@@ -1,0 +1,37 @@
+**Date** : 06/01/2015
+
+**Participants** : JG, TLC, AC, PV, NS
+
+
+**Précédente réunion le [[pt6/reunions/reunion_pt6_18.12.2014|18/12/2014]]**
+
+====== Ordre du jour ======
+
+^Quoi?                  ^Qui?          ^Avancement    ^
+|<del>Projet REALISM</del>|NS|Information sur le travail à faire|
+|Réorganisation UTech6 |NS|Préparation de la réunion du 9/01 sur le RACI Utech/IT : quels objectifs? quels exemples?|
+|MiniLIMS |AC+TLC|Préparation de la réunion du 7/01 <del>TLC va instancier la VM de test sur OStack en ouvrant l'IP vers les range IP de BIOASTER@Gerland, BIOASTER@Pasteur et réseau ingénieur. AC fera une présentation le 12/12/2014</del> |
+|Workflow management et plateforme d'accès aux ressources|PV|Déploiement de [[http://pegasus.isi.edu/|Pegasus]] en attente. A déployer au CC|
+|Search/revue de code|PV|Finalisation, environ 3 jour FTE consommé pour un rapport de 25 pages|
+|eCRF : cahier des charges|PV|Evaluation des prestataires, les bonnes questions à poser, JG ou AC pourront jouer le rôle d'expert technique|
+|Mise en place d'OpenStack et prestation SysFera|NS+PV+JG|Montage NFS OK, changement de config d'OpenStack suite à l'arrêt du CC, discussion à avoir avec le CC sur le fonctionnement du tenant bioaster(service)|
+|Hébergement au CCIN2P3 et convention|JG+PV|Statut des commandes|
+|Déploiement de [[http://galaxyproject.org/|Galaxy]], [[http://www.sequenceserver.com/|SequenceServer]], de [[http://c4c.uwc4c.com/express_license_technologies/viroblast|ViroBlast]], de [[http://appmibio.uni-goettingen.de/software/|SecureBlast]] ou de [[http://www.broadinstitute.org/cancer/software/genepattern|Gene Pattern]]|TLC|Renouvellement de l'instance Galaxy, téléchargement de NR, Uniprot et PDB sur GPFS. Les ervices importants sont Blast, PSI-BLAST, ClustalW/Muscle/TCoffee |
+|<del>Jitsi/Jabber</del>|JG|Il faudrait désactiver ICE dans Jisti|
+|<del>Doc et tutoriaux dans le Wiki, ticket dans OTRS</del>|NS|RAS|
+|<del>OwnCloud et transfert de données</del>|JG|RAS|
+ 
+ 
+====== Archives ======
+  - [[pt6/reunions/reunion_pt6_06.06.2014|06/06/2014]]
+  - [[pt6/reunions/reunion_pt6_10.06.2014|10/06/2014]]
+  - [[pt6/reunions/reunion_pt6_25.06.2014|25/06/2014]]
+  - [[pt6/reunions/reunion_pt6_19.09.2014|19/09/2014]]
+  - [[pt6/reunions/reunion_pt6_30.09.2014|30/09/2014]]
+  - [[pt6/reunions/reunion_pt6_14.10.2014|14/10/2014]]
+  - [[pt6/reunions/reunion_pt6_28.10.2014|28/10/2014]]
+  - [[pt6/reunions/reunion_pt6_19.11.2014|19/11/2014]]
+  - [[pt6/reunions/reunion_pt6_25.11.2014|25/11/2014]]
+  - [[pt6/reunions/reunion_pt6_12.12.2014|12/12/2014]]
+  - [[pt6/reunions/reunion_pt6_18.12.2014|18/12/2014]]
+  - [[pt6/reunions/reunion_pt6_06.01.2015|06/01/2015]]

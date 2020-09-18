@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="creer_un_projet">Créer un projet</h1>
+<div class="level1">
+
+<p>
+Avant de démarrer un projet, assurez vous de connaitre <a href="/informatique/developpement/developpement_de_projet" class="wikilink1" title="informatique:developpement:developpement_de_projet">les bonnes pratiques de développement de projet</a>.
+</p>
+
+<p>
+Installer l&#039;outils <code>symfony</code> :
+</p>
+<pre class="code">  $ curl -LsS http://symfony.com/installer &gt; symfony.phar
+  $ mv symfony.phar ~/bin/symfony
+  $ chmod a+x ~/bin/symfony</pre>
+
+<p>
+Installer l&#039;outils <code>composer</code> qui sert à gérer l&#039;installation des dépendances :
+</p>
+<pre class="code">  $ curl -s https://getcomposer.org/installer | php
+  $ mv composer.phar ~/bin/composer
+  $ chmod a+x ~/bin/composer</pre>
+
+<p>
+Créer le squelette de l&#039;application :
+</p>
+<pre class="code">  $ symfony new mon_application</pre>
+
+<p>
+Supprimer les tests par défaut.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/creer_un_projet?codeblock=0" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/DefaultController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Symfony\Bundle\FrameworkBundle\Controller\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> DefaultController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Il ne reste plus qu&#039;à définir la licence et le nom du projet dans <code>composer.json</code>.
+</p>
+
+<p>
+Si vous voulez versionner votre projet, c&#039;est le moment ou jamais de faire le <code>commit</code> initial !
+</p>
+<pre class="code">  $ git init
+  $ git add .
+  $ git commit -m &quot;Create Symfony project&quot;</pre>
+
+</div>

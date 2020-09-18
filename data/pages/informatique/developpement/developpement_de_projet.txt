@@ -1,0 +1,148 @@
+====== Projet de développement ======
+  
+
+
+===== Mise en place =====
+
+Après avoir créé un compte sur GitLab, on s'assurera d'avoir déclaré sa clé SSH (''~/.ssh/id_rsa.pub'') dans son profile.
+
+On choisit un projet existant ou on en crée un nouveau.
+
+On clone le projet avec la commande ''git clone git@gitlab.in2p3.fr:/bioaster/<PROJET>''.
+
+Pour créer le dépôt en ligne de commande :
+
+<code>
+$ symfony new <PROJET>
+$ cd <PROJET>
+$ git init
+$ git add .
+$ git commit -m "Création du projet Symfony"
+$ git remote add origin git@gitlab.in2p3.fr:bioaster/<PROJET>.git
+$ git push -u origin master
+</code>
+
+===== Identification d'un nouveau besoin =====
+
+  * Le chef de projet (**C**) discute avec l'utilisateur (**U**) d'une fonctionnalité que celui-ci veut ajouter au logiciel.
+  * Le C établie un ''use case'' et/ou des ''user stories'' avec l'U.
+  * Le C crée le ou les tickets (//issues//) dans la forge et pensant à indiquer le nom de l'U et lui associer un label : feature, bug, design…
+
+===== Lancer un cycle de développement =====
+
+Ceci se fait au cours d'une réunion d'équipe.
+
+  * Le C crée une nouvelle ''version'' (//milestone//) dans la forge.
+  * Le C associe des tickets à cette version.
+  * Le C assigne des développeurs (**D**) aux différents tickets.
+
+Il n'existe pas pour le moment de manière de montrer que l'on accepte un ticket… ou alors implicitement quand la branche est crée.
+
+===== Travailler sur une nouvelle fonctionnalité (ou un bug fix) =====
+
+Il faut d'assurer que D a créé une //fork// du projet dans GitLab et qu'il a un clone local.
+
+<code>
+$ git clone git@gitlab.in2p3.fr:<LOGIN>/<PROJET>.git
+$ cd <PROJET>
+$ git remote add upstream git@gitlab.in2p3.fr:bioaster/<PROJET>.git
+</code>
+
+On se servira de la branche ''upstream'' pour récupérer les mises à jour.
+
+On utilisera régulièrement ''git status'' pour voir l'état du dépôt.
+
+Ensuite, pour chaque ticket, le D doit :
+
+  * S'assurer que le ''master'' local est à jour ;\\ <code text>
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master # Doit normalement faire un fast-forward
+</code>
+  * Créer une nouvelle branche de ''feature'' ou de ''bug'' dans son dépôt ;\\ <code text>
+$ git checkout -b feature-123
+$ git push -u origin feature-123 # Enregistre origin comme branche amont
+</code>
+  * Suivre une branche particulière déjà créée par quelqu'un d'autre ou à partir d'une autre machine;\\ <code text>
+$ git checkout -b feature-4 origin/feature-4
+</code>
+  * Développer et commiter les modifications ;\\ <code text>
+$ # Par exemple, on ajoute un fichier de commentaire
+$ vim README.md
+$ git add README.md
+$ git commit -m "Ajout du lien vers le site web"
+</code>
+  * Intégrer les derniers changement de la branche ''master'' ; \\ <code text>
+$ git fetch upstream # mise à jour de upstream/master
+$ git merge --no-ff upstream/master # Demande un message de commit "Implémente une fonctionnalité (Fix #123)"
+# Re lancer les tests unitaires s'ils existent et corriger les problèmes/conflits
+$ git push
+</code>
+  * Dans GitLab on va sur la branche et on fait une //merge request// entre la branche de sa //fork// et celle du dépôt original. Ce merge sera en ''--no-ff'' pour éviter les historiques moches.
+
+  * Vous pourriez avoir besoin de récupérer l'avancée de votre master pendant le développement de votre branche. Pour cela : \\ <code text>
+$ git checkout master
+$ git pull
+$ git checkout votreBranche      
+$ git fetch origin    #facultatif        
+$ git merge origin/master
+#remplir le commit et sauver
+$ git push
+</code>
+===== Intégrer des fonctionnalités à la version en cours de développement =====
+
+Quand une fonctionnalité est prête (une //merge request// a été créée), elle peut alors être testée et intégrée.
+
+  * Le C crée une branche pour tester le code.\\ <code text>
+$ git fetch
+$ git checkout master
+$ git checkout -b test-feature-123
+$ git merge --no-ff origin/feature-123
+</code>
+  * C teste le code.\\ <code text>
+$ composer install
+$ php app/console doctrine:migrations:migrate
+$ phpunit -c app # ou quelque chose dans le genre
+</code>
+  * C teste la fonctionnalité.
+  * C accepte, ou pas, la fonctionnalité (//merge request//)
+
+===== Clôturer un cycle de développement =====
+
+Ceci se passe lors de la réunion de fin de //sprint// quand toute l'équipe et tous les utilisateurs sont présents.
+
+  * C branche ''develop'' dans ''release''.\\ <code text>
+$ git checkout master
+$ git checkout -b release-1.2
+$ git push
+</code>
+
+La branche peut aussi être créée depuis l'interface de GitLab.
+
+Ce modèle de //GitLabFlow// est plus simple que le //GitFlow// classique.
+
+===== Corriger un bogue =====
+
+Quelques **bonnes pratiques** générales :
+
+  * **On branche à partir de la révision où le bug a été introduit.** \\ On branche de ''master'', peut importe du moment que la bonne révision existe dans la branche parent.
+  * **On écrit un test avant même de corriger le bug**, cela permet de s'assurer que le bug ne réapparaîtra pas. \\ Ce test peut faire partie d'une méthode de test déjà existante (''testMethod()'') ou être un test dédié (''testBug13()'').
+
+Il est traité [[/informatique/developpement/developpement_de_projet#travailler_sur_une_nouvelle_fonctionnalite_ou_un_bug_fix|comme n'importe quelle fonctionnalité]] et est intégré à un //sprint//.
+
+===== Maintenir les dépôts au quotidien =====
+
+Le C est en charge de veiller à ce que les dépôts de code soient dans un bon état. Ceci consiste principalement à faire [[/informatique/developpement/developpement_de_projet#integrer_des_fonctionnalites_a_la_version_en_cours_de_developpement|les intégrations de nouvelles fonctionnalités]].
+
+
+===== Bonne utilisation du git reset =====
+
+Un très bon article explicatif sur pourquoi faire un reset et comment faire : http://www.git-attitude.fr/2016/05/11/git-reset/
+
+===== Tips =====
+  * Comment voir l'historique de la branche sur laquelle on travail et pas celles provenant d'ancien merge ?
+Typiquement imaginons nous travaillons sur le branche "B2" qui a été mergé avec la "B1". Si on tape uniquement ''git log'' on verra les logs de B2, suivis de ceux de B1. Si on veut éviter ce comportement on utilise l'argument ''- -not'' suivi du nom de la branche que l'on veut exclure.
+Exemple :
+<code>
+ git log B2 --not B1
+</code>

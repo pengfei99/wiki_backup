@@ -1,0 +1,20 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1512639004;s:8:"modified";i:1512639004;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1512639004;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"C";s:2:"id";s:51:"employes:pengfei.liu:admin_system:home_dir_creation";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:614;}s:5:"title";s:43:"Create home directory after user connection";s:11:"description";a:2:{s:15:"tableofcontents";a:1:{i:0;a:4:{s:3:"hid";s:43:"create_home_directory_after_user_connection";s:5:"title";s:43:"Create home directory after user connection";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:378:"Create home directory after user connection
+
+Install oddjod 
+
+
+yum install oddjob-mkhomedir
+
+systemctl enable oddjobd
+
+systemctl start oddjobd
+
+
+Enable it after user login
+Edit /etc/pam.d/system-auth and Edit /etc/pam.d/password-auth 
+
+
+vim /etc/pam.d/system-auth
+vim /etc/pam.d/password-auth
+#add follwoing line 
+session     optional      pam_oddjob_mkhomedir.so skel=/etc/skel";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1512639004;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1512639004;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"C";s:2:"id";s:51:"employes:pengfei.liu:admin_system:home_dir_creation";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:614;}}}

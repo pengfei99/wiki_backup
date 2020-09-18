@@ -1,0 +1,172 @@
+
+<h1 class="sectionedit1" id="ajouter_le_support_de_bootstrap">Ajouter le support de Bootstrap</h1>
+<div class="level1">
+
+<p>
+Le bundle <a href="http://bootstrap.braincrafted.com/getting-started.html" class="urlextern" title="http://bootstrap.braincrafted.com/getting-started.html"  rel="nofollow">Braincrafted</a> fournit l&#039;intégration de <a href="http://getbootstrap.com/" class="urlextern" title="http://getbootstrap.com/"  rel="nofollow">Twitter Bootstrap</a>.
+</p>
+
+<p>
+On installe ensuite le bundle avec Composer:
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_bootstrap?codeblock=0" title="Télécharger un extrait" class="mediafile mf_json">composer.json</a></dt>
+<dd><pre class="code txt">{
+    &quot;repositories&quot;: [
+        {
+            &quot;type&quot;: &quot;package&quot;,
+            &quot;package&quot;: {
+                &quot;name&quot;: &quot;jquery/jquery&quot;,
+                &quot;version&quot;: &quot;1.11.1&quot;,
+                &quot;dist&quot;: {
+                    &quot;url&quot;: &quot;http://code.jquery.com/jquery-1.11.1.js&quot;,
+                    &quot;type&quot;: &quot;file&quot;
+                }
+            }
+        }
+    ],
+    &quot;require&quot;: {
+        ... other dependencies
+        &quot;twbs/bootstrap&quot;: &quot;3.0.*&quot;,
+        &quot;jquery/jquery&quot;:  &quot;1.11.*&quot;,
+        &quot;braincrafted/bootstrap-bundle&quot;: &quot;~2.0&quot;
+    }
+}</pre>
+</dd></dl>
+
+<p>
+On lance l&#039;installation :
+</p>
+<pre class="code">  $ composer update</pre>
+
+<p>
+On l&#039;active dans symfony :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_bootstrap?codeblock=1" title="Télécharger un extrait" class="mediafile mf_php">app/AppKernel.php</a></dt>
+<dd><pre class="code txt">class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+        );
+        // ...
+    }
+}</pre>
+</dd></dl>
+
+<p>
+Il est nécessaire d&#039;installer un compilateur LESS. Ceci se fait sur Debian comme ceci :
+</p>
+<pre class="code">  $ sudo vim /etc/apt/sources.list
+      deb http://http.debian.net/debian wheezy-backports main
+  $ sudo aptitude update
+  $ sudo aptitude -t wheezy-backports install nodejs
+  $ sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
+  $ wget https://www.npmjs.org/install.sh
+  $ sudo bash install.sh
+  $ sudo npm install -g less</pre>
+
+<p>
+Ou sous Ubuntu :
+</p>
+<pre class="code">  $ sudo aptitude install nodejs npm
+  $ sudo npm install -g less</pre>
+
+<p>
+Et pour une fois, c&#039;est plus simple sur SL6 :
+</p>
+<pre class="code">  $ sudo yum install nodejs nodejs-less</pre>
+
+<p>
+Il faut ensuite configurer l&#039;outil :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_bootstrap?codeblock=2" title="Télécharger un extrait" class="mediafile mf_yml">app/config/config.yml</a></dt>
+<dd><pre class="code yml"># Assetic Configuration
+assetic:
+    debug:          &quot;%kernel.debug%&quot;
+    use_controller: false
+    bundles:        [ ]
+    filters:
+        cssrewrite: ~
+        less:
+            node: /usr/bin/node
+            node_paths: [/usr/lib/node_modules]
+            apply_to: &quot;\.less$&quot;
+braincrafted_bootstrap:
+    less_filter: less</pre>
+</dd></dl>
+
+<p>
+Pour compiler les fichiers css nécessaires :
+</p>
+<pre class="code">  php app/console assetic:dump</pre>
+
+<p>
+Rendre les <code>glyphicons</code> disponibles :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_bootstrap?codeblock=3" title="Télécharger un extrait" class="mediafile mf_json">composer.json</a></dt>
+<dd><pre class="code txt">{
+    ...
+    &quot;scripts&quot;: {
+        &quot;post-install-cmd&quot;: [
+            ...
+            &quot;Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install&quot;
+        ],
+        &quot;post-update-cmd&quot;: [
+            ...
+            &quot;Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install&quot;
+        ]
+    }
+    ...
+}</pre>
+</dd></dl>
+
+<p>
+Le template par défaut peut maintenant être adapté :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_bootstrap?codeblock=4" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/base.html.twig</a></dt>
+<dd><pre class="code html4strict"><span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;utf-8&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">http-equiv</span><span class="sy0">=</span><span class="st0">&quot;X-UA-Compatible&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;IE=edge&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;viewport&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;width=device-width, initial-scale=1&quot;</span>&gt;</span>
+&nbsp;
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>{% block title %}Welcome!{% endblock %}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+&nbsp;
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/link.html"><span class="kw2">link</span></a> <span class="kw3">rel</span><span class="sy0">=</span><span class="st0">&quot;icon&quot;</span> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;image/x-icon&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;{{ asset('favicon.ico') }}&quot;</span> <span class="sy0">/</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/link.html"><span class="kw2">link</span></a> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;{{ asset('css/bootstrap.css') }}&quot;</span> <span class="kw3">rel</span><span class="sy0">=</span><span class="st0">&quot;stylesheet&quot;</span> <span class="kw3">media</span><span class="sy0">=</span><span class="st0">&quot;screen&quot;</span>&gt;</span>
+    {% block stylesheets %}{% endblock %}
+&nbsp;
+    <span class="sc-1">&lt;!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries --&gt;</span>
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+&nbsp;
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+    {% block body %}{% endblock %}
+&nbsp;
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a> <span class="kw3">src</span><span class="sy0">=</span><span class="st0">&quot;{{ asset('js/jquery.js') }}&quot;</span>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a> <span class="kw3">src</span><span class="sy0">=</span><span class="st0">&quot;{{ asset('js/bootstrap.js') }}&quot;</span>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a>&gt;</span>
+    {% block javascripts %}{% endblock %}
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span></pre>
+</dd></dl>
+
+<p>
+On peut ignorer certains des fichiers qui sont automatiquement générés et qui ne doivent pas être utilisés directement :
+</p>
+<pre class="code">  $ vim .bzrignore
+    web/css/bootstrap*
+    web/fonts/glyphicons*
+    web/js/bootstrap*
+    web/js/jquery*
+  $ bzr add
+  $ bzr ci -m &quot;Mise en place de Twitter Bootstrap&quot;</pre>
+
+</div>

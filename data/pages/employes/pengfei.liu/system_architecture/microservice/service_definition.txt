@@ -1,0 +1,50 @@
+====== What is a (micro)service? ======
+
+The microservice architecture (sometimes abbreviated to microservices) is an architectural style that structures an application as a collection of services that are organized around business capabilities. It enables the continuous delivery/deployment of large, complex applications. The microservice architecture has several other benefits including better scalability and fault tolerance. It also makes it easier for an organization to experiment with new technologies and evolve its technology stack.
+
+The most critical architectural decision that you must make when using microservices is to identify and design the services and determine how they collaborate. In comparison, technology-related issues, such as Serverless, Docker, and Kubernetes, pale into insignificance. This is the first of several posts that explores the nature of a service.
+
+===== Key characteristics of a service =====
+
+A service has several key characteristics:
+
+  * Highly maintainable and testable - enables rapid and frequent development and deployment
+  * Loosely coupled with other services - enables a team to work independently the majority of time on their service(s) without being impacted by changes to other services and without affecting other services
+  * Independently deployable - enables a team to deploy their service without having to coordinate with other teams
+  * Capable of being developed by a small team - essential for high productivity by avoiding the high communication overhead of large teams
+
+===== The structure of a service =====
+The following diagram shows the structure of a service. It has a hexagonal architecture. The core of the service is its business logic, which is surrounded by adapters that communicate with other services and applications.
+
+{{:employes:pengfei.liu:system_architecture:microservice:service_archi.png?400|}}
+
+
+===== A service has an API =====
+
+From the perspective of its consumers, the only thing that matters about a service is its API. A service API consists of operations and published events.
+
+==== Operations ====
+
+There are two types of operations: commands and queries. A command is an operation that mutates data. A query is a command that retrieves data. For example, in the FTGO application(https://github.com/microservices-patterns/ftgo-application/), the Order Service, implements commands, such as createOrder(), reviseOrder() and cancelOrder(), and queries, such as findOrder() and findOrderHistory().
+
+A service’s operations are invoked using some combination of synchronous protocols, such as REST or gRPC, and asynchronous messaging. Synchronous protocols, especially REST, are particularly useful when implementing APIs for external clients, such as mobile applications and Single Page applications.
+
+However, asynchronous protocols are typically needed when implementing sagas, which maintain data consistency between services. For example, the book store Order Service’s createOrder() operation is implemented by the POST /orders REST endpoint and initiates the Create Order Saga, which is implemented using asynchronous messaging.
+
+==== Events ====
+
+A service often publishes events. An event is typically DDD domain events, which are emitted by an aggregate when it’s created, updated or deleted. A service publishes events to a message channel implemented by a message broker. The Eventuate Tram framework, for example, supports publishing events to Apache Kafka, ActiveMQ and RabbitMQ.
+
+==== Business logic ====
+
+The heart of the service and the reason for its existence. It implements the API’s operations and publishes events. The business logic invokes the operations of other services and subscribes to their events. It persists data in the service’s database.
+
+==== A service might collaborate with other services ====
+
+When services collaborate, it’s through APIs rather than via the database. A service might invoke the operations of another service. The FTGO(https://github.com/microservices-patterns/ftgo-application/) Order Service, for example, asynchronously invokes the Kitchen Service services.
+
+A service can also subscribe to the events published by another service. The Order Service, for example, subscribes to events published by the Restaurant Service.
+
+==== A service's database is private ====
+A service usually has a database, which stores its data and sometimes data replicated from other services. For example, the FTGO Order Service’s database stores Orders as well as Restaurants, which are replicated from the Restaurant Service. In order to ensure loose coupling, it’s generally a bad idea for services to share database tables. Instead, services must only communicate through their APIs.
+

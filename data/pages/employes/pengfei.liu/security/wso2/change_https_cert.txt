@@ -1,0 +1,162 @@
+====== Change wso2 default https certificate ======
+
+The default certificate in wso2 is is a self signed certificate for localhost.
+
+So you will see the un secure sign in your browser. 
+
+===== Prepare your CA signed certificate =====
+
+To do so , you need to generate a private key, a csr. Then send the csr to CA. The CA will send back a signed certificate, an intermediate.crt and rootCA.crt.
+
+So now you have all the element you need
+
+  * private key
+  * signed certificate
+  * intermediate certificate
+  * root certificate
+
+===== Build keystore for wso2 =====
+ 
+
+1.Create a pkcs12 key store with certificate, private key and intermediate.crt
+
+''openssl pkcs12 -export -in acc-wso.bioaster.org.crt -inkey encrypted.key -name wso2carbon -certfile intermediate.crt -out keystore.pfx ''
+
+-name defines the alias of your private key
+
+Before you do this, it's recommened to encrypte your private key. You can go to the following page to see how
+
+https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/keystore
+
+2. Convert pkcs12 keystore to jks keystore
+
+''keytool -importkeystore -srckeystore keystore.pfx -srcstoretype pkcs12 -destkeystore wso2carbonNew.jks -deststoretype JKS''
+
+3. Export the public key of the keypair
+
+''keytool -export -alias wso2carbon -keystore wso2carbonNew.jks -file acc-wso.bioaster.org.pub
+''
+
+4. Add the public key into the client-truststore.jks
+
+'' keytool -import -alias wso2carbon -file acc-wso.bioaster.org.pub -keystore client-truststore.jks -storepass wso2carbon''
+
+The client-truststore.jks is located at ${wsois_home}/repository/resources/security
+
+===== Copy the new keystore and configure wso2-is to use the new keystore =====
+
+1.Copy the wso2carbonNew.jks to wso2Is
+
+''cp wso2carbon ${wsois_home}/repository/resources/security''
+
+2.There are three place you need to modify (Default install). If you has a custom install, you may need to change more, for example /conf/axis2/axis2.xml
+
+2.1 Modify carbon.xml
+
+''vim ${wsois_home}/repository/conf/carbon.xml''
+
+You should find the follwoing config
+
+<code>
+<KeyStore>
+            <!-- Keystore file location-->
+            <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+            <!-- Keystore type (JKS/PKCS12 etc.)-->
+            <Type>JKS</Type>
+            <!-- Keystore password-->
+            <Password>pwd</Password>
+            <!-- Private Key alias-->
+            <KeyAlias>wso2carbon</KeyAlias>
+            <!-- Private Key password-->
+            <KeyPassword>wso2carbon</KeyPassword>
+        </KeyStore>
+
+        <!--
+            System wide trust-store which is used to maintain the certificates of all
+            the trusted parties.
+        -->
+        <TrustStore>
+            <!-- trust-store file location -->
+            <Location>${carbon.home}/repository/resources/security/client-truststore.jks</Location>
+            <!-- trust-store type (JKS/PKCS12 etc.) -->
+            <Type>JKS</Type>
+            <!-- trust-store password -->
+            <Password>wso2carbon</Password>
+        </TrustStore>
+
+</code>
+
+You need to change it to :
+
+<code>
+<KeyStore>
+            <!-- Keystore file location-->
+            <Location>${carbon.home}/repository/resources/security/wso2carbonNew.jks</Location>
+            <!-- Keystore type (JKS/PKCS12 etc.)-->
+            <Type>JKS</Type>
+            <!-- Keystore password-->
+            <Password>pwd</Password>
+            <!-- Private Key alias-->
+            <KeyAlias>certAlias</KeyAlias>
+            <!-- Private Key password-->
+            <KeyPassword>pwd</KeyPassword>
+        </KeyStore>
+
+        <!--
+            System wide trust-store which is used to maintain the certificates of all
+            the trusted parties.
+        -->
+        <TrustStore>
+            <!-- trust-store file location -->
+            <Location>${carbon.home}/repository/resources/security/client-truststore.jks</Location>
+            <!-- trust-store type (JKS/PKCS12 etc.) -->
+            <Type>JKS</Type>
+            <!-- trust-store password -->
+            <Password>wso2carbon</Password>
+        </TrustStore>
+
+</code>
+
+2.2 Modify ${carbon.home}/repository/conf/identity/identity.xml
+
+''vim ${carbon.home}/repository/conf/identity/identity.xml''
+
+<code>
+<EntitlementSettings>
+        <ThirftBasedEntitlementConfig>
+            <EnableThriftService>false</EnableThriftService>
+            <ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
+            <ClientTimeout>10000</ClientTimeout>
+            <KeyStore>
+                <Location>${carbon.home}/repository/resources/security/wso2carbonNew.jks</Location>
+                <Password>pwd</Password>
+            </KeyStore>
+            <!-- Enable this element to mention the host-name of your IS machine -->
+            <ThriftHostName>${carbon.host}</ThriftHostName>
+        </ThirftBasedEntitlementConfig>
+    </EntitlementSettings>
+</code>
+2.3 Modify ${carbon.home}/repository/conf/tomcat/catalina-server.xml
+
+''vim ${carbon.home}/repository/conf/tomcat/catalina-server.xml''
+
+<code>
+  keystoreFile="${carbon.home}/repository/resources/security/wso2carbonNew.jks"
+ keystorePass="pwd"
+
+</code>
+
+===== Add intermediate and root CA to keystore =====
+
+Restart your wso2-is server, you should see everything works.
+
+To make it more nice, you can add the intermediate.crt and rootCA.crt into your keystore
+
+wso2-Is has GUI todo so.
+
+Login to the admin dashboard. Click on Keystores->List->name of your keystore (in our case, it's wso2carbonNew.jks)
+
+Click on import certificate, choose the certificate file then click on OK
+
+The last step is completly optional.
+

@@ -1,0 +1,15 @@
+&lt;VirtualHost *:80&gt;
+   ServerName ec2-52-47-136-8.eu-west-3.compute.amazonaws.com
+   ServerAlias 52.47.136.8
+   DocumentRoot /var/www/html/dokuwiki
+&nbsp;
+  &lt;Directory /var/www/html/dokuwiki&gt;
+ Options Indexes FollowSymLinks MultiViews
+AllowOverride All
+Require  all granted
+ &lt;/Directory&gt; 
+ServerSignature off
+ErrorLog /var/log/httpd/error_log
+CustomLog /var/log/httpd/access_log combined
+&nbsp;
+&lt;/VirtualHost&gt;

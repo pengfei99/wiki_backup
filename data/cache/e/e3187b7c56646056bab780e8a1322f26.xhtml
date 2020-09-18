@@ -1,0 +1,20 @@
+
+<h1 class="sectionedit1" id="bash_script_copy_hdfs_file_to_local_file_system">Bash script copy hdfs file to local file system</h1>
+<div class="level1">
+<pre class="code">#!/bin/bash
+
+hdfs_path=$1
+gpfs_path_input=$2
+gpfs_path=${gpfs_path_input:=/mnt/gpfs/pt6/stats-gpfs/result}
+# get file name from hdfs path
+file_name=$(basename $hdfs_path)
+tmp_path=/tmp/$file_name
+
+#copy file from hdfs to local /tmp
+hdfs dfs -get $hdfs_path /tmp
+sudo chown -R biodata:bioaster $tmp_path
+# run the move command as user biodata, because hadoop doesnot have the right to access gpfs
+sudo runuser -l biodata -c &quot;mv ${tmp_path} ${gpfs_path}&quot;
+</pre>
+
+</div>

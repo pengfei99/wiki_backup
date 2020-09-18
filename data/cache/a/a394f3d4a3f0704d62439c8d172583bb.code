@@ -1,0 +1,17 @@
+{
+  &quot;typeName&quot;: &quot;hive_table&quot;,
+  &quot;excludeDeletedEntities&quot;: true,
+  &quot;classification&quot;: &quot;Mosaic&quot;,
+  &quot;query&quot;: &quot;&quot;,
+  &quot;limit&quot;: 50,
+  &quot;offset&quot;: 0,
+  &quot;entityFilters&quot;: {
+    &quot;attributeName&quot;: &quot;owner&quot;,
+    &quot;operator&quot;: &quot;eq&quot;,
+    &quot;attributeValue&quot;: &quot;hive&quot;
+  },
+  &quot;tagFilters&quot;: null,
+  &quot;attributes&quot;: [
+    &quot;&quot;
+  ]
+}

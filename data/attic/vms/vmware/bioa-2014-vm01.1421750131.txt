@@ -1,0 +1,35 @@
+====== BIOA-2014-VM01 ======
+
+===== Introduction =====
+
+Cette machine sert de point d'accès au réseau virtuel de Paris.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : [[https://www.pfsense.org/|pfSense]]
+  * **Matériel** : 
+    * //RAM//: 1Go
+    * //Disques durs//: 2Go
+    * //Adresse MAC// : 00:0C:29:6C:37:BC / 00:0C:29:6C:37:C6
+  * **Adresse IP** : 157.99.42.13
+
+===== Installation =====
+
+==== Système de base ====
+
+Le système s'installe seul en suivant le //wizard//. Il faut ensuite un client (navigateur web) sur le réseau local (192.168.0.1) pour accéder à l'interface de configuration web.
+
+Le module supplémentaire ''Open-VM-tools'' doit être installé depuis le menu ''System > Packages''. 
+
+Le configuration peut-être chargée depuis le menu ''Diagnostics > Backup/Restore'' en utilisant le {{ut6:machines_virtuelles:config-pfsense.paris.bioaster.org-20140618160903.xml.zip|fichier de sauvegarde}}.
+
+===== Journal =====
+
+  * **2014.06.17 (tlc)** Installation

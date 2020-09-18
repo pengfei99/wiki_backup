@@ -1,0 +1,7 @@
+<span class="kw2">sudo</span> <span class="sy0">/</span>sbin<span class="sy0">/</span>service httpd restart
+Redirecting to <span class="sy0">/</span>bin<span class="sy0">/</span>systemctl restart  httpd.service
+Job <span class="kw1">for</span> httpd.service failed because the control process exited with error code. See <span class="st0">&quot;systemctl status httpd.service&quot;</span> and <span class="st0">&quot;journalctl -xe&quot;</span> <span class="kw1">for</span> details.
+&nbsp;
+<span class="co0"># sortie de journalctl -xe</span>
+sept. <span class="nu0">19</span> <span class="nu0">11</span>:02:<span class="nu0">22</span> cclinbiospecp01.bioaster.org httpd<span class="br0">&#91;</span><span class="nu0">8474</span><span class="br0">&#93;</span>: AH00526: Syntax error on line <span class="nu0">35</span> of <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>sites-enabled<span class="sy0">/</span>biospecimens.conf:
+sept. <span class="nu0">19</span> <span class="nu0">11</span>:02:<span class="nu0">22</span> cclinbiospecp01.bioaster.org httpd<span class="br0">&#91;</span><span class="nu0">8474</span><span class="br0">&#93;</span>: Invalid <span class="kw3">command</span> <span class="st_h">'SSLEngine'</span>, perhaps misspelled or defined by a module not inclu

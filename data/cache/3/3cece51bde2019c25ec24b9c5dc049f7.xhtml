@@ -1,0 +1,108 @@
+
+<h1 class="sectionedit1" id="keys_in_relational_model">Keys in relational model</h1>
+<div class="level1">
+
+<p>
+In this article, we will explain the different keys in a relational model. I will use the following tables as examples.
+</p>
+
+<p>
+Student table:
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">STUD_NO</th><th class="col1">STUD_NAME</th><th class="col2">STUD_PHONE</th><th class="col3">STUD_STATE</th><th class="col4">STUD_COUNTRY</th><th class="col5">STUD_AG</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">Liu</td><td class="col2">344545</td><td class="col3">LiaoNing</td><td class="col4">China</td><td class="col5">20</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">Zhou</td><td class="col2">344545</td><td class="col3">ZheJiang</td><td class="col4">China</td><td class="col5">35</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;177-306&quot;} -->
+<p>
+Student course table:
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">STUD_NO</th><th class="col1">COURSE_NO</th><th class="col2">COURSE_NAME</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">C1</td><td class="col2">DBMS</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">C2</td><td class="col2">Computer Networks</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">1</td><td class="col1">C1</td><td class="col2">Computer Networks</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;330-423&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Keys in relational model&quot;,&quot;hid&quot;:&quot;keys_in_relational_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-427&quot;} -->
+<h2 class="sectionedit4" id="candidate_key">Candidate Key</h2>
+<div class="level2">
+
+<p>
+The minimal set of attribute which can uniquely identify a tuple is known as candidate key. For Example, STUD_NO in STUDENT relation.
+</p>
+
+<p>
+The value of Candidate Key is <strong>unique</strong> and <strong>non-null</strong> for every tuple.
+There can be more than one candidate key in a relation. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT.
+The candidate key can be simple (having only one attribute) or composite as well. For Example, {STUD_NO, COURSE_NO} is a composite candidate key for relation STUDENT_COURSE.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Candidate Key&quot;,&quot;hid&quot;:&quot;candidate_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;428-985&quot;} -->
+<h2 class="sectionedit5" id="super_key">Super Key</h2>
+<div class="level2">
+
+<p>
+The set of attributes which can uniquely identify a tuple is known as Super Key. For Example, STUD_NO, (STUD_NO, STUD_NAME) etc.
+</p>
+<ul>
+<li class="level1"><div class="li"> Adding zero or more attributes to candidate key generates super key.</div>
+</li>
+<li class="level1"><div class="li"> A candidate key is a super key but vice versa is not true.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Super Key&quot;,&quot;hid&quot;:&quot;super_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;986-1275&quot;} -->
+<h2 class="sectionedit6" id="primary_key">Primary Key</h2>
+<div class="level2">
+
+<p>
+There can be more than one candidate key in a relation out of which one can be chosen as primary key. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT but STUD_NO can be chosen as primary key (only one out of many candidate keys).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Primary Key&quot;,&quot;hid&quot;:&quot;primary_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1276-1572&quot;} -->
+<h2 class="sectionedit7" id="alternate_key">Alternate Key</h2>
+<div class="level2">
+
+<p>
+The candidate key other than primary key is called as alternate key. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT but STUD_PHONE will be alternate key (only one out of many candidate keys).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Alternate Key&quot;,&quot;hid&quot;:&quot;alternate_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1573-1833&quot;} -->
+<h2 class="sectionedit8" id="foreign_key">Foreign Key</h2>
+<div class="level2">
+
+<p>
+If an attribute can only take the values which are present as values of some other attribute, it will be foreign key to the attribute to which it refers. The relation which is being referenced is called <strong>referenced relation</strong> and corresponding attribute is called <strong>referenced attribute</strong> and the relation which refers to referenced relation is called <strong>referencing relation</strong> and corresponding attribute is called <strong>referencing attribute</strong>. Referenced attribute of referencing attribute should be primary key. 
+</p>
+
+<p>
+For Example, STUD_NO in STUDENT_COURSE is a foreign key to STUD_NO in STUDENT relation.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Foreign Key&quot;,&quot;hid&quot;:&quot;foreign_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;1834-&quot;} -->

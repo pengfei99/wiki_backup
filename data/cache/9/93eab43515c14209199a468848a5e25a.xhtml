@@ -1,0 +1,83 @@
+
+<h1 class="sectionedit1" id="samba_sur_centos">Samba sur CentOS</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Samba sur CentOS" [1-32] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Samba_%28software%29" class="urlextern" title="https://en.wikipedia.org/wiki/Samba_%28software%29"  rel="nofollow">Samba</a> permet de partager des dossiers et des fichiers avec des postes Windows.
+</p>
+
+<p>
+Il est normalement simple d&#039;utilisation. La difficulté sous CentOS vient de l&#039;utilisation de <a href="https://en.wikipedia.org/wiki/Selinux" class="urlextern" title="https://en.wikipedia.org/wiki/Selinux"  rel="nofollow">SELinux</a>. Cette page est inspirée du <a href="http://wiki.centos.org/HowTos/SetUpSamba" class="urlextern" title="http://wiki.centos.org/HowTos/SetUpSamba"  rel="nofollow">manuel de CentOS</a>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [33-430] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+<strong>???</strong>
+</p>
+<pre class="code"></pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [431-481] -->
+<h2 class="sectionedit4" id="configuration">Configuration</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Configuration" [482-508] -->
+<h3 class="sectionedit5" id="selinux">SELinux</h3>
+<div class="level3">
+<pre class="code">sudo yum -y install policycoreutils-python
+
+# Puis, pour chaque dossier à partager
+sudo semanage fcontext -a -t samba_share_t &#039;/DOSSIER(/.*)?&#039;
+sudo restorecon -R /DOSSIER</pre>
+
+</div>
+<!-- EDIT5 SECTION "SELinux" [509-715] -->
+<h3 class="sectionedit6" id="samba">Samba</h3>
+<div class="level3">
+
+<p>
+Voici un exemple de configuration :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/groupe/les_informations_communes/samba_sur_centos?codeblock=2" title="Télécharger un extrait" class="mediafile mf_conf">/etc/samba/smb.conf</a></dt>
+<dd><pre class="code samba">[global]
+workgroup = BIOASTER
+netbios name = LILIA
+interfaces = 127.0.0.1, 10.69.1.214
+bind interfaces only = yes
+; hosts allow = 127.0.0.1, 10.69.1.214
+; hosts deny = 0.0.0.0/0
+; log level = 3
+&nbsp;
+[sequencing]
+path = /Sequencing
+comment = Sequencing Data
+browsable = yes
+read only = no
+writable = yes
+valid users = tanguy</pre>
+</dd></dl>
+
+<p>
+Après chaque modification il faut relancer le service :
+</p>
+<pre class="code shell">sudo /etc/init.d/smb restart</pre>
+
+<p>
+Il peut alors être testé avec les commandes suivantes :
+</p>
+<pre class="code shell">smbclient -L \\localhost -U tanguy -W BIOASTER
+smbclient //localhost/sequencing -U tanguy -W BIOASTER</pre>
+
+</div>
+<!-- EDIT6 SECTION "Samba" [716-] -->

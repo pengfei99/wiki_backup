@@ -1,0 +1,70 @@
+
+<h1 class="sectionedit1" id="statistic_route">Statistic route</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Statistic route" [1-31] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Let us use the following sample network architecture for the rest of the examples.
+</p>
+
+<p>
+In the diagram below, we have 2 individual networks ( 192.168.1.0 and 192.168.3.0, with subnet mask of 255.255.255.0 ).
+</p>
+
+<p>
+We also have a “GATEWAY” machine with 3 network cards. 1st card is connected to 192.168.1.0, 2nd card is connected to 192.168.3.0, and the 3rd card is connected to the external world.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Aadmin_system%3Anetwork%3Astatistic_route&amp;media=employes:pengfei.liu:admin_system:network:route-command.png" class="media" title="employes:pengfei.liu:admin_system:network:route-command.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=a7b05c&amp;media=employes:pengfei.liu:admin_system:network:route-command.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [32-522] -->
+<h2 class="sectionedit3" id="introduction_of_route_command">Introduction of route command</h2>
+<div class="level2">
+
+<p>
+Route command is used to show/manipulate the IP routing table. It&#039;s primarily used to setup static routes to specific host or networks via an interface.
+</p>
+<pre class="code"># route shows the details of the kernel routing table entries
+[root@host-134-158-37-11 pliu]$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         Lyon-COREA.in2p 0.0.0.0         UG    100    0        0 eth0
+134.158.37.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
+169.254.169.254 134.158.37.237  255.255.255.255 UGH   100    0        0 eth0
+
+# to view the real ip address of the server instead of the server name
+[root@host-134-158-37-11 pliu]$ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         134.158.37.254  0.0.0.0         UG    100    0        0 eth0
+134.158.37.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
+169.254.169.254 134.158.37.237  255.255.255.255 UGH   100    0        0 eth0
+
+# Kernel maintains the routing cache information to route the packets faster. We can list the kernel’s routing cache information by using the -C flag.
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Introduction of route command" [523-1769] -->
+<h3 class="sectionedit4" id="add_a_default_gateway">Add a default gateway</h3>
+<div class="level3">
+<pre class="code">route add default gw 192.168.1.10</pre>
+
+</div>
+<!-- EDIT4 SECTION "Add a default gateway" [1770-1855] -->
+<h2 class="sectionedit5" id="make_1921683_accessible_from_1921681">Make 192.168.3.* Accessible from 192.168.1.*</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Make 192.168.3.* Accessible from 192.168.1.*" [1856-1915] -->
+<h2 class="sectionedit6" id="client_ssh_config">Client ssh config</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Client ssh config" [1916-] -->

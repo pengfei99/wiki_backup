@@ -1,0 +1,237 @@
+
+<h1 class="sectionedit1" id="change_wso2_default_https_certificate">Change wso2 default https certificate</h1>
+<div class="level1">
+
+<p>
+The default certificate in wso2 is is a self signed certificate for localhost.
+</p>
+
+<p>
+So you will see the un secure sign in your browser. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Change wso2 default https certificate" [1-187] -->
+<h2 class="sectionedit2" id="prepare_your_ca_signed_certificate">Prepare your CA signed certificate</h2>
+<div class="level2">
+
+<p>
+To do so , you need to generate a private key, a csr. Then send the csr to CA. The CA will send back a signed certificate, an intermediate.crt and rootCA.crt.
+</p>
+
+<p>
+So now you have all the element you need
+</p>
+<ul>
+<li class="level1"><div class="li"> private key</div>
+</li>
+<li class="level1"><div class="li"> signed certificate</div>
+</li>
+<li class="level1"><div class="li"> intermediate certificate</div>
+</li>
+<li class="level1"><div class="li"> root certificate</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Prepare your CA signed certificate" [188-527] -->
+<h2 class="sectionedit3" id="build_keystore_for_wso2">Build keystore for wso2</h2>
+<div class="level2">
+
+<p>
+1.Create a pkcs12 key store with certificate, private key and intermediate.crt
+</p>
+
+<p>
+<code>openssl pkcs12 -export -in acc-wso.bioaster.org.crt -inkey encrypted.key -name wso2carbon -certfile intermediate.crt -out keystore.pfx </code>
+</p>
+
+<p>
+-name defines the alias of your private key
+</p>
+
+<p>
+Before you do this, it&#039;s recommened to encrypte your private key. You can go to the following page to see how
+</p>
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/keystore" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/keystore" rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/keystore</a>
+</p>
+
+<p>
+2. Convert pkcs12 keystore to jks keystore
+</p>
+
+<p>
+<code>keytool -importkeystore -srckeystore keystore.pfx -srcstoretype pkcs12 -destkeystore wso2carbonNew.jks -deststoretype JKS</code>
+</p>
+
+<p>
+3. Export the public key of the keypair
+</p>
+
+<p>
+<code>keytool -export -alias wso2carbon -keystore wso2carbonNew.jks -file acc-wso.bioaster.org.pub
+</code>
+</p>
+
+<p>
+4. Add the public key into the client-truststore.jks
+</p>
+
+<p>
+<code> keytool -import -alias wso2carbon -file acc-wso.bioaster.org.pub -keystore client-truststore.jks -storepass wso2carbon</code>
+</p>
+
+<p>
+The client-truststore.jks is located at ${wsois_home}/repository/resources/security
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Build keystore for wso2" [528-1588] -->
+<h2 class="sectionedit4" id="copy_the_new_keystore_and_configure_wso2-is_to_use_the_new_keystore">Copy the new keystore and configure wso2-is to use the new keystore</h2>
+<div class="level2">
+
+<p>
+1.Copy the wso2carbonNew.jks to wso2Is
+</p>
+
+<p>
+<code>cp wso2carbon ${wsois_home}/repository/resources/security</code>
+</p>
+
+<p>
+2.There are three place you need to modify (Default install). If you has a custom install, you may need to change more, for example /conf/axis2/axis2.xml
+</p>
+
+<p>
+2.1 Modify carbon.xml
+</p>
+
+<p>
+<code>vim ${wsois_home}/repository/conf/carbon.xml</code>
+</p>
+
+<p>
+You should find the follwoing config
+</p>
+<pre class="code">&lt;KeyStore&gt;
+            &lt;!-- Keystore file location--&gt;
+            &lt;Location&gt;${carbon.home}/repository/resources/security/wso2carbon.jks&lt;/Location&gt;
+            &lt;!-- Keystore type (JKS/PKCS12 etc.)--&gt;
+            &lt;Type&gt;JKS&lt;/Type&gt;
+            &lt;!-- Keystore password--&gt;
+            &lt;Password&gt;pwd&lt;/Password&gt;
+            &lt;!-- Private Key alias--&gt;
+            &lt;KeyAlias&gt;wso2carbon&lt;/KeyAlias&gt;
+            &lt;!-- Private Key password--&gt;
+            &lt;KeyPassword&gt;wso2carbon&lt;/KeyPassword&gt;
+        &lt;/KeyStore&gt;
+
+        &lt;!--
+            System wide trust-store which is used to maintain the certificates of all
+            the trusted parties.
+        --&gt;
+        &lt;TrustStore&gt;
+            &lt;!-- trust-store file location --&gt;
+            &lt;Location&gt;${carbon.home}/repository/resources/security/client-truststore.jks&lt;/Location&gt;
+            &lt;!-- trust-store type (JKS/PKCS12 etc.) --&gt;
+            &lt;Type&gt;JKS&lt;/Type&gt;
+            &lt;!-- trust-store password --&gt;
+            &lt;Password&gt;wso2carbon&lt;/Password&gt;
+        &lt;/TrustStore&gt;
+</pre>
+
+<p>
+You need to change it to :
+</p>
+<pre class="code">&lt;KeyStore&gt;
+            &lt;!-- Keystore file location--&gt;
+            &lt;Location&gt;${carbon.home}/repository/resources/security/wso2carbonNew.jks&lt;/Location&gt;
+            &lt;!-- Keystore type (JKS/PKCS12 etc.)--&gt;
+            &lt;Type&gt;JKS&lt;/Type&gt;
+            &lt;!-- Keystore password--&gt;
+            &lt;Password&gt;pwd&lt;/Password&gt;
+            &lt;!-- Private Key alias--&gt;
+            &lt;KeyAlias&gt;certAlias&lt;/KeyAlias&gt;
+            &lt;!-- Private Key password--&gt;
+            &lt;KeyPassword&gt;pwd&lt;/KeyPassword&gt;
+        &lt;/KeyStore&gt;
+
+        &lt;!--
+            System wide trust-store which is used to maintain the certificates of all
+            the trusted parties.
+        --&gt;
+        &lt;TrustStore&gt;
+            &lt;!-- trust-store file location --&gt;
+            &lt;Location&gt;${carbon.home}/repository/resources/security/client-truststore.jks&lt;/Location&gt;
+            &lt;!-- trust-store type (JKS/PKCS12 etc.) --&gt;
+            &lt;Type&gt;JKS&lt;/Type&gt;
+            &lt;!-- trust-store password --&gt;
+            &lt;Password&gt;wso2carbon&lt;/Password&gt;
+        &lt;/TrustStore&gt;
+</pre>
+
+<p>
+2.2 Modify ${carbon.home}/repository/conf/identity/identity.xml
+</p>
+
+<p>
+<code>vim ${carbon.home}/repository/conf/identity/identity.xml</code>
+</p>
+<pre class="code">&lt;EntitlementSettings&gt;
+        &lt;ThirftBasedEntitlementConfig&gt;
+            &lt;EnableThriftService&gt;false&lt;/EnableThriftService&gt;
+            &lt;ReceivePort&gt;${Ports.ThriftEntitlementReceivePort}&lt;/ReceivePort&gt;
+            &lt;ClientTimeout&gt;10000&lt;/ClientTimeout&gt;
+            &lt;KeyStore&gt;
+                &lt;Location&gt;${carbon.home}/repository/resources/security/wso2carbonNew.jks&lt;/Location&gt;
+                &lt;Password&gt;pwd&lt;/Password&gt;
+            &lt;/KeyStore&gt;
+            &lt;!-- Enable this element to mention the host-name of your IS machine --&gt;
+            &lt;ThriftHostName&gt;${carbon.host}&lt;/ThriftHostName&gt;
+        &lt;/ThirftBasedEntitlementConfig&gt;
+    &lt;/EntitlementSettings&gt;</pre>
+
+<p>
+2.3 Modify ${carbon.home}/repository/conf/tomcat/catalina-server.xml
+</p>
+
+<p>
+<code>vim ${carbon.home}/repository/conf/tomcat/catalina-server.xml</code>
+</p>
+<pre class="code">  keystoreFile=&quot;${carbon.home}/repository/resources/security/wso2carbonNew.jks&quot;
+ keystorePass=&quot;pwd&quot;
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "Copy the new keystore and configure wso2-is to use the new keystore" [1589-5143] -->
+<h2 class="sectionedit5" id="add_intermediate_and_root_ca_to_keystore">Add intermediate and root CA to keystore</h2>
+<div class="level2">
+
+<p>
+Restart your wso2-is server, you should see everything works.
+</p>
+
+<p>
+To make it more nice, you can add the intermediate.crt and rootCA.crt into your keystore
+</p>
+
+<p>
+wso2-Is has <abbr title="Graphical User Interface">GUI</abbr> todo so.
+</p>
+
+<p>
+Login to the admin dashboard. Click on Keystores→List→name of your keystore (in our case, it&#039;s wso2carbonNew.jks)
+</p>
+
+<p>
+Click on import certificate, choose the certificate file then click on OK
+</p>
+
+<p>
+The last step is completly optional.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Add intermediate and root CA to keystore" [5144-] -->

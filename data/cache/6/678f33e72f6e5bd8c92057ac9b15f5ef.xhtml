@@ -1,0 +1,28 @@
+
+<h1 class="sectionedit1" id="openstack_cli_cheat_sheet">OpenStack cli cheat sheet</h1>
+<div class="level1">
+<pre class="code"># start/stop a vm
+nova start/stop &quot;node-id&quot;
+
+# delete a vm
+nova delete &quot;node-id&quot;
+
+# create a snap-shot/image of a vm (stop the vm first, make it quicker to create image)
+nova image-create &quot;node-id&quot; &quot;image-name&quot;
+
+# view all images 
+glance image-list
+
+# view image details
+glance image-show &quot;image-id&quot;
+
+# create vm base on an image
+nova boot --flavor m1.medium.2 --image Template_Centos_7_latest_28_06_2018 --key-name bioaster_os CCLinCytoD01
+
+# get flavor list
+nova flavor-list
+
+# show key pair list
+nova keypair-list</pre>
+
+</div>

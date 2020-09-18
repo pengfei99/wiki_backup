@@ -1,0 +1,70 @@
+====== SequenceServer ======
+
+===== Informations =====
+
+  * **Version** : 0.8.7
+  * **Licence** : //Open Source// (for academics) & //Commercial//
+  * **Page Web** : [[http://www.sequenceserver.com]]
+  * **Description** : SequenceServer lets you rapidly set up a BLAST+ server with an intuitive user interface for use locally or over the web.
+
+===== Installation =====
+
+<WRAP round info>
+L'installation avec **passenger** n'est pas vraiment adaptée à une approche "multi projets".\\
+**SequenceServer** tourne aussi très bien en //standalone//...
+</WRAP>
+
+<code>
+sudo aptitude install --without-recommends ruby ruby-gems ncbi-blast+
+sudo gem install sequenceserver
+vim .sequenceserver.conf
+# bin: /usr/bin
+# database: /var/db/blast
+sudo mkdir -p /var/db/blast
+</code>
+
+<code>
+sudo aptitude intall build-essential apache2 \
+              libssl-dev zlib1g-dev apache2-threaded-dev \
+              ruby-dev libapr1-dev libaprutil1-dev libcurl4-gnutls-dev
+sudo gem install passenger
+sudo passenger-install-apache2-module
+</code>
+
+<code text /etc/apache2/mods-available/passenger.load>
+LoadModule passenger_module /var/lib/gems/1.9.1/gems/passenger-4.0.48/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot /var/lib/gems/1.9.1/gems/passenger-4.0.48
+  PassengerDefaultRuby /usr/bin/ruby1.9.1
+</IfModule>
+</code>
+
+<code text /etc/apache2/sites-available/sequenceserver>
+<VirtualHost *:80>
+ServerName blast.paris.bioaster.org
+  DocumentRoot /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/
+  <Directory /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/>
+    Allow from all
+    Options -MultiViews
+  </Directory>
+  PassengerUser www-data
+</VirtualHost>
+</code>
+
+<code>
+sudo a2enmod passenger
+sudo a2ensote sequenceserver
+
+cd /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/
+sudo bundle install
+
+sudo vim /var/www/.sequenceserver.conf
+# bin: /usr/bin
+# database: /var/db/blast
+
+sudo service apache2 restart
+</code>
+
+===== Log =====
+
+  * **2014.08.08 (tlc)** Version 0.8.7 installée

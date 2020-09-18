@@ -1,0 +1,3 @@
+$ git fetch upstream # mise à jour de upstream/master
+$ git merge --no-ff upstream/master # Demande un message de commit
+$ git push

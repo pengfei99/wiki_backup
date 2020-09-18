@@ -1,0 +1,47 @@
+====== Montage de l'espace GPFS dans une VM via NFS ======
+
+Cette recette n'est valable que pour un montage NFS version 3. A terme, nous devrions passer à la version 4 qui modifiera le mode d'authentification (tickets Kerberos). 
+
+Installation du client NFS sur une VM scientific linux
+
+<code text>
+yum install nfs-utils nfs-utils-lib
+</code>
+
+Mapping gid/uid : il faut mapper sur les ACLs de GPFS (groupe: bioaster, user: votre_user_id) et donc créer le groupe bioaster, le user et assigner le user au groupe bioaster
+
+Pour connaitre vos uid/gid depuis une machine interactive du CC :
+<code text>
+$ id
+$ uid=40639(pveyre) gid=1072(bioaster) groups=1072(bioaster),102(ccin2p3),1100209211
+</code>
+
+
+Le uid du user **pveyre** est **40639**
+Le gid du groupe **bioaster** est **1072**
+
+On les ajoute donc dans la VM :
+
+<code text>
+$ groupadd -g 1072 bioaster
+$ useradd -u 40639 -g 1072 pveyre
+$ usermod -d /sps/bioaster pveyre
+</code>
+
+
+Montage de l'espace de NFS
+
+
+<WRAP left round todo 60%>
+PV : modifier le wrapper sysfera qui attaque en dur les anciens serveurs nfs, noter qq part qu'il a fallu autoriser l'accès aux nouveaux serveurs nfs (ccdtli94 et ccdtli95) depuis le tenant bioaster (pseudo tenant de service )
+</WRAP>
+<WRAP clear></WRAP>
+
+<code text>
+$ mount -t nfs -o nosuid,nodev,tcp,nfsvers=3,hard,intr,mountport=664 ccdtli94:/sps/bioaster /mnt/test_nfs
+</code>
+
+<WRAP left round todo 60%>
+PV : remettre tout ça au propre et rajouter un exemple de commande pour vérifier le montage, un truc du genre 'showmount -e serveur.local'
+PV : revoir des commandes plus propres pour la création du groupe et du user
+</WRAP>

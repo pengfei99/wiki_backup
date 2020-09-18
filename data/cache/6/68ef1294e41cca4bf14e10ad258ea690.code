@@ -1,0 +1,31 @@
+server.modules = (
+	&quot;mod_access&quot;,
+	&quot;mod_alias&quot;,
+	&quot;mod_compress&quot;,
+ 	&quot;mod_redirect&quot;,
+        &quot;mod_rewrite&quot;,
+)
+&nbsp;
+server.document-root        = &quot;/var/www/default/&quot;
+server.upload-dirs          = ( &quot;/var/cache/lighttpd/uploads&quot; )
+server.errorlog             = &quot;/var/log/lighttpd/error.log&quot;
+server.pid-file             = &quot;/var/run/lighttpd.pid&quot;
+server.username             = &quot;www-data&quot;
+server.groupname            = &quot;www-data&quot;
+server.port                 = 80
+&nbsp;
+var.vhost_dir               = &quot;/var/www/&quot;
+var.log_dir                 = &quot;/var/log/lighttpd/&quot;
+#debug.log-request-handling  = &quot;enable&quot;
+&nbsp;
+index-file.names            = ( &quot;index.php&quot;, &quot;index.html&quot;, &quot;index.lighttpd.html&quot; )
+url.access-deny             = ( &quot;~&quot;, &quot;.inc&quot; )
+static-file.exclude-extensions = ( &quot;.php&quot;, &quot;.pl&quot;, &quot;.fcgi&quot; )
+&nbsp;
+compress.cache-dir          = &quot;/var/cache/lighttpd/compress/&quot;
+compress.filetype           = ( &quot;application/javascript&quot;, &quot;text/css&quot;, &quot;text/html&quot;, &quot;text/plain&quot; )
+&nbsp;
+# default listening port for IPv6 falls back to the IPv4 port
+include_shell &quot;/usr/share/lighttpd/use-ipv6.pl &quot; + server.port
+include_shell &quot;/usr/share/lighttpd/create-mime.assign.pl&quot;
+include_shell &quot;/usr/share/lighttpd/include-conf-enabled.pl&quot;

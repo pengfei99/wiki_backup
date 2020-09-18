@@ -1,0 +1,48 @@
+====== wwwblast ======
+
+===== Informations =====
+
+  * **Version** : 2.2.26
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://openwetware.org/wiki/Wwwblast]]
+  * **Description** : A wwwblast installation allows a researcher to use BLAST to search a sequence database using a graphical user interface.
+
+===== Commentaires =====
+
+Le "logiciel" est plus que dépassé. L'auteur avoue lui même utiliser [[sequenceserver|SequenceServer]].
+
+===== Installation =====
+
+Le logiciel a besoin de la commande **tcsh** car les scripts cgi sont écrits dans ce langage.
+
+<code>
+yum install tcsh
+cd /usr/local
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/wwwblast-2.2.26-x64-linux.tar.gz
+tar xvzf wwwblast-2.2.26-x64-linux.tar.gz
+mv blast wwwblast
+</code>
+
+===== Intégration =====
+
+<code apache "/etc/httpd/conf.d/welcome.conf">
+<VirtualHost *:80>
+    ServerName wwwblast.bioaster.org
+    DocumentRoot /usr/local/wwwblast
+    
+    SetEnv BLASTDB /sps/inter/bioaster/db/blast/
+    
+    # Paths to resources are hardcoded as "../blast/"
+    Alias /blast /var/www/wwwblast 
+    
+    <Directory /usr/local/wwwblast>
+        Options FollowSymLinks ExecCGI
+        DirectoryIndex index.html index.cgi
+        AddHandler cgi-script .cgi .pl
+    </Directory>
+</VirtualHost>
+</code>
+
+===== Log =====
+
+  * **2014.02.28 (tlc)** Version 2.2.6 installée

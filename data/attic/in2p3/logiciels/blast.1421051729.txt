@@ -1,0 +1,70 @@
+====== BLAST ======
+
+===== Informations =====
+
+  * **Version** : 2.2.29
+  * **Licence** : //"Public Domain"//
+  * **Page Web** : [[http://blast.ncbi.nlm.nih.gov/Blast.cgi]]
+  * **Description** : The Basic Local Alignment Search Tool (BLAST) finds regions of local similarity between sequences. The program compares nucleotide or protein sequences to sequence databases and calculates the statistical significance of matches. BLAST can be used to infer functional and evolutionary relationships between sequences as well as help identify members of gene families. 
+
+===== Pré-requis =====
+
+<code>
+[root@builder ~]# yum install perl-Archive-Tar
+</code>
+
+**yum** ne pouvant/devant pas être utilisé sur la ferme, les [[in2p3/logiciels/perl_modules|paquets PERL]] doivent être installés à la main.
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/blast/2.2.29"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget "ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.2.29+-src.tar.gz"
+tar xvzf ncbi-blast-2.2.29+-src.tar.gz
+cd ncbi-blast-2.2.29+-src/c++
+./configure --prefix=$APP
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Basic Local Alignment Search Tool.\n"
+}
+
+set version "2.2.29"
+
+module load perl_modules
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/blast/${version}"
+set bin_dir "${app}/bin"
+set lib_dir "${app}/lib"
+set include_dir "${app}/include"
+
+prepend-path PATH $bin_dir
+prepend-path LIBRARY_PATH $lib_dir
+prepend-path LD_LIBRARY_PATH $lib_dir
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+
+prepend-path BLASTDB "/sps/inter/bioaster/db/blast"
+</code>
+
+===== Téléchargement des bases de données =====
+
+La base des données sont stockées dans ''/sps/inter/bioaster/db/blast'' et sont mise à jour comme ceci :
+
+<code>
+cd /sps/inter/bioaster/db/blast
+module load blast
+update_blastdb.pl --decompress --force <DB_NAME>
+</code>
+
+===== Log =====
+
+* **2014.02.05 (tlc)** Version 2.2.29 installée

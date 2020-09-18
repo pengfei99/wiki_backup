@@ -1,0 +1,31 @@
+====== Remove old kernels ======
+
+Remove old kernels can save some disk spaces
+
+===== 1. Check installed kernels =====
+
+<code>
+rpm -q kernel
+kernel-2.6.32-279.el6.x86_64
+kernel-2.6.32-279.2.1.el6.x86_64
+kernel-2.6.32-279.5.2.el6.x86_64
+kernel-2.6.32-279.9.1.el6.x86_64
+</code>
+
+===== 2. Remove old kernels =====
+
+<code>
+# To run package-cleanup we need yum-utils as dependencies
+yum install yum-utils
+
+# cet count as how many old kernels you want to keep, it has to be 2 at least. So if the current kernel has problem, you can roll back to the previous.
+package-cleanup --oldkernels --count=2
+</code>
+
+===== 3. Set the amount of installed kernels permanent =====
+
+<code>
+# edit /etc/yum.conf and set installonly_limit:
+
+installonly_limit=2
+</code>

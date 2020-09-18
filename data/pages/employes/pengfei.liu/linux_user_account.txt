@@ -1,0 +1,192 @@
+====== Linux user account creation and group creation ======
+
+All user account related information are stored in the following files:
+
+  * Unordered List Item/etc/passwd – Contains one line for each user account.
+  * /etc/shadow – Contains the password information in encrypted formatfor the system’s accounts and optional account aging information.
+  * /etc/group – Defines the groups on the system.
+  * /etc/default/useradd – This file contains a value for the default group, if none is specified by the useradd command.
+  * /etc/login.defs – This file defines the site-specific configuration for the shadow password suite stored in /etc/shadow file.
+
+===== List all available users in the linux =====
+
+The below code will return all users (humain or process) of the linux system.
+
+<code>
+cut -d: -f1 /etc/passwd
+</code>
+
+===== Create user account with all possible options =====
+
+Most used option table
+
+^ Option      ^ Action           ^
+| -c    | Adds comment to the user account     | 
+| -m    | Creates user home directory in default location, if nonexistent |
+| -s    | Default shell other than /bin/bash     |
+| -n    | Does not create a private group for the user, usually a group with username     |
+|-r, --system| create a system account |
+
+==== 1. create user account ====
+
+<code>
+
+# List all local users in your linux server
+cut -d: -f1 /etc/password
+
+sudo useradd pliu --uid 8888 --home /home/sweet_home/pliu/ --create-home --groups godTeam, bestDevs --gid bestMan 
+
+-add user pliu
+-uid is 8888
+-user home /home/sweet_home/pliu/ 
+-useradd will create user home
+-user will be added two groups godTeam and bestDevs as second group
+-user will be added group bestMan as primary group
+</code>
+
+==== 2. set up password ====
+
+<code>
+sudo passwd pliu
+
+</code>
+
+==== 3. Create a system account ====
+
+<code>
+# create a system account with a home dir
+useradd -r kafka -m
+</code>
+
+
+===== Disabling user accounts  =====
+There are several methods to disable accounts on a system. These range from editing the /etc/passwd file by hand. Or even using the passwd command with the -lswitch. Both of these methods have one big drawback: if the user has ssh access and uses an RSA key for authentication, they can still login using this method.
+
+Now let’s use the chage command, changing the password expiry date to a previous date. Also, it may be good to make a note on the account as to why we disabled it.
+
+<code>
+[root@localhost Downloads]# chage -E 2005-10-01 bjones
+ 
+[root@localhost Downloads]# usermod  -c "Disabled Account while Bob out of the country 
+for five months" bjones
+
+[root@localhost Downloads]# grep bjones /etc/passwd 
+bjones:x:1001:1001:Disabled Account while Bob out of the country for four 
+months:/home/bjones:/bin/bash
+
+[root@localhost Downloads]#
+</code>
+
+===== Lock an account =====
+
+If you don't want to a user to login an account, you can lock it and disable its shell. This happens when the account is a system or process account which runs a service or a tool.
+
+<code>
+sudo usermod -L <login>
+
+# For locking zookeeper account
+sudo usermod -L zk
+</code>
+
+
+===== Create group with all options =====
+
+<code>
+#this will create a group bestDevs with gid 8888
+groupadd -g 8888 bestDevs
+
+# all group info is stored in /etc/group
+# getent can get entries from name service switch libraries
+#show all groups and memebers in the system
+getent group
+
+# get info of a specific group/gid
+getent group bestDevs
+getent group 8888
+
+</code>
+==== create group with password ====
+
+Let's make a new group called secret. We will add a password to the group, allowing the users to add themselves with a known password.
+
+<code>
+[root@localhost]# groupadd secret
+
+[root@localhost]# gpasswd secret 
+Changing the password for group secret 
+New Password:  
+Re-enter new password:
+
+[root@localhost]# exit 
+exit
+
+[centos@localhost ~]$ newgrp secret 
+Password:
+
+[centos@localhost ~]$ groups 
+secret wheel rdc
+
+[centos@localhost ~]$
+</code>
+
+==== Modifier user account ====
+
+
+usermod is used to update account attributes.
+
+Following are the common usermod switches.
+
+^ Option      ^ Action           ^
+| -c    | Comment, updates the user comment value     | 
+| -a    | Appends, adds user to supplementary groups, only with the -G option |
+| -d    | Home directory, updates the user's home directory     |
+| -G    | Groups, adds or removesthe secondary user groups     |
+| -g    | Group, default primary group of the user     |
+
+<code>
+[root@localhost]# groups centos 
+centos : accounting secret
+
+# change the primary group of pliu to bioaster
+[root@localhost]# usermod -g bioaster pliu
+
+# add the secondary group wheel to user centos
+[root@localhost]# usermod -a -G wheel centos
+
+[root@localhost]# groups centos
+centos : accounting wheel secret
+
+[root@localhost]#
+</code>
+
+==== modify group  ====
+
+''groupmod -g 8888 mygroup''
+
+change gid of mygroup to 8888
+
+
+==== Remove user ====
+
+<code>
+userdel pliu
+
+#remove user and user home
+userdel -r pliu
+</code>
+
+===== Default File Permissions (umask) =====
+
+When you create a file or directory, the default file permissions assigned to the file or directory are controlled by the user mask. The user mask is set by the umask command in a user initialization file. You can display the current value of the user mask by typing umask and pressing Return.
+
+The user mask contains the following octal values:
+  * The first digit sets permissions for the user
+  * The second sets permissions for group
+  * The third sets permissions for other, also referred to as “world”
+
+Note that if the first digit is zero, it is not displayed. For example, if umask is set to 022, 22 is displayed.
+
+To determine the umask value you want to set, subtract the value of the permissions you want from 666 (for a file) or 777 (for a directory). The remainder is the value to use with the umask command. For example, suppose you want to change the default mode for files to 644 (rw-r--r--). The difference between 666 and 644 is 022, which is the value you would use as an argument to the umask command. 
+
+If you have a umask 002, when you create a directory, it will have 775 (777-002). When you create a file, it will have 664(666-002) which means rw-rw-r. 
+

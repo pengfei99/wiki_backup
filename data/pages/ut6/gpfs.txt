@@ -1,0 +1,66 @@
+====== Infos utiles concernant GPFS ======
+
+
+
+===== Présentation =====
+
+[[https://fr.wikipedia.org/wiki/General_Parallel_File_System | Généralité]]
+
+
+
+
+
+
+
+===== Monitoring =====
+
+Utilisation : http://cctools.in2p3.fr/mrtguser/mrtguser/bioaster/bioaster_nfs.html
+
+Accueil : https://ccspsmon.in2p3.fr/
+
+Par user : https://ccspsmon.in2p3.fr/users/bioaster.html
+
+Par top-level directory :  https://ccspsmon.in2p3.fr/dush/bioaster.html
+
+Monitoring des serveurs NFS ccdtli94/95 : https://ccspsmon.in2p3.fr/bn 
+
+
+
+===== Cleanup =====
+
+Un script générant la liste des fichiers non accédés depuis un an (par propriétaire) a été mis en place le 1er décembre 2016. 
+
+Ce script ne supprime aucun fichier.
+
+Les listes de résultats sont consultables ici : https://ccspsmon.in2p3.fr/cleanup/bioaster.html (cette page est "cachée", elle n'est pas référencée sur https://ccspsmon.in2p3.fr/cleanup/ et les moteurs de recherche ne peuvent l'indexer)
+
+
+===== Volumétrie (au 23-06-2016) ===== 
+
+
+
+===== Snapshots & restauration ===== 
+
+Un snapshot de l'espace GPFS est fait toutes les heures de 8h à 20h sur une semaine glissante, soit 13 * 7 = 91 snapshots
+
+Les snapshots sont stockés dans /sps/bioaster/.snapshots/
+
+
+<code class="prettyprint">
+[pveyre@ccage013 ~]$ ll /sps/bioaster/.snapshots/
+total 2688
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-0900
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1000
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1100
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1200
+...
+...
+</code>
+
+La configuration des snapshots est faite par le CC, l'interlocuteur privilégié est Loïc Tortay ( <tortay@cc.in2p3.fr> )
+
+Documentation : http://www.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.adv.doc/bl1adv_logcopy.htm
+
+
+
+

@@ -1,0 +1,6 @@
+a:6:{s:2:"id";s:35:"securite:installer_certificats_cnrs";s:6:"prefix";s:0:"";s:4:"text";s:450:"====== Installation des certificats du CNRS ======
+
+L'autorité de certification du CNRS n'est pas par défaut reconnu par les navigateurs internet comme étant une "personne de confiance". Il faut donc l'ajouter manuellement.\\
+Les certificats sont disponibles sur [[https://igc.services.cnrs.fr/search_CA_certificate/?CA=CNRS2-Standard&lang=fr&body=view_ca.html|la page du CNRS]]. La procédure change légèrement en fonction du navigateur.
+
+";s:6:"suffix";s:0:"";s:4:"date";i:0;s:6:"client";s:29:"tanguy.lecarrour@bioaster.org";}

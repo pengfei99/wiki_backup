@@ -1,0 +1,73 @@
+
+<h1 class="sectionedit1" id="spark_user_define_function">Spark user define function</h1>
+<div class="level1">
+
+<p>
+In spark dataframe/dataset dsl or sql, if user define function is not registered, we cant not use it
+</p>
+
+<p>
+For example, we have  a following dataset, the seconde column is in Byte
+</p>
+<pre class="code">+-----+-----------+
+|  Uid|      SizeH|
++-----+-----------+
+|42029|    5279390| 
+|42557|       9602| 
+|42968|59175620627|
+|42566|42226912277| 
+|42556|  146878220|
++-----+-----------+</pre>
+
+<p>
+We want transform the Byte into a humain readable way (e.g. KB,<abbr title="Megabyte">MB</abbr>,<abbr title="Gigabyte">GB</abbr>,PB,etc)
+</p>
+
+<p>
+So we have the following scala object who can do the job
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_udf&amp;codeblock=1" title="Download Snippet" class="mediafile mf_scala">getSize.scala</a></dt>
+<dd><pre class="code file scala"> <a href="http://scala-lang.org"><span class="kw1">def</span></a> getSize<span class="br0">&#40;</span>rawSize<span class="sy0">:</span>Long<span class="br0">&#41;</span><span class="sy0">:</span> String <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> unit<span class="sy0">:</span>Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="sy0">=</span>Array<span class="br0">&#40;</span><span class="st0">&quot;B&quot;</span>,<span class="st0">&quot;KB&quot;</span>,<span class="st0">&quot;MB&quot;</span>,<span class="st0">&quot;GB&quot;</span>,<span class="st0">&quot;TB&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> index<span class="sy0">=</span><span class="nu0">0</span>
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> tmpSize<span class="sy0">:</span>Long<span class="sy0">=</span>rawSize
+    <a href="http://scala-lang.org"><span class="kw1">while</span></a><span class="br0">&#40;</span>tmpSize<span class="sy0">&gt;=</span><span class="nu0">1024</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+      tmpSize<span class="sy0">=</span>tmpSize/<span class="nu0">1024</span>
+      index+<span class="sy0">=</span><span class="nu0">1</span>
+    <span class="br0">&#125;</span>
+   <a href="http://scala-lang.org"><span class="kw1">return</span></a> tmpSize+unit<span class="br0">&#40;</span>index<span class="br0">&#41;</span>
+  <span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+But when we call it in a dataset pipeline , 
+</p>
+<pre class="code">#suppose df is the dataframe of above
+val finaldf=df.withColumn(&quot;Size&quot;, expr(&quot;getSize(SizeH)&quot;))</pre>
+
+<p>
+it shows error Undefined function: &#039;getSize&#039;. This function is neither a registered temporary function nor a permanent function registered in the database &#039;default&#039;.; line 1 pos 0
+The following example registers a Scala closure as UDF:
+</p>
+<pre class="code"> sparkSession.udf.register(&quot;myUDF&quot;, (arg1: Int, arg2: String) =&gt; arg2 + arg1)</pre>
+
+<p>
+The following example registers a UDF in Java:
+</p>
+<pre class="code"> sparkSession.udf().register(&quot;myUDF&quot;,
+     new UDF2&lt;Integer, String, String&gt;() {
+         @Override
+         public String call(Integer arg1, String arg2) {
+             return arg2 + arg1;
+         }
+    }, DataTypes.StringType);</pre>
+
+<p>
+Or, to use Java 8 lambda syntax:
+</p>
+<pre class="code"> sparkSession.udf().register(&quot;myUDF&quot;,
+     (Integer arg1, String arg2) -&gt; arg2 + arg1,
+     DataTypes.StringType);</pre>
+
+</div>

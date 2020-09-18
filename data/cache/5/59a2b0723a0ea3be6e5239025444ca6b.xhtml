@@ -1,0 +1,289 @@
+
+<h1 class="sectionedit1" id="screen">Screen</h1>
+<div class="level1">
+
+<p>
+Linux Screen allows you to:
+</p>
+<ul>
+<li class="level1"><div class="li"> Use multiple shell windows from a single SSH session.</div>
+</li>
+<li class="level1"><div class="li"> Keep a shell active even through network disruptions.</div>
+</li>
+<li class="level1"><div class="li"> Disconnect and re-connect to a shell sessions from multiple locations.</div>
+</li>
+<li class="level1"><div class="li"> Run a long running process without maintaining an active shell session.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Screen&quot;,&quot;hid&quot;:&quot;screen&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-319&quot;} -->
+<h2 class="sectionedit2" id="install_screen">Install screen</h2>
+<div class="level2">
+
+<p>
+There is great chance your linux already have screen installed
+</p>
+<pre class="code">#check if you have screen or not
+[hadoop@CCLinDataWHD01 pliu]$ which screen
+#if you see this, it&#039;s installed
+/bin/screen
+
+#otherwise
+sudo yum install screen
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install screen&quot;,&quot;hid&quot;:&quot;install_screen&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;320-586&quot;} -->
+<h2 class="sectionedit3" id="use_screen">Use screen</h2>
+<div class="level2">
+<pre class="code">#open a screen
+&gt; screen</pre>
+
+<p>
+Once you are inside a screen you can type any command as you are in a normal shell, to give command to screen. You need to use&lt;color #ed1c24&gt; Ctrl-a&lt;/color&gt; then options. Screen works like vim, it has a mode command. By typing ctrl-a you enter to command mode.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use screen&quot;,&quot;hid&quot;:&quot;use_screen&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;587-912&quot;} -->
+<h3 class="sectionedit4" id="creating_a_new_window">Creating a new window</h3>
+<div class="level3">
+
+<p>
+<code>Ctrl-a c</code>
+</p>
+
+<p>
+This will create a new window for you with your default prompt.  Your old window is still active.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Creating a new window&quot;,&quot;hid&quot;:&quot;creating_a_new_window&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;913-1058&quot;} -->
+<h3 class="sectionedit5" id="switching_between_windows">Switching Between windows</h3>
+<div class="level3">
+
+<p>
+<code>Ctrl-a n</code>
+</p>
+
+<p>
+Screen allows you to move forward and back. In the example above, you could use “Ctrl-a “n” to get back to top. This command switches you to the next window.
+</p>
+
+<p>
+The windows work like a carousel and will loop back around to your first window.
+</p>
+
+<p>
+You can create several windows and toggle through them with “Ctrl-a” “n” for the next window or “Ctrl-a” “p” for the previous window.
+</p>
+
+<p>
+Each process will keep running until you kill that window.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Switching Between windows&quot;,&quot;hid&quot;:&quot;switching_between_windows&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;1059-1567&quot;} -->
+<h3 class="sectionedit6" id="detaching_from_screen">Detaching from screen</h3>
+<div class="level3">
+
+<p>
+<code>Ctrl-a d</code>
+</p>
+
+<p>
+Detaching is the most powerful part of screen.  Screen allows you to detach from a window and reattach later.
+</p>
+
+<p>
+If your network connection fails, screen will automatically detach your session!
+</p>
+
+<p>
+You can detach from the window using “Ctrl-a” “d”.
+</p>
+
+<p>
+This will drop you into your shell.
+</p>
+
+<p>
+All screen windows are still there and you can re-attach to them later.
+</p>
+
+<p>
+This is great when you are using rsync for server migration.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Detaching from screen&quot;,&quot;hid&quot;:&quot;detaching_from_screen&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;1568-2039&quot;} -->
+<h3 class="sectionedit7" id="reattach_to_screen">Reattach to screen</h3>
+<div class="level3">
+<pre class="code">[hadoop@CCLinDataWHD01 pliu]$ screen -r</pre>
+
+<p>
+This will re-attach to your screen.
+</p>
+
+<p>
+However, if you have multiple screens you may get this:
+</p>
+<pre class="code">$ screen -r
+There are several suitable screens on:
+31917.pts-5.office      (Detached)
+31844.pts-0.office      (Detached)
+Type &quot;screen [-d] -r [pid.]tty.host&quot; to resume one of them.
+If you get this, just specify the screen you want.
+
+$ screen -r  31844.pts-0.office</pre>
+
+<p>
+Beware, ctrl-a c create a new window inside one screen. One screen can have multiple windows.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Reattach to screen&quot;,&quot;hid&quot;:&quot;reattach_to_screen&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;2040-2595&quot;} -->
+<h3 class="sectionedit8" id="list_all_screen_session">List all screen session</h3>
+<div class="level3">
+
+<p>
+The screen -list depends on user session, see the following example
+</p>
+<pre class="code">[root@CCLinDataWHD01 bin]# screen -list
+No Sockets found in /var/run/screen/S-root.
+
+[root@CCLinDataWHD01 bin]# su hadoop
+[hadoop@CCLinDataWHD01 bin]$ screen -list
+There is a screen on:
+	16558.$name	(Attached)
+1 Socket in /var/run/screen/S-hadoop.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List all screen session&quot;,&quot;hid&quot;:&quot;list_all_screen_session&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:8,&quot;range&quot;:&quot;2596-2963&quot;} -->
+<h3 class="sectionedit9" id="attaching_an_attached_screen">Attaching an attached screen</h3>
+<div class="level3">
+<pre class="code">screen -x 16558.$name
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Attaching an attached screen&quot;,&quot;hid&quot;:&quot;attaching_an_attached_screen&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:9,&quot;range&quot;:&quot;2964-3042&quot;} -->
+<h3 class="sectionedit10" id="scoll_up_and_down_to_your_screen">Scoll up and down to your screen</h3>
+<div class="level3">
+
+<p>
+Use ctrl+a then [ to enter to copy mode.
+</p>
+
+<p>
+Once you are in copy mode, you can scoll up and down.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scoll up and down to your screen&quot;,&quot;hid&quot;:&quot;scoll_up_and_down_to_your_screen&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:10,&quot;range&quot;:&quot;3043-3183&quot;} -->
+<h3 class="sectionedit11" id="logging_your_screen_output">Logging your screen output</h3>
+<div class="level3">
+
+<p>
+It&#039;s important to keep track of what I do on a server. Fortunately, screen makes this easy.
+</p>
+
+<p>
+Using “Ctrl-a” “H”, creates a running log of the session.
+</p>
+
+<p>
+Screen will keep appending data to the file through multiple sessions. Using the log function is very useful for capturing what you have done, especially if you are making a lot of changes. If something goes awry, you can look back through your logs.
+</p>
+
+<p>
+With “Ctrl-a H” the screen will write the output into the default log file which is defined in the default screen conf file
+</p>
+
+<p>
+To write the output in your own way
+</p>
+<pre class="code">cd /tmp
+vim /tmp/screen.conf
+
+#put the following lines
+logfile screen_test.log
+logfile flush 1
+log on
+logtstamp after 1
+logtstamp string &quot;[ %t: %Y-%m-%d %c:%s ]\012&quot;
+logtstamp on
+
+#run the screen with your custom conf
+screen -c ./tmp/screen.conf -dmSL &#039;screen_test&#039; /tmp/helloworld.sh
+
+# -dm means creates a new session with mode &quot;detached&quot;
+# -S means specify the session name
+# -L tells screen to turn on automatic output logging for the windows
+
+# so the above script run screen with a conf file screen.conf, with session name &#039;screen_test&#039; and runs 
+# the shell helloworld.sh in the screen session.
+ </pre>
+
+<p>
+To make it easier, we can build a script to run the above automatically.
+</p>
+<pre class="code file bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># name of the screen session can't be empty</span>
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re4">$1</span> == <span class="st0">&quot;&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;Usage: $0 name&quot;</span>;
+    <span class="kw3">exit</span> <span class="nu0">1</span>;
+<span class="kw1">fi</span>
+<span class="co0"># get the screen session name</span>
+<span class="re2">name</span>=<span class="re4">$1</span>
+<span class="co0"># define screen output log path</span>
+<span class="co0"># make sure the runner of the script has the right to write in it</span>
+<span class="re2">path</span>=<span class="st0">&quot;/tmp/log&quot;</span>;
+<span class="co0"># define the screen log config</span>
+<span class="re2">config</span>=<span class="st0">&quot;logfile <span class="es3">${path}</span>/<span class="es3">${name}</span>.log
+logfile flush 1
+log on
+logtstamp after 1
+logtstamp string <span class="es1">\&quot;</span>[ %t: %Y-%m-%d %c:%s ]\012<span class="es1">\&quot;</span>
+logtstamp on&quot;</span>;
+<span class="co0"># write the log config to a temporal file</span>
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$config</span>&quot;</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>log.conf
+<span class="co0"># run screen with log config </span>
+<span class="kw2">screen</span> <span class="re5">-c</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>log.conf <span class="re5">-dmSL</span> <span class="re1">$name</span> 
+<span class="co0"># remove the temporal config file</span>
+<span class="co0">#rm /tmp/log.conf</span></pre>
+
+<p>
+The above script takes an argument as session name, and creates a detached screen session. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Logging your screen output&quot;,&quot;hid&quot;:&quot;logging_your_screen_output&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;3184-5244&quot;} -->
+<h2 class="sectionedit12" id="sharing_a_screen_session_with_another_user">Sharing a screen session with another user</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Open a screen with user1</div>
+</li>
+<li class="level1"><div class="li"> Enable mutli-user mode ([user1@ tmp]$ Ctrl-a :multiuser on)</div>
+</li>
+<li class="level1"><div class="li"> Add the desired user(s) ([user1@ tmp]$ Ctrl-a :acladd user2)</div>
+</li>
+<li class="level1"><div class="li"> User2 connect to screen of user1 ([user2@ ~]$ screen -x user1/shared)</div>
+</li>
+<li class="level1"><div class="li"> If you receive a error message ( Must run suid root for multiuser support.) you need to log out and do the following commands </div>
+</li>
+</ol>
+<pre class="code">[user1@ ~]$ su -
+Password: 
+[root@ ~]# chmod u+s $(which screen)
+[root@ ~]# chmod 755 /var/run/screen
+[root@ ~]# rm -fr /var/run/screen/*
+[root@ ~]# exit
+logout</pre>
+
+<p>
+Ps: making the screen command suid root is a security issue (otherwise, wouldn&#039;t it already have been set this way). So, you may be better off making a third shared account which both users can log into to share a screen session with. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sharing a screen session with another user&quot;,&quot;hid&quot;:&quot;sharing_a_screen_session_with_another_user&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;5245-&quot;} -->

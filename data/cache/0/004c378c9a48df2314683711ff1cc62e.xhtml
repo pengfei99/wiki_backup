@@ -1,0 +1,131 @@
+
+<h1 class="sectionedit1" id="lims_reunion_15092015">[LIMS] Réunion 15/09/2015</h1>
+<div class="level1">
+
+<p>
+<strong><abbr title="Audrey Cauchard">AC</abbr>, <abbr title="Yoann Mouscaz">YM</abbr>, <abbr title="Nicolas Sapay">NS</abbr>, TLC</strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "[LIMS] Réunion 15/09/2015" [1-62] -->
+<h2 class="sectionedit2" id="retour_sur_la_reunion_du_3_sept_avec_gbym">Retour sur la réunion du 3 sept avec GB / YM</h2>
+<div class="level2">
+
+<p>
+Pour <abbr title="Audrey Cauchard">AC</abbr> qui n&#039;était pas là. Guillaume a remonté 3 points sur lesquels il faudrait réfléchir :
+</p>
+<ol>
+<li class="level1"><div class="li"> Introduire une filiation au niveau des “batchs”</div>
+<ul>
+<li class="level2"><div class="li"> Ce n&#039;est visiblement pas nécessaire, car on peut remonter la filiation des échantillons.</div>
+</li>
+<li class="level2"><div class="li"> La seule information nécessaire au niveau du “batch” est un UID pour pouvoir poser des code-barres.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Grouper les échantillons au sein d&#039;une plaque</div>
+</li>
+<li class="level1"><div class="li"> Reconsidérer le nombre de tables, car cela parait peu (il ne dit pas de rajouter des tables, il fait juste remarquer qu&#039;elles ne paraissent pas nombreuses)</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT2 SECTION "Retour sur la réunion du 3 sept avec GB / YM" [63-690] -->
+<h2 class="sectionedit3" id="gestion_des_suppressions_de_donnees">Gestion des suppressions de données</h2>
+<div class="level2">
+
+<p>
+<abbr title="Audrey Cauchard">AC</abbr> est partisane du “on ne détruit pas, on invalide”, ce qui parait convenir à tout le monde.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Gestion des suppressions de données" [691-837] -->
+<h2 class="sectionedit4" id="audit_trail">&quot;Audit trail&quot;</h2>
+<div class="level2">
+
+<p>
+<abbr title="Nicolas Sapay">NS</abbr> propose de la garder très simple dans un premier temps en attendant de savoir se que la règlementation nous impose : connexions utilisateur uniquement.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Audit trail" [838-1022] -->
+<h2 class="sectionedit5" id="choix_techniques">Choix techniques</h2>
+<div class="level2">
+
+<p>
+Ils devraient avoir lieu lors de la réunion du jeudi 17 septembre.
+</p>
+
+<p>
+Le choix de la base de données ne semble pas crucial, car les ORM sont une abstraction au SGBD.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Choix techniques" [1023-1219] -->
+<h2 class="sectionedit6" id="design_et_experience_utilisateur">Design et expérience utilisateur</h2>
+<div class="level2">
+
+<p>
+<abbr title="Nicolas Sapay">NS</abbr> rappelle qu&#039;il est important de se mettre à la place de l&#039;utilisateur et évoque les interfaces de la PDB. Il évoque aussi la présence de “favoris” et d&#039;une page d&#039;accueil personnalisée.
+</p>
+
+<p>
+Un troisième “module” de recherche devrait être développé pour offrir une expérience de recherche plus complète.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Design et expérience utilisateur" [1220-1581] -->
+<h2 class="sectionedit7" id="licence_logiciel">Licence logiciel</h2>
+<div class="level2">
+
+<p>
+Le choix de la licence n&#039;a pas encore été arrêté : <abbr title="Guillaume Boissy">GB</abbr> est plutôt OpenSource, NG voudrait un logiciel propriétaire.
+Cela pose visiblement des problèmes.
+</p>
+<!-- EDIT8 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+Quels problèmes ? L&#039;utilisation de logiciel sous licence commercialle affectera le LIMS quelle que soit sa licence. Seule l&#039;intégration de code sous licence à notre propre code peut poser problème.
+</p>
+
+<p>
+Pour éviter les pb liés à l&#039;intégration de code sous licence “libératrice” à un logiciel propriétaire, il faut :
+</p>
+<ul>
+<li class="level1"><div class="li"> soit ne pas utiliser le code et trouver une alternative ;</div>
+</li>
+<li class="level1"><div class="li"> soit passer le code du logiciel sous licence libre.</div>
+</li>
+</ul>
+
+<p>
+Étant donné que le code est de toute façon non compilé, les sources seront distribuées. Les gens pourront donc le lire et le copier ! Même les Chinois. 
+</p>
+
+<p>
+La seule façon de ne pas distribuer les sources est de passer le logiciel en SAAS, mais pas sous licence AGPL qui impose de diffuser les sources quand même.
+</p>
+
+<p>
+Le seul avantage de garder les sources inaccessibles et de limiter le nombre de développeurs qui pourraient contribuer au projet, et donc le limiter les engueulades ! <img class="emojione" alt="&#x1F604;" src="//cdn.jsdelivr.net/emojione/assets/png/1F604.png?v=1.2.4"/>&#039;
+</p>
+</div><!-- EDIT9 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT7 SECTION "Licence logiciel" [1582-2733] -->
+<h2 class="sectionedit10" id="cahier_des_charges">Cahier des charges</h2>
+<div class="level2">
+
+<p>
+<abbr title="Nicolas Sapay">NS</abbr> le tient à disposition dans <code>Z:\03 - PLATEAUX TECHNIQUES\PT 06 STOCKAGE DE DONNEES ET CALCUL INTENSIF\Projets\En cours\LIMS</code>.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Cahier des charges" [2734-2899] -->
+<h2 class="sectionedit11" id="schema_de_la_base_de_donnees">Schéma de la base de données</h2>
+<div class="level2">
+
+<p>
+Quelques modifications sont apportées à la base. Celle-ci est consultable sur la sandbox de <abbr title="Yoann Mouscaz">YM</abbr> : <a href="http://134.158.37.15/wwwsqldesigner/" class="urlextern" title="http://134.158.37.15/wwwsqldesigner/"  rel="nofollow">http://134.158.37.15/wwwsqldesigner/</a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Schéma de la base de données" [2900-] -->

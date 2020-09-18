@@ -1,0 +1,1 @@
+$ mount -t nfs -o nosuid,nodev,tcp,nfsvers=3,hard,intr,mountport=664 ccdtli94:/sps/bioaster /mnt/test_nfs

@@ -1,0 +1,3 @@
+$ bzr add
+$ bzr ci -m &quot;Clos le ticket #123&quot;
+$ bzr push :parent

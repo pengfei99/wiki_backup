@@ -1,0 +1,86 @@
+====== Install httpd mod_ssl tomcat7 and config proxy ajp between them======
+
+1. Install requrired package of httpd on centos 7
+
+''sudo yum install httpd mod_ssl''
+
+2. Install required package of tomcat7 on centos 7
+
+''sudo yum install tomcat''
+
+3. Make tomcat a startup demaeon
+
+''sudo systemctl enable tomcat''
+
+4. Optimise tomcat7 jvm
+
+''sudo vim /usr/share/tomcat/conf/tomcat.conf''
+
+Add following line 
+
+<code>
+JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC"
+</code>
+
+The **-Xmx** switch to start the JVM with a higher maximum heap memory. This will free up CPU time for the processes you really care about
+
+**-XX:MaxPermSize** It’s used to set size for Permanent Generation. It is where class files are kept.
+
+
+5. Enable ajp proxy in tomcat7
+
+''sudo vim /usr/share/tomcat/conf/server.xml''
+
+Add the following line
+
+<code>
+<Connector port="8009" enableLookups="false" protocol="AJP/1.3" redirectPort="8443" />
+</code>
+
+6. Configure virtual host to enable https
+
+<code>
+<VirtualHost *:80>
+    ServerName example.bioaster.org
+    ServerAlias example.bioaster.org
+    Redirect permanent / https://example.bioaster.org/
+</VirtualHost>
+
+
+
+<VirtualHost *:443>
+ServerName example.bioaster.org
+ServerAlias example.bioaster.org
+
+    SSLEngine       on
+    SSLProxyEngine on
+    SSLProxyVerify none
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+ 
+    SSLCertificateFile      /etc/pki/tls/certs/example.bioaster.org.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/example.bioaster.org.key
+    SSLCertificateChainFile /etc/pki/tls/certs/intermediate.crt
+
+LimitRequestFieldSize 65536
+
+RewriteEngine On
+  RewriteCond %{REQUEST_URI}  !^/portal/.*
+  RewriteRule ^/.* /portal/ [R,L]
+
+
+
+        <Location /portal>
+                ProxyPass ajp://127.0.0.1:8009/portal
+                ProxyPassReverse ajp://127.0.0.1:8009/portal
+        </Location>
+
+
+
+</VirtualHost>
+
+</code>
+
+7. Deploy your war file in the **/usr/share/tomcat/webapps**
+
+

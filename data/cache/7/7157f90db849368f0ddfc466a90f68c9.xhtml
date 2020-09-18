@@ -1,0 +1,38 @@
+
+<p>
+<em class="u">Compte rendu de la réunion du 13/02/2017 avec C.Moret :</em>
+</p>
+
+<p>
+Les échantillons biologiques (ex sang) sont au moins à manipuler en P2. Étant donné que tous les échantillons sont ainsi chez BIOASTER on peut les mettre P2 par défaut.
+</p>
+
+<p>
+<em class="u">Compte rendu de la réunion du 15/02/2017 avec <abbr title="Yoann Mouscaz">YM</abbr> et <abbr title="Clément Delestre">CD</abbr> :</em>
+Pour les pathogens il a été décidé de faire la table Pathogens contenant les champs suivants :
+</p>
+<ul>
+<li class="level1"><div class="li"> id</div>
+</li>
+<li class="level3"><div class="li"> Groupe (1, 2, 3, 4)</div>
+</li>
+<li class="level3"><div class="li"> Symbole (V, A, T, spp, etc.)</div>
+</li>
+<li class="level3"><div class="li"> ManyToMany à Sample</div>
+</li>
+<li class="level3"><div class="li"> ManyToMany à Classification ayant comme root_id : virus, bacteria, fungi ou parasite</div>
+</li>
+</ul>
+
+<p>
+cf <a href="/noe/migrations" class="wikilink1" title="noe:migrations">Migrations NoE depuis février 2017</a>
+</p>
+
+<p>
+<em class="u">Au niveau du front-end :</em>
+Le bouton “ajouter agents biologiques” sera disponible dés le 1er échantillon, mais invisible si l&#039;échantillon appartient à la classification bactérie,virus, champignon ou parasite. 
+</p>
+
+<p>
+En cliquant sur ce dernier il fera apparaitre la liste de toutes les classifications reliées à la table <code>Pathogen</code>. Une checkbox à côté permettra de filtrer au niveau du groupe (“non pathogène” → 1, “pathogène” → différent de 1). On peut imaginer que par défaut la checkbox sera sur “non pathogène”.
+</p>

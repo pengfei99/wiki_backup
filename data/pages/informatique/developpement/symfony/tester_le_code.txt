@@ -1,0 +1,53 @@
+====== Tester le code ======
+
+<WRAP round todo>
+Charger les fixtures de test : [[https://github.com/liip/LiipFunctionalTestBundle]]
+
+Eviter les //smoke tests//, car c'est mieux un vrai test ! Autant prendre de bonnes habitudes dès le début.
+
+Toutes les méthodes **doivent** être testées, en test unitaire ou fonctionnel.
+</WRAP>
+
+Comme indiquer dans les bonnes pratiques, il vaut mieux mettre en place des tests le plus tôt possible. Ceci se fait assez simplement une fois ''phpunit'' installé.
+
+On écrit un fichier de test par contrôleur. 
+
+<code php src/AppBundle/Tests/Controller/DefaultControllerTest.php>
+<?php
+
+namespace AppBundle\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class DefaultControllerTest extends WebTestCase
+{
+    public function urlProvider()
+    {
+        return array(
+            array('/'),
+        );
+    }
+
+    /**
+     * @dataProvider urlProvider
+     */
+    public function testPageIsSuccessful($url)
+    {
+        $client = self::createClient();
+        $client->request('GET', $url);
+        $this->assertTrue($client->getResponse()->isSuccessful());
+    }
+
+    public function testPrivate()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/private');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+    }
+}
+</code>
+
+Une fois le test démarré, toutes les méthodes ''test*()'' existantes seront appelées.
+
+    $ phpunit -c app/
+

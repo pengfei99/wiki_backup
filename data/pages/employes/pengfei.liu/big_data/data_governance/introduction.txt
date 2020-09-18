@@ -1,0 +1,30 @@
+====== Data governance ======
+
+===== What is data governance =====
+
+**Data governance** is a data management concept concerning the capability that enables an organization to ensure that high data quality exists throughout the complete lifecycle of the data. 
+
+Data governance key focus area: 
+  * Availability,
+  * Usability, 
+  * Consistency, 
+  * Data integrity, 
+  * Data security.
+
+Data governance tools must establishing processes to ensure effective data management throughout the data processing lifecycle such as accountability for the adverse effects of poor data quality and ensuring that the data which an data warehouse has can be used by the entire organization.
+
+===== What problem data governance solution can resolve =====
+
+A data governance solution must answer questions such as :
+
+  * Which sources are feeding data? (data traceability)
+  * What is the data schema of these sources? (data usability)
+  * Which process reads the data and how is it transformed? (data linkage)
+  * When was the data last updated? (data audit)
+  * Who did the last update? (data audit)
+  * Can we classify the data? (data usability)
+  * Can we find data based on their classification?  (data usability)
+
+All the data which helps answer the above questions are called data governance meta-data.
+
+

@@ -1,0 +1,17 @@
+<span class="kw2">class</span> ArticleController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(
+     *     &quot;/articles/{_locale}/{year}/{title}.{_format}&quot;,
+     *     defaults={&quot;_format&quot;: &quot;html&quot;},
+     *     requirements={
+     *         &quot;_locale&quot;: &quot;en|fr&quot;,
+     *         &quot;_format&quot;: &quot;html|rss&quot;,
+     *         &quot;year&quot;: &quot;\d+&quot;
+     *     }
+     * )
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span><span class="re0">$_locale</span><span class="sy0">,</span> <span class="re0">$year</span><span class="sy0">,</span> <span class="re0">$title</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

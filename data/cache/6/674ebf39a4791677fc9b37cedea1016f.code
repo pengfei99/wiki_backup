@@ -1,0 +1,13 @@
+$SERVEUR[&quot;socket&quot;] == &quot;:443&quot; {
+   server.name = &quot;serveur.tld&quot;
+   server.document-root = &quot;/var/www&quot;
+   ssl.engine = &quot;enable&quot;
+   ssl.pemfile = &quot;/path/to/certificate+key-combined.pem&quot;
+&nbsp;
+   ssl.verifyclient.exportcert = &quot;enable&quot;
+   ssl.verifyclient.activate   = &quot;enable&quot;
+   ssl.verifyclient.username   = &quot;SSL_CLIENT_S_DN_CN&quot; # PHP: $_SERVER['SSL_CLIENT_S_DN_EMAILADDRESS']
+   ssl.verifyclient.enforce    = &quot;enable&quot;
+   ssl.verifyclient.depth      = 3
+   ssl.ca-file                 = &quot;/etc/ssl/crt/trusted_certificates.pem&quot;
+}

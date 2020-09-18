@@ -1,0 +1,53 @@
+====== Foire aux questions ======
+  * [[bioinformatique/support/demande_de_ressource|Comment faire une demande des ressources ou d'assistance pour utiliser une ressource, un logiciel ou un service ?]]
+  * Comment démarrer un [[bioinformatique/support/projet_de_developpement|projet de développement]] dans la [[https://forge.in2p3.fr/projects/bioaster|forge]] ?
+  * Comment versionner du code avec [[bioinformatique:outils:bazaar|Bazaar]] ?
+  * Où trouver de l'aide pour [[bioinformatique/Python|coder en Python]]?
+  * Pourquoi et comment utiliser la [[bioinformatique/univage|ferme de calcul]] ?
+  * Pourquoi et comment utiliser le [[bioinformatique/openstack|cloud]] ?
+  * Comment utiliser Matlab ?
+  * Comment utiliser les bases de données au CC-IN2P3 ?
+
+{{tag>todo}}
+====== Moyens à disposition ======
+
+
+Le diagramme suivant permet de choisir le moyen le plus adapté pour une réaliser tâche donnée. Un **clic** sur un des rectangles permet d'accéder à la page du wiki correspondante.
+
+{{map>/ut6/bioinformatique/pt6.png?nolink&978x802 |PT6}}
+**Les différentes services offerts par le PT6 sont :**
+
+  * [[/bioinformatique/outils|Outils @ 567,30,742,78]]
+  * [[/bioinformatique/vmware|VMWare @ 737,411,925,689]]
+  * [[/bioinformatique/openstack|OpenStack @ 394,408,582,686]]
+  * [[/bioinformatique/univage|UnivaGE @ 51,408,244,688]]
+  * [[/in2p3/logiciels#en_ligne_de_commande|Logiciels @ 59,718,241,768]]
+  * [[/in2p3/logiciels#services|Services @ 390,717,587,767]]
+  * [[/bioinformatique/services_critiques|Services Critiques @ 728,720,940,768]]
+{{<map}}
+
+
+===== Groupes de travail =====
+==== Gestion et analyses des données ====
+Les objectifs de ce [[bioinformatique:gestion_et_analyse_des_donnees| groupe de travail ]] sont de participer à la conception du système d'information scientifique de BIOASTER et de définir les bonnes pratiques du calcul scientifique.
+
+  * **Atelier 001 du 26/06/2014:** [[bioinformatique/gestion_du_code| gestion du code scientifique]]
+  * **Atelier 002 du 03/07/2014:** [[bioinformatique/gestion_du_code| gestion du code scientifique]], [[bioinformatique/workflow_management | Gestion des flux de données]] et [[bioinformatique/transfert_management | Gestion des transferts de données vers le CC-IN2P3]]
+  * **Atelier 003 du 17/07/2014:** Point sur les machines virtuelles, [[bioinformatique/workflow_management | Gestion des flux de données]], [[bioinformatique/software_management|Gestion des logiciels]]
+  * **Atelier 004 du 31/07/2014:** [[bioinformatique/password_manager | Gestionnaire de mots de passe]], [[bioinformatique/software_management|Gestion des logiciels]], Point sur l'organisation des [[bioinformatique/storage_space | espaces de stockage]], OwnCloud.
+  * **Atelier 005 du 28/08/2014:** Actualité du PT6 ([[https://ccbioappl04.in2p3.fr/owncloud/|OwnCloud]], [[https://ccbiowiki1.in2p3.fr/|Wiki]], recrutement), Point sur l'intégration de données à BIOASTER, point sur l'informatique scientifique, technique et bureautique, Tour de table et suggestions (un atelier sur le traitement des données de cytométrie?).
+  * **Atelier 006 du 12/09/2014:** Le versionnage et le coding style (Pierre va présenter [[http://www.redmine.org/|Redmine]], rapide retour sur ECCB’14, Mise au point sur le domaine d'intervention du PT6, présentation du travail de Claire et Séverine, tour de table / suggestions.
+  * **Atelier 007 du 25/09/2014:** [[ut6|Organisation IT/bio-info/data management]], Bilan du groupe de travail, Versionnage du code et forge : documentation, accès aux travaux en cours,... , [[https://cc-usersupport.in2p3.fr/otrs/customer.pl|Ouverture d’un système de ticket pour les demandes PT6 ]], Formation Python, <del>déploiement de Galaxy</del>, Tour de table, suggestions, etc.
+  * **Atelier 008 du 23/10/2014:** Information sur le budget PT06 et le budget Projet, Faut-il une instance Galaxy à BIOASTER ? > Pegasus est en cours de déploiement et de test. Galaxy ne sera pas employé dans l'immédiat pour gérer les workflows et les pipeline d'analyse mais pourrait être proposé comme une service.
+  * **Atelier 009 du 13/11/2014:** Retour du Big Data Leaders Forum, Retour sur le workshop SMODIA du projet Stategra sur l'intégration de données -omiques,  Présentation des random forest par Trang et de la PLS par Adama le 18/12, Point info sur l'organisation UT6/IT, 
+  * **Atelier 010 du 04/12/2014:** Retour sur intervention LCO pour la mise en oeuvre workflow/Pegasus et point sur l'avancement. Notez la présentation de Pegasus à l'ENS mercredi 10/12/14. Point sur le LIMS : WIP. Pierre va participer à la revue de code de Search chez Novius. Point sur le deploiement de Transmart par Tanguy : WIP. Bioaster est entré dans le projet Etriks. Le 5/1/15 présentation par Adama des outils et projets bioinfo du PT7.
+  *  **Atelier 011 du 18/12/2014:** Présentation du Random Forest (par Trang) et de la PLS par (par Adama). [[bioinformatique/cr_random_forest_and_pls|Voir le CR de la réunion]]
+  * **Atelier 012 du 05/01/2015:** Présentation de l'outil de gestion des metadonnées d'analyse bioinfo de l'utec7 (par Adama). [[bioinformatique/framework_bioinfo_utec7|Voir le CR de la présentation]]
+====== Échanges scientifiques ======
+
+  * La [[/conferences|liste des conférences]] passées (avec les comptes rendu) et à venir.
+  * Les sources [[/bioinformatique/veille_technologique|de veille technologique]].
+
+====== Bonnes pratiques ======
+
+Les "[[bioinformatique:bonnes_pratiques_de_codage|bonnes pratiques pour l'écriture de code]]" sont un vaste sujet qui nécessite bien une page dédiée.

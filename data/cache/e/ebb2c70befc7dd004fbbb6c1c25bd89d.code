@@ -1,0 +1,1 @@
+$ nova boot --key-name=cloudkey --image=official-centos-7x-x86_64  --flavor=m1.small idm

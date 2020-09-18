@@ -1,0 +1,2 @@
+$ aptitude install --without-recommends lighttpd php5-cgi php5 php5-sqlite python pip
+$ pip install yoyo-migrations

@@ -1,0 +1,642 @@
+
+<h1 class="sectionedit1" id="lesson05_sql_joining_data">Lesson05 SQL joining Data</h1>
+<div class="level1">
+
+<p>
+To combine data from different tables, we need to join these data with a join clause. A JOIN clause is used to combine rows from two or more tables, based on a related column between them. In this lesson, we will show you a brief overview of joins.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson05 SQL joining Data&quot;,&quot;hid&quot;:&quot;lesson05_sql_joining_data&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-291&quot;} -->
+<h2 class="sectionedit2" id="different_join_types">5.1 Different join types</h2>
+<div class="level2">
+
+<p>
+In general, we have the following join types:
+</p>
+<ul>
+<li class="level1"><div class="li"> Inner Join – selects rows from one table that have the corresponding rows in other tables.</div>
+</li>
+<li class="level1"><div class="li"> Left (OUTER) Join – selects rows from one table that may or may not have the corresponding rows in other tables.</div>
+</li>
+<li class="level1"><div class="li"> Right (OUTER) Join - Return all records from the right table, and the matched records from the left table</div>
+</li>
+<li class="level1"><div class="li"> Self-join – joins a table to itself by comparing a table to itself.</div>
+</li>
+<li class="level1"><div class="li"> Full Outer Join – returns all records when there is a match in either left table or right table records.</div>
+</li>
+<li class="level1"><div class="li"> Cross Join – produces a Cartesian product of the rows in two or more tables.</div>
+</li>
+<li class="level1"><div class="li"> Natural Join – joins two or more tables using implicit join condition based on the common column names in the joined tables.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1 Different join types&quot;,&quot;hid&quot;:&quot;different_join_types&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;292-1101&quot;} -->
+<h2 class="sectionedit3" id="inner_join">5.2 Inner Join</h2>
+<div class="level2">
+
+<p>
+A Inner Join selects rows from one table that have the corresponding rows in other tables. The INNER JOIN keyword selects all rows from both tables as long as there is a match between the columns. 
+</p>
+
+<p>
+For example, we have two tables:
+Orders:
+</p>
+<ul>
+<li class="level1"><div class="li"> OrderID</div>
+</li>
+<li class="level1"><div class="li"> CustomerID</div>
+</li>
+<li class="level1"><div class="li"> OrderDate</div>
+</li>
+</ul>
+
+<p>
+Customers:
+</p>
+<ul>
+<li class="level1"><div class="li"> CustomerID</div>
+</li>
+<li class="level2"><div class="li"> CustomerName</div>
+</li>
+<li class="level2"><div class="li"> ContactName</div>
+</li>
+<li class="level2"><div class="li"> Country</div>
+</li>
+</ul>
+<pre class="code">SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;</pre>
+
+<p>
+If there are records in the “Orders” table that do not have matches in “Customers”, these orders will not be shown!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2 Inner Join&quot;,&quot;hid&quot;:&quot;inner_join&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1102-1766&quot;} -->
+<h2 class="sectionedit4" id="left_right_join">5.3 Left/Right join</h2>
+<div class="level2">
+
+<p>
+Left Join returns all rows from the left table that may or may not have the corresponding rows in other tables. The columns of the right side table in the result table will be NULL if there is no match.
+</p>
+
+<p>
+Right Join returns all rows from the right table that may or may not have the corresponding rows in other tables. The columns of the left side table in the result table will be NULL if there is no match.
+</p>
+
+<p>
+Note: In some database implementations, Left/right join are called Left/Right OUTER JOIN.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.3 Left\/Right join&quot;,&quot;hid&quot;:&quot;left_right_join&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1767-2299&quot;} -->
+<h3 class="sectionedit5" id="examples">Examples</h3>
+<div class="level3">
+<pre class="code"># This left join will return all rows in Orders if there are no corresponding rows in Customers, the Customers.CustomerName column will be NULL.
+
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+LEFT JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+
+# This right join will return all rows in Customers if there are no corresponding rows in Orders, the Orders.OrderID and Orders.OrderDate column will be NULL
+
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+RIGHT JOIN Customers ON Orders.CustomerID=Customers.CustomerID;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2300-2920&quot;} -->
+<h2 class="sectionedit6" id="self_join">5.4 Self Join</h2>
+<div class="level2">
+
+<p>
+Self-join joins a table to itself. Self-joins are useful for comparing values in a column of rows within the same table. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.4 Self Join&quot;,&quot;hid&quot;:&quot;self_join&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;2921-3070&quot;} -->
+<h3 class="sectionedit7" id="examples1">Examples</h3>
+<div class="level3">
+
+<p>
+Suppose we have a table Customers and it has the following columns
+Customers:
+</p>
+<ul>
+<li class="level1"><div class="li"> CustomerID</div>
+</li>
+<li class="level2"><div class="li"> CustomerName</div>
+</li>
+<li class="level2"><div class="li"> ContactName</div>
+</li>
+<li class="level2"><div class="li"> Country</div>
+</li>
+<li class="level2"><div class="li"> City</div>
+</li>
+</ul>
+
+<p>
+We want to find all customers which are from the same city.
+</p>
+<pre class="code"># explicite self join
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A inner join Customers B on A.City = B.City
+WHERE A.CustomerID &lt;&gt; B.CustomerID
+ORDER BY A.City;
+
+# implicite self join
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID &lt;&gt; B.CustomerID
+AND A.City = B.City 
+ORDER BY A.City;
+
+# Note that, two above sql commands will return the same result. If you replace inner join with left or right, it will not change anything, it will return the same result.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples1&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;3071-3917&quot;} -->
+<h2 class="sectionedit8" id="full_outer_join">5.5 Full Outer Join</h2>
+<div class="level2">
+
+<p>
+Full Outer Join returns all records when there is a match in either left table or right table records. For rows which the left/right side table does not have a match, the columns of the left/right side table in the result table will be NULL.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.5 Full Outer Join&quot;,&quot;hid&quot;:&quot;full_outer_join&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:8,&quot;range&quot;:&quot;3918-4194&quot;} -->
+<h3 class="sectionedit9" id="examples2">Examples</h3>
+<div class="level3">
+
+<p>
+We reuse the two table of the inner join example, the below sql query will return all rows of the table orders and customers, if there are a match, all the column value of these match rows in the result table will be from the two tables. If no match, the column value will be NULL.
+</p>
+<pre class="code">SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+FULL OUTER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;</pre>
+
+<p>
+Note: FULL OUTER JOIN can potentially return very large result-sets, for example, if there are n rows in Orders, and m rows in Customers, the result will have n+m rows
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples2&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:9,&quot;range&quot;:&quot;4195-4828&quot;} -->
+<h2 class="sectionedit10" id="cross_join">5.6 Cross Join</h2>
+<div class="level2">
+
+<p>
+Cross Join produces the Cartesian Product of rows in two or more tables. Each row from the 1st table is combined with each row from the 2nd one. Different from the other JOIN operators, the CROSS JOIN does not have any matching condition in the join clause.
+</p>
+<pre class="code"># a standard cross join query
+SELECT * FROM A CROSS JOIN B
+
+# an implicit cross join query
+SELECT * FROM A, B
+
+# another implicit cross join query
+SELECT * FROM A INNER JOIN B ON TRUE</pre>
+
+<p>
+Note: CROSS JOIN can potentially return very large result-sets, for example, if there are n rows in Orders, and m rows in Customers, the result will have n*m rows
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.6 Cross Join&quot;,&quot;hid&quot;:&quot;cross_join&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:10,&quot;range&quot;:&quot;4829-5479&quot;} -->
+<h2 class="sectionedit11" id="natural_join">5.7 Natural Join</h2>
+<div class="level2">
+
+<p>
+Natural Join creates an implicit join based on the same column names in the joined tables. A natural join can be an inner join, left join, or right join. If you do not specify a join explicitly, the INNER JOIN is used by default.
+</p>
+
+<p>
+If wildcard * is used in the select list, the result will contain the following columns:
+</p>
+<ul>
+<li class="level1"><div class="li"> All the common columns, which are the columns in both tables that have the same name</div>
+</li>
+<li class="level1"><div class="li"> Every column in the first and second tables that is not a common column</div>
+</li>
+</ul>
+
+<p>
+For example, we have two tables:
+tableA(c1,c2,c3), tableB(c4,c1,c5) 
+</p>
+
+<p>
+A natural join will return a table (c1,c2,c3,c4,c5)
+</p>
+<pre class="code"># A standard natural join
+Select * from A NATURAL JOIN B
+
+# equivalent inner join
+SELECT * FROM A INNER JOIN B USING (c1)</pre>
+
+<p>
+Note: The convenience is that it does not require you to specify the join clause because it uses an implicit join clause based on the common column. Avoid using it whenever possible because it may cause an unexpected result.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.7 Natural Join&quot;,&quot;hid&quot;:&quot;natural_join&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:11,&quot;range&quot;:&quot;5480-6482&quot;} -->
+<h2 class="sectionedit12" id="sql_join_cheat_sheet">5.8 SQL join cheat sheet</h2>
+<div class="level2">
+
+<p>
+The following figure shows all the join type and their corresponding SQL query.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Adata_base%3Atheory%3A05_sql_join_data&amp;media=employes:pengfei.liu:data_science:data_base:theory:join_cheat_sheet.png" class="media" title="employes:pengfei.liu:data_science:data_base:theory:join_cheat_sheet.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=a0fe5b&amp;media=employes:pengfei.liu:data_science:data_base:theory:join_cheat_sheet.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.8 SQL join cheat sheet&quot;,&quot;hid&quot;:&quot;sql_join_cheat_sheet&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:12,&quot;range&quot;:&quot;6483-6684&quot;} -->
+<h2 class="sectionedit13" id="union">5.9 Union</h2>
+<div class="level2">
+
+<p>
+The UNION operator combines result sets of two or more SELECT statements into a single result set. The following are rules applied to the queries:
+</p>
+<ul>
+<li class="level1"><div class="li"> Both queries must return the same number of columns.</div>
+</li>
+<li class="level1"><div class="li"> The corresponding columns in the queries must have compatible data types.</div>
+</li>
+<li class="level1"><div class="li"> Removes all duplicate rows Unless the UNION ALL is used.</div>
+</li>
+<li class="level1"><div class="li"> No order. To sort the rows in the combined result set by a specified column, you use the ORDER BY clause.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.9 Union&quot;,&quot;hid&quot;:&quot;union&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:13,&quot;range&quot;:&quot;6685-7161&quot;} -->
+<h3 class="sectionedit14" id="example">Example</h3>
+<div class="level3">
+
+<p>
+Suppose we have two tables(e.g. customers, suppliers), and they both have a column named city. We have to have the full list of city of both tables.
+</p>
+<pre class="code"># This command will return the full city list and remove the duplicates
+SELECT City FROM Customers 
+UNION
+SELECT City FROM Suppliers
+ORDER BY City;
+
+# This command will return the full city list and keep the duplicates
+SELECT City FROM Customers
+UNION ALL
+SELECT City FROM Suppliers
+ORDER BY City;
+
+# The following SQL statement returns the German cities (only distinct values) from both the &quot;Customers&quot; and the &quot;Suppliers&quot; table
+SELECT City, Country FROM Customers WHERE Country=&#039;Germany&#039;
+UNION
+SELECT City, Country FROM Suppliers WHERE Country=&#039;Germany&#039;
+ORDER BY City;
+
+# To know the rows are from which table, we can use the following technique
+SELECT &#039;Customer&#039; As Type, ContactName, City, Country
+FROM Customers
+UNION
+SELECT &#039;Supplier&#039;, ContactName, City, Country
+FROM Suppliers
+
+# Type	ContactName	City	Country
+# Customer	Alejandra Camino	Madrid	Spain
+# Supplier	Anne Heikkonen	Lappeenranta	Finland
+
+# Note that the &#039;Customer&#039;, &#039;Supplier&#039; are constant which will be added in each row of the supplier and customer.
+# The second select statement will use the column name of the first select statement, so the order of the column name of the two select statements must be a match. 
+# For example, the following query will return 
+SELECT &#039;Customer&#039; As Type, ContactName, City, Country
+FROM Customers
+UNION
+SELECT &#039;Supplier&#039;, ContactName, Country, City
+FROM Suppliers
+
+# Type	ContactName	City	Country
+# Customer	Alejandra Camino	Madrid	Spain
+# Supplier	Anne Heikkonen		Finland Lappeenranta</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;7162-8837&quot;} -->
+<h2 class="sectionedit15" id="intersect">5.10 Intersect</h2>
+<div class="level2">
+
+<p>
+The INTERSECT operator combines the result sets of two or more SELECT statements into a single result set. The INTERSECT operator returns any rows that are available in both result set or returned by both queries. The following are rules applied to the queries:
+</p>
+<ul>
+<li class="level1"><div class="li"> The number of columns and their order in the SELECT clauses must be the same.</div>
+</li>
+<li class="level1"><div class="li"> The data types of the columns must be compatible</div>
+</li>
+</ul>
+
+<p>
+To sort the result set returned by the INTERSECT operator, place the ORDER BY clause at the end of the statement. 
+</p>
+
+<p>
+Note that, MySQL does not support the INTERSECT operator. Because the use of intersect is not so popular.
+</p>
+<pre class="code"># The sql query is very similar to union
+SELECT column1 [, column2 ]
+FROM table1 [, table2 ]
+[WHERE condition]
+
+INTERSECT
+
+SELECT column1 [, column2 ]
+FROM table1 [, table2 ]
+[WHERE condition]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.10 Intersect&quot;,&quot;hid&quot;:&quot;intersect&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:15,&quot;range&quot;:&quot;8838-9695&quot;} -->
+<h2 class="sectionedit16" id="except">5.11 EXCEPT</h2>
+<div class="level2">
+
+<p>
+The SQL EXCEPT operator returns the rows in the first query that do not appears in the output of the second query.
+It returns rows by comparing the result sets of two or more queries. To combine the queries using the EXCEPT operator:
+</p>
+<ul>
+<li class="level1"><div class="li"> The number of columns &amp; their orders must be the same in the 2 queries.</div>
+</li>
+<li class="level1"><div class="li"> The data types of the respective columns must be compatible.</div>
+</li>
+</ul>
+
+<p>
+To sort the result set returned by the EXCEPT operator, place the ORDER BY clause at the end of the statement. 
+Note that, in oracle and mysql, the except clause is replaced by <strong>MINUS</strong>.
+</p>
+<pre class="code">SELECT column1 [, column2 ]
+FROM table1 [, table2 ]
+[WHERE condition]
+
+EXCEPT
+
+SELECT column1 [, column2 ]
+FROM table1 [, table2 ]
+[WHERE condition]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.11 EXCEPT&quot;,&quot;hid&quot;:&quot;except&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:16,&quot;range&quot;:&quot;9696-10449&quot;} -->
+<h2 class="sectionedit17" id="grouping_sets">5.12 Grouping Sets</h2>
+<div class="level2">
+
+<p>
+By definition, a grouping set is a group of columns by which you group. Typically, a single query with an aggregate defines a single grouping set. The GROUPING SETS OPERATOR generates a result set equivalent to which generated by the UNION ALL of the multiple GROUP BY clauses.
+</p>
+
+<p>
+But why we use grouping sets instead of UNION ALL? 
+There are two major problems:
+</p>
+<ul>
+<li class="level1"><div class="li"> The query is quite lengthy</div>
+</li>
+<li class="level1"><div class="li"> The query is slow because SQL Server needs to execute four queries and combine the result sets into a single one.</div>
+</li>
+</ul>
+<pre class="code"># The general syntax of the grouping sets:
+SELECT
+    column1,
+    column2,
+    aggregate_function (column3)
+FROM
+    table_name
+GROUP BY
+    GROUPING SETS (
+        (column1, column2),
+        (column1),
+        (column2),
+        ()
+);
+
+# Note that, the grouping set works on a signle table
+# The above sql query returns four grouping sets (column1,column2), (column1), (column2), ()</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.12 Grouping Sets&quot;,&quot;hid&quot;:&quot;grouping_sets&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:17,&quot;range&quot;:&quot;10450-11393&quot;} -->
+<h3 class="sectionedit18" id="grouping_function">GROUPING function</h3>
+<div class="level3">
+
+<p>
+The GROUPING function indicates whether a specified column in a GROUP BY clause is aggregated or not. It returns 1 for aggregated or 0 for not aggregated in the result set.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;GROUPING function&quot;,&quot;hid&quot;:&quot;grouping_function&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:18,&quot;range&quot;:&quot;11394-11596&quot;} -->
+<h3 class="sectionedit19" id="examples3">Examples</h3>
+<div class="level3">
+
+<p>
+Suppose we have a table called sales_summary in schema sales, and it has four columns (e.g. brand, category, model_year, sales). The manager wants to know the sales number of each brand and category. 
+</p>
+
+<p>
+1. So first, we need to get the sales group by brand and category with the following query
+</p>
+<pre class="code">SELECT brand, category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY brand, category
+ORDER BY brand, category;
+
+# it will return something like
+# brand  |  category | sales
+# Electra|  Children Bicycles | 207606,00
+# Electra|  Cruisers Bicycles | 694909,00
+# Haro   | Mountain Bikes | 171459,00
+# Trek   | Electric Bikes | 838372,00
+# Trek   | Mountain Bikes | 184770,00</pre>
+
+<p>
+2. The manager said it&#039;s great, but he also needs to know the sales of each brand, the following query will return that
+</p>
+<pre class="code">SELECT brand, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY brand
+ORDER BY brand;
+
+# it will return something like
+# brand  |  sales
+# Electra|  1207606,00
+# Haro   |  1851459,00
+# Trek   |  4602754,00</pre>
+
+<p>
+3. The manager also wants to know the sales of each category, the following query will return that
+</p>
+<pre class="code">SELECT category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY category
+ORDER BY category;
+
+# it will return something like
+# category | sales
+# Children Bicycles | 1207606,00
+# Cruisers Bicycles | 2694909,00
+# Mountain Bikes | 3171459,00
+# Electric Bikes | 1838372,00
+</pre>
+
+<p>
+4. The manager wants to know the total sales.
+</p>
+<pre class="code">SELECT SUM (sales) sales
+FROM sales.sales_summary;
+
+# it will return something like
+#  sales
+# 7689113,00</pre>
+
+<p>
+5. The manager wants to know can we put the above result in a single result table. We know we have four grouping sets: (brand, category), (brand), (category), (). The first solution is to use the UNION ALL clause. As union all requires all select statement has the same number and order of columns, we need to add NULL in the last three queries. The full SQL query:
+</p>
+<pre class="code">SELECT brand, category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY brand, category
+UNION ALL
+SELECT brand, NULL, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY brand
+UNION ALL
+SELECT NULL, category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY category
+UNION ALL
+SELECT NULL, NULL, SUM (sales)
+FROM sales.sales_summary
+ORDER BY brand, category;</pre>
+
+<p>
+We can notice that the query is quite long, and we will have performance issues, because we execute four queries on the same table and combine the result sets. In this kind of scenario, we need to use the grouping sets clause.
+</p>
+<pre class="code">SELECT brand, category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY
+ GROUPING SETS ((brand, category),(brand),(category),())
+ORDER BY brand, category;
+
+# The above query will return the same result as the Union all query. However, this query is much more readable and of course more efficient.</pre>
+
+<p>
+6. Finally, the manager wants to know if the sales value of one row is the result of aggregation or not. We need to modify a little bit our query as followed:
+</p>
+<pre class="code">SELECT 
+GROUPING(brand) grouping_brand,
+GROUPING(category) grouping_category,
+brand, category, SUM (sales) sales
+FROM sales.sales_summary
+GROUP BY
+ GROUPING SETS ((brand, category),(brand),(category),())
+ORDER BY brand, category;
+
+# We add two more columns to indicate that if the sales value is the result of brand or category column aggregation
+# it will return something like
+# grouping_brand | grouping_category |  brand  |  category | sales
+#   1     |     1    | NULL  | NULL  | 7689113,00
+#   1     |     0    | NULL  |  Children Bicycles | 292189,00
+#   0     |     1    |Electra| NULL  | 1205321,00
+#   0     |     0    |Haro   | Mountain Bikes | 171459,00
+
+# The first line is the sum of all brand and all category, so it&#039;s the result of category and brand aggregation.
+# The second line is the sum of all brand and Children Bicycles category, so it&#039;s only the result of brand aggregation.
+# The third line is the sum of brand Electra and all category, so it&#039;s only the result of category aggregation
+# The fouth line is the sum of brand Haro and category Moutain Bikes, so it&#039;s no aggregation on brand and category.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples3&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:19,&quot;range&quot;:&quot;11597-15809&quot;} -->
+<h2 class="sectionedit20" id="sub_queries">5.13 Sub queries</h2>
+<div class="level2">
+
+<p>
+A Subquery or Inner query or a Nested query is a query within another SQL query and embedded within the WHERE clause. A subquery is used to return data that will be used in the main query as a condition to further restrict the data to be retrieved. Subqueries can be used with the SELECT, INSERT, UPDATE, and DELETE statements along with the operators like =, &lt;, &gt;, &gt;=, ⇐, IN, BETWEEN, etc. 
+</p>
+
+<p>
+There are a few rules that subqueries must follow:
+</p>
+<ul>
+<li class="level1"><div class="li"> Subqueries must be enclosed within parentheses.</div>
+</li>
+<li class="level1"><div class="li"> A subquery can have only one column in the SELECT clause unless multiple columns are in the main query for the subquery to compare its selected columns.</div>
+</li>
+<li class="level1"><div class="li"> An ORDER BY command cannot be used in a subquery, although the main query can use an ORDER BY. The GROUP BY command can be used to perform the same function as the ORDER BY in a subquery.</div>
+</li>
+<li class="level1"><div class="li"> Subqueries that return more than one row can only be used with multiple value operators such as the IN operator.</div>
+</li>
+<li class="level1"><div class="li"> The SELECT list cannot include any references to values that evaluate to a BLOB, ARRAY, CLOB, or NCLOB.</div>
+</li>
+<li class="level1"><div class="li"> A subquery cannot be immediately enclosed in a set function.</div>
+</li>
+<li class="level1"><div class="li"> The BETWEEN operator cannot be used with a subquery. However, the BETWEEN operator can be used within the subquery.</div>
+</li>
+</ul>
+<pre class="code"># The general syntax
+SELECT column_name [, column_name ]
+FROM   table1 [, table2 ]
+WHERE  column_name OPERATOR
+   (SELECT column_name [, column_name ]
+   FROM table1 [, table2 ]
+   [WHERE])
+   
+# Use subquery in an insert statement
+INSERT INTO table_name [ (column1 [, column2 ]) ]
+   SELECT [ *|column1 [, column2 ]
+   FROM table1 [, table2 ]
+   [ WHERE VALUE OPERATOR ] 
+
+# Use subquery in a update statement   
+UPDATE table
+SET column_name = new_value
+[ WHERE OPERATOR [ VALUE ]
+   (SELECT COLUMN_NAME
+   FROM TABLE_NAME)
+   [ WHERE) ]   </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.13 Sub queries&quot;,&quot;hid&quot;:&quot;sub_queries&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:20,&quot;range&quot;:&quot;15810-17654&quot;} -->
+<h3 class="sectionedit21" id="example1">Example</h3>
+<div class="level3">
+
+<p>
+Suppose we have a table Customers which has five columns: (ID, NAME, AGE, ADDRESS, SALARY)
+</p>
+
+<p>
+1. We want to get all customers whose salary is above average.
+</p>
+<pre class="code"># In this case, the subquery returns only one value, so we don&#039;t need to use IN
+Select * from Customers where SALARY &gt; (select avg(SALARY) from Customers)</pre>
+
+<p>
+2. We want to get all customers whose salary is above 4500.
+</p>
+<pre class="code"># In this case, the subquery returns 0 or more values, we need to use IN
+SELECT * FROM CUSTOMERS WHERE ID IN (SELECT ID FROM CUSTOMERS WHERE SALARY &gt; 4500) ;
+
+# Note that we can get the result without using the subquery, the above query is only for demo</pre>
+
+<p>
+3. We want to create a backup table of the Customers table
+</p>
+<pre class="code">INSERT INTO CUSTOMERS_BKP SELECT * FROM CUSTOMERS  WHERE ID IN (SELECT ID FROM CUSTOMERS) ;</pre>
+
+<p>
+4. We have CUSTOMERS_BKP table available which is backup of CUSTOMERS table. The following example updates SALARY by 0.25 times in the CUSTOMERS table for all the customers whose AGE is greater than or equal to 27.
+</p>
+<pre class="code">UPDATE CUSTOMERS SET SALARY = SALARY * 0.25 WHERE AGE IN (SELECT AGE FROM CUSTOMERS_BKP WHERE AGE &gt;= 27 );</pre>
+
+<p>
+5. The following example deletes the records from the CUSTOMERS table for all the customers whose AGE is greater than or equal to 27.
+</p>
+<pre class="code">DELETE FROM CUSTOMERS WHERE AGE IN (SELECT AGE FROM CUSTOMERS_BKP WHERE AGE &gt;= 27 );</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example1&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:21,&quot;range&quot;:&quot;17655-&quot;} -->

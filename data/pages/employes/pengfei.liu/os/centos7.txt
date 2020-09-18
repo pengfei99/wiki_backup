@@ -1,0 +1,15 @@
+====== Basic config on centos 7 ======
+===== Basic centos7 repo =====
+
+<code>
+
+# epel repo
+yum install -y epel-release
+
+# yum-utils repo
+yum -y install yum-utils
+
+# centos developement 
+yum -y groupinstall development
+</code>
+

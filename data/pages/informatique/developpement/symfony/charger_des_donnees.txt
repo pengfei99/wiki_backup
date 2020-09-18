@@ -1,0 +1,46 @@
+====== Charger des données ======
+
+Pour des données "normales" à insérer dans la base après sa création on peut utiliser les ''fixtures'' de Propel :
+
+    $ mkdir src/AppBundle/Resources/fixtures/
+
+<code yml src/AppBundle/Resources/fixtures/001-users.yml>
+AppBundle\Model\User:
+    u1:
+        first_name: Jean
+        last_name: Dupond
+    u2:
+        first_name: Marie
+        last_name: Dupont
+</code>
+
+    $ php app/console propel:fixtures:load @AppBundle
+
+<WRAP round important>
+Faites attention en utilisant la méthode ci-dessus, car **la table sera vidée** avant d'insérer les fixtures !\\ 
+Pour avoir **des données de test**, il vaut mieux utiliser la méthode ci-dessous.
+</WRAP>
+
+Pour ajouter automatiquement de fausses données, il vaut mieux utiliser [[https://github.com/willdurand/BazingaFakerBundle|le bundle approprié]] :
+
+    $ composer require "willdurand/faker-bundle" "@stable"
+
+<code php app/AppKernel.php>
+if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+    // …
+    $bundles[] = new Bazinga\Bundle\FakerBundle\BazingaFakerBundle();
+}
+</code>
+
+<code yml app/config/config_dev.yml>
+bazinga_faker:
+    seed:       1234
+    locale:     fr_FR
+    entities:
+        AppBundle\Model\User:
+            number: 5
+</code>
+
+    $ php app/console faker:populate
+
+

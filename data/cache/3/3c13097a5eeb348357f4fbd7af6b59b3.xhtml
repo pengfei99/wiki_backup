@@ -1,0 +1,173 @@
+
+<h1 class="sectionedit1" id="reunion_du_28_septembre_2017">Réunion du 28 Septembre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 28 Septembre 2017" [1-46] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [47-95] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Templates <abbr title="Julie Hardy">JHA</abbr>/NET</div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Organisme Génétiquement Modifié">OGM</abbr>/<abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr></div>
+</li>
+<li class="level1"><div class="li"> Champs dynamiques</div>
+</li>
+<li class="level1"><div class="li"> Design</div>
+</li>
+<li class="level1"><div class="li"> Préparer le NETmeeting </div>
+</li>
+<li class="level1"><div class="li"> Réunion avec le service QSI –&gt; on s&#039;en occupe lundi 02/10/17  → [Edit du 02/10/17] Fait</div>
+</li>
+<li class="level1"><div class="li"> <code>Besoin de <abbr title="Pengfei Liu">PLU</abbr> pour créer les users et les groupes avant qu&#039;ils se connectent..</code> –&gt; Standby. To be continued…</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [96-435] -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Prochain NETMeeting</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> Quelles unités mettre dans <abbr title="Network Of Experiments">NoE</abbr> ? –&gt; on présentera les unités qu&#039;on a actuellement et on demandera s&#039;il en manque.</div>
+</li>
+<li class="level1"><div class="li"> Sur quoi chercher dans la datatable ? –&gt; on proposera une liste de choix possibles et la NET choisira</div>
+</li>
+<li class="level1"><div class="li"> Qu&#039;affiche-t-on par défaut dans les colonnes que tout le monde peut voir ? –&gt; on proposera une liste de choix possibles et la NET choisira</div>
+</li>
+<li class="level1"><div class="li"> Quelles questions on pourrait mettre dans la page “<abbr title="Frequently Asked Questions">FAQ</abbr>” ? –&gt; on présentera la page en TeamMeeting + NETMeeting et on recoltera les idées</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Templates <abbr title="Julie Hardy">JHA</abbr> vs NET</em>
+</p>
+
+<p>
+Rien n&#039;a bougé cette semaine de ce côté.<br/>
+
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> merge des 3 listes dynamiques étant en dessous de 80% de matching</div>
+</li>
+<li class="level1"><div class="li"> retravailler les template de <abbr title="Julie Hardy">JHA</abbr> afin d&#039;avoir toutes les infos nécessaires à la création d&#039;un échantillon + un vocabulaire unique entre headers de template et labels de formulaires de <abbr title="Network Of Experiments">NoE</abbr>  </div>
+</li>
+</ul>
+
+<p>
+<em class="u"><abbr title="Organisme Génétiquement Modifié">OGM</abbr>/<abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr></em>
+</p>
+
+<p>
+De nombreux développements ont eu lieu au cours de la semaine. La feature est quasiment complétée.<br/>
+
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>modifier la base de données pour que les opérations citées ci-dessus soit possibles</del> –&gt; Fait </div>
+</li>
+<li class="level1"><div class="li"> <del>implémenter un ETL pour la liste des <abbr title="Organisme Génétiquement Modifié">OGM</abbr> venant du QSI à transférer en base de données</del> –&gt; Fait</div>
+</li>
+<li class="level1"><div class="li"> <del>modifier le formulaire statique de <abbr title="Network Of Experiments">NoE</abbr></del></div>
+</li>
+<li class="level1"><div class="li"> <del>intégrer “<abbr title="Organisme Génétiquement Modifié">OGM</abbr>” à la classification <code>type d&#039;échantillon</code></del> –&gt; Fait.</div>
+</li>
+<li class="level1"><div class="li"> <del>Vérifier si tous les échantillons <abbr title="Organisme Génétiquement Modifié">OGM</abbr> manipulés à BIOASTER sont bien sur la liste (exemple qui nous fait douter : les souris <abbr title="Organisme Génétiquement Modifié">OGM</abbr> manipulées par UTEC05…)</del> –&gt; à priori c&#039;est ok, Hélène DUGA nous a confirmé que l&#039;UTEC05 ne manipulait pas d&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr>. </div>
+</li>
+<li class="level1"><div class="li"> Dans formulaire d&#039;edition : </div>
+<ul>
+<li class="level2"><div class="li"> <del>rajouter le champs <abbr title="Genetically Modified Organisms">GMOs</abbr> (en lecture seule pour tous, sauf pour le créateur)</del></div>
+</li>
+<li class="level2"><div class="li"> <del>jouer le script AJAX de check BSL vis à vis du storage selectionné (a mettre aussi dans le SampleForm)</del></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <del>liée les classification dans le cas où c&#039;est un type <abbr title="Genetically Modified Organism">GMO</abbr> pour ensuite produire les bon champs dynamiques</del></div>
+</li>
+<li class="level1"><div class="li"> Faire le <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> dans populateNoE</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Champs dynamiques</em>
+</p>
+
+<p>
+De nombreux développements ont eu lieu au cours de la semaine. La feature est quasiment complétée.<br/>
+
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>persister en db les nouvelles valeurs après édition</del> –&gt; fait</div>
+</li>
+<li class="level1"><div class="li"> longueur des champs identiques</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Design</em>
+</p>
+
+<p>
+Ces points seront traités en low priority.<br/>
+
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> travailler le display général du formulaire d&#039;edition</div>
+</li>
+<li class="level1"><div class="li"> image en rapport avec BSL sur page info et edition</div>
+</li>
+<li class="level1"><div class="li"> plan des labos BIOASTER, image dédiée pour <abbr title="Organisme Génétiquement Modifié">OGM</abbr>/<abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr></div>
+</li>
+<li class="level1"><div class="li"> Retravailler pages de login/logout</div>
+</li>
+<li class="level1"><div class="li"> <del>Enlever “homepage” dans navbar général et rendre le logo cliquable</del> –&gt; Fait</div>
+</li>
+<li class="level1"><div class="li"> Créer un coté “Fournisseur” (listing + formulaire d&#039;ajout et d&#039;édition) </div>
+</li>
+</ul>
+
+<p>
+<em class="u">autres TODO, liste générale avant beta test V1 par la NET</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del><code>merger la branche de Pengfei (auth-shib/secu-dev-Pengfei)</code></del></div>
+</li>
+<li class="level1"><div class="li"> finaliser code de <abbr title="Julie Hardy">JHA</abbr> + merge de la branche au master</div>
+</li>
+<li class="level1"><div class="li"> <del><code>finir la fonctionnalité recherche datatable</code></del> —&gt; il reste à récolter les souhaits de la NET pour savoir quels champs requeter en particulier </div>
+</li>
+<li class="level1"><div class="li"> définir quoi mettre (quels types d&#039;infos) dans le dropdown de datatable –&gt; voir avec la NET</div>
+</li>
+<li class="level1"><div class="li"> finir l&#039;édition d&#039;un échantillon  –&gt; PENDING (80%)</div>
+</li>
+<li class="level1"><div class="li"> avoir une page d&#039;information d&#039;un échantillon propre et sexy –&gt; PENDING</div>
+</li>
+<li class="level1"><div class="li"> code barre</div>
+</li>
+<li class="level1"><div class="li"> créer un échantillon enfant</div>
+</li>
+<li class="level1"><div class="li"> <del><code>dashboard d&#039;accueil v1 (simple)</code></del></div>
+</li>
+<li class="level1"><div class="li"> déployer <abbr title="Network Of Experiments">NoE</abbr> sur le serveur de dev</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Résumé" [436-] -->

@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="bowtie">Bowtie</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Bowtie" [1-22] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 1.0.0</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : <em>Artistic License</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://bowtie-bio.sourceforge.net/index.shtml" class="urlextern" title="http://bowtie-bio.sourceforge.net/index.shtml"  rel="nofollow">http://bowtie-bio.sourceforge.net/index.shtml</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : Bowtie is an ultrafast, memory-efficient short read aligner. It aligns short DNA sequences (reads) to the human genome at a rate of over 25 million 35-bp reads per hour. Bowtie indexes the genome with a Burrows-Wheeler index to keep its memory footprint small: typically about 2.2 <abbr title="Gigabyte">GB</abbr> for the human genome (2.9 <abbr title="Gigabyte">GB</abbr> for paired-end). </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [23-534] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster/&quot;
+wget &quot;http://downloads.sourceforge.net/project/bowtie-bio/bowtie/1.0.0/bowtie-1.0.0-src.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fbowtie-bio%2Ffiles%2Fbowtie%2F1.0.0%2F&amp;ts=1387550290&amp;use_mirror=garr&quot; -O bowtie-1.0.0-src.zip
+unzip bowtie-1.0.0-src.zip
+cd bowtie-1.0.0/
+make
+mkdir -p $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin
+cp bowtie $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin
+cp bowtie-* $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [535-1088] -->
+<h2 class="sectionedit4" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;An ultrafast memory-efficient short read aligner.\n&quot;
+}
+
+set version &quot;1.0.0&quot;
+
+set gcc_version &quot;RedHat_4.4.7-3&quot;
+set bin_dir &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-${gcc_version}/bowtie/${version}/bin&quot;
+
+prepend-path PATH $bin_dir</pre>
+
+</div>
+<!-- EDIT4 SECTION "Intégration" [1089-1415] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.04 (tlc)</strong> Version 1.0.0 installée
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Log" [1416-] -->

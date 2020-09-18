@@ -1,0 +1,40 @@
+====== QIIME ======
+
+L'image à été mise à disposition car l'installation manuelle de [[ccin2p3:in2p3:logiciels:qiime|QIIME]] n'est pas recommandée.
+
+===== Installation =====
+
+L'image mise à disposition par l'équipe de QIIME est faite pour tourner dans une interface graphique. Elle ne contient pas de serveur SSH permettant un accès distant. 
+
+  * Télécharger l'[[http://qiime.org/install/virtual_box.html|image VirtualBox]] sur un PC ayant un VirtualBox
+  * Extraire l'image
+  * Démarrer l'image et procéder à l'installation et la configuration de SSH
+  * (Compresser l'image)
+  * Transférer l'image sur une frontale du CC
+  * Créer une VM avec 40G de disque éphémère <code>
+nova boot --key-name=cloudkey --image=official-SL-6x-x86_64 --flavor=m1.medium QEMU
+#...
+mkfs.ext4 /dev/vdb
+mkdir /mnt/ephemeral
+mount /dev/vdb /mnt/ephemeral
+</code>
+  * Transférer l'image sur la VM (sur le disque de 40G une fois configuré)
+  * (Extraire l'image)
+  * Convertir l'image avec QEMU <code>
+yum install qemu-img
+qemu-img convert -f vdi -O qcow2 QIIME-1.8.0-amd64.vdi QIIME-1.8.0-amd64.qcow2
+</code>
+  * Transférer l'image sur la frontale <code>
+cd /sps/inter/bioaster/
+scp qiime:/mnt/ephemeral/QIIME-1.8.0-amd64.qcow2 .
+</code>
+  * Enregistrer l'image grâce à glance et tester <code>
+glance add name=QIIME-1.8.0 is_public=true container_format=bare disk_format=qcow2 \
+       < ./QIIME-1.8.0-amd64.qcow2
+nova boot --key-name=cloudkey --security-groups=web_server --image=QIIME-1.8.0 --flavor=m1.tiny Qiime
+</code>
+  * Détruire la VM créée pour utiliser QEMU
+
+===== Log =====
+
+  * **2014.03.19 (tlc)** Déploiement de la version 1.8.0

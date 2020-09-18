@@ -1,0 +1,181 @@
+
+<h1 class="sectionedit1" id="second_normal_form">Second normal form</h1>
+<div class="level1">
+
+<p>
+Second normal form (2NF) is a normal form used in database normalization.
+</p>
+
+<p>
+To appreciate second normal form, you must understand the idea of functional dependency. A functional dependency is a relationship between or among attributes. One attribute is functionally dependent on another if the value of the second attribute determines the value of the first attribute. If you know the value of the second attribute, you can determine the value of the first attribute.
+</p>
+
+<p>
+Suppose, for example, that a table has attributes (columns) StandardCharge, NumberOfTests, and TotalCharge that relate through the following equation:
+</p>
+<pre class="code">TotalCharge = StandardCharge * NumberOfTests</pre>
+
+<p>
+TotalCharge is functionally dependent on both StandardCharge and NumberOfTests. If you know the values of StandardCharge and NumberOfTests, you can determine the value of TotalCharge.
+</p>
+
+<p>
+Every table in first normal form must have a unique primary key. That key may consist of one or more than one column. A key consisting of more than one column is called a composite key. To be in second normal form (2NF), all non-key attributes must depend on the entire key. Thus, every relation that is in 1NF with a single attribute key is automatically in second normal form.
+</p>
+
+<p>
+If a relation has a composite key, all non-key attributes must depend on all components of the key. If you have a table where some non-key attributes don’t depend on all components of the key, break the table up into two or more tables so that  in each of the new tables  all non-key attributes depend on all components of the primary key.
+</p>
+
+<p>
+Put simply, a relation is in 2NF if
+</p>
+<ul>
+<li class="level1"><div class="li"> it is in 1NF</div>
+</li>
+<li class="level1"><div class="li"> every non-prime attribute of the relation(table) is dependent on the whole of every candidate key.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Second normal form&quot;,&quot;hid&quot;:&quot;second_normal_form&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1781&quot;} -->
+<h2 class="sectionedit2" id="example_1">Example 1</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Manufacturer	</th><th class="col1 leftalign">Model	</th><th class="col2">Model_Full_Name </th><th class="col3">Manufacturer Country</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">Forte	</td><td class="col1 leftalign">X-Prime	</td><td class="col2 leftalign">Forte X-Prime	</td><td class="col3">Italy</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Forte	</td><td class="col1 leftalign">Ultraclean	</td><td class="col2 leftalign">Forte Ultraclean	</td><td class="col3">Italy</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Dent-o-Fresh	</td><td class="col1 leftalign">EZbrush	</td><td class="col2 leftalign">Dent-o-Fresh EZbrush	</td><td class="col3">USA</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">Kobayashi	</td><td class="col1 leftalign">ST-60	</td><td class="col2 leftalign">Kobayashi ST-60	</td><td class="col3">Japan</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">Hoch	</td><td class="col1 leftalign">Toothmaster	</td><td class="col2 leftalign">Hoch Toothmaster	</td><td class="col3">Germany</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">Hoch	</td><td class="col1 leftalign">X-Prime	</td><td class="col2 leftalign">Hoch X-Prime	</td><td class="col3">Germany</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1805-2129&quot;} -->
+<p>
+Even if the designer has specified the primary key as {Model Full Name}, the relation is not in 2NF because of the other candidate keys. {Manufacturer, Model} is also a candidate key, and Manufacturer Country is dependent on a proper subset of it: Manufacturer. To make the design conform to 2NF, it is necessary to have two relations:
+</p>
+
+<p>
+Electric toothbrush Manufacturers
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Manufacturer</th><th class="col1">Manufacturer Country</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Forte</td><td class="col1">Italy</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Dent-o-Fresh</td><td class="col1">USA</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Kobayashi</td><td class="col1">Japan</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Hoch</td><td class="col1">Germany</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;2503-2604&quot;} -->
+<p>
+Electric toothbrush Models
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Manufacturer</th><th class="col1">Model</th><th class="col2">Model Full Name</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Forte</td><td class="col1">X-Prime</td><td class="col2">Forte X-Prime</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Forte</td><td class="col1">Ultraclean</td><td class="col2">Forte Ultraclean</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Dent-o-Fresh</td><td class="col1">EZbrush</td><td class="col2">Dent-o-Fresh EZbrush</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Kobayashi</td><td class="col1">ST-60</td><td class="col2">Kobayashi ST-60</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Hoch</td><td class="col1">Toothmaster</td><td class="col2">Hoch Toothmaster</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Hoch</td><td class="col1">X-Prime</td><td class="col2">Hoch X-Prime</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;2634-2878&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example 1&quot;,&quot;hid&quot;:&quot;example_1&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;1782-2879&quot;} -->
+<h2 class="sectionedit6" id="example_2">Example 2</h2>
+<div class="level2">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Device_ID(Pk)</th><th class="col1 rightalign">	Price </th><th class="col2 rightalign">	Supplier_ID(Pk)</th><th class="col3">Supplier_Name</th><th class="col4">Supplier_Address</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">65	</td><td class="col1 leftalign">59.99	</td><td class="col2 leftalign">1	</td><td class="col3">Stylized Parts</td><td class="col4 rightalign">	VA</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">73	</td><td class="col1 leftalign">20.00	</td><td class="col2 leftalign">1	</td><td class="col3">Stylized Parts</td><td class="col4 rightalign">	VA</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">66	</td><td class="col1 leftalign">69.99	</td><td class="col2 leftalign">2	</td><td class="col3">ACME Industries</td><td class="col4 rightalign">	CA</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;2903-3080&quot;} -->
+<p>
+The above table does not have duplicate data in one column, so it&#039;s 1st NF, The price is dependent on device_id, Supplier_ID is also dependent on device_id, but supplier_name and address are not dependent on device_id, but only dependent on supplier_ID. So it&#039;s not 2nd NF, to transform it into 2nd NF, we need to divide it into two tables. 
+</p>
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Device_ID(Pk)</th><th class="col1 rightalign">	Price </th><th class="col2 rightalign">	Supplier_ID(Pk)</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">65	</td><td class="col1 leftalign">59.99	</td><td class="col2 leftalign">1	</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">73	</td><td class="col1 leftalign">20.00	</td><td class="col2 leftalign">1	</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">66	</td><td class="col1 leftalign">69.99	</td><td class="col2 leftalign">2	</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;3425-3513&quot;} --><div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Supplier_ID(Pk)</th><th class="col1">Supplier_Name</th><th class="col2">Supplier_Address</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">1	</td><td class="col1">Stylized Parts</td><td class="col2 rightalign">	VA</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">2	</td><td class="col1">ACME Industries</td><td class="col2 rightalign">	CA</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;3515-3612&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example 2&quot;,&quot;hid&quot;:&quot;example_2&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;2880-&quot;} -->

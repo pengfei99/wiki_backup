@@ -1,0 +1,1 @@
+nova boot --key-name=cloudkey --security-groups=web_server --image=TranSMART_1.1 --flavor=m1.small TranSMART

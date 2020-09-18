@@ -1,0 +1,169 @@
+
+<h1 class="sectionedit1" id="flume_agent_configuration">Flume Agent configuration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume Agent configuration&quot;,&quot;hid&quot;:&quot;flume_agent_configuration&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="basic_architecture_of_a_flume_agent_configuration_file">Basic architecture of a flume agent configuration file</h2>
+<div class="level2">
+
+<p>
+There are five main components in a flume agent:
+</p>
+<ul>
+<li class="level1"><div class="li"> Define agent names (can have multiple agents in a configuration file)</div>
+</li>
+<li class="level1"><div class="li"> Configure agent sources (can have multiple sources in one agent)</div>
+</li>
+<li class="level1"><div class="li"> Configure agent channels</div>
+</li>
+<li class="level1"><div class="li"> Configure agent sinks</div>
+</li>
+<li class="level1"><div class="li"> Connect sources, channels and sinks to the agents </div>
+</li>
+</ul>
+
+<p>
+The follown code fragment is an example of how we define an agent.
+</p>
+<pre class="code">#Define names
+agent1.sources = source1
+agent1.sinks = sink1
+agent1.channels = channel1
+ 
+#Connect components
+agent1.sources.source1.channels = channel1
+agent1.sinks.sink1.channel = channel1
+ 
+#Config source
+agent1.sources.source1.type = spooldir
+agent1.sources.source1.spoolDir = spoolDirectory
+ 
+#Config sink
+agent1.sinks.sink1.type = logger
+ 
+#Config channel
+agent1.channels.channel1.type = file</pre>
+
+<p>
+You could notice that all lines in the configuration file have the following structures
+</p>
+<pre class="code">[agent].[component-type].[component-name].[configuration-property] = [list-of-values]</pre>
+
+<p>
+The above code fragment will generate a data pipeline shows in the figure below
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Aflume%3Aagent_configuration&amp;media=employes:pengfei.liu:data_science:flume:flume_spooldir_agent.png" class="media" title="employes:pengfei.liu:data_science:flume:flume_spooldir_agent.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=5e1400&amp;media=employes:pengfei.liu:data_science:flume:flume_spooldir_agent.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Basic architecture of a flume agent configuration file&quot;,&quot;hid&quot;:&quot;basic_architecture_of_a_flume_agent_configuration_file&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-1243&quot;} -->
+<h2 class="sectionedit3" id="available_sources_in_flume_agent">Available sources in flume agent</h2>
+<div class="level2">
+
+<p>
+Below is the list of sources which are supported by flume:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Avro Source</strong>: it often used to link flume agents. For example, one agent ends with avro sinks, the next agent which connect to the avro sinks needs to use an avro source.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Thrift Source</strong>: Similar to avro</div>
+</li>
+<li class="level1"><div class="li"> <strong>Exec Source</strong>: The exec source provides a mechanism to run a command outside Flume and then turn the output into Flume events.</div>
+</li>
+<li class="level1"><div class="li"> <strong>JMS Source</strong>: Sometimes, data can originate from asynchronous message queues. For these cases, you can use Flume&#039;s JMS source to create events read from a JMS Queue or Topic. While it is theoretically possible to use any Java Message Service (JMS) implementation, Flume has only been tested with ActiveMQ, so be sure to test thoroughly if you use a different provider.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Spooling Directory Source</strong>: monitors a directory for new files. It is assumed that files copied to the directory are complete. It also assumes that filenames never changes.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Twitter 1% firehose Source</strong>: can read data from twitter web services.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Kafka Source</strong>: read data from kafka topics</div>
+</li>
+<li class="level1"><div class="li"> <strong>NetCat Source</strong>: read data from network connections using TCP or UDP.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Sequence Generator Source</strong>: It is used for testing purpose. It generates the events continuously by using a counter that starts from 0 and increments 1 for each event generated.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Syslog Sources</strong>: used to receive remote syslog events</div>
+</li>
+<li class="level1"><div class="li"> <strong>Syslog TCP Source</strong>: </div>
+</li>
+<li class="level1"><div class="li"> <strong>Multiport Syslog TCP Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Syslog UDP Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>HTTP Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Stress Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Legacy Sources</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Thrift Legacy Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Custom Source</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Scribe Source</strong>:</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Available sources in flume agent&quot;,&quot;hid&quot;:&quot;available_sources_in_flume_agent&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;1244-2940&quot;} -->
+<h2 class="sectionedit4" id="available_flume_channels">Available flume channels</h2>
+<div class="level2">
+
+<p>
+Below is the list of channels which are supported by flume:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Memory Channel</strong>: is a channel where in-flight events are stored in memory. As memory is (usually) orders of magnitude faster than the disk, events can be ingested much more quickly, resulting in reduced hardware needs. The downside of using this channel is that an agent failure (hardware problem, power outage, JVM crash, Flume restart, and so on) results in the loss of data.</div>
+</li>
+<li class="level1"><div class="li"> <strong>JDBC Channel</strong>: is a channel where all the Flume events here are stored in a persistent storage that’s backed by a database. Moreover, only embedded derby is supported by the JDBC channel currently. Also, we can say it is a very durable channel that’s ideal for flows where recoverability is important.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Kafka Channel</strong>: is a channel which allows you to write to sinks directly from Kafka without using a source. It can also write to Kafka topics directly from Flume sources without additional buffering. As all the events are stored in a Kafka cluster (that must be installed separately), it offers high availability and replication. Hence, in case an agent or a Flume kafka broker crashes, the events are immediately available to other sinks.</div>
+</li>
+<li class="level1"><div class="li"> <strong>File Channel</strong>: is a channel that stores events to the local filesystem of the agent. Though it&#039;s slower than the memory channel, it provides a durable storage path that can survive most issues and should be used in use cases where a gap in your data flow is undesirable.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Spillable Memory Channel</strong>: is a channel that acts as a memory channel until it is full. At that point, it acts like a file channel that is configured with a much larger capacity than its memory counterpart but runs at the speed of your disks</div>
+</li>
+<li class="level1"><div class="li"> <strong>Pseudo Transaction Channel</strong>: is a channel only used for unit testing purposes. Do not use it in a production environment.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Available flume channels&quot;,&quot;hid&quot;:&quot;available_flume_channels&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2941-4840&quot;} -->
+<h2 class="sectionedit5" id="available_flume_sinks">Available flume sinks</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>HDFS Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Hive Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Logger Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Avro Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Thrift Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong><abbr title="Internet Relay Chat">IRC</abbr> Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>File Roll Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Null Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>HBaseSink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>AsyncHBaseSink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>MorphlineSolrSink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>ElasticSearchSink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Kite Dataset Sink</strong>:</div>
+</li>
+<li class="level1"><div class="li"> <strong>Kafka Sink</strong>:</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Available flume sinks&quot;,&quot;hid&quot;:&quot;available_flume_sinks&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;4841-&quot;} -->

@@ -1,0 +1,301 @@
+
+<h1 class="sectionedit1" id="openstack_cli">OpenStack cli</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OpenStack cli&quot;,&quot;hid&quot;:&quot;openstack_cli&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-29&quot;} -->
+<h2 class="sectionedit2" id="credetials_to_use_openstack">Credetials to use openstack</h2>
+<div class="level2">
+
+<p>
+In your home, you should find a dir .novacreds
+</p>
+
+<p>
+In this dir, you can find a key pair and novarc.sh. In novarc.sh, you can find your login and pwd and keystone server info.
+</p>
+<pre class="code">#novarc.sh
+export OS_USERNAME=&quot;pliu&quot;
+export OS_PASSWORD=&quot;6521963a-fabf-11e2-ba12-020000006c0d&quot;
+export OS_PROJECT_NAME=&quot;bioaster&quot;
+export OS_AUTH_URL=&quot;https://cckeystone.in2p3.fr:5000/v3/&quot;
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_IDENTITY_API_VERSION=3
+export OS_VOLUME_API_VERSION=2</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Credetials to use openstack&quot;,&quot;hid&quot;:&quot;credetials_to_use_openstack&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;30-583&quot;} -->
+<h2 class="sectionedit3" id="command_for_adding_key_pair_in_openstack">Command for adding key pair in openstack</h2>
+<div class="level2">
+
+<p>
+When you boot a new vm you need to give a default ssh keypair for ssh connextion after the vm creation.
+</p>
+<pre class="code"># list all registered keypair
+nova keypair-list
+
+# create a key pair named &quot;mykey&quot; and output it to a file in user&#039;s .ssh dir
+nova keypair-add mykey &gt; ~/.ssh/cloudkey
+
+# if you already have a key pair you can upload the public key to openstack with name mykeyy
+nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+
+# show key key details
+nova keypair-show mykey
+
+# delete key
+nova keypair-delete mykey</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command for adding key pair in openstack&quot;,&quot;hid&quot;:&quot;command_for_adding_key_pair_in_openstack&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;584-1157&quot;} -->
+<h2 class="sectionedit4" id="command_for_vm">Command for vm</h2>
+<div class="level2">
+<pre class="code"># list all vms in tenant
+nova list
+
+# list all flavors
+nova flavor-list
+
+# list all images
+glance image-list
+
+# create a vm
+nova boot --flavor &lt;flavor-id&gt; --image &lt;img-id&gt; --key-name &lt;key-name&gt; &lt;vm-name&gt;
+# example
+nova boot --flavor m1.medium.2 --image Template_Centos_7_latest_28_06_2018 --key-name bioaster_os CCLinCytoD01
+
+# stop/start/restart a vm
+nova stop/start/restart &lt;vm-name&gt;
+
+# delete a vm
+nova delete &lt;vm-name&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command for vm&quot;,&quot;hid&quot;:&quot;command_for_vm&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1158-1624&quot;} -->
+<h2 class="sectionedit5" id="command_for_image">Command for image</h2>
+<div class="level2">
+<pre class="code"># create image (snapshoot of a vm)
+nova image-create --poll &lt;vm-name&gt; &lt;image-name&gt;
+# delete image
+glance image-delete &lt;image-name&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command for image&quot;,&quot;hid&quot;:&quot;command_for_image&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;1625-1802&quot;} -->
+<h2 class="sectionedit6" id="resize_your_vm">Resize your vm</h2>
+<div class="level2">
+<pre class="code"># Step 1: resize your vm flavor, --poll option shows the resize progress.
+nova resize &lt;server-id/name&gt; &lt;flavor-id/name&gt; --poll
+
+# By default, the nova resize command gives the guest operating system a chance to perform a controlled shutdown before the instance is powered off and the instance is resized. The shutdown behavior is configured by the shutdown_timeout parameter that can be set in the nova.conf file. Its value stands for the overall period (in seconds) a guest operation system is allowed to complete the shutdown. The default timeout is 60 seconds. See Description of Compute configuration options for details.
+
+The timeout value can be overridden on a per image basis by means of os_shutdown_timeout that is an image metadata setting allowing different types of operating systems to specify how much time they need to shut down cleanly.
+
+# Step 2: show the status of your vm, if the resize complete, the status becomes VERIFY_RESIZE.
+
+# Step 3: Confirm the resize
+openstack server resize --confirm &lt;server-id/name&gt;
+
+# After confirm, the server status becomes active
+# if the resize fails or does not work as expected, you can revert the  resize
+openstack server resize --revert &lt;server-id/name&gt;
+
+# The server status becomes active after convert</pre>
+
+<p>
+The full nova cli list : <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/5/html/End_User_Guide/app_cheat_sheet.html" class="urlextern" title="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/5/html/End_User_Guide/app_cheat_sheet.html" rel="nofollow">https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/5/html/End_User_Guide/app_cheat_sheet.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Resize your vm&quot;,&quot;hid&quot;:&quot;resize_your_vm&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;1803-3265&quot;} -->
+<h1 class="sectionedit7" id="new_openstack_cli">New openstack cli</h1>
+<div class="level1">
+
+<p>
+The old nova command will be deprecated soon. So it&#039;s time to move on the new command line client. You can find the official guide in <a href="https://docs.openstack.org/ocata/user-guide/cli-cheat-sheet.html" class="urlextern" title="https://docs.openstack.org/ocata/user-guide/cli-cheat-sheet.html" rel="nofollow">https://docs.openstack.org/ocata/user-guide/cli-cheat-sheet.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;New openstack cli&quot;,&quot;hid&quot;:&quot;new_openstack_cli&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;3266-3497&quot;} -->
+<h2 class="sectionedit8" id="compute_module_nova">Compute module (nova)</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Compute module (nova)&quot;,&quot;hid&quot;:&quot;compute_module_nova&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;3498-3532&quot;} -->
+<h3 class="sectionedit9" id="key_management">Key management</h3>
+<div class="level3">
+<pre class="code"># list all available public key pair in 
+$ openstack keypair list
+
+# Create keypair, generate the private and public key, store the public key in the key OpenStack key store, and
+save the private key in the file test.pem
+$ openstack keypair create test &gt; test.pem
+$ chmod 600 test.pem</pre>
+
+<p>
+Manage security groups
+</p>
+<pre class="code">
+# Add rules to default security group allowing ping and SSH between instances in the default security group
+$ openstack security group rule create default --remote-group default --protocol icmp
+$ openstack security group rule create default --remote-group default --dst-port 22</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Key management&quot;,&quot;hid&quot;:&quot;key_management&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:9,&quot;range&quot;:&quot;3533-4178&quot;} -->
+<h3 class="sectionedit10" id="vm_creation">Vm creation</h3>
+<div class="level3">
+<pre class="code"># List instances, check status of instance
+$ openstack server list
+
+#List images
+$ openstack image list
+
+# Create a flavor named m1.tiny, need admin rights
+$ openstack flavor create --ram 512 --disk 1 --vcpus 1 m1.tiny
+
+# List flavors
+$ openstack flavor list
+
+# Boot an instance using flavor and image names or ID (if names are unique)
+$ openstack server create --image &lt;img-id&gt; --flavor &lt;flavor-id&gt; --key-name &lt;key-name&gt; &lt;vm-name&gt;
+# example
+$ openstack server create --image Template_Centos7_Latest_24_07_2018 --flavor m1.medium --key-name bioaster_os CCLinOPTestD01
+
+# Inject user data and files into an instance while create a new vm
+openstack server create --user-data &lt;FILE-Path&gt; --image &lt;img-id&gt; --flavor &lt;flavor-id&gt; --key-name &lt;key-name&gt; &lt;vm-name&gt;
+# Note the injected file will be located at /var/lib/cloud
+
+
+# after vm creation, we can view the VM details
+openstack server show CCLinOPTestD01
+
+# View console log of instance
+$ openstack console log show CCLinOPTestD01
+
+# Set metadata on an instance
+$ nova meta CCLinOPTestD01 set newmeta=&#039;my test meta data&#039;
+# The meta data will be added to the properties line if you do openstack server show 
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Vm creation&quot;,&quot;hid&quot;:&quot;vm_creation&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;4179-5371&quot;} -->
+<h3 class="sectionedit11" id="vm_control">Vm control</h3>
+<div class="level3">
+<pre class="code"># To Pause a vm
+$ openstack server pause CCLinOPTestD01
+
+# Unpause
+$ openstack server unpause CCLinOPTestD01
+
+# Suspend
+$ openstack server suspend CCLinOPTestD01
+
+# Unsuspend
+$ openstack server resume CCLinOPTestD01
+
+# Stop
+$ openstack server stop CCLinOPTestD01
+
+# Start
+$ openstack server start CCLinOPTestD01
+
+# Rescue
+$ openstack server rescue &lt;vm-NAME&gt;
+$ openstack server rescue &lt;vm-NAME&gt; --rescue_image_ref RESCUE_IMAGE
+
+# Resize
+$ openstack server resize &lt;vm-NAME&gt; &lt;New-FLAVOR-Name&gt;
+$ openstack server resize my-pem-server m1.small
+$ openstack server resize --confirm my-pem-server1
+
+# Rebuild
+$ openstack server rebuild &lt;vm-NAME&gt; &lt;IMAGE-Name&gt;
+
+# Reboot
+$ openstack server reboot &lt;vm-NAME&gt;
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Vm control&quot;,&quot;hid&quot;:&quot;vm_control&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:11,&quot;range&quot;:&quot;5372-6112&quot;} -->
+<h2 class="sectionedit12" id="image_module_glance">2. Image module (glance)</h2>
+<div class="level2">
+<pre class="code"># List images you can access
+$ openstack image list
+
+# Delete specified image
+$ openstack image delete &lt;image-id/name&gt;
+
+# Describe a specific image
+$ openstack image show &lt;image-id/name&gt;
+
+# create snapshot from a VM
+openstack image create --poll &lt;vm-name&gt; &lt;image-name&gt;
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Image module (glance)&quot;,&quot;hid&quot;:&quot;image_module_glance&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;6113-6439&quot;} -->
+<h2 class="sectionedit13" id="storage_module_cinder">Storage module (cinder)</h2>
+<div class="level2">
+
+<p>
+The cinder-volume is block storage used to manage volumes and volume snapshots that attach to instances.
+</p>
+<pre class="code"># List all volumes, noticing the volume status
+$ openstack volume list
+
+# Create a new volume
+$ openstack volume create --size &lt;SIZE_IN_GB&gt; &lt;Volume-NAME&gt;
+$ openstack volume create --size 100 MyFirstVolume
+
+# Attach a volume to an instance. Note the instance is active, and the volume is available
+$ openstack server add volume &lt;INSTANCE_ID&gt; &lt;VOLUME_ID&gt;
+$ openstack server add volume CCLinOPTestD01 my_test_volume
+# After this, the status of the volume will be changed from available to in-use
+
+# To use it, you need to login into your vm and do the following config
+
+# 1. Identify the mounted disk, in our case, it&#039;s the /dev/vdc
+$ fdisk -l
+Disk /dev/vdc: 107.4 GB, 107374182400 bytes, 209715200 sectors
+
+# 2. Make filesystem on volume
+$ mkfs.ext4 /dev/vdc
+
+# 3. Create a mount point
+$ mkdir /DATA
+
+# 4. Mount the volume at the mount point
+$ mount /dev/vdc /DATA
+
+# You can check the mounted volume
+$ df -h
+/dev/vdc         99G   61M   94G   1% /DATA
+
+# Unmount the volume
+# umount /DATA
+
+# Detach volume from a vm
+$ openstack server remove volume &lt;INSTANCE_ID&gt; &lt;VOLUME_ID&gt;
+$ openstack server remove volume CCLinOPTestD01 my_test_volume
+# now the status of the volume is available again
+
+# Now you can delete the volume, note you can delete it if it is in-use
+$ openstack volume delete &lt;VOLUME_ID&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Storage module (cinder)&quot;,&quot;hid&quot;:&quot;storage_module_cinder&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:13,&quot;range&quot;:&quot;6440-7895&quot;} -->
+<h3 class="sectionedit14" id="resize_a_volume">Resize a volume</h3>
+<div class="level3">
+
+<p>
+To resize your volume, you must first detach it from the server. To detach the volume from your server, pass the server ID and volume ID to the following command:
+</p>
+<pre class="code"># Resize the volume by passing the volume ID and the new size (a value greater than the old one) as parameters:
+$ openstack volume set &lt;Volume_Name/ID&gt; --size &lt;Size_in_GB&gt;
+# Example
+$ openstack volume set 573e024d-5235-49ce-8332-be1576d323f8 --size 10</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Resize a volume&quot;,&quot;hid&quot;:&quot;resize_a_volume&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:14,&quot;range&quot;:&quot;7896-&quot;} -->

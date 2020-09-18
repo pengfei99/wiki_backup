@@ -1,0 +1,32 @@
+====== ReviewBoard ======
+
+===== Installation =====
+
+L'installation se fait en deux parties : [[/si/outils/reviewboard/serveur|le serveur]] et [[/si/outils/reviewboard/client|le client]].
+
+===== Méthode de travail =====
+
+ReviewBoard est un système reposant sur les correctifs (//patch//). Il ne prend pas en compte les branches et les révisions produits par les VCS. Pour chaque révision (''commit'') il y aura donc une revue de code distincte.
+
+==== Mise en place ====
+
+  * Enregistrer le dépôt dans ReviewBoard
+  * Créer le ''.reviewboardrc'' et l'intégrer (''commit'' et ''push'') dans le dépôt pour que tout e monde puisse l'utiliser
+
+==== Utilisation ====
+
+  - Créer une branche locale de développement
+  - Faire une modification (ou un ensemble)
+  - L'enregistrer (''commit'')
+  - Faire une demande de revue (''rbt post'') (utiliser ''--depends-on ID'' ?!)
+  - Recommencer depuis le point 2
+
+==== Intégration des correctifs ====
+
+  - Créer un branche liée (''checkout'')
+  - Intégrer le correctif (''rbt --patch ID'')
+  - Tester le code si nécessaire
+  - L'enregistrer (''commit'', pas besoin de ''push'' car la branche est liée)
+
+
+{{tag>todo}}

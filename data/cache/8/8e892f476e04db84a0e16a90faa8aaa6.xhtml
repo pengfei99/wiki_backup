@@ -1,0 +1,171 @@
+
+<p>
+<strong>Datatables</strong> est une bibliothèque <em>javascript</em> permettant d&#039;afficher un tableau, de pouvoir le trier selon une colonne, rechercher du texte dedans, paginer etc.
+</p>
+
+<p>
+Tout d&#039;abord sachez que la doc est <a href="https://datatables.net/" class="urlextern" title="https://datatables.net/" rel="nofollow">ici</a>.
+</p>
+
+<h1 class="sectionedit1" id="guide_d_utilisation">Guide d&#039;utilisation</h1>
+<div class="level1">
+
+<p>
+<a href="/lib/exe/detail.php?id=datatables&amp;media=ut6:bioinformatique:images:1j2ptj.jpg" class="media" title="ut6:bioinformatique:images:1j2ptj.jpg"><img src="/lib/exe/fetch.php?w=200&amp;tok=eacf98&amp;media=ut6:bioinformatique:images:1j2ptj.jpg" class="mediacenter" alt="" width="200" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Guide d&#039;utilisation&quot;,&quot;hid&quot;:&quot;guide_d_utilisation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;237-320&quot;} -->
+<h2 class="sectionedit2" id="premiers_pas">Premiers pas</h2>
+<div class="level2">
+
+<p>
+Téléchargez la dernière version sur le site et importez les fichiers javascript et <abbr title="Cascading Style Sheets">CSS</abbr> sur votre page web.
+Ensuite appelez la bibliothèque ainsi
+</p>
+<pre class="code">$(document).ready( function () {
+    $(&#039;#maTable&#039;).DataTable();
+  });</pre>
+
+<p>
+<em>Et voilà !</em>  datatable est opérationnel seulement, il fonctionnera 100% côté client c&#039;est à dire qu&#039;il chargera d&#039;un coup les n lignes de votre tableau. Si n commence à être grand (1.000,10.000… plus) votre page sera ralentie. 
+La solution à ce problème est de gérer datatable côté serveur.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=datatables&amp;media=ut6:bioinformatique:images:1j2ptm.jpg" class="media" title="ut6:bioinformatique:images:1j2ptm.jpg"><img src="/lib/exe/fetch.php?w=200&amp;tok=852ed4&amp;media=ut6:bioinformatique:images:1j2ptm.jpg" class="mediacenter" alt="" width="200" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Premiers pas&quot;,&quot;hid&quot;:&quot;premiers_pas&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;321-942&quot;} -->
+<h2 class="sectionedit3" id="configuration_du_server_side">Configuration du server side</h2>
+<div class="level2">
+
+<p>
+Il y a différentes options à définir dans votre code côté javascript (client) :
+</p>
+<pre class="code javascript">$<span class="br0">&#40;</span><span class="st0">'#myTable'</span><span class="br0">&#41;</span>.<span class="me1">DataTable</span><span class="br0">&#40;</span><span class="br0">&#123;</span>
+      <span class="st0">&quot;serverSide&quot;</span><span class="sy0">:</span> <span class="kw2">true</span><span class="sy0">,</span> <span class="co1">//indique que l'on utilise le serveur </span>
+      <span class="st0">&quot;processing&quot;</span><span class="sy0">:</span> <span class="kw2">true</span><span class="sy0">,</span> <span class="co1">//affiche processing quand ça charge</span>
+      <span class="st0">&quot;ajax&quot;</span><span class="sy0">:</span> <span class="br0">&#123;</span>
+        url<span class="sy0">:</span> <span class="st0">&quot;{{path('dataTableSearch')}}&quot;</span><span class="sy0">,</span> <span class="co1">// l'url que datatable va appeler, ici on utilise la fonction path de twig pour le générer</span>
+        <span class="st0">&quot;data&quot;</span><span class="sy0">:</span> <span class="kw1">function</span> <span class="br0">&#40;</span> d <span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="co1">//par défaut l'url ci-dessus va être appelée avec un certain nombre de variables (cf ci-dessous) mais grâce à cette fonction on peut en spécifier d'autres</span>
+          d.<span class="me1">field</span> <span class="sy0">=</span> $<span class="br0">&#40;</span><span class="st0">'#monChamp'</span><span class="br0">&#41;</span>.<span class="me1">val</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// en Symfony il suffira de faire $request-&gt;get('field); pour obtenir la valeur de ce champ</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span><span class="sy0">,</span>
+      <span class="st0">&quot;columns&quot;</span><span class="sy0">:</span><span class="br0">&#91;</span> <span class="co1">// le nom de chacune des colonnes de votre tableau</span>
+        <span class="br0">&#123;</span><span class="st0">&quot;data&quot;</span><span class="sy0">:</span> <span class="st0">&quot;id&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span>
+        <span class="br0">&#123;</span><span class="st0">&quot;data&quot;</span><span class="sy0">:</span> <span class="st0">&quot;info&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span>
+        <span class="br0">&#123;</span><span class="st0">&quot;data&quot;</span><span class="sy0">:</span> <span class="st0">&quot;supplier&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span>
+        <span class="br0">&#123;</span><span class="st0">&quot;data&quot;</span><span class="sy0">:</span><span class="st0">&quot;icon&quot;</span><span class="br0">&#125;</span>
+      <span class="br0">&#93;</span><span class="sy0">,</span>
+      <span class="st0">&quot;pageLength&quot;</span><span class="sy0">:</span> <span class="nu0">10</span><span class="sy0">,</span>
+      <span class="st0">&quot;lengthMenu&quot;</span><span class="sy0">:</span> <span class="br0">&#91;</span><span class="br0">&#91;</span><span class="nu0">10</span><span class="sy0">,</span> <span class="nu0">25</span><span class="sy0">,</span> <span class="nu0">50</span><span class="sy0">,</span> <span class="nu0">100</span><span class="sy0">,</span> <span class="nu0">500</span><span class="sy0">,</span> <span class="sy0">-</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="br0">&#91;</span><span class="nu0">10</span><span class="sy0">,</span> <span class="nu0">25</span><span class="sy0">,</span> <span class="nu0">50</span><span class="sy0">,</span> <span class="nu0">100</span><span class="sy0">,</span> <span class="nu0">500</span><span class="sy0">,</span> <span class="st0">&quot;All&quot;</span><span class="br0">&#93;</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="co1">// la taille des pages : à gauche les valeurs et à droite les options visibles par l'utilisateur</span>
+      <span class="st0">&quot;searchDelay&quot;</span><span class="sy0">:</span> <span class="nu0">1500</span> <span class="co1">// ne rien chercher avec 1.5 seconde</span>
+    <span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<a href="https://datatables.net/manual/server-side" class="urlextern" title="https://datatables.net/manual/server-side" rel="nofollow">La doc</a> de datatables nous indique le nom des variables envoyées par défaut.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configuration du server side&quot;,&quot;hid&quot;:&quot;configuration_du_server_side&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;943-2331&quot;} -->
+<h3 class="sectionedit4" id="configuration_du_serveur_avec_symfony">Configuration du serveur avec Symfony</h3>
+<div class="level3">
+
+<p>
+On commence les choses sérieuses :)
+</p>
+<pre class="code php"><span class="kw2">public</span> <span class="kw2">function</span> maFonction<span class="br0">&#40;</span>Request <span class="re0">$request</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="co1">// ici on a mit le nombre de résultats dans une variable en session pour tout le temps avoir le nombre de résultats sans refaire la requête SQL</span>
+  <span class="re0">$querySize</span> <span class="sy0">=</span> <span class="re0">$session</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'querysize'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="co1">// laRequeteSQL est une méthode qui va retourner qu'une partie des résultats selon la page sélectionnée. Typiquement ça peut être que les 10 premiers si l'utilisateur est sur la première page et choisi d'afficher 10 lignes.</span>
+  <span class="re0">$data</span> <span class="sy0">=</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">laRequeteSQL</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="co1">// si $request-&gt;get('search')['value'] n'est pas null alors l'utilisateur a rentré une valeur. Le nombre de &quot;recordFiltered&quot; est donc différent du nombre de record total (parce qu'on applique un filtre).</span>
+  <span class="kw1">if</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'search'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="st_h">'value'</span><span class="br0">&#93;</span> <span class="sy0">!=</span> <span class="kw4">null</span> <span class="br0">&#41;</span><span class="br0">&#123;</span>
+     <span class="re0">$jsonArray</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+          <span class="st_h">'data'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+          <span class="st_h">'recordsFiltered'</span> <span class="sy0">=&gt;</span><a href="http://www.php.net/sizeof"><span class="kw3">sizeof</span></a><span class="br0">&#40;</span><span class="re0">$data</span><span class="br0">&#41;</span><span class="sy0">,</span> 
+          <span class="st_h">'recordsTotal'</span> <span class="sy0">=&gt;</span> <span class="re0">$querySize</span><span class="sy0">,</span> <span class="co1">//le nombre de résultats total</span>
+      <span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">else</span><span class="br0">&#123;</span>
+    <span class="re0">$jsonArray</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+         <span class="st_h">'data'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+         <span class="st_h">'recordsFiltered'</span> <span class="sy0">=&gt;</span><span class="re0">$querySize</span><span class="sy0">,</span> 
+         <span class="st_h">'recordsTotal'</span> <span class="sy0">=&gt;</span> <span class="re0">$querySize</span><span class="sy0">,</span> <span class="co1">//le nombre de résultats total</span>
+      <span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+<span class="co1">// on fabrique le JSON pour retourner les données à notre datatable</span>
+<span class="kw1">foreach</span> <span class="br0">&#40;</span><span class="re0">$data</span> <span class="kw1">as</span> <span class="re0">$entity</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+     <span class="re0">$jsonArray</span><span class="br0">&#91;</span><span class="st_h">'data'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#91;</span>
+           <span class="st_h">'DT_RowClass'</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;selectedtochart_light&quot;</span><span class="sy0">,</span> <span class="co1">//la class CSS de la ligne</span>
+           <span class="st_h">'DT_RowId'</span><span class="sy0">=&gt;</span><a href="http://www.php.net/strval"><span class="kw3">strval</span></a><span class="br0">&#40;</span><span class="re0">$entity</span><span class="sy0">-&gt;</span><span class="me1">getId</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="co1">//l'ID de la ligne</span>
+           <span class="co1">//ici ça doit correspondre au nom des colonnes définies en javascript</span>
+           <span class="st_h">'id'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/strval"><span class="kw3">strval</span></a><span class="br0">&#40;</span><span class="re0">$entity</span><span class="sy0">-&gt;</span><span class="me1">getId</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span> 
+           <span class="st_h">'info'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/strval"><span class="kw3">strval</span></a><span class="br0">&#40;</span> <span class="re0">$entity</span><span class="sy0">-&gt;</span><span class="me1">getInfo</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy0">,</span>
+           <span class="st_h">'supplier'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/strval"><span class="kw3">strval</span></a><span class="br0">&#40;</span> <span class="re0">$entity</span><span class="sy0">-&gt;</span><span class="me1">getSuppliersInfo</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy0">,</span>
+           <span class="st_h">'icon'</span> <span class="sy0">=&gt;</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">renderButtonLinkRB</span><span class="br0">&#40;</span><span class="re0">$entity</span><span class="sy0">,</span><span class="re0">$type</span><span class="sy0">,</span><span class="re0">$idDemand</span><span class="sy0">,</span><span class="re0">$idstrain</span><span class="br0">&#41;</span>
+         <span class="br0">&#93;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="kw1">return</span> <span class="kw2">new</span> Response<span class="br0">&#40;</span><a href="http://www.php.net/json_encode"><span class="kw3">json_encode</span></a><span class="br0">&#40;</span><span class="re0">$jsonArray</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="nu0">200</span><span class="sy0">,</span> <span class="br0">&#91;</span><span class="st_h">'Content-Type'</span> <span class="sy0">=&gt;</span> <span class="st_h">'application/json'</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>    </pre>
+
+<p>
+Dans votre fonction nommée “laRequeteSQL” il faut récupérer les paramètres envoyés par dataTable et les traiter. Vous pouvez utiliser la debug bag de Symfony + la doc de DataTable pour vous aider. Voici un exemple de fonction :
+</p>
+<pre class="code php"><span class="kw2">public</span> <span class="kw2">function</span> laRequeteSQL<span class="br0">&#40;</span>Request <span class="re0">$request</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="re0">$qb</span> <span class="sy0">=</span> <span class="re0">$em</span><span class="sy0">-&gt;</span><span class="me1">getRepository</span><span class="br0">&#40;</span><span class="st_h">'MyBundle:MyEntity'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">createQueryBuilder</span><span class="br0">&#40;</span><span class="st_h">'q'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="co1">// start vaut le numéro de la première valeur a afficher (taille de page * nombre de la page) et length le nombre de résultats à afficher</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'start'</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="st0">&quot;&quot;</span>  and <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'length'</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="st0">&quot;&quot;</span> <span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">setFirstResult</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'start'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'length'</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="sy0">-</span><span class="nu0">1</span> <span class="br0">&#41;</span><span class="br0">&#123;</span> <span class="co1">// si length vaut -1 cela veut dire que l'utilisateur veut tout afficher, cf la configuration de datatable en javasript</span>
+          <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">setMaxResults</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'length'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+    <span class="kw1">else</span><span class="br0">&#123;</span>
+      <span class="co1">// on stock le nombre total de résultat dans la session</span>
+      <span class="re0">$session</span><span class="sy0">-&gt;</span><span class="me1">set</span><span class="br0">&#40;</span><span class="st_h">'querysize'</span><span class="sy0">,</span> <a href="http://www.php.net/sizeof"><span class="kw3">sizeof</span></a><span class="br0">&#40;</span><span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">getQuery</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">getResult</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="co1">// ici on choisi par défaut d'afficher que les 10 premiers résultats</span>
+      <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">setFirstResult</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">setMaxResults</span><span class="br0">&#40;</span><span class="nu0">10</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co1">// ici l'utilisateur a cliqué sur une colonne pour la trier</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'order'</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="st0">&quot;&quot;</span>   <span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$orderBy</span><span class="sy0">=</span><span class="st0">&quot;&quot;</span><span class="sy0">;</span>
+        <span class="re0">$order</span> <span class="sy0">=</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'order'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">// le chiffre est le numéro de la colonne, en commençant à 0</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$order</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'column'</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+          <span class="re0">$orderBy</span><span class="sy0">=</span><span class="st0">&quot;s.id&quot;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw1">elseif</span> 
+          <span class="co2">#etc...#
+</span>        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$order</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'dir'</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="st_h">'desc'</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+          <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">orderBy</span><span class="br0">&#40;</span><span class="re0">$orderBy</span><span class="sy0">,</span> <span class="st_h">'DESC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw1">elseif</span> <span class="br0">&#40;</span><span class="re0">$order</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'dir'</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="st_h">'asc'</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+          <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">orderBy</span><span class="br0">&#40;</span><span class="re0">$orderBy</span><span class="sy0">,</span> <span class="st_h">'ASC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+     <span class="co1">// ici l'utilisateur a entré une valeur, a vous faire votre requête SQL en fonction de ça !</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'search'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="st_h">'value'</span><span class="br0">&#93;</span> <span class="sy0">!=</span> <span class="st0">&quot;&quot;</span>   <span class="br0">&#41;</span>
+      <span class="br0">&#123;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span><a href="http://www.php.net/strlen"><span class="kw3">strlen</span></a><span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'search'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="st_h">'value'</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+          <span class="re0">$word</span> <span class="sy0">=</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'search'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="st_h">'value'</span><span class="br0">&#93;</span><span class="sy0">;</span>
+          <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">andWhere</span><span class="br0">&#40;</span><span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">expr</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">orX</span><span class="br0">&#40;</span>
+           <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">expr</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">like</span><span class="br0">&#40;</span><span class="st_h">'s.fieldOne'</span><span class="sy0">,</span> <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">expr</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">literal</span><span class="br0">&#40;</span><span class="st_h">'%'</span><span class="sy0">.</span><span class="re0">$word</span><span class="sy0">.</span><span class="st_h">'%'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+           <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">expr</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">like</span><span class="br0">&#40;</span><span class="st_h">'s.fieldTwo'</span><span class="sy0">,</span> <span class="re0">$qb</span><span class="sy0">-&gt;</span><span class="me1">expr</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">literal</span><span class="br0">&#40;</span><span class="st_h">'%'</span><span class="sy0">.</span><span class="re0">$word</span><span class="sy0">.</span><span class="st_h">'%'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+          <span class="co2">#etc...#
+</span>          <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>      </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configuration du serveur avec Symfony&quot;,&quot;hid&quot;:&quot;configuration_du_serveur_avec_symfony&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2332-&quot;} -->

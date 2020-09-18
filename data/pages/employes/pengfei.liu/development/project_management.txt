@@ -1,0 +1,122 @@
+====== Project management ======
+
+In this article, we will talk about how to manage software development projects and projects life cycle. 
+
+===== Tools =====
+
+We normally use two types of tools to manage a project.
+  - Project management tools (e.g. Redmine, Jira, etc.)
+  - Source code version control (e.g. Git, svn, bazzar, etc.)
+
+I recommend Redmine and Git as tools for beginners. Redmine is Open source and have a strong community. It has not only issues tracking features, but also has general project management features such as the Gantt charts, time tracking, wikis, blogs and agile Kanban board.
+
+Git is designed to manage the content of the source code (i.e. compare source code line by line). Bazzar has fewer features compared to Git.
+
+===== Players =====
+
+In every project, we will have three types of players:
+  * Project Manager
+  * Developers
+  * Clients
+
+In a larger team, you may have testers, architects, database admins, etc. You can find a complete list of their roles and duties in this page https://medium.com/@SherrieRose/software-project-team-roles-and-responsibilities-152a7d575759. For the simplicity of this tutorial. We assume that we have only three roles.
+
+===== Software development life cycles =====
+
+There are many software development life cycle models, such as:
+  * Code-and-fix (aka ad-hoc): creating software without any formal guidelines or process
+  * Waterfall: standard phases (req., design, code, test) in order
+  * Spiral: assess risks at each step; do most critical action first
+  * Evolutionary prototyping: build an initial small requirement spec, code it, then "evolve" the spec and code as needed. 
+  * Staged delivery:  build initial requirement specs for several releases, then design-and code each in sequence
+  * Agile (XP, scrum, ...)
+  * many others
+
+The above lifecycles all share the below steps/stages/phases:
+  * Requirements
+  * Design
+  * Implementation
+  * Testing
+  * Maintenance
+
+Note: The lifecycle models will add overhead cost in your development. But without them, you have no way to assess progress, quality or risks. Remember the later a problem is found in software, the more costly it is to fix. So you need to find the best fitting models for your projects. 
+
+Rate each model 1-5 in each of the categories
+^Model Name^ Risk management ^ Quality/cost ctrl ^ Predictability^ Visibility of progress ^ Customer involvement^
+|code-and-fix | 1 | 1 | 1 | 3 | 2 |
+|waterfall | 2 | 4 | 3 | 1 | 2 |
+|spiral | 5 | 5 | 3 | 3 | 3 |
+|evolutionary prototyping | 3 | 3 | 2 | 5 | 5 |
+|staged delivery | 3 | 5 | 3 | 3 | 4 |
+|design-to schedule | 4 | 3 | 5 | 3 | 2 |
+
+As you can see, all models have his advantage and disadvantage. Based on your project requirements, aim for good, fast, and cheap solutions. But you can't have all three at the same time.
+
+I will site the two most popular models for their advantage and disadvantage.
+
+==== Staged delivery model ====
+
+In a staged delivery model, after the requirements analysis, we design the global software architecture, then we divide the development into small stages. And in each small stages, we plan, design, execute, test and release 
+  - Requirements analysis
+  - design architect
+    - stage 1: detailed design, code, debug, test and delivery
+    - stage 2: detailed design, code, ...
+    - ...
+    - stage n: ... 
+
+staged delivery model is very practical, widely used and successful.
+
+=== Advantage ===
+
+  * Can ship at the end of any release cycle. Looks like success to customers, even if it's not the original goal.
+  * Intermediate deliveries show progress, satisfy customers, and lead to feedback.
+  * Problems are visible early (e.g., integration).
+  * Facilitates shorter, more predictable release cycles.
+
+=== Disadvantage ===
+
+  - Requires tight coordination with documentation, management, marketing
+  - Product must be decomposable
+  - Extra releases cause overhead
+
+==== Evolutionary prototyping model ====
+
+Evolutionary prototyping model is another popular and successful model, especially for custom products. We first need to develop a skeleton system and evolve it for delivery.
+
+Staged delivery ≠ evolutionary prototyping. Because in a staged delivery model, all requirements are known ahead of time. But in an evolutionary model, we discovered the requirements by customer feedback on each release.
+
+=== Advantages ===
+
+  * Addresses risks early
+  * Produces steady signs of progress, builds customer confidence
+  * Useful when requirements are unknown or changing
+  * Customer involvement ("What do you think of this version?")
+
+=== Limitations ===
+
+  * Requires close customer involvement
+  * Assumes user's initial spec is flexible
+  * Problems with planning
+    * Especially if the developers are inexperienced
+    * Feature creep, major design decisions, use of time, etc.
+    * Hard to estimate completion schedule or feature set
+    * Unclear how many iterations will be needed to finish
+  * Integration problems
+    * fails for separate pieces that must then be integrated
+    * bridging; new software trying to gradually replace old
+  * Temporary fixes become permanent constraints
+
+===== Real world scenarios =====
+
+Suppose you already have a project repository in the github or gitlab server. You are a developer who is joining the project for the first time. 
+
+==== Clone the project to your local repository and build the development environment ====
+
+<code>
+# clone the project
+git clone git@github.com:pengfei99/Data_Science.git
+</code>
+
+==== Define the feature which you wants to develop with your product manager ====
+
+PM will meet the clients first, gathering all requirements of this feature.

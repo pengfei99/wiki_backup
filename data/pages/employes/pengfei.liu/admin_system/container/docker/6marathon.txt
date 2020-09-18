@@ -1,0 +1,103 @@
+====== Part 6: Marathon ======
+
+If you have a big cluster which runs docker, the docker Swarm reaches its limit very quickly. So we need other solutions such as 
+  * mesos (start to die)
+  * Kubernetes (aka.K8s) (most popular at 2020)
+
+Marathon: Deploy and manage containers (including Docker) on top of Apache Mesos at scale. Marathon is an Apache Mesos framework for container orchestration. Marathon provides a REST API for starting, stopping, and scaling applications. Marathon is written in Scala and can run in highly-available mode by running multiple copies. The state of running tasks gets stored in the Mesos state abstraction.
+
+
+Marathon offers a web application and a rest api(http://mesosphere.github.io/marathon/api-console/index.html)
+
+To deploy a docker image on the cluster, you need to create a json file
+
+<code>
+{
+  "id": "/pengfei/dokuwiki",
+  "cmd": null,
+  "cpus": 0.01,
+  "mem": 128,
+  "disk": 0,
+  "instances": 1,
+  "acceptedResourceRoles": [],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "forcePullImage": true,
+      "image": "docker-registry.beta.innovation.insee.eu/pengfei/dokuwiki",
+      "parameters": [],
+      "privileged": false
+    },
+    "volumes": [],
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 0,
+        "labels": {},
+        "name": "default",
+        "protocol": "tcp",
+        "servicePort": 10826
+      }
+    ]
+  },
+  "networks": [
+    {
+      "mode": "container/bridge"
+    }
+  ],
+  "portDefinitions": [],
+  "maxLaunchDelaySeconds": 300
+}
+</code>
+
+This json file contains several parts
+  * Container description
+  * Image description
+
+===== Container description =====
+
+<code>
+# id is your container id.
+"id": "/pengfei/dokuwiki",
+# cmd is the command 
+  "cmd": null,
+# number of cpus of your container
+  "cpus": 0.01,
+# memory of your container
+  "mem": 128,
+# disk of your container
+  "disk": 0,
+# number of your instances which you want in your cluster
+  "instances": 1,
+#
+  "acceptedResourceRoles": [],
+</code>
+
+
+===== Image description =====
+
+<code>
+"container": {
+    "type": "DOCKER",
+    "docker": {
+      "forcePullImage": true,
+      # The location of the image which you want run inside the container
+      "image": "docker-registry.beta.innovation.insee.eu/pengfei/dokuwiki",
+      "parameters": [],
+      "privileged": false
+    },
+    "volumes": [],
+    # port specification of the container and the host of the container
+    # If we put hostPort as 0, the cluster will give a random port. 
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 0,
+        "labels": {},
+        "name": "default",
+        "protocol": "tcp",
+        "servicePort": 10826
+      }
+    ]
+  },
+</code>

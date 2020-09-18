@@ -1,0 +1,155 @@
+
+<h3 class="sectionedit1" id="user_stories">User stories</h3>
+<div class="level3">
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir visualiser un pathway dans un navigateur Web </td><td class="col1"> Utec 2,6,7 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir télécharger un pathway à partir de <code>KEGG</code>, <code>MetaCyc</code>, le convertir aux formats <code>SBML</code> (en priorité) et <code>BioPAX</code> </td><td class="col1"> Utec 2,6,7 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir ouvrir, éditer et sauvegarder des pathways <code>SBML</code> (en priorité) et <code>BioPAX</code> (en préservant une référence/lien vers la source) </td><td class="col1"> Utec 2,6,7 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir modifier le layout de son pathway manuellement (edition de base), appliquer des layouts automatiques (circulaire, hiérarchique, …), zoom +/- </td><td class="col1"> Utec 2,6,7 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir visualiser les <code>métabolites</code>, <code>lipids</code>, <code>protéines</code>, <code>gènes</code>, <code>interactions moléculaires</code> avec des couleurs et/ou formes différentes (e.g. métabolites avec des cercles rouges, protéines avec des carrés bleus, lipids avec des cercles jaunes, …) </td><td class="col1"> Utec 2,6,7 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir afficher et visualiser des informations quantitatives sur son pathway : les niveaux des flux métaboliques (chiffres, épaisseurs des arcs variables), le niveaux de métabolites (chiffres, entités de taille variables sur le graphe) </td><td class="col1"> Utec7 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir dupliquer des entités dans son graphe afin d&#039;améliorer le layout et avoir des pathways plus lisibles (2 entités distinctes peuvent donc  faire référence à la même molécule) </td><td class="col1"> Utec7 </td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [25-1529] -->
+</div>
+<!-- EDIT1 SECTION "User stories" [1-1530] -->
+<h3 class="sectionedit3" id="entite">Entité</h3>
+<div class="level3">
+
+<p>
+Objet graphique qui représente une molécule dans un état (e.g. protéine phosphorylée, enzyme active ou inactive, métabolite, lipide, …)
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>id</code> unique dans le graphe</div>
+</li>
+<li class="level1"><div class="li"> <code>InChi key</code> (e.g. L-Ascorbic Acid InChI Key = 1S/C6H8O6/c7-1-2(8)5-3(9)4(10)6(11)12-5/h2,5,7-8,10-11H,1H2/t2-,5+/m0/s1 (standard <a href="http://www.iupac.org/home/publications/e-resources/inchi.html" class="urlextern" title="http://www.iupac.org/home/publications/e-resources/inchi.html"  rel="nofollow">InChi</a>))</div>
+</li>
+<li class="level1"><div class="li"> ids de la moélcule dans les prinicpales bases de données de référence</div>
+<ul>
+<li class="level2"><div class="li"> <code>id Uniprot</code> pour les protéine (e.g. <a href="http://www.uniprot.org/uniprot/P05089" class="urlextern" title="http://www.uniprot.org/uniprot/P05089"  rel="nofollow">P05089</a> pour Arginase-1)</div>
+</li>
+<li class="level2"><div class="li"> <code>id Kegg</code> si ça vient de<a href="http://www.genome.jp/kegg/" class="urlextern" title="http://www.genome.jp/kegg/"  rel="nofollow">Kegg</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>IUPAC name</code> (e.g. (5R)-[(1S)-1,2-Dihydroxyethyl]-3,4-dihydroxyfuran-2(5H)-one for Acid Ascorbic)</div>
+</li>
+<li class="level1"><div class="li"> <code>Usual Name</code> (e.g. L-Ascorbic Acid, Glutamine, AKT-P, …) </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Entité" [1531-2366] -->
+<h3 class="sectionedit4" id="interaction">Interaction</h3>
+<div class="level3">
+
+<p>
+Lien entre 2 entités. Il existe deux types d&#039;interaction
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>Activation</code> : —→</div>
+<ul>
+<li class="level2"><div class="li"> Par exemple A —- active —→ B </div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <code>Inhibition</code> : —-|</div>
+<ul>
+<li class="level2"><div class="li"> Par exemple A —- inhibe —-| B  </div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<strong>Attention</strong>:<br/>
+
+L&#039;interaction ne donne pas forcement d&#039;information sur le mécanisme d&#039;action
+</p>
+<ul>
+<li class="level1"><div class="li"> une dégradation ou une désactivation (par phosphrylation, méthylation) d&#039;une molécule dans le cas d&#039;une <code>Inhibition</code></div>
+</li>
+<li class="level1"><div class="li"> une synthèse ou une simple activation par phosphorylation dans le cas d&#039;une <code>Activation</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Interaction" [2367-2906] -->
+<h3 class="sectionedit5" id="exemples_de_pathways">Exemples de pathways</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="genetic_pathways">Genetic pathways</h4>
+<div class="level4">
+
+<p>
+@ToDo
+</p>
+
+</div>
+
+<h4 id="signaling_pathways_protein-protein_interaction_pathway">Signaling pathways (Protein-Protein interaction pathway)</h4>
+<div class="level4">
+
+<p>
+@Todo
+</p>
+
+</div>
+
+<h4 id="metabolicfluxomic_pathways">Metabolic/Fluxomic pathways</h4>
+<div class="level4">
+
+<p>
+@ToDo
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Exemples de pathways" [2907-3086] -->
+<h3 class="sectionedit6" id="outilspublications">Outils/Publications</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Cytoscape (BioPax) : Permet d&#039;installer plusieurs plugins</div>
+</li>
+<li class="level1"><div class="li"> Cytoscape .js (Visualisation Web de pathway)</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.celldesigner.org/" class="urlextern" title="http://www.celldesigner.org/"  rel="nofollow">CellDesigner</a> : Logiciel de visualisation, modélisation, simulation dynamique de pathways (SBML) + plugins</div>
+</li>
+<li class="level1"><div class="li"> Kegg</div>
+</li>
+<li class="level1"><div class="li"> MetaCyc</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.ebi.ac.uk/biomodels-main/" class="urlextern" title="https://www.ebi.ac.uk/biomodels-main/"  rel="nofollow">BioModels</a> : Base de données de modèles cinétiques (SBML), curés et non-curés manuéllement (embl-ebi)</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.wikipathways.org/index.php/WikiPathways" class="urlextern" title="http://www.wikipathways.org/index.php/WikiPathways"  rel="nofollow">WikiPathways</a> (Base de données de Pathways)</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.researchgate.net/profile/Dmitry_Grapov/publication/274641857_MetaMapR_Pathway_Independent_Metabolomic_Network_Analysis_Incorporating_Unknowns/links/5527c51d0cf2779ab78aa2db.pdf" class="urlextern" title="http://www.researchgate.net/profile/Dmitry_Grapov/publication/274641857_MetaMapR_Pathway_Independent_Metabolomic_Network_Analysis_Incorporating_Unknowns/links/5527c51d0cf2779ab78aa2db.pdf"  rel="nofollow"> Pathway_Independent_Metabolomic_Network_Analysis</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://github.com/dgrapov/MetaMapR" class="urlextern" title="https://github.com/dgrapov/MetaMapR"  rel="nofollow"> MetaMapR</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Outils/Publications" [3087-] -->

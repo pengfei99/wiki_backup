@@ -1,0 +1,112 @@
+
+<h1 class="sectionedit1" id="migration_owncloud_2">Migration &quot;owncloud 2&quot;</h1>
+<div class="level1">
+
+<p>
+On migre d&#039;un serveur BSD vers un CentOS.
+</p>
+
+<p>
+On passe de la version 7 d&#039;owncloud à la version 8. Dans l&#039;avenir, on fera des mises à jour plus régulières…
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Migration owncloud 2" [1-197] -->
+<h2 class="sectionedit2" id="changer_de_base_de_donnees">Changer de base de données</h2>
+<div class="level2">
+
+<p>
+Une fois obtenues les informations de la nouvelle base de données, il suffit de lancer la commande suivante :
+</p>
+<pre class="code">  php occ db:convert-type --password=&quot;XXXXX&quot; mysql|pgsql username hostname database</pre>
+
+<p>
+Le fichier <code>config/config.php</code> est mis à jour une fois la migration effectuée.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Changer de base de données" [198-521] -->
+<h2 class="sectionedit3" id="migration">Migration…</h2>
+<div class="level2">
+
+<p>
+Les commandes <code>php occ</code> sont à lancer en tant que <strong>biodata</strong>.
+</p>
+<ul>
+<li class="level1"><div class="li"> [IT] Mettre à jour la documentation</div>
+</li>
+<li class="level1"><div class="li"> [IT] Générer un certificat StartSSL pour owncloud.bioaster.org</div>
+</li>
+<li class="level1"><div class="li"> Mettre à jour les données (rsync) <em>ad nauseam</em>…</div>
+</li>
+<li class="level1"><div class="li"> Prévenir les utilisateurs !!</div>
+</li>
+<li class="level1"><div class="li"> Mettre en mode maintenance les 2 serveurs le soir (cela tue toutes les connexions)<pre class="code">$ php occ maintenance:mode --on</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Faire une ultime synchronisation des données <pre class="code">rsync --archive --verbose --compress --update --inplace --append --human-readable /usr/local/www/owncloud/data/ biodata@ccage.in2p3.fr:/sps/bioaster/UsersData/</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Copier le fichier de configuration et la base SQLite vers le nouveau serveur</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assurer que le nouveau serveur est configuré pour utiliser la bd sqlite et les bonnes données<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=informatique:owncloud:migration&amp;codeblock=2" title="Download Snippet" class="mediafile mf_php">config/config.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+<span class="re0">$CONFIG</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'trusted_domains'</span> <span class="sy0">=&gt;</span>
+  <a href="http://www.php.net/array"><span class="kw3">array</span></a> <span class="br0">&#40;</span>
+    <span class="nu0">0</span> <span class="sy0">=&gt;</span> <span class="st_h">'ccbioappl03.in2p3.fr'</span><span class="sy0">,</span>
+    <span class="nu0">1</span> <span class="sy0">=&gt;</span> <span class="st_h">'owncloud.bioaster.org'</span><span class="sy0">,</span>
+  <span class="br0">&#41;</span><span class="sy0">,</span>
+  <span class="st_h">'datadirectory'</span> <span class="sy0">=&gt;</span> <span class="st_h">'/sps/gpfs/UsersData/'</span><span class="sy0">,</span>
+  <span class="st_h">'dbtype'</span> <span class="sy0">=&gt;</span> <span class="st_h">'sqlite3'</span><span class="sy0">,</span>
+  …</pre>
+</dd></dl>
+</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assurer que la base MySQL est vide<pre class="code">$ mysql -u bio_owncloud -p -h ccmysql.in2p3.fr bio_owncloud
+mysql&gt; drop database bio_owncloud;
+mysql&gt; create database bio_owncloud;</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Migrer de sqlite à MySQL<pre class="code">$ php occ db:convert-type --password=&quot;XXXXXXXX&quot; mysql bio_owncloud ccmysql.in2p3.fr bio_owncloud --all-apps</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Lancer une migration de la base sqlite (bd de v7 mais code de v8)<pre class="code">$ php occ upgrade</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Enlever le mode maintenance sur le nouveau (normalement fait par `upgrade`)<pre class="code">$ php occ maintenance:mode --off</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Lancer une sync des fichiers ?! <pre class="code">$ php occ files:scan</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> snapshot puis nouvelles variables de configuration ?!<pre class="code">  &#039;memcache.local&#039; =&gt; &#039;\\OC\\Memcache\\APCu&#039;,
+  &#039;asset-pipeline.enabled&#039; =&gt; true,
+  &#039;preview_max_scale_factor&#039; =&gt; 1,
+  &#039;enabledPreviewProviders&#039; =&gt;
+  array (
+    0 =&gt; &#039;OC\\Preview\\PNG&#039;,
+    1 =&gt; &#039;OC\\Preview\\JPEG&#039;,
+    2 =&gt; &#039;OC\\Preview\\GIF&#039;,
+    11 =&gt; &#039;OC\\Preview\\Illustrator&#039;,
+    12 =&gt; &#039;OC\\Preview\\Postscript&#039;,
+    13 =&gt; &#039;OC\\Preview\\Photoshop&#039;,
+    14 =&gt; &#039;OC\\Preview\\TIFF&#039;
+  ),</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=informatique:owncloud:ut6_vmware#sauvegarde_des_disques_des_vms" class="wikilink2" title="informatique:owncloud:ut6_vmware" rel="nofollow">Sauvegarde disque VMware</a></div>
+</li>
+<li class="level1"><div class="li"> Faire des tests !?</div>
+</li>
+<li class="level1"><div class="li"> Mettre une redirection sur l&#039;ancien (explicite pour rappeler que le montage doit être modifié)</div>
+</li>
+<li class="level1"><div class="li"> Annoncer la nouvelle <abbr title="Uniform Resource Locator">URL</abbr> aux utilisateurs</div>
+</li>
+<li class="level1"><div class="li"> Mettre à jour la documentation AQ</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Migration…" [522-] -->

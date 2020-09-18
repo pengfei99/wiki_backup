@@ -1,0 +1,10 @@
+====== Démarrer le serveur de test ======
+
+Le serveur de test permet de s'affranchir des problèmes de permissions que l'on peut avoir quand on utilise Apache|Lighttpd|Nginx…
+
+    $ php app/console server:run
+    Server running on http://127.0.0.1:8000
+    
+    Quit the server with CONTROL-C.
+
+On peut maintenant passer au développement.

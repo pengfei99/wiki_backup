@@ -1,0 +1,3 @@
+    sudo yum install mariadb
+    systemctl start mariadb
+    mysql -u root

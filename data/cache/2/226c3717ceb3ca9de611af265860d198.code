@@ -1,0 +1,14 @@
+&lt;IfModule mod_php5.c&gt;
+  php_value upload_max_filesize 200G
+  php_value post_max_size 200G
+  php_value memory_limit 200G
+  php_value mbstring.func_overload 0
+  php_value always_populate_raw_post_data -1
+  php_value default_charset 'UTF-8'
+  php_value output_buffering 0
+  php_value max_input_time 3600
+  php_value max_execution_time 3600
+  &lt;IfModule mod_env.c&gt;
+    SetEnv htaccessWorking true
+  &lt;/IfModule&gt;
+&lt;/IfModule&gt;

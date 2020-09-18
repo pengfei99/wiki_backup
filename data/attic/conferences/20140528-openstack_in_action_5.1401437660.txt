@@ -1,0 +1,146 @@
+====== Conférence "OpenStack in action! 5" ======
+
+Le mercredi 28 mai 2014, à Paris. Participants : TLC
+
+Liens sur le site d'eNovance : [[http://openstackinaction.com/|OpenStack in Action!]]
+
+**Impressions** : Une journée de promotion d'eNovance (la moitié des intervenants étant de la compagnie) et des solutions commerciales des différents partenaires (Red Hat, Suse...). Des sessions techniques très techniques. 
+
+**A retenir** :
+
+  * les techniques de tests du projet ;
+  * le processus d'intégration continue d'eNovance ;
+  * je suis le seul à avoir un laptop avec Windows... j'ai honte de le sortir ;
+  * pas mal de gens sont en train de //reviewer// des patchs (avec [[https://en.wikipedia.org/wiki/Gerrit_%28software%29|Gerrit]]et [[https://en.wikipedia.org/wiki/List_of_tools_for_code_review|autres]])
+
+===== 09h35 - Accelerate your business in the open hybrid cloud with OpenStack / Bryan Che =====
+
+Présentation (commerciale) des services cloud de Red Hat.
+
+  * "Dans 10 ans, rien en IT ne se fera sans OpenStack"
+  * La maintenance représente 80% du budget de l'IT ; OpenStack veut inverser le ratio.
+  * Les mots du jour : "Agile, efficiant, scalable"
+  * RedHat [[https://www.openshift.com/|OpenShift]] PaaS
+  * [[http://openshift.github.io/geard/|GearD]] for containers (docker: isolated apps in a VM) on top of RedHat Linux atomic host
+  * [[https://www.redhat.com/products/cloud-computing/cloudforms/|CloudForms]] (anciennement ManageIQ) : gestion "commerciale" d'un cloud
+
+===== 10h05 - Combining cloud technologies to leverage / Jean Philippe Melet =====
+
+Présentation commerciale de la solution vicube de la société Econocom
+
+  * "Marketwise, cloud is a huge oportunity for business"
+
+===== 10h30 - Is OpenStack ready for the enterprise? / Nick Barcet =====
+
+  * OpenStack is NOT a product! It's a technology framework. A cloud can be based on OpenStack
+  * Saving money on licensing fee is not a good reason to switch (ex: ESX, licensing is only 10%, 35% human cost)
+  * Good reasons to switch : it's Free software (Adaptability, Security, Sharing, Standard, Hybridate)
+  * "better, quicker, faster on the way to succes"
+  * Stop pre-control craziness: trust is the first enabler of inovation, wich leads to responsability, autonomy and creativity
+  * mesure in end goals, not in milestones
+
+===== 11h50 - OpenStack powered by users / Jonathan Bryce =====
+
+Présentation renommée "OpenStack global update" qui est un résumé de ce qui s'est dit à Atlanta.
+
+  * It's a plateform. Apache 2 license
+  * Icehouse: 9th release, 1200 dev (+30%)
+  * OpenStack summit in november in Paris
+
+===== 11h50 -  Why OpenStack [...] for private cloud? / Andrew Mitry =====
+
+Présentation par une personne de NBCUniversal des raisons pour lesquels ils ont choisi OpenStack.
+
+  * Community is driving the standards
+  * Not locked-in by vendor
+  * API abstraction, IPv6
+
+===== 12h20 - Behind the scene: how we produce OpenStack / Thierry Carrez =====
+
+Présentation de quelques statistiques et pratiques du projet OpenStack.
+
+  * 130+ git repo, 1.8+ MLOC
+  * **principals**
+    * if it's not (automatically) tested then it's considered as not working
+    * code review (for everyone)
+    * gate-centric dev (robotic overlord)
+    * time based releases (all the teams keep in sync)
+    * automate everything
+  * **challenges**
+    * //chaos//: no offical project goals
+    * task //coordination// across groups
+    * //congestion// of the gate (tests in parallel : A, A+B, A+B+C)
+    * //rare occurences//
+    * community focus
+    * "watercooler effect" : discussions à la machine à café remplacées par IRC et mailing lists
+    * anger (!!)... meet face to face
+  * "biggest software development ever" (?)
+
+===== 14h00 - Easing deployment of Highly available OpenStack cloud / Vincent Untz =====
+
+Présentation des solutions de haute disponibilité.
+
+High Availability (HA) done using Pacemaker on GNU. Required to reach 99,9% (and more) availability, minimises system downtime, minimises data loss.
+
+Différentes stratégies :
+
+  * Active/Passive: a server takes over in case of failure
+  * Active/Active: load balancing, DB... (for stateless software)
+
+HA in OpenStack: redondant network, storage...
+
+**Good news**: guide available, many stateless services. **Bad news**: difficult, services not easy to set up in active/active (DB)
+
+[[https://en.wikipedia.org/wiki/Pacemaker_%28software%29|Pacemaker]]: "you don't want it, but you need it" (to reach 99,9% SLA)
+
+[[http://clusterlabs.org/wiki/Hawk|Hawk]]: web UI for Pacemaker
+
+===== 14h30 - Bridges and tunnels [...] OpenStack networking / Mark McClain =====
+
+Présentation très technique du composant réseau d'OpenStack : Neutron.
+
+Why Neutron? Additionnal features, technology agnostique, unified API and small core
+
+Rest of the talk: technical details and implementation
+
+===== 15h00 - Code testing strategies / Chmouel Boujnah =====
+
+Présentation un peu farfelue de la manière dont les tests sont organisés dans OpenStack.
+
+  * Unit test: Test Driven Development (TDD), coding style (flake8 on top of pep8)
+  * Integration testing (API)
+  * Performence testing (benchmarking): do hardware performence test first
+  * Scalability testing
+  * regression
+  * compatibility
+  * Pentesting
+  * Usability
+
+**Tools and Libraries**: DevStack, tox/virtualenv, pbr, testrunner, coverage, testtools, mock, httppretty, six, tempest
+
+===== 15h30 - Nova, Road to Juno / Nikola Dipanov =====
+
+Présentation un peu confuse de la migration de Nova Network lors de la dernière release.
+
+**Main concerns**: live upgrades, live migrations
+
+===== 16h30 - OpenStack and Ceph / Sebastien Han =====
+
+Présentation de [[http://ceph.com/|Ceph]]et de son intégration dans OpenStack.
+
+Can be used since IceHouse with all the OpenStack components
+
+===== 17h00 - OpenStack on a silver platter / Emilien Macchi =====
+
+Présentation des méthodes d'intégration continue (CI) d'OpenStack par la société eNovance. Ce processus est mis en place pour gérer toute la mise à jour, le principal problème étant l'ordre de redémarrage des différents composants.
+
+All the tools developped by eNovance are OpenSource and available on GitHub.
+
+  * **Jenkins**: install OpenStack everyday on VM, then use tempest to test. Used to validate upstream packages and installation
+  * **eDeploy**: to deploy (using rsync) on the real hardware, no new pkg after deployment
+  * Config:
+    * **Puppet** and **serverspec**
+    * **config-tools** supervises puppet
+    * puppet uses modules from stackforge
+  * *Sanity: **smoke** and **tempest**
+  * Upgrade: **Ansible** playbooks

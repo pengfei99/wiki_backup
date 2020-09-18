@@ -1,0 +1,179 @@
+==== Build from source ====
+
+1. Download source
+
+Go to http://www.apache.org/dyn/closer.cgi/ambari/ambari-2.6.2 and find the suggested mirror for download. The process to verify the download is described is at http://www.apache.org/dyn/closer.cgi#verify
+
+2. build source via mvn
+<code>
+wget http://www.apache.org/dist/ambari/ambari-2.6.2/apache-ambari-2.6.2-src.tar.gz (use the suggested mirror from above)
+tar xfvz apache-ambari-2.6.2-src.tar.gz
+cd apache-ambari-2.6.2-src
+# build ambari-main
+mvn versions:set -DnewVersion=2.6.2.0.0
+ 
+pushd ambari-metrics
+# build ambari-metrics
+mvn versions:set -DnewVersion=2.6.2.0.0
+popd
+</code>
+
+3. Generate system packages via mvn
+
+After build we can now generate the rpm for yum installations. Before typing the following command, make sure that you have installed rpm-build
+
+<code>
+# install rpm-build if you don't have it
+yum install -y rpm-build
+
+# generate the rpm package for centos7
+mvn -B clean install rpm:rpm -DnewVersion=2.6.2.0.0 -DbuildNumber=631319b00937a8d04667d93714241d2a0cb17275 -DskipTests -Dpython.ver="python >= 2.6"
+
+# generate the deb package for debian
+mvn -B clean install jdeb:jdeb -DnewVersion=2.6.2.0.0 -DbuildNumber=631319b00937a8d04667d93714241d2a0cb17275 -DskipTests -Dpython.ver="python >= 2.6"
+
+</code>
+
+4. Install ambari server packages
+
+After step 3, mvn should generate a target folder under apache-ambari-2.6.2-src/ambari-server
+
+<code>
+# All the rpm packages for ambari server is located at 
+# ambari-server/target/rpm/ambari-server/RPMS/noarch/
+
+#[For CentOS 6 or 7]
+yum install ambari-server*.rpm    
+#This should also pull in postgres packages as well.
+
+#[For SLES 11]
+zypper install ambari-server*.rpm    
+#This should also pull in postgres packages as well.
+
+
+#[For Ubuntu/Debian]
+apt-get install ./ambari-server*.deb   
+#This should also pull in postgres packages as well.
+</code>
+
+
+5. Set up Ambari Server
+Run the setup command to configure your Ambari Server, Database, JDK, LDAP, and other options:Run the setup command to configure your Ambari Server, Database, JDK, LDAP, and other options:
+
+<code>
+ambari-server setup
+# Follow the on-screen instructions to proceed.
+# Step 1. Set selinux on mode permissive, enter y
+# Step 2. Custom user account for ambari-server daemon, the default is root, if it's for production, we suggest that you create a user ambari and use it to run ambari-server daemon.
+# Step 3. set jdk. we choose oracle jdk 8
+# Step 4. Set database, if you have remote db, you need to choose advance db configuration. Otherwise use the embedded postgresql server of ambari.
+# Step 5(optional) if you choose the remote db, you need to run the following DDL against the database to create the schema: /var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
+
+# Once set up is done, start Ambari Server:
+ambari-server start
+
+# in the console it should show in which port the ambari server runs. in my example, it runs on 8080
+# So enter http://<host-name or IP>:8080 to your browser. You should see a login page,
+# The default login and pwd is admin/admin. You should change it after the installation.
+
+# To stop the server
+ambari-server stop
+</code>
+
+6. Install ambari agent on all hosts
+This step needs to be run on all hosts that will be managed by Ambari(namenode and datanode).
+
+<code>
+# Copy the rpm package from ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/ and run:
+# [For CentOS 6 or 7]
+yum install ambari-agent*.rpm
+
+# [For SLES 11]
+zypper install ambari-agent*.rpm
+
+# [Ubuntu/Debian]
+apt-get install ./ambari-agent*.deb
+
+#Edit /etc/ambari-agent/ambari.ini
+...
+[server]
+hostname=localhost
+ 
+...
+
+# Make sure hostname under the [server] section points to the actual Ambari Server host, rather than "localhost".
+
+# after the config of ambari.ini. you can run the ambari-agent on all host
+ambari-agent start 
+</code>
+
+7. Use Web UI to manage cluster
+
+<code>
+Open up a web browser and go to http://<ambari-server-host>:8080.
+</code>
+
+
+Log in with username admin and password admin and follow on-screen instructions. Secure your environment by ensuring your administrator details are changed from the default values as soon as possible.
+
+Under Install Options page, enter the hosts to add to the cluster.  Do not supply any SSH key, and check "Perform manual registration on hosts and do not use SSH" and hit "Next".
+
+
+=== FAQ ===
+ If running into errors while compiling the ambari-metrics package due to missing the artifacts of jms, jmxri, jmxtools:
+
+<code>
+[ERROR] Failed to execute goal on project ambari-metrics-kafka-sink: Could not resolve dependencies for project org.apache.ambari:ambari-metrics-kafka-sink:jar:2.2.2-0: The following artifacts could not be resolved: javax.jms:jms:jar:1.1, com.sun.jdmk:jmxtools:jar:1.2.1, com.sun.jmx:jmxri:jar:1.2.1: Could not transfer artifact javax.jms:jms:jar:1.1 from/to java.net (https://maven-repository.dev.java.net/nonav/repository): No connector available to access repository java.net (https://maven-repository.dev.java.net/nonav/repository) of type legacy using the available factories WagonRepositoryConnectorFactory
+
+</code>
+
+The work around is to manually install the three missing artifacts:
+
+<code>
+mvn install:install-file -Dfile=jms-1.1.pom -DgroupId=javax.jms -DartifactId=jms -Dversion=1.1 -Dpackaging=jar
+ 
+mvn install:install-file -Dfile=jmxtools-1.2.1.pom -DgroupId=com.sun.jdmk -DartifactId=jmxtools -Dversion=1.2.1 -Dpackaging=jar
+ 
+mvn install:install-file -Dfile=jmxri-1.2.1.pom -DgroupId=com.sun.jmx -DartifactId=jmxri -Dversion=1.2.1 -Dpackaging=jar
+
+</code>
+
+The three poms are:
+
+<code>
+$ cat jms-1.1.pom
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>javax.jms</groupId>
+  <artifactId>jms</artifactId>
+  <version>1.1</version>
+  <name>Java Message Service</name>
+  <description>
+    The Java Message Service (JMS) API is a messaging standard that allows application components based on the Java 2 Platform, Enterprise Edition (J2EE) to create, send, receive, and read messages. It enables distributed communication that is loosely coupled, reliable, and asynchronous.
+  </description>
+  <url>http://java.sun.com/products/jms</url>
+  <distributionManagement>
+    <downloadUrl>http://java.sun.com/products/jms/docs.html</downloadUrl>
+  </distributionManagement>
+  
+$ cat jmxri-1.2.1.pom
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.sun.jmx</groupId>
+  <artifactId>jmxri</artifactId>
+  <version>1.2.1</version>
+  <distributionManagement>
+    <status>deployed</status>
+  </distributionManagement>
+  
+$ cat jmxtools-1.2.1.pom
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.sun.jdmk</groupId>
+  <artifactId>jmxtools</artifactId>
+  <version>1.2.1</version>
+  <distributionManagement>
+    <status>deployed</status>
+  </distributionManagement>
+
+</code>

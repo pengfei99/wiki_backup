@@ -1,0 +1,79 @@
+
+<h1 class="sectionedit1" id="yarn">Yarn</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Yarn" [1-20] -->
+<h2 class="sectionedit2" id="hadoop_yarn_architecture">Hadoop Yarn architecture</h2>
+<div class="level2">
+
+<p>
+Apache Yarn Framework consists of a master daemon known as “Resource Manager”, slave daemon called node manager (one per slave node) and Application Master (one per application).
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ayarn&amp;media=employes:pengfei.liu:big_data:yarn_architecture.gif" class="media" title="employes:pengfei.liu:big_data:yarn_architecture.gif"><img src="/lib/exe/fetch.php?w=400&amp;tok=9ced01&amp;media=employes:pengfei.liu:big_data:yarn_architecture.gif" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Hadoop Yarn architecture" [21-305] -->
+<h3 class="sectionedit3" id="resource_manager">Resource manager</h3>
+<div class="level3">
+
+<p>
+It is the master daemon of Yarn. RM manages the global assignments of resources (CPU and memory) among all the applications. It arbitrates system resources between competing applications. follow Resource Manager guide to learn Yarn Resource manager in great detail.
+</p>
+
+<p>
+Resource Manager has two Main components
+</p>
+<ul>
+<li class="level1"><div class="li"> Scheduler → The scheduler is responsible for allocating the resources to the running application. The scheduler is pure scheduler it means that it performs no monitoring no tracking for the application and even doesn’t guarantees about restarting failed tasks either due to application failure or hardware failures.</div>
+</li>
+<li class="level1"><div class="li"> Application manager → It manages running Application Masters in the cluster, i.e., it is responsible for starting application masters and for monitoring and restarting them on different nodes in case of failures</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Resource manager" [306-1183] -->
+<h3 class="sectionedit4" id="node_manager_nm">Node manager(NM)</h3>
+<div class="level3">
+
+<p>
+It is the slave daemon of Yarn. NM is responsible for containers monitoring their resource usage and reporting the same to the ResourceManager. Manage the user process on that machine. Yarn NodeManager also tracks the health of the node on which it is running. The design also allows plugging long-running auxiliary services to the NM; these are application-specific services, specified as part of the configurations and loaded by the NM during startup. A shuffle is a typical auxiliary service by the NMs for MapReduce applications on YARN.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Node manager(NM)" [1184-1754] -->
+<h3 class="sectionedit5" id="application_master_am">Application Master (AM)</h3>
+<div class="level3">
+
+<p>
+One application master runs per application. It negotiates resources from the resource manager and works with the node manager. It Manages the application life cycle.
+</p>
+
+<p>
+The AM acquires containers from the RM’s Scheduler before contacting the corresponding NMs to start the application’s individual tasks.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Application Master (AM)" [1755-2099] -->
+<h2 class="sectionedit6" id="resource_manager_restart">Resource Manager Restart</h2>
+<div class="level2">
+
+<p>
+Resource Manager is the central authority that manages resources and schedules applications running on YARN. Hence, it is potentially an SPOF (single point of failure) in an Apache YARN cluster.
+</p>
+
+<p>
+There are two types of restart for Resource Manager:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Non-work-preserving RM restart</strong>  This restart enhances RM to persist application/attempt state in a pluggable state-store. Resource Manager will reload the same info from state-store on the restart and re-kick the previously running apps. Users does not need to re-submit the applications. Node manager and clients during down time of RM will keep polling RM until RM comes up, when RM comes up, it will send a re-sync command to all the NM and AM it was talking to via heartbeats. The NMs will kill all its manager’s containers and re-register with RM</div>
+</li>
+<li class="level1"><div class="li"> <strong>Work-preserving RM restart</strong>  This focuses on reconstructing the running state of RM by combining the container status from Node Managers and container requests from Application Masters on restart. The key difference from Non-work-preserving RM restart is that already running apps will not be stopped after master restarts, so applications will not lose its processed data because of RM/master outage. RM recovers its running state by taking advantage of container status which is sent from all the node managers. NM will not kill the containers when it re-syncs with the restarted RM. It continues managing the containers and sends the container status across to RM when it re-registers.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Resource Manager Restart" [2100-] -->

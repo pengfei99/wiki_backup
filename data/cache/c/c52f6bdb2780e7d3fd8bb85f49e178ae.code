@@ -1,0 +1,4 @@
+system_users:
+  - { name: &quot;pveyre&quot;, comment: &quot;Pierre VEYRE&quot;, uid: 40639,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - …

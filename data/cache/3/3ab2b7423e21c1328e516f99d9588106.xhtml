@@ -1,0 +1,62 @@
+
+<h1 class="sectionedit1" id="installer_xfce_et_x2go_sur_centos">INSTALLER Xfce et X2go sur CentOS</h1>
+<div class="level1">
+
+<p>
+<strong>Installer EPEL et X window : </strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo yum install epel-release
+$ sudo yum groupinstall &quot;X Window system&quot;
+</pre>
+<p>
+<strong>Installer XFCE</strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo yum groupinstall xfce
+</pre>
+<p>
+<strong>Changer de target graphique</strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo systemctl isolate graphical.target
+</pre>
+<p>
+<strong>Démarrer l&#039;interface graphique au démarrage de la machine</strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo systemctl set-default graphical.target
+$ sudo rm &#039;/etc/systemd/system/default.target&#039;
+$ sudo ln -s &#039;/usr/lib/systemd/system/graphical.target&#039; &#039;/etc/systemd/system/default.target&#039;
+</pre>
+<p>
+<strong>Installer X2go server</strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo yum -y install x2goserver-xsession
+</pre>
+<p>
+<strong>Permettre la connexion ssh avec mot de passe </strong>
+</p>
+
+<p>
+Dans /etc/ssh/sshd_config :
+</p>
+<pre class="prettyprint lang-class">
+PasswordAuthentication yes
+</pre>
+<p>
+<strong>Redémarrer le daemon ssh</strong>
+</p>
+<pre class="prettyprint lang-class">
+$ sudo service sshd restart
+</pre>
+<p>
+<strong>On peut ensuite se connecter à la machine avec un client X2go ⇒ <a href="http://wiki.x2go.org/doku.php" class="urlextern" title="http://wiki.x2go.org/doku.php"  rel="nofollow">http://wiki.x2go.org/doku.php</a> </strong>
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_todo plugin_wrap" style="width: 30%;">
+<p>
+<strong><abbr title="Pierre Veyre">PV</abbr>: En faire un script Ansible ! </strong>
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>

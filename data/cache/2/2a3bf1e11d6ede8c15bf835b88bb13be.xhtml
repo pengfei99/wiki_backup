@@ -1,0 +1,93 @@
+
+<h1 class="sectionedit1" id="reunion_du_25_octobre_2017">Réunion du **25** Octobre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du **25** Octobre 2017" [1-48] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [49-100] -->
+<h2 class="sectionedit3" id="en_cours">En cours</h2>
+<div class="level2">
+
+<p>
+Reprise de l&#039;existant
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>Reprendre les champs description et commentaire liées aux demandes</del></div>
+</li>
+<li class="level1"><div class="li"> <del>CRB et contact</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Collections</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Microorganismes</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Reprendre les mails envoyés après une demande</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Mettre à jour le statut d&#039;une demande (annulée ou finie) cf <a href="https://devtools.bioaster.org/redmine/issues/608" class="urlextern" title="https://devtools.bioaster.org/redmine/issues/608"  rel="nofollow">https://devtools.bioaster.org/redmine/issues/608</a></del></div>
+</li>
+<li class="level1"><div class="li"> <del>Vérifier que les champs avec des sauts de ligne (emails, commentaires etc) sont bien sauvegardés comme il faut en DB.</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Vérifier que tout est OK sur l&#039;appli : notamment les listes à choix donnent parfois un affichage inattendu.</del> </div>
+</li>
+<li class="level1"><div class="li"> <del>Les fichiers attachés à un commentaire ne fonctionnent pas quand on clique dessus.</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Les mails liés au passage d&#039;une demande à l&#039;autre posent problèmes</del></div>
+</li>
+<li class="level1"><div class="li"> <span style='color:#ed1c24; '>Attention</span> : ne seront pas repris :</div>
+<ul>
+<li class="level2"><div class="li"> Les commentaires attachés aux étapes (c&#039;était prévu comme ça)</div>
+</li>
+<li class="level2"><div class="li"> Les mails de passage d&#039;étapes attaché non activé en backoffice ne seront pas sauvegardés (exemple avec l&#039;étape 3 en prod). </div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "En cours" [101-1220] -->
+<h2 class="sectionedit4" id="reste_a_faire">Reste à faire</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Reste à faire" [1221-1247] -->
+<h3 class="sectionedit5" id="points_majeurs">Points majeurs</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <del>Le tour des champs : certains sont en “longtext” alors qu&#039;un varchar(255) serait suffisant je pense.</del></div>
+</li>
+<li class="level1"><div class="li"> <del>SEO : robots.txt → ne pas indexer la page admin/ etc</del> Finalement le robots.txt sera laissé tel quel, ce n&#039;est pas ça qui faut faire pour ne pas indexer des pages par google (<a href="https://support.google.com/webmasters/answer/6062608?hl=en&amp;visit_id=1-636445156208444123-4189758307&amp;rd=1" class="urlextern" title="https://support.google.com/webmasters/answer/6062608?hl=en&amp;visit_id=1-636445156208444123-4189758307&amp;rd=1"  rel="nofollow">source</a>). La procédure suivie est <a href="https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag" class="urlextern" title="https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag"  rel="nofollow">ici</a> et a été implémenté lors de <a href="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/404fe941e0a55db297d1c93fc7b45cbf0b56dbbd" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/404fe941e0a55db297d1c93fc7b45cbf0b56dbbd"  rel="nofollow">ce commit</a>.</div>
+</li>
+<li class="level1"><div class="li"> <del>security.txt et human.txt</del> → l&#039;adresse de contact est accessible sur le site et ajouté côté client en JS, pas envie de rajouter des adresses mail en dur dans des fichiers textes accessibles par tous…</div>
+</li>
+<li class="level1"><div class="li"> Demander à l&#039;IT si le système de spool peut mettre l&#039;adresse biospecimens@bioaster.org dans les spams (<abbr title="Clément Delestre">CD</abbr> : je pense que ça dépend du client mail du receveur)</div>
+</li>
+<li class="level1"><div class="li"> Awstats</div>
+</li>
+<li class="level1"><div class="li"> Minifier les fichiers <abbr title="HyperText Markup Language">HTML</abbr>/<abbr title="Cascading Style Sheets">CSS</abbr>/JS <a href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/utiliser-assetic-pour-gerer-les-codes-css-et-js-de-votre-site" class="urlextern" title="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/utiliser-assetic-pour-gerer-les-codes-css-et-js-de-votre-site"  rel="nofollow">tuto global</a> <a href="http://symfony.com/doc/current/assetic/uglifyjs.html" class="urlextern" title="http://symfony.com/doc/current/assetic/uglifyjs.html"  rel="nofollow">uglify JS</a>  <a href="http://symfony.com/doc/2.8/assetic/asset_management.html" class="urlextern" title="http://symfony.com/doc/2.8/assetic/asset_management.html"  rel="nofollow">assetic global</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Points majeurs" [1248-2703] -->
+<h3 class="sectionedit6" id="points_mineurs">Points mineurs</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Idée : <del>charger les demandes dans le tableau de bord 15 par 15 en AJAX et mettre un loader dans une div en attendant. Ceci dit c&#039;est au delà de l&#039;isofonctionnalité. Sur la version de prod si on demande à afficher TOUTES les demandes ça met 4 secondes. Sur la version de dev en local ça met 2.5 secondes.</del> ajoutée comme idée <a href="https://devtools.bioaster.org/redmine/issues/432" class="urlextern" title="https://devtools.bioaster.org/redmine/issues/432"  rel="nofollow">ici</a></div>
+</li>
+<li class="level1"><div class="li"> Regarder <a href="http://webdevchecklist.com/" class="urlextern" title="http://webdevchecklist.com/"  rel="nofollow">ça</a></div>
+</li>
+<li class="level1"><div class="li"> Dashboard : j&#039;ai l’impression que par défaut on ne voit que les demandes faites sur des default workpackages. J&#039;aimerais en parler avec l&#039;UTEC01.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Points mineurs" [2704-] -->

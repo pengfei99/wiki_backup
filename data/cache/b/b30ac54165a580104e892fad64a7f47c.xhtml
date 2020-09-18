@@ -1,0 +1,229 @@
+
+<h1 class="sectionedit1" id="bonnes_pratiques_a_adopter_pour_nos_projets_en_python">Bonnes pratiques à adopter pour nos projets en python</h1>
+<div class="level1">
+
+<p>
+Il existe à ce jour deux versions de python couramment utilisées : la 2 et la 3.
+Il faudra privilégié la 3 pour les nouveaux projets, quand il n&#039;y a pas de contraintes techniques imposant la 2 (ex : librairies pas encore portées en 3, essentiellement).
+</p>
+
+<p>
+Afin d&#039;avoir une bonne hygiène sur votre machine de développement ou votre VM, voici la marche à suivre avant de se lancer dans le code.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Bonnes pratiques à adopter pour nos projets en python" [1-470] -->
+<h2 class="sectionedit2" id="installer_pyenv_et_ses_copains_virtualenvvirtualenvwrapper">Installer pyenv et ses copains virtualenv/virtualenvwrapper</h2>
+<div class="level2">
+<!-- EDIT3 PLUGIN_WRAP_START [0-] --><div class="wrap_center wrap_round wrap_tip plugin_wrap" style="width: 60%;">
+<p>
+Cette installation a été intégralement automatisée (<a href="https://gitlab.in2p3.fr/bioaster/pyenv-install" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/pyenv-install"  rel="nofollow">source</a>):
+</p>
+<pre class="prettyprint">
+bash &lt;(wget -q -O - https://gitlab.in2p3.fr/api/v3/projects/2178/repository/raw_blobs/a993032bba3335ba6bf0f34adb5b7b412b49e32c?private_token=eyJFUeV2sdzV5P_-BWi2)
+</pre>
+<p>
+Lancez cette commande puis sautez directement à la partie <span class="curid"><a href="/ut6/projets_internes/bp_python#creer_un_projet_avec_pyenv" class="wikilink1" title="ut6:projets_internes:bp_python">création de votre projet</a></span> !
+</p>
+</div><!-- EDIT4 PLUGIN_WRAP_END [0-] -->
+<p>
+pyenv va permettre de passer d&#039;une version à une autre en une seule commande. Fini les galères de déclarations de PYTHONPATH, de mises à jours compliquées, etc.
+</p>
+
+<p>
+Les sources du projet pyenv se trouve ici : <a href="https://github.com/yyuu/pyenv" class="urlextern" title="https://github.com/yyuu/pyenv"  rel="nofollow">https://github.com/yyuu/pyenv</a>
+Vous pouvez l&#039;installer à partir de là ou à partir de votre gestionnaire de paquets.
+</p>
+
+<p>
+Par exemple sur <strong>Mac</strong> vous pourrez le faire via homebrew de cette façon :
+</p>
+<pre class="prettyprint">
+$ brew install pyenv
+</pre>
+<p>
+Sous <strong>CentOS</strong>, il faudra le faire de la manière suivante:
+</p>
+<pre class="prettyprint">
+$ sudo yum install -y gcc gcc-c++ make git patch openssl-devel zlib-devel readline-devel sqlite-devel bzip2-devel
+$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+</pre>
+<p>
+Il faudra ensuite ajouter virtualenv et son compère virtualenvwrapper à pyenv. Ils auront pour mission d&#039;encapsuler vos projets dans des environnements de développements fermés afin de
+</p>
+<ul>
+<li class="level1"><div class="li"> ne pas pourrir votre système inutilement</div>
+</li>
+<li class="level1"><div class="li"> vous permettre d&#039;avoir une vue des lib installées pour le projet à un instant t</div>
+</li>
+<li class="level1"><div class="li"> vous faciliter la désinstallation d&#039;une ou plusieurs lib, vous etes sur qu&#039;il n&#039;y aura pas d&#039;impact sur d&#039;autres projets en cours</div>
+</li>
+</ul>
+
+<p>
+Même principe que pour pyenv. Les sources sont ici : <a href="https://github.com/yyuu/pyenv-virtualenv" class="urlextern" title="https://github.com/yyuu/pyenv-virtualenv"  rel="nofollow">https://github.com/yyuu/pyenv-virtualenv</a> et ici : <a href="https://github.com/yyuu/pyenv-virtualenvwrapper" class="urlextern" title="https://github.com/yyuu/pyenv-virtualenvwrapper"  rel="nofollow">https://github.com/yyuu/pyenv-virtualenvwrapper</a>
+</p>
+
+<p>
+Sur <strong>Mac</strong>, via homebrew :
+</p>
+<pre class="prettyprint">
+$ brew install pyenv-virtualenv
+$ brew install pyenv-virtualenvwrapper
+</pre>
+<p>
+Sous <strong>CentOS</strong>:
+</p>
+<pre class="prettyprint">
+$ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv-virtualenv
+$ git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git ~/.pyenv-virtualenvwrapper
+</pre>
+<p>
+Il faudra ensuite rajouter ces deux lignes à votre .bash_profile ou .profile :
+</p>
+<pre class="prettyprint">
+$ echo &#039;eval &quot;$(pyenv init -)&quot;&#039; &gt;&gt; ~/.bash_profile
+$ echo &#039;eval &quot;$(pyenv virtualenv-init -)&quot;&#039; &gt;&gt; ~/.bash_profile
+</pre>
+</div>
+<!-- EDIT2 SECTION "Installer pyenv et ses copains virtualenv/virtualenvwrapper" [471-2850] -->
+<h3 class="sectionedit5" id="mettre_a_jour_le_pythonpath">Mettre à jour le PYTHONPATH</h3>
+<div class="level3">
+
+<p>
+Avant l&#039;installation, votre PYTHONPATH devait ressembler à quelque chose comme ça :
+</p>
+<pre class="prettyprint lang-shell">
+/usr/local/bin:/usr/bin:/bin
+</pre>
+<p>
+Sur <strong>Mac</strong>, il faudra maintenant qu&#039;il ressemble à ça :
+</p>
+<pre class="prettyprint lang-shell">
+~/.pyenv/shims:/usr/local/bin:/usr/bin:/bin
+</pre>
+<p>
+Sous <strong>CentOS</strong>, il faudra ajouter bien plus de liens:
+</p>
+<pre class="prettyprint lang-shell">
+$HOME/.pyenv/bin:$HOME/.pyenv/shims:$HOME/.pyenv-virtualenv/bin:$HOME/.pyenv-virtualenv/shims:$HOME/.pyenv-virtualenvwrapper/bin:$HOME/.pyenv-virtualenvwrapper/shims:/usr/local/bin:/usr/bin:/bin
+</pre>
+<p>
+Puis un petit 
+</p>
+<pre class="prettyprint"> source .bash_profile </pre>
+<p>
+ fera l&#039;affaire.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Mettre à jour le PYTHONPATH" [2851-3489] -->
+<h3 class="sectionedit6" id="installer_les_differentes_versions_de_python_dans_pyenv">Installer les différentes versions de python dans pyenv</h3>
+<div class="level3">
+
+<p>
+Il va maintenant falloir “charger” pyenv des versions de python que vous désirez utiliser pour vos projets.
+Afin d&#039;avoir un aperçu des versions proposées par pyenv, il faudra taper :
+</p>
+<pre class="prettyprint">
+$ pyenv install --list
+</pre>
+<p>
+Vous aurez alors en sortie quelque chose de semblable à ça :
+</p>
+<pre class="prettyprint">
+Available versions:
+  2.1.3
+  2.2.3
+  2.3.7
+  2.4
+  2.4.1
+  2.4.2
+  2.4.3
+  2.4.4
+  2.4.5
+  2.4.6
+  2.5
+  2.5.1
+  2.5.2
+  2.5.3
+  2.5.4
+  2.5.5
+  .......
+</pre>
+<p>
+Une fois votre/vos version(s) choisie(s), vous n&#039;aurez plus qu&#039;à faire de la sorte :
+</p>
+<pre class="prettyprint">
+$ pyenv install 2.7.10
+$ pyenv install 3.5.1
+</pre>
+</div>
+<!-- EDIT6 SECTION "Installer les différentes versions de python dans pyenv" [3490-4165] -->
+<h2 class="sectionedit7" id="creer_un_projet_avec_pyenv">Créer un projet avec pyenv</h2>
+<div class="level2">
+
+<p>
+Le moment est venu pour vous de vous lancer corps et âme dans votre nouveau projet !
+Pour le créer il faudra suivre ce protocole :
+</p>
+<pre class="prettyprint">
+$ cd /path/to_my/project
+$ pyenv virtualenv 3.5.1 Le_Nom_Que_Je_Veux_Donner_A_Mon_Virtualenv
+$ echo &quot;Le_Nom_Que_Je_Veux_Donner_A_Mon_Virtualenv&quot; &gt; .python-version    // de cette façon à chaque fois que vous irez dans le dossier de votre projet cela switchera automatiquement sur votre pyenv/virtualenv
+</pre>
+<p>
+On peut remplacer la deuxième ligne par :
+</p>
+<pre class="prettyprint">
+$ pyenv local Le_Nom_Que_Je_Veux_Donner_A_Mon_Virtualenv // va créer le .python-version dans le dossier courant
+</pre>
+<p>
+Pour sortir du pyenv il suffira juste de sortir du dossier projet.
+</p>
+
+<p>
+Si jamais vous désirez pour une raison ou une autre etre dans votre virtualenv tout en étant à l&#039;extérieur de votre dossier projet, il vous suffira de faire :
+</p>
+<pre class="prettyprint">
+$ pyenv activate Le_Nom_Que_Je_Veux_Donner_A_Mon_Virtualenv
+</pre>
+<p>
+Et pour en sortir :
+</p>
+<pre class="prettyprint">
+$ pyenv deactivate Le_Nom_Que_Je_Veux_Donner_A_Mon_Virtualenv
+</pre>
+<p>
+Après tout ça, il faudra quand même produire un peu de code –&gt; a vous de jouer ! :)
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Créer un projet avec pyenv" [4166-5327] -->
+<h3 class="sectionedit8" id="supprimer_un_projet_avec_pyenv">Supprimer un projet avec pyenv</h3>
+<div class="level3">
+
+<p>
+Tout aussi simple (si ce n&#039;est plus) que de créer un projet.
+</p>
+<pre class="prettyprint">
+$ pyenv uninstall Le_Nom_De_Mon_Virtualenv
+</pre>
+</div>
+<!-- EDIT8 SECTION "Supprimer un projet avec pyenv" [5328-5491] -->
+<h2 class="sectionedit9" id="installation_d_outils_de_bonnes_pratiques">Installation d&#039;outils de bonnes pratiques</h2>
+<div class="level2">
+
+<p>
+Afin de garantir le respect du standard PEP8 et de détecter des erreurs courantes, installez le paquet flake8 de la manière suivante:
+</p>
+<pre class="prettyprint">
+pip install --upgrade pip
+pip install flake8
+</pre>
+<p>
+Idéalement, votre IDE devra être paramétrer pour faire ces vérifications en direct. Atom propose le plugin linter-flake8.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Installation d'outils de bonnes pratiques" [5492-] -->

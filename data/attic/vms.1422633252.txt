@@ -1,0 +1,13 @@
+====== Liste des Machines Virtuelles ======
+
+Les machines ont un utilisateur **bioaster** dont le mot de passe se trouve dans la base de donnée de mots de passe.
+
+Le compte **root** est accessible en utilisant ''sudo -s''.
+
+===== VMWare =====
+
+{{nslist>/vms/vmware nodsort,nodate}}
+
+===== OpenStack =====
+
+{{nslist>/vms/openstack nodsort,nodate}}

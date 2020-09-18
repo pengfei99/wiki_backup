@@ -1,0 +1,73 @@
+====== Lesson09: Monitoring Kafka ======
+
+===== 9.1 Metric basics =====
+===== 9.2 Broker metrics =====
+===== 9.3 Client monitoring =====
+
+
+
+===== 9.4 Yahoo Cluster Manager for Apache Kafka =====
+
+为了简化开发者和服务工程师维护Kafka集群的工作，yahoo构建了一个叫做Kafka管理器的基于Web工具，叫做 CMAK (Cluster Manager for Apache Kafka, previously known as Kafka Manager)。这个管理工具可以很容易地发现分布在集群中的哪些topic分布不均匀，或者是分区在整个集群分布不均匀的的情况。它支持管理多个集群、选择副本、副本重新分配以及创建Topic。同时，这个管理工具也是一个非常好的可以快速浏览这个集群的工具，有如下功能：
+  - 管理多个kafka集群
+  - 便捷的检查kafka集群状态(topics,brokers,备份分布情况,分区分布情况)
+  - 选择你要运行的副本
+  - 基于当前分区状况进行
+  - 可以选择topic配置并创建topic(0.8.1.1和0.8.2的配置不同)
+  - 删除topic(只支持0.8.2以上的版本并且要在broker配置中设置delete.topic.enable=true)
+  - Topic list会指明哪些topic被删除（在0.8.2以上版本适用）
+  - 为已存在的topic增加分区
+  - 为已存在的topic更新配置
+  - 在多个topic上批量重分区
+  - 在多个topic上批量重分区(可选partition broker位置)
+
+For more details, plz visite https://github.com/yahoo/CMAK
+
+==== 9.4.1 Get the source and change the config ====
+
+You can get the latest release from https://github.com/yahoo/CMAK/releases
+
+I download the 3.0.0.4 version(which requires java 11).
+
+<code>
+#Unzip and put it in somewhere you want. I put it here
+/opt/kafka/cmak-3.0.0.4
+
+# edit the conf/application.conf file 
+cmak.zkhosts="localhost:2181"
+basicAuthentication.username="admin"
+basicAuthentication.password="xxxx"
+
+</code>
+
+==== 9.4.2 Run the application ====
+
+<code>
+# kafka-manager 默认的端口是9000，可通过 -Dhttp.port，指定端口; -Dconfig.file=conf/application.conf指定配置文件:
+# if you system java setup is another jdk, rather than jdk 11. you can use -java-home to specify one.
+nohup bin/cmak -java-home /opt/JAVA/jdk-11.0.7 -Dconfig.file=conf/application.conf -Dhttp.port=8080 &
+</code>
+
+==== 9.4.2 Using the cmak Web UI ====
+
+Open your browser and typing localhost:8080, enter your login and passwd. You will see the welcome page of cmak.
+Click on Cluster button->add a new cluster, you will see the following form.
+{{:employes:pengfei.liu:data_science:kafka:kafka-cmak.png?400|}}
+
+Just fill the first three lines, and don't touch the others. 
+
+<code>
+注意：如果没有在 Kafka 中配置过 JMX_PORT，千万不要选择第一个复选框。
+
+Enable JMX Polling
+
+如果选择了该复选框，Kafka-manager 可能会无法启动。
+</code>
+
+
+Now you can monitoring all existing topics and brokers. You will see the interface like this.
+
+{{:employes:pengfei.liu:data_science:kafka:kafka_cmak_topics.png?600|}}
+
+You can also create topics with it.
+

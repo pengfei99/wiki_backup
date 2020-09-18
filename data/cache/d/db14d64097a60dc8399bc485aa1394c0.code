@@ -1,0 +1,9 @@
+$HTTP[&quot;host&quot;] == &quot;porpro.paris.bioaster.org&quot; {
+    server.document-root = vhost_dir + &quot;/porpro/app/webroot/&quot;
+    url.rewrite-if-not-file = ( 
+	&quot;^([^\?]*)(\?(.+))?$&quot; =&gt; &quot;/index.php?url=$1&amp;$3&quot; 
+    )
+    server.errorlog  = log_dir + &quot;porpro-error.log&quot;
+    accesslog.filename = log_dir + &quot;porpro-access.log&quot;
+    accesslog.format = &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot;
+}

@@ -1,0 +1,287 @@
+
+<h1 class="sectionedit1" id="dns_migration">DNS Migration</h1>
+<div class="level1">
+
+<p>
+Due to change or dns server
+</p>
+
+<p>
+old dns server for B1 :
+</p>
+
+<p>
+dns1: 10.69.1.31
+dns2: 10.69.2.21
+</p>
+
+<p>
+will migrate to new dns servers: 
+</p>
+
+<p>
+dns1: 10.69.2.21 (hosted in infra B1)
+dns2: 10.69.2.22 (hosted in infra B1)
+dns3: 10.70.2.21 (hosted in infra cc)
+dns4: 134.158.37.231 (dns cc)
+</p>
+
+</div>
+<!-- EDIT1 SECTION "DNS Migration" [1-299] -->
+<h2 class="sectionedit2" id="todo_list">Todo List</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Todo List" [300-322] -->
+<h3 class="sectionedit3" id="vm_in_sub_net_13415837024_and_172176024">VM in sub net 134.158.37.0/24 and 172.17.6.0/24</h3>
+<div class="level3">
+
+<p>
+Migration <abbr title="Domain Name System">DNS</abbr> for VMs in openstack is pending. Wait for network green light, Not tested yet.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "VM in sub net 134.158.37.0/24 and 172.17.6.0/24" [323-482] -->
+<h2 class="sectionedit4" id="done_list">Done List</h2>
+<div class="level2">
+
+<p>
+<strong><em class="u">The <abbr title="Domain Name System">DNS</abbr> migration is done for the following VMs, and new dns server config is tested.</em></strong>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Done List" [483-600] -->
+<h3 class="sectionedit5" id="vm_in_centos_7">VM in centos 7</h3>
+<div class="level3">
+
+<p>
+[CCLinGenostarP01]
+CCLinGenostarP01 ansible_host=10.70.3.15
+</p>
+
+<p>
+[CCLinTransMartD01]
+CCLinTransMartD01 ansible_host=10.70.3.29
+</p>
+
+<p>
+[CCLinPamD01]
+CCLinPamD01 ansible_host=10.70.3.117
+</p>
+
+<p>
+[CCLinBUMPD01]
+CCLinBUMPD01 ansible_host=10.70.3.28
+</p>
+
+<p>
+[CCLinAuthorizationP01]
+CCLinAuthorizationP01 ansible_host=10.70.3.116
+</p>
+
+<p>
+[CCLinBiospecP01]
+CCLinBiospecP01 ansible_host=10.70.3.12
+</p>
+
+<p>
+[CCLinDevToolsP01]
+CCLinDevToolsP01 ansible_host=10.70.3.13
+</p>
+
+<p>
+[CCLinDevToolsP02]
+CCLinDevToolsP02 ansible_host=10.70.3.14
+</p>
+
+<p>
+[CCLinNoeP01]
+CCLinNoeP01 ansible_host=10.70.3.21
+</p>
+
+<p>
+[CCLinNoeShibP01]
+CCLinNoeShibP01 ansible_host=10.70.3.27
+</p>
+
+<p>
+[CCLinOpenLdapP01]
+CCLinOpenLdapP01 ansible_host=10.70.3.118
+</p>
+
+<p>
+[CCLinShaarliP01]
+CCLinShaarliP01 ansible_host=10.70.3.19
+</p>
+
+<p>
+[CCLinShibP01]
+CCLinShibP01 ansible_host=10.70.3.18
+</p>
+
+<p>
+[CCLinSSOP01]
+CCLinSSOP01 ansible_host=10.70.3.11
+</p>
+
+<p>
+[CCLinWikiP01]
+CCLinWikiP01 ansible_host=10.70.3.16
+</p>
+
+<p>
+[CCLinCodiraP02]
+CCLinCodiraP01 ansible_host=10.70.3.24
+</p>
+
+</div>
+<!-- EDIT5 SECTION "VM in centos 7" [601-1555] -->
+<h3 class="sectionedit6" id="vm_in_windows">VM in windows</h3>
+<div class="level3">
+
+<p>
+#vm-name: CCWinAnalyseP01(10.70.3.20), service: VM for analyze UTEC7 
+</p>
+
+<p>
+[ccwinanalysep01]
+CCWinAnalyseP01.bioaster.local 
+</p>
+
+<p>
+#vm-name: CCWinImageP01(10.70.3.23), service: VM for image treatement UTEC7 
+</p>
+
+<p>
+[CCWinImageP01]
+CCWinImageP01.bioaster.local 
+</p>
+
+<p>
+#vm-name: CCWinADDSP01(10.70.2.21), service: server dns . we don&#039;t need to change dns setting in this vms
+</p>
+
+<p>
+[CCWinADDSP01]
+CCWinADDSP01.bioaster.local 
+</p>
+
+<p>
+#vm-name: CCWinCodiraP01(10.70.3.22), service: VM for matlab projet Codira 
+</p>
+
+<p>
+[ccwincodirap01]
+CCWinCodiraP01.bioaster.local
+</p>
+
+<p>
+#vm-name: CCWinCodiraP03(10.70.3.25), service: VM for matlab projet Codira 
+</p>
+
+<p>
+[ccwincodirap03]
+CCWinCodiraP03.bioaster.local 
+</p>
+
+<p>
+#vm-name: CCWinUtec03P01(10.70.3.26), service: VM for matlab projet Codira and utec03 paris
+</p>
+
+<p>
+[ccwinutec03p01]
+CCWinUtec03P01.bioaster.local 
+</p>
+
+<p>
+#vm-name: B1WinProteoP01(10.69.20.18), service: VM for UTEC7 
+</p>
+
+<p>
+[B1WinProteoP01]
+B1WinProteoP01.bioaster.local 
+</p>
+
+<p>
+#vm-name: B1WinBiomedic(10.69.3.11), service: VM for data storage project realism 
+</p>
+
+<p>
+[B1WinBiomedic]
+B1WinBiomedic.bioaster.local 
+</p>
+
+</div>
+<!-- EDIT6 SECTION "VM in windows" [1556-2617] -->
+<h3 class="sectionedit7" id="vm_in_sub_net_1341583624">VM in sub net 134.158.36.24</h3>
+<div class="level3">
+
+<p>
+<strong><em class="u">For the following VMs, we have done the dns migration, but test does not pass with the new dns server, as a result, we roll back to old config.</em></strong>
+</p>
+
+<p>
+[CCLinOwncloudP01] 
+CCLinOwncloudP01 ansible_host=134.158.36.24
+</p>
+
+<p>
+[ccbioappl01] 
+CCLinOwncloudP01 ansible_host=134.158.36.23
+</p>
+
+</div>
+<!-- EDIT7 SECTION "VM in sub net 134.158.36.24" [2618-2936] -->
+<h2 class="sectionedit8" id="wait_list">Wait List</h2>
+<div class="level2">
+
+<p>
+<strong><em class="u">VM may not need dns migration, they will be deleted or replaced soon.</em></strong>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Wait List" [2937-3038] -->
+<h3 class="sectionedit9" id="free_bsd">Free BSD</h3>
+<div class="level3">
+
+<p>
+# Serveur certificats &amp; tentake FreeBSD
+</p>
+
+<p>
+[ccbioappl05]
+ccbioappl05.bioaster.local ansible_host=134.158.36.25 ansible_ssh_user=bioaster ansible_sudo=true
+</p>
+
+<p>
+# Gestion de GPFS et transfert vers DataManageBC (FreeBSD)
+</p>
+
+<p>
+[ccbiodmcc]
+datamanagebc.bioaster.local ansible_host=134.158.36.7 ansible_ssh_user=bioaster ansible_sudo=true
+</p>
+
+<p>
+[biospecimen]
+biospecimen ansible_host=10.69.40.11
+</p>
+
+<p>
+[biospecimen-dev]
+biospecimen-dev ansible_host=10.69.40.12
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Free BSD" [3039-3496] -->
+<h3 class="sectionedit10" id="sl_6">SL 6</h3>
+<div class="level3">
+
+<p>
+# vm-name: drtpt202, service: utec2 
+[drtpt202]
+drtpt202.bioaster.local ansible_ssh_host=192.168.122.1 ansible_ssh_user=bioaster ansible_sudo=true
+</p>
+
+</div>
+<!-- EDIT10 SECTION "SL 6" [3497-] -->

@@ -1,0 +1,13 @@
+====== Outils ======
+
+===== Python =====
+
+Des modèles de script sont à disposition dans les dépôts [[/si/outils/bazaar|Bazaar]] du CC.
+
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/templates/
+
+Dans le dossier ''python_libraries'' se trouve les dépôts des bibliothèques Python. Elles doivent être placées dans un répertoire situé dans le ''PYTHONPATH'' pour fonctionner.
+
+    $ cd /home/<LOGIN>/lib/python
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/python_libraries/common
+    $ export PYTHONPATH="$PYTHONPATH:/home/<LOGIN>/lib/python"

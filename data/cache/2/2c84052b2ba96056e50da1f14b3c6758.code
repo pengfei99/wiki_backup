@@ -1,0 +1,10 @@
+<span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;UTF-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;database</span> <span class="re0">name</span>=<span class="st0">&quot;default&quot;</span> <span class="re0">namespace</span>=<span class="st0">&quot;AppBundle\Model&quot;</span> <span class="re0">defaultIdMethod</span>=<span class="st0">&quot;native&quot;</span><span class="re2">&gt;</span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;table</span> <span class="re0">name</span>=<span class="st0">&quot;user&quot;</span><span class="re2">&gt;</span></span>
+        <span class="sc3"><span class="re1">&lt;column</span> <span class="re0">name</span>=<span class="st0">&quot;id&quot;</span> <span class="re0">type</span>=<span class="st0">&quot;integer&quot;</span> <span class="re0">required</span>=<span class="st0">&quot;true&quot;</span> <span class="re0">primaryKey</span>=<span class="st0">&quot;true&quot;</span> <span class="re0">autoIncrement</span>=<span class="st0">&quot;true&quot;</span> <span class="re2">/&gt;</span></span>
+        <span class="sc3"><span class="re1">&lt;column</span> <span class="re0">name</span>=<span class="st0">&quot;first_name&quot;</span> <span class="re0">type</span>=<span class="st0">&quot;varchar&quot;</span> <span class="re0">size</span>=<span class="st0">&quot;100&quot;</span> <span class="re2">/&gt;</span></span>
+        <span class="sc3"><span class="re1">&lt;column</span> <span class="re0">name</span>=<span class="st0">&quot;last_name&quot;</span> <span class="re0">type</span>=<span class="st0">&quot;varchar&quot;</span> <span class="re0">size</span>=<span class="st0">&quot;100&quot;</span> <span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/table<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/database<span class="re2">&gt;</span></span></span>

@@ -1,0 +1,61 @@
+====== MaSuRCA assembler======
+
+===== Informations =====
+
+  * **Version** : 2.1.0
+  * **Licence** : //"Open Source"//
+  * **Page Web** : [[http://www.genome.umd.edu/masurca.html]]
+  * **Description** : MaSuRCA is whole genome assembly software. It combines the efficiency of the de Bruijn graph and Overlap-Layout-Consensus (OLC) approaches. MaSuRCA can assemble data sets containing only short reads from Illumina sequencing or a mixture of short reads and long reads (Sanger, 454). 
+
+===== Installation =====
+
+__**Notes**__ :
+
+  * La version 2.2.0 est boguée et ne compile pas.
+  * La version 2.0.3 dépend d'une version de GCC > 4.7 (contournable en remplaçant ''-std=c++11'' par ''-std=c++0x'')
+  * La version 2.1.0 dépend de [[in2p3/logiciels/jellyfish|JELLYFISH]] 1.1.0 et 2.0. La 1.1.0 ne pouvant être installée séparément on se contentera de noter que [[in2p3/logiciels/jellyfish|JELLYFISH]] et MaSuRCA sont en ''conflict'' dans les fichiers module.
+  
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APPS="$SOFTWARE/apps/gcc-RedHat_4.4.7-3"
+
+mkdir -p $APPS/masurca/2.1.0
+cd $SOFTWARE/src
+wget ftp://ftp.genome.umd.edu/pub/MaSuRCA/MaSuRCA-2.1.0.tar.gz
+tar xvzf MaSuRCA-2.1.0.tar.gz
+cd MaSuRCA-2.1.0
+DEST=$APPS/masurca/2.1.0 ./install.sh
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "MaSuRCA assembler.\n"
+}
+
+conflict "jellyfish"
+
+set version "2.1.0"
+
+set root "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/masurca/${version}"
+set bin_dir "${root}/bin"
+set lib_dir "${root}/lib"
+set include_dir "${root}/include"
+set man_dir "${root}/share/man"
+set pkgcfg_dir "${lib_dir}/pkgconfig"
+
+prepend-path PATH $bin_dir
+prepend-path LIBRARY_PATH $lib_dir
+prepend-path LD_LIBRARY_PATH $lib_dir
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+prepend-path MANPATH $man_dir
+prepend-path PKG_CONFIG_PATH $pkgcfg_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 2.1.0 installée

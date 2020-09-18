@@ -1,0 +1,162 @@
+
+<h1 class="sectionedit1" id="part_3services">Part 3: Services</h1>
+<div class="level1">
+
+<p>
+In part 3, we scale our application and enable load-balancing. To do this, we must go one level up in the hierarchy of a distributed application: the service.
+</p>
+
+<p>
+Stack
+Services (you are here)
+Container (covered in part 2)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Part 3: Services&quot;,&quot;hid&quot;:&quot;part_3services&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-253&quot;} -->
+<h2 class="sectionedit2" id="about_services">About services</h2>
+<div class="level2">
+
+<p>
+In a distributed application, different pieces of the app are called “services”. For example, if you imagine a video sharing site, it probably includes a service for storing application data in a database, a service for video transcoding in the background after a user uploads something, a service for the front-end, and so on.
+</p>
+
+<p>
+Services are really just “containers in production.” A service only runs one image, but it codifies the way that image runs—what ports it should use, how many replicas of the container should run so the service has the capacity it needs, and so on. Scaling a service changes the number of container instances running that piece of software, assigning more computing resources to the service in the process.
+</p>
+
+<p>
+Luckily it’s very easy to define, run, and scale services with the Docker platform – just write a docker-compose.yml file.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;About services&quot;,&quot;hid&quot;:&quot;about_services&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;254-1155&quot;} -->
+<h2 class="sectionedit3" id="docker-composeyml">docker-compose.yml</h2>
+<div class="level2">
+
+<p>
+A docker-compose.yml file is a YAML file that defines how Docker containers should behave in production.
+</p>
+
+<p>
+Save this file as docker-compose.yml wherever you want. Be sure you have pushed the image you created in Part 2 to a registry, and update this .yml by replacing username/repo:tag with your image details. The following example is based on my settings
+</p>
+<pre class="code">version: &quot;3&quot;
+services:
+  pengfeiweb:
+  #the name of the service
+    image: liupengfei99/test:v1
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: &quot;0.1&quot;
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - &quot;4000:80&quot;
+    networks:
+      - webnet
+networks:
+  webnet:
+</pre>
+
+<p>
+The above docker-compose.yml file tells Docker to do the following:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pull the image we uploaded in step 2 from the registry.</div>
+</li>
+<li class="level1"><div class="li"> Run 5 instances of that image as a service called the “web”, limiting each one to use, at most, 10% of a single core of CPU time (this could also be e.g. “1.5” to mean 1 and a half core for each), and 50MB of RAM.</div>
+</li>
+<li class="level1"><div class="li"> Immediately restart containers if one fails.</div>
+</li>
+<li class="level1"><div class="li"> Map port 4000 on the host to web’s port 80.</div>
+</li>
+<li class="level1"><div class="li"> Instruct web’s containers to share port 80 via a load-balanced network called webnet. (Internally, the containers themselves publish to web’s port 80 at an ephemeral port.)</div>
+</li>
+<li class="level1"><div class="li"> Define the website network with the default settings (which is a load-balanced overlay network).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;docker-compose.yml&quot;,&quot;hid&quot;:&quot;docker-composeyml&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1156-2627&quot;} -->
+<h2 class="sectionedit4" id="run_your_new_load-balanced_app">Run your new load-balanced app</h2>
+<div class="level2">
+
+<p>
+Before we can use the docker stack deploy command we first run:
+</p>
+<pre class="code">docker swarm init
+
+# Note: We get into the meaning of that command in part 4. If you don’t run docker swarm init you get an error that “this node is not a swarm manager.” </pre>
+
+<p>
+Now let’s run it. You need to give your app a name. Here, it is set to dockerlab:
+</p>
+<pre class="code">docker stack deploy -c docker-compose.yml dockerlab
+# The above command will run a single service stack. This single service stack is running 5 container instances of our deployed image on one host. Let’s investigate.
+
+# If all works fine, you should see
+Creating network dockerlab_webnet
+Creating service dockerlab_pengfeiweb
+
+# Get the service ID for the one service in our application:
+$ docker service ls
+
+ID                  NAME                   MODE                REPLICAS            IMAGE                  PORTS
+4bjr3jvhzp02        dockerlab_pengfeiweb   replicated          5/5                 liupengfei99/test:v1   *:4000-&gt;80/tcp
+
+# Alternatively, you can run docker stack services, followed by the name of your stack. The following example command lets you view all services associated with the dockerlab stack:
+$ docker stack services dockerlab
+
+# A single container running in service is called a task. Tasks are given unique IDs that numerically increment, up to the number of replicas you defined in docker-compose.yml. List the tasks for your service:
+
+$ docker service ps dockerlab_pengfeiweb
+ID                  NAME                     IMAGE                  NODE                    DESIRED STATE       CURRENT STATE           ERROR               PORTS
+sdh1ws0hafcg        dockerlab_pengfeiweb.1   liupengfei99/test:v1   localhost.localdomain   Running             Running 7 minutes ago                       
+yg6hnito06e1        dockerlab_pengfeiweb.2   liupengfei99/test:v1   localhost.localdomain   Running             Running 7 minutes ago                       
+
+# Tasks also show up if you just list all the containers on your system, though that is not filtered by service:
+
+$ docker container ls -q</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Run your new load-balanced app&quot;,&quot;hid&quot;:&quot;run_your_new_load-balanced_app&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2628-4762&quot;} -->
+<h2 class="sectionedit5" id="scale_the_app">Scale the app</h2>
+<div class="level2">
+
+<p>
+You can scale the app by changing the replicas value in docker-compose.yml, saving the change, and re-run the docker stack deploy.
+</p>
+
+<p>
+Docker performs an in-place update, no need to tear the stack down first or kill any containers.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scale the app&quot;,&quot;hid&quot;:&quot;scale_the_app&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;4763-5020&quot;} -->
+<h2 class="sectionedit6" id="take_down_the_app_and_the_swarm">Take down the app and the swarm</h2>
+<div class="level2">
+<pre class="code"># Take the app down
+docker stack rm dockerlab
+
+# Take down the swarn
+docker swarm leave --force</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Take down the app and the swarm&quot;,&quot;hid&quot;:&quot;take_down_the_app_and_the_swarm&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;5021-5177&quot;} -->
+<h2 class="sectionedit7" id="recap">Recap</h2>
+<div class="level2">
+<pre class="code">docker stack ls                                            # List stacks or apps
+docker stack deploy -c &lt;composefile&gt; &lt;appname&gt;  # Run the specified Compose file
+docker service ls                 # List running services associated with an app
+docker service ps &lt;service&gt;                  # List tasks associated with an app
+docker inspect &lt;task or container&gt;                   # Inspect task or container
+docker container ls -q                                      # List container IDs
+docker stack rm &lt;appname&gt;                             # Tear down an application
+docker swarm leave --force      # Take down a single node swarm from the manager</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Recap&quot;,&quot;hid&quot;:&quot;recap&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;5178-&quot;} -->

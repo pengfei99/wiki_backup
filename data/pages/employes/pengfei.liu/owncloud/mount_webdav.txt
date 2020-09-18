@@ -1,0 +1,129 @@
+====== Install owncloud client on centos 7 ======
+
+This fat client will sync your entire owncloud folder to your local desktop. It may cost you a lot.
+
+1. Install the owncloud-client 
+<code>
+cd /etc/yum.repos.d/
+
+wget http://download.opensuse.org/repositories/isv:ownCloud:desktop/CentOS_7/isv:ownCloud:desktop.repo
+
+yum install owncloud-client
+</code>
+
+2. Configure the client
+
+Click on Applicaions->Accessories->owncloud desktop sync client
+
+Enter the owncloud server address: https://owncloud.bioaster.org
+
+Enter your login password owncloud
+
+You choose the folder you want to sync and local folder path  
+
+
+====== Install desktop client on ubuntu 16.04 ======
+
+<code>
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Ubuntu_16.04/ /' > /etc/apt/sources.list.d/owncloud-client.list"
+sudo apt-get update
+sudo apt-get install owncloud-client
+</code>
+
+
+
+====== Mount webdav on centos 7 ======
+
+There are two ways to do this, 
+  - Use Gnome or KDE utilites.
+  - Use package davfs2 to mount webdav as a file system 
+
+====== Mount webdav via Gnome ======
+
+''Centos KDE''
+
+1.If you have a gnome or KDE GUI on your centos. It's very simple. Open a folder (Click on Places-> Home). Now on the top menu bar, you will see a new tab "Files". Click on Files, then chose connect to Server.
+
+2. In the Server address bar, you put 
+
+''davs://owncloud.bioaster.org/remote.php/webdav/''
+
+If your server is on http then use 
+
+''dav://owncloud.bioaster.org/remote.php/webdav/''
+
+A pop up window will ask your login password.
+
+After this you will see a new folder on the left hand side bar.
+
+''Ubuntu unity''
+
+
+1.If your ubuntu is a default install. It's very simple. Open a folder, Now on the top menu bar, you will see a new tab "Files". Click on Files, then chose connect to Server.
+
+2. In the Server address bar, you put 
+
+''davs://owncloud.bioaster.org/remote.php/webdav/''
+
+If your server is on http then use 
+
+''dav://owncloud.bioaster.org/remote.php/webdav/''
+
+A pop up window will ask your login password.
+
+After this you will see a new folder on the left hand side bar.
+
+====== Mount webdav via davfs ======
+
+<code>
+# 1. Install epel, the davfs2 package is in the epel repo
+
+sudo yum install epel-release
+
+# 2. Install davfs2 package
+
+sudo yum install davfs2
+
+# 3. Create mount point and conf folder for davfs2
+
+mkdir /home/<uid>/owncloud
+
+mkdir /home/<uid>/.davfs2
+
+# 4. Copy and edit davfs conifg file
+
+sudo cp /etc/davfs2/secrets /home/<uid>/.davfs2/
+
+sudo chown <uid>:<uid> /home/<uid>/.davfs2/secrets
+
+sudo chmod 0600 /home/<uid>/.davfs2/secrets
+
+# Add the following line at the end of file secrets
+
+https://owncloud.bioaster.org/remote.php/webdav/ <username> <password>
+
+5. Mount the webdav
+
+mount -t davfs https://owncloud.bioaster.org/remote.php/webdav/ /home/<uid>/owncloud
+
+6 Make the auto mount at boot
+
+Edit /etc/fstab, add the following line at the end of the file
+
+https://owncloud.bioaster.org/remote.php/webdav   /home/<uid>/owncloud davfs user,rw,auto 0 0
+</code>
+
+
+
+**I have tested this, it's not good idea. Because, at boot stage, you don't have internet connections alreay, it may result to error.**
+
+7. Known issues
+
+  - You may have this as warning message, /sbin/mount.davfs: warning: the server does not support locks
+
+You can add ''use_locks 0'' in /etc/davfs2/davfs2.conf
+
+  - To avoid answer y for accepting servcer certificates. Copy server-certificate.pem to /etc/davfs2/certs/. Then edit /etc/davfs2/davfs2.conf and uncomment the line servercert ''servercert /etc/davfs2/certs/server-certificate.pem''
+
+ 
+

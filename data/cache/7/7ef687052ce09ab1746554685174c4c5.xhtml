@@ -1,0 +1,83 @@
+
+<h1 class="sectionedit1" id="sequenceserver">SequenceServer</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "SequenceServer" [1-30] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 0.8.7</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : <em>Open Source</em> (for academics) &amp; <em>Commercial</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://www.sequenceserver.com" class="urlextern" title="http://www.sequenceserver.com"  rel="nofollow">http://www.sequenceserver.com</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : SequenceServer lets you rapidly set up a BLAST+ server with an intuitive user interface for use locally or over the web.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [31-344] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_info plugin_wrap">
+<p>
+L&#039;installation avec <strong>passenger</strong> n&#039;est pas vraiment adaptée à une approche “multi projets”.<br/>
+
+<strong>SequenceServer</strong> tourne aussi très bien en <em>standalone</em>…
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] --><pre class="code">sudo aptitude install --without-recommends ruby ruby-gems ncbi-blast+
+sudo gem install sequenceserver
+vim .sequenceserver.conf
+# bin: /usr/bin
+# database: /var/db/blast
+sudo mkdir -p /var/db/blast</pre>
+<pre class="code">sudo aptitude intall build-essential apache2 \
+              libssl-dev zlib1g-dev apache2-threaded-dev \
+              ruby-dev libapr1-dev libaprutil1-dev libcurl4-gnutls-dev
+sudo gem install passenger
+sudo passenger-install-apache2-module</pre>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/sequenceserver?codeblock=2" title="Download Snippet" class="mediafile mf_load">/etc/apache2/mods-available/passenger.load</a></dt>
+<dd><pre class="code text">LoadModule passenger_module /var/lib/gems/1.9.1/gems/passenger-4.0.48/buildout/apache2/mod_passenger.so
+&lt;IfModule mod_passenger.c&gt;
+  PassengerRoot /var/lib/gems/1.9.1/gems/passenger-4.0.48
+  PassengerDefaultRuby /usr/bin/ruby1.9.1
+&lt;/IfModule&gt;</pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/sequenceserver?codeblock=3" title="Download Snippet" class="mediafile mf_">/etc/apache2/sites-available/sequenceserver</a></dt>
+<dd><pre class="code text">&lt;VirtualHost *:80&gt;
+ServerName blast.paris.bioaster.org
+  DocumentRoot /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/
+  &lt;Directory /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/&gt;
+    Allow from all
+    Options -MultiViews
+  &lt;/Directory&gt;
+  PassengerUser www-data
+&lt;/VirtualHost&gt;</pre>
+</dd></dl>
+<pre class="code">sudo a2enmod passenger
+sudo a2ensote sequenceserver
+
+cd /var/lib/gems/1.9.1/gems/sequenceserver-0.8.7/public/
+sudo bundle install
+
+sudo vim /var/www/.sequenceserver.conf
+# bin: /usr/bin
+# database: /var/db/blast
+
+sudo service apache2 restart</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [345-1950] -->
+<h2 class="sectionedit6" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.08.08 (tlc)</strong> Version 0.8.7 installée</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Log" [1951-] -->

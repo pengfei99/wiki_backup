@@ -1,0 +1,130 @@
+====== Lesson04: Spark Core and RDD ======
+
+The foundation of Spark Core are:
+  * The distributed computing infrastructure
+  * The RDD programming abstraction.
+
+
+===== 4.1 Introduction of RDD =====
+
+RDDs represent both the idea of how a large dataset is represented in Spark and the abstraction for working with it.
+
+RDDs are:
+  * immutable, 
+  * fault-tolerant,
+  * parallel data structures
+  * in-memory storage and computation
+  * Data Partitioning and Placement
+  * rich set of operators.  
+
+==== 4.1.1 Immutable ====
+
+RDDs are designed to be immutable, which means you can’t specifically modify a particular row in the dataset represented by that RDD. The RDD operations that manipulate the rows in the RDD will return a new RDD. The source RDD is unchanged. The immutability of RDDs essentially requires an RDD to carry its lineage information that Spark leverages to efficiently provide the fault tolerance capability.
+
+==== 4.1.2 Fault Tolerant ====
+
+The ability to process multiple datasets in parallel usually requires a cluster of machines to host and execute the computational logic. If one or more of those machines dies or becomes extremely slow because of unexpected circumstances, Spark automatically takes care of handling the failure on behalf of its users by rebuilding the failed portion using the lineage information, which will be discussed later in this Lesson.
+
+
+==== 4.1.3 Parallel Data Structures ====
+
+Imagine the use case where someone gives you a large log file that is 1TB size and you are asked to find out how many log statements contain the word exception in it. A slow solution would be to iterate through that logfile from the beginning to the end and execute the logic of determining whether a particular log statement contains the word exception. A faster solution would be to divide that 1TB file into several chunks and execute the aforementioned logic on each chunk in a parallelized manner to speed up the overall processing time. Each chunk contains a collection of rows.
+
+The collection of rows is essentially the data structure that holds a set of rows and provides the ability to iterate through each row. Each chunk contains a collection of rows, and all the chunks are being processed in parallel. This is where the phrase parallel data structures comes from.
+
+==== 4.1.4 In-Memory Computing ====
+
+**RDDs are stored in Memory, not in a disk.** 
+
+Machine learning algorithms are iterative in nature, meaning they need to go through many iterations to arrive at an optimal state. This is where distributed in-memory computation can help in reducing the completion time from days to hours. Another use case that can hugely benefit from distributed in-memory computation is interactive data mining, where multiple ad hoc queries are performed on the same subset of data. If that subset of data is persisted in memory, those queries will take seconds and not minutes to complete.
+
+==== 4.1.5 Data Partitioning and Placement ====
+
+The information about how the rows in a dataset are partitioned into chunks and about their physical location is considered to be the dataset metadata. This information helps Spark perform optimizations while executing the computational logic.
+
+For example, while joining two datasets, the data partition information is useful to determine whether it is necessary to move the rows from various chunks of the two datasets to the same location to perform the join. Moving data across machines is an expensive operation, and therefore minimizing it would dramatically reduce the overall
+processing time.
+
+**Data placement information helps to reinforce the data locality concept, which means bringing the computation to where the data lives.** Knowing where the chunks are located on a cluster, Spark can use those machines to host and execute the computational logic on those chunks, and therefore the time to read the rows from those chunks would be much less than reading them from a different node on the cluster.
+
+==== 4.1.6 Rich Set of Operations ====
+
+RDDs provide a rich set of commonly needed data processing operations. They include the ability to perform 
+  * data transformation
+  * filtering
+  * grouping
+  * joining
+  * aggregation
+  * sorting
+  * counting
+
+These operations operate at the coarse-grained level, meaning the same operation is applied to many rows, not to any specific row.
+
+In summary, an RDD is represented as an abstraction and is defined by the following five pieces of information:
+  * A set of partitions, which are the chunks that make up the entire dataset
+  * A set of dependencies on parent RDDs
+  * A function for computing all the rows in the data set
+  * Metadata about the partitioning scheme (optional)
+  * Where the data lives on the cluster (optional); if the data lives on HDFS, then it would be where the block locations are located
+
+The Spark runtime uses these **five pieces of information to schedule and execute the user data processing logic** that is expressed via the RDD operations.
+
+The **first three pieces of information make up the lineage information**, which Spark uses for two purposes:   
+  - Determining the order of execution of RDDs
+  - For failure recovery purposes.
+
+===== 4.2 RDD operations =====
+
+Each row in an RDD is represented as a Java object, and the structure of this Java object is opaque/unknown to Spark. The user of RDD has complete control over how to manipulate this Java object. This flexibility comes with a lot of responsibilities, meaning some of the commonly needed operations such as the computing average will have to be hand-crafted.
+
+The RDD operations are classified into two types: 
+  * transformations
+  * actions.
+
+^Type^ Evaluation ^Returned Value^
+|transformation | lazy | another RDD |
+|action |eager |some other result or write the result to disk|
+
+
+**Transformation operations are lazily evaluated, meaning Spark will delay the evaluations of the invoked operations until an action is taken**. In other words, the transformation operations merely record the specified transformation logic and will apply them at a later point. On the other hand, invoking an action operation will trigger the evaluation of all the transformations that preceded it, and it will either return some result to the driver or write data to a storage system.
+
+==== 4.2.1 RDD creation ====
+Since RDD is an abstract class, you cannot create an instance of the RDD class directly. The SparkContext class provides factory methods to create instances of concrete implementation classes. An RDD can also be created from another RDD by applying a transformation to it. As discussed earlier, RDDs are immutable. Any operation that modifies an RDD returns a new RDD with the modified data.
+
+There are three main ways to create an RDD:
+  - RDDs creation with in memory collection of objects
+  - RDDs creation with files
+  - RDDs creation with RDD transformation operations
+
+Spark driver will submit a new job to the executor when it encounters action. Spark's RDD is by default recomputed each time you run an action on them. If you would like to reuse an RDD in multiple actions, you can ask the spark to persist it using RDD.persist(). After computing it the first time Spark will store the RDD contents in memory (partitioned across the machines in your cluster). Persisting RDDs on disk is also possible.
+
+The behavior of not persisting by default may again seem unusual, but it makes a lot of sense for big datasets: if you will not reuse the RDD, there’s no reason to waste storage space when Spark could instead stream through the data once and just compute the result.
+
+For more details and code example, plz visit https://github.com/pengfei99/Spark/blob/master/LearningSpark/src/main/java/org/pengfei/Lesson01_RDD/Lesson01_RDD_Basics.scala
+==== 4.2.2 RDD Transformation ====
+
+Spark Transformation is a function that takes RDD as input and produces one or more RDD as output. Each time it creates new RDD when we apply any transformation. 
+
+**RDDs transformation are all lazy in spark.** They get execute when we call an action
+
+Applying transformation built an **RDD lineage**, with the entire parent RDDs of the final RDD(s). RDD lineage, also known as **RDD operator graph or RDD dependency graph**. It is a logical execution plan(i.e. it is Directed Acyclic Graph (DAG) of the entire parent RDDs of the final result RDD). After the transformation, the resultant RDD is always different from its parent RDD. It can be: 
+  * smaller (e.g. filter, count, distinct, sample)
+  * bigger (e.g. flatMap(), union(), Cartesian())
+  * same size (e.g. map).
+
+There are two types of transformations:
+
+  * **Narrow transformation**: In Narrow transformation, all the elements that are required to compute the records in single partition live in the single partition of the parent RDD. A limited subset of partition is used to calculate the result.  **map(), flatMap(), mapPartition(), filter(), sample(), union() are the narrow transformations.**
+  * **Wide transformation**: In wide transformation, all the elements that are required to compute the records in the single partition may live in many partitions of parent RDD. The partition may live in many partitions of parent RDD. **intersection(), distinct(), groupbyKey(), reducebyKey(), join(), cartesian(), repartition(), coalesce() are the wide transformations** .
+
+**In another word, narrow transformation does not require shuffle, wide transformation require shuffle(create new stage).**
+
+{{:employes:pengfei.liu:big_data:spark:spark-narrow-transformation.jpg?600|}}
+
+{{:employes:pengfei.liu:big_data:spark:spark-wide-transformation.jpg?600|}}
+
+
+==== 4.2.3 RDD Action ====
+
+
+

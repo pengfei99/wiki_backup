@@ -1,0 +1,85 @@
+
+<h1 class="sectionedit1" id="configure_mariadb_to_allow_remote_access">Configure mariadb to allow remote access</h1>
+<div class="level1">
+
+<p>
+Mariadb by default listen to the loopback network interface (localhost, 127.0.0.1) not the real network interface.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Configure mariadb to allow remote access" [1-172] -->
+<h1 class="sectionedit2" id="step_1_change_the_mariadb_config_file_to_bind_to_the_real_network_interface">Step 1. change the mariadb config file to bind to the real network interface</h1>
+<div class="level1">
+<pre class="code"># Under centos 7, the config file is at /etc/my.cnf
+
+vim /etc/my.cnf
+
+# comment the line skip-networking, this line will ignor the tcp/ip request from the real network interface
+# add two lines
+
+bind-address = 0.0.0.0
+port =3306
+
+# save the file and restart server
+sudo systemctl restart mariadb.service
+
+# check the network status of mariadb server
+sudo netstat -anp | grep 3306
+
+# you should see something like this
+
+tcp       0      0 0.0.0.0:3306          0.0.0.0:*        LISTEN         3213/mysqld</pre>
+
+</div>
+<!-- EDIT2 SECTION "Step 1. change the mariadb config file to bind to the real network interface" [173-786] -->
+<h1 class="sectionedit3" id="step_2_add_access_rights_to_clients_in_mariadb_server">Step 2. Add access rights to clients in mariadb server</h1>
+<div class="level1">
+
+<p>
+To enable a client to connect to a database, you must grant access to the remote server.
+</p>
+
+<p>
+For example, if you wish for a client computer with IP address 10.70.3.18 to connect to a database called test_db as user pliu, then run the commands below after logging onto the database server.
+</p>
+<pre class="code"># To view all existing authorizations
+
+MariaDB [(none)]&gt; SELECT User, Host FROM mysql.user;
+
++--------------+-------------------------------+
+| User         | Host                          |
++--------------+-------------------------------+
+| root         | 127.0.0.1                     |
+| root         | ::1                           |
+|              | cclinowncloudp01.bioaster.org |
+| root         | cclinowncloudp01.bioaster.org |
+|              | localhost                     |
+| root         | localhost                     |
++--------------+-------------------------------+
+
+# add new authorization rules
+GRANT ALL ON test_db.* TO &#039;pliu@10.70.3.%&#039; IDENTIFIED BY &#039;password&#039;;
+
+# The above command we don&#039;t use the ip 10.70.3.18, we use a wildcard. It means user pliu can connect from 
+# anywhere on the 10.70.3.0/24 lan.
+# if you replace test_db.* by *.*, it means pliu has right on all dbs in this server
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Step 2. Add access rights to clients in mariadb server" [787-2072] -->
+<h1 class="sectionedit4" id="step_3_configure_firewall_to_allow_port_3306">Step 3. Configure firewall to allow port 3306</h1>
+<div class="level1">
+<pre class="code"># add port 3306 permanently
+firewall-cmd --permanent --add-port=3306/tcp
+
+# reload rules to make it effective
+firewall-cmd --reload</pre>
+
+</div>
+<!-- EDIT4 SECTION "Step 3. Configure firewall to allow port 3306" [2073-2282] -->
+<h1 class="sectionedit5" id="step_4_connect_to_server_via_a_remote_client">Step 4. connect to server via a remote client</h1>
+<div class="level1">
+<pre class="code">mysql -h server-ip -u pliu -P 3306 -p test_db</pre>
+
+</div>
+<!-- EDIT5 SECTION "Step 4. connect to server via a remote client" [2283-] -->

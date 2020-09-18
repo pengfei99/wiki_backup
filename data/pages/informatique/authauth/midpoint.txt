@@ -1,0 +1,34 @@
+====== MidPoint ======
+
+
+**MidPoint** is a pragmatic provisioning system. Currently midPoint is a complete identity management system that has reached and exceeded many commercial IDM offerings. MidPoint is a comprehensive provisioning solution with many unique features. It is a truly universal system that can be deployed in almost any environment.
+
+[[https://www.evolveum.com/doc/midpoint-datasheet.pdf | Fiche technique]]
+
+[[https://www.evolveum.com/using-midpoint-cas/ | Utiliser MidPoint avec CAS]]
+
+Live démo MidPoint : http://demo.evolveum.com (Login: administrator Password: 5ecr3t)
+
+
+===== Notes de déploiement ===== 
+
+**Pour commencer :**
+Instanciation d'une VM CentOs sur Open Stack depuis une machine interactive du CC
+
+<code text>
+$ nova boot --key-name=cloudkey --image=official-centos-7x-x86_64  --flavor=m1.small idm
+</code>
+
+Une fois la VM instanciée, s'y connecter avec le user centos
+
+==== Installation ====
+
+==== Personnalisation ====
+
+===== Accès =====
+
+URL temporaire
+
+[[http://134.158.37.14/]]
+
+

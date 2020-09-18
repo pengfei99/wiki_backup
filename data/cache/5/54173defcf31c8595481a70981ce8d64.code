@@ -1,0 +1,1 @@
+                   &lt;form action=&quot;{{ path('biospecimens_connected_workflow',{}) }}&quot; method=&quot;post&quot;&gt;  &lt;input type=&quot;hidden&quot; name=&quot;toto&quot; value=&quot;{{userDemand.id}}&quot;&gt; &lt;button type=&quot;submit&quot;&gt;  {{userDemand.id}}&lt;/button&gt; &lt;/form&gt;

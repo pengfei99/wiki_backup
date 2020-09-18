@@ -1,0 +1,31 @@
+====== Travailler sur une nouvelle fonctionnalité ======
+
+Avant de commencer à travailler, assurez-vous d'avoir assimilé [[/informatique/developpement/developpement_de_projet|les bonnes pratiques de développement]].
+
+  * Créer une branche de développement <code>
+$ git clone git@gitlab.in2p3.fr:bioaster/<PROJECT>.git
+$ cd <PROJECT>
+$ git checkout -b feature-XYZ develop
+</code>
+  * Préparer la branche <code>
+$ composer install
+  # si de nouveaux paramètres sont à saisir (connexion à la base de données de test), ils seront demandés ici
+  
+$ php app/console doctrine:database:drop --force
+$ php app/console doctrine:database:create
+$ php app/console doctrine:migrations:status
+$ php app/console doctrine:migrations:migrate
+$ php app/console doctrine:fixtures:load @AppBundle
+
+$ # php app/console faker:populate
+
+$ php app/console cache:clear --env=dev
+$ php app/console cache:warmup --env=dev
+
+$ php app/console server:run</code>
+  * Développer (par ex. : [[/informatique/developpement/symfony/ajouter_un_objet|ajouter un objet]])\\ On peut laisser le serveur de test tourner et travailler dans un autre terminal.
+  * Enregistrer et soumettre pour validation  <code>
+$ git add file1 file2 …
+$ git commit -m "Implémente une fonctionnalité (Fix #YXZ)"
+$ git push
+</code>

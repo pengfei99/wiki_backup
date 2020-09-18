@@ -1,0 +1,103 @@
+
+<h1 class="sectionedit1" id="network_time_protocol_ntp">Network time protocol (NTP)</h1>
+<div class="level1">
+
+<p>
+For many security service, we need to use NTP server to synchronize time. For example shibboleth needs less than 300 ms time difference between IDP and SP.
+</p>
+
+<p>
+<strong>1. Install ntp client on your sever</strong>
+</p>
+<pre class="prettyprint">
+yum install ntp ntpdate ntp-doc
+</pre><ul>
+<li class="level1"><div class="li"> ntp : ntpd server which continuously adjusts system time and utilities used to query and configure the ntpd daemon.</div>
+</li>
+<li class="level1"><div class="li"> ntpdate : Utility to set the date and time via NTP.</div>
+</li>
+<li class="level1"><div class="li"> ntp-doc : NTP documentation</div>
+</li>
+</ul>
+
+<p>
+<strong>2. Register ntpd dameon in systemctl</strong>
+</p>
+<pre class="prettyprint">
+# chkconfig ntpd on
+# systemctl start ntpd
+# systemctl status ntpd
+</pre>
+<p>
+Make the ntpd damoen start at the start of the server
+</p>
+<pre class="prettyprint">
+# systemctl enable ntpd
+</pre>
+<p>
+<strong>3. Edit firewall</strong>
+</p>
+
+<p>
+NTP service uses UDP port 123 on OSI transport layer (layer 4). It is designed particularly to resist the effects of variable latency (jitter). To open this port on RHEL/CentOS 7 run the following commands against Firewalld service.
+</p>
+<pre class="prettyprint">
+# firewall-cmd --add-service=ntp --permanent
+# firewall-cmd --reload
+</pre>
+<p>
+<strong>4. Edit /etc/ntp.conf to define ntp server</strong>
+</p>
+
+<p>
+You need to choose a ntp server which you want to synchronize your server time with.
+</p>
+
+<p>
+The Default server is something like this :
+</p>
+<pre class="prettyprint">
+server 0.centos.pool.ntp.org iburst
+server 1.centos.pool.ntp.org iburst
+server 2.centos.pool.ntp.org iburst
+server 3.centos.pool.ntp.org iburst
+</pre>
+<p>
+For bioaster, we use ntp.bioaster.local
+It should looks like this
+</p>
+<pre class="prettyprint">
+server  ntp.bioaster.local
+</pre>
+<p>
+<strong>5. Verify ntp config</strong>
+Use this command : <code>ntpq -p</code>
+</p>
+
+<p>
+It shows the ntp server which you use for time synchro.
+</p>
+<pre class="prettyprint">
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*srvadmin.bioast 195.154.41.195   3 u    4   64    1    8.170   -0.565   0.000
+
+</pre>
+<p>
+<strong>6 Synchronize with a ntp server manually</strong>
+</p>
+
+<p>
+<code>ntpdate -q ntp.bioaster.org</code>
+</p>
+
+<p>
+timedatectl set-ntp 0
+timedatectl set-ntp 1
+</p>
+
+<p>
+timedatectl set-time &#039;2017-09-06 09:30:00&#039;
+</p>
+
+</div>

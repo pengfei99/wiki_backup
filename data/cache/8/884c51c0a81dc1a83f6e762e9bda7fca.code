@@ -1,0 +1,35 @@
+<a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">streaming</span>.<span class="me1">flume</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">SparkConf</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">storage</span>.<span class="me1">StorageLevel</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">streaming</span>.<span class="sy0">_</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">streaming</span>.<span class="me1">flume</span>.<span class="sy0">_</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">util</span>.<span class="me1">IntParam</span>
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> FlumeEventCount <span class="br0">&#123;</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> host<span class="sy0">=</span><span class="st0">&quot;127.0.0.1&quot;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> port<span class="sy0">=</span><span class="nu0">6666</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> batchInterval <span class="sy0">=</span> Milliseconds<span class="br0">&#40;</span><span class="nu0">2000</span><span class="br0">&#41;</span>
+    <span class="co1">// Create the context and set the batch size</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sparkConf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;FlumeEventCount&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> ssc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> StreamingContext<span class="br0">&#40;</span>sparkConf, batchInterval<span class="br0">&#41;</span>
+    <span class="co1">// Create a flume stream listen to 127.0.0.1 on port 6666</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> stream <span class="sy0">=</span> FlumeUtils.<span class="me1">createStream</span><span class="br0">&#40;</span>ssc, host, port, StorageLevel.<span class="me1">MEMORY_ONLY_SER_2</span><span class="br0">&#41;</span>
+    <span class="co1">// Print out the count of events received from this server in each batch</span>
+&nbsp;
+    stream.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>cnt <span class="sy0">=&gt;</span> <span class="st0">&quot;Received &quot;</span> + cnt + <span class="st0">&quot; flume events.&quot;</span> <span class="br0">&#41;</span>.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> mappedlines <span class="sy0">=</span> stream.<span class="me1">map</span><span class="br0">&#123;</span>sparkFlumeEvent <span class="sy0">=&gt;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> event <span class="sy0">=</span> sparkFlumeEvent.<span class="me1">event</span>
+      println<span class="br0">&#40;</span><span class="st0">&quot;Value of event &quot;</span> + event<span class="br0">&#41;</span>
+      println<span class="br0">&#40;</span><span class="st0">&quot;Value of event Header &quot;</span> + event.<span class="me1">getHeaders</span><span class="br0">&#41;</span>
+      println<span class="br0">&#40;</span><span class="st0">&quot;Value of event Schema &quot;</span> + event.<span class="me1">getSchema</span><span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> messageBody <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> String<span class="br0">&#40;</span>event.<span class="me1">getBody</span>.<span class="me1">array</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      println<span class="br0">&#40;</span><span class="st0">&quot;Value of event Body &quot;</span> + messageBody<span class="br0">&#41;</span>
+      messageBody<span class="br0">&#125;</span>.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    ssc.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    ssc.<span class="me1">awaitTermination</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

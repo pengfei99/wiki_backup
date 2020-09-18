@@ -1,0 +1,192 @@
+
+<h1 class="sectionedit1" id="dokuwiki">DokuWiki</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "DokuWiki" [1-24] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2013-12-08 <em>“Binky”</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv2</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="https://www.dokuwiki.org" class="urlextern" title="https://www.dokuwiki.org"  rel="nofollow">https://www.dokuwiki.org</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn&#039;t require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup and integration makes it an administrator&#039;s favorite. Built in access controls and authentication connectors make DokuWiki especially useful in the enterprise context and the large number of plugins contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki. </div>
+</li>
+</ul>
+
+<p>
+Une instance FreeBSD a été configurée dans le nuage VMware pour déployer le wiki.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [25-770] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Installation" [771-796] -->
+<h3 class="sectionedit4" id="installation_des_logiciels">Installation des logiciels</h3>
+<div class="level3">
+<pre class="code">pkg install apache24 mod_php5 php5 php5-session php5-xml</pre>
+
+</div>
+<!-- EDIT4 SECTION "Installation des logiciels" [797-907] -->
+<h3 class="sectionedit5" id="configuration_du_serveur_web">Configuration du serveur web</h3>
+<div class="level3">
+
+<p>
+Faire attention à créer tous les sous dossiers !!!
+</p>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/dokuwiki?codeblock=1" title="Download Snippet" class="mediafile mf_conf">/usr/local/etc/apache24/httpd.conf</a></dt>
+<dd><pre class="code text">Listen 443
+…
+LoadModule ssl_module     libexec/apache24/mod_ssl.so
+LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+LoadModule php5_module    libexec/apache24/libphp5.so
+…
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+…
+DirectoryIndex index.html index.php</pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/dokuwiki?codeblock=2" title="Download Snippet" class="mediafile mf_conf">/usr/local/etc/apache24/Includes/wiki.bioaster.local.conf</a></dt>
+<dd><pre class="code text">&lt;VirtualHost _default_:443&gt;
+    ServerName wiki.bioaster.local
+    DocumentRoot /usr/local/www/data/vhosts/dokuwiki/
+&nbsp;
+    &lt;Directory /usr/local/www/data/vhosts/dokuwiki/&gt;
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&nbsp;
+    ErrorLog &quot;/var/log/httpd-error-wiki.bioaster.local.log&quot;
+    CustomLog &quot;/var/log/httpd-acces-wiki.bioaster.local.log&quot; combined
+&nbsp;
+    SSLEngine       on
+    SSLProtocol all -SSLv2 -SSLv3
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+    SSLVerifyClient require
+    SSLVerifyDepth  1
+    SSLOptions +StdEnvVars
+&nbsp;
+    SSLCertificateFile /etc/ssl/crt/wiki.bioaster.local-cert.pem
+    SSLCertificateKeyFile /etc/ssl/key/wiki.bioaster.local-key.pem
+    SSLCACertificatePath   /etc/ssl/crt/
+    SSLCACertificateFile   /etc/ssl/crt/ca_for_wiki.pem
+&nbsp;
+    #CustomLog &quot;/var/log/httpd-ssl_request-wiki.bioaster.local.log&quot; \
+    #      &quot;%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \&quot;%r\&quot; %b&quot;
+&lt;/VirtualHost&gt;</pre>
+</dd></dl>
+
+<p>
+Le fichier <code>/etc/ssl/crt/ca_for_wiki.pem</code> contient les CA à qui ont fait confiance pour émettre des certificats. Pour le créer, il faut faire quelque chose comme :
+</p>
+<pre class="code">cd /etc/ssl/crt
+cat bioaster_root_paris.pem cacert.pem cacert_class_3_root.pem startsssl-sub.class1.server.ca.pem \
+    &gt; ca_for_wiki.pem</pre>
+
+<p>
+Créez le <strong>.htaccess</strong> et décommenter la partie concernant la réécriture.
+</p>
+<pre class="code text">cp /usr/local/www/data/vhosts/dokuwiki/.htaccess.dist /usr/local/www/data/vhosts/dokuwiki/.htaccess</pre>
+
+</div>
+<!-- EDIT5 SECTION "Configuration du serveur web" [908-2968] -->
+<h2 class="sectionedit6" id="configuration">Configuration</h2>
+<div class="level2">
+
+<p>
+Activer les <strong>options avancées</strong> suivantes : <code>configuration</code> &gt; <code>advanced</code> &gt; nice <abbr title="Uniform Resource Locator">URL</abbr> w/ .htacces + use slash as name separator
+</p>
+
+<p>
+Installer les <strong>extensions</strong> :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:templatepagename" class="urlextern" title="https://www.dokuwiki.org/plugin:templatepagename"  rel="nofollow">templatepagename</a> ;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:pagelist" class="urlextern" title="https://www.dokuwiki.org/plugin:pagelist"  rel="nofollow">pagelist</a> ;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:tag" class="urlextern" title="https://www.dokuwiki.org/plugin:tag"  rel="nofollow">tag</a> ;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:nslist" class="urlextern" title="https://www.dokuwiki.org/plugin:nslist"  rel="nofollow">nslist</a> ;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:dw2pdf" class="urlextern" title="https://www.dokuwiki.org/plugin:dw2pdf"  rel="nofollow">dw2pdf</a>, qui nécessite le package <code>php5-zlib</code> <br/>
+Il nécessite aussi d&#039;être intégré au template du wiki. Ceci se fait comme suit dans <code>vector</code> <dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/dokuwiki?codeblock=5" title="Download Snippet" class="mediafile mf_php">lib/tpl/vector/user/boxes.php</a></dt>
+<dd><pre class="code php"><span class="re0">$_vector_boxes</span><span class="br0">&#91;</span><span class="st0">&quot;plugins&quot;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">&quot;headline&quot;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;Plugins&quot;</span><span class="sy0">;</span>
+<span class="re0">$_vector_boxes</span><span class="br0">&#91;</span><span class="st0">&quot;plugins&quot;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">&quot;xhtml&quot;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;&lt;ul&gt;<span class="es1">\n</span>&quot;</span>
+                                    <span class="sy0">.</span><span class="st0">&quot;  &lt;li&gt;&lt;a href='&quot;</span><span class="sy0">.</span>wl<span class="br0">&#40;</span>cleanID<span class="br0">&#40;</span>getId<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st0">&quot;do&quot;</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;export_pdf&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">.</span><span class="st0">&quot;'&gt;&quot;</span>
+                                    <span class="sy0">.</span><span class="st0">&quot;      PDF Export&quot;</span>
+                                    <span class="sy0">.</span><span class="st0">&quot;&lt;/a&gt;&quot;</span><span class="sy0">;</span></pre>
+</dd></dl>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.dokuwiki.org/plugin:codeprettify" class="urlextern" title="https://www.dokuwiki.org/plugin:codeprettify"  rel="nofollow">codeprettify</a>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Configuration" [2969-4025] -->
+<h2 class="sectionedit7" id="authentification_et_autorisation">Authentification et Autorisation</h2>
+<div class="level2">
+
+<p>
+Il faut installer l&#039;extension <strong>certlogin</strong> pour s&#039;identifier sur le wiki. Elle peut être récupéré ici :
+</p>
+<pre class="code">  bzr+ssh://LOGIN@ccage.in2p3.fr/~tlecarro/repo/dokuwiki-plugin-certlogin</pre>
+
+<p>
+Ensuite, il faut :
+</p>
+<ul>
+<li class="level1"><div class="li"> changer le <code>Auth Backend</code> dans la configuration pour <strong>certlogin</strong> ;</div>
+</li>
+<li class="level1"><div class="li"> mettre un nom d&#039;admin dans la configuration de <strong>certlogin</strong> (<code>conf/default.php</code>) ;</div>
+</li>
+<li class="level1"><div class="li"> définir les paramètres de connexion au LDAP dans l&#039;interface de configuration de dokuwiki. </div>
+</li>
+</ul>
+
+<p>
+Les valeurs pour la configuration du LDAP sont :
+</p>
+<pre class="code text">'host'          = 'srvadmin.bioaster.local';
+'port'          = 389;
+'base_dn'       = 'OU=UTILISATEURS BIOASTER ACTIFS,DC=Bioaster,DC=local';
+'search_filter' = '(&amp;(objectClass=user)(objectCategory=person)(homeMDB=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(mail=%s))';
+'version'       = 3;
+'use_tls'       = 0;
+'referrals'     = 0;
+'deref_options' = 0;
+'login'         = 'CN=SRVWIKI_Service,OU=Wiki,OU=Application,OU=GroupeSecu,DC=Bioaster,DC=local';
+'password'      = '************';
+'admins'        = array(&quot;tanguy.lecarrour@bioaster.org&quot;);
+'debug'         = 1;</pre>
+
+</div>
+<!-- EDIT7 SECTION "Authentification et Autorisation" [4026-5186] -->
+<h2 class="sectionedit8" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2015.02.06 (tlc)</strong> Ajout de StartSSL dans la liste des CA de confiance</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.01.30 (tlc)</strong> Suppression de la passphrase sur la clé privée du serveur wiki.bioaster.local</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.01.28 (tlc)</strong> Migration vers le nouveau serveur et mise à jour vers “Hrun” (2014-09-29b)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2014.02.13 (tlc)</strong> Version 2013-12-08 <em>“Binky”</em> installée</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Log" [5187-] -->

@@ -1,0 +1,48 @@
+
+<h1 class="sectionedit1" id="apache_directory_studio_trouble_shoot">Apache directory studio trouble shoot</h1>
+<div class="level1">
+
+<p>
+If your apache directory studio can not find jre or jdk.
+It will exit with error 13.
+</p>
+
+<p>
+So you have to download a jre or jdk, and tell ads where is it.
+</p>
+
+<p>
+For example, if we download it and put it under C:\DATA\Mes Documents\Tools\jdk1.8.0_131\
+</p>
+
+<p>
+go to  C:\DATA\Mes Documents\Tools\ApacheDirectoryStudio
+</p>
+
+<p>
+edit the file ApacheDirectoryStudio.ini
+</p>
+
+<p>
+the config file should looks like this
+</p>
+<pre class="code">-vm
+
+C:\DATA\Mes Documents\Tools\jdk1.8.0_131\jre\bin
+
+-startup
+
+plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar
+
+--launcher.library
+
+plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_1.1.200.v20150204-1316
+
+/studio-rcp/resources/icons/linux/studio.xpm
+
+-vmargs
+
+-Dosgi.requiredJavaVersion=1.7
+</pre>
+
+</div>

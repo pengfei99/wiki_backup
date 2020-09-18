@@ -1,0 +1,101 @@
+====== Fusion de branches ======
+
+===== Débutants =====
+
+==== Fusion sans conflit ====
+
+Voici à quoi ressemble l'historique de révisions (''log'') basique d'un //tronc// (la branche principale du développement) :
+
+{{/si/outils/bazaar/fusion_de_branches/1-initial_trunk.png?direct|}}
+
+Des modifications dans la branche de //dev//, si elles été poussées (''push'') directement dans le //tronc// donneraient ceci :
+
+{{/si/outils/bazaar/fusion_de_branches/2-changes_pushed_to_trunk.png?direct|}}
+
+Ceci est appelé //fast-foward history//.
+
+Si, au lieu de pousser (''push'') les révisions de //dev//, on les fusionne (''merge'') dans le //tronc//, on obtient une //branched history//...
+
+{{/si/outils/bazaar/fusion_de_branches/3-merge_waiting_for_commit.png?direct|}}
+
+... qu'il suffit alors d'enregistrer (''commit'') dans le ''tronc'' :
+
+{{/si/outils/bazaar/fusion_de_branches/4.1-merge_has_been_commited.png?direct|}}
+
+Si le //tronc// avait été modifié avant l'intégration de //dev//, on obtiendrait l'historique suivant :
+
+{{/si/outils/bazaar/fusion_de_branches/4.2-merge_has_been_commited_on_changed_trunk.png?direct|}}
+
+**Attention :** voici ce qui se passe quand le //tronc// est fusionné dans //dev//, et que //dev// est ensuite poussé (''push'') dans le //tronc// :
+
+{{/si/outils/bazaar/fusion_de_branches/5-merged_in_dev_then_push_to_trunk.png?direct|}}
+
+==== Fusion avec un ou plusieurs conflits ====
+
+Des conflits peuvent apparaitre quand les modifications de //dev// sont intégrées dans le //tronc//. Dans ce cas, la bonne chose à faire est d'appliquer le //double-merge pattern//.
+
+La marche à suivre pour résoudre un "conflit de fusion" est :
+  * annuler (''revert'') les modifications dans le //tronc// (introduits par la fusion qui se finie en conflit) ;
+  * fusionner (''merge'') le //tronc// dans //dev// ;
+  * résoudre les conflits dans //dev// ;
+  * enregistrer (''commit'') les modifications dans //dev// ;
+  * fusionner (''merge'') //dev// dans le //tronc// ;
+  * enregistrer (''commit'') les modifications dans le //tronc//.
+
+{{/si/outils/bazaar/fusion_de_branches/6-double_merge.png?direct|}}
+
+Ceci est appelé //double-merge pattern//.
+
+==== Pas envie de vérifier la présence de conflits... ====
+
+Au lieu de toujours essayer de fusionner au //tronc//, il est possible d'évaluer les options disponibles depuis //dev//.
+
+  * Se déplacer dans //dev// et s'assurer que le //tronc// est à jour :
+
+    cd dev
+    bzr pull -d ../tronc
+
+  * Lister les différences entre //dev// et le //tronc// :
+
+    bzr missing
+
+  * **Cas 1 - //dev// contient une révision supplémentaire :** Vous pouvez simplement pousser la révision vers le //tronc// si le message de la révision est sensé... et il devrait toujours l'être !
+
+    bzr push
+
+  * **Cas 2 - Vous avez plusieurs révisions supplémentaires :** Pour les intégrer proprement au //tronc//, ces changements doivent être fusionnés dans le //tronc//, puis enregistrés. L'historique résultant montrera une seule révision contenant des sous-révisions.
+
+    cd ../tronc
+    bzr merge ../dev
+    bzr ci -m "Message global pour les révisions supplémentaires de dev"
+
+  * **Cas 3 - Les branches ont divergé : ** Les modifications du //tronc// doivent d'abord être fusionnées dans //dev//, enregistrées, puis fusionnées dans le //tronc// **=** //double-merge pattern// :
+
+    cd dev
+    bzr merge ../tronc
+    # si nécessaire, résoudre les conflits
+    bzr ci -m "Intégration des modifications du tronc"
+    cd ../tronc
+    bzr merge ../dev
+    bzr ci -m "Message global pour les révisions supplémentaires de dev"
+
+
+**Remarques :**
+
+  * Dans le doute, appliquez la procédure décrite dans le **Cas 3**. Si vous étiez en fait dans le **Cas 2**, il n'y aura rien dans le //tronc// à intégrer et à enregistrer. Si vous étiez dans le **Cas 1**, l'historique contiendra une révision contenant elle même une sous-révision ; ce n'est pas très joli, mais pas dramatique.
+  * Pour fusionner le //tronc// dans une branche ou tous les changements n'ont pas encore été enregistrés, il suffit de la mettre de côté (''shelve'') le temps de fusionner les branches, puis de les réintroduire (''unshelve'').
+
+===== Experts =====
+
+Voici les conseils originaux tels qu'ils apparaissent sur [[http://toykeeper.net/tutorials/bzr-vs-git/]] :
+
+  * **Don't merge trunk into your branch and then push over trunk**. This results in a fast-forward merge, which causes problems. It hijacks trunk, reshapes the history graph, renumbers revisions, and interferes with bisect tools.
+  * **Make sure merges to trunk are just merges**, with no additional changes.
+  * If your branch doesn't merge cleanly with trunk, be sure to use the //double-merge pattern// explained below. Merge from trunk, fix the conflicts, and then merge back to trunk. 
+  * **Never push to trunk unless you are the owner** and you are pushing a locally-updated copy of trunk.
+  * If you combine the above tips, all merges to trunk will end up being trivial... so why not let a bot do it?
+
+===== Autre approche à considérer =====
+
+Dans sont [[http://bzrinit.com/|excellent tutoriel]], Duck ROWING montre comment [[http://bzrinit.com/03.html|utiliser (un)bind]] pour simplifier la dernière étape du "double merge".\\ Une branche liée se comporte en effet comme si le dépôt utilisé était celui distant. Il n'y a donc pas à utiliser ''push'' et le ''merge'' ne marchera pas si les branches ont divergé.
+

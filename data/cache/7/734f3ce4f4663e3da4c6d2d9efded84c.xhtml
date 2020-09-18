@@ -1,0 +1,208 @@
+
+<h1 class="sectionedit1" id="sqoop">Sqoop</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Sqoop" [1-21] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Sqoop − “SQL to Hadoop and Hadoop to SQL”
+</p>
+
+<p>
+Sqoop is a tool designed to transfer data between Hadoop and relational database servers. It is used to import data from relational databases such as MySQL, Oracle to Hadoop HDFS, and export from Hadoop file system to relational databases. It is provided by the Apache Software Foundation.
+</p>
+
+<p>
+Sqoop Import
+</p>
+
+<p>
+The import tool imports individual tables from RDBMS to HDFS. Each row in a table is treated as a record in HDFS. All records are stored as text data in text files or as binary data in Avro and Sequence files.
+</p>
+
+<p>
+Sqoop Export
+</p>
+
+<p>
+The export tool exports a set of files from HDFS back to an RDBMS. The files given as input to Sqoop contain records, which are called as rows in table. Those are read and parsed into a set of records and delimited with user-specified delimiter.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [22-875] -->
+<h2 class="sectionedit3" id="install_sqoop">Install sqoop</h2>
+<div class="level2">
+
+<p>
+Sqoop needs hdfs to run. So you need to install hdfs first. Follow this doc<a href="/doku.php?id=employes:pengfei.liu:big_data:hadoop:install_config_hadoop" class="wikilink1" title="employes:pengfei.liu:big_data:hadoop:install_config_hadoop">Install hdfs on multi node cluster</a>
+</p>
+
+<p>
+Downloud the latest stable version from here : <a href="http://sqoop.apache.org/" class="urlextern" title="http://sqoop.apache.org/" rel="nofollow">http://sqoop.apache.org/</a>
+</p>
+
+<p>
+In our case, the stable version is 1.4.6.
+</p>
+<pre class="code">#Download the sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz.
+#put the sqoop bin in your chosen place
+mkdir -p /opt/sqoop
+mv sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz /opt/sqoop/.
+cd /opt/sqoop/
+tar -xzvf sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz 
+mv sqoop-1.4.6.bin__hadoop-2.0.4-alpha sqoop-1.4.6
+
+#add sqoop bin path in path
+vim /etc/profile.d/sqoop.sh
+
+#add the following lines
+#!/bin/bash
+
+export SQOOP_HOME=/opt/sqoop/sqoop-1.4.6
+export PATH=$PATH:$SQOOP_HOME/bin
+
+[hadoop@localhost sqoop-1.4.6]$ source /etc/profile.d/sqoop.sh 
+[hadoop@localhost sqoop-1.4.6]$ echo $SQOOP_HOME
+/opt/sqoop/sqoop-1.4.6
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Install sqoop" [876-1815] -->
+<h2 class="sectionedit4" id="configure_sqoop">Configure sqoop</h2>
+<div class="level2">
+
+<p>
+To make sqoop works with hdfs, you need to modify the sqoop-env.sh
+</p>
+<pre class="code">cp sqoop-env-template.sh sqoop-env.sh
+
+vim sqoop-env.sh
+
+# add follwoing line 
+
+#Set path to where bin/hadoop is available
+export HADOOP_COMMON_HOME=/opt/hadoop/hadoop
+
+#Set path to where hadoop-*-core.jar is available
+export HADOOP_MAPRED_HOME=/opt/hadoop/hadoop
+
+#set the path to where bin/hbase is available
+export HBASE_HOME=/opt/hbase/hbase-1.2.6
+
+#Set the path to where bin/hive is available
+export HIVE_HOME=/opt/hive/hive-2.3.2
+</pre>
+
+<p>
+Only the the HADOOP_COMMON_HOME and HADOOP_MAPRED_HOME is essential. others can be omitted if you don&#039;t have them.
+</p>
+
+<p>
+Test your sqoop
+</p>
+<pre class="code">[hadoop@localhost lib]$ sqoop-version
+Warning: /opt/sqoop/sqoop-1.4.6/../hcatalog does not exist! HCatalog jobs will fail.
+Please set $HCAT_HOME to the root of your HCatalog installation.
+Warning: /opt/sqoop/sqoop-1.4.6/../accumulo does not exist! Accumulo imports will fail.
+Please set $ACCUMULO_HOME to the root of your Accumulo installation.
+Warning: /opt/sqoop/sqoop-1.4.6/../zookeeper does not exist! Accumulo imports will fail.
+Please set $ZOOKEEPER_HOME to the root of your Zookeeper installation.
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hadoop/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hbase/hbase-1.2.6/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+18/01/31 11:56:03 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6
+Sqoop 1.4.6
+git commit id c0c5a81723759fa575844a0a1eae8f510fa32c25
+Compiled by root on Mon Apr 27 14:38:36 CST 2015
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "Configure sqoop" [1816-3674] -->
+<h2 class="sectionedit5" id="add_jdbc_connector">Add jdbc connector</h2>
+<div class="level2">
+
+<p>
+If you want to use sqoop to connect to mysql/mariadb, you need to download the appropriate driver.
+</p>
+
+<p>
+For example, for mysql,plz go to <a href="https://www.mysql.com/products/connector/" class="urlextern" title="https://www.mysql.com/products/connector/" rel="nofollow">https://www.mysql.com/products/connector/</a>.
+</p>
+
+<p>
+for postgresql plz go to <a href="https://jdbc.postgresql.org/download.html" class="urlextern" title="https://jdbc.postgresql.org/download.html" rel="nofollow">https://jdbc.postgresql.org/download.html</a>
+</p>
+
+<p>
+After download the .jar file, you need to put it in /opt/sqoop/sqoop-1.4.6/lib
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Add jdbc connector" [3675-4032] -->
+<h1 class="sectionedit6" id="sqoop_commands">Sqoop Commands</h1>
+<div class="level1">
+
+<p>
+<strong>1. To view the mysql files [mysql resides in local system , database name is test]</strong>
+</p>
+<pre class="code">#for mysql server
+$sqoop list-tables --connect jdbc:mysql://localhost:3306/test --username root --password password1
+
+#for postgresql server
+sqoop list-tables --connect jdbc:postgresql://127.0.0.1:5432/northwind --username pliu -P
+</pre>
+
+<p>
+<strong>2. To import all tables [database name is hadoopdb, giving -P implies password to be given when prompted]
+</strong>
+If you want to import the table to hive just add option –hive-import
+</p>
+<pre class="code">$sqoop import-all-tables --connect jdbc:mysql://localhost:3306/hadoopdb --username root -P
+
+$sqoop import-all-tables --connect jdbc:postgresql://127.0.0.1:5432/northwind --username pliu -P --hive-import --create-hive-table --direct</pre>
+
+<p>
+<strong>3. To import a mysql table into hdfs [database name is hadoopdb, table name is demo]</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password password1! --table demo</pre>
+
+<p>
+<strong>4. To import a mysql table into hive</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password password1! --table demo --hive-import</pre>
+
+<p>
+<strong>5. To import table based on user defined condition into hive  [–m denotes the mappers]
+</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root -P --table demo1 --where &quot;state like &#039;k%&#039;&quot; --m 3 --hive-import --hive-table kstate</pre>
+
+<p>
+<strong>6. To import a table using split by option [mappers is decided based on the values in column specified in split by option, if you want to control the mappers then explicitly specify –m]
+</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password password1! --table demo1 --split-by state --hive-import --hive-table splittest</pre>
+
+<p>
+<strong>7. To import a table using query</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password password1! --query &quot;select * from demo1 where \$CONDITIONS order by name&quot; --split-by state --hive-import --target-dir test --hive-table sorteddata</pre>
+
+<p>
+<strong>8. To import a table without hive delimiters [drops \n, \r and \01 from string fields]</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password
+password1! --table demo hive-import --hive-drop-import-delims</pre>
+
+<p>
+<strong>9. To import a table into hdfs with specific delimiters</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password password1! --table demo --fields-terminated-by &quot;||&quot;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Sqoop Commands" [4033-] -->

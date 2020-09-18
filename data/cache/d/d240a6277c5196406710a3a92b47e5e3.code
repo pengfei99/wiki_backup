@@ -1,0 +1,91 @@
+<span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+&nbsp;
+<span class="co1">##########################################</span>
+<span class="co1"># Prepare data set #######################</span>
+<span class="co1">##########################################</span>
+&nbsp;
+nfl_data <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/NFL Play by Play 2009-2017 (v4).csv&quot;</span><span class="br0">&#41;</span>
+sf_permits <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/Building_Permits.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#set random number generator seed, to have the same sample in every execution of the code</span>
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># get 5 sample of the nfl data set</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>nfl_data.<span class="me1">sample</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">##########################################</span>
+<span class="co1"># Get missing value number ###############</span>
+<span class="co1">##########################################</span>
+&nbsp;
+nfl_missing_value_count<span class="sy0">=</span>nfl_data.<span class="me1">isnull</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="kw2">sum</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># look at the number of missing value in the first ten columns</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>nfl_missing_value_count<span class="br0">&#91;</span><span class="nu0">0</span>:<span class="nu0">10</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># get the total missing value percentage</span>
+<span class="co1"># nfl_data.shape =&gt; (407688, 102) 407688 is rwo number, 102 is the column number</span>
+nfl_total_cells<span class="sy0">=</span>np.<span class="me1">product</span><span class="br0">&#40;</span>nfl_data.<span class="me1">shape</span><span class="br0">&#41;</span>
+<span class="co1"># print(nfl_total_cells)</span>
+nfl_total_missing<span class="sy0">=</span>nfl_missing_value_count.<span class="kw2">sum</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="co1"># print(nfl_total_missing)</span>
+&nbsp;
+nfl_miss_percent<span class="sy0">=</span><span class="kw2">float</span><span class="br0">&#40;</span>nfl_total_missing<span class="br0">&#41;</span>/<span class="kw2">float</span><span class="br0">&#40;</span>nfl_total_cells<span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Total missing percentage : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span>nfl_miss_percent*<span class="nu0">100</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">########################################</span>
+<span class="co1">####Find out why the value is missing ##</span>
+<span class="co1">#######################################</span>
+&nbsp;
+<span class="st0">&quot;&quot;&quot;
+Value missing because of :
+&nbsp;
+1. not recorded -&gt; need to estimate a value and replace it
+2. not exist -&gt; no need to guess the value. Keep it as NaN.
+&nbsp;
+For example, in nfl data set 
+&nbsp;
+By looking at (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016), I can see that this column has information
+on the number of seconds left in the game when the play was made. This means that these values are probably missing 
+because they were not recorded, rather than because they don't exist. So, it would make sense for us to try and guess 
+what they should be rather than just leaving them as NA's.
+&nbsp;
+On the other hand, there are other fields, like `PenalizedTeam` that also have lot of missing fields. In this case, 
+though, the field is missing because if there was no penalty then it doesn't make sense to say *which* team was 
+penalized. For this column, it would make more sense to either leave it empty or to add a third value like &quot;neither&quot; 
+and use that to replace the NA's.
+&quot;&quot;&quot;</span>
+&nbsp;
+<span class="co1">#####################################</span>
+<span class="co1">#######Drop missing value ###########</span>
+<span class="co1">####################################</span>
+&nbsp;
+<span class="co1"># remove all the rows that contain a missing value</span>
+nfl_data.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove all columns with at least one missing value</span>
+nfl_columns_with_na_dropped <span class="sy0">=</span> nfl_data.<span class="me1">dropna</span><span class="br0">&#40;</span>axis<span class="sy0">=</span><span class="nu0">1</span><span class="br0">&#41;</span>
+nfl_columns_with_na_dropped.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># just how much data did we lose?</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Columns in original dataset: %d <span class="es0">\n</span>&quot;</span> % nfl_data.<span class="me1">shape</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Columns with na's dropped: %d&quot;</span> % nfl_columns_with_na_dropped.<span class="me1">shape</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">##############################################</span>
+<span class="co1">### Filling in missing value automatically ##</span>
+<span class="co1">#############################################</span>
+&nbsp;
+<span class="co1"># get a small subset of the NFL dataset</span>
+subset_nfl_data <span class="sy0">=</span> nfl_data.<span class="me1">loc</span><span class="br0">&#91;</span>:<span class="sy0">,</span> <span class="st0">'EPA'</span>:<span class="st0">'Season'</span><span class="br0">&#93;</span>.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>subset_nfl_data.<span class="me1">sample</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all NA's with 0</span>
+subset_nfl_data.<span class="me1">fillna</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all NA's the value with the value that comes directly after it (next row) in the same column, </span>
+<span class="co1"># then replace all the reamining na's with 0</span>
+subset_nfl_data.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+subset_nfl_data.<span class="me1">fillna</span><span class="br0">&#40;</span>method <span class="sy0">=</span> <span class="st0">'bfill'</span><span class="sy0">,</span> axis<span class="sy0">=</span><span class="nu0">0</span><span class="br0">&#41;</span>.<span class="me1">fillna</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>

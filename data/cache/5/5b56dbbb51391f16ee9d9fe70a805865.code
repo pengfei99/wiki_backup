@@ -1,0 +1,8 @@
+<span class="co0"># démarrage du service</span>
+$ service shiny-server start
+&nbsp;
+<span class="co0"># arrêt du service</span>
+$ service shiny-server stop
+&nbsp;
+<span class="co0"># état du service</span>
+$ service shiny-server status

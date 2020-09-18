@@ -1,0 +1,16 @@
+# /etc/fstab
+# Created by anaconda on Tue Jul 30 18:12:24 2013
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/vg_bioa2013pc03-lv_root /                       ext4    defaults        1 1
+UUID=82607d5e-bcd2-467c-86d9-ca8b104fef58 /boot                   ext4    defaults        1 2
+/dev/mapper/vg_bioa2013pc03-lv_home /home                   ext4    defaults        1 2
+/dev/mapper/vg_bioa2013pc03-lv_swap swap                    swap    defaults        0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
+ccbioappl04.in2p3.fr    /home/cauchard/owncloud davfs   user,rw,noauto  0 0
+10.69.2.12:/mnt/biodata/UTEC02  /mnt/UTEC02     nfs     rw,hard,intr    0 0

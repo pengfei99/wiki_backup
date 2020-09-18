@@ -1,0 +1,214 @@
+====== Anaconda tutorial 01: Introduction ======
+
+===== 1 Concepts of Conda =====
+
+Before we start, let’s ensure that you have conda installed either via Miniconda or Anaconda.
+
+<code>
+# Check conda version to make sure it's installed.
+conda info
+
+# To see the full documentation for any command, type the command followed by --help. For example, to learn about the conda update command:
+conda update --help
+</code>
+
+==== 1.1 Conda environment ====
+
+What is a conda environment?
+
+  * Similar to python virtual environments (venv)
+  * A set of isolated packages in a directory
+  * Able to be shared via environment files
+
+<code>
+# List out available environments
+conda env list # The starred * environment is the current activate environment
+
+# Create conda environment from command line (Not Best Practice)
+conda create --name myenv --channel conda-forge python=3.6
+
+# Activate conda environment
+conda activate myenv
+
+# Deactivate conda environment
+conda deactivate
+
+# Create conda environment from environment file (Recommended Best Practice)
+conda env create --file environment.yml
+
+# Removing conda environments
+conda env remove --yes --name myenv
+
+</code>
+
+Best practice for creating conda environment
+
+  - When starting a new environment, always generate it from an environment file rather than the command line.
+  - As you add packages to the environment, be sure to update the environment file.
+  - Unless you have to (i.e. Production Environments), try to avoid specifying the version of each package. This will ensure you have the most up to date version that will work across the platform.
+
+If you follow these guidelines, you should be able to give your environment file to anyone, and they will be able to install your packages with no problem.
+
+==== 1.2 Conda channels ====
+
+What is the conda channel?
+
+  * Similar to linux repository (or app store)
+  * The service is hosted for free at Anaconda Cloud
+
+<code>
+# List out your channels and priorities
+conda config --get channels
+
+# If you have a few trusted channels that you prefer to use, you can pre-configure these so that every time you are creating an environment, you won’t need to explicitly declare the channel.
+conda config --add channels conda-forge
+</code>
+
+NOTE: The highest priority channel is where your packages will be installed from no matter if another channel has a higher version!
+
+Conda Forge (https://anaconda.org/conda-forge) is a community-led collection of recipes, build infrastructure and distributions for the conda package manager.
+
+==== 1.3 Conda packages ====
+
+What is a conda package?
+
+  * A compiled software package, but when installed also include all of its dependencies even the lower level ones
+  * Cross-platform
+  * Made from recipes
+
+You can search for conda packages at https://anaconda.org/ or the terminal shown below.
+
+<code>
+# Look at the packages you have installed
+conda list
+
+# Let's search for gdal conda
+conda search gdal
+
+# Install a single conda package, here -c conda-forge indicates which channel you will use to download the package
+conda install -c conda-forge gdal
+
+# Or install multiple packages
+conda install -c conda-forge gdal fiona
+
+# Removing a conda package, here -n myenv indicates the name of the enironment, without this, the base env
+will be the target env to remove package.
+conda remove -n myenv gdal
+</code>
+
+==== 1.4 Recipes ====
+
+Instruction on how to compile the conda package and its metadata
+
+<code yaml>
+package:
+  name: pandas
+  version: 
+source:
+  url: https://github.com/pydata/pandas/archive/v.tar.gz
+  sha256: d9f67bb17f334ad395e01b2339c3756f3e0d0240cb94c094ef711bbfc5c56c80
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+about:
+  home: http://pandas.pydata.org
+  license: BSD 3-clause
+  summary: 'High-performance, easy-to-use data structures and data analysis tools.'
+extra:
+  recipe-maintainers:
+    - jreback
+    - jorisvandenbossche
+    - TomAugspurger
+</code>
+
+==== 1.5 Build a project developement environment via a env.yml ====
+
+As we explained before, the best way to build a project development environment is to use an env.yml file. This allows you to share your development environment with other developers.
+
+Suppose we want to build a deep learning project based on tensorflow. We will write a env.yml file 
+
+<code yaml env.yml>
+# name of your virtural environment
+name: ml-env
+
+# List of repos which conda will use to download dependenices
+channels: 
+  - defaults
+
+# List of dependencies which your environment will install
+dependencies:
+  - python=3.6
+  - numpy
+# A set of utility functions for iterators, functions, and dictionaries.
+  - toolz
+# Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments
+  - matplotlib
+# dill extends python's pickle module for serializing and de-serializing python objects to the majority of the built-in python type
+  - dill
+  - pandas
+  - tensorflow
+# PyTables is a package for managing hierarchical datasets and designed to efficiently and easily cope with extremely large amounts of data
+  - pytables
+# Pyhical location where your environment will be located
+prefix: /tmp/pliu/envs/ml-env
+</code> 
+
+Based on this file, we could now build the environment
+
+<code>
+# create the env
+conda env create -f env.yml 
+
+# list all envs
+conda env list
+conda info --envs
+
+# activate an env
+conda activate ml-env
+
+# list all packages in the virtual env
+conda list
+
+# deactive an env
+conda deactive
+
+# you can also create a copy of an environment
+conda create --name ml-env-copy --clone ml-env
+</code>
+
+==== 1.6 Export and import environment dependencies ====
+
+This is a possible way to build identical environments. But I do not recommend this way. Because Conda does not check architecture or dependencies when installing from a spec file. The best way is still to share the env.yml file.
+
+<code>
+# export all dependencies into a file
+conda list --explicit > spec-file.txt
+
+# The spec-file.txt content looks like below lines
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+@EXPLICIT
+https://repo.anaconda.com/pkgs/main/linux-64/_tflow_select-2.3.0-mkl.tar.bz2
+https://repo.anaconda.com/pkgs/main/linux-64/blas-1.0-mkl.tar.bz2
+https://repo.anaconda.com/pkgs/main/linux-64/ca-certificates-2019.1.23-0.tar.bz2
+
+
+# import all dependencies and create a new environment
+conda create --name ml-env-tmp --file spec-file.txt
+
+# import all dependencies into an existing environment
+conda install --name ml-env-import --file spec-file.txt
+
+</code>
+
+==== 1.6 Update/delete environment ====
+
+<code bash>
+# The -f specify which updates you want to do, and -n specify which environment you want to update.
+conda env update –f environment.yml –n your_env_name
+
+# You can also delete your environment, the --all means remove all packages from the environment and is necessary to completely clean the environment.
+conda remove --name your_env_name --all
+
+</code>

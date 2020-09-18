@@ -1,0 +1,51 @@
+====== Cycle de vie d'un ticket ======
+
+<ditaa>
+  |
+  | U demande
+  | M crée le ticket
+  |
+  V
++-----+
+| NEW |
++-----+
+  |
+  | M assigne le ticket à un développeur
+  | D accepte
+  |
+  V
++----------+
+| ACCEPTED |
++----------+
+  |
+  | D commence à travailler
+  |
+  V
++-------------+
+| IN PROGRESS |
++-------------+
+  |
+  | D soumet sa branche
+  |
+  V
++-----------+
+| SUBMITTED |
++-----------+
+  |
+  | M teste avec U
+  | les autres D peuvent laisser des commentaires si ils testent aussi
+  |
+  V
++--------+
+| TESTED |
++--------+
+  |
+  | M merge et commit (ou pas)
+  |
+  +-----------+
+  |           |
+  V           V
++--------+   +----------+
+| MERGED |   | REJECTED |
++--------+   +----------+
+</ditaa>

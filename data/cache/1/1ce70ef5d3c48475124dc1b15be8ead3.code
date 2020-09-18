@@ -1,0 +1,8 @@
+<span class="kw1">from</span> django.<span class="me1">http</span> <span class="kw1">import</span> HttpResponse
+&nbsp;
+<span class="kw1">from</span> polls.<span class="me1">models</span> <span class="kw1">import</span> Question
+&nbsp;
+<span class="kw1">def</span> index<span class="br0">&#40;</span>request<span class="br0">&#41;</span>:
+    latest_question_list <span class="sy0">=</span> Question.<span class="me1">objects</span>.<span class="me1">order_by</span><span class="br0">&#40;</span><span class="st0">'-pub_date'</span><span class="br0">&#41;</span><span class="br0">&#91;</span>:<span class="nu0">5</span><span class="br0">&#93;</span>
+    output <span class="sy0">=</span> <span class="st0">', '</span>.<span class="me1">join</span><span class="br0">&#40;</span><span class="br0">&#91;</span>p.<span class="me1">question_text</span> <span class="kw1">for</span> p <span class="kw1">in</span> latest_question_list<span class="br0">&#93;</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> HttpResponse<span class="br0">&#40;</span>output<span class="br0">&#41;</span>

@@ -1,0 +1,65 @@
+
+<h1 class="sectionedit1" id="open_port_for_service_in_centos_firewalld">Open port for service in Centos firewalld</h1>
+<div class="level1">
+
+<p>
+1. Check firewalld status
+</p>
+<pre class="code">systemctl status firewalld</pre>
+
+<p>
+2. list all active zone
+</p>
+<pre class="code">firewall-cmd --get-zones</pre>
+
+<p>
+3. list all openports and authorize service on one zone
+</p>
+<pre class="code">firewall-cmd --zone=public --list-ports
+
+firewall-cmd --zone=public --list-services
+
+firewall-cmd --zone=public --list-all</pre>
+
+<p>
+4. Open close ports on a zone, add –permanent if you want rule active after restart
+</p>
+<pre class="code">firewall-cmd --zone=public --add-port=5432/tcp --permanent
+
+firewall-cmd --zone=public --remove-port=5432/tcp</pre>
+
+<p>
+5. Authorize and deny service on a zone, add –permanent if you want rule active after restart 
+</p>
+<pre class="code">firewall-cmd --zone=public --add-service=http --permanent
+
+firewall-cmd --zone=public --remove-service=http</pre>
+
+<p>
+6. Reload rule, after modification
+</p>
+<pre class="code">firewall-cmd --reload
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Open port for service in Centos firewalld&quot;,&quot;hid&quot;:&quot;open_port_for_service_in_centos_firewalld&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-895&quot;} -->
+<h2 class="sectionedit2" id="other_usefull_command">Other usefull command</h2>
+<div class="level2">
+
+<p>
+1. Change zone on different interface
+</p>
+<pre class="code">firewall-cmd --zone=test --change-interface=eth0</pre>
+
+<p>
+2.Block all incoming or outgoing connections
+</p>
+<pre class="code">firewall-cmd --panic-on</pre>
+
+<p>
+3. Use nmap to see all service which listening on a port
+</p>
+<pre class="code">nmap -sT -O localhost</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Other usefull command&quot;,&quot;hid&quot;:&quot;other_usefull_command&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:2,&quot;range&quot;:&quot;896-&quot;} -->

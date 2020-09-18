@@ -1,0 +1,4 @@
+$ php app<span class="sy0">/</span>console doctrine:generate:entities AppBundle
+Generating entity <span class="st0">&quot;AppBundle\Entity\Book&quot;</span>
+  <span class="sy0">&gt;</span> backing up Book.php to Book.php~
+  <span class="sy0">&gt;</span> generating AppBundle\Entity\Book

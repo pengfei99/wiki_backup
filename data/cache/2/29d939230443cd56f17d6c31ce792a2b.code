@@ -1,0 +1,124 @@
+<a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">application</span>.<span class="me1">example</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> java.<span class="me1">io</span>.<span class="me1">File</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="sy0">_</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">types</span>.<span class="br0">&#123;</span>IntegerType, StringType, StructField, StructType<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="coMULTI">/*
+*
+* Inverted Index is mapping of content like text to the document in
+* which it can be found. Mainly used in search engines, it provides
+* faster lookup on text searches i.e to find the documents where the
+* search text occurs.
+*
+*
+* Problem Statement:
+* 1. Dataset contains Shakespeare's works split among many files
+* 2. The output must contain a list of all words with the file in which
+*    it occurs and the number of times it occurs
+*
+* */</span>
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> InvertedIndexShakespeare <span class="br0">&#123;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">case</span></a> <a href="http://scala-lang.org"><span class="kw1">class</span></a> wordFile<span class="br0">&#40;</span>wordName<span class="sy0">:</span>String,wordCount<span class="sy0">:</span>Int,fileName<span class="sy0">:</span>String<span class="br0">&#41;</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span> <span class="br0">&#123;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileDir<span class="sy0">=</span><span class="st0">&quot;/home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare&quot;</span>
+    <span class="co1">//get the file list</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileList<span class="sy0">=</span>getFileList<span class="br0">&#40;</span>fileDir<span class="br0">&#41;</span>
+    <span class="co1">//fileList.foreach(file=&gt;println(&quot;file://&quot;+file.getAbsolutePath))</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>.<span class="me1">appName</span><span class="br0">&#40;</span><span class="st0">&quot;InvertedIndexShakespeare&quot;</span><span class="br0">&#41;</span>.<span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+&nbsp;
+    <span class="coMULTI">/*******************************************
+    *build wordCound df for all files in the directory and write df to parquet file
+      * *********************************************/</span>
+    <span class="coMULTI">/*val wordCountDF=buildFullWordCountDataFrame(fileList,spark)
+    val parquetFilePath=&quot;file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/parquet&quot;
+    wordCountDF.write.parquet(parquetFilePath)*/</span>
+&nbsp;
+    <span class="coMULTI">/*
+    * WE can use dataframe build in function to transform data
+    *
+    * */</span>
+&nbsp;
+    <span class="co1">//wordCountDF.filter($&quot;word_name&quot;=!=&quot;/s&quot;).orderBy($&quot;word_count&quot;.desc).show(10)</span>
+&nbsp;
+    <span class="coMULTI">/******************************************
+      * Read parquet file and create  a view for sql query
+      * *****************************/</span>
+   <span class="coMULTI">/* val wordCountDF=spark.read.parquet(parquetFilePath)
+    wordCountDF.createOrReplaceTempView(&quot;wordCount&quot;)
+    val popularWord=spark.sql(&quot;select * from wordCount where word_name &lt;&gt; ' ' ORDER BY word_count DESC&quot;)
+    popularWord.show(20)*/</span>
+    <span class="co1">//wordCountDF.orderBy($&quot;word_count&quot;.desc).show(10)</span>
+   <span class="co1">// wordCountDF.show(10)</span>
+&nbsp;
+    <span class="coMULTI">/*val testfilePath=&quot;file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare/0ws0110.txt&quot;
+    val testDF=wordCount(testfilePath,spark,&quot;0ws0110.txt&quot;)
+    testDF.orderBy($&quot;word_count&quot;.desc).show(10)*/</span>
+&nbsp;
+&nbsp;
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * This function takes a list of files and a spark session, count all words in all files
+  * return a dataframe
+  * */</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> buildFullWordCountDataFrame<span class="br0">&#40;</span>fileList<span class="sy0">:</span>List<span class="br0">&#91;</span>File<span class="br0">&#93;</span>,spark<span class="sy0">:</span>SparkSession<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> spark.<span class="me1">sparkContext</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sqlC<span class="sy0">=</span>spark.<span class="me1">sqlContext</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> schema <span class="sy0">=</span> StructType<span class="br0">&#40;</span>Array<span class="br0">&#40;</span>
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;word_name&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;word_count&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;file_name&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+    <span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> fullDf <span class="sy0">:</span> DataFrame <span class="sy0">=</span> sqlC.<span class="me1">createDataFrame</span><span class="br0">&#40;</span>sc.<span class="me1">emptyRDD</span><span class="br0">&#91;</span>Row<span class="br0">&#93;</span>,schema<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> totalColumn<span class="sy0">:</span>Long <span class="sy0">=</span> <span class="nu0">0</span>
+    <a href="http://scala-lang.org"><span class="kw1">for</span></a><span class="br0">&#40;</span>file<span class="sy0">&lt;</span>-fileList<span class="br0">&#41;</span><span class="br0">&#123;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileName<span class="sy0">=</span>file.<span class="me1">getName</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> filePath<span class="sy0">=</span><span class="st0">&quot;file://&quot;</span>+file.<span class="me1">getAbsolutePath</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordDF<span class="sy0">=</span>wordCount<span class="br0">&#40;</span>filePath,spark,fileName<span class="br0">&#41;</span>
+      fullDf<span class="sy0">=</span>fullDf.<span class="me1">union</span><span class="br0">&#40;</span>wordDF<span class="br0">&#41;</span>
+      totalColumn<span class="sy0">=</span>totalColumn+wordDF.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+    <span class="coMULTI">/*println(&quot;Total row :&quot;+totalColumn)
+    println(&quot;Data frame row :&quot;+ fullDf.count())*/</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> fullDf
+  <span class="br0">&#125;</span>
+<span class="coMULTI">/*
+* This function take a file path, spark session, a file name.
+* it counts all words in this file and return a data frame
+* */</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> wordCount<span class="br0">&#40;</span>filePath<span class="sy0">:</span>String,spark<span class="sy0">:</span>SparkSession,fileName<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame<span class="sy0">=</span> <span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> spark.<span class="me1">sparkContext</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> textFile <span class="sy0">=</span> sc.<span class="me1">textFile</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span>
+    <span class="co1">//filter word.isEmpty eliminats white space words</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCount <span class="sy0">=</span> textFile.<span class="me1">flatMap</span><span class="br0">&#40;</span>line<span class="sy0">=&gt;</span>line.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">filter</span><span class="br0">&#40;</span>word <span class="sy0">=&gt;</span> <span class="sy0">!</span>word.<span class="me1">isEmpty</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>word<span class="sy0">=&gt;</span><span class="br0">&#40;</span>word,<span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="br0">&#40;</span>a,b<span class="br0">&#41;</span><span class="sy0">=&gt;</span>a+b<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordDF<span class="sy0">=</span>wordCount.<span class="me1">map</span><span class="br0">&#40;</span>atts<span class="sy0">=&gt;</span>wordFile<span class="br0">&#40;</span>atts.<span class="sy0">_</span>1,atts.<span class="sy0">_</span>2.<span class="me1">toInt</span>,fileName<span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">toDF</span><span class="br0">&#40;</span><span class="st0">&quot;word_name&quot;</span>,<span class="st0">&quot;word_count&quot;</span>,<span class="st0">&quot;file_name&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> wordDF
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * This function take a dir path, return a list of files in this dir*/</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getFileList<span class="br0">&#40;</span>fileDir<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>List<span class="br0">&#91;</span>File<span class="br0">&#93;</span><span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> dir <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> File<span class="br0">&#40;</span>fileDir<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">if</span></a><span class="br0">&#40;</span>dir.<span class="me1">exists</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> dir.<span class="me1">isDirectory</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileList<span class="sy0">=</span>dir.<span class="me1">listFiles</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">filter</span><span class="br0">&#40;</span>file<span class="sy0">=&gt;</span>file.<span class="me1">getName</span>.<span class="me1">startsWith</span><span class="br0">&#40;</span><span class="st0">&quot;0ws&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">toList</span>
+      <a href="http://scala-lang.org"><span class="kw1">return</span></a> fileList
+    <span class="br0">&#125;</span>
+    <a href="http://scala-lang.org"><span class="kw1">else</span></a> <a href="http://scala-lang.org"><span class="kw1">null</span></a>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

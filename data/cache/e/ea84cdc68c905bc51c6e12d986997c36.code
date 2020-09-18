@@ -1,0 +1,6 @@
+$ mkdir /var/www
+$ cd /var/www
+$ bzr branch bzr+ssh://USER@ccage.in2p3.fr/~tlecarro/repo/porpro
+$ cd porpro
+$ chown -R www-data:www-data app/tmp
+$ yoyo-migrate apply app/Database/Schema sqlite://./Database/Data/prod.sql3

@@ -1,0 +1,743 @@
+
+<h1 class="sectionedit1" id="cloudera_enterprise_60x_installation">Cloudera Enterprise 6.0.x installation</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Cloudera Enterprise 6.0.x installation" [1-54] -->
+<h2 class="sectionedit2" id="key_components_in_cloudera_enterprise">Key components in Cloudera Enterprise</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CDH - The Cloudera distribution of Apache Hadoop and other related open-source projects, including Apache Impala and Cloudera Search. CDH also provides security and integration with numerous hardware and software solutions.</div>
+</li>
+<li class="level1"><div class="li"> Apache Impala - A massively parallel processing SQL engine for interactive analytics and business intelligence. Its highly optimized architecture makes it ideally suited for traditional BI-style queries with joins, aggregations, and subqueries. It can query Hadoop data files from a variety of sources, including those produced by MapReduce jobs or loaded into Hive tables. The YARN resource management component lets Impala coexist on clusters running batch workloads concurrently with Impala SQL queries. You can manage Impala alongside other Hadoop components through the Cloudera Manager user interface, and secure its data through the Sentry authorization framework.</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Search - Provides near real-time access to data stored in or ingested into Hadoop and HBase. Search provides near real-time indexing, batch indexing, full-text exploration and navigated drill-down, as well as a simple, full-text interface that requires no SQL or programming skills. Fully integrated in the data-processing platform, Search uses the flexible, scalable, and robust storage system included with CDH. This eliminates the need to move large data sets across infrastructures to perform business tasks.</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Manager - A sophisticated application used to deploy, manage, monitor, and diagnose issues with your CDH deployments. Cloudera Manager provides the Admin Console, a web-based user interface that makes administration of your enterprise data simple and straightforward. It also includes the Cloudera Manager <abbr title="Application Programming Interface">API</abbr>, which you can use to obtain cluster health information and metrics, as well as configure Cloudera Manager.</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Navigator - End-to-end data management and security for the CDH platform. Cloudera Navigator Data Management enables administrators, data managers, and analysts explore vast data collections in Hadoop. Cloudera Navigator Encrypt and simplifies the storage and management of encryption keys. The robust auditing, data management, lineage management, lifecycle management, and encryption key management in Cloudera Navigator allow enterprises to adhere to stringent compliance and regulatory requirements.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Key components in Cloudera Enterprise" [55-2484] -->
+<h2 class="sectionedit3" id="before_installation">Before installation</h2>
+<div class="level2">
+
+<p>
+See the full pre-requis for installation here (<a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/installation_reqts.html" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/installation_reqts.html" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/installation_reqts.html</a>).
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Before installation" [2485-2654] -->
+<h3 class="sectionedit4" id="storage_space_planning_for_cloudera_manager">Storage Space planning for cloudera manager</h3>
+<div class="level3">
+
+<p>
+Cloudera Manager tracks metrics of services, jobs, and applications in many background processes. All of these metrics require storage. Depending on the size of your organization, this storage can be local or remote, disk-based or in a database, managed by you or by another team in another location.
+</p>
+
+<p>
+If your storage is 100% filled, the cluster might experience data loss, and many other components will be impacted. In this page <a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_reqs_space.html" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_reqs_space.html" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_reqs_space.html</a>
+you can check the default disk config for each component of the cluster.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Storage Space planning for cloudera manager" [2655-3301] -->
+<h3 class="sectionedit5" id="set_up_ssh_access">Set up ssh access</h3>
+<div class="level3">
+
+<p>
+The host which has cloudera manager installed need ssh access and sudo right to install required services on each node (master, slave, etc)
+</p>
+<pre class="code"># 1. Create user and group on all hosts
+groupadd -g 42030 hadoop
+
+useradd hadoop --uid 100068 --home /home/hadoop --create-home --gid hadoop
+
+# 2. Generate ssh key pair on the cloudera manager host
+sudo su hadoop
+ssh-keygen -t rsa
+
+# 3. copy the public key into all other nodes
+mkdir -p ~/.ssh
+vim ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
+
+# 4. edit the /etc/ssh/sshd_config
+AllowUsers hadoop </pre>
+
+</div>
+<!-- EDIT5 SECTION "Set up ssh access" [3302-3900] -->
+<h3 class="sectionedit6" id="configure_network_name">Configure network name</h3>
+<div class="level3">
+
+<p>
+Configure hostname of each node in the cluster to ensure that all members can communicate with each other.
+</p>
+<pre class="code"># 1. set the hostname to a unique name (fqdn)
+sudo hostnamectl set-hostname cloudera01.pengfei.org
+
+# 2. Edit /etc/hosts for all nodes to be aware of all other nodes
+
+1.1.1.1  cloudera01.pengfei.org  cloudera01
+2.2.2.2  cloudera02.pengfei.org  cloudera02
+3.3.3.3  cloudera03.pengfei.org  cloudera03
+4.4.4.4  cloudera04.pengfei.org  cloudera04
+
+# 3. Edit /etc/sysconfig/network with the fqdn of the host
+HOSTNAME=cloudera01.pengfei.org
+
+# 4. Verify that each host consistently identifies to the network
+# a. Run uname -a and check that the hostname matches the output of the hostname command
+# b. Run /sbin/ifconfig and note the value of inet addr in the eth0 (or bond0) entry, for example:
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.17.6.16  netmask 255.255.255.0  broadcast 172.17.6.255
+        inet6 fe80::f816:3eff:fe1f:f6ff  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether fa:16:3e:1f:f6:ff  txqueuelen 1000  (Ethernet)
+        
+# c. Run host -v -t A $(hostname) and verify that the output matches the hostname command.
+#    The IP address should be the same as reported by ifconfig for eth0 (or bond0): for example
+
+[pliu@cclindwcloudera01 ~]$ host -v -t A cclindwcloudera01.in2p3.fr
+Trying &quot;cclindwcloudera01.in2p3.fr&quot;
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49519
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;cclindwcloudera01.in2p3.fr.	IN	A
+
+;; ANSWER SECTION:
+cclindwcloudera01.in2p3.fr. 0	IN	A	172.17.6.16
+
+Received 60 bytes from 172.17.6.250#53 in 1 ms
+</pre>
+
+<p>
+Note Important:
+* The canonical name of each host in /etc/hosts must be the FQDN (for example myhost-1.example.com), not the unqualified hostname (for example myhost-1). The canonical name is the first entry after the IP address.
+</p>
+<ul>
+<li class="level1"><div class="li"> Do not use aliases, either in /etc/hosts or in configuring <abbr title="Domain Name System">DNS</abbr>.</div>
+</li>
+<li class="level1"><div class="li"> Unqualified hostnames (short names) must be unique. For example, you cannot have both host01.example.com and host01.standby.example.com managed by the same Cloudera Manager Server.</div>
+</li>
+<li class="level1"><div class="li"> FQDN can not contain _ (e.g. host_01.example.com is not allowed)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Configure network name" [3901-6169] -->
+<h3 class="sectionedit7" id="disable_the_firewall">Disable the firewall</h3>
+<div class="level3">
+
+<p>
+To disable the firewall on each host in your cluster, perform the following steps on each host.
+</p>
+<pre class="code"># if you are using iptables
+# Save the existing iptables rule set.
+iptables-save &gt; /root/firewall.rules
+# stop service from starting at reboot
+sudo chkconfig iptables off
+# stop service
+sudo service iptables stop
+
+# if you are using firewall-cmd
+systemctl stop firewalld</pre>
+
+</div>
+<!-- EDIT7 SECTION "Disable the firewall" [6170-6585] -->
+<h3 class="sectionedit8" id="setting_selinux_mode">Setting selinux mode</h3>
+<div class="level3">
+<pre class="code"># check the selinux state
+getenforce
+
+# if the output is enforcing, you need to change to permissive or disabled
+vim /etc/selinux/config
+
+SELINUX=disabled
+# The above config take effect only after system restart
+# disable immediately
+setenforce 0
+</pre>
+
+</div>
+<!-- EDIT8 SECTION "Setting selinux mode" [6586-6881] -->
+<h3 class="sectionedit9" id="enableing_ntp">Enableing ntp</h3>
+<div class="level3">
+<pre class="code"># install if you don&#039;t have
+yum install ntp
+
+# edit the /etc/ntp.conf to add ntp servers.
+server 0.pool.ntp.org
+server 1.pool.ntp.org
+server 2.pool.ntp.org
+
+# start the ntp service
+systemctl start ntpd
+
+# configure the ntp service to run at boot
+systemctl enable ntpd
+
+# synchonize the node
+ntpdate -u &lt;ntp_server&gt;
+
+# synchronize teh system clock
+
+hwclock --systohc</pre>
+
+</div>
+<!-- EDIT9 SECTION "Enableing ntp" [6882-7288] -->
+<h3 class="sectionedit10" id="install_python_27">Install python 2.7</h3>
+<div class="level3">
+
+<p>
+On centos7, python 2.7.5 is installed by default
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Install python 2.7" [7289-7368] -->
+<h3 class="sectionedit11" id="impala_requirements">Impala requirements</h3>
+<div class="level3">
+
+<p>
+<a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/impala_prereqs.html#prereqs" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/impala_prereqs.html#prereqs" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/impala_prereqs.html#prereqs</a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Impala requirements" [7369-7490] -->
+<h3 class="sectionedit12" id="required_privileged">Required privileged</h3>
+<div class="level3">
+
+<p>
+You will need root or sudo right do intall cdh.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Required privileged" [7491-7570] -->
+<h3 class="sectionedit13" id="ports">Ports</h3>
+<div class="level3">
+
+<p>
+<a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_ports.html#concept_k5z_vwy_4j" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_ports.html#concept_k5z_vwy_4j" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_ports.html#concept_k5z_vwy_4j</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Ports" [7571-7690] -->
+<h3 class="sectionedit14" id="cdh_cluster_hosts_and_role_assignments">CDH Cluster Hosts and Role assignments</h3>
+<div class="level3">
+
+<p>
+Cluster hosts can be broadly described as the following types:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Master hosts</strong> run Hadoop master processes such as the HDFS NameNode and YARN Resource Manager.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Utility hosts</strong> run other cluster processes that are not master processes such as Cloudera Manager and the Hive Metastore.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Gateway hosts</strong> are client access points for launching jobs in the cluster. The number of gateway hosts required varies depending on the type and size of the workloads.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Worker hosts</strong> primarily run DataNodes and other distributed processes such as Impalad.</div>
+</li>
+</ul>
+
+<p>
+In <a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_host_allocations.html#host_role_assignments" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_host_allocations.html#host_role_assignments" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_host_allocations.html#host_role_assignments</a>, it explains how to distribute hosts and services on the the hosts.
+</p>
+
+<p>
+For example a cluster of 10 nodes
+</p>
+
+<p>
+Master 1 : Hdfs name node, JournalNode, FailoverController, YARN ResourceManager, ZooKeeper, JobHistory Server, Spark History Server, Kudu master
+</p>
+
+<p>
+Master 2 : Hdfs name node, JournalNode, FailoverController, YARN ResourceManager, ZooKeeper, Kudu master
+</p>
+
+<p>
+Master 3 : Kudu master(Kudu requires an odd number of masters for HA)
+</p>
+
+<p>
+Uility host: cloudera manager, cloudera manager management service, Hive metastore, impala catalog server, oozie, Zookeeper, JournalNode(requires dedicated disk)
+</p>
+
+<p>
+one or more gateway hosts: Hue, HiveServer2, Flume, GateWay configuration
+</p>
+
+<p>
+worker hosts: hdfs datanode, node manager, impalad, kudu tablet server
+</p>
+
+</div>
+<!-- EDIT14 SECTION "CDH Cluster Hosts and Role assignments" [7691-9159] -->
+<h2 class="sectionedit15" id="installing_cloudera_manager_cdh_and_managed_services">Installing cloudera manager, cdh and managed services</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT15 SECTION "Installing cloudera manager, cdh and managed services" [9160-9226] -->
+<h3 class="sectionedit16" id="configure_a_repository">1. Configure a Repository</h3>
+<div class="level3">
+
+<p>
+Download the right cloudera-manager.repo for your linux dist. You can find the complete list here:
+</p>
+
+<p>
+<a href="https://www.cloudera.com/documentation/enterprise/6/release-notes/topics/rg_cm_6_version_download.html" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/release-notes/topics/rg_cm_6_version_download.html" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/release-notes/topics/rg_cm_6_version_download.html</a>
+</p>
+
+<p>
+In our case, it looks like this 
+</p>
+<pre class="code">[root@cclindwcloudera01 yum.repos.d]# cat cloudera-manager.repo 
+[cloudera-manager]
+name=Cloudera Manager 6.0.0
+baseurl=https://archive.cloudera.com/cm6/6.0.0/redhat7/yum/
+gpgkey=https://archive.cloudera.com/cm6/6.0.0/redhat7/yum/RPM-GPG-KEY-cloudera
+gpgcheck=1
+enabled=1
+autorefresh=0
+type=rpm-md</pre>
+
+<p>
+Import the repository signing GPG key:
+</p>
+<pre class="code">sudo rpm --import https://archive.cloudera.com/cm6/6.0.0/redhat7/yum/RPM-GPG-KEY-cloudera</pre>
+
+</div>
+<!-- EDIT16 SECTION "1. Configure a Repository" [9227-9960] -->
+<h3 class="sectionedit17" id="install_jdk">2. Install jdk</h3>
+<div class="level3">
+
+<p>
+As we installed the cloudera repo in step 1, we can install jdk via this repo.
+</p>
+<pre class="code">sudo yum install oracle-j2sdk1.8
+# yum install java under /usr/java/jdk1.8.0_141-cloudera
+
+# add java path
+vim /etc/profile.d/jdk.sh
+
+export JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera
+export PATH=$PATH:$JAVA_HOME/bin
+
+source /etc/profile.d/jdk.sh
+</pre>
+
+</div>
+<!-- EDIT17 SECTION "2. Install jdk" [9961-10329] -->
+<h3 class="sectionedit18" id="install_cloudera_manager_packages">3. Install cloudera manager packages</h3>
+<div class="level3">
+
+<p>
+On the Cloudera Manager Server host, type the following commands to install the Cloudera Manager packages.
+</p>
+<pre class="code">sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server</pre>
+
+<p>
+If you are using an Oracle database for Cloudera Manager Server, edit the /etc/default/cloudera-scm-server file on the Cloudera Manager server host. Locate the line that begins with <strong>export CMF_JAVA_OPTS</strong> and change the <strong>-Xmx2G</strong> option to <strong>-Xmx4G</strong>.
+</p>
+
+</div>
+
+<h4 id="enable_auto-tls">Enable Auto-TLS</h4>
+<div class="level4">
+
+<p>
+Auto-TLS supports two options:
+</p>
+
+<p>
+option 1 : Use cloudera manager to generate an internal certificate authority and corresponding certificates.
+</p>
+
+<p>
+option 2 : Use an existing certificate authority and corresponding certificates,
+</p>
+
+<p>
+Here we only show the option 1, for option 2, you can check <a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/auto_tls.html#auto_tls" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/auto_tls.html#auto_tls" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/auto_tls.html#auto_tls</a>
+</p>
+
+<p>
+Auto-TLS is supported for new installations only. You must enable Auto-TLS before adding any hosts to Cloudera Manager. To enable auto-TLS with an embedded Cloudera Manager CA, run the following command:
+</p>
+<pre class="code">sudo JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera /opt/cloudera/cm-agent/bin/certmanager setup --configure-services</pre>
+
+<p>
+if your jdk is installed manually, replace <strong>jdk1.8.0_141-cloudera</strong> with your JDK version. If you want to store the files in a directory other than the default (/var/lib/cloudera-scm-server/certmanager), add the –location option as follows:
+</p>
+<pre class="code">sudo JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera /opt/cloudera/cm-agent/bin/certmanager --location /opt/cloudera/CMCA setup --configure-services</pre>
+
+<p>
+Note that the generated certificate use the current hostname, make sure your hostname is set before you run the above command.
+</p>
+
+</div>
+<!-- EDIT18 SECTION "3. Install cloudera manager packages" [10330-12108] -->
+<h3 class="sectionedit19" id="install_and_configure_databases">Install and configure databases</h3>
+<div class="level3">
+
+<p>
+Cloudera Manager uses various databases and datastores to store information about the Cloudera Manager configuration, as well as information such as the health of the system, or task progress.
+</p>
+
+<p>
+Although you can deploy different types of databases in a single environment, doing so can create unexpected complications. Cloudera recommends choosing one supported database provider for all of the Cloudera databases.
+</p>
+
+<p>
+You can use your own PostgreSQL, MariaDB, MySQL, or Oracle database for the Cloudera Manager Server and other services that use databases. 
+</p>
+
+</div>
+<!-- EDIT19 SECTION "Install and configure databases" [12109-12707] -->
+<h2 class="sectionedit20" id="required_databases">Required databases</h2>
+<div class="level2">
+
+<p>
+The following components all require databases: Cloudera Manager Server, Oozie Server, Sqoop Server, Activity Monitor, Reports Manager, Hive Metastore Server, Hue Server, Sentry Server, Cloudera Navigator Audit Server, and Cloudera Navigator Metadata Server. The type of data contained in the databases and their relative sizes are as follows:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Cloudera Manager Server</strong> - Contains all the information about services you have configured and their role assignments, all configuration history, commands, users, and running processes. This relatively small database (&lt; 100 <abbr title="Megabyte">MB</abbr>) is the most important to back up.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Oozie Server</strong> - Contains Oozie workflow, coordinator, and bundle data. Can grow very large.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Sqoop Server</strong> - Contains entities such as the connector, driver, links and jobs. Relatively small.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Activity Monitor</strong> - Contains information about past activities. In large clusters, this database can grow large. Configuring an Activity Monitor database is only necessary if a MapReduce service is deployed.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Reports Manager</strong> - Tracks disk utilization and processing activities over time. Medium-sized.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Hive Metastore Server</strong> - Contains Hive metadata. Relatively small.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Hue Server</strong> - Contains user account information, job submissions, and Hive queries. Relatively small.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Sentry Server</strong> - Contains authorization metadata. Relatively small.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Cloudera Navigator Audit Server</strong> - Contains auditing information. In large clusters, this database can grow large.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Cloudera Navigator Metadata Server</strong> - Contains authorization, policies, and audit report metadata. Relatively small.</div>
+</li>
+</ul>
+
+<p>
+The Host Monitor and Service Monitor services use local disk-based datastores. For more information, see <a href="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_storage.html" class="urlextern" title="https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_storage.html" rel="nofollow">https://www.cloudera.com/documentation/enterprise/6/6.0/topics/cm_ig_storage.html</a>
+</p>
+
+<p>
+The JDBC connector for your database must be installed on the hosts where you assign the Activity Monitor and Reports Manager roles.
+</p>
+
+<p>
+Cloudera supports mariaDB/mysql, postgresql, oracle database
+</p>
+
+<p>
+In our example, we choose to install postgresql. 
+</p>
+<pre class="code">yum install postgresql-server</pre>
+
+</div>
+<!-- EDIT20 SECTION "Required databases" [12708-14859] -->
+<h2 class="sectionedit21" id="install_psycopg2_python_package">Install psycopg2 python package</h2>
+<div class="level2">
+
+<p>
+Hue in CDH 6 requires version 2.5.4 or higher of the psycopg2 Python package for connecting to a PostgreSQL database. The psycopg2 package is automatically installed as a dependency of Cloudera Manager Agent, but the version installed is often lower than 2.5.4.
+</p>
+
+<p>
+If you are installing or upgrading to CDH 6 and using PostgreSQL for the Hue database, you must install psycopg2 2.5.4 or higher on all Hue hosts as follows. These examples install version 2.7.5
+</p>
+<pre class="code"># install pip
+sudo yum install python-pip
+# install psycopg via pip
+sudo pip install psycopg2==2.7.5 --ignore-installed</pre>
+
+</div>
+<!-- EDIT21 SECTION "Install psycopg2 python package" [14860-15499] -->
+<h2 class="sectionedit22" id="configuring_and_starting_postgresql_server">Configuring and Starting postgresql server</h2>
+<div class="level2">
+
+<p>
+By default, PostgreSQL only accepts connections on the loopback interface. You must reconfigure PostgreSQL to accept connections from the fully qualified domain names (FQDN) of the hosts hosting the services for which you are configuring databases.
+</p>
+
+<p>
+1. Make sure that LC_ALL is set to en_US.UTF-8 and initialize the database as follows:
+</p>
+<pre class="code">echo &#039;LC_ALL=&quot;en_US.UTF-8&quot;&#039; &gt;&gt; /etc/locale.conf
+sudo su -l postgres -c &quot;postgresql-setup initdb&quot;</pre>
+
+<p>
+2. Enable md5 authen, edit the pg_hba.conf, which is usually found in /var/lib/pgsql/data or /etc/postgresql/&lt;version&gt;/main
+</p>
+<pre class="code"># add the following line to enable md5
+host all all 127.0.0.1/32 md5
+# if the following line exsit already in the file, make sure md5 is before ident
+host all all 127.0.0.1/32 ident</pre>
+
+<p>
+ if you want to access PostgreSQL from a different host, replace 127.0.0.1 with your IP address and update postgresql.conf, which is typically found in the same place as pg_hba.conf, to include:
+</p>
+<pre class="code">listen_addresses = &#039;*&#039;</pre>
+
+<p>
+3. Configure settings to ensure your system performs as expected. Update these settings in the /var/lib/pgsql/data/postgresql.conf
+</p>
+
+</div>
+<!-- EDIT22 SECTION "Configuring and Starting postgresql server" [15500-16694] -->
+<h3 class="sectionedit23" id="small_to_mid-sized_cluster">Small to mid-sized cluster</h3>
+<div class="level3">
+
+<p>
+ For small and mid sized cluster, considering the following settings as starting points. if resources are limited, consider reducing the buffer sizes and checkpoint segments further.
+</p>
+
+<p>
+Ongoing tuning may be required based on each host&#039;s resource utilization. For example, if the Cloudera Manager Server is running on the same host as other roles, the following values may be acceptable:
+</p>
+<pre class="code">shared_buffers = 256MB
+
+wal_buffers = 8MB
+
+checkpoint_segments = 16 
+
+# The checkpoint_segments setting is removed in PostgreSQL 9.5 and higher, replaced by min_wal_size and max_wal_size. The PostgreSQL 9.5 release notes provides the following formula for determining the new settings:
+
+max_wal_size = (3 * checkpoint_segments) * 16MB</pre>
+
+</div>
+<!-- EDIT23 SECTION "Small to mid-sized cluster" [16695-17469] -->
+<h3 class="sectionedit24" id="large_clusters">Large clusters</h3>
+<div class="level3">
+
+<p>
+For large clusters, which can contain up to 1000 hosts, consider the following settings as starting points.
+</p>
+<pre class="code">max_connection = 150 
+# For large clusters, each database is typically hosted on a different host. In general, allow each 
+# database on a host 100 max connections and then add 50 extra connections. You may have to increase the 
+# system resource available to Postgresql as described at 
+# https://www.postgresql.org/docs/current/static/runtime-config-connection.html
+
+shared_buffers=1024MB
+
+
+wal_buffers = 16MB
+
+checkpoint_segments = 128 
+</pre>
+
+<p>
+4. configure postgres server to start at reboot
+</p>
+<pre class="code">systemctl enable postgresql
+
+systemctl restart postgresql</pre>
+
+</div>
+<!-- EDIT24 SECTION "Large clusters" [17470-18184] -->
+<h2 class="sectionedit25" id="creating_database_for_cloudera_services">Creating database for cloudera services</h2>
+<div class="level2">
+
+<p>
+We need to create account and database for the following services:
+</p>
+<ul>
+<li class="level1"><div class="li"> Cloudera Manager Server</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Management Service roles: Activity Monitor (if using the MapReduce service in a CDH 5 cluster); Reports Manager</div>
+</li>
+<li class="level1"><div class="li"> Each Hive metastore</div>
+</li>
+<li class="level1"><div class="li"> Sentry Server</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Navigator Audit Server</div>
+</li>
+<li class="level1"><div class="li"> Cloudera Navigator Metadata Server</div>
+</li>
+</ul>
+
+<p>
+The databases must be configured to support the PostgreSQL UTF8 character set encoding.
+</p>
+
+<p>
+Record the values you enter for database names, usernames, and passwords. The Cloudera Manager installation wizard requires this information to correctly connect to these databases.
+</p>
+<pre class="code"># connect to the database with user postgres
+sudo -u postgres psql
+
+# create user and db for cloudera manager server 
+CREATE ROLE scm LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE scm OWNER scm ENCODING &#039;UTF8&#039;;
+
+# create user and db for activity monitor
+CREATE ROLE amon LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE amon OWNER amon ENCODING &#039;UTF8&#039;;
+
+# create user and db for report manager
+CREATE ROLE rman LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE rman OWNER rman ENCODING &#039;UTF8&#039;;
+
+# create user and db for Hue
+CREATE ROLE hue LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE hue OWNER hue ENCODING &#039;UTF8&#039;;
+
+# create user and db for Hive MetaStore server
+CREATE ROLE hive LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE metastore OWNER hive ENCODING &#039;UTF8&#039;;
+
+# create user and db for sentry server
+CREATE ROLE sentry LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE sentry OWNER sentry ENCODING &#039;UTF8&#039;;
+
+# create user and db for cloudera navigator audit server
+CREATE ROLE nav LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE nav OWNER nav ENCODING &#039;UTF8&#039;;
+
+# create user and db for cloudera navigator metadata server
+CREATE ROLE navms LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE navms OWNER navms ENCODING &#039;UTF8&#039;;
+
+# create user and db for Oozie
+CREATE ROLE oozie LOGIN PASSWORD &#039;bioaster&#039;;
+CREATE DATABASE oozie OWNER oozie ENCODING &#039;UTF8&#039;;
+
+
+#For PostgreSQL 8.4 and higher, set standard_conforming_strings=off for the Hive Metastore and Oozie databases:
+# for hive
+ALTER DATABASE metastore SET standard_conforming_strings=off;
+# for oozie
+ALTER DATABASE oozie SET standard_conforming_strings=off;
+
+# if you did some typo, you can drop database and delete account
+drop database if exists acm;
+# acm is the database name
+# if exists is optional, Use IF EXISTS to prevent an error from removing a non-existent database. PostgreSQL will issue a notice instead.
+# delete user account acm
+drop user if exists acm;</pre>
+
+<p>
+After the account and database creation, you can use the following command to connect one to test
+</p>
+<pre class="code">psql -h 127.0.0.1 -U hive -d metastore -W</pre>
+
+</div>
+<!-- EDIT25 SECTION "Creating database for cloudera services" [18185-20904] -->
+<h2 class="sectionedit26" id="set_up_the_cloudera_manager_database">Set up the cloudera manager database</h2>
+<div class="level2">
+
+<p>
+Cloudera Manager Server includes a script that can create and configure a database for itself. The script can:
+</p>
+<ul>
+<li class="level1"><div class="li"> Create the Cloudera Manager Server database configuration file.</div>
+</li>
+<li class="level1"><div class="li"> (MariaDB, MySQL, and PostgreSQL) Create and configure a database for Cloudera Manager Server to use.</div>
+</li>
+<li class="level1"><div class="li"> (MariaDB, MySQL, and PostgreSQL) Create and configure a user account for Cloudera Manager Server.</div>
+</li>
+</ul>
+
+<p>
+Although the script can create a database, the following procedures assume that you have already created the database as described above.
+</p>
+
+</div>
+<!-- EDIT26 SECTION "Set up the cloudera manager database" [20905-21480] -->
+<h3 class="sectionedit27" id="syntax_for_scm_prepare_databasesh">Syntax for scm_prepare_database.sh</h3>
+<div class="level3">
+<pre class="code"># syntax for the scm_prepare_database.sh
+/opt/cloudera/cm/schema/scm_prepare_database.sh \
+[options] &lt;databaseType&gt; &lt;databaseName&gt; &lt;databaseUser&gt; &lt;password&gt;
+
+# &lt;databaseType&gt; canbe mysql(mysql/mariadb), postgresql, oracle
+# &lt;databaseName&gt; The name of the Cloudera Manager Server database to use. The default database name provided in the Cloudera Manager configuration settings is scm, but you are not required to use it.
+# &lt;databaseUser&gt; The username for the Cloudera Manager Server database to create or use. The default username provided in the Cloudera Manager configuration settings is scm, but you are not required to use it.
+# &lt;password&gt; The password for the &lt;databaseUser&gt; to create or use. If you do not want the password visible on the screen or stored in the command history, do not specify the password, and you are prompted to enter it.
+
+#options
+--config-path : The path to the Cloudera Manager Server configuration files. The default is /etc/cloudera-scm-server.
+
+-f/--force : If specified, the script does not stop if an error occurs.
+
+-h|--host : The IP address or hostname of the host where the database is installed. The default is to use localhost.
+
+-p|--password : The admin password for the database application. Use with the -u option. The default is no password. Do not put a space between -p and the password (for example, -phunter2). If you do not want the password visible on the screen or stored in the command history, use the -p option without specifying a password, and you are prompted to enter it. If you have already created the database, do not use this option.
+
+-P|--port : DB port number
+
+--scm-host : The hostname where the Cloudera Manager Server is installed. If the Cloudera Manager Server and the database are installed on the same host, do not use this option or the -h option.
+
+--scm-password-script : A script to execute whose stdout provides the password for user SCM (for the database).
+
+-u|--user : The admin username of the database, use it with the -p option, if you already created the database, do not use this option.
+
+# In our case, the command looks like this
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh postgresql scm scm 
+
+# you should see the return message like this
+All done, your SCM database is configured correctly!</pre>
+
+<p>
+To create a new database, you must specify the -u and -p parameters for a user with privileges to create databases. If you have already created the database as instructed above, do not specify these options.
+</p>
+
+</div>
+<!-- EDIT27 SECTION "Syntax for scm_prepare_database.sh" [21481-24039] -->
+<h2 class="sectionedit28" id="install_cdh_and_other_software">Install cdh and other software</h2>
+<div class="level2">
+
+<p>
+After setting up the Cloudera Manager database, we can use cloudera manager server to install cdh and other software.
+</p>
+<pre class="code"># start Cloudera Manager Server
+sudo systemctl start cloudera-scm-server
+
+# To observe the startup process, run the following on the Cloudera Manager Server host:
+sudo tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+# When you see this log entry, the Cloudera Manager Admin Console is ready:
+INFO WebServerImpl:com.cloudera.server.cmf.WebServerImpl: Started Jetty server.
+
+# In a web browser, go to http://&lt;server_host&gt;:7180, where &lt;server_host&gt; is the FQDN or IP address of the host where the Cloudera Manager Server is running.
+
+# log in to the Cloudera Manager Admin Console
+login : admin
+pwd: admin
+</pre>
+
+</div>
+<!-- EDIT28 SECTION "Install cdh and other software" [24040-24835] -->
+<h1 class="sectionedit29" id="trouble_shooting">Trouble shooting</h1>
+<div class="level1">
+
+<p>
+1. Can&#039;t Generate certficate for hosts when installing scm-agents with auto-tls enabled
+</p>
+
+<p>
+I did not find out what causes this error, I think it&#039;s a port problem
+</p>
+
+<p>
+Solutions :
+</p>
+<pre class="code"># remove the generated ca
+rm -rf /var/lib/cloudera-scm-server/certmanager
+
+# regenerate ca without the --configure-services
+JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera /opt/cloudera/cm-agent/bin/certmanager setup
+</pre>
+
+</div>
+<!-- EDIT29 SECTION "Trouble shooting" [24836-] -->

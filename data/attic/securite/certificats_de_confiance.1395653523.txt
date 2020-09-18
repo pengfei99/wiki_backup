@@ -1,0 +1,30 @@
+====== Listes des certificats de confiance ======
+
+Tous les systèmes font par défaut confiance à une liste de CA. Tous les certificats sont ajoutés à cette liste, et la procédure de mise à jour dépend de l'OS.
+
+**BIOASTER** vous conseille de faire confiance aux CAs suivants et d'importer leurs certificats :
+
+  * [[https://igc.services.cnrs.fr/search_CA_certificate/?CA=CNRS2-Standard&lang=fr&body=view_ca.html|CNRS]], en cliquant sur la croix entre ''Chargement dans le navigateur'' et ''Toute la chaine de certification'' ;
+  * [[http://www.cacert.org/index.php?id=3|CAcert]] en cliquant sur les clés de classe 1 et 3 au format PEM.
+
+Certains logiciels ([[/securite/client_courriel#mozilla_thunderbird|Thunderbird]], [[/securite/navigateur_internet#mozilla_firefox|Firefox]]...) gèrent leur propre liste de CA de confiance. Les certificats des CA doivent donc aussi être rajoutés dans ces listes.
+
+Dans la suite de cette page sont décrites les procédures d'import de certificats au niveau de l'OS.
+
+===== Microsoft Windows® =====
+
+L'importation se fait à partir d'[[/securite/navigateur_internet#microsoft_internet_explorer|Internet Explorer]]. Après avoir téléchargé un certificat, une fenêtre s'ouvre pour l'afficher. Il suffit de cliquer sur ''Installer le certificat...'' pour démarrer un assistant d'installation.
+
+{{/securite/import_cert_windows.png?direct&500|}}
+
+===== Debian GNU/Linux =====
+
+La gestion des certificats racines dépend du paquet **ca-certificates**.
+
+Les nouveaux certificats doivent être installés dans le dossier ''/usr/share/ca-certificates'' (ou dans un sous-dossier) et avoir l'extension ''.crt''.
+
+Une fois installé, il suffit de sélectionner les nouveaux certificats à activer dans la liste proposée en lançant la commande ''sudo dpkg-reconfigure ca-certificates''.
+
+{{securite/dpkg-reconfigure_ca-certificates.png?direct&500|}}
+
+Tous les certificats sont dès lors disponibles dans un unique fichier : ''/etc/ssl/certs/ca-certificates.crt''.

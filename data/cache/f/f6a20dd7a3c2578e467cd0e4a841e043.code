@@ -1,0 +1,3 @@
+<span class="re1">$outputDir</span> = <span class="st_h">'$OWNCLOUD/Projet_Biospecimens/exportDataFromV1/'</span>
+<span class="kw2">mkdir</span> <span class="co1">${outputDir}</span><span class="sy0">/</span>uploadedFiles
+<span class="kw2">scp</span> <span class="re5">-r</span> bioaster<span class="sy0">@</span>biospecimens.bioaster.org:<span class="sy0">/</span>usr<span class="sy0">/</span>local<span class="sy0">/</span>www<span class="sy0">/</span>bioaster-biospecimens<span class="sy0">/</span>htdocs<span class="sy0">/</span>local<span class="sy0">/</span>data<span class="sy0">/</span>files<span class="sy0">/</span> <span class="co1">${outputDir}</span><span class="sy0">/</span>uploadedFiles

@@ -1,0 +1,4 @@
+$ cd develop
+$ bzr merge ../release-1.2
+$ bzr ci -m &quot;Fusionne les nouvelles révisions de la branche release-1.2&quot;
+$ bzr push :parent

@@ -1,0 +1,91 @@
+====== Data Science ======
+
+===== 0. Statistic =====
+
+[[employes:pengfei.liu:data_science:statistic:glossary|Key concepts/words in statistics]]
+===== 1. Machine learning =====
+
+Machine learning Introduction : [[employes:pengfei.liu:data_science:machine_learning:introduction|Machine learning Introduction]]
+
+==== 1.1 Machine learning algorithme ====
+
+=== 1.1.1 Algorithms for solving Classification problems ===
+
+Logic regression
+
+naive bayes
+
+KNN
+
+Support Vector Machines (SVM)
+
+=== 1.1.2 Algorithms for solving Regression problems ===
+
+Linear regression [[employes:pengfei.liu:data_science:machine_learning:algo:linear_regression|Linear regression]]
+
+survival regression
+
+=== 1.1.3 Tree algorithms ===
+
+Tree algorithms work for both regression and classification problems
+
+Decision Tree
+ 
+Random forest
+
+Gradient boost
+
+
+=== 1.1.4 Algorithms for solving Clustering problems  ===
+K-means
+
+Gaussian mixtures(GMMs)
+
+=== 1.1.5 Algorithms for solving Recommendation problems  ===
+
+Alternating least squares (ALS)
+
+=== 1.1.6 Algorithms for Topic modeling ===
+
+Latent Dirichlet allocation (LDA)
+
+=== 1.1.7 Natural language processing ===
+
+TF-IDF
+
+Latent semantic analysis
+
+=== 1.1.8 Divers ===
+
+Frequent itemsets
+
+Association rules
+
+Sequential pattern mining
+
+
+
+
+
+
+==== 1.2 Machine learning framework ====
+
+TensorFlow [[employes:pengfei.liu:data_science:machine_learning:framework:tensorflow|Install Tensorflow on Ubuntu 16.04]]
+
+Keras + TensorFlow with virtual env [[employes:pengfei.liu:data_science:machine_learning:framework:keras_tensorflow|Install keras with tensorflow as backend]]
+
+Neural network with keras [[employes:pengfei.liu:data_science:machine_learning:framework:keras_neural_network_example|Develop your first neural network with Keras]]
+
+==== 1.3 Nature language processing ====
+
+[[employes:pengfei.liu:data_science:nlp:start|Nature language processing]]
+==== 1.4 Real world project ====
+
+Taobao sales : [[employes:pengfei.liu:big_data:real_world_example:taobao_sales|Use Big data techs to analyze taobao sales]]
+
+===== 2 Data analytics =====
+
+Batch processing:
+
+Stream processing: 
+

@@ -1,0 +1,78 @@
+
+<h1 class="sectionedit1" id="outils">Outils</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Outils" [1-22] -->
+<h2 class="sectionedit2" id="bonnes_pratiques">Bonnes Pratiques</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Bonnes Pratiques" [23-52] -->
+<h3 class="sectionedit3" id="controle_de_version">Contrôle de version</h3>
+<div class="level3">
+
+<p>
+Les logiciels de contrôle de versions (VCS) offrent plusieurs fonctionnalités intéressantes :
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Traçabilité</strong> : on sait qui a fait quelle modification quand et pourquoi ;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Retour dans le temps</strong> : on peut toujours revenir à une version antérieure ;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Distribution</strong> : n&#039;importe quelle version des documents versionnés peut être copiée très facilement ;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Collaboration</strong> : le VCS facilite le travaille collaboratif et l&#039;intégration des contributions des différents membres de l&#039;équipe.</div>
+</li>
+</ul>
+
+<p>
+Le choix du VCS est pour le moment arrêté sur <a href="/si/outils/bazaar" class="wikilink1" title="si:outils:bazaar">GNU Bazaar</a>, bien que l&#039;utilisation de l&#039;un n&#039;empêche pas certaines personnes ou équipes d&#039;en utiliser un autre en parallèle.
+Et si vous vous la posez, voici la réponse à la question «<a href="/si/outils/bazaar/pourquoi" class="wikilink1" title="si:outils:bazaar:pourquoi">pourquoi Bazaar ?</a>».
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Contrôle de version" [53-918] -->
+<h3 class="sectionedit4" id="revue_de_code">Revue de code</h3>
+<div class="level3">
+
+<p>
+La revue de code est la pratique consistant à demander à un collègue de vérifier le code que l&#039;on a écrit avant de l&#039;inclure dans la version de production. Ceci vient compléter ou remplacer <a href="https://fr.wikipedia.org/wiki/Programmation_en_bin%C3%B4me" class="urlextern" title="https://fr.wikipedia.org/wiki/Programmation_en_bin%C3%B4me"  rel="nofollow">l&#039;écriture de code en binôme</a>.
+</p>
+
+<p>
+De nombreux logiciels de revue de code existent (GitHub, GitLab, <a href="http://phabricator.org/" class="urlextern" title="http://phabricator.org/"  rel="nofollow">Phabricator</a>, <a href="https://launchpad.net" class="urlextern" title="https://launchpad.net"  rel="nofollow">Launchpad</a>…), mais la plupart sont étroitement liés à un VCS et imposent l&#039;utiliser des méthodes de travail peu adaptées. Les logiciels de revue de correctifs (<em>patch</em>) peuvent fonctionner avec tous les VCS, mais pour ce faire ils laisses de côté la notion de branche.
+</p>
+
+<p>
+<a href="/si/outils/reviewboard" class="wikilink1" title="si:outils:reviewboard">ReviewBoard</a> est un outil utilisé pour de nombreux projets et qui n&#039;est pas lié à un VCS particulier. Il est en ce moment en évaluation.
+</p>
+
+<p>
+Un simple système de suivi de project comme <a href="http://www.redmine.org/" class="urlextern" title="http://www.redmine.org/"  rel="nofollow">Redmine</a> pourrait-être utilisé pour faire le suivi de revue de code : un ticket est ouvert avec la branche à tester, la revue et le test se font en ligne de commande.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Revue de code" [919-2058] -->
+<h2 class="sectionedit5" id="langages">Langages</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Langages" [2059-2080] -->
+<h3 class="sectionedit6" id="python">Python</h3>
+<div class="level3">
+
+<p>
+Des modèles de script sont à disposition dans les dépôts <a href="/si/outils/bazaar" class="wikilink1" title="si:outils:bazaar">Bazaar</a> du CC.
+</p>
+<pre class="code">  $ bzr branch bzr+ssh://&lt;LOGIN&gt;@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/templates/</pre>
+
+<p>
+Dans le dossier <code>python_libraries</code> se trouve les dépôts des bibliothèques Python. Elles doivent être placées dans un répertoire situé dans le <code>PYTHONPATH</code> pour fonctionner.
+</p>
+<pre class="code">  $ cd /home/&lt;LOGIN&gt;/lib/python
+  $ bzr branch bzr+ssh://&lt;LOGIN&gt;@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/python_libraries/common
+  $ export PYTHONPATH=&quot;$PYTHONPATH:/home/&lt;LOGIN&gt;/lib/python&quot;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Python" [2081-] -->

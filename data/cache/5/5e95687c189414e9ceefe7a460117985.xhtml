@@ -1,0 +1,104 @@
+
+<h1 class="sectionedit1" id="install_mariadb_on_centos7">Install mariadb on centos7</h1>
+<div class="level1">
+
+<p>
+MariaDB is a drop-in replacement for MySQL. It is easy to install, offers many speed and performance improvements, and is easy to integrate into most MySQL deployments. Answers for compatibility questions can be found at: MariaDB versus MySQL  Compatibility. MariaDB offers more storage engines than MySQL, including Cassandra (NoSQL, in MariaDB Version 10), XtraDB (drop-in replacement for InnoDB), and OQGRAPH (in MariaDB Version 10).
+</p>
+
+<p>
+Pre-Flight Check
+These instructions are intended for installing MariaDB on a single CentOS 7 node.
+I’ll be working from a Liquid Web Self Managed CentOS 7 server, and I’ll be logged in as root.
+</p>
+
+<p>
+Install MySQL / MariaDB
+Installing MariaDB is as simple as running just one command:
+</p>
+
+<p>
+<code>yum -y install mariadb-server mariadb</code>
+</p>
+
+<p>
+And then start MySQL, now MariaDB:
+</p>
+
+<p>
+<code>systemctl start mariadb</code>
+</p>
+
+<p>
+Be sure that MySQL/MariaDB starts at boot:
+</p>
+
+<p>
+<code>systemctl enable mariadb</code>
+</p>
+
+<p>
+To check the status of MySQL/MariaDB:
+</p>
+
+<p>
+<code>systemctl status mariadb</code>
+</p>
+
+<p>
+To top MySQL/MariaDB:
+</p>
+
+<p>
+<code>systemctl stop mariadb</code>
+</p>
+
+<p>
+Check the installation with the command client:
+</p>
+<pre class="code">mysql
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 2
+Server version: 5.5.56-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
+
+Type &#039;help;&#039; or &#039;\h&#039; for help. Type &#039;\c&#039; to clear the current input statement.
+
+MariaDB [(none)]&gt; exit
+Bye
+
+</pre>
+
+</div>
+<!-- EDIT1 SECTION "Install mariadb on centos7" [1-1458] -->
+<h2 class="sectionedit2" id="configuration_post_installation">Configuration post installation</h2>
+<div class="level2">
+
+<p>
+As you see from above, by default, the installation doesn’t assign any password to MySQL root account.
+</p>
+
+<p>
+To set the mysql root user password and perform other security configuration on the database, execute the mysql_secure_installation script as shown below.
+</p>
+
+<p>
+If you use yum to install the mariadb, the mysql_secure_installation script should be in your path. So just type <code>mysql_secure_installation</code>
+</p>
+
+<p>
+Follow the instruction, the mariadb is configured.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Configuration post installation" [1459-1961] -->
+<h2 class="sectionedit3" id="jdbc_driver">JDBC driver</h2>
+<div class="level2">
+
+<p>
+<a href="https://mariadb.com/kb/en/library/about-mariadb-connector-j/" class="urlextern" title="https://mariadb.com/kb/en/library/about-mariadb-connector-j/" rel="nofollow">https://mariadb.com/kb/en/library/about-mariadb-connector-j/</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "JDBC driver" [1962-] -->

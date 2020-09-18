@@ -1,0 +1,116 @@
+
+<h1 class="sectionedit1" id="instancier_une_machine_sur_openstack">Instancier une machine sur OpenStack</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Instancier une machine sur OpenStack" [1-52] -->
+<h2 class="sectionedit2" id="creer_la_vm">Créer la VM</h2>
+<div class="level2">
+
+<p>
+<em class="u"><strong>Prérequis</strong></em> : être <a href="/doku.php?id=bioinformatique:openstack:bioinformatique_se_connecter_au_ccin2p3" class="wikilink2" title="bioinformatique:openstack:bioinformatique_se_connecter_au_ccin2p3" rel="nofollow">connecté au CC</a> <strong>ou</strong> avoir configuré son environnement local pour utiliser <code>nova</code>.
+</p>
+
+<p>
+La commande pour créer une VM est : 
+</p>
+<pre class="code text">nova boot --key-name=cloudkey --image=CentOS-7 --flavor=m1.tiny --security-groups=default dev-tools</pre>
+<ul>
+<li class="level1"><div class="li"> <code>cloudkey</code> est le nom de la clé SSH qui sera autorisée à se connecter sur la VM ;</div>
+</li>
+<li class="level1"><div class="li"> <code>Centos-7</code> est le nom de l&#039;image à instancier ; </div>
+</li>
+<li class="level1"><div class="li"> <code>m1.tiny</code> représente les ressources (CPU, RAM, …) mises à disposition pour cette VM ;</div>
+</li>
+<li class="level1"><div class="li"> <code>default</code> est la politique de sécurité à appliquer ;</div>
+</li>
+<li class="level1"><div class="li"> <code>dev-tools</code> est le nom de la VM.</div>
+</li>
+</ul>
+
+<p>
+L&#039;état de construction peut être vérifié avec <code>nova list</code>. Cette commande permet aussi de voir <strong>l&#039;adresse IP</strong> ayant été attribuée à la VM.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Créer la VM" [53-897] -->
+<h2 class="sectionedit3" id="se_connecter_a_la_vm">Se connecter à la VM</h2>
+<div class="level2">
+
+<p>
+<em class="u"><strong>Prérequis</strong></em> : l&#039;utilitaire <code>SSH</code> et un pare-feu laissant passer les connexions.
+</p>
+
+<p>
+Une fois démarrée, on peut se connecter à la VM avec la commande : <code>ssh -i .novacreds/cloudkey centos@134.158.37.17</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>.novacreds/cloudkey</code> correspond à la clé SSH qui a été enregistrée dans OpenStack (commande <code>keypair-add</code>) avec l&#039;identifiant <code>cloudkey</code> ;</div>
+</li>
+<li class="level1"><div class="li"> <code>centos</code> est l&#039;utilisateur par défaut de l&#039;image <code>Centos-7</code> ;</div>
+</li>
+<li class="level1"><div class="li"> <code>134.158.37.17</code> est l&#039;adresse IP associée à la VM.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Se connecter à la VM" [898-1435] -->
+<h2 class="sectionedit4" id="appliquer_la_configuration_minimale_a_la_vm">Appliquer la configuration minimale à la VM</h2>
+<div class="level2">
+
+<p>
+<em class="u"><strong>Prérequis</strong></em> : les outils <code>git</code> et <code>ansible</code> à disposition.
+</p>
+
+<p>
+Bien que la VM soit utilisable telle quelle, il est préférable de lui appliquer les configurations de base de tout serveur BIOASTER. Pour ce faire, on utilise le gestionnaire de configuration <code>ansible</code>.
+</p>
+
+<p>
+On récupère les <em>playbooks</em> et les rôles <code>ansible</code> : <code>git clone git@gitlab.in2p3.fr:bioaster/ansible.git</code>.
+</p>
+
+<p>
+On crée, dans le dossier cloné, un fichier inventaire avec notre VM :
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=bioinformatique:openstack:instancier&amp;codeblock=1" title="Download Snippet" class="mediafile mf_">inventory</a></dt>
+<dd><pre class="code yml">[my_group]
+my.server.name ansible_host=134.158.37.17 ansible_user=centos</pre>
+</dd></dl>
+
+<p>
+On crée ensuite un <em>playbook</em> minimal pour gérer notre VM : 
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=bioinformatique:openstack:instancier&amp;codeblock=2" title="Download Snippet" class="mediafile mf_yml">site.yml</a></dt>
+<dd><pre class="code yml">---
+&nbsp;
+- name: Configure my VM
+  hosts: my_group
+  roles:
+    - server</pre>
+</dd></dl>
+
+<p>
+Le rôle <code>server</code> va configurer de nombreux éléments parmi lesquels : OpenSSH, NTPd, /etc/hosts, …
+</p>
+
+<p>
+On exécute le playbook avec la commande : <code>ansible-playbook -i inventory -l my_group site.yml</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>inventory</code> est notre fichier d&#039;inventaire qui remplace celui par défaut (<code>/etc/ansible/inventory</code>) ;</div>
+</li>
+<li class="level1"><div class="li"> <code>my_group</code> est le groupe auquel on veut se limiter (option <code>-l</code>) ;</div>
+</li>
+<li class="level1"><div class="li"> <code>site.yml</code> est le <em>playbook</em> à utiliser.</div>
+</li>
+</ul>
+
+<p>
+Une fois configuré, il est possible d&#039;accéder à la machine avec les utilisateurs définis par le rôle. Ceux-ci sont pour le moment définis par la variable <code>system_users</code> dans le fichier <code>roles/server/defaults/main.yml</code>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Appliquer la configuration minimale à la VM" [1436-] -->

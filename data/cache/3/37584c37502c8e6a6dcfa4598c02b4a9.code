@@ -1,0 +1,9 @@
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>0<span class="br0">&#125;</span>config.ldif,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootDN</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,cn=config</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>0<span class="br0">&#125;</span>config.ldif,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootPW</span>
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>jCfNbdgnB7TyOUWrCPByznrifWl/RhwM</span>

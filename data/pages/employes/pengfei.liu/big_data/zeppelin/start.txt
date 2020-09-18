@@ -1,0 +1,15 @@
+====== Zeppelin documentation ======
+
+===== Installation and configure =====
+[[employes:pengfei.liu:big_data:zeppelin:install_and_configure|Install Apache Zeppelin on Centos 7]]
+
+[[employes:pengfei.liu:big_data:zeppelin:authentication|Zeppelin authentication]]
+===== Interpreter =====
+
+The interpreter is the most important module in Zeppelin. For supporting each language, you need to configure a Zeppelin interpreter which connects to the backend of the language. For example, for python interpreter, we need to configure it to connect to a python backend (virtual env or conda).
+
+JDBC : [[employes:pengfei.liu:big_data:zeppelin:jdbc_interpreter|Zeppelin JDBC interpreter]]
+
+SparkR : [[employes:pengfei.liu:big_data:zeppelin:r_interpreter|Install and configure R interpreter in Zeppelin]]
+
+PySpark: [[employes:pengfei.liu:big_data:zeppelin:spark_interpreter|Configure spark interpreter to use pyspark]]

@@ -1,0 +1,215 @@
+
+<h1 class="sectionedit1" id="administrer_une_machine_virtuelle">Administrer une machine virtuelle</h1>
+<div class="level1">
+
+<p>
+La procédure BIOASTER est basée sur le guide OpenStack du CC-IN2P3. Ce dernier sert de document de base pour toutes les bonnes pratiques concernant OpenStack. 
+</p>
+
+<p>
+Avant de lire cette page, assurez-vous d&#039;avoir consulté <a href="/ccin2p3/cloud?&amp;#se_connecter_au_nuage" class="wikilink1" title="ccin2p3:cloud">la page d&#039;utilisation du nuage</a>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Administrer une machine virtuelle" [1-344] -->
+<h2 class="sectionedit2" id="lister_les_vm">Lister les VM</h2>
+<div class="level2">
+
+<p>
+Voici comment obtenir la <strong>liste des VM</strong> existantes : 
+</p>
+<pre class="code text">$ nova list
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+
+| ID                                   | Name        | Status  | Task State | Power State | Networks                             |
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+
+| b5330873-1760-4373-8159-e687076031c4 | Galaxy      | ACTIVE  | None       | Running     | bioaster=172.17.6.8, 134.158.246.43  |
+| 697168f7-321b-41eb-8ce1-5c52c94f77f6 | Qiime       | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.4, 134.158.246.25  |
+| d3222016-e97a-45e9-8cee-d1572d29e0b8 | Qiime       | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.7, 134.158.246.137 |
+| ded3b1ce-a675-406c-882d-ed267a84e8ec | Test2       | ACTIVE  | None       | Running     | bioaster=172.17.6.6, 134.158.246.133 |
+| 0bdbf2be-c1a2-4a9b-871a-7fefac56be47 | debian_test | ACTIVE  | None       | Running     | bioaster=172.17.6.5                  |
+| bbeb560e-7c5f-4183-8286-2427ff92e984 | test_tlc    | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.9                  |
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+</pre>
+
+<p>
+La colonne <em>status</em> indique l&#039;état actuel de la machine et conditionne les actions qui peuvent être faites dessus.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Lister les VM" [345-1891] -->
+<h2 class="sectionedit3" id="arreter">Arrêter</h2>
+<div class="level2">
+
+<p>
+Arrêter un VM inutile permet d&#039;économiser des ressources.
+</p>
+<pre class="code text">$ nova stop test_tlc</pre>
+
+</div>
+<!-- EDIT3 SECTION "Arrêter" [1892-2016] -->
+<h2 class="sectionedit4" id="demarrer">Démarrer</h2>
+<div class="level2">
+
+<p>
+Permet de redémarrer une machine qui a été arrêtée.
+</p>
+<pre class="code text">$ nova start test_tlc</pre>
+
+</div>
+<!-- EDIT4 SECTION "Démarrer" [2017-2140] -->
+<h2 class="sectionedit5" id="detruire">Détruire</h2>
+<div class="level2">
+
+<p>
+Détruire une VM est une action qui <strong>ne peut pas être annulée</strong>. Toutes les données de la VM seront perdues, à moins qu&#039;elles ne soient sur un disque ou un espace AFS/SPS monté sur la VM.
+</p>
+<pre class="code text">$ nova delete test_tlc</pre>
+
+</div>
+<!-- EDIT5 SECTION "Détruire" [2141-2402] -->
+<h2 class="sectionedit6" id="ajouter_une_ip_publique">Ajouter une IP publique</h2>
+<div class="level2">
+
+<p>
+Pour qu&#039;un service tournant sur une VM soit accessible depuis l&#039;extérieur il faut qu&#039;elle soit :
+</p>
+<ul>
+<li class="level1"><div class="li"> accessible grâce à une adresse IP publique ;</div>
+</li>
+<li class="level1"><div class="li"> accessible en passant par un proxy disposant d&#039;une adresse IP publique.</div>
+</li>
+</ul>
+
+<p>
+Ici est décrit le premier cas où le serveur hébergeant le service possède une adresse IP publique.
+</p>
+
+<p>
+La première étape consiste à vérifier si des adresses IP publiques sont disponibles.
+</p>
+<pre class="code text">$ nova floating-ip-list
++-----------------+--------------------------------------+------------+------+
+| Ip              | Instance Id                          | Fixed Ip   | Pool |
++-----------------+--------------------------------------+------------+------+
+| 134.158.246.10  | None                                 | None       | nova |
+| 134.158.246.25  | 697168f7-321b-41eb-8ce1-5c52c94f77f6 | 172.17.6.4 | nova |
+| 134.158.246.26  | None                                 | None       | nova |
+| 134.158.246.43  | b5330873-1760-4373-8159-e687076031c4 | 172.17.6.8 | nova |
+| 134.158.246.133 | ded3b1ce-a675-406c-882d-ed267a84e8ec | 172.17.6.6 | nova |
+| 134.158.246.137 | d3222016-e97a-45e9-8cee-d1572d29e0b8 | 172.17.6.7 | nova |
+| 134.158.246.191 | None                                 | None       | nova |
++-----------------+--------------------------------------+------------+------+</pre>
+
+<p>
+Si aucune IP n&#039;est disponible, il faut essayer d&#039;en créer une.
+</p>
+<pre class="code text">$ nova floating-ip-create
++----------------+-------------+----------+------+
+| Ip             | Instance Id | Fixed Ip | Pool |
++----------------+-------------+----------+------+
+| 134.158.246.25 | None        | None     | nova |
++----------------+-------------+----------+------+</pre>
+
+<p>
+On peut ensuite assigner l&#039;IP à la VM.
+</p>
+<pre class="code text">$ nova add-floating-ip mavm 134.158.246.25</pre>
+
+</div>
+<!-- EDIT6 SECTION "Ajouter une IP publique" [2403-4246] -->
+<h2 class="sectionedit7" id="configurer_le_pare-feu">Configurer le pare-feu</h2>
+<div class="level2">
+
+<p>
+Il est nécessaire de configurer le pare-feu afin de pouvoir contacter les services déployés sur les VM. Dans l&#039;exemple suivant, on ouvre le port pour les connexions SSH.
+</p>
+<pre class="code text">$ nova secgroup-list
++---------+-------------+
+| Name    | Description |
++---------+-------------+
+| default | default     |
++---------+-------------+
+&nbsp;
+$ nova secgroup-list-rules default 
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
++-------------+-----------+---------+-----------+--------------+
+&nbsp;
+$ nova secgroup-add-rule default tcp 22 22 0.0.0.0/0 </pre>
+
+<p>
+Les groupes peuvent être assignés aux VM lors du <em>boot</em> grâce à l&#039;option <code>–security-groups &lt;NOM_DES_GROUPES&gt;</code>.
+</p>
+
+<p>
+Pour que les services soient accessibles depuis l&#039;extérieur, il faut faire une demande d&#039;ouverture de port sur le pare-feu de l&#039;IN2P3 en utilisant le <a href="https://cc-usersupport.in2p3.fr/otrs/customer.pl" class="urlextern" title="https://cc-usersupport.in2p3.fr/otrs/customer.pl"  rel="nofollow">système de tickets</a>.
+</p>
+
+<p>
+Pour créer le goupe <code>web_server</code> on fait :
+</p>
+<pre class="code">  nova secgroup-create web_server &quot;Web server&quot;
+  nova secgroup-add-rule web_server tcp 22 22 0.0.0.0/0
+  nova secgroup-add-rule web_server tcp 80 80 0.0.0.0/0</pre>
+
+</div>
+<!-- EDIT7 SECTION "Configurer le pare-feu" [4247-5541] -->
+<h2 class="sectionedit8" id="ajouter_un_disque">Ajouter un disque</h2>
+<div class="level2">
+
+<p>
+Si aucun disque disponible n&#039;existe, il faut en créer un avec <code>cinder</code>.
+</p>
+<pre class="code text">$ cinder list
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|   ID    |   Status  | Display Name | Size | Volume Type | Bootable |             Attached to              |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|  [...]  | available | testvol1     |  1   |     None    |          |                                      |
+|  [...]  | detaching | testvol2     |  1   |     None    |          | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+|  [...]  | available | vol4         |  1   |     None    |          |                                      |
+|  [...]  | available | vol5         |  1   |     None    |          |                                      |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+&nbsp;
+$ cinder create --display-name monvolume1 5
++---------------------+--------------------------------------+
+|       Property      |                Value                 |
++---------------------+--------------------------------------+
+|     attachments     |                  []                  |
+|  availability_zone  |                 nova                 |
+|      created_at     |      2013-04-19T11:03:50.606663      |
+| display_description |                 None                 |
+|     display_name    |              monvolume1              |
+|          id         | cb252a17-f581-4d70-8049-be358a5fc8bb |
+|       metadata      |                  {}                  |
+|         size        |                  5                   |
+|     snapshot_id     |                 None                 |
+|        status       |               creating               |
+|     volume_type     |                 None                 |
++---------------------+--------------------------------------+</pre>
+
+<p>
+Il faut ensuite attacher ce disque à la VM.
+</p>
+<pre class="code text">$ nova volume-attach monserveur 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb /dev/vdb
++----------+--------------------------------------+
+| Property | Value                                |
++----------+--------------------------------------+
+| device   | /dev/vdb                             |
+| serverId | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+| id       | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
+| volumeId | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
++----------+--------------------------------------+</pre>
+
+<p>
+Le disque doit ensuite être formaté (si nécessaire) et monté dans la VM.
+</p>
+<pre class="code text"># Dans la VM
+$ mkfs.xfs /dev/vdb
+$ mkdir /data
+$ cat &gt;&gt; /etc/fstab &lt;&lt;EOF
+/dev/vdb /data xfs nosuid,nodev 1 2
+EOF
+$ mount /data</pre>
+
+</div>
+<!-- EDIT8 SECTION "Ajouter un disque" [5542-] -->

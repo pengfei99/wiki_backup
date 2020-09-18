@@ -1,0 +1,15 @@
+ &lt;resolver:DataConnector xsi:type=&quot;LDAPDirectory&quot; xmlns=&quot;urn:mace:shibboleth:2.0:resolver:dc&quot;
+                        id=&quot;LocalLdap&quot;
+                        ldapURL=&quot;ldap://ldap.bioaster.org:389&quot;
+                        baseDN=&quot;OU=UTILISATEURS,dc=bioaster,dc=local&quot;
+                        principal=&quot;CN=admin,dc=bioaster,DC=org&quot;
+                        principalCredential=&quot;pwd&quot;
+                        useStartTLS=&quot;false&quot;&gt;
+        &lt;FilterTemplate&gt;
+            &lt;![CDATA[
+                (sAMAccountName=${requestContext.principalName})
+            ]]&gt;
+        &lt;/FilterTemplate&gt;
+&nbsp;
+        &lt;ReturnAttributes&gt;cn uid mail department title&lt;/ReturnAttributes&gt;
+    &lt;/resolver:DataConnector&gt;

@@ -1,0 +1,127 @@
+====== DokuWiki ======
+
+===== Informations =====
+
+  * **Version** : 2013-12-08 //"Binky"//
+  * **Licence** : GPLv2
+  * **Page Web** : [[https://www.dokuwiki.org]]
+  * **Description** : DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in access controls and authentication connectors make DokuWiki especially useful in the enterprise context and the large number of plugins contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki. 
+
+Une instance FreeBSD a été configurée dans le nuage VMware pour déployer le wiki.
+
+===== Installation =====
+
+==== Installation des logiciels ====
+
+<code>
+pkg install apache24 mod_php5 php5 php5-session php5-xml
+</code>
+
+==== Configuration du serveur web ====
+
+Faire attention à créer tous les sous dossiers !!!
+
+<code text /usr/local/etc/apache24/httpd.conf>
+Listen 443
+…
+LoadModule ssl_module     libexec/apache24/mod_ssl.so
+LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+LoadModule php5_module    libexec/apache24/libphp5.so
+…
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+…
+DirectoryIndex index.html index.php
+</code>
+
+<code text /usr/local/etc/apache24/Includes/wiki.bioaster.local.conf>
+<VirtualHost _default_:443>
+    ServerName wiki.bioaster.local
+    DocumentRoot /usr/local/www/data/vhosts/dokuwiki/
+
+    <Directory /usr/local/www/data/vhosts/dokuwiki/>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog "/var/log/httpd-error-wiki.bioaster.local.log"
+    CustomLog "/var/log/httpd-acces-wiki.bioaster.local.log" combined
+
+    SSLEngine       on
+    SSLProtocol all -SSLv2 -SSLv3
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+    SSLVerifyClient require
+    SSLVerifyDepth  1
+    SSLOptions +StdEnvVars
+
+    SSLCertificateFile /etc/ssl/crt/wiki.bioaster.local-cert.pem
+    SSLCertificateKeyFile /etc/ssl/key/wiki.bioaster.local-key.pem
+    SSLCACertificatePath   /etc/ssl/crt/
+    SSLCACertificateFile   /etc/ssl/crt/ca_for_wiki.pem
+
+    #CustomLog "/var/log/httpd-ssl_request-wiki.bioaster.local.log" \
+    #      "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+</VirtualHost>
+</code>
+
+Le fichier ''/etc/ssl/crt/ca_for_wiki.pem'' contient les CA à qui ont fait confiance pour émettre des certificats. Pour le créer, il faut faire quelque chose comme :
+<code>
+cd /etc/ssl/crt
+cat bioaster_root_paris.pem cacert.pem cacert_class_3_root.pem startsssl-sub.class1.server.ca.pem \
+    > ca_for_wiki.pem
+</code>
+
+Créez le **.htaccess** et décommenter la partie concernant la réécriture.
+<code text>
+cp /usr/local/www/data/vhosts/dokuwiki/.htaccess.dist /usr/local/www/data/vhosts/dokuwiki/.htaccess
+</code>
+
+
+
+===== Configuration=====
+
+Activer les **options avancées** suivantes : ''configuration'' > ''advanced'' > nice URL w/ .htacces + use slash as name separator
+
+Installer les **extensions** :
+  * [[https://www.dokuwiki.org/plugin:templatepagename|templatepagename]] ;
+  * [[https://www.dokuwiki.org/plugin:pagelist|pagelist]] ;
+  * [[https://www.dokuwiki.org/plugin:tag|tag]].
+
+Installer l'extension pour se connecter à l'aide d'un certificat et disponible ici : 
+    bzr+ssh://LOGIN@ccage.in2p3.fr/~tlecarro/repo/dokuwiki-plugin-certlogin
+
+Ne pas oublier de changer le ''Auth Backend'' dans la configuration pour ''certlogin''.
+
+===== Connexion à l'AD =====
+
+D'après le fichier de configuration du wiki de DEUZZI, le plugin ''authad'' a été utilisé avec les paramètres sont les suivants :
+
+<code text local.protected.php>
+<?php
+  // general DokuWiki options
+  $conf['useacl']         = 1;
+  $conf['authtype']       = 'plain';
+ 
+  // configure your Active Directory data here
+  $conf['auth']['ad']['account_suffix']     = '@bioaster.local';
+  $conf['auth']['ad']['base_dn']            = 'DC=bioaster,DC=local';
+  $conf['auth']['ad']['domain_controllers'] = 'srvadmin.bioaster.local, srvfic.bioaster.local';
+  $conf['plugin']['authad']['sso'] = 1;
+  $conf['plugin']['authad']['admin_username'] = 'dokuwiki';
+  $conf['plugin']['authad']['admin_password'] = 'XXXXXXXX';
+
+  // optional parameters
+  $conf['plugin']['authad']['recursive_groups']   = 1;
+  $conf['plugin']['authad']['sso']                = 1;
+  $conf['plugin']['authad']['real_primarygroup']  = 1;
+  $conf['manager']   = '@DokuwikiAdmin';
+  $conf['superuser'] = '@DokuwikiAdmin';
+</code>
+
+===== Log =====
+
+  * **2015.02.06 (tlc)** Ajout de StartSSL dans la liste des CA de confiance
+  * **2015.01.30 (tlc)** Suppression de la passphrase sur la clé privée du serveur wiki.bioaster.local
+  * **2015.01.28 (tlc)** Migration vers le nouveau serveur et mise à jour vers "Hrun" (2014-09-29b)
+  * **2014.02.13 (tlc)** Version 2013-12-08 //"Binky"// installée

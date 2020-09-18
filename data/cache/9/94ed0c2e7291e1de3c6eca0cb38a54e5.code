@@ -1,0 +1,12 @@
+<span class="co3">/**
+     * computes partition for given record.
+     * if the record has partition returns the value otherwise
+     * calls configured partitioner class to compute the partition.
+     */</span>
+    <span class="kw1">private</span> <span class="kw4">int</span> partition<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> serializedKey, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> serializedValue, Cluster cluster<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+integer"><span class="kw3">Integer</span></a> partition <span class="sy0">=</span> record.<span class="me1">partition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> partition <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">?</span>
+                partition <span class="sy0">:</span>
+                partitioner.<span class="me1">partition</span><span class="br0">&#40;</span>
+                        record.<span class="me1">topic</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, record.<span class="me1">key</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serializedKey, record.<span class="me1">value</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serializedValue, cluster<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>

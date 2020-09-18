@@ -1,0 +1,28 @@
+**Date** : 14/10/2014
+
+**Participants** : PV, NS
+
+====== Ordre du jour ======
+Précédente réunion le [[reunion_pt6_30.09.2014|30/09/2014]]
+  - Appel à projet européen eINFRA9
+  - Retour du Forum Big Data Leaders
+  - MiniLIMS : Forge, framework etc.
+  - Use case PT2 et évaluation de [[http://irods.org/|iRODS]], [[http://www.midasplatform.org/|MIDAS]] et [[http://pegasus.isi.edu/|Pegasus]].
+  - eCRF : cahier des charges
+  - Mise en place d'OpenStack, tenant bioaser/bioaster_htc et liaison à GPFS.
+  - Budget PT6. 
+  - <del>Déploiement de [[http://www.sequenceserver.com/|SequenceServer]], de [[http://c4c.uwc4c.com/express_license_technologies/viroblast|ViroBlast]] ou de [[http://appmibio.uni-goettingen.de/software/|SecureBlast]].</del>
+  - <del>Les stations de travail des bio-informaticiens.</del>
+  - <del>Doc et tutoriaux dans le Wiki, ticket dans OTRS</del>
+  - <del>OwnCloud et transfert de données</del>
+  - <del>Mise en place de Tentakel sur CCBIO...</del>
+  - <del>Certificat.</del> 
+  
+====== Commentaires et actions ======
+  - <wrap info>NS</wrap> | RAS
+  - <wrap info>NS</wrap> | RAS  
+  - <wrap info>AC+PV+TLC</wrap> | Forge: OK, Bzr: repo créé dans le $THRONG_DIR, Frameworkage du code prévu avec Symfony et lecture de la doc CakePHP, à faire : création d'un espace Web pour le test et la prod, à faire : création de la DB sur le cluster DB.   
+  - <wrap info>PV</wrap> | Installation de Pegasus en cours, il faut rester vigilant sur le temps nécessaire pour le tester. En attendant, PV essaye de récupérer des info auprès de Noua et de Fred Suter. 
+  - <wrap info>PV</wrap> | Visite à Karen jeudi 16/10 pour débrifer le PPT et mettre en place la procédure de sélection de l'eCRF. 
+  - <wrap info>PV+JG</wrap> | bioaster_htc est opérationnel, test de connective en cours entre bioaster et bioaster_htc, Sysfera utilise bioaster_htc, montage NFS/GPFS a priori prêt dans ~15 jours.
+  - <wrap info>NS</wrap> | En cours. Retour à la prochaine réunion.

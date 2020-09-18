@@ -1,0 +1,14 @@
+#########################################
+#
+# Start of virtual user configuration <span class="br0">&#40;</span>by PV<span class="br0">&#41;</span>
+#
+#
+<span class="re1">local_enable</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">chroot_local_user</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">user_config_dir</span><span class="sy0">=</span><span class="re2">/etc/vsftpd/vsftpd-virtual-user/</span>
+<span class="re1">virtual_use_local_privs</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">pam_service_name</span><span class="sy0">=</span><span class="re2">vsftpd</span>
+<span class="re1">guest_enable</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">anon_other_write_enable</span><span class="sy0">=</span><span class="re2">NO</span>
+<span class="re1">nopriv_user</span><span class="sy0">=</span><span class="re2">bioaster</span>
+<span class="re1">guest_username</span><span class="sy0">=</span><span class="re2">bioaster</span>

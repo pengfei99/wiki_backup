@@ -1,0 +1,23 @@
+a:65:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:4:"STAR";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:21;}i:4;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:12:"Informations";i:1;i:2;i:2;i:21;}i:2;i:21;}i:5;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:21;}i:6;a:3:{i:0;s:10:"listu_open";i:1;a:0:{}i:2;i:46;}i:7;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:46;}i:8;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:46;}i:9;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:50;}i:10;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:51;}i:11;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:7:"Version";}i:2;i:53;}i:12;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:60;}i:13;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:9:" : 2.3.0e";}i:2;i:62;}i:14;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:71;}i:15;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:71;}i:16;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:71;}i:17;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:71;}i:18;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:75;}i:19;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:76;}i:20;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:7:"Licence";}i:2;i:78;}i:21;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:85;}i:22;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:8:" : GPLv3";}i:2;i:87;}i:23;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:95;}i:24;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:95;}i:25;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:95;}i:26;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:95;}i:27;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:99;}i:28;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:100;}i:29;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:8:"Page Web";}i:2;i:102;}i:30;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:110;}i:31;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:3:" : ";}i:2;i:112;}i:32;a:3:{i:0;s:12:"externallink";i:1;a:2:{i:0;s:34:"http://code.google.com/p/rna-star/";i:1;N;}i:2;i:115;}i:33;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:153;}i:34;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:153;}i:35;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:153;}i:36;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:153;}i:37;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:157;}i:38;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:158;}i:39;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:11:"Description";}i:2;i:160;}i:40;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:171;}i:41;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:84:" : STAR aligns RNA-seq reads to a reference genome using uncompressed suffix arrays.";}i:2;i:173;}i:42;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:257;}i:43;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:257;}i:44;a:3:{i:0;s:11:"listu_close";i:1;a:0:{}i:2;i:257;}i:45;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:259;}i:46;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:12:"Installation";i:1;i:2;i:2;i:259;}i:2;i:259;}i:47;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:259;}i:48;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:261:"
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster/"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/star/2.3.0e/bin"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://rna-star.googlecode.com/files/STAR_2.3.0e.tgz
+tar xvzf STAR_2.3.0e.tgz
+cd STAR_2.3.0e
+make
+mv STAR $APP/
+";i:1;N;i:2;N;}i:2;i:290;}i:49;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:561;}i:50;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:12:"Intégration";i:1;i:2;i:2;i:561;}i:2;i:561;}i:51;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:561;}i:52;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:280:"
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "STAR aligns RNA-seq reads to a reference genome using uncompressed suffix arrays.\n"
+}
+
+set version "2.3.0e"
+
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/star/2.3.0e/bin"
+
+prepend-path PATH $bin_dir
+";i:1;N;i:2;N;}i:2;i:592;}i:53;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:882;}i:54;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:3:"Log";i:1;i:2;i:2;i:882;}i:2;i:882;}i:55;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:882;}i:56;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:882;}i:57;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:"* ";}i:2;i:899;}i:58;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:901;}i:59;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:16:"2014.02.05 (tlc)";}i:2;i:903;}i:60;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:919;}i:61;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:26:" Version 2.3.0e installée";}i:2;i:921;}i:62;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:947;}i:63;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:947;}i:64;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:947;}}

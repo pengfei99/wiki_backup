@@ -1,0 +1,598 @@
+
+<h1 class="sectionedit1" id="procedure_for_owncloud_installation">Procedure for Owncloud installation</h1>
+<div class="level1">
+
+<p>
+This guide is desgin for centos 7
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Procedure for Owncloud installation" [1-86] -->
+<h2 class="sectionedit2" id="install_dependencies">Install dependencies</h2>
+<div class="level2">
+
+<p>
+<code>yum install httpd php php-mysql mariadb-server mariadb sqlite php-dom php-mbstring php-gd php-pdo php-process wget bzip2 mod_ssl openssl</code>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Install dependencies" [87-262] -->
+<h2 class="sectionedit3" id="selinux_status">Selinux status</h2>
+<div class="level2">
+
+<p>
+<code>sestatus</code>
+</p>
+
+<p>
+If selinux is enabled, type the following line to allow owncloud to write on the server
+</p>
+
+<p>
+<code>setsebool -P httpd_unified on</code>
+</p>
+
+<p>
+For those who don&#039;t want to use selinux, you can disable it
+</p>
+
+<p>
+<code>sudo vim /etc/selinux/config</code>
+</p>
+
+<p>
+Change SELINUX=enforcing to SELINUX=disabled
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Selinux status" [263-570] -->
+<h2 class="sectionedit4" id="network_setup">Network setup</h2>
+<div class="level2">
+
+<p>
+By default, centos 7 use firewalld, the following command opens http and https to outside world.
+</p>
+
+<p>
+<code>firewall-cmd –permanent –zone=public –add-service=http</code>
+</p>
+
+<p>
+<code>firewall-cmd –permanent –zone=public –add-service=https</code>
+</p>
+
+<p>
+<code>firewall-cmd –reload</code>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Network setup" [571-848] -->
+<h2 class="sectionedit5" id="configure_mariadb_and_httpd_as_startup_deamon">Configure mariadb and httpd as startup deamon</h2>
+<div class="level2">
+
+<p>
+<code>systemctl enable httpd.service</code>
+</p>
+
+<p>
+<code>systemctl enable mariadb.service</code>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Configure mariadb and httpd as startup deamon" [849-981] -->
+<h1 class="sectionedit6" id="install_owncloud">Install owncloud</h1>
+<div class="level1">
+
+<p>
+You can find all owncloud release in this location <a href="https://owncloud.org/release-channels/" class="urlextern" title="https://owncloud.org/release-channels/"  rel="nofollow">https://owncloud.org/release-channels/</a>
+</p>
+
+<p>
+It&#039;s recommanded to use production release.
+</p>
+
+<p>
+Download your prefered version.
+</p>
+
+<p>
+<code>wget <a href="https://download.owncloud.org/community/owncloud-9.1.1.tar.bz2" class="urlextern" title="https://download.owncloud.org/community/owncloud-9.1.1.tar.bz2"  rel="nofollow">https://download.owncloud.org/community/owncloud-9.1.1.tar.bz2</a></code>
+</p>
+
+<p>
+Unzip to /var/www/html/
+</p>
+
+<p>
+<code>tar -xjvf owncloud-9.1.1.tar.bz2 -C /var/www/html/</code>
+</p>
+
+<p>
+Change owner of the owncloud folder
+</p>
+
+<p>
+<code>chown -R biodata:bioaster /var/www/html/owncloud</code>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Install owncloud" [982-1429] -->
+<h1 class="sectionedit7" id="configuration_of_db">Configuration of DB</h1>
+<div class="level1">
+
+<p>
+<code>mysql_secure_installation</code> to set the root password
+</p>
+
+<p>
+If it ask you to enter the current root password, just click on enter.
+</p>
+
+<p>
+After the initiation, you can connect to the database by using root 
+</p>
+
+<p>
+<code>mysql -u root -p</code>
+</p>
+
+<p>
+Create database for owncloud
+</p>
+
+<p>
+<code>CREATE DATABASE bio_owncloud;</code>
+</p>
+
+<p>
+Create owncloud db user
+</p>
+
+<p>
+<code>GRANT ALL ON bio_owncloud.* TO &#039;bio_owncloud&#039;@&#039;localhost&#039; IDENTIFIED BY &#039;password&#039;;</code>
+</p>
+
+<p>
+<code>FLUSH PRIVILEGES;</code>
+</p>
+
+<p>
+Try to connect with bio_owncloud
+</p>
+
+<p>
+<code>mysql -u bio_owncloud -p;</code>
+</p>
+
+<p>
+<code>use bio_owncloud;</code>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Configuration of DB" [1430-1974] -->
+<h1 class="sectionedit8" id="configure_apache">Configure apache</h1>
+<div class="level1">
+
+<p>
+Create two directory under /etc/httpd/
+</p>
+
+<p>
+<code>mkdir /etc/httpd/sites-available</code>
+</p>
+
+<p>
+<code>mkdir /etc/httpd/sites-enabled</code>
+</p>
+
+<p>
+put the following owncloud.conf under sites-available
+</p>
+<pre class="code">
+&lt;VirtualHost *:80&gt;
+    ServerName localhost
+    ServerAlias localhost
+    Redirect permanent / https://localhost/
+&lt;/VirtualHost&gt;
+ 
+&lt;VirtualHost *:443&gt;
+    ServerName localhost
+    ServerAlias localhost
+    DocumentRoot /var/www/html
+ 
+    php_admin_value session.save_path &quot;/var/lib/php/session/biodata&quot;
+ 
+    SSLEngine       on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+ 
+    SSLCertificateFile      /etc/pki/tls/certs/localhost.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/localhost.key
+ 
+    #SSLVerifyClient none
+    #
+    #SSLCACertificatePath    configuration/certificates
+    #SSLCACertificateFile    configuration/certificates/cacert.pem
+ 
+    &lt;IfModule mod_headers.c&gt;
+        Header always set Strict-Transport-Security &quot;max-age=25768000; includeSubDomains; preload&quot;
+    &lt;/IfModule&gt;
+
+&lt;IfModule mod_alias.c&gt;
+   Alias /owncloud /var/www/html/owncloud
+&lt;/IfModule&gt;
+&lt;Directory &quot;/var/www/html/owncloud&quot;&gt;
+   Options Indexes FollowSymLinks
+   AllowOverride All
+   Order allow,deny
+   allow from all
+&lt;/Directory&gt;
+
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>
+Create an alias of owncloud.conf in sites-enabled
+</p>
+
+<p>
+<code>ln -s ../sites-available/owncloud.conf owncloud.conf</code>
+</p>
+
+<p>
+PS : to make user biodata access /var/lib/php/session/biodata, you need to add group apache to user biodata
+</p>
+
+<p>
+ <code>usermod -a -G apache biodata</code>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Configure apache" [1975-3534] -->
+<h1 class="sectionedit9" id="httpd_process_uid_and_gid">Httpd Process uid and gid</h1>
+<div class="level1">
+
+<p>
+As owncloud will write on GPFS of cc. It requires owncloud run under a specific uid and gid.
+</p>
+
+<p>
+<code>useradd biodata -u 42605</code>
+</p>
+
+<p>
+<code>groupadd bioaster -g 1072</code>
+</p>
+
+<p>
+<code>usermod -g bioaster biodata</code>
+</p>
+
+<p>
+If you already have a group called bioaster which gid is not 1072. Change the gid
+</p>
+
+<p>
+<code>groupmod -g NEWGID GROUPNAME</code>
+</p>
+
+<p>
+In our case, it will be 
+</p>
+
+<p>
+<code>groupmod -g 1072 bioaster</code>
+</p>
+
+<p>
+Update all files in old group to new one
+</p>
+
+<p>
+<code>find / -gid OLDGID ! -type l -exec chgrp NEWGID {} \;</code>
+</p>
+
+<p>
+Check user biodata uid and gid
+</p>
+
+<p>
+<code>id biodata</code>
+</p>
+
+<p>
+You should see this <code>uid=42605(biodata) gid=1072(bioaster) groups=1072(bioaster)</code>
+</p>
+
+<p>
+Now modify /etc/httpd/conf/httpd.conf
+</p>
+
+<p>
+add the followin two lines
+</p>
+
+<p>
+<code> User biodata </code>
+</p>
+
+<p>
+<code> Group bioaster</code>
+</p>
+
+<p>
+Restart httpd service
+</p>
+
+<p>
+<code>systemctl restart httpd</code>
+</p>
+
+<p>
+To check the httpd process uid and gid 
+</p>
+
+<p>
+<code>ps aux | grep httpd </code>
+</p>
+
+<p>
+You should see this.
+</p>
+<pre class="code">root      18646  0.0  0.7 445404  7840 ?        Ss   14:04   0:00 /usr/sbin/httpd -DFOREGROUND
+biodata   18647  0.0  2.4 562876 24712 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18648  0.1  2.4 562928 24808 ?        S    14:04   0:02 /usr/sbin/httpd -DFOREGROUND
+biodata   18649  0.1  3.5 660612 35904 ?        S    14:04   0:02 /usr/sbin/httpd -DFOREGROUND
+biodata   18650  0.0  3.2 570400 32204 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18651  0.1  3.2 570388 32076 ?        S    14:04   0:02 /usr/sbin/httpd -DFOREGROUND
+biodata   18728  0.0  2.7 565988 27764 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18733  0.0  3.2 657728 32936 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18734  0.0  2.4 562924 24688 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18735  0.0  2.2 560872 22636 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+biodata   18736  0.0  2.5 563944 25708 ?        S    14:04   0:01 /usr/sbin/httpd -DFOREGROUND
+</pre>
+
+</div>
+<!-- EDIT9 SECTION "Httpd Process uid and gid" [3535-5482] -->
+<h1 class="sectionedit10" id="upgrade_php54_to_php_55">Upgrade php5.4 to php 5.5</h1>
+<div class="level1">
+
+<p>
+PHP 5.4 has been end-of-life since September 2015 and is no longer supported by the PHP team. It is highly recommended to upgrade to PHP 5.5+ for best security and performance.
+</p>
+
+<p>
+I decide to upgrade to php 5.5 by using the repo centos-release-scl.
+</p>
+
+<p>
+Because it&#039;s from the official owncloud document(<a href="https://doc.owncloud.org/server/9.0/admin_manual/installation/php_55_installation.html" class="urlextern" title="https://doc.owncloud.org/server/9.0/admin_manual/installation/php_55_installation.html"  rel="nofollow">https://doc.owncloud.org/server/9.0/admin_manual/installation/php_55_installation.html</a>).
+</p>
+
+<p>
+Install repo centos-release-scl
+</p>
+
+<p>
+<code>yum install centos-release-scl</code>
+</p>
+
+<p>
+Install php lib
+</p>
+
+<p>
+<code>yum install php55 php55-php php55-php-gd php55-php-mbstring</code>
+</p>
+
+<p>
+Install php mysql lib
+</p>
+
+<p>
+<code>yum install php55-php-mysqlnd</code>
+</p>
+
+<p>
+Disable loading the old PHP Apache modules by changing their names:
+</p>
+<pre class="code">mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php54.off
+mv /etc/httpd/conf.modules.d/10-php.conf /etc/httpd/conf.modules.d/10-php54.off</pre>
+
+<p>
+Copy the PHP 5.5 Apache modules into place:
+</p>
+<pre class="code">cp /opt/rh/httpd24/root/etc/httpd/conf.d/php55-php.conf /etc/httpd/conf.d/
+cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-php55-php.conf /etc/httpd/conf.modules.d/
+cp /opt/rh/httpd24/root/etc/httpd/modules/libphp55-php5.so /etc/httpd/modules/</pre>
+
+<p>
+Enable php55 in bath environment
+</p>
+
+<p>
+<code>source /opt/rh/php55/enable</code>
+</p>
+
+<p>
+<code>php –version</code>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Upgrade php5.4 to php 5.5" [5483-6737] -->
+<h1 class="sectionedit11" id="install_php-pecl-apcu_module">Install php-pecl-apcu module</h1>
+<div class="level1">
+
+<p>
+As we installed the php55, so we can&#039;t use the <strong>php-pecl-apcu</strong> anymore.
+</p>
+
+<p>
+We need to use <strong>sclo-php55-php-pecl-apcu</strong> package. Do not add new repo, it may generate conflict.
+</p>
+
+<p>
+ This sclo-php55-php-pecl-apcu package will add the apcu.so and apcu.ini in /opt/rh/php55/root/etc/php.d
+</p>
+
+<p>
+<code>sudo yum install sclo-php55-php-pecl-apcu</code>
+</p>
+
+<p>
+After installation, You need to edit the apcu.ini.
+</p>
+
+<p>
+Put the following line
+</p>
+<pre class="code">    apc.enabled=1
+    apc.enable_cli=1</pre>
+
+<p>
+Now the module is configured
+</p>
+
+<p>
+We need ownloud use this module
+</p>
+
+<p>
+<code> vim /var/www/html/owncloud/conf/config.php</code>
+</p>
+
+<p>
+add the following line
+</p>
+<pre class="code">    &#039;memcache.local&#039; =&gt; &#039;\\OC\\Memcache\\APCu&#039;,</pre>
+
+</div>
+<!-- EDIT11 SECTION "Install php-pecl-apcu module" [6738-7441] -->
+<h1 class="sectionedit12" id="add_openoffice_plugin">Add openoffice plugin</h1>
+<div class="level1">
+
+<p>
+Download the appropriet lib (document app) for your owncloud version.
+</p>
+
+<p>
+Use this link <a href="https://apps.owncloud.com/content/show.php/Documents?content=168711" class="urlextern" title="https://apps.owncloud.com/content/show.php/Documents?content=168711"  rel="nofollow">https://apps.owncloud.com/content/show.php/Documents?content=168711</a>
+</p>
+
+<p>
+Uzip the lib, you will find a folder documents, change the ownership of this folder
+</p>
+
+<p>
+<code>chown -R biodata:bioaster documents</code>
+</p>
+
+<p>
+Change the access rights
+</p>
+
+<p>
+<code>chmod -R 750 documents</code>
+</p>
+
+<p>
+move this folder to /var/www/html/owncloud/apps/
+</p>
+
+<p>
+Go to the owncloud web interface,click on the left hand side top, choose apps ,
+</p>
+
+<p>
+You will see a new side bar, choose Not enabled, You will see the documents apps
+</p>
+
+<p>
+Enable it.
+</p>
+
+<p>
+Now we need to install the openoffice
+</p>
+
+<p>
+<code>yum install libreoffice</code>
+</p>
+<pre class="code">
+Name        : libreoffice
+Arch        : x86_64
+Epoch       : 1
+Version     : 4.3.7.2
+Release     : 5.el7_2.1
+Size        : 45 k
+Repo        : updates/7/x86_64
+Summary     : Free Software Productivity Suite
+URL         : http://www.libreoffice.org/
+License     : (MPLv1.1 or LGPLv3+) and LGPLv3 and LGPLv2+ and BSD and (MPLv1.1 or GPLv2 or LGPLv2 or
+            : Netscape) and Public Domain and ASL 2.0 and Artistic and MPLv2.0 and CC0
+Description : LibreOffice is an Open Source, community-developed, office productivity suite.
+            : It includes the key desktop applications, such as a word processor,
+            : spreadsheet, presentation manager, formula editor and drawing program, with a
+            : user interface and feature set similar to other office suites.  Sophisticated
+            : and flexible, LibreOffice also works transparently with a variety of file
+            : formats, including Microsoft Office File Formats.
+</pre>
+
+<p>
+Add 
+<code>&#039;preview_libreoffice_path&#039; ⇒ &#039;/usr/bin/libreoffice&#039;,</code>
+</p>
+
+<p>
+in /var/www/html/owncloud/config/config.php
+</p>
+
+<p>
+Ps, If your selinux is still activate, you need to reset the label 
+</p>
+
+<p>
+<code>restorecon -vR documents/</code>
+</p>
+
+<p>
+after this command, you can check if documents&#039; label looks like other apps label
+</p>
+
+<p>
+<code>ls -Z</code>
+</p>
+<pre class="code">drwxr-xr-x. biodata bioaster unconfined_u:object_r:httpd_sys_content_t:s0 activity
+drwxr-x---. biodata bioaster unconfined_u:object_r:httpd_sys_content_t:s0 documents
+drwxr-xr-x. biodata bioaster unconfined_u:object_r:httpd_sys_content_t:s0 encryption
+drwxr-xr-x. biodata bioaster unconfined_u:object_r:httpd_sys_content_t:s0 external</pre>
+
+</div>
+<!-- EDIT12 SECTION "Add openoffice plugin" [7442-9726] -->
+<h1 class="sectionedit13" id="update_and_recovery">Update and recovery</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/upgrade_and_backup" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/upgrade_and_backup"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/upgrade_and_backup</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Update and recovery" [9727-9851] -->
+<h1 class="sectionedit14" id="mount_webdav">Mount webdav</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/mount_webdav" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/mount_webdav"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud/mount_webdav</a>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Mount webdav" [9852-9962] -->
+<h1 class="sectionedit15" id="mount_nfsgpfs">Mount nfs/gpfs</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/ccin2p3/cloud/gpfs-nfs" class="urlextern" title="https://wiki.bioaster.org/ccin2p3/cloud/gpfs-nfs"  rel="nofollow">https://wiki.bioaster.org/ccin2p3/cloud/gpfs-nfs</a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Mount nfs/gpfs" [9963-] -->

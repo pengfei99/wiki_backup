@@ -1,0 +1,121 @@
+
+<h1 class="sectionedit1" id="part_6marathon">Part 6: Marathon</h1>
+<div class="level1">
+
+<p>
+If you have a big cluster which runs docker, the docker Swarm reaches its limit very quickly. So we need other solutions such as
+</p>
+<ul>
+<li class="level1"><div class="li"> mesos (start to die)</div>
+</li>
+<li class="level1"><div class="li"> Kubernetes (aka.K8s) (most popular at 2020)</div>
+</li>
+</ul>
+
+<p>
+Marathon: Deploy and manage containers (including Docker) on top of Apache Mesos at scale. Marathon is an Apache Mesos framework for container orchestration. Marathon provides a REST <abbr title="Application Programming Interface">API</abbr> for starting, stopping, and scaling applications. Marathon is written in Scala and can run in highly-available mode by running multiple copies. The state of running tasks gets stored in the Mesos state abstraction.
+</p>
+
+<p>
+Marathon offers a web application and a rest api(<a href="http://mesosphere.github.io/marathon/api-console/index.html" class="urlextern" title="http://mesosphere.github.io/marathon/api-console/index.html" rel="ugc nofollow">http://mesosphere.github.io/marathon/api-console/index.html</a>)
+</p>
+
+<p>
+To deploy a docker image on the cluster, you need to create a json file
+</p>
+<pre class="code">{
+  &quot;id&quot;: &quot;/pengfei/dokuwiki&quot;,
+  &quot;cmd&quot;: null,
+  &quot;cpus&quot;: 0.01,
+  &quot;mem&quot;: 128,
+  &quot;disk&quot;: 0,
+  &quot;instances&quot;: 1,
+  &quot;acceptedResourceRoles&quot;: [],
+  &quot;container&quot;: {
+    &quot;type&quot;: &quot;DOCKER&quot;,
+    &quot;docker&quot;: {
+      &quot;forcePullImage&quot;: true,
+      &quot;image&quot;: &quot;docker-registry.beta.innovation.insee.eu/pengfei/dokuwiki&quot;,
+      &quot;parameters&quot;: [],
+      &quot;privileged&quot;: false
+    },
+    &quot;volumes&quot;: [],
+    &quot;portMappings&quot;: [
+      {
+        &quot;containerPort&quot;: 80,
+        &quot;hostPort&quot;: 0,
+        &quot;labels&quot;: {},
+        &quot;name&quot;: &quot;default&quot;,
+        &quot;protocol&quot;: &quot;tcp&quot;,
+        &quot;servicePort&quot;: 10826
+      }
+    ]
+  },
+  &quot;networks&quot;: [
+    {
+      &quot;mode&quot;: &quot;container/bridge&quot;
+    }
+  ],
+  &quot;portDefinitions&quot;: [],
+  &quot;maxLaunchDelaySeconds&quot;: 300
+}</pre>
+
+<p>
+This json file contains several parts
+</p>
+<ul>
+<li class="level1"><div class="li"> Container description</div>
+</li>
+<li class="level1"><div class="li"> Image description</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Part 6: Marathon&quot;,&quot;hid&quot;:&quot;part_6marathon&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1632&quot;} -->
+<h2 class="sectionedit2" id="container_description">Container description</h2>
+<div class="level2">
+<pre class="code"># id is your container id.
+&quot;id&quot;: &quot;/pengfei/dokuwiki&quot;,
+# cmd is the command 
+  &quot;cmd&quot;: null,
+# number of cpus of your container
+  &quot;cpus&quot;: 0.01,
+# memory of your container
+  &quot;mem&quot;: 128,
+# disk of your container
+  &quot;disk&quot;: 0,
+# number of your instances which you want in your cluster
+  &quot;instances&quot;: 1,
+#
+  &quot;acceptedResourceRoles&quot;: [],</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Container description&quot;,&quot;hid&quot;:&quot;container_description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;1633-2014&quot;} -->
+<h2 class="sectionedit3" id="image_description">Image description</h2>
+<div class="level2">
+<pre class="code">&quot;container&quot;: {
+    &quot;type&quot;: &quot;DOCKER&quot;,
+    &quot;docker&quot;: {
+      &quot;forcePullImage&quot;: true,
+      # The location of the image which you want run inside the container
+      &quot;image&quot;: &quot;docker-registry.beta.innovation.insee.eu/pengfei/dokuwiki&quot;,
+      &quot;parameters&quot;: [],
+      &quot;privileged&quot;: false
+    },
+    &quot;volumes&quot;: [],
+    # port specification of the container and the host of the container
+    # If we put hostPort as 0, the cluster will give a random port. 
+    &quot;portMappings&quot;: [
+      {
+        &quot;containerPort&quot;: 80,
+        &quot;hostPort&quot;: 0,
+        &quot;labels&quot;: {},
+        &quot;name&quot;: &quot;default&quot;,
+        &quot;protocol&quot;: &quot;tcp&quot;,
+        &quot;servicePort&quot;: 10826
+      }
+    ]
+  },</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Image description&quot;,&quot;hid&quot;:&quot;image_description&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;2015-&quot;} -->

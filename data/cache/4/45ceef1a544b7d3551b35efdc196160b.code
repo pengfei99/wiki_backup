@@ -1,0 +1,4 @@
+<span class="kw2">rm</span> app<span class="sy0">/</span>DoctrineMigrations<span class="sy0">/*</span>
+php app<span class="sy0">/</span>console doctrine:migrations:diff
+php app<span class="sy0">/</span>console doctrine:migrations:status
+php app<span class="sy0">/</span>console doctrine:migrations:migrate

@@ -1,0 +1,210 @@
+
+<h1 class="sectionedit1" id="comment_utiliser_matlab_au_cc">Comment utiliser Matlab au CC ?</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Comment utiliser Matlab au CC ?" [1-47] -->
+<h2 class="sectionedit2" id="lister_les_versions">Lister les versions</h2>
+<div class="level2">
+
+<p>
+ACtuellement les versions R2014b et R2015b sont installées
+</p>
+<pre class="prettyprint">
+$ ll /afs/in2p3.fr/system/amd64_sl7/usr/local/matlab
+drwxr-xr-x 22 toukouro ccin2p3 2048 Apr  7  2016 R2014b
+drwxr-xr-x 21 toukouro ccin2p3 2048 Apr  7  2016 R2015b
+</pre>
+</div>
+<!-- EDIT2 SECTION "Lister les versions" [48-321] -->
+<h2 class="sectionedit3" id="lister_les_toolboxs">Lister les toolboxs</h2>
+<div class="level2">
+
+<p>
+<strong>Plusieurs façons de faire</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Consulter la page des infos générales de licence  ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_license_generale.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_license_generale.php"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_license_generale.php</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Consulter la page des complex &amp; RQS du CC ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_sge_complex.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_complex.php"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_complex.php</a> ; les ressources/toolboxs Matlab y sont déclarées (entre autres) </div>
+</li>
+</ul>
+
+<p>
+Exemple au 17-10-2016 :
+</p>
+<pre class="prettyprint">
+Complex name 	Number of RQS 	Available slots 	Slots used 	Used/available 	  Requested slots
+matlab 	        0 	        150 	                0 	        0.0 % 	          0
+matlab_distrib 	0 	        2 	                0 	        0.0 % 	          0
+matlab_opt 	0 	        20 	                0 	        0.0 % 	          0
+matlab_sig 	0 	        4 	                0 	        0.0 % 	          0
+matlab_stat 	0 	        12 	                0 	        0.0 % 	          0
+</pre><ul>
+<li class="level1"><div class="li"> En ligne de commande depuis une machine interactive ccage :</div>
+<ul>
+<li class="level3"><div class="li"> <pre class="prettyprint">
+[pveyre@cca007 ~]$ qconf -sc | grep -i matlab
+matlab                     matlab                     INT         &lt;=      YES         YES        0        0       NO
+matlab_distrib             matlab_distrib             INT         &lt;=      YES         YES        0        0       NO
+matlab_opt                 matlab_opt                 INT         &lt;=      YES         YES        0        0       NO
+matlab_sig                 matlab_sig                 INT         &lt;=      YES         YES        0        0       NO
+matlab_stat  
+</pre></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Lister les toolboxs" [322-1802] -->
+<h2 class="sectionedit4" id="consulter_les_quotas_et_les_jetons">Consulter les quotas et les jetons</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Consulter les quotas et les jetons" [1803-1852] -->
+<h3 class="sectionedit5" id="les_quotas">Les quotas</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT5 SECTION "Les quotas" [1853-1874] -->
+<h3 class="sectionedit6" id="les_jetons_utilises">Les jetons utilisés</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Vue journalière ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=daily" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=daily"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=daily</a></div>
+</li>
+<li class="level1"><div class="li"> Vue hebdomadaire ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=weekly" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=weekly"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=weekly</a></div>
+</li>
+<li class="level1"><div class="li"> Vue mensuelle ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=monthly" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=monthly"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=monthly</a></div>
+</li>
+<li class="level1"><div class="li"> Vue annuelle ⇒ <a href="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=yearly" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=yearly"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_license_matlab.php?statime=yearly</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Les jetons utilisés" [1875-2283] -->
+<h2 class="sectionedit7" id="valider_son_script_matlab_en_interactif_avant_de_lancer_des_jobs">Valider son script Matlab en &quot;interactif&quot; avant de lancer des jobs</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Valider son script Matlab en interactif avant de lancer des jobs" [2284-2364] -->
+<h2 class="sectionedit8" id="lancer_des_jobs_necessitant_la_ressource_matlab">Lancer des jobs nécessitant la ressource Matlab</h2>
+<div class="level2">
+
+<p>
+Si vous n&#039;avez pas compilé votre code Matlab et que vous utilisez la ferme de calcul UGE, vous devez déclarer la ressource Matlab lors de la soumission de vos jobs :
+</p>
+<pre class="prettyprint">
+$ qsub -P P_bioaster -N &quot;nom_du_job&quot; -l sps=1,matlab=1 -q huge /chemin_du_script
+</pre>
+<p>
+NB : ici le job utilise les ressources (-l) sps (GPFS) et matlab (sps=1,matlab=1) et utilise la queue de soumission (-q) huge
+</p>
+
+<p>
+Pour voir les différentes queues de soumission et leurs caractéristiques : <a href="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_queue.php</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Lancer des jobs nécessitant la ressource Matlab" [2365-2949] -->
+<h2 class="sectionedit9" id="compiler_un_script_matlab">Compiler un script Matlab</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 SECTION "Compiler un script Matlab" [2950-2989] -->
+<h3 class="sectionedit10" id="pourquoi_compiler_un_programme_matlab">Pourquoi compiler un programme matlab ?</h3>
+<div class="level3">
+
+<p>
+Il y a au moins trois bonnes raisons pour compiler une fonction MATLAB:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pour augmenter la vitesse</div>
+</li>
+<li class="level2"><div class="li"> Pour cacher le code source pour diffuser vos travaux et éviter que votre code soit modifié.</div>
+</li>
+<li class="level2"><div class="li"> Pour créer une application indépendante de MATLAB.</div>
+</li>
+</ul>
+
+<p>
+Un code C compilé tourne plus vite que son équivalent en MATLAB car :
+</p>
+<ul>
+<li class="level1"><div class="li"> Un programme compilé tourne plus vite qu’un programme interprété.</div>
+</li>
+<li class="level2"><div class="li"> Un code C contient des données de types plus simple. Pour MATLAB toutes les données sont des matrices (des tableaux).</div>
+</li>
+<li class="level2"><div class="li"> MATLAB vérifie la taille des tableaux à chaque affectation d’élément ce que l’on peut éviter de faire en C.</div>
+</li>
+<li class="level2"><div class="li"> MATLAB doit ré-allouer de la mémoire en cours d’exécution là où en C on peut l’éviter.</div>
+</li>
+</ul>
+
+<p>
+La compilation d’une fonction MATLAB n’apportera pas forcement de gain si :
+</p>
+<ul>
+<li class="level1"><div class="li"> la fonction MATLAB est fortement vectorisée.</div>
+</li>
+<li class="level1"><div class="li"> la fonction MATLAB passe beaucoup de temps à utiliser des fonctions internes MATLAB</div>
+</li>
+<li class="level1"><div class="li"> mathématiques (très rapide) et graphiques (très lent).</div>
+</li>
+</ul>
+
+<p>
+La compilation apportera des gains de temps si la fonction MATLAB :
+</p>
+<ul>
+<li class="level1"><div class="li"> contient des boucles (for,while).</div>
+</li>
+<li class="level1"><div class="li"> contient des variables que le compilateur traduit en ’real’ ou en ’integer’.</div>
+</li>
+<li class="level1"><div class="li"> ne travaille que sur des réelles.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Pourquoi compiler un programme matlab ?" [2990-4330] -->
+<h3 class="sectionedit11" id="comment_compiler_un_programme_matlab">Comment compiler un programme Matlab ?</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="prerequis">Prérequis</h4>
+<div class="level4">
+
+<p>
+Pour lancer la compilation matlab avec mcc, il faut au préalable se connecter sur les machines interactives en ssh en activant la session X.
+</p>
+<pre class="prettyprint">
+$ ssh -X pveyre@ccage.in2p3.fr
+</pre>
+<p>
+Positionnement la variable LD_LIBRARY_PATH
+</p>
+
+<p>
+Famille des Bourne shell (ksh, bash, zsh, sh):
+</p>
+<pre class="prettyprint">
+$ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/matlabR2010a/runtime/glnxa64/
+</pre>
+<p>
+Famille des C-shell (csh, tcsh):
+</p>
+<pre class="prettyprint">
+$ setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/matlabR2010a/runtime/glnxa64/
+</pre>
+<p>
+Pour connaitre son shell (ici tcsh):
+</p>
+<pre class="prettyprint">
+[pveyre@cca008 ~]$ echo $SHELL
+/usr/local/bin/tcsh
+</pre>
+</div>
+<!-- EDIT11 SECTION "Comment compiler un programme Matlab ?" [4331-] -->

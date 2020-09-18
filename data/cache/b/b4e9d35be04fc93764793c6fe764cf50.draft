@@ -1,0 +1,158 @@
+a:6:{s:2:"id";s:35:"ut6:reunions:reunion_ut6_01.09.2016";s:6:"prefix";s:0:"";s:4:"text";s:8029:"**Date : 01/09/2016  **
+
+**Participants** : AC, YM, PV, NS, GB    +AB   //(excusés : )//
+
+
+**Précédente réunion le [[reunion_ut6_24.08.2016|24/08/2016]]**
+
+
+{{ut6:projets_internes:Sprite_2_c_143.gif}}
+
+==== IT/IS (AB) & UTEC06  ====
+  * [AB]  point sur les snapshots.
+  * [GB]  point sur internet@IP
+  * [GB] incident @CC sur serveur NFS
+
+{{ut6:projets_internes:sprite_6_x_124.png}}
+
+==== POINTS URGENTS UTEC6 à traiter IMPERATIVEMENT  ====
+ * [GB] Finalisation stages: dispo des versions finales des rapports, suppresion des comptes, ...
+  * [GB] Rentrée Septembre : intense!  
+    * Notamment merci de penser à préparer nos meeting face-to-face de mi-année à finaliser avant le 23/09
+      * Slots possibles avant la fin de semaine .... si intéressé(e)s....  ??
+    * Arrivée de Clément et PengFeï le 12/09
+      * programme ?
+ * [NS] Maturation de TBAGS => voir le tableau 
+\\
+
+{{ut6:projets_internes:sprite_6_x_054.png}}
+
+==== Vie de la société  ====
+  * [GB] Demande Eléonor => inventaire ouvrages scientifiques
+    * [NS] [[http://shop.oreilly.com/product/0636920039709.do|The fundamental of deep learning]]?
+    * [NS] [[http://shop.oreilly.com/product/0636920034391.do|Web Scraping with Python]] ?
+    * [NS] [[http://www.oreilly.com/data/free/files/ten-signs-of-data-science-maturity.pdf|Ten Signs of Data Science Maturity]]?
+  * [GB] Abonnement à des périodiques
+    * [YM] Abonnement LinuxMag ?
+    * [YM] Abonnement [[http://www.biofutur.com/ | Biofutur]] ?
+    * [PV] MISC &co ? : http://www.miscmag.com/
+    * [PV] Science mag en ligne : http://www.sciencemag.org/
+
+{{ut6:projets_internes:sprite_6_x_129_f.png}}
+
+=== Vie de l'équipe / point RH ===
+  * [tous] recrutement en cours
+    * [GB] 2eme interview de Arnaud Zeboulon
+  * [GB] Retour sur le Kakémono...
+  * [YM] Nettoyage de M: pour la partie RH
+
+{{ut6:projets_internes:sprite_6_x_151.png}}
+
+=== Points Généraux (Veille technique, Idéations, idéations UTEC6, stratégies,... ) ===
+  * [GB] Nouveaux projets en maturation : COSAC (GC, UTHEM Inf), MetSA-MoA2.0 (UTEC7), TBAGS
+  * [PV] Mise en place puis test de SONARQUBE pour qualité logicielle Metagenomics
+
+{{ut6:projets_internes:sprite_6_x_039.png}}
+
+=== Interaction avec les autres Unités / Services  / CC  /  PASTEUR  ===
+  * CC-IN2P3
+    * rencontre prévue le Vendredi 30 SEPTEMBRE: Dave the date (attente confirmation CC)..
+  * Bioinfo
+    * [PV] Réunions prévues pour utilisation UGE@CC : Python (Alexëi), R (Jérémie), Matlab (Adama)
+  * UTECx
+    * UTEC3: [NS] Discussion avec Benoit, Séverine et Fabrice le 13/09/2016pour comprendre mieux les données d'immunomonitoring/Cytof. C'est l'occasion de discuter des problèmes de visualisation et de clusterisation des données de haute dimensions. Ces types de problèmes sont rencontrés systématiquement dans nos gros projets. La question sous-jacente est :comment visualiser/identifier les différences entre groupes de patients en fonction du temps?
+    * UTEC1:  
+       * [NS] relance de Blandine pour savoir où on en est dans la MR001 et le stockage des données médicales => renvoie de balle à AC! 
+       * [NS] j'ai été relancé sur le LIMS...
+  * UTHEMs
+    * []
+  * Juridique
+    * []
+  * Com
+    * []
+  * QSI
+    * [AC] ISO9001 : ça prend forme
+  * Pasteur -IP
+
+
+{{ut6:projets_internes:sprite_6_x_025_m.png}}
+
+==== Partnerships / BD ====
+  * []
+
+====== PROJETs ======
+
+^Question ^Quoi?                  ^Qui?          ^Avancement / Action   ^
+^1 |BCOM |NS|  |
+^2 |Biospecimens  + BIOCOLLECTIONS|YM| Next: finalisation budget |
+^3 |NoE +eSample +FLEMS |NS+tous |[NS + YM] Passage de témoin officiel pour le chapeau de CdP |
+^4 |Data Science|NS| 15-20 min sur la question: pourquoi faut-il s'intéresser aux réseaux de neurones artificiels ? |
+^5 |Symbiosis|PV|  |
+^6 |REALISM + tranSMART |NS| | 
+^7 |Data management |AC|  |
+^8 |eCRF |YM| [YM] Tous les dysfonctionnements relevés ont été corrigés par Clinfile. Soucis de lenteur en cours d'étude/résolution. \\ [YM] Test HCL normalement débutable fin de semaine prochainement normalement \\ [YM] Plan de passage de V1 à V2 à définir en ce qui concerne les patients V1 non-validés. \\ [YM] Pour la v1 : choc septique : 11, trauma : 16, brulure : 5, chir : 14, VS : 43, Total : 89, Attendu : 200 |
+^9 |MOSAIC|GB+NS| Passage en Fast Fast-track (!!) : TermSheet#2 pour Novembre... \\ [NS] J'ai commencé un tableau récapitulatif des prélèvements et des expériences prévues. Le tableau est dans les mains de LB qui doit le compléter avec les personnes concernées. Quoi qu'il en soit, <wrap danger>le LIMS sera nécessaire à MOSAIC -> doit-on négocier du temps de développement?</wrap>.|
+^10 |bMx Metagenomics / BIOINFORM / MetaSeq|GB|  Début exécution - amendement draft PRD de GG   en cours ; AppliedMaths@BA1 15&16/09 @BA1 ?  (fromation BIONUMERICS + architecture Bnext/MetaSeq  |
+^11 |TBAGS |NS| [NS] Beaucoup de question en suspends avec PMO+Leader de maturation en congés: qui prend en charge l'eCRF? Faut-il négocier du temps de développement LIMS? Quel est le parcours des échantillons -> quel quantité de data management faut-il envisager? Comment faire intervenir Trang dans le projet? Faut-il prévoir une intégration dans tranSMART? <wrap danger>La maturation doit se terminer la semaine du 12 septembre </wrap>!|
+
+====== Archives ======
+  - [[reunion_pt6_06.06.2014|06/06/2014]]
+  - [[reunion_pt6_10.06.2014|10/06/2014]]
+  - [[reunion_pt6_25.06.2014|25/06/2014]]
+  - [[reunion_pt6_19.09.2014|19/09/2014]]
+  - [[reunion_pt6_30.09.2014|30/09/2014]]
+  - [[reunion_pt6_14.10.2014|14/10/2014]]
+  - [[reunion_pt6_28.10.2014|28/10/2014]]
+  - [[reunion_pt6_19.11.2014|19/11/2014]]
+  - [[reunion_pt6_25.11.2014|25/11/2014]]
+  - [[reunion_pt6_12.12.2014|12/12/2014]]
+  - [[reunion_pt6_18.12.2014|18/12/2014]]
+  - [[reunion_pt6_06.01.2015|06/01/2015]]
+  - [[reunion_ut6_20.01.2015|20/01/2015]]
+  - [[reunion_ut6_03.02.2015|03/02/2015]]
+  - [[reunion_ut6_17.02.2015|17/02/2015]]
+  - [[reunion_ut6_03.03.2015|03/03/2015]]
+  - [[reunion_ut6_20.03.2015|20/03/2015]]
+  - [[reunion_ut6_31.03.2015|31/03/2015]]
+  - [[reunion_ut6_14.04.2015|14/04/2015]]
+  - [[reunion_ut6_28.04.2015|28/04/2015]]
+  - [[reunion_ut6_12.05.2015|12/05/2015]]
+  - [[reunion_ut6_26.05.2015|26/05/2015]]
+  - [[reunion_ut6_09.06.2015|09/06/2015]]
+  - [[reunion_ut6_30.07.2015|30/07/2015]]
+  - [[reunion_ut6_18.08.2015|18/08/2015]]
+  - [[reunion_ut6_08.09.2015|08/09/2015]]
+  - [[reunion_ut6_22.09.2015|22/09/2015]]
+  - [[reunion_ut6_29.09.2015|29/09/2015]]
+  - [[reunion_ut6_06.10.2015|06/10/2015]]
+  - [[reunion_ut6_13.10.2015|13/10/2015]]
+  - [[reunion_ut6_28.10.2015|28/10/2015]]
+  - [[reunion_ut6_03.11.2015|03/11/2015]]
+  - [[reunion_ut6_10.11.2015|10/11/2015]]
+  - 24/11/2015
+  - [[reunion_ut6_08.12.2015|08/12/2015]]
+  - [[reunion_ut6_22.12.2015|22/12/2015 & 05/01/2016]]
+  - [[reunion_ut6_13.01.2016|13/01/2016 & 19/01/2016]]
+  - [[reunion_ut6_26.01.2016|26/01/2016]]
+  - [[reunion_ut6_10.02.2016|10/02/2016]]
+  - [[reunion_ut6_16.02.2016|16/02/2016]]
+  - [[reunion_ut6_23.02.2016|23/02/2016]]
+  - [[reunion_ut6_01.03.2016|01/03/2016]]
+  - [[reunion_ut6_08.03.2016|08/03/2016]]
+  - [[reunion_ut6_15.03.2016|15/03/2016]]
+  - [[reunion_ut6_22.03.2016|22/03/2016]]
+  - [[reunion_ut6_30.03.2016|30/03/2016]]
+  - [[reunion_ut6_05.04.2016|05/04/2016]]
+  - [[reunion_ut6_12.04.2016|12/04/2016]]
+  - [[reunion_ut6_27.04.2016|27/04/2016]]
+  - [[reunion_ut6_11.05.2016|11/05/2016]]
+  - [[reunion_ut6_18.05.2016|18/05/2016]]
+  - [[reunion_ut6_25.05.2016|25/05/2016]]
+  - [[reunion_ut6_01.06.2016|01/06/2016]]
+  - [[reunion_ut6_08.06.2016|08/06/2016]]
+  - [[reunion_ut6_15.06.2016|15/06/2016]]
+  - [[reunion_ut6_22.06.2016|22/06/2016]]
+  - [[reunion_ut6_06.07.2016|06/07/2016]]
+  - [[reunion_ut6_13.07.2016|13/07/2016]]
+  - [[reunion_ut6_26.07.2016|26/07/2016]]
+  - [[reunion_ut6_24.08.2016|24/08/2016]]";s:6:"suffix";s:0:"";s:4:"date";i:1473180768;s:6:"client";s:29:"guillaume.boissy@bioaster.org";}

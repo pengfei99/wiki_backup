@@ -1,0 +1,36 @@
+
+<h1 class="sectionedit1" id="developpement_collaboratif">Développement collaboratif</h1>
+<div class="level1">
+<div class="tags"><span>
+	<a href="/tag/todo?do=showtag&amp;tag=todo" class="wikilink1" title="tag:todo" rel="tag">todo</a>
+</span></div>
+
+<p>
+Devrait s&#039;inspirer de <a href="http://fgcz-intranet.uzh.ch/tiki-index.php?page=bioinformatics.tools.development_guidelines" class="urlextern" title="http://fgcz-intranet.uzh.ch/tiki-index.php?page=bioinformatics.tools.development_guidelines"  rel="nofollow">la page du FGCZ</a>, mais sans le Redmine !
+</p>
+<pre class="code">  $ mkdir &lt;PROJECT_NAME&gt;
+  $ cd &lt;PROJECT_NAME&gt;
+  $ bzr init
+  $ vim &lt;YOUR_FILE&gt;
+  $ bzr add
+  $ bzr ci -m &quot;My commit message.&quot;
+  
+  # Init a shared repository that won&#039;t contain working trees
+  $ bzr init-repo --no-trees bzr+ssh://code.bioaster.org/depots/&lt;PROJECT_NAME&gt;
+  
+  # Push your project to the remote repo, this will be the &quot;trunk&quot;
+  $ bzr push bzr+ssh://depots.bioaster.org/&lt;PROJECT_NAME&gt;</pre>
+<pre class="code">  $ bzr branch bzr+ssh://code.bioaster.org/depots/&lt;PROJECT_NAME&gt; \
+               bzr+ssh://code.bioaster.org/depots/&lt;PROJECT_NAME&gt;/&lt;DEV_BRANCH&gt;</pre>
+<pre class="code">  $ bzr branch bzr+ssh://code.bioaster.org/depots/&lt;PROJECT_NAME&gt;/&lt;DEV_BRANCH&gt;
+  $ cd &lt;DEV_BRANCH&gt;
+  # code, test, commit... ad infinitum!</pre>
+<pre class="code">  $ bzr push :parent
+  All changes applied successfully.                                                                      
+  Pushed up to revision X.</pre>
+
+<p>
+As <strong>“1 branch == 1 merge request”</strong>, no further development should be done in the branch.
+</p>
+
+</div>

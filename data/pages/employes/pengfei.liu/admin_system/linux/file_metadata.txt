@@ -1,0 +1,46 @@
+====== Linux file metadata ======
+
+===== File time =====
+
+atime  File Access Time
+Access time shows the last time the data from a file was accessed  read by one of the Unix processes directly or through commands and scripts.
+
+ctime  File Change Time
+ctime also changes when you change file's ownership or access permissions. It will also naturally highlight the last time file had its contents updated.
+
+mtime  File Modify Time
+Last modification time shows time of the  last change to file's contents. It does not change with owner or permission changes, and is therefore used for tracking the actual changes to data of the file itself.
+
+<code>
+# To see the atime, ctime, mtime, we can use stat
+[pliu@localhost tmp]$ stat toto
+  File: ‘toto’
+  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file
+Device: fd00h/64768d	Inode: 16798754    Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/    pliu)   Gid: ( 1000/    pliu)
+Context: unconfined_u:object_r:user_tmp_t:s0
+Access: 2018-05-29 16:40:15.987298921 +0200
+Modify: 2018-05-29 16:40:15.987298921 +0200
+Change: 2018-05-29 16:40:15.987298921 +0200
+ Birth: -
+
+# You can also use ls -l to view mtime
+# ls -lu shows atime
+# ls -lc shows ctime
+
+
+# to change atime,ctime,mtime to current time, a touch command is enough.
+</code>
+
+
+
+If you want to modify
+===== Directory/File complete acl and default acl for sub-dir/files =====
+
+<code>
+getfacl
+
+setfacl
+</code>
+
+

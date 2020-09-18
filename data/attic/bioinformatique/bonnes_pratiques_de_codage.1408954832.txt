@@ -1,0 +1,271 @@
+====== Bonnes pratiques de codage ======
+
+Il n'y a pas de consensus mondial sur les **"bonnes pratiques"** à appliquer quand on écrit un programme. Cependant, de nombreuses réflexions ont été menées par de brillants informaticiens ayant passé de nombreuses années à travailler à l'amélioration de leur **//art//**.
+
+Ici sont mentionnés quelques éléments sur lesquels nous nous sommes mis d'accord et que nous devrions appliquer au sein de BIOASTER.
+
+<WRAP round todo>
+Nous ne nous sommes **pas encore** mis d'accord... mais le but est de mettre sur cette page toutes les bonnes pratiques que nous nous engageons à appliquer, surtout parce que nous avons réalisé qu'elles nous apportaient beaucoup.
+</WRAP>
+
+La plupart de ces pratiques sont étudiées plus en détail dans le livre "{{:bioinformatique:books:cleancodeahandbookofagilesoftwarecraftsmanship.pdf|Clean code handbook}}". Les références au livre sur cette page sont notées, par exemple, ''[cch:p64]'' pour la page 64 et ''[cch:c8]'' pour la chapitre 8.
+
+Les conseils donnés ici ne sont pas des vérités absolues ; il peuvent donc être amenés à changer si nous en trouvons des meilleurs.
+
+<WRAP round todo>
+Je mettrais bien ici les 2-3 règles d'or à respecter... histoire de ne pas avoir à lire toute la page.
+</WRAP>
+
+===== Documenter =====
+
+Commençons par une citation :
+ 
+<WRAP round box>
+**Le code est la documentation !**\\
+//-- Socrate, c. 440 avant notre ère//
+</WRAP>
+
+... tout ça pour dire que la documentation est souvent redondante avec le code et la maintenir à jour est un effort supplémentaire. Un code clair et bien écrit devrait être suffisant pour pouvoir comprendre **en première lecture** le fonctionnement du programme. La plupart des pratiques décrites sur cette page visent d'ailleurs à rendre le code plus clair et plus facile à comprendre.
+
+Cependant, de nombreuses choses doivent tout de même être expliquées dans programme : but du programme, justification technique de l'emploi d'un algorithme plutôt que d'un autre...
+
+Ces commentaires s'ils sont écrits en respectant certains standards peuvent facilement être lu par des générateurs de documentation (ex : [[/bioinformatique/doxygen|Doxygen]]) afin de produire des documentations plus lisibles (coloration syntaxique, suppression du code au profit des //signatures//...) et plus facilement navigables (liens hypertextes entre les éléments ayant une relation) dans différents formats : HTML, LaTeX, pdf, docx...
+
+Des exemples sur la manière de documenter le code seront donnés à chaque section de cette page.
+
+===== Bien commencer un programme =====
+
+La première chose lue est souvent, pour ne pas dire toujours, la première ligne ! Autant donc, être clair dès le début sur la fonction première du programme.
+
+<code>
+$ less `which bzr`
+#!/usr/bin/python
+
+# Copyright (C) 2005, 2006, 2007, 2008, 2009 Canonical Ltd
+#
+# [...longue notice de droit d'auteur...]
+# 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+"""Bazaar -- a free distributed version-control tool"""
+</code>
+
+===== Obtenir de l'aide =====
+
+Confronté à un nouveau programme (en ligne de commande), le premier réflexe est souvent d'invoquer le programme avec l'option d'aide : ''-h'', ''--help'', voir même ''man commande''.\\
+Il est donc important de fournir un message d'aide permettant à l'utilisateur de pouvoir utiliser le programme convenablement sans avoir à trouver et à lire la documentation ou même le code.
+
+De nombreuses bibliothèques logicielles ont été écrites afin de faciliter cette tâche. Celles-ci dépendent du langage utilisé. En voici [[/bioinformatique/python_help|un exemple en Python]].
+
+<code>
+$ bzr --help
+Bazaar 2.1.1 -- a free distributed version-control tool
+http://bazaar-vcs.org/
+
+Basic commands:
+  bzr init           makes this directory a versioned branch
+  bzr branch         make a copy of another branch
+  [...]
+</code>
+
+===== Conventions de nommage =====
+
+**Use Intention-Revealing Names** [cch:p18]\\
+La règle d'or est que les noms des objets (variables, fonctions, classes) doivent toujours **décrire leur rôle précis** dans l'algorithme.\\
+Une bonne pratique de nommage est donc celle qui nécessite **le moins de commentaires** dans le code.
+
+<color red>Mauvaise pratique :</color>
+    int d; //elapsed time in days
+
+<color green>Bonne pratique :</color>
+    int elapsedTimeInDays;
+    int daysSinceModification;
+
+<WRAP round help>
+Personnellement je ne suis pas trop [[https://en.wikipedia.org/wiki/Camelcase|CamelCase]].\\
+Je pencherais plutôt pour un bon vieil **under_score**. Surtout que les noms de constantes en **CamelCase** contiennent des underscores ! Autant donc les utiliser dès le début.\\
+<color red>**[ Nicolas ]** :  </color> personnellement, j'utilise les underscore; je trouve que ça rend le code plus lisible.\\
+Si on pouvait aussi éviter la [[https://en.wikipedia.org/wiki/Hungarian_notation|notation hongroise]] qui prefix le nom avec le type...\\
+<color red>**[ Nicolas ]** :</color> j'ai trouvé utile ce genre de notation pour du C ou du Fortran, parfois du C++. Je n'en fera pas forcément une règle. Il me semble que dans ce cas, là, ça vient assez naturellement avec la complexité du code.\\
+</WRAP>
+
+<color green>Bonne pratique (?) :</color>
+    int elapsed_time_in_days;
+    int days_since_modification;
+
+
+
+===== Indentation =====
+
+[[https://en.wikipedia.org/wiki/Indent_style|Le style d'indentation]], bien que n'étant pas fondamentalement très important, peut aider à la lisibilité du code.
+
+Le choix des **caractères d'indentation** (espaces ou tabulations) peut aussi paraitre trivial, mais se révèle en fait **vital** quand on travaille avec un langage (stupide) comme //Python// dont les blocs sont délimités par les niveaux d'indentation.\\
+Dans la plupart des éditeurs de texte, on peut choisir de faire apparaitre les caractères invisibles, ce qui peut s'avérer très pratique.
+
+<WRAP round help>
+Pour ma part, je j'utilise [[https://en.wikipedia.org/wiki/Indent_style#Allman_style|le style Allman]] - j'ai tout de même une légère tendance à la compression de temps en temps -, et **uniquement des espaces**.\\
+Tant qu'on évite les horreurs du genre [[https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style|BSD KNF]] et les mélanges tab/space, ça me va !
+<color red>**[ Nicolas ] :**</color> Personnellement, j'utilise les tabulation car je trouve que c'est plus rapide à parcourir et que la taille des tabulations est modifiable dans la plupart des éditeurs. Du coup, chacun visualise comme il le souhaite.  
+</WRAP>
+ 
+
+
+
+===== Structures et classes =====
+
+**The Law of Demeter** [cch:p97] (voir {{:bioinformatique:books:demeter.pdf|ce papier}})\\
+Une structure expose des variables (publiques), un objet expose des fonctions... 
+
+{{ :bioinformatique:images:law_of_demeter.png |}}
+===== Fonctions, classes et méthodes (factorisation de code) =====
+
+Les fonctions et les méthodes (fonctions appartenant à une classe), sont de **petits bouts de code** (le plus petit possible) qui font **une seule chose** et qui le font bien !
+
+Leur nom doit décrire précisément ce qu'elles font, et contiennent souvent **un verbe ou un mot clé**. Le nom devant permettre de savoir exactement ce que la fonction fait (dans les grandes lignes) il est important de **ne pas avoir d'effet de bord** (//side effects//), à moins de le préciser dans le nom de la fonction ; mais ceci est souvent maladroit.
+
+Une fonction devrait avoir besoin d'un **minimum d'arguments** pour travailler : 0, 1, 2, voir 3 mais pas plus ! \\
+Le nombre d'arguments conditionne l’intelligibilité du code et aussi la complexité des tests unitaires à écrire pour tester tous les cas possibles. \\
+Un trop grand nombre d'arguments est souvent un appel à refactorisation du code. Certains arguments fonctionnellement proches peuvent être regroupés dans une même structure/classe avant d'être passés à la fonction.
+
+<color red>Mauvaise pratique :</color>
+<code text>
+Circle makeCircle(double x, double y, double radius);
+</code>
+
+<color green>Bonne pratique :</color>
+<code text>
+Circle makeCircle(Point center, double radius);
+</code>
+
+<WRAP round todo>
+  * [cch:46] Prefer Exceptions to Returning Error Codes
+  * [cch:114] Bondaries: isolate from external library interfaces
+</WRAP>
+
+==== Factorisation de code ====
+Le découpage du code en fonctions contenant de **petits bouts de codes** prends vraiment son sens dans la factorisation de code. En voici un exemple
+
+<color red>Mauvaise pratique :</color>
+<code text>
+function buildCar(){
+  //bluild wheels
+  ...
+  //build glasses
+  ...
+  //mount the different pieces of the car
+  ...
+  return car;
+}  
+</code>  
+
+Ici ''buildCar()'' fait plusieurs choses au delà de la construction de la voiture même: contruction de roues, vitres, ...
+
+<color green>Bonne pratique :</color>
+<code text>
+function buildCar(){
+  wheels = buildWheels();
+  glasses = buildGlasses();
+  ...
+  car = mountCarPieces(wheels, glasses, ...)
+  return car
+}
+</code>
+On aurait aussi pu passer les pièces en paramètres à ''buildCar'', mais ici l'idée est que ''buildCar'' ne se charge plus de construire les pièces mais ces tâches sont déléguées à d'autres fonctions.\\
+Il en résulte un code plus clair (avec moins commentaires) dont les ''petits bouts de code'' (i.e. les fonctions) sont réutilisables, d'où la factorisation !
+
+<color green>Meilleure pratique :</color>\\
+
+Plutôt qu'un approche procédurale, il est souvent plus intéressant d'opter pour une approche orientée objet. Ici on peut créer une classe ''Car'' et lui déléguer la charge de création de voitures via son constructeur. A titre d'exemple :\\
+
+<code text>
+car = new Car();
+
+Class Car{
+   public:
+     method Car(){
+       this->_buildWheels()
+       this->_buildGlasses()
+       this->_mountPieces();
+     }
+     
+     method run(){}
+   
+   private:
+     method _mountPieces{ 
+       //...
+     }
+     
+     method _buildWheels{
+       this->_wheels[1] = new Wheel();
+       ...
+       this->_wheels[4] = new Wheel();
+     }
+     
+     method _buildGlasses{
+       this->_front_glass = new Glass('front');
+       this->_rear_glass = new Glass('rear');
+     }
+     
+   private:
+     list<Wheels> _wheels;
+     Glass _front_glass;
+     Glass _rear_glass;
+     ...  
+}
+</code>
+
+La classe ''Car'' est donc un object complètement autonome (voir Loi de Demeter), réutilisable à souhaite !\\
+On pourra aussi remarquer que toute l'ingéniérie de création de la voiture est privée... pour des raisons de confidentialité en cas d'exposition de code dans une API.
+===== Tester son code =====
+
+Il est important de tester **toutes les fonctionnalités** de son code afin de voir si des modifications introduites sur une section ont un impact négatif sur une autre section du code. Ceci est particulièrement vrai quand le code est correctement factorisé, on peut alors **tester indépendamment** chaque fonction, classe et méthode. 
+Cette pratique est connue sous le nom de [[https://fr.wikipedia.org/wiki/Test_unitaire|tests unitaires]].
+
+Les tests sont en général regroupés dans une partie différente de l'arborescence de fichiers (dossier ''test'') et sont **lancés après chaque modification**, avant même d'enregistrer les modifications dans le système de gestion de versions.
+
+__Exemple__ : dans un projet géré par ''make'', les tests sont lancés avec la commande ''make check''.
+
+De nombreux [[https://fr.wikipedia.org/wiki/Test_unitaire#Environnements_de_test|environnements de tests]] existent pour chaque langage et peuvent être facilement intégrés à n'importe quel projet.
+
+
+===== Utilisation des index dans les listes =====
+
+Voici un exemple [cch:p9] utilisant une constante bien nommée pour accéder aux éléments d'une liste. Notons aussi le renommage de la fonction pour obtenir les //flaggedCells//.
+
+<color red>Mauvaise pratique :</color>
+<code>
+public List<int[]> getThem() {
+    List<int[]> list1 = new ArrayList<int[]>();
+    for (int[] x : theList)
+        if (x[0] == 4)
+            list1.add(x);
+    return list1;
+}
+</code>
+
+<color green>Bonne pratique :</color>
+<code>
+public List<int[]> getFlaggedCells() {
+    List<int[]> flaggedCells = new ArrayList<int[]>();
+    for (int[] cell : gameBoard)
+        if (cell[STATUS_VALUE] == FLAGGED)
+            flaggedCells.add(cell);
+    return flaggedCells;
+}
+</code>
+
+===== Comparaison de valeurs =====
+
+Plutôt que de comparer des valeurs comme ci-dessus (''cell[STATUS_VALUE] == FLAGGED''), utiliser des méthodes (''.isFlagged'') sur un objet :
+
+<code>
+public List<Cell> getFlaggedCells() {
+    List<Cell> flaggedCells = new ArrayList<Cell>();
+    for (Cell cell : gameBoard)
+        if (cell.isFlagged())
+            flaggedCells.add(cell);
+    return flaggedCells;
+}
+</code>
+
+{{tag>ToDo}}

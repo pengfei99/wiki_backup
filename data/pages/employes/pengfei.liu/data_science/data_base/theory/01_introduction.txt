@@ -1,0 +1,58 @@
+====== Lesson01 Data Base theory Introduction ======
+
+===== 1.Introduction =====
+
+A database is a centralized data repository which collects, stocks data, and organizes data in order to improve the consultation.
+
+With time, different types of databases have been proposed:
+
+  * Tree (1960s, relation 1 to N, simple structure but inflexible)
+  * Network model (1970s, relation N to M, a flexible way of representing objects and their relationships, COmmon Business Oriented Language aka. cobol)
+  * Relational (N to M.Developed by IBM and proposed by Dr Edgar Codd in the 1970s, it was built on mathematics -Relational Algebra. No redundant data (save storage), Strong consistency, No data loss: the relation set represents the whole data set.)
+  * object-oriented (1980s, replaced by ORM frameworks)
+  * Multi-dimensional (1990s, often used in Business intelligence)
+  * NoSQL (2003,came in with big data ecosystem: four types: Key-Value store, Document store, Graph store, Column store)
+  * NewSQL (2011, NoSQL with acid (strong transactional check), newest solution: Google Spanner (successor of BigTable), VoltDB,H-Store).)
+
+===== 2.Terminologies =====
+
+==== 2.1 Transaction ====
+
+What is a transaction in a database?
+
+Each transaction is an operation set (Data Management Language) performed on data
+
+==== 2.2 OLTP ====
+On-Line Transactional Processing ( OLTP )
+
+
+
+
+===== 3. Relational database =====
+A relational database:
+  * manages transaction: Multi insert, delete, update simultaneously
+  * provides a high transaction concurrency level.
+  * introduce the normal form
+
+==== 3.1 Four properties of a relational database ====
+
+=== Atomic ===
+  * Each transaction is an operation set (DML) performed on data which is efficient when the transaction had been validated.
+  * The database handles the transaction, as a unit, which can be validated or canceled.
+  * In case of failure, all DML in a transaction is canceled.
+
+=== Consistency ===
+  * Any valid or canceled transaction change the data status from one valid status to another valid status
+  * The transaction should be based on the business rules.
+  * In case of money transfers from account A into account B: money is not created or destroyed but moved only and the credited amount should be the same as the debited one
+
+=== Isolation ===
+  * All transactions are running as if each one is the only one executed by the system.
+  * Transactions control all accesses through a secure mechanism. When data are modified by a transaction, they are locked and can not be changed by another transaction.
+  * Through the « read consistency » mechanism displayed by the RDBMS, a transaction t1 can overlook the
+current modifications by a transaction t2 just before t1
+
+=== Durability ===
+  * Once the transaction is validated all data are stored and accessible to all users
+  * Any data change is done through a transaction
+

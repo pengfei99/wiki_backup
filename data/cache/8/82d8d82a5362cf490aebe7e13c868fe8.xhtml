@@ -1,0 +1,301 @@
+
+<h1 class="sectionedit1" id="ansible_install_and_configuration">Ansible Install and configuration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ansible Install and configuration&quot;,&quot;hid&quot;:&quot;ansible_install_and_configuration&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-49&quot;} -->
+<h2 class="sectionedit2" id="install_ansible_on_centos_7_8">1. Install ansible on centos 7/8</h2>
+<div class="level2">
+<pre class="code"># on centos 8, yum will install ansible 2.9 by default
+sudo yum install ansible
+
+# You can check your ansible version 
+ansible --version</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Install ansible on centos 7\/8&quot;,&quot;hid&quot;:&quot;install_ansible_on_centos_7_8&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;50-249&quot;} -->
+<h2 class="sectionedit3" id="configuration">2. Configuration</h2>
+<div class="level2">
+
+<p>
+The full document on ansible configuration:
+</p>
+
+<p>
+<a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html#getting-the-latest-configuration" class="urlextern" title="https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html#getting-the-latest-configuration" rel="nofollow">https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html#getting-the-latest-configuration</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Configuration&quot;,&quot;hid&quot;:&quot;configuration&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;250-443&quot;} -->
+<h3 class="sectionedit4" id="hosts_configuration">2.1 Hosts configuration</h3>
+<div class="level3">
+
+<p>
+Ansible works against multiple managed nodes or “hosts” in your infrastructure at the same time. We need to specify a list or group of lists of servers (a.k.a inventory), to indicate which servers you want Ansible to run against.
+</p>
+
+<p>
+The default location for specify this inventory is a file <strong>/etc/ansible/hosts</strong>. 
+</p>
+
+</div>
+
+<h4 id="customize_inventory_files">2.1.1 Customize inventory files</h4>
+<div class="level4">
+
+<p>
+<strong>You can specify a different inventory file at the command line using the -i &lt;path&gt; option</strong>. If you have multiple inventory files, you can use -i as many time as you want. For example, if you have two files a,b you can use the following commmand
+</p>
+<pre class="code">ansible-playbook get_logs.yml -i a -i b
+</pre>
+
+<p>
+The inventory file can be in INI or YMAL. For example, a basic INI inventory (etc/ansible/hosts) might look like this: 
+</p>
+<pre class="code">cent8_sql01.pengfei.org
+
+[udl_datalake]
+lin[01:06].udl.org
+
+
+[cluster_manager]
+lin01.udl.org
+
+[service_node]
+lin02.udl.org
+lin03.udl.org
+159.84.108.202
+
+[worker_node]
+159.84.108.201
+159.84.108.200</pre>
+
+</div>
+
+<h5 id="default_groups">Default groups</h5>
+<div class="level5">
+
+<p>
+There are two default groups:
+</p>
+<ul>
+<li class="level1"><div class="li"> all: It contains every host in the inventory</div>
+</li>
+<li class="level1"><div class="li"> ungrouped. It contains all hosts that don’t have another group aside from all. For example, in the above inventory, the ungrouped group has one host which is cent8_sql01.pengfei.org.</div>
+</li>
+</ul>
+
+<p>
+Every host will always belong to at least 2 groups (all and ungrouped or all and some other group). Though all and ungrouped are always present, they can be implicit and not appear in group listings like group_names.
+</p>
+
+<p>
+We can also write an inventory in YAML format
+</p>
+<pre class="code YAML"><span class="co4">all</span>:<span class="co4">
+  hosts</span>:<span class="co4">
+    cent8_sql01.pengfei.org</span>:<span class="co4">
+  udl_datalake</span>:<span class="co3">
+    hosts</span><span class="sy2">: </span><span class="co4">
+      lin[01:06].udl.org</span>:<span class="co3">
+  cluster_manager</span><span class="sy2">: </span> <span class="co4">
+    hosts</span>:<span class="co4">
+      lin01.udl.org</span>:<span class="co4">
+  service_node</span>:<span class="co4">
+    hosts</span>:<span class="co4">
+      lin02.udl.org</span>:<span class="co4">
+      lin03.udl.org</span>:<span class="co4">
+      159.84.108.202</span>:<span class="co4">
+  worker_node</span>:<span class="co4">
+    hosts</span>:<span class="co4">
+      159.84.108.201</span><span class="sy2">:
+</span>      159.84.108.200:</pre>
+
+<p>
+There are some important points:
+</p>
+<ul>
+<li class="level1"><div class="li"> The hosts can be an <abbr title="Uniform Resource Locator">URL</abbr> or an IP address.</div>
+</li>
+<li class="level1"><div class="li"> A host can be in multiple groups.</div>
+</li>
+<li class="level1"><div class="li"> If you have many servers which have the same pattern you can use a range like www[01:50].example.com to specify them all. It also works for letters db-[a:f].example.com.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="group_variables">2.1.2 Group variables</h4>
+<div class="level4">
+
+<p>
+You can also set variables in the inventory file
+</p>
+<pre class="code">lin01.udl.org http_port=80 maxRequestsPerChild=808
+lin02.udl.org http_port=303 maxRequestsPerChild=909
+&lt;code&gt;
+
+If all hosts in a group share a variable value, you can apply that variable to an entire group at once. In INI:
+
+&lt;code&gt;
+[udl_datalake]
+host1
+host2
+
+[udl_datalake:vars]
+ntp_server=ntp.udl.org
+proxy=proxy.udl.org</pre>
+
+</div>
+
+<h4 id="host_group_hierarchy">2.1.3 Host group hierarchy</h4>
+<div class="level4">
+
+<p>
+We can use keyword children to group groups of hosts.
+</p>
+<pre class="code">[beijing]
+host1
+host2
+
+[shanghai]
+host2
+host3
+
+[southeast:children]
+beijing
+shanghai
+
+[southeast:vars]
+some_server=foo.southeast.example.com
+halon_system_timeout=30
+self_destruct_countdown=60
+escape_pods=2
+
+[china:children]
+southeast
+northeast
+southwest
+northwest</pre>
+
+<p>
+Here, group china contains all servers of the southeast, …, northwest region, and southeast region contains all servers of beijing and shanghai. 
+</p>
+
+<p>
+The variables in vars will apply to all servers of the southeast region.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Hosts configuration&quot;,&quot;hid&quot;:&quot;hosts_configuration&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;444-3671&quot;} -->
+<h2 class="sectionedit5" id="ansible_playbook_content_organization">3. Ansible playbook Content Organization</h2>
+<div class="level2">
+
+<p>
+The Content organization in ansible playbook is very important. You can find all best practices in the following link
+</p>
+
+<p>
+<a href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html" class="urlextern" title="https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html" rel="nofollow">https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html</a>
+</p>
+
+<p>
+I prefer to organize my playbook in the following way.
+</p>
+<pre class="code">inventories/
+   production/
+      hosts               # inventory file for production servers
+      group_vars/
+         group1.yml       # here we assign variables to particular groups
+         group2.yml
+      host_vars/
+         hostname1.yml    # here we assign variables to particular systems
+         hostname2.yml
+
+   staging/
+      hosts               # inventory file for staging environment
+      group_vars/
+         group1.yml       # here we assign variables to particular groups
+         group2.yml
+      host_vars/
+         stagehost1.yml   # here we assign variables to particular systems
+         stagehost2.yml
+
+library/                  # if any custom modules, put them here (optional)
+module_utils/             # if any custom module_utils to support modules, put them here (optional)
+filter_plugins/           # if any custom filter plugins, put them here (optional)
+
+site.yml                  # master playbook
+webservers.yml            # playbook for webserver tier
+dbservers.yml             # playbook for dbserver tier
+
+roles/
+    common/               # this hierarchy represents a &quot;role&quot;
+        tasks/            #
+            main.yml      #  &lt;-- tasks file can include smaller files if warranted
+        handlers/         #
+            main.yml      #  &lt;-- handlers file
+        templates/        #  &lt;-- files for use with the template resource
+            ntp.conf.j2   #  &lt;------- templates end in .j2
+        files/            #
+            bar.txt       #  &lt;-- files for use with the copy resource
+            foo.sh        #  &lt;-- script files for use with the script resource
+        vars/             #
+            main.yml      #  &lt;-- variables associated with this role
+        defaults/         #
+            main.yml      #  &lt;-- default lower priority variables for this role
+        meta/             #
+            main.yml      #  &lt;-- role dependencies
+        library/          # roles can also include custom modules
+        module_utils/     # roles can also include custom module_utils
+        lookup_plugins/   # or other types of plugins, like lookup in this case
+
+    webtier/              # same kind of structure as &quot;common&quot; was above, done for the webtier role
+    monitoring/           # &quot;&quot;
+    fooapp/               # &quot;&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Ansible playbook Content Organization&quot;,&quot;hid&quot;:&quot;ansible_playbook_content_organization&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:5,&quot;range&quot;:&quot;3672-6275&quot;} -->
+<h3 class="sectionedit6" id="how_variables_are_merged">3.1 How variables are merged</h3>
+<div class="level3">
+
+<p>
+By default, variables are merged/flattened to the specific host before a play is run. This keeps Ansible focused on the Host and Task, so groups don’t really survive outside of inventory and host matching. By default, Ansible overwrites variables including the ones defined for a group and/or host (see <a href="https://docs.ansible.com/ansible/latest/reference_appendices/config.html#default-hash-behaviour" class="urlextern" title="https://docs.ansible.com/ansible/latest/reference_appendices/config.html#default-hash-behaviour" rel="nofollow">https://docs.ansible.com/ansible/latest/reference_appendices/config.html#default-hash-behaviour</a>). The order/precedence is (from lowest to highest):
+</p>
+<ul>
+<li class="level1"><div class="li"> all group (because it is the ‘parent’ of all other groups)</div>
+</li>
+<li class="level1"><div class="li"> parent group</div>
+</li>
+<li class="level1"><div class="li"> child group</div>
+</li>
+<li class="level1"><div class="li"> host</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 How variables are merged&quot;,&quot;hid&quot;:&quot;how_variables_are_merged&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;6276-6878&quot;} -->
+<h2 class="sectionedit7" id="run_playbook_with_options">4. Run playbook with options</h2>
+<div class="level2">
+<pre class="code"># Run your playbook with default inventory
+ansible-playbook site.yml
+
+# Run with customize inventory
+ansible-playbook -i datalake_inventory site.yml</pre>
+
+<p>
+You can override the default variables defines in the playbook. Suppose in your playbook, you have two variables (e.g. user_name and user_pwd). You can overwrite them with the following command
+</p>
+<pre class="code">ansible-playbook site.yml –extra-vars &quot;user_name=toto user_pwd=changeMe&quot;</pre>
+
+<p>
+Before you run the playbook on the server, you may want to test which hosts and which task the playbook will run on. You can use the following options. 
+</p>
+<pre class="code">ansible-playbook --list-hosts --list-tasks site.yml</pre>
+
+<p>
+The full option explanation page is here <a href="https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html" class="urlextern" title="https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html" rel="nofollow">https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Run playbook with options&quot;,&quot;hid&quot;:&quot;run_playbook_with_options&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;6879-&quot;} -->

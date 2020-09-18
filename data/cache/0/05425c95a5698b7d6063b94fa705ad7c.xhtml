@@ -1,0 +1,284 @@
+
+<h1 class="sectionedit1" id="spark_introduction">Spark Introduction</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark Introduction&quot;,&quot;hid&quot;:&quot;spark_introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-35&quot;} -->
+<h2 class="sectionedit2" id="spark_architecture">Spark architecture</h2>
+<div class="level2">
+
+<p>
+Spark uses a master/worker architecture. There is a driver that talks to a single coordinator called <strong>master</strong> that manages <strong>slaves</strong> (i.e. workers) in which executors run.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_introduction&amp;media=employes:pengfei.liu:big_data:spark:sparkapp-sparkcontext-master-slaves.png" class="media" title="employes:pengfei.liu:big_data:spark:sparkapp-sparkcontext-master-slaves.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=434fc8&amp;media=employes:pengfei.liu:big_data:spark:sparkapp-sparkcontext-master-slaves.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+The driver and the executors run in their own Java processes. You can run them all on the same (horizontal cluster) or separate machines (vertical cluster) or in a mixed machine configuration.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark architecture&quot;,&quot;hid&quot;:&quot;spark_architecture&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;36-523&quot;} -->
+<h3 class="sectionedit3" id="master_node">Master Node</h3>
+<div class="level3">
+
+<p>
+Master node runs
+</p>
+<ol>
+<li class="level1"><div class="li"> Driver program</div>
+</li>
+<li class="level1"><div class="li"> Cluster Manager</div>
+</li>
+</ol>
+
+<p>
+<strong>Driver program</strong>: A driver program is an application that uses Spark as a library. It provides the data processing code that Spark executes on the worker nodes. A driver program can launch one or more jobs on a Spark cluster.
+</p>
+
+<p>
+<strong>Cluster manager</strong>: We can have three different type
+</p>
+<ul>
+<li class="level1"><div class="li"> standalone(spark default resource manager)</div>
+</li>
+<li class="level1"><div class="li"> yarn </div>
+</li>
+<li class="level1"><div class="li"> mesos </div>
+</li>
+</ul>
+
+<p>
+cluster manager (resource manager) can acquire cluster resources for executing a job. A cluster manager, as the name implies, manages computing resources across a cluster of worker nodes. It provides low-level scheduling of cluster resources across applications. It enables multiple applications to share cluster resources and run on the same worker nodes.
+</p>
+
+<p>
+Yarn and mesos allow you to run Spark and Hadoop simultaneously on the same worker nodes.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Master Node&quot;,&quot;hid&quot;:&quot;master_node&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;524-1404&quot;} -->
+<h3 class="sectionedit4" id="worker_node">Worker Node</h3>
+<div class="level3">
+
+<p>
+Worker Node provides CPU, memory, and storage to a spark application. It runs one or many Executor, a Executor runs one or many Tasks.
+</p>
+
+<p>
+<strong>Executor</strong>: spark executors runs on worker node as distributed process of a Spark application(aka. driver program). An executor is a JVM process that Spark creates on each worker for an application. It executes application code concurrently in multiple threads. It can also cache data in memory or disk. An executor has the same lifespan as the application for which it is created. When a Spark application terminates, all executors created for it also terminate.
+</p>
+
+<p>
+<strong>Executor number on a worker</strong> : If you specify the amount of executors when invoking spark-submit you should get the amount you ask for –num-executors X
+If you do not specify then by default Spark should use dynamic allocation which will start more executors if needed. In this case you can configure the behaviour, e.g. max number of executors, see <a href="http://spark.apache.org/docs/latest/configuration.html#dynamic-allocation" class="urlextern" title="http://spark.apache.org/docs/latest/configuration.html#dynamic-allocation" rel="nofollow">http://spark.apache.org/docs/latest/configuration.html#dynamic-allocation</a>
+</p>
+
+<p>
+<strong>Tasks</strong> : A task is the smallest unit of work that Spark sends to an executor. It is executed by a thread in an executor on a worker node. Each task performs some computations to either return a result to a driver program or partition its output for shuffle.
+</p>
+
+<p>
+<strong>Task numbers on a executor</strong> : Spark creates a task per data partition. An executor runs one or more tasks concurrently. The amount of parallelism is determined by the number of partitions. More partitions mean more tasks processing data in parallel.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Worker Node&quot;,&quot;hid&quot;:&quot;worker_node&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1405-2975&quot;} -->
+<h2 class="sectionedit5" id="other_important_terminology">Other important terminology</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Shuffle: A shuffle redistributes data among a cluster of nodes. It is an expensive operation because it involves moving data across a network. Note that a shuffle does not randomly redistribute data; it groups data elements into buckets based on some criteria. Each bucket forms a new partition.</div>
+</li>
+<li class="level1"><div class="li"> Job: A job is a set of computations that Spark performs to return results to a driver program. Essentially, it is an execution of a data processing algorithm on a Spark cluster. An application can launch multiple jobs.</div>
+</li>
+<li class="level1"><div class="li"> Stage: A stage is a collection of tasks. Spark splits a job into a DAG of stages. A stage may depend on another stage. For example, a job may be split into two stages, stage 0 and stage 1, where stage 1 cannot begin until stage 0 is completed. Spark groups tasks into stages using shuffle boundaries. Tasks that do not require a shuffle are grouped into the same stage. A task that requires its input data to be shuffled begins a new stage.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Other important terminology&quot;,&quot;hid&quot;:&quot;other_important_terminology&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2976-3984&quot;} -->
+<h2 class="sectionedit6" id="how_an_spark_applications_works">How an Spark Applications works</h2>
+<div class="level2">
+
+<p>
+With the definitions out of the way, I can now describe how a Spark application processes data in parallel
+across a cluster of nodes. When a Spark application is run, Spark connects to a cluster manager and acquires executors on the worker nodes. As mentioned earlier, a Spark application submits a data processing algorithm as a job. Spark splits a job into a directed acyclic graph (DAG) of stages. It then schedules the execution of these stages on the executors using a low-level scheduler provided by a cluster manager. The executors run the tasks submitted by Spark in parallel.
+</p>
+
+<p>
+Every Spark application gets its own set of executors on the worker nodes. This design provides a few
+benefits. First, tasks from different applications are isolated from each other since they run in different JVM processes. A misbehaving task from one application cannot crash another Spark application. Second, scheduling of tasks becomes easier. Spark has to schedule the tasks belonging to only one application at a time.
+</p>
+
+<p>
+It does not have to handle the complexities of scheduling tasks from multiple concurrently running applications. However, this design also has one disadvantage. Since applications run in separate JVM processes, they cannot easily share data. Even though they may be running on the same worker nodes, they cannot share data without writing it to disk. As previously mentioned, writing and reading data from disk are expensive operations. Therefore, applications sharing data through disk will experience performance issues.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How an Spark Applications works&quot;,&quot;hid&quot;:&quot;how_an_spark_applications_works&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3985-5566&quot;} -->
+<h2 class="sectionedit7" id="spark_api">Spark API</h2>
+<div class="level2">
+
+<p>
+Spark makes its cluster computing capabilities available to an application in the form of a library. This
+library is written in Scala, but it provides an application programming interface (<abbr title="Application Programming Interface">API</abbr>) in multiple languages.
+</p>
+
+<p>
+At the current time (08-2018), the Spark <abbr title="Application Programming Interface">API</abbr> is available in Scala, Java, Python, and R. You can
+develop a Spark application in any of these languages. Unofficial support for additional languages, such as Clojure, is also available.
+</p>
+
+<p>
+The Spark <abbr title="Application Programming Interface">API</abbr> consists of two important abstractions: SparkContext and Resilient Distributed Datasets
+(RDDs).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark API&quot;,&quot;hid&quot;:&quot;spark_api&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;5567-6151&quot;} -->
+<h3 class="sectionedit8" id="sparkcontext_sparksession">SparkContext(SparkSession)</h3>
+<div class="level3">
+
+<p>
+In older version of Spark there was different contexts that was entrypoints to the different api (sparkcontext for the core api, sql context for the spark-sql api, streaming context for the Dstream api etc…) this was source of confusion for the developer and was a point of optimization for the spark team, so in the most recent version of spark there is only one entrypoint (the spark session) and from this you can get the various other entrypoint (the spark context , the streaming context , etc ….)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SparkContext(SparkSession)&quot;,&quot;hid&quot;:&quot;sparkcontext_sparksession&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;6152-6696&quot;} -->
+<h2 class="sectionedit9" id="run_spark_on_different_mode">Run spark on different mode</h2>
+<div class="level2">
+
+<p>
+Local mode : local[2]
+</p>
+
+<p>
+For the local mode, spark runs drivers, masters, and workers on the same JVM. The number 2 defines how many cores spark will use.
+</p>
+
+<p>
+standalone cluster : spark:<em>master:7077
+
+spark on yarn : yarn-client
+
+spark on mesos : mesos:</em>host:5050
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Run spark on different mode&quot;,&quot;hid&quot;:&quot;run_spark_on_different_mode&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;6697-6999&quot;} -->
+<h2 class="sectionedit10" id="spark-shell_vs_spark_submit">Spark-shell vs spark submit</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark-shell vs spark submit&quot;,&quot;hid&quot;:&quot;spark-shell_vs_spark_submit&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;7000-7039&quot;} -->
+<h2 class="sectionedit11" id="launching_spark_on_yarndeploy_mode_client_vs_cluster">Launching spark on Yarn : Deploy mode Client vs Cluster</h2>
+<div class="level2">
+
+<p>
+There are two deploy modes that can be used to launch Spark applications on YARN. In cluster mode, the Spark driver runs inside an application master process which is managed by YARN on the cluster, and the client can go away after initiating the application. In client mode, the driver runs in the client process, and the application master is only used for requesting resources from YARN.
+</p>
+
+<p>
+When you do spark-shell or spark-submit, you could choose –deploy-mode client/cluster
+</p>
+<pre class="code"># spark shell
+$ ./bin/spark-shell --master yarn --deploy-mode client</pre>
+<pre class="code">$ ./bin/spark-submit --class org.apache.spark.examples.SparkPi \
+    --master yarn \
+    --deploy-mode cluster \
+    --driver-memory 4g \
+    --executor-memory 2g \
+    --executor-cores 1 \
+    --queue thequeue \
+    examples/jars/spark-examples*.jar \
+    10</pre>
+
+<p>
+The above starts a YARN client program which starts the default Application Master. Then SparkPi will be run as a child thread of Application Master. The client will periodically poll the Application Master for status updates and display them in the console. The client will exit once your application has finished running. Refer to the “Debugging your Application” section below for how to see driver and executor logs.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Launching spark on Yarn : Deploy mode Client vs Cluster&quot;,&quot;hid&quot;:&quot;launching_spark_on_yarndeploy_mode_client_vs_cluster&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;7040-8374&quot;} -->
+<h3 class="sectionedit12" id="client_mode">Client mode:</h3>
+<div class="level3">
+
+<p>
+When deploy-mode is client, the Driver Program is not necessarily the master node. You could run spark-submit on your laptop, and the Driver Program would run on your laptop.
+</p>
+
+<p>
+The Client mode is perfect for the following situations:
+</p>
+<ul>
+<li class="level1"><div class="li"> Want to get a job result (dynamic analysis)</div>
+</li>
+<li class="level1"><div class="li"> Easier for developing/debugging</div>
+</li>
+<li class="level1"><div class="li"> Control where your Driver Program is running</div>
+</li>
+<li class="level1"><div class="li"> Always up application: expose your Spark job launcher as REST service or a Web UI</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Client mode:&quot;,&quot;hid&quot;:&quot;client_mode&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:12,&quot;range&quot;:&quot;8375-8851&quot;} -->
+<h3 class="sectionedit13" id="cluster_mode">Cluster mode</h3>
+<div class="level3">
+
+<p>
+On the contrary, when deploy-mode is cluster, then cluster manager (master node) is used to find a slave having enough available resources to execute the Driver Program. As a result, the Driver Program would run on one of the slave nodes. As its execution is delegated, you can not get the result from Driver Program, it must store its results in a file, database, etc.
+</p>
+
+<p>
+The Cluster mode is for the following situations:
+</p>
+<ul>
+<li class="level1"><div class="li"> Easier for resource allocation (let the master decide): Fire and forget</div>
+</li>
+<li class="level1"><div class="li"> Monitor your Driver Program from Master Web UI like other workers</div>
+</li>
+<li class="level1"><div class="li"> Stop at the end: one job is finished, allocated resources are freed</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cluster mode&quot;,&quot;hid&quot;:&quot;cluster_mode&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:13,&quot;range&quot;:&quot;8852-9516&quot;} -->
+<h2 class="sectionedit14" id="faq">FAQ</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FAQ&quot;,&quot;hid&quot;:&quot;faq&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:14,&quot;range&quot;:&quot;9517-9533&quot;} -->
+<h3 class="sectionedit15" id="missing_the_spark_yarn_jar_when_run_spark_shell_with_yarn">Missing the spark yarn jar when run spark shell with yarn</h3>
+<div class="level3">
+
+<p>
+When run &#039;spark on yarn&#039; requires spark jar files available on the cluster and if I don&#039;t do anything then every time I run my program it will copy hundreds of jar files from $SPARK_HOME to each node. I see that code&#039;s execution pauses for some time before it finishes copying. 
+</p>
+
+<p>
+Spark&#039;s documentation suggests to set spark.yarn.jars property to avoid this copying. So I set below below property in <strong>spark-defaults.conf</strong> file.
+</p>
+
+<p>
+The requiring jars are located at ${SPARK_HOME}/jars, in our case, it&#039;s /opt/spark/spark-2.2.0/jars. To make it easy to download to the spark workers,
+</p>
+
+<p>
+We need to zip them and copy them into hdfs, for example,hdfs:<em>hadoop-nn:9000/user/spark/share/lib/spark-archive.zip
+Then we need to set the spark.yarn.archive=hdfs:</em>hadoop-nn:9000/user/spark/share/lib/spark-archive.zip
+in spark-defaults.conf
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Missing the spark yarn jar when run spark shell with yarn&quot;,&quot;hid&quot;:&quot;missing_the_spark_yarn_jar_when_run_spark_shell_with_yarn&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:15,&quot;range&quot;:&quot;9534-10430&quot;} -->
+<h3 class="sectionedit16" id="spark_shell_with_yarn_-_erroryarn_application_has_already_ended_it_might_have_been_killed_or_unable_to_launch_application_master">Spark Shell with Yarn - Error: Yarn application has already ended! It might have been killed or unable to launch application master</h3>
+<div class="level3">
+
+<p>
+This happens when you miss configure the spark.yarn.archive or spark.yarn.jars. Follow the above solution, it will be done.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark Shell with Yarn - Error: Yarn application has already ended! It might have been killed or unable to launch application master&quot;,&quot;hid&quot;:&quot;spark_shell_with_yarn_-_erroryarn_application_has_already_ended_it_might_have_been_killed_or_unable_to_launch_application_master&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:16,&quot;range&quot;:&quot;10431-&quot;} -->

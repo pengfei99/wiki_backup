@@ -1,0 +1,109 @@
+
+<h1 class="sectionedit1" id="instancier_une_nouvelle_app_dans_un_projet_django_existant">Instancier une nouvelle app dans un projet Django existant</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Instancier une nouvelle app dans un projet Django existant" [1-74] -->
+<h2 class="sectionedit2" id="creation_de_l_application">Creation de l&#039;application</h2>
+<div class="level2">
+
+<p>
+Pour créer une application, il suffit d&#039;executer la commande suivante :
+</p>
+<pre class="prettyprint">
+$ python manage.py startapp monapplication
+</pre>
+<p>
+Vous aurez alors dans le dossier monapplication/ sous vos yeux ébahis quelque chose ressemblant fortement à cela :
+</p>
+<pre class="prettyprint">
+monapplication/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+</pre>
+<p>
+Il faudra ensuite ajouter dans le dossier de l&#039;application un fichier urls.py avec ce contenu :
+</p>
+<pre class="prettyprint">
+from django.conf.urls import url
+
+from . import views
+
+
+app_name = &#039;monapplication&#039;
+urlpatterns = [
+    url(r&#039;^$&#039;, views.index, name=&#039;index&#039;),
+]
+</pre>
+<p>
+Si vous utilisez le moteur de template Jinja 2 il faudra également rajouter dans votre dossier d&#039;app un fichier index.html à ce path :
+</p>
+<pre class="prettyprint">
+/templates/jinja2/monapplication/index.html
+</pre>
+<p>
+Il vous reste maintenant à renseigner le fichier models.py pour que cela colle avec votre base de données.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Creation de l'application" [75-1076] -->
+<h2 class="sectionedit3" id="declaration_de_l_application">Déclaration de l&#039;application</h2>
+<div class="level2">
+
+<p>
+Votre application est maintenant prête à être connue de votre projet global.
+</p>
+
+<p>
+Pour cela il va falloir vous rendre dans le fichier /monprojet/monprojet/urls.py et y ajouter la déclaration de votre route principale concernant votre app :
+</p>
+<pre class="prettyprint">
+...
+
+urlpatterns = [
+    ...
+    url(r&#039;^monapplication/&#039;, include(&#039;core.urls&#039;)),
+    url(r&#039;^admin/&#039;, admin.site.urls),
+]
+
+...
+</pre>
+<p>
+Et n&#039;oublions pas le fichier /monprojet/monprojet/settings.py où il faudra déclarer l&#039;existance de votre nouvelle app de cette manière :
+</p>
+<pre class="prettyprint">
+...
+
+INSTALLED_APPS = [
+    &#039;monapplication.apps.MonapplicationConfig&#039;,
+    ...
+    ...
+    ...
+    &#039;django.contrib.admin&#039;,
+    &#039;django.contrib.auth&#039;,
+    &#039;django.contrib.contenttypes&#039;,
+    &#039;django.contrib.sessions&#039;,
+    &#039;django.contrib.messages&#039;,
+    &#039;django.contrib.staticfiles&#039;,
+    &#039;debug_toolbar&#039;,
+]
+
+...
+</pre>
+</div>
+<!-- EDIT3 SECTION "Déclaration de l'application" [1077-1968] -->
+<h2 class="sectionedit4" id="migration_de_la_db">Migration de la db</h2>
+<div class="level2">
+
+<p>
+Suivre les étapes <a href="/informatique/developpement/django/creer_un_projet?&amp;#migration_de_la_base_de_donnees_du_projet" class="wikilink1" title="informatique:developpement:django:creer_un_projet">décrites ici</a>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Migration de la db" [1969-] -->

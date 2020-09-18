@@ -1,0 +1,164 @@
+====== Protocole de création d'un projet Django ======
+
+Informations avant de se plonger tête baissée dans le protocole : 
+  * la version de django utilisée pour les projets BIOASTER est la 1.10. Se consulter si besoin de passer à au-dessus/au-dessous.
+  * le [[https://docs.djangoproject.com/en/1.10/ | tutoriel officiel]] est très bien fait et la majorité des notes de cette page sont issues de ce tuto.
+  * la version de python a prendre par défaut pour tout nouveau projet est la version 3.x (sauf si problème de lib exotiques pas encore passées en python3).
+
+Prérequis au protocole : 
+  * avoir [[/ut6/projets_internes/bp_python | pyenv et virtualenv/virtualenv-wrapper]] d'installés sur l'environnement de travail
+  * avoir créé le pyenv + virtualenv de son projet
+  * avoir réalisé le pip install django et vérifier que tout est là où il faut et dans la version qu'il faut : <Code>python -m django --version</Code>
+
+===== Creation du projet =====
+
+Une simple commande se chargera de créer votre dossier projet et tout ce qu'il faut dedans comme il faut :
+<Code>django-admin startproject mysite</Code>
+
+Vous aurez alors une architecture semblable à cela dans votre dossier monprojet/ :
+<Code>
+monprojet/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+</Code>
+
+Votre projet est instancié, à partir de là vous pouvez lancer le serveur de développement de cette façon :
+<Code>
+$ python manage.py runserver
+</Code>
+
+Si tout est ok, vous aurez un retour semblable à cela (NB : ignorer pour le moment les warnings concernant les migrations) :
+<Code>
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+September 26, 2016 - 07:40:29
+Django version 1.10.1, using settings 'monprojet.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+</Code>
+
+===== Creation des applications du projet =====
+
+Il va maintenant falloir créer les différentes applications de votre projet (== Bundles pour Symfony).
+Pour créer une application, il suffit d'executer la commande suivante :
+<Code>
+$ python manage.py startapp monapplication
+</Code>
+Vous aurez alors dans le dossier monapplication/ sous vos yeux ébahis quelque chose ressemblant fortement à cela :
+<Code>
+monapplication/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+</Code> 
+
+===== Creation de la base de données du projet =====
+Django propose un réglage par défaut en SQLite. Si vous désirez changez cela il faudra mettre les mains dans monprojet/settings.py à ce niveau là :
+<Code>
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+</Code>
+
+Pour une base de données Postgresql la configuration ressemblera à cela :
+<Code>
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'masuperdb',
+        'USER': 'totoledba',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+</Code>
+
+Normalement si vous suivez vous l'aurez compris en lisant l'argument de la clé ENGINE, il va falloir installer psycopg2 pour que la jointure python-psql se déroule bien.
+Pour cela, pip install est votre ami :
+<Code>
+$ pip install psycopg2
+</Code>
+
+Il va falloir créer la dite base de données :
+<Code>
+$ createdb -e -O totoledba masuperdb
+</Code>
+
+Puis lui appliquer les migrations qui ont été détecté par le serveur de développement grâce à la commande migrate de Django. La commande migrate examine le réglage INSTALLED_APPS et crée les tables de base de données nécessaires en fonction des réglages de base de données dans votre fichier mysite/settings.py et des migrations de base de données contenues dans l’application
+
+<Code>
+$ python manage.py migrate
+</Code>
+
+Vous aurez un retour console similaire à cela :
+<Code>
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying sessions.0001_initial... OK
+</Code>
+
+Et une base de données qui devrait ressembler à cela :
+<Code>
+
+masuperdb=# \dt
+                   List of relations
+ Schema |            Name            | Type  |  Owner   
+--------+----------------------------+-------+----------
+ public | auth_group                 | table | totoledba
+ public | auth_group_permissions     | table | totoledba
+ public | auth_permission            | table | totoledba
+ public | auth_user                  | table | totoledba
+ public | auth_user_groups           | table | totoledba
+ public | auth_user_user_permissions | table | totoledba
+ public | django_admin_log           | table | totoledba
+ public | django_content_type        | table | totoledba
+ public | django_migrations          | table | totoledba
+ public | django_session             | table | totoledba
+(10 rows)
+</Code>
+
+===== Migration de la base de données du projet =====
+
+Mais si vous avez bien suivi, vous remarquerez qu'il n'y a rien concernant d'éventuelles tables que nous aurions pu renseigner dans monapplication/
+Pas de panique, nous y venons ! Il s'agit ici de décrire le processus de migration selon Django.
+  - Vous faites vos changements dans le models.py de votre/vos application(s)
+  - à la création de votre application, un monapplication/apps.py est créé également, il contient la classe MonapplicationConfig. Il faudra alors nourrir la clé INSTALLED_APPS se trouvant dans monprojet/settings.py en rajoutant en argument la liaison vers votre nouvelle application de cette facon : <Code> INSTALLED_APPS = [
+    'monapplication.apps.MonapplicationConfig',
+    ...,
+    ]
+</Code>
+  - Django ayant la vision sur votre nouvelle application, vous pouvez maintenant lui demander de générer la migration : <Code>$ python manage.py makemigrations monapplication</Code>
+  - Si les informations renvoyées sur le terminal ne sont pas assez verbeuses ou explicites pour vous, vous pouvez aller jeter un oeil dans le dossier migrations/xxxx_initial.py de votre application en question. Ou bien vous pouvez taper la commande suivante qui vous affichera le SQL qui sera executé à la prochaine commande migrate (dans cet exemple 0001 étant l'itération de migration relative à votre application): <Code>python manage.py sqlmigrate monapplication 0001</Code> 
+  - Si vous n'êtes pas d'accord avec ce que propose la migration ou que vous avez fait une erreur dans votre code, supprimer le fichier xxxx_initial.py généré dans monapplication/migrations/ et recommencer le protocole de migration à partir du point 1
+  - Quand tout est ok, vous aller pouvoir jouer la dernière commande de migration, celle qui impactera votre base de données. Soyez donc sûr de vos changements arrivé à cette étape : <Code>$ python manage.py migrate</Code>

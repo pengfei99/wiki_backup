@@ -1,0 +1,91 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm02">BIOA-2014-VM02</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BIOA-2014-VM02" [1-30] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Machine servant de serveur de fichiers.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/machines_virtuelles/bioa-2014-vm02?do=backlink" class="wikilink1" title="machines_virtuelles:bioa-2014-vm02">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [31-203] -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Contacts" [204-275] -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : Debian GNU/Linux 7.5 (wheezy)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 2Go + 10Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:3B:FC:7B</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations Techniques" [276-517] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Installation" [518-543] -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo</pre>
+
+</div>
+<!-- EDIT6 SECTION "Système de base" [544-683] -->
+<h3 class="sectionedit7" id="samba">Samba</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends samba</pre>
+<dl class="code">
+<dt><a href="/_export/code/machines_virtuelles/bioa-2014-vm02?codeblock=2" title="Download Snippet" class="mediafile mf_conf">/etc/samba/smb.conf</a></dt>
+<dd><pre class="code text">[Donnees]
+    comment = Disque Commun Paris
+    read only = no
+    writable = yes
+    path = /mnt/dd2/samba/commun_paris
+    guest ok = yes</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT7 SECTION "Samba" [684-947] -->
+<h2 class="sectionedit8" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.06.17 (tlc)</strong> Installation</div>
+</li>
+<li class="level1"><div class="li"> <strong>2014.11.06 (tlc)</strong> Ajout d&#039;un disque de 20Go pour remplacer l&#039;ancien + tests de <a href="/pt6/vmware/resize_disk" class="wikilink1" title="pt6:vmware:resize_disk">redimensionnement</a> pour la prochaine fois</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.01.14 (tlc)</strong> Redimensionnement du disque de données (sdb) à 40 Go</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Journal" [948-] -->

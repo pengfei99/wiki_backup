@@ -1,0 +1,135 @@
+
+<h1 class="sectionedit1" id="reunion_du_07_septembre_2017">Réunion du 07 Septembre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 07 Septembre 2017" [1-46] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [47-95] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Rendu formulaires de création d&#039;échantillon</div>
+</li>
+<li class="level1"><div class="li"> Champs dynamiques</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [96-195] -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Rendu formulaires de création d&#039;échantillon</em>
+</p>
+
+<p>
+Discussion autour des images à afficher sur le SampleDynForm. Demande auprès de la com&#039; envoyée par mail @ EB.<br/>
+
+</p>
+
+<p>
+L&#039;idée sera d&#039;implémenter un algo pour parcourir les nœuds des deux classifications sélectionnées par l&#039;utilisateur et de trouver l&#039;image en rapport avec le nœud le moins loin possible de la valeur choisie.<br/>
+
+</p>
+
+<p>
+Il faudra prévoir un dossier spécial contenant ces images, qui porteront les mêmes noms que les classifications. Exemple : bacteria.png <br/>
+
+</p>
+
+<p>
+Une dizaine d&#039;images seraient un bon commencement.
+</p>
+
+<p>
+<em class="u">Formulaire/Champs dynamiques</em>
+</p>
+
+<p>
+Le rendu des deux formulaires de création d&#039;échantillons a avancé. <br/>
+
+</p>
+
+<p>
+Pour le premier formulaire (champs statiques) il reste à faire :
+</p>
+<ul>
+<li class="level1"><div class="li"> Filtrer les BSL en fonction des storages</div>
+</li>
+<li class="level1"><div class="li"> Filtrer les storages en fonction des labo/UTECs</div>
+</li>
+<li class="level1"><div class="li"> Faire la classification bioagent</div>
+</li>
+<li class="level1"><div class="li"> Mettre étoiles devant champs obligatoires (ou après)</div>
+</li>
+<li class="level1"><div class="li"> Afficher les noms des frigos et/ou tiroirs</div>
+</li>
+<li class="level1"><div class="li"> réunir les champs proches (par logique) sur une même ligne</div>
+</li>
+<li class="level1"><div class="li"> introduire flatpicker pour les DateTimeField</div>
+</li>
+<li class="level1"><div class="li"> afficher uniquement les projets de l&#039;utilisateur</div>
+</li>
+<li class="level1"><div class="li"> Afficher le champs <abbr title="Organisme Génétiquement Modifié">OGM</abbr> que si l&#039;utilisateur est un <abbr title="Organisme Génétiquement Modifié">OGM</abbr> user</div>
+</li>
+<li class="level1"><div class="li"> Afficher le champs <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> que si l&#039;utilisateur est un <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> user</div>
+</li>
+</ul>
+
+<p>
+Pour le second (champs dynamiques), quand il existera, il reste à faire:
+</p>
+<ul>
+<li class="level1"><div class="li"> image différentes selon types de classifications selectionnées (type + origine)</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assurer que tous les validateurs sont en place (automatiques + manuels)</div>
+</li>
+<li class="level1"><div class="li"> Gérer les dates avec flatpickr : <a href="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945</a> <a href="https://chmln.github.io/flatpickr/getting-started/" class="urlextern" title="https://chmln.github.io/flatpickr/getting-started/"  rel="nofollow">https://chmln.github.io/flatpickr/getting-started/</a></div>
+</li>
+<li class="level1"><div class="li"> Concaténer les propositions de champs dynamiques venant de la NET avec les templates produits par <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+</ul>
+
+<p>
+<em class="u">Autre</em>
+</p>
+
+<p>
+Reste à faire avant beta test V1 par la NET :
+</p>
+<ul>
+<li class="level1"><div class="li"> merger la branche de Pengfei (auth-shib/secu-dev-Pengfei)</div>
+</li>
+<li class="level1"><div class="li"> finaliser code de <abbr title="Julie Hardy">JHA</abbr> + merge de la branche au master</div>
+</li>
+<li class="level1"><div class="li"> finir la fonctionnalité recherche datatable</div>
+</li>
+<li class="level1"><div class="li"> définir quoi mettre (quels types d&#039;infos) dans le dropdown de datatable</div>
+</li>
+<li class="level1"><div class="li"> finir l&#039;édition d&#039;un échantillon</div>
+</li>
+<li class="level1"><div class="li"> avoir une page d&#039;information d&#039;un échantillon propre et sexy</div>
+</li>
+<li class="level1"><div class="li"> code barre</div>
+</li>
+<li class="level1"><div class="li"> créer un échantillon enfant</div>
+</li>
+<li class="level1"><div class="li"> dashboard d&#039;accueil</div>
+</li>
+<li class="level1"><div class="li"> déployer <abbr title="Network Of Experiments">NoE</abbr> sur le serveur de dev</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Résumé" [196-] -->

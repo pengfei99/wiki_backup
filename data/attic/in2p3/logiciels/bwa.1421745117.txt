@@ -1,0 +1,43 @@
+====== BWA ======
+
+===== Informations =====
+
+  * **Version** : 0.7.5a
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://bio-bwa.sourceforge.net/]]
+  * **Description** : BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to 1Mbp. BWA-MEM and BWA-SW share similar features such as long-read support and split alignment, but BWA-MEM, which is the latest, is generally recommended for high-quality queries as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads. 
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/bwa/0.7.5a/bin"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget -O bwa-0.7.5a.tar.bz2 \
+     "http://downloads.sourceforge.net/project/bio-bwa/bwa-0.7.5a.tar.bz2?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fbio-bwa%2Ffiles%2F&ts=1391782162&use_mirror=heanet"
+tar xvjf bwa-0.7.5a.tar.bz2
+cd bwa-0.7.5a
+make
+mv bwa qualfa2fq.pl xa2multi.pl $APP/
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Burrows-Wheeler Aligner.\n"
+}
+
+set version "0.7.5a"
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/bwa/${version}"
+
+prepend-path PATH "${app}/bin"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 0.7.5a installée

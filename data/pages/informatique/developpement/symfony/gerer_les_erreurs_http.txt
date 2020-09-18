@@ -1,0 +1,21 @@
+====== Gérer les erreurs HTTP ======
+
+On peut gérer les erreurs HTTP ("Not Found", "Internal Server Error"…) de [[http://symfony.com/doc/current/cookbook/controller/error_pages.html|plusieurs manières]]. Le plus simple est de surcharger les //templates// d'affichage d'erreurs de Twig.
+
+<code html app/Resources/TwigBundle/views/Exception/error.html.twig>
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ status_code }} {{ status_text }}
+{% endblock %}
+
+{% block body %}
+    <h1>Oups ! ^_^'</h1>
+    <p>Le serveur a retourné une erreur <strong>"{{ status_code }} {{ status_text }}"</strong>.</p>
+{% endblock %}
+</code>
+
+On versionne ensuite le changement :
+
+    $ bzr add
+    $ bzr ci -m "Amélioration de l'affichage des erreurs"

@@ -1,0 +1,182 @@
+
+<h1 class="sectionedit1" id="install_oracle_jdk_on_ubuntu_1604">Install oracle jdk on ubuntu 16.04</h1>
+<div class="level1">
+
+<p>
+On ubuntu, there are many ppa you can add to your apt-get , after adding the ppa, you can just use apt-get install to do the install
+</p>
+
+<p>
+To be sure, what you are installing on your pc, I prefer manual installation
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Install oracle jdk on ubuntu 16.04" [1-261] -->
+<h2 class="sectionedit2" id="manual_installation">manual installation</h2>
+<div class="level2">
+
+<p>
+<strong>1. Download jdk from oracle</strong>
+</p>
+<pre class="code">$  cd /tmp/
+$  wget --no-cookies --no-check-certificate --header &quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie&quot; &quot;http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz&quot;
+$ tar -xzvf jdk-8u121-linux-x64.tar.gz
+$ mv jdk1.8.0_121 /opt/.</pre>
+
+<p>
+You can replace the “<a href="http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz" class="urlextern" title="http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz" rel="nofollow">http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz</a>” by the latest jdk download link available at oracle site.
+</p>
+
+<p>
+<strong>2. Remove all openjdk package</strong>
+</p>
+<pre class="code">apt-get purge openjdk-\*</pre>
+
+<p>
+<strong>3. Use alternatives command to install jdk</strong>
+</p>
+<pre class="code">update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_121/bin/java 2000
+
+update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_121/bin/javac 2000</pre>
+
+<p>
+Now you can test with 
+</p>
+
+<p>
+<code>java -version</code> it should show following code
+</p>
+<pre class="code">java version &quot;1.8.0_121&quot;
+Java(TM) SE Runtime Environment (build 1.8.0_121-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.121-b13, mixed mode)</pre>
+
+<p>
+<code>update-alternatives –config java</code>
+</p>
+<pre class="code">There is only one alternative in link group java (providing /usr/bin/java): /opt/jdk1.8.0_121/bin/java
+Nothing to configure.</pre>
+
+<p>
+update-alternatives –config javac
+</p>
+<pre class="code">There is only one alternative in link group javac (providing /usr/bin/javac): /opt/jdk1.8.0_121/bin/javac
+Nothing to configure.</pre>
+
+<p>
+<strong>4. Set up JAVA_HOME and path </strong>
+</p>
+<pre class="code">export JAVA_HOME=/opt/jdk1.8.0_121
+export PATH=$PATH:/opt/jdk1.8.0_121/bin</pre>
+
+<p>
+If you want this permenant even after reboot
+</p>
+
+<p>
+create a file
+</p>
+
+<p>
+<code>touch /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+<code>vim /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+and put the following lines 
+</p>
+<pre class="code">export JAVA_HOME=/opt/jdk1.8.0_121
+export PATH=$PATH:/opt/jdk1.8.0_121/bin</pre>
+
+<p>
+If you want it effective right now.
+</p>
+
+<p>
+<code>source /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+<code>echo $JAVA_HOME</code>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "manual installation" [262-2255] -->
+<h1 class="sectionedit3" id="install_java_on_centos_7">Install java on centos 7</h1>
+<div class="level1">
+
+<p>
+<strong>1. Download jdk from oracle</strong>
+</p>
+<pre class="code">$  cd /tmp/
+$  wget --no-cookies --no-check-certificate --header &quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie&quot; &quot;http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz&quot;
+$ tar -xzvf jdk-8u121-linux-i586.tar.g
+$ cp jdk1.8.0_121 /opt/.</pre>
+
+<p>
+You can replace the “<a href="http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz" class="urlextern" title="http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz" rel="nofollow">http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz</a>” by the latest jdk download link available at oracle site.
+</p>
+
+<p>
+<strong>2. Use alternatives command to install jdk</strong>
+</p>
+<pre class="code">$ cd /opt/jdk1.8.0_121/
+$ alternatives --install /usr/bin/java java /opt/jdk1.8.0_121/bin/java 2
+$ alternatives --config java
+
+
+There are 3 programs which provide &#039;java&#039;.
+
+  Selection    Command
+-----------------------------------------------
+*  1           /opt/jdk1.7.0_71/bin/java
+ + 2           /opt/jdk1.8.0_45/bin/java
+   3           /opt/jdk1.8.0_91/bin/java
+   4           /opt/jdk1.8.0_121/bin/java
+
+Enter to keep the current selection[+], or type selection number: 4</pre>
+
+<p>
+<strong>3. Set up JAVA_HOME and path </strong>
+</p>
+<pre class="code">export JAVA_HOME=/opt/jdk1.8.0_121
+export PATH=$PATH:/opt/jdk1.8.0_121/bin</pre>
+
+<p>
+If you want this permenant even after reboot
+</p>
+
+<p>
+create a file
+</p>
+
+<p>
+<code>touch /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+<code>vim /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+and put the following lines 
+</p>
+<pre class="code">export JAVA_HOME=/opt/jdk1.8.0_121
+export PATH=$PATH:/opt/jdk1.8.0_121/bin</pre>
+
+<p>
+If you want it effective right now.
+</p>
+
+<p>
+<code>source /etc/profile.d/oraclejdk.sh</code>
+</p>
+
+<p>
+<code>echo $JAVA_HOME</code>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Install java on centos 7" [2256-] -->

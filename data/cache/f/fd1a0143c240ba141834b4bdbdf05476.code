@@ -1,0 +1,3 @@
+    php app/console cache:warmup --env=dev
+    php app/console doctrine:migrations:status
+    php app/console doctrine:migrations:migrate

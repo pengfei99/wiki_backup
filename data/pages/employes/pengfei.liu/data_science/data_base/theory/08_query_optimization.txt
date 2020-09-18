@@ -1,0 +1,217 @@
+====== Lesson09: SQL query optimization ======
+
+===== 9.1 General sql query optimization =====
+
+==== 9.1.1 Select fields instead of select * ====
+
+<code sql>
+# EFFICIENT
+SELECT FirstName, LastName, Address, City, State, Zip FROM Customers
+
+# INEFFICIENT
+SELECT * FROM Customers
+</code>
+
+==== 9.1.2 Select more fields to avoid select distinct ====
+
+<code sql>
+# Inefficient and inaccurate, because doesn’t account for multiple people in the same state having the same first and last name.
+SELECT DISTINCT FirstName, LastName, State FROM Customers
+
+SELECT FirstName, LastName, Address, City, State, Zip FROM Customers
+</code>
+
+==== 9.1.3  Create Joins with INNER JOIN Rather than WHERE ====
+
+<code sql>
+# The below query create a cross join (catesian product) on two tables then filter the result with the where clause
+SELECT Customers.CustomerID, Customers.Name, Sales.LastSaleDate
+FROM Customers, Sales
+WHERE Customers.CustomerID = Sales.CustomerID
+
+# The inner join will filter the result while doing inner join
+SELECT Customers.CustomerID, Customers.Name, Sales.LastSaleDate
+FROM Customers
+   INNER JOIN Sales
+   ON Customers.CustomerID = Sales.CustomerID
+</code>
+
+==== 9.1.4 Use WHERE instead of HAVING to Define Filters ====
+
+Similarly to the above mentioend concept, the goal of an efficient query is to pull only the required records from the database. Per the SQL Order of Operations, HAVING statements are calculated after WHERE statements. If the intent is to filter a query based on conditions, a WHERE statement is more efficient
+
+For example, let’s assume 200 sales have been made in the year 2016, and we want to query for the number of sales per customer in 2016.
+
+<code sql>
+# The below query would pull 1,000 sales records from the Sales table, then filter for the 200 records generated in the year 2016, and finally count the records in the data set
+SELECT Customers.CustomerID, Customers.Name, Count(Sales.SalesID)
+FROM Customers
+   INNER JOIN Sales
+   ON Customers.CustomerID = Sales.CustomerID
+GROUP BY Customers.CustomerID, Customers.Name
+HAVING Sales.LastSaleDate BETWEEN #1/1/2016# AND #12/31/2016#
+
+# In comparison, WHERE clauses limit the number of records pulled, it will only pull the 200 records from the year 2016
+SELECT Customers.CustomerID, Customers.Name, Count(Sales.SalesID)
+FROM Customers 
+  INNER JOIN Sales
+  ON Customers.CustomerID = Sales.CustomerID
+WHERE Sales.LastSaleDate BETWEEN #1/1/2016# AND #12/31/2016#
+GROUP BY Customers.CustomerID, Customers.Name
+</code>
+
+**HAVING** should only be used when filtering on an aggregated field. In the query above, we could additionally filter for customers with greater than 5 sales using a HAVING statement.
+
+<code sql>
+SELECT Customers.CustomerID, Customers.Name, Count(Sales.SalesID)
+FROM Customers
+   INNER JOIN Sales 
+   ON Customers.CustomerID = Sales.CustomerID
+WHERE Sales.LastSaleDate BETWEEN #1/1/2016# AND #12/31/2016#
+GROUP BY Customers.CustomerID, Customers.Name
+HAVING Count(Sales.SalesID) > 5
+</code>
+
+===== 9.2 Create indexes, but do it wisely  =====
+
+==== 9.2.1 One Index per table ====
+
+As a general rule of thumb, MySQL/Postgresql can only use one index for each table in the query. Therefore, there is no point in creating more than one index for each query. Preferably, same indexes should match as many of the queries as possible, as it will reduce the load on the database when inserting or updating data (which requires updating the indexes as well).
+
+==== 9.2.2 Create the index on the most often queried column ====
+Which column you choose when you create indexes is the first question you need to ask. It depends on which kind of SQL queries and which column it access.
+
+In general, when creating an index, the most important parts are the **equality conditions** in the **WHERE** and **JOIN** conditions of your SQL queries. In most cases, conditions such as name = ‘John’ will allow the database to filter most of the rows from the table and go through a small amount of rows to return the required results. Therefore, we should start indexing by adding these columns to the index.
+
+Then, you should look into the **range conditions**, but you should only add one of them – the most selective one, as MySQL can’t handle more of them. In some cases when there are no range conditions, it makes sense to add the GROUP BY / ORDER BY columns, assuming the ordering is done in only one direction (ASC / DESC).
+
+
+In some cases, it also makes sense to create a separate index that contains the ORDER BY clause’s columns, as MySQL sometimes chooses to use it. Please note though that for this to happen, the index should contain all columns from the ORDER BY clause and they should all be specified with the same order (ASC / DESC). This doesn’t guarantee that the database’s optimizer will pick this index rather than the other compound indexes, but it’s worth a try.
+
+
+=== Examples ===
+
+Suppose we have the following query as the most frequently used queries
+
+<code sql>
+SELECT id, first_name, last_name, age from employees where first_name = ‘John’ AND last_name = ‘Brack’ and age > 25 ORDER BY age ASC;
+</code>
+
+For this query, we’ll start with adding the columns first_name and last_name, which are compared with an equality operator. Then, we’ll add the age column which is compared with a range condition. No need to have the ORDER BY clause indexed here, as the age column is already in the index. Last but not least, we’ll add id from the SELECT clause to the index to have a covering index.
+
+So to index this query properly, you should add the index:
+<code>
+create index pri_index on employees (first_name, last_name, age, id).;
+</code>
+
+==== 9.2.3 Not to do when indexing ====
+
+=== Indexing each and every column in the table separately ===
+In most cases, MySQL won’t be able to use more than one index for each table in the query.
+
+Therefore, when creating a separate index for each column in the table, the database is bound to perform only one of the search operations using an index, and the rest of them will be significantly slower, as the database can’t use an index to execute them.
+
+We recommend using compound indexes (explained later in this article) rather than single-column indexes.
+
+=== The OR operator in filtering conditions ===
+
+Consider this query:
+SELECT a, b FROM tbl WHERE a = 3 OR b = 8.
+
+In many cases, MySQL won’t be able to use an index to apply an OR condition, and as a result, this query is not **indexable**.
+
+Therefore, we recommend to avoid such OR conditions and consider splitting the query to two parts, combined with a UNION DISTINCT (or even better, UNION ALL, in case you know there won’t be any duplicate results)
+
+=== Adding redundant indexes ===
+
+Indexes are magnificent when trying to optimize your SQL queries and they can improve performance significantly.
+
+But, they come with a downside as well. Each index you’re creating should be kept updated and in sync when changes occur in your databases. So for each INSERT / UPDATE / DELETE in your databases, all relevant indexes should be updated. This update can take some time, especially with large tables/indexes.
+
+Therefore, do not create indexes unless you know you’ll need them.
+
+Also, we highly recommend analyzing your database once in a while, searching for any redundant indexes that can be removed.
+
+=== The order of columns in an index is important ===
+
+Let’s say I hand you my contacts phone book which is ordered by the contact’s first name and ask you to count how many people are there named “John” in the book. You’ll grab the book in both hands and say “no problem”. You will navigate to the page that holds all names starting with John, and start counting from there.
+
+Now, let’s say I change the assignment and hand you a phone book that is ordered by the contact’s last name, but ask you to still count all contacts with the first name “John”. How would you approach that? Well, the database scratches his head in this situation as well.
+
+Now lets look at an SQL query to demonstrate the same behavior with the MySQL optimizer:
+SELECT first_name, last_name FROM contacts WHERE first_name = ‘John’;
+
+Having the index contacts (first_name, last_name) is ideal here, because the index starts with our filtering condition and ends with another column in the SELECT clause.
+
+But, having the reverse index contacts (last_name, first_name) is rather useless, as the database can’t use the index for filtering, as the column we need is second in the index and not first.
+
+The conclusion from this example is that the order of columns in an index is rather important.
+
+===== 9.3 Change your query to use the existing indexes =====
+
+You should use the explain command to see, if your query use the indexes or not. Becuase, in general, a lot of query will make your database don't use your index. Below are some examples.
+
+==== 9.3.1 Avoid wrapping indexed columns with functions ====
+
+Consider this query, which counts the number of hot dogs purchased in the US on 2018. Just in case you’re curious, 18,000,000,000 hot dogs were sold in the US in 2018.
+
+<code sql>
+SELECT count(*) FROM us_hotdog_purchases WHERE YEAR(purchase_time) = ‘2018’
+</code>
+
+As you can see, we are using the YEAR function to grab the year part from the purchase_time column. This function call will prevent the database from being able to use an index for the purchase_time column search, because we **indexed the value of purchase_time, but not the return value of YEAR(purchase_time)**.
+
+The following query will return the same result, but with the help of index
+<code sql>
+SELECT count(*) FROM us_hotdog_purchases WHERE purchased_at >= ‘2018-01-01’ AND purchased_at < ‘2019-01-01’
+</code>
+
+
+==== 9.3.2 Avoid Or conditions ====
+
+Consider this query, which selects the amount of posts on Facebook posted after new year’s eve, or posted by a user named Mark.
+
+<code sql>
+SELECT count(*) FROM fb_posts WHERE username = ‘Mark’ OR post_time > ‘2018-01-01’
+</code>
+
+Having an index on both the username and post_time columns might sound helpful, but in most cases, the database won’t use it, at least not in full. The reason will be the connection between the two conditions – the OR operator, which makes the database fetch the results of each part of the condition separately.
+
+An alternative way to look at this query can be to ‘split’ the OR condition and ‘combine’ it using a UNION clause. This alternative will allow you to index each of the conditions separately, so the database will use the indexes to search for the results and then combine the results with the UNION clause.
+
+<code sql>
+SELECT …
+FROM …
+WHERE username = ‘Mark’
+    UNION
+SELECT …
+FROM …
+WHERE post_time > ‘2018-01-01’
+</code>
+
+==== 9.3.3 Avoid sorting with a mixed order ====
+
+Consider this query, which selects all posts from Facebook and sorts them by the username in ascending order, and then by the post date in descending order.
+
+<code>
+SELECT username, post_type FROM fb_posts ORDER BY username ASC, post_type DESC
+</code>
+
+MySQL (and so many other relational databases), cannot use indexes when sorting with a mixed order (both ASC and DESC in the same ORDER BY clause). This changed with the release of the reversed indexes functionality and MySQL 8.x.
+
+==== 9.3.4 Avoid LIKE searches with prefix wildcards ====
+
+
+Consider this query, which searches all Facebook posts from a username which includes the string ‘Mar’, so we are searching for all posts written by users named Mark, Marcus, Almar, etc.
+
+<code sql>
+SELECT * FROM fb_posts WHERE username like ‘%Mar%’;
+</code>
+
+Having a wildcard ‘%’ at the beginning of the pattern will prevent the database from using an index for this column’s search. Such searches can take a while.
+
+In this case, there are two options to improve this query’s performance. The first one is trivial – consider whether the prefix wildcard is important enough. If you can manage without it, get rid of it.
+
+Another option will be to use full-text indexes(create compound index on all columns). Please note though, that these indexes and the MATCH … AGAINST syntax isn’t free from challenges and has some differences when compared to the familiar LIKE expressions in MySQL.
+
+Note that: use wildcards at the end of o phrase is acceptable. 

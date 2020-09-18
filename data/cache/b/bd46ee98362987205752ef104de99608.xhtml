@@ -1,0 +1,27 @@
+
+<h1 class="sectionedit1" id="comment_supprimer_un_bundle">Comment supprimer un bundle ?</h1>
+<div class="level1">
+
+<p>
+1/ Supprimer le fichier du bundle.<br/>
+
+2/ Supprimer toutes les routes en lien avec le bundle.<br/>
+
+3/ Enlever le new  “<em> du bundle à supprimer</em>”  dans le AppKernel.<br/>
+
+4/ Faire un cache:clear.<br/>
+
+</p>
+<pre class="code">  php app/console cache:clear  </pre>
+
+<p>
+5/ Mettre à jour le composer.phar<br/>
+
+</p>
+<pre class="code">  php ../composer.phar update   </pre>
+
+<p>
+Étape supplémentaire : dans le fichier config.yml, supprimer la ligne correspondant au bundle dans la section <em>imports</em> (situé en début de fichier). 
+</p>
+
+</div>

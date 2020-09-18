@@ -1,0 +1,17 @@
+====== Pandas read data, understand data ======
+
+===== Read data from a file =====
+
+Pandas can read many file format (e.g. csv, excel, json, etc).
+
+<code>
+import pandas as pd
+
+dataframe=pd.read_csv("file_path",encoding="file_encoding")
+
+# read csv example
+kickstarter_2016 = pd.read_csv("ks-projects-201612.csv", encoding='Windows-1252')
+</code>
+
+You can use this link to 
+

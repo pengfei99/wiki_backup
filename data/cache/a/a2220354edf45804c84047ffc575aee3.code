@@ -1,0 +1,1 @@
+nova boot --key-name=cloudkey --image=CentOS-7 --flavor=m1.tiny --security-groups=default dev-tools

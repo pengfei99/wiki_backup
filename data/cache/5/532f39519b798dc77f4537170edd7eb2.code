@@ -1,0 +1,47 @@
+<span class="kw1">public</span> <span class="kw1">class</span> FileChannelTxt<span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> args<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+&nbsp;
+<span class="co1">//1.创建一个RandomAccessFile（随机访问文件）对象，        </span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> raf<span class="sy0">=</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;D:<span class="es0">\\</span>niodata.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//通过RandomAccessFile对象的getChannel()方法。FileChannel是抽象类。        </span>
+FileChannel inChannel <span class="sy0">=</span>raf.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//2.创建一个读数据缓冲区对象</span>
+ByteBuffer buf<span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//3.从通道中读取数据</span>
+<span class="kw4">int</span> bytesRead <span class="sy0">=</span> inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//创建一个写数据缓冲区对象</span>
+ByteBuffer buf2<span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//写入数据</span>
+buf2.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;filechannel test&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf2.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+inChannel.<span class="me1">write</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">while</span><span class="br0">&#40;</span>bytesRead <span class="sy0">!=-</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+&nbsp;
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Read &quot;</span><span class="sy0">+</span>bytesRead<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//Buffer有两种模式，写模式和读模式。在写模式下调用flip()之后，Buffer从写模式变成读模式。</span>
+buf.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//如果还有未读内容    </span>
+<span class="kw1">while</span><span class="br0">&#40;</span>buf.<span class="me1">hasRemaining</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">char</span><span class="br0">&#41;</span>buf.<span class="me1">get</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="co1">//清空缓存区</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+bytesRead <span class="sy0">=</span>inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//关闭RandomAccessFile（随机访问文件）对象</span>
+raf.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

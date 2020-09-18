@@ -1,0 +1,212 @@
+====== Install postgresql on centos 7 ======
+
+1. Get postgresql repo
+
+You can visit this link https://yum.postgresql.org/repopackages.php for more information on 
+
+For example, I choose 11.x.
+<code>
+# Add the PostgreSQL repository in CentOS 7.
+$ rpm -Uvh https://yum.postgresql.org/11/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+# Now we can run the following command to install the postgresql server and client
+
+$ yum install postgresql11-server postgresql11 -y
+
+</code>
+
+2. Initialize your postgresql db
+
+''/usr/pgsql-11/bin/postgresql-11-setup initdb''
+
+3. Start, stop, status de postgresql service
+
+''systemctl start/stop/status postgresql-11''
+
+====== Configure postgresql ======
+
+1. Configure pg_hba to allow remote access to postgresql server
+
+The pg_hba file can be find in /var/lib/pgsql/11/data/
+
+''vim pg_hba.conf''
+
+You should see lines like this
+
+<code>
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     postgres                                peer
+#host    replication     postgres        127.0.0.1/32            ident
+#host    replication     postgres        ::1/128                 ident
+</code>
+
+You need to change the first line auth method from peer to md5.
+
+So you can get access with login and password.
+
+If I want to allow a machine with IP 134.188.88.8 to access on my base toto with login titi
+
+I should add a line like this
+
+''host  toto    titi   134.188.88.8/32     md5''
+
+After this you also need to modify
+
+add this line to allow remote connection on postgresql server
+
+<code>
+cd /var/lib/pgsql/9.5/data
+vim postgresql.conf
+# listen_addresses = 'localhost' means only local connexion is allowed, change it to *, postgres accept all connexiton 
+listen_addresses = '*'
+</code>  
+
+2. User management
+
+<code>
+# create user pliu with pwd toto
+CREATE USER pliu WITH PASSWORD 'toto';
+
+# change user password
+ALTER USER 'user_name' WITH PASSWORD 'new_password';
+</code>
+
+
+
+3. Add database
+
+CREATE DATABASE mysite ;
+
+4. Grant privilege on database
+
+<code>
+# grant all privileges
+GRANT ALL PRIVILEGES ON DATABASE mysite TO pliu;
+
+# grant read only privileges on a schema
+# first you need to grant user to use this schema
+GRANT USAGE ON SCHEMA mysite TO pliu;
+# second you grant select right on tables of this schema
+GRANT SELECT ON ALL TABLES IN SCHEMA mysite TO pliu;
+</code>
+
+
+
+5. Test your database
+
+psql -U pliu -h localhost -d mysite -W
+
+====== Install psycopg2 in virtual env to allow django to connect to postgres db ======
+
+
+1. Install dependencies
+
+psycopy needs postgresql developpement tool package to compile. As we use postgres9.5
+
+So, ''sudo yum install postgresql95-devel''
+
+2. Try ''pip install psycopg2''
+
+If it fails, and says **Error: pg_config executable not found.**
+
+You need to add pg_config to your path.
+
+Use ''find / -name pg_config  2>/dev/null'' to find where is your pg_config
+
+For example, if it shows /usr/pgsql-9.5/bin/pg_config
+
+''export PATH=$PATH:/usr/pgsql-9.5/bin/''
+
+Now you can do '' pip install psycopg2''
+
+====== create user login and database ======
+
+1. login as postgres and connect db with psql,create db noe and user noe, with password, grant full access of db noe to user noe.
+
+<code>
+sudo su postgres
+psql
+CREATE DATABASE noe;
+</code>
+
+
+
+
+====== Initial database with django web app database ======
+
+<code>
+cd /var/www/NoE/
+python manage.py makemigrations
+python manage.py migrate
+</code>
+
+Test if everything goes well
+
+python manage.py runserver
+
+gunicorn NoE.wsgi:application
+====== pg_dump version mismatch - How to fix in CentOS 7 ======
+
+If you have the following message 
+
+<code>
+pg_dump: server version: 9.4.7; pg_dump version: 9.2.15 
+
+pg_dump: aborting because of server version mismatch
+
+</code>
+
+It means you need to update your pg_dump version
+
+To do so on centos7, you need to add the rpm
+
+''$ sudo rpm -Uvh https://download.postgresql.org/pub/repos/yum/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-3.noarch.rpm''
+
+All the available package is here: http://yum.postgresql.org/repopackages.php#pg94
+
+Install the psql 94 client
+
+''$ sudo yum install postgresql94''
+
+
+Find the pg_dump executable 
+
+''$ find / -name pg_dump -type f 2>/dev/null''
+
+For example, in my centos 7, it shows 
+
+<code>
+/usr/bin/pg_dump
+/usr/pgsql-9.4/bin/pg_dump
+
+# pg_dump for export database to a file
+/usr/pgsql-9.4/bin/pg_dump -h <hostname> -U <username> <dbname> > db_dump_file
+
+# for example, if you have a database northwind, to export it use the following command
+# and user must have the right to export the database
+pg_dump -U pliu -h 127.0.0.1 -d northwind -W > northwind
+psql --set ON_ERROR_STOP=on dbname < dumpfile
+
+# if you want to import data into a database, database must be crea
+psql -U pliu -h cclindw01.in2p3.fr northwind < northwind.sql
+</code>
+
+
+====== Jdbc driver ======
+
+In this page you can find all jdbc drivers https://jdbc.postgresql.org/download.html
+
+For java 8, we choose 
+
+https://jdbc.postgresql.org/download/postgresql-42.2.5.jar
+
+

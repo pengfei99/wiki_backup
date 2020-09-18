@@ -1,0 +1,12 @@
+<span class="co1">// list data base and table in spark catalog</span>
+spark.<span class="me1">catalog</span>.<span class="me1">listDatabases</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+spark.<span class="me1">catalog</span>.<span class="me1">listTables</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">//create table </span>
+spark.<span class="me1">sql</span><span class="br0">&#40;</span><span class="st0">&quot;CREATE TABLE product_visit_number (product_name String, view_number Int)&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">//write data frame to table</span>
+productVisitNumber.<span class="me1">write</span>.<span class="me1">mode</span><span class="br0">&#40;</span>SaveMode.<span class="me1">Overwrite</span><span class="br0">&#41;</span>.<span class="me1">saveAsTable</span><span class="br0">&#40;</span><span class="st0">&quot;product_visit_number&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">//show data in the table</span>
+spark.<span class="me1">sql</span><span class="br0">&#40;</span><span class="st0">&quot;select * from product_visit_number limit 10&quot;</span><span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span>

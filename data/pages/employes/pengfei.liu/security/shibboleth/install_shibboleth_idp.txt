@@ -1,0 +1,111 @@
+====== Install shibboleth IDP ======
+
+1. Pre-requise
+
+Java,
+
+web server (apache)
+
+application server (Jetty)
+
+The new sciforma dev DB is installed at 10.69.2.41
+
+2. Download Shibboleth installer
+
+3. Install shibboleth
+
+
+====== Configure shibboleth IDP======
+
+
+
+====== Add new shibboleth SP to IDP======
+
+
+====== Add new user attribute======
+
+1. Get user attribute from data source (e.g. ldap, db, etc.)
+
+LDAP example:
+
+<Code class="prettyprint linenums:1">
+ <resolver:DataConnector xsi:type="LDAPDirectory" xmlns="urn:mace:shibboleth:2.0:resolver:dc"
+                        id="LocalLdap"
+                        ldapURL="ldap://ldap.bioaster.org:389"
+                        baseDN="OU=UTILISATEURS,dc=bioaster,dc=local"
+                        principal="CN=admin,dc=bioaster,DC=org"
+                        principalCredential="pwd"
+                        useStartTLS="false">
+        <FilterTemplate>
+            <![CDATA[
+                (sAMAccountName=${requestContext.principalName})
+            ]]>
+        </FilterTemplate>
+        
+        <ReturnAttributes>cn uid mail department title</ReturnAttributes>
+    </resolver:DataConnector>
+</Code>
+
+The return attributes are the attribute name of user in the ldap server
+
+
+The database example:
+
+<Code class="prettyprint linenums:1">
+<resolver:DataConnector id="SciformaUserDb" xsi:type="RelationalDatabase" xmlns="urn:mace:shibboleth:2.0:resolver:dc" queryTimeout="PT0.000S">
+        <dc:ApplicationManagedConnection jdbcDriver="org.postgresql.Driver"
+                                         poolAcquireRetryAttempts="1"
+                                         poolAcquireRetryDelay="1"
+                                         poolBreakAfterAcquireFailure="false"
+                                         jdbcURL="jdbc:postgresql://100.169.12.131:5432/sciforma"
+                                         jdbcUserName="shibbolteh"
+                                         jdbcPassword="pwd"/>
+
+        <dc:QueryTemplate>
+            <![CDATA[
+               SELECT t."AD_ID", string_agg(t.wps,';') AS wps 
+                FROM 
+                    (SELECT DISTINCT a."AD_ID", CONCAT(b."Name",'|',c."ID",'::', b."WorkPackageID") AS wps  
+                    FROM sciforma."BA_shib_LaborAsgn" a INNER JOIN sciforma."BA_shib_projWPtask" b ON  a."_Task_IID" = b."_Task_IID" AND a."_Project_IID" = b."_Project_IID" 
+                    INNER JOIN sciforma."Project" c ON b."Name" = c."Name" ORDER BY a."AD_ID") t 
+                WHERE t."AD_ID"='${requestContext.principalName}'    
+                GROUP BY t."AD_ID";
+            ]]>
+        </dc:QueryTemplate>
+
+
+        <dc:Column columnName="wps" attributeID="wps" />
+         </resolver:DataConnector>
+
+</Code>
+
+2. Define attributes in xml format
+
+<Code class="prettyprint linenums:1">
+<resolver:AttributeDefinition xsi:type="ad:Simple" id="title" sourceAttributeID="title">
+        <resolver:Dependency ref="LocalLdap" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="title" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="title" />
+    </resolver:AttributeDefinition>
+</Code>
+
+The sourceAttributeID="title" is the attribute name return by the ldap 
+
+
+3. Define Autorization  IDP_HOME/conf/attribute-filter.xml and in the AttributeFilterPolicyGroup section add a new AttributeFilterPolicy. There is an example:
+
+
+<Code class="prettyprint linenums:1">
+<afp:AttributeRule attributeID="title">
+<afp:PermitValueRule xsi:type="basic:ANY"/>
+</afp:AttributeRule>
+</Code>
+
+====== Test your IDP attributes availabilities ======
+
+
+<Code>
+$ su - jetty
+$ cd /opt/shibboleth-idp/
+$ ./bin/aacli.sh --requester=http://www.bioaster.org/secure --configDir=conf/ --principal="ymouscaz"
+</Code>

@@ -1,0 +1,294 @@
+
+<h1 class="sectionedit1" id="lesson2handling_semi-structured_data">Lesson2: Handling Semi-structured data</h1>
+<div class="level1">
+
+<p>
+In this lesson, we will show you how we handle semi-structured data in HIVE and spark. The data which we use is from IOT system of trucks (e.g. trucks.csv, geolocation.csv). 
+</p>
+
+<p>
+You can find these data on my google drive (<a href="https://drive.google.com/drive/folders/1XpOxVfnUXYyvhHHavqBgyUJGSiiPJAG0" class="urlextern" title="https://drive.google.com/drive/folders/1XpOxVfnUXYyvhHHavqBgyUJGSiiPJAG0" rel="nofollow">https://drive.google.com/drive/folders/1XpOxVfnUXYyvhHHavqBgyUJGSiiPJAG0</a>)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson2: Handling Semi-structured data&quot;,&quot;hid&quot;:&quot;lesson2handling_semi-structured_data&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-349&quot;} -->
+<h2 class="sectionedit2" id="load_data_to_hdfs">1. Load data to hdfs</h2>
+<div class="level2">
+
+<p>
+Although hive and spark can work with local fs, but we prefer to use hdfs, which gives us more realistic big data environment context.
+</p>
+<pre class="code"># If you run a sandbox on docker, you need to copy the data to vm
+scp -P 2222 /path/to/file root@127.0.0.1:/tmp/
+
+# load data to hdfs
+hdfs dfs -mkdir /tmp/data
+hdfs dfs -put /path/to/file /tmp/data
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Load data to hdfs&quot;,&quot;hid&quot;:&quot;load_data_to_hdfs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;350-734&quot;} -->
+<h2 class="sectionedit3" id="import_data_to_hive">2. Import data to hive</h2>
+<div class="level2">
+
+<p>
+Here, we will combine external and managed table. We will explain why in the end of this section
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Import data to hive&quot;,&quot;hid&quot;:&quot;import_data_to_hive&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;735-868&quot;} -->
+<h3 class="sectionedit4" id="load_data_in_raw_textfile_format">2.1 Load data in raw textfile format</h3>
+<div class="level3">
+<pre class="code"># Create a hive database
+$ create database if not exists truck_iot
+
+# note in hive, database and schema are equal
+
+# Create an external table for trucks and geolocation
+$ create external table if not exists truck_iot.trucks_raw (driverid string,truckid string,model string,jun13_miles int,jun13_gas int, may13_miles int, may13_gas int, apr13_miles int, apr13_gas int,  
+mar13_miles int, mar13_gas int, feb13_miles int, feb13_gas int, jan13_miles int,jan13_gas int, dec12_miles int, dec12_gas int, nov12_miles int, nov12_gas int, oct12_miles int, oct12_gas int,
+sep12_miles int,sep12_gas int, aug12_miles int, aug12_gas int, jul12_miles int, jul12_gas int,jun12_miles int,jun12_gas int,may12_miles int,may12_gas int,apr12_miles int, apr12_gas int,
+mar12_miles int,mar12_gas int,feb12_miles int,feb12_gas int,jan12_miles int, jan12_gas int, dec11_miles int, dec11_gas int, nov11_miles int,nov11_gas int,oct11_miles int,oct11_gas int,
+sep11_miles int, sep11_gas int,aug11_miles int,aug11_gas int,jul11_miles int,jul11_gas int,jun11_miles int,jun11_gas int, may11_miles int, may11_gas int, apr11_miles int, apr11_gas int,
+mar11_miles int, mar11_gas int,feb11_miles int,feb11_gas int,jan11_miles int,jan11_gas int, dec10_miles int, dec10_gas int, nov10_miles int, nov10_gas int, oct10_miles int, oct10_gas int,
+sep10_miles int, sep10_gas int,aug10_miles int, aug10_gas int,jul10_miles int,jul10_gas int, jun10_miles int, jun10_gas int, may10_miles int, may10_gas int, apr10_miles int, apr10_gas int,
+mar10_miles int, mar10_gas int,feb10_miles int,feb10_gas int,jan10_miles int,jan10_gas int, dec09_miles int, dec09_gas int,nov09_miles int,nov09_gas int, oct09_miles int,oct09_gas int,
+sep09_miles int, sep09_gas int, aug09_miles int,aug09_gas int,jul09_miles int,jul09_gas int,jun09_miles int, jun09_gas int,may09_miles int,may09_gas int,apr09_miles int,apr09_gas int,
+mar09_miles int, mar09_gas int, feb09_miles int,feb09_gas int,jan09_miles int,jan09_gas int) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; LINES TERMINATED BY &#039;\n&#039; STORED AS TextFile tblproperties(&quot;skip.header.line.count&quot;=&quot;1&quot;);
+
+# load trucks.csv to table trucks_raw
+Load data inpath &#039;/tmp/data/trucks.csv&#039; into table truck_iot.trucks_raw;  
+
+
+# Create table for geolocation
+create external table if not exists truck_iot.geolocation_raw (truckid STRING, driverid STRING, event STRING, latitude DOUBLE, longitude DOUBLE, city STRING, state STRING, velocity INT, event_ind INT, idling_ind INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; LINES TERMINATED BY &#039;\n&#039; STORED AS TextFile tblproperties(&quot;skip.header.line.count&quot;=&quot;1&quot;);
+
+# load geolocation.csv to table geolocation_raw
+Load data inpath &#039;/tmp/data/geolocation.csv&#039; into table truck_iot.geolocation_raw;</pre>
+
+<p>
+Now the data has been loaded, let&#039;s get familiar with the hive data warehouse
+</p>
+
+<p>
+Some useful command to understand the table and database
+</p>
+<pre class="code"># list all database/schema
+$ show databases/schemas; 
+
+# show table column;
+$ describe geolocation_orc;
+
+# show table columns and all metadata of the table
+$ describe formatted geolocation_orc;
+
+# show the commad for table creation
+$ show create table geolocation;</pre>
+
+<p>
+Get Some basic stats and key an eye on the execution time
+</p>
+<pre class="code"># Get the top ten trucks with the highest velocity/speed
+select * from truck_iot.geolocation_raw order by velocity desc limit 10;
+
+# Get all event a truck can get
+select distinct(event) from truck_iot.geolocation_raw limit 10;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Load data in raw textfile format&quot;,&quot;hid&quot;:&quot;load_data_in_raw_textfile_format&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;869-4373&quot;} -->
+<h3 class="sectionedit5" id="transform_the_data_in_orc_format">2.2 Transform the data in orc format</h3>
+<div class="level3">
+
+<p>
+The Optimized Row Columnar (ORC) file format provides a highly efficient way to store Hive data. It was designed to overcome limitations of the other Hive file formats. Using ORC files improves performance when Hive is reading, writing, and processing data. 
+</p>
+
+<p>
+For more information about orc, check this link: <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC" class="urlextern" title="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC" rel="nofollow">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC</a>
+</p>
+<pre class="code"># Create a managed table with orc format for geolocation
+$ create table if not exists truck_iot.geolocation_orc (truckid STRING, driverid STRING, event STRING, latitude DOUBLE, longitude DOUBLE, city STRING, state STRING, velocity INT, event_ind INT, idling_ind INT) STORED AS ORC;
+
+# Create a managed table with orc format for trucks
+$ create table if not exists truck_iot.trucks_orc (driverid string,truckid string,model string,jun13_miles int,jun13_gas int, may13_miles int, may13_gas int, apr13_miles int, apr13_gas int,  
+mar13_miles int, mar13_gas int, feb13_miles int, feb13_gas int, jan13_miles int,jan13_gas int, dec12_miles int, dec12_gas int, nov12_miles int, nov12_gas int, oct12_miles int, oct12_gas int,
+sep12_miles int,sep12_gas int, aug12_miles int, aug12_gas int, jul12_miles int, jul12_gas int,jun12_miles int,jun12_gas int,may12_miles int,may12_gas int,apr12_miles int, apr12_gas int,
+mar12_miles int,mar12_gas int,feb12_miles int,feb12_gas int,jan12_miles int, jan12_gas int, dec11_miles int, dec11_gas int, nov11_miles int,nov11_gas int,oct11_miles int,oct11_gas int,
+sep11_miles int, sep11_gas int,aug11_miles int,aug11_gas int,jul11_miles int,jul11_gas int,jun11_miles int,jun11_gas int, may11_miles int, may11_gas int, apr11_miles int, apr11_gas int,
+mar11_miles int, mar11_gas int,feb11_miles int,feb11_gas int,jan11_miles int,jan11_gas int, dec10_miles int, dec10_gas int, nov10_miles int, nov10_gas int, oct10_miles int, oct10_gas int,
+sep10_miles int, sep10_gas int,aug10_miles int, aug10_gas int,jul10_miles int,jul10_gas int, jun10_miles int, jun10_gas int, may10_miles int, may10_gas int, apr10_miles int, apr10_gas int,
+mar10_miles int, mar10_gas int,feb10_miles int,feb10_gas int,jan10_miles int,jan10_gas int, dec09_miles int, dec09_gas int,nov09_miles int,nov09_gas int, oct09_miles int,oct09_gas int,
+sep09_miles int, sep09_gas int, aug09_miles int,aug09_gas int,jul09_miles int,jul09_gas int,jun09_miles int, jun09_gas int,may09_miles int,may09_gas int,apr09_miles int,apr09_gas int,
+mar09_miles int, mar09_gas int, feb09_miles int,feb09_gas int,jan09_miles int,jan09_gas int) STORED AS ORC;
+
+# Load data into table geolocation
+$ insert into table truck_iot.geolocation_orc SELECT * FROM truck_iot.geolocation_raw;
+
+# Load data into table trucks
+$ insert into table truck_iot.trucks_orc SELECT * FROM truck_iot.trucks_raw;</pre>
+
+<p>
+Now rerun the basic stats query and check again the execution time
+</p>
+<pre class="code"># Get the top ten trucks with the highest velocity/speed
+select * from truck_iot.geolocation_raw order by velocity desc limit 10;
+
+# Get all event a truck can get
+select distinct(event) from truck_iot.geolocation_raw limit 10;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Transform the data in orc format&quot;,&quot;hid&quot;:&quot;transform_the_data_in_orc_format&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;4374-7486&quot;} -->
+<h2 class="sectionedit6" id="advance_analysis_with_hive">3 Advance analysis with hive</h2>
+<div class="level2">
+
+<p>
+The manager wants to know two things:
+</p>
+<ul>
+<li class="level1"><div class="li"> Which driver is the most efficient in driving (miles per gallon)</div>
+</li>
+<li class="level1"><div class="li"> Which truck is the most efficient (miles per gallon) </div>
+</li>
+<li class="level1"><div class="li"> Which driver did the longest road.</div>
+</li>
+</ul>
+
+<p>
+We will start with our truck data table.  We need to sum up all the miles and gas columns on a per truck basis. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3 Advance analysis with hive&quot;,&quot;hid&quot;:&quot;advance_analysis_with_hive&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:6,&quot;range&quot;:&quot;7487-7847&quot;} -->
+<h3 class="sectionedit7" id="understand_the_data_and_transform_it_for_analysis">3.1 Understand the data and transform it for analysis</h3>
+<div class="level3">
+<pre class="code">
+# The following command pivots a column with temporal information into rows with two columns (1. time, 2, value). For example, the column &quot;jun13_miles&quot; with value 9217 will become two columns &quot;date&quot; with value jun13, &quot;miles&quot; with value 9217.
+
+$ CREATE TABLE truck_iot.truckmileage STORED AS ORC AS SELECT truckid, driverid, rdate, miles, gas, miles / gas mpg FROM truck_iot.trucks_orc LATERAL VIEW stack(54, &#039;jun13&#039;,jun13_miles,jun13_gas,
+&#039;may13&#039;,may13_miles,may13_gas,&#039;apr13&#039;,apr13_miles,apr13_gas,&#039;mar13&#039;,mar13_miles,mar13_gas,&#039;feb13&#039;,feb13_miles,feb13_gas,&#039;jan13&#039;,jan13_miles,jan13_gas,&#039;dec12&#039;,dec12_miles,
+dec12_gas,&#039;nov12&#039;,nov12_miles,nov12_gas,&#039;oct12&#039;,oct12_miles,oct12_gas,&#039;sep12&#039;,sep12_miles,sep12_gas,&#039;aug12&#039;,aug12_miles,aug12_gas,&#039;jul12&#039;,jul12_miles,jul12_gas,
+&#039;jun12&#039;,jun12_miles,jun12_gas,&#039;may12&#039;,may12_miles,may12_gas,&#039;apr12&#039;,apr12_miles,apr12_gas,&#039;mar12&#039;,mar12_miles,mar12_gas,&#039;feb12&#039;,feb12_miles,feb12_gas,&#039;jan12&#039;,jan12_miles,jan12_gas,
+&#039;dec11&#039;,dec11_miles,dec11_gas,&#039;nov11&#039;,nov11_miles,nov11_gas,&#039;oct11&#039;,oct11_miles,oct11_gas,&#039;sep11&#039;,sep11_miles,sep11_gas,&#039;aug11&#039;,aug11_miles,aug11_gas,&#039;jul11&#039;,jul11_miles,jul11_gas,
+&#039;jun11&#039;,jun11_miles,jun11_gas,&#039;may11&#039;,may11_miles,may11_gas,&#039;apr11&#039;,apr11_miles,apr11_gas,&#039;mar11&#039;,mar11_miles,mar11_gas,&#039;feb11&#039;,feb11_miles,feb11_gas,&#039;jan11&#039;,jan11_miles,jan11_gas,
+&#039;dec10&#039;,dec10_miles,dec10_gas,&#039;nov10&#039;,nov10_miles,nov10_gas,&#039;oct10&#039;,oct10_miles,oct10_gas,&#039;sep10&#039;,sep10_miles,sep10_gas,&#039;aug10&#039;,aug10_miles,aug10_gas,&#039;jul10&#039;,jul10_miles,jul10_gas,
+&#039;jun10&#039;,jun10_miles,jun10_gas,&#039;may10&#039;,may10_miles,may10_gas,&#039;apr10&#039;,apr10_miles,apr10_gas,&#039;mar10&#039;,mar10_miles,mar10_gas,&#039;feb10&#039;,feb10_miles,feb10_gas,&#039;jan10&#039;,jan10_miles,jan10_gas,
+&#039;dec09&#039;,dec09_miles,dec09_gas,&#039;nov09&#039;,nov09_miles,nov09_gas,&#039;oct09&#039;,oct09_miles,oct09_gas,&#039;sep09&#039;,sep09_miles,sep09_gas,&#039;aug09&#039;,aug09_miles,aug09_gas,&#039;jul09&#039;,jul09_miles,jul09_gas,
+&#039;jun09&#039;,jun09_miles,jun09_gas,&#039;may09&#039;,may09_miles,may09_gas,&#039;apr09&#039;,apr09_miles,apr09_gas,&#039;mar09&#039;,mar09_miles,mar09_gas,&#039;feb09&#039;,feb09_miles,feb09_gas,&#039;jan09&#039;,jan09_miles,jan09_gas) 
+dummyalias AS rdate, miles, gas;
+
+# check the geneated table
+select * from truck_iot.truckmileage limit 10;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Understand the data and transform it for analysis&quot;,&quot;hid&quot;:&quot;understand_the_data_and_transform_it_for_analysis&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:7,&quot;range&quot;:&quot;7848-10077&quot;} -->
+<h3 class="sectionedit8" id="which_driver_is_the_most_efficient_in_driving_miles_per_gallon">3.2 Which driver is the most efficient in driving (miles per gallon)</h3>
+<div class="level3">
+
+<p>
+We want to calculate the average miles per gallon for all drivers and take the top ten most efficient
+</p>
+<pre class="code"># calculate the average mpg for each truck
+SELECT driverid, avg(mpg) avgmpg FROM truck_iot.truckmileage GROUP BY driverid;
+
+# Save the result in a new table
+CREATE TABLE truck_iot.avgmileage_drivers STORED AS ORC AS SELECT driverid, avg(mpg) avgmpg FROM truck_iot.truckmileage GROUP BY driverid;
+
+# check the genereated result
+select * from truck_iot.avgmileage_drivers order by avgmpg desc limit 10;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Which driver is the most efficient in driving (miles per gallon)&quot;,&quot;hid&quot;:&quot;which_driver_is_the_most_efficient_in_driving_miles_per_gallon&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:8,&quot;range&quot;:&quot;10078-10674&quot;} -->
+<h3 class="sectionedit9" id="which_truck_is_the_most_efficient_miles_per_gallon">3.3 Which truck is the most efficient (miles per gallon)</h3>
+<div class="level3">
+
+<p>
+We want to calculate the average miles per gallon for all trucks and take the top ten most efficient
+</p>
+<pre class="code"># calculate the average mpg for each truck
+SELECT truckid, avg(mpg) avgmpg FROM truck_iot.truckmileage GROUP BY truckid;
+
+# Save the result in a new table
+CREATE TABLE truck_iot.avgmileage_trucks STORED AS ORC AS SELECT truckid, avg(mpg) avgmpg FROM truck_iot.truckmileage GROUP BY truckid;
+
+# check the genereated result
+select * from truck_iot.avgmileage_trucks order by avgmpg desc limit 10;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Which truck is the most efficient (miles per gallon)&quot;,&quot;hid&quot;:&quot;which_truck_is_the_most_efficient_miles_per_gallon&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;10675-11253&quot;} -->
+<h3 class="sectionedit10" id="which_driver_did_the_longest_road">3.4 Which driver did the longest road.</h3>
+<div class="level3">
+<pre class="code"># Create Table DriverMileage from Existing truckmileage data
+$ CREATE TABLE truck_iot.DriverMileage STORED AS ORC AS SELECT driverid, sum(miles) totmiles FROM truck_iot.truckmileage GROUP BY driverid;
+
+# 
+$ select * from truck_iot.DriverMileage order by totmiles DESC limit 10; </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 Which driver did the longest road.&quot;,&quot;hid&quot;:&quot;which_driver_did_the_longest_road&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;11254-11597&quot;} -->
+<h2 class="sectionedit11" id="appendix">Appendix</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Appendix&quot;,&quot;hid&quot;:&quot;appendix&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;11598-11619&quot;} -->
+<h3 class="sectionedit12" id="a1_alter_external_table_name">A.1 Alter external table name</h3>
+<div class="level3">
+
+<p>
+You must have noticed, we can&#039;t change the external table name. To alter the name, we need to first convert the external table to managed table
+</p>
+<pre class="code">ALTER TABLE truck_iot.geolocation SET TBLPROPERTIES(&#039;EXTERNAL&#039;=&#039;FALSE&#039;);
+ALTER TABLE truck_iot.geolocation RENAME TO truck_iot.geolocation_raw;
+ALTER TABLE truck_iot.geolocation_raw SET TBLPROPERTIES(&#039;EXTERNAL&#039;=&#039;TRUE&#039;);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A.1 Alter external table name&quot;,&quot;hid&quot;:&quot;a1_alter_external_table_name&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:12,&quot;range&quot;:&quot;11620-12041&quot;} -->
+<h3 class="sectionedit13" id="a2_hive_supported_data_storage_formats">A.2 Hive supported data storage formats</h3>
+<div class="level3">
+
+<p>
+Hive supports TextFile, SequenceFile, RCFile, AVRO, ORC and Parquet as data storage format.
+</p>
+<ul>
+<li class="level1"><div class="li"> TextFile: is the default format, Data is stored in lines, with each line being a record. Each line is terminated by a newline character (\n).</div>
+</li>
+<li class="level1"><div class="li"> Sequence files: are Hadoop flat files which stores values in binary key-value pairs.</div>
+</li>
+<li class="level1"><div class="li"> RCFile: is row columnar file format. This is another form of Hive file format which offers high row-level compression rates.</div>
+</li>
+<li class="level1"><div class="li"> AVRO: is open source project that provides data serialization and data exchange services for Hadoop. You can exchange data between Hadoop eco-system and program written in any programming languages</div>
+</li>
+<li class="level1"><div class="li"> ORC: stands for Optimized Row Columnar file format. provides a highly efficient way to store data in the Hive table. This file system was actually designed to overcome limitations of the other Hive file formats. The Use of ORC files improves performance when Hive is reading, writing, and processing data from large tables.</div>
+</li>
+<li class="level1"><div class="li"> Parquet: is a column-oriented binary file format. The parquet is highly efficient for the types of large-scale queries. Parquet is especially good for queries scanning particular columns within a particular table</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A.2 Hive supported data storage formats&quot;,&quot;hid&quot;:&quot;a2_hive_supported_data_storage_formats&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:13,&quot;range&quot;:&quot;12042-13297&quot;} -->
+<h3 class="sectionedit14" id="a3_database_and_schema_in_hive">A.3 Database and Schema in hive</h3>
+<div class="level3">
+
+<p>
+Database and schema in a hive server are the same things, Hive will create a new directory in the hive warehouse path(HDFS)to store all table information of the databases or schemas.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A.3 Database and Schema in hive&quot;,&quot;hid&quot;:&quot;a3_database_and_schema_in_hive&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:14,&quot;range&quot;:&quot;13298-13524&quot;} -->
+<h2 class="sectionedit15" id="common_errors">Common Errors</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common Errors&quot;,&quot;hid&quot;:&quot;common_errors&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:15,&quot;range&quot;:&quot;13525-13551&quot;} -->
+<h3 class="sectionedit16" id="failed_to_load_csv_files_to_the_tables_stored_as_orc">1. Failed to load csv files to the tables stored as orc</h3>
+<div class="level3">
+
+<p>
+If we create a table with stored as orc, we <strong>can not</strong> load csv file directly into it. To load csv, we must create a table stored as TextFile. Then use 
+</p>
+<pre class="code">$ Load data inpath &#039;path/to/csv&#039; into table text_table;
+
+$ insert into table orc_table SELECT * from text_table;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Failed to load csv files to the tables stored as orc&quot;,&quot;hid&quot;:&quot;failed_to_load_csv_files_to_the_tables_stored_as_orc&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:16,&quot;range&quot;:&quot;13552-&quot;} -->

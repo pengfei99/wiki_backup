@@ -1,0 +1,11 @@
+====== Annuaire Pasteur ======
+
+> //Configuration donnée par **Gabriel De Miranda**//
+
+Pour accéder à internet il ne faut pas de configuration particulière. Par contre, pour accéder à l'annuaire il faut passer par le proxy Pasteur. Le passage par le proxy ralentit considérablement l'accès à internet.
+
+Dans **Firefox** : ''Fichier > Options > Avancé > Réseau > Connexions > Paramètres...''
+
+Dans ''Configuration manuelle du proxy'' taper ''cache.pasteur.fr'' et choisir le port ''8080''. Cocher ensuite la case ''Utiliser ce serveur proxy pour tous les autres protocoles''.
+
+Sur **Firefox**, et peut-être sur d'autres navigateur, il existe une astuce pour ne passer par le proxy que pour consulter l'annuaire. Pour ce faire il faut créer un raccourci qui passe l'option ''-P <profile>'' lors du démarrage et [[http://kb.mozillazine.org/Profile_Manager|créer un second profile]] uniquement pour l'accès à l'annuaire. L'option ''-no-remote'' permet d'ouvrir les 2 fenêtres à la fois.

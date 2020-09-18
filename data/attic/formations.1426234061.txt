@@ -1,0 +1,53 @@
+====== Formations ======
+
+===== Contribuer =====
+
+Les formations ne sont pas des présentations ! Elles n'ont pas forcement vocation à être présentées devant un auditoire. Les diapo doivent donc être compréhensibles sans commentaires !
+
+Les documents sont écrits en [[http://remarkjs.com|remarkjs]] qui utilise la syntaxe [[http://daringfireball.net/projects/markdown/|markdown]]. Celle-ci est très facile à apprendre.  
+
+Le code pour les formations est géré avec [[/bioinformatique/outils/bazaar|Bazaar]], est peut donc être récupéré comme ceci :
+
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/~tlecarro/repo/presentations/gnu_bazaar/
+
+===== Présentations disponibles =====
+
+Les présentations sont accessibles en ligne ici : [[http://presentations.bioaster.local]]
+
+  - [[http://presentations.bioaster.local/presentations/courriels|Un courriel c'est quoi ?]]
+  - [[http://presentations.bioaster.local/presentations/transfert_de_courriel|Comment voyagent-ils ?]]
+  - [[http://presentations.bioaster.local/presentations/securite|Comment les sécuriser]] ?! (Échanges sur internet)
+    * <del>Rappels : courriel = texte ; beaucoup d'intermédiaires dont on ne peut se passer (liens vers les 2 présentations)</del> 
+    * <del>Le contenu (chiffrement du corps : DSA, RSA) ou le contenant (chiffrement de la connexion : SSL/TLS)</del>
+    * Historique du chiffrement
+    * <del>PKI</del>
+        * <del>Clé vs MdP</del>
+        * <del>X.509 (certificats)</del>
+        * <del>OpenPGP (centralisé et décentralisé, WebOfTrust)</del>
+    * Utilisation des Certificats
+        * Authentifications des serveurs et services (plus de phishing)
+            * HTTPS, SSL, exception de sécurité (accepter certificat, attention au Man in the middle), ajout d'un CA (BIOASTER)
+            * Authentifications auprès des services (plus de mot de passe, révocation)
+        * wiki BIOASTER
+        * Chiffrement et Signature des courriels
+
+  * [[http://presentations.bioaster.local/presentations/gnu_bazaar|GNU Bazaar : La gestion de version pour les nuls !]]
+  * Liberté, Égalité, Fraternité : Propriétaire vs Ouvert vs Libre
+  * Mathématique de la cryptographie
+  * SSH
+    * Fonctionnement (PKI)
+    * Usage
+    * Configuration
+    * Bonnes pratiques
+  * [[http://presentations.bioaster.local/presentations/informatique|Les autres trucs de geek]]
+    - Hexadécimal
+    - Base64
+    - Wiki
+    - Nétiquette (posting styles)
+    - Tor
+    - Doodle
+    - RSS
+    - Framasoft (Etherpad)
+    - "Propriété Intellectuelle"
+
+{{tag>todo}}

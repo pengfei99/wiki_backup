@@ -1,0 +1,37 @@
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> AppBundle\Model\Person<span class="sy0">;</span>
+<span class="kw2">use</span> AppBundle\Form\Type\PersonType<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> PersonController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+    <span class="co4">/**
+     * @Route(&quot;/persons/new&quot;, name=&quot;person_new&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> newAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$person</span> <span class="sy0">=</span> <span class="kw2">new</span> Person<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$form</span> <span class="sy0">=</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">createForm</span><span class="br0">&#40;</span><span class="kw2">new</span> PersonType<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="re0">$person</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$request</span> <span class="sy0">=</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">getRequest</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">handleRequest</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">isSubmitted</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">isValid</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <span class="re0">$person</span><span class="sy0">-&gt;</span><span class="me1">save</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+            <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'session'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">getFlashBag</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">add</span><span class="br0">&#40;</span>
+                <span class="st_h">'notice'</span><span class="sy0">,</span>
+                <span class="st_h">'Les données ont été enregistrées !'</span>
+            <span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+            <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">redirect</span><span class="br0">&#40;</span><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">generateUrl</span><span class="br0">&#40;</span><span class="st_h">'person_show'</span><span class="sy0">,</span>
+                                                      <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'id'</span> <span class="sy0">=&gt;</span> <span class="re0">$person</span><span class="sy0">-&gt;</span><span class="me1">getId</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'person/new.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'form'</span> <span class="sy0">=&gt;</span> <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">createView</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>

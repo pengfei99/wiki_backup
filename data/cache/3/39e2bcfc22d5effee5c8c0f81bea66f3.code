@@ -1,0 +1,30 @@
+# This option enables our SSL support for vsftpd.
+<span class="re1">ssl_enable</span><span class="sy0">=</span><span class="re2">YES</span>
+&nbsp;
+#Prevent anonymous SSL/TLS encrypted login, in essence the guest user.
+<span class="re1">allow_anon_ssl</span><span class="sy0">=</span><span class="re2">NO</span>
+&nbsp;
+# We’re going to force SSL/TLS encryption of both your username/password and your data to keep it safe.
+<span class="re1">force_local_data_ssl</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">force_local_logins_ssl</span><span class="sy0">=</span><span class="re2">YES</span>
+&nbsp;
+# Use the stronger, better, encryption offered by TLS <span class="nu0">1.1</span> and <span class="nu0">1.2</span>.
+<span class="re1">ssl_tlsv1_1</span><span class="sy0">=</span><span class="re2">YES</span>
+<span class="re1">ssl_tlsv1_2</span><span class="sy0">=</span><span class="re2">YES</span>
+&nbsp;
+# TLS <span class="nu0">1.0</span> is getting a little more insecure than we would like, so we are going to disable it. Please note that some older FTP clients are not compatible with newer TLS versions and may require this option to be set to “YES”.
+<span class="re1">ssl_tlsv1</span><span class="sy0">=</span><span class="re2">NO</span>
+&nbsp;
+# To keep the FTP connections safe against the BEAST and POODLE vulnerabilities we are going to disable SSLv2 and SSLv3.
+<span class="re1">ssl_sslv2</span><span class="sy0">=</span><span class="re2">NO</span>
+<span class="re1">ssl_sslv3</span><span class="sy0">=</span><span class="re2">NO</span>
+&nbsp;
+# Continuing our security improvements we are going to add some additional protection against Man In The Middle <span class="br0">&#40;</span>MITM<span class="br0">&#41;</span> attacks by enabling the following. This may not be compatible with some older FTP clients. If you experience connection loss try setting this option to “NO”.
+<span class="re1">require_ssl_reuse</span><span class="sy0">=</span><span class="re2">YES</span>
+&nbsp;
+# This will require the server to use stronger cipher suites.
+<span class="re1">ssl_ciphers</span><span class="sy0">=</span><span class="re2">HIGH</span>
+&nbsp;
+# Lastly, our crt and key file.
+<span class="re1">rsa_cert_file</span><span class="sy0">=</span><span class="re2">/etc/pki/tls/certs/ftp.crt</span>
+<span class="re1">rsa_private_key_file</span><span class="sy0">=</span><span class="re2">/etc/pki/tls/private/ftp.key</span>

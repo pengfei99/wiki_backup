@@ -1,0 +1,34 @@
+sciforma=&gt; select * from sciforma.&quot;BA_shib_LaborAsgn&quot;;
+ _Project_IID | _Res_IID | _Task_IID | Resource__FirstNam | Resource__ID |    Res_Name    |      AD_ID
+--------------+----------+-----------+--------------------+--------------+----------------+-----------------
+        19623 |     4337 |     21103 | Bettina            | BW           | WERLE          | bwerle
+        19623 |     4300 |     19700 | Adrien             | AL           | LUGARI         | alugari
+        19623 |     4300 |     19702 | Adrien             | AL           | LUGARI         | alugari
+        19623 |     4335 |     21104 | Christophe         | CV           | VEDRINE        | cvedrine
+        19623 |     4248 |     21053 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4248 |     19717 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19717 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19719 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19719 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19721 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19721 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19723 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4248 |     21054 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19727 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19727 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4306 |     19736 | Xavier             | XM           | MENICHE        | xmeniche
+        19623 |     4255 |     19736 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        19623 |    35670 |     19736 |                    | QTof         | QTof           | qtof
+        19623 |     4306 |     19738 | Xavier             | XM           | MENICHE        | xmeniche
+        19623 |     4255 |     19738 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        19623 |    35670 |     19738 |                    | QTof         | QTof           | qtof
+        19623 |     4335 |     21105 | Christophe         | CV           | VEDRINE        | cvedrine
+        19623 |     4273 |     21105 | Céline             | CC           | COUTURIER      | ccouturier
+        19623 |     4273 |     19743 | Céline             | CC           | COUTURIER      | ccouturier
+        14889 |     4283 |     15984 | Christelle         | CBO          | BOISSE         | cboisse
+        14889 |     4263 |     14917 | Andrei             | ABU          | BUNESCU        | abunescu
+        14889 |     3922 |     14917 | Djomangan Adama    | DAO          | OUATTARA       | douattara
+        14889 |     4306 |     14917 | Xavier             | XM           | MENICHE        | xmeniche
+        14889 |     4255 |     14917 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        14889 |     4283 |     14917 | Christelle         | CBO          | BOISSE         | cboisse
+        14889 |    35669 |     14917 |                    | RMN          | RMN            | rmn

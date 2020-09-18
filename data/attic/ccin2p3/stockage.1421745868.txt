@@ -1,0 +1,14 @@
+====== Espace de stockage ======
+
+===== AFS : Andrew File System =====
+
+
+
+===== SPS : ?!? =====
+
+<code text>
+$ spsquota list /sps/inter/bioaster
+Fileset quota for '/sps/inter/bioaster': Explicit quota defined
+Space used:     47.31 GB, Hard quota:         1 TB, Soft quota:         1 TB
+Files used:          364, Hard quota:          1 M, Soft quota:          1 M
+</code>

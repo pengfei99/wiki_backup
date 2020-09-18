@@ -1,0 +1,19 @@
+$ php app<span class="sy0">/</span>console doctrine:migrations:status
+&nbsp;
+ == Configuration
+&nbsp;
+    <span class="sy0">&gt;&gt;</span> Name:                                               Application Migrations
+    <span class="sy0">&gt;&gt;</span> Database Driver:                                    pdo_mysql
+    <span class="sy0">&gt;&gt;</span> Database Name:                                      hector
+    <span class="sy0">&gt;&gt;</span> Configuration Source:                               manually configured
+    <span class="sy0">&gt;&gt;</span> Version Table Name:                                 migration_versions
+    <span class="sy0">&gt;&gt;</span> Migrations Namespace:                               Application\Migrations
+    <span class="sy0">&gt;&gt;</span> Migrations Directory:                               app<span class="sy0">/</span>DoctrineMigrations
+    <span class="sy0">&gt;&gt;</span> Previous Version:                                   Already at first version
+    <span class="sy0">&gt;&gt;</span> Current Version:                                    <span class="nu0">0</span>
+    <span class="sy0">&gt;&gt;</span> Next Version:                                       <span class="nu0">2015</span>-09-<span class="nu0">29</span> <span class="nu0">14</span>:<span class="nu0">34</span>:<span class="nu0">19</span> <span class="br0">&#40;</span><span class="nu0">20150929143419</span><span class="br0">&#41;</span>
+    <span class="sy0">&gt;&gt;</span> Latest Version:                                     <span class="nu0">2015</span>-09-<span class="nu0">29</span> <span class="nu0">14</span>:<span class="nu0">34</span>:<span class="nu0">19</span> <span class="br0">&#40;</span><span class="nu0">20150929143419</span><span class="br0">&#41;</span>
+    <span class="sy0">&gt;&gt;</span> Executed Migrations:                                <span class="nu0">0</span>
+    <span class="sy0">&gt;&gt;</span> Executed Unavailable Migrations:                    <span class="nu0">0</span>
+    <span class="sy0">&gt;&gt;</span> Available Migrations:                               <span class="nu0">1</span>
+    <span class="sy0">&gt;&gt;</span> New Migrations:                                     <span class="nu0">1</span>

@@ -1,0 +1,135 @@
+{
+  &quot;structDefs&quot;: [
+    {
+      &quot;category&quot;: &quot;STRUCT&quot;,
+      &quot;name&quot;: &quot;schema_col&quot;,
+      &quot;description&quot;: &quot;column definition for schema&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;col&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;data_type&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;required&quot;,
+          &quot;typeName&quot;: &quot;boolean&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ],
+  &quot;entityDefs&quot;: [
+    {
+      &quot;superTypes&quot;: [
+        &quot;DataSet&quot;
+      ],
+      &quot;category&quot;: &quot;ENTITY&quot;,
+      &quot;name&quot;: &quot;GPFSDataFile&quot;,
+      &quot;description&quot;: &quot;a type definition for a file in gpfs which contains data, this could a file that needs to be processed or it can be an output (ex: extracts)&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;file_name&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;parent_dir&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;user&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;group&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;permission&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;creation_time&quot;,
+          &quot;typeName&quot;: &quot;date&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;format&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;schema&quot;,
+          &quot;typeName&quot;: &quot;array&lt;schema_col&gt;&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+$ lighttpd-enable-mod accesslog fastcgi
+$ service lighttpd force-reload

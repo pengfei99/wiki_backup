@@ -1,0 +1,11 @@
+====== Montage de l'espace GPFS dans une VM via NFS ======
+
+Cette recette n'est valable que pour un montage NFS version 3. A terme, nous devrions passer à la version 4 qui modifiera le mode d'authentification (tickets Kerberos). 
+
+Installation du client NFS sur la VM
+
+Paramétrage du client 
+
+Mapping des UID et GID
+
+Montage de l'espace  

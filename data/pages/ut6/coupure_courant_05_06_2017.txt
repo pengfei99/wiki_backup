@@ -1,0 +1,83 @@
+====== Inventaire des VMs sur B1 opérées par utec6======
+
+vm name : biospecimen, ip : 10.69.40.11, os : FreeBSD, service : biospecimen-prod
+
+vm name : biospecimen-dev, ip : 10.69.40.12, os : FreeBSD, service : biospecimen-dev
+
+vm name : DataManageBC, ip : 10.69.20.16, os : FreeBSD, service : data transfer de B1 au CC.
+
+vm name : drtpt202, ip : 192.168.122.1, os : FreeBSD, service : vm de calcul utec02.
+
+vm name : Freenas, ip : 10.69.2.12, os : FreeBSD, service : Server freenas.
+
+vm name : B1WinBNP01, ip : 10.69.3.30, os : Windows, service : Logiciel Bionumerics.
+
+vm name : B1LinAnsibleP01, ip : 10.69.2.242, os : CentOS, service : Machine Ansible master.
+
+vm name : B1WinBiomedic, ip : 10.69.3.11, os : Windows, service : Server de données biomédicales.
+
+vm name : Gentran2, ip : 10.69.20.15, os : SL6, service : Vm analyses UTEC02
+
+
+====== Plan d'arret ======
+
+===== biospecimen prod et dev=====
+
+==== Arrêt vendredi (02-06-2017) soir ====
+
+C'est conseille de arreter les services en utilisant l'ordre suivant.
+<Code>
+1. stop apache web server 
+2. stop mysql db server
+3. stop sendmaild
+4. shut down vm
+</Code>
+
+<Code>
+#Stop Apache
+/usr/local/etc/rc.d/apache24 stop
+
+#Stop mysql db server
+/usr/local/etc/rc.d/mysql-server stop
+
+#Stop send mail
+cd /etc/mail
+make stop
+</Code>
+
+==== Reprise de service (05-06-2017) ====
+Il est conseillé de démarrer les services en utilisant l'ordre suivant.
+<Code>
+1. Start vm and check http status, if it's ok skip the following steps
+2. start mysql db server
+3. start sendmail service
+4. start apache web server
+5. check http status
+</Code>
+
+Reprise de service automatisée
+
+Sur /etc/rc.conf, j'ai déjà ajouté
+
+<Code>
+mysql_enable="YES"
+sendmail_enable="YES"
+apache24_enable="yes"
+</Code>
+
+''Normalement, au démmarage, les 3 services se lancent automatiquement.''
+
+Si ça ne redémarre pas automatiquement, utiliser la commande suivant
+<Code>
+#Start mysql db server
+/usr/local/etc/rc.d/mysql-server start
+
+#Start send mail
+cd /etc/mail
+make start
+
+#Start Apache
+/usr/local/etc/rc.d/apache24 start
+</Code>
+
+

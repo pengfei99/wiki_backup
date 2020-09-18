@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Détails sur l'ISBN #{{ book.isbn }}
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Détails sur l'ISBN #{{ book.isbn }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/dl.html"><span class="kw2">dl</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;dl-horizontal&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;</span>ISBN<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;&lt;<a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>{{ book.isbn }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;</span>Titre<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;&lt;<a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>{{ book.title|capitalize }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dl.html"><span class="kw2">dl</span></a>&gt;</span>
+{% endblock %}

@@ -1,0 +1,346 @@
+
+<h1 class="sectionedit1" id="lesson03introduction_of_spark_shell_and_spark_ui">Lesson03: Introduction of spark shell and spark UI</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson03: Introduction of spark shell and spark UI&quot;,&quot;hid&quot;:&quot;lesson03introduction_of_spark_shell_and_spark_ui&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-66&quot;} -->
+<h2 class="sectionedit2" id="start_a_spark_shell">3.1 start a spark shell</h2>
+<div class="level2">
+
+<p>
+if You have a spark cluster, you can use the following command to run your spark shell
+</p>
+<pre class="code">spark-shell --master 
+yarn-client </pre>
+
+<p>
+if you have a local install you can use the 
+</p>
+<pre class="code">spark-shell --master local[0]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 start a spark shell&quot;,&quot;hid&quot;:&quot;start_a_spark_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;67-330&quot;} -->
+<h2 class="sectionedit3" id="understand_the_spark_context">3.2 understand the spark context</h2>
+<div class="level2">
+
+<p>
+After you run the spark shell, you will have some thing like this
+</p>
+<pre class="code">20/06/23 11:03:06 WARN Utils: Your hostname, localhost.localdomain resolves to a loopback address: 127.0.0.1; using 192.168.184.128 instead (on interface ens33)
+20/06/23 11:03:06 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+20/06/23 11:03:06 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Using Spark&#039;s default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to &quot;WARN&quot;.
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://192.168.184.128:4040
+Spark context available as &#039;sc&#039; (master = local[*], app id = local-1592902990828).
+Spark session available as &#039;spark&#039;.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  &#039;_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.4.6
+      /_/
+         
+Using Scala version 2.11.12 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_251)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+
+scala&gt; 
+</pre>
+
+<p>
+This means your spark is up running, to understand your spak context u can type the following command
+</p>
+<pre class="code">scala&gt; sc.version
+res0: String = 1.6.0
+
+scala&gt; sc.master
+res1: String = yarn-client
+
+scala&gt; sc.appName
+res2: String = Spark shell
+
+#this shows you have two workers in your cluster which can run your spark job
+scala&gt; sc.defaultParallelism
+res8: Int = 2
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 understand the spark context&quot;,&quot;hid&quot;:&quot;understand_the_spark_context&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;331-1942&quot;} -->
+<h2 class="sectionedit4" id="run_a_simple_spark_application">3.3 Run a simple spark application</h2>
+<div class="level2">
+
+<p>
+We will do a little word count with the created spark-shell. First create a file and put some words in it
+</p>
+<pre class="code">vim /tmp/word_count.txt
+
+# in spark-shell
+# This code will count the word number can write the result in /tmp/word_count_result
+scala&gt; sc.textFile(&quot;/tmp/word_count.txt&quot;).flatMap(x=&gt;x.split(&quot; &quot;)).map(x=&gt;(x,1)).reduceByKey((x,y)=&gt;x+y).saveAsTextFile(&quot;/tmp/word_count_result&quot;) 
+
+# In the output file, you can find 
+[pliu@localhost word_count_result]$ ls
+part-00000  part-00001  _SUCCESS</pre>
+
+<p>
+Note the default partition is 2, which means the parallelism level of the calculation is 2 (2 tasks for each stage). The output is exactly like the Hadoop MapReduce output:
+</p>
+<ul>
+<li class="level1"><div class="li"> part-0000*: are the files which contain the result because the default partition is 2. So the result also has 2 partitions. </div>
+</li>
+<li class="level1"><div class="li"> _SUCCESS: Status of your application</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Run a simple spark application&quot;,&quot;hid&quot;:&quot;run_a_simple_spark_application&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;1943-2842&quot;} -->
+<h2 class="sectionedit5" id="explore_spark_web_ui">3.4 Explore spark web UI</h2>
+<div class="level2">
+
+<p>
+When you run the spark-shell, you should see the following line in your console
+</p>
+<pre class="code">Spark context Web UI available at http://192.168.184.128:4040</pre>
+
+<p>
+This <abbr title="Uniform Resource Locator">URL</abbr> is the your spark web UI. Open it in a web browser, you should see the following page
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_shell&amp;media=employes:pengfei.liu:big_data:spark:spark_web_ui.png" class="media" title="employes:pengfei.liu:big_data:spark:spark_web_ui.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=d5ff42&amp;media=employes:pengfei.liu:big_data:spark:spark_web_ui.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+Note this web UI is launched by the driver of your spark application(in our case, the application is spark-shell), so if you close spark-shell, the web UI will be closed too.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 Explore spark web UI&quot;,&quot;hid&quot;:&quot;explore_spark_web_ui&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;2843-3374&quot;} -->
+<h3 class="sectionedit6" id="stages">3.4.1 Stages</h3>
+<div class="level3">
+
+<p>
+After you finish the above word count, you could find there are two stages in the stage page.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_shell&amp;media=employes:pengfei.liu:big_data:spark:spark_stages.png" class="media" title="employes:pengfei.liu:big_data:spark:spark_stages.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=6d777a&amp;media=employes:pengfei.liu:big_data:spark:spark_stages.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+You can check the details of each stage
+</p>
+<ul>
+<li class="level1"><div class="li"> Tasks of this stage</div>
+</li>
+<li class="level1"><div class="li"> Event Timeline</div>
+</li>
+<li class="level1"><div class="li"> DAG of this stage</div>
+</li>
+</ul>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_shell&amp;media=employes:pengfei.liu:big_data:spark:spark_stage_detail.png" class="media" title="employes:pengfei.liu:big_data:spark:spark_stage_detail.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=9df859&amp;media=employes:pengfei.liu:big_data:spark:spark_stage_detail.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+In our example, as our partition number is 2, so we have 2 tasks. The event timeline shows the details time spent on each task. The DAG shows who spark organize the data processing instructions.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_shell&amp;media=employes:pengfei.liu:big_data:spark:spark_word_count_dag1.png" class="media" title="employes:pengfei.liu:big_data:spark:spark_word_count_dag1.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=fa6b7d&amp;media=employes:pengfei.liu:big_data:spark:spark_word_count_dag1.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+The first stage has three blocks
+</p>
+<ul>
+<li class="level1"><div class="li"> read file</div>
+</li>
+<li class="level1"><div class="li"> flatMap</div>
+</li>
+<li class="level1"><div class="li"> map</div>
+</li>
+</ul>
+
+<p>
+The second stage has two blocks
+</p>
+<ol>
+<li class="level1"><div class="li"> reduceByKey</div>
+</li>
+<li class="level1"><div class="li"> saveAsTextFile</div>
+</li>
+</ol>
+
+<p>
+You can notice, we create a new stage when we encounter a shuffle(transfer data between node). Here the shuffle is caused by reduceBykey
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4.1 Stages&quot;,&quot;hid&quot;:&quot;stages&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:6,&quot;range&quot;:&quot;3375-4279&quot;} -->
+<h2 class="sectionedit7" id="understand_spark_session">3.5 Understand spark session</h2>
+<div class="level2">
+
+<p>
+Since spark 2.0, the spark session has been introduced, it encapsulates the existing Spark Context therefore existing functionality should not be affected and developers may continue using the Spark Context as desired
+</p>
+
+<p>
+In earlier versions of spark, spark context was entry point for Spark. As RDD was main <abbr title="Application Programming Interface">API</abbr>, it was created and manipulated using context API’s. For every other <abbr title="Application Programming Interface">API</abbr>,we needed to use different contexts.For streaming, we needed StreamingContext, for SQL sqlContext and for hive HiveContext. But as DataSet and Dataframe API’s are becoming new standard API’s we need an entry point build for them. So in Spark 2.0, we have a new entry point for DataSet and Dataframe API’s called as Spark Session.
+</p>
+
+<p>
+SparkSession is essentially combination of SQLContext, HiveContext and future StreamingContext. All the API’s available on those contexts are available on spark session also. Spark session internally has a spark context for actual computation.
+</p>
+
+<p>
+When you run spark-shell, a spark session is automatically created. You can check it
+</p>
+<pre class="code">#get spark session information
+scala&gt; :type spark
+org.apache.spark.sql.SparkSession
+
+#read csv data to output in a dataframe
+val inputFile = &quot;file:///tmp/satisfait.csv&quot;
+import org.apache.spark.sql.types._
+val schema = StructType(Array(
+      StructField(&quot;manager_name&quot;,StringType,false),
+      StructField(&quot;client_name&quot;,StringType,false),
+      StructField(&quot;client_gender&quot;,StringType,false),
+      StructField(&quot;client_age&quot;,IntegerType,false),
+      StructField(&quot;response_time&quot;,DoubleType,false),
+      StructField(&quot;satisfaction_level&quot;,DoubleType,false)
+    ))
+val df = spark.read.format(&quot;com.databricks.spark.csv&quot;).option(&quot;header&quot;, &quot;true&quot;).schema(schema).load(inputFile)
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.5 Understand spark session&quot;,&quot;hid&quot;:&quot;understand_spark_session&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:7,&quot;range&quot;:&quot;4280-6066&quot;} -->
+<h2 class="sectionedit8" id="create_simple_rdd_in_spark">Create simple RDD in spark</h2>
+<div class="level2">
+
+<p>
+Create simple RDD with keyword parallelize in scala spark shell 
+</p>
+<pre class="code">#use default parallel partition which is 2 as shown above
+scala&gt; val x = sc.parallelize(1 to 1000)
+x: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at &lt;console&gt;:27
+
+#use 5 parallel partion 
+scala&gt; val x = sc.parallelize(1 to 1000,5)
+
+
+scala&gt; x.toDebugString
+res3: String = (2) ParallelCollectionRDD[0] at parallelize at &lt;console&gt;:27 []
+</pre>
+
+<p>
+There are some usefull function u can use in RDD.
+</p>
+<ul>
+<li class="level1"><div class="li"> distinct - print distinct element in your RDD</div>
+</li>
+<li class="level1"><div class="li"> union - </div>
+</li>
+<li class="level1"><div class="li"> intersection - </div>
+</li>
+<li class="level1"><div class="li"> subtract - rdd1 minus rdd2</div>
+</li>
+</ul>
+<pre class="code">scala&gt; val list1=sc.parallelize(Array(&quot;coffee&quot;,&quot;coffee&quot;,&quot;panda&quot;,&quot;monkey&quot;,&quot;tea&quot;),3)
+list1: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[0] at parallelize at &lt;console&gt;:24
+
+scala&gt; val list2=sc.parallelize(Array(&quot;coffee&quot;,&quot;monkey&quot;,&quot;kitty&quot;),3)
+list2: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[1] at parallelize at &lt;console&gt;:24
+
+scala&gt; list1.collect
+res1: Array[String] = Array(coffee, coffee, panda, monkey, tea)                 
+
+scala&gt; list2.collect
+res2: Array[String] = Array(coffee, monkey, kitty)
+
+scala&gt; list1.distinct.collect
+res4: Array[String] = Array(coffee, panda, monkey, tea)
+
+scala&gt; list1.union(list2).collect
+res5: Array[String] = Array(coffee, coffee, panda, monkey, tea, coffee, monkey, kitty)
+
+scala&gt; list1.intersection(list2).collect
+res6: Array[String] = Array(coffee, monkey)
+
+scala&gt; list1.subtract(list2).collect
+res7: Array[String] = Array(panda, tea)
+</pre>
+<pre class="code">vim /tmp/pengfei.txt
+
+#put the following text
+pengfei is great
+pengfei loves apple
+pengfei want go home
+pengfei want to sleep
+pengfei want to travel
+Testing spark
+Using spark scala shell
+</pre>
+
+<p>
+Up load this data to hdfs
+</p>
+<pre class="code">[cloudera@quickstart tmp]$ hdfs dfs -mkdir /test_data
+[cloudera@quickstart tmp]$ hdfs dfs -put /tmp/pengfei.txt /test_data/.</pre>
+<pre class="code"># Suppose we have the hdfs name node running on hdfs://hadoop-nn.pengfei.org:9000
+# build rdd based on text file on hdfs
+scala&gt; val textfile = sc.textFile(&quot;hdfs://hadoop-nn.bioaster.org:9000/test_data/pengfei.txt&quot;)
+textfile: org.apache.spark.rdd.RDD[String] = /test_data/pengfei.txt MapPartitionsRDD[5] at textFile at &lt;console&gt;:27
+
+scala&gt; textfile.toDebugString
+res5: String = 
+(2) /test_data/pengfei.txt MapPartitionsRDD[5] at textFile at &lt;console&gt;:27 []
+ |  /test_data/pengfei.txt HadoopRDD[4] at textFile at &lt;console&gt;:27 []
+
+# build rdd based on other rdd
+scala&gt; val pengfeiLines = textfile.filter(line =&gt; line.contains(&quot;pengfei&quot;))
+pengfeiLines: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[6] at filter at &lt;console&gt;:29
+
+scala&gt; pengfeiLines.toDebugString
+res6: String = 
+(2) MapPartitionsRDD[6] at filter at &lt;console&gt;:29 []
+ |  /test_data/pengfei.txt MapPartitionsRDD[5] at textFile at &lt;console&gt;:27 []
+ |  /test_data/pengfei.txt HadoopRDD[4] at textFile at &lt;console&gt;:27 []
+
+# show rdd details
+scala&gt; x.collect()
+res7: Array[Int] = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, ...
+scala&gt; sc.defaultParallelism
+res8: Int = 2
+
+scala&gt; pengfeiLines.collect()
+res9: Array[String] = Array(pengfei is great, pengfei loves apple, pengfei want go home, pengfei want to sleep, pengfei want to travel)
+
+scala&gt; val sparkLines= textfile.filter(line =&gt; line.contains(&quot;spark&quot;))
+sparkLines: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[7] at filter at &lt;console&gt;:29
+
+scala&gt; sparkLines.collect()
+res10: Array[String] = Array(Testing spark, Using spark scala shell)
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create simple RDD in spark&quot;,&quot;hid&quot;:&quot;create_simple_rdd_in_spark&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:8,&quot;range&quot;:&quot;6067-10315&quot;} -->
+<h3 class="sectionedit9" id="flatmap_vs_map_in_rdd">Flatmap vs map in RDD</h3>
+<div class="level3">
+
+<p>
+You can
+think of flatMap() as “flattening” the iterators returned to it, so that instead of ending
+up with an RDD of lists we have an RDD of the elements in those lists.
+</p>
+<pre class="code">RDD1={&quot;coffee panda&quot;,&quot;happy panda&quot;,&quot;happiest panda party&quot;}
+RDD1.map()-&gt; {[&quot;coffee&quot;, &quot;panda&quot;],[&quot;happy&quot;, &quot;panda&quot;], [&quot;happiest&quot;, &quot;panda&quot;, &quot;party&quot;]}
+RDD1.flatMap()-&gt;{&quot;coffee&quot;, &quot;panda&quot;,&quot;happy&quot;, &quot;panda&quot;,&quot;happiest&quot;, &quot;panda&quot;, &quot;party&quot;}</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flatmap vs map in RDD&quot;,&quot;hid&quot;:&quot;flatmap_vs_map_in_rdd&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:9,&quot;range&quot;:&quot;10316-&quot;} -->

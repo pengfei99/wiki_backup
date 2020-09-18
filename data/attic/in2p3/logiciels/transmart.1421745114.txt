@@ -1,0 +1,191 @@
+====== TranSMART ======
+
+===== Informations =====
+
+  * **Version** : ???
+  * **Licence** : ???
+  * **Page Web** : [[https://github.com/transmart]]
+  * **Description** : TranSMART is a knowledge management platform that enables scientists to develop and refine research hypotheses by investigating correlations between genetic and phenotypic data, and assessing their analytical results in the context of published literature and other work.
+
+===== Installation depuis la VA =====
+
+==== Le portail TranSMART ====
+
+Télécharger [[https://susestudio.com/a/tZS1y8/transmart-1-1-virtual-appliance/download/ovf|la VA]] et l'installer dans VMware comme décrit dans le [[https://wiki.transmartfoundation.org/display/TSMTGPL/tranSMART+1.1+Virtual+Appliance|wiki TranSMART]].
+
+Comment par **fixer quelques petits problèmes** de la VA :
+
+<code text>
+# Pour changer le clavier en azerty
+$ yast2
+# Hardware > System Keyboard Layout
+
+# Supression des message d'erreur "martiens"
+$ vim /etc/sysctl.conf
+  # net.ipv4.conf.eth0.log_martians = 0
+  # net.ipv4.conf.wlan0.log_martians = 0
+</code>
+
+**Reconfigurer le logiciel** pour qu'il utilise la BD qu'on va mettre en place :
+
+<code text>
+$ vim /usr/share/tomcat/.grails/transmartConfig/DataSource.groovy
+  # url = "jdbc:postgresql://192.168.0.12:5432/transmart"
+$ transmartstop
+$ transmartstart
+</code>
+
+**Copier la base de données** et l'envoyer sur le serveur de BD :
+
+<code text>
+$ su - postgres
+$ pg_dumpall > dump.sql
+$ scp dump.sql bioaster@192.168.0.12:/tmp
+</code>
+
+==== La base de données ====
+
+**Créer un serveur** indépendant pour la base de données PostgreSQL et le configurer :
+
+<code text>
+$ sudo aptitide install postgresql-client postgresql
+$ sudo adduser biomart_user
+
+# Ecouter sur tous les ports
+$ sudo vim /etc/postgresql/9.1/main/postgresql.conf
+  # listen_address = '*'
+
+# Authoriser l'utilisation distante de la base 'transmart'
+$ sudo vim /etc/postgresql/9.1/main/pg_hba.conf
+  # host    transmart    biomart_user    192.168.0.11/32    md5
+
+$ /etc/init.d/postgresql restart
+</code>
+
+**Créer la base de données** (pas nécessaire ?! obsolète à cause du pg_dumpall)
+
+<code text>
+$ sudo su - postgres
+$ psql template1
+=# CREATE USER biomart_user WITH PASSWORD 'biomart_user';
+=# CREATE DATABASE transmart;
+=# GRANT ALL PRIVILEGES ON DATABASE transmart to biomart_user;
+=# \q
+</code>
+
+**Importer le dump** :
+
+<code text>
+$ sudo su - postgres
+$ psql < /tmp/dump.sql
+</code>
+
+
+
+===== Installation "from scratch" =====
+
+Instructions : https://wiki.transmartfoundation.org/display/TSMTGPL/Installing+tranSMART+from+Source
+
+Les instructions données sont incomplètes et parfois erronées !! L'installation à partir de la VA est pour le moment conseillée.
+
+Le étapes ci-dessous sont obsolètes et d'autres tests ont été réalisés à partir d'une OpenSuse 13.1
+
+<code>
+# OS:
+#   - Debian 7 n'a pas le bon R
+#   - OpenSuse 13.1 a un R mal compilé, quite à le recompiler autant essayer...
+#   - Debian 8... 
+
+nova boot --key-name=cloudkey --image=Debian_8 --flavor=m1.small TranSMART
+
+Attacher une IP flottante pour accéder à l'exterieur
+Se connecter
+su -
+locale-gen en_US.UTF-8
+
+
+##############
+# Pré-requis #
+##############
+
+###yum install java-1.6.0-openjdk ant jpackage-utils git
+aptitude install --without-recommends openjdk-6-jdk git ant maven2 postgresql r-base libcairo2-dev
+
+cd /opt
+wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.7.zip
+unzip grails-2.3.7.zip
+
+# Dans .bashrc
+export GRAILS_HOME="/opt/grails-2.3.7"
+export PATH="${PATH}:${GRAILS_HOME}/bin"
+export JAVA_HOME="/usr/lib/jvm/java-6-openjdk-amd64/jre/"
+
+source ~/.bashrc
+
+grails -version
+
+$ R
+>install.packages("Rserve")
+>install.packages("Cairo")
+>install.packages("MASS") # !!!
+>install.packages("stringr")
+>install.packages("ggplot2")
+>install.packages("plyr")
+>install.packages("reshape2")
+>install.packages("gplots")
+>install.packages("data.table")
+>source("http://bioconductor.org/biocLite.R")
+>biocLite("impute")
+>install.packages("WGCNA")
+>biocLite("multtest")
+> library(Rserve)
+> Rserve()
+> quit()
+
+$ wget http://www.few.vu.nl/~mavdwiel/CGHtest/CGHtest_1.1.tar.gz
+$ R
+
+> install.packages("survival")
+> source("http://bioconductor.org/biocLite.R")
+> biocLite("CGHbase")
+> install.packages("CGHtest_1.1.tar.gz", repos=NULL, type="source")
+> q()
+
+
+################
+# Installation #
+################
+
+adduser -m -s /bin/bash transmart
+mkdir /opt/transmart
+chown transmart:transmart /opt/transmart
+
+su - postgres
+-bash-4.1$ createuser
+  Enter name of role to add: transmart
+  Shall the new role be a superuser? (y/n) y
+-bash-4.1$ createdb transmart
+
+su - transmart
+vim ~/.bashrc
+# same as root
+source ~/.bashrc
+
+/usr/pgsql-9.2/bin/initdb /opt/transmart/postgresql
+/usr/pgsql-9.2/bin/pg_ctl -D /opt/transmart/postgresql -l /opt/transmart/postgresql/server.log start
+/usr/pgsql-9.2/bin/psql -d postgres -c "create database transmart"
+
+wget https://github.com/transmart/transmartAppInstaller/archive/GPL1.1.0.zip
+unzip GPL1.1.0.zip
+cd transmartAppInstaller-GPL1.1.0/script
+cp setupTranSMARTDevelopment.properties.sample setupTranSMARTDevelopment.properties
+
+edit ./startup.sh and change 
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'transmart'
+to
+SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE datname = 'transmart' 
+</code>
+
+===== Log =====
+
+  * **2014.06.12 (tlc)** Work in progress...

@@ -1,0 +1,39 @@
+====== La ferme de calcul ======
+
+<WRAP info>
+La ferme de calcul du CC-IN2P3 permet de lancer massivement des analyses indépendantes sur un grand nombre de ressources. Actuellement, vous pouvez exécuter simultanément :
+  * 100 tâches sur 1 cœur et 4 Go de mémoire; 
+  * ou jusqu'à 10 tâches sur 8 cœurs et 3 Go de mémoire par cœur.
+ 
+Si le nombre de tâches soumises dépasse le quota, elle seront mise en attente. 
+</WRAP>
+
+===== Introduction =====
+
+Les moyens de calcul du CC-IN2P3 sont mutualisés dans une ferme de calcul unique : les machines ne sont donc pas dédiées à une expérience ou un groupe spécifique.
+Ce mode de gestion permet de bénéficier d’un excellent taux de remplissage et d’une optimisation maximale des ressources. Les calculs s’effectuent de façon indépendante sur un processeur d’une machine.
+L'accès aux ressources de la ferme est géré par un ordonnanceur de tâche: [[http://www.univa.com/products/grid-engine.php|Univa Grid Engine]].
+
+
+====== Soumettre une tâche monocœur ======
+
+<WRAP info>La documentation complète est disponible dans la [[http://cc.in2p3.fr/docenligne/969|base de connaissances du CC-IN2P3]].</WRAP> 
+
+Pour soumettre une tâche, il faut commencer par écrire un script [[http://tiswww.case.edu/php/chet/bash/bashtop.html|Bash]] regroupant l'ensemble des commandes que vous souahitez exécuter:\\
+<CODE>
+#! /usr/local/bin/bash\\
+\\
+# Go to the bioaster common directory\\
+cd /sps/inter/bioaster/\\
+\\
+# Print the current environment variables\\
+echo "Current Environment Variable"\\
+printenv\\
+<CODE>
+
+
+
+
+====== Soumettre une tâche multicœur ======
+
+{{tag>todo}}

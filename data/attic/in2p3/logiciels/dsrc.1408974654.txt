@@ -1,0 +1,81 @@
+====== DSRC - DNA Sequence Reads Compression ======
+
+===== Informations =====
+
+  * **Version** : 1.2.3
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://exemple.org]]
+  * **Description** : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-4/dsrc/2.0"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget https://github.com/lrog/dsrc/archive/master.zip
+unzip master.zip
+cd
+# WORK IN PROGRESS...
+# module load glibc boost
+# make
+</code>
+
+Les sources doivent être compilées avec //pthread// qui n'est pas disponible (?!) au CC. L'installation et l'utilisation d'une version alternative de la //glibc// avec module entraine de nombreux problèmes quad on essaye d'utiliser des binaires liés dynamiquement à la version du système : ''ls'', ...
+
+Pour éviter ce problème on utilisera [[http://sun.aei.polsl.pl/dsrc/download/2.0rc/dsrc|la version binaire]] téléchargée directement depuis le site.
+
+===== Tests =====
+
+Les tests s'avèrent intéressants au début (compression rapide et efficace), mais des nombreux //crashs silencieux// sont constatés.\\
+La décompression est //"désastreuses"//. Elle est lente, et le fichier restitué n'est pas le même que le fichier d'entrée !\\
+Cela marque l'arrêt des tests !
+
+<code text>
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster 548M Aug 25 10:51 CRouiRNA.fq
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:47 CRouiRNA.fq.gz
+
+#COMPRESSION 
+
+$ time gzip CRouiRNA.fq -c > CRouiRNA.fq-gzip.gz
+real    0m33.179s
+user    0m28.285s
+sys     0m0.855s
+
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:54 CRouiRNA.fq-gzip.gz
+
+$ time dsrc c CRouiRNA.fq CRouiRNA.fq-dsrc.gz
+real    0m4.021s
+user    0m8.818s
+sys     0m1.376s
+
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  63M Aug 25 10:57 CRouiRNA.fq-dsrc.gz
+
+#DECOMPRESSION
+
+$ time gunzip CRouiRNA.fq-gzip.gz -c > CRouiRNA.fq-gzip
+real    0m11.717s
+user    0m3.677s
+sys     0m3.433s
+
+$ time dsrc d CRouiRNA.fq-dsrc.gz CRouiRNA.fq-dsrc
+real    1m56.554s
+user    0m4.881s
+sys     0m3.526s
+
+
+$ wc -l CRouiRNA.fq-dsrc
+4425703 CRouiRNA.fq-dsrc
+
+$ wc -l CRouiRNA.fq
+15083152 CRouiRNA.fq
+</code>
+
+
+===== Log =====
+
+  * **2014.08.25 (tlc)** Test de la version 2.0

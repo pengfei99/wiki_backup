@@ -1,0 +1,43 @@
+====== Résumé ======
+
+===== Contexte =====
+
+BIOASTER va devenir important producteur de données de références sur le microbiote ou les agents infectieux. La production de donnée se localise principalement dans les unités technologiques. Alternativement, cette production peut se faire chez des partenaires ou des prestataires. La production de données est à la fois diverse et massive :
+  * diverse, car la structure et la méthode d'analyse des données varient en fonction de leurs origines ;
+  * massive, car les sites de productions sont nombreux (Gerland, Paris, INSERM, ISA, partenaire ou prestataire) et les débits ou les volumes de productions peuvent être importants (p.ex. ~1 To/semaine pour l'unité de génomique et transcriptomique).
+
+BIOASTER doit ainsi se doter d'une capacité de récolte, d'annotation, d'intégration, d'analyse et de redistribution des données. Deux familles de données sont identifiées :
+  - les données phénotypiques, issues des collections biologiques et des modèles animaux ;
+  - les données expérimentales, issues des équipements -omiques (génomique, transcriptomique, protéomique, métabolomique) et de la bioproduction.
+
+Ces deux familles de données doivent être croisées entre elles afin de produire de la connaissance valorisable, par exemple des biomarqueurs indiquant l'apparition d'une résistance à un antibiotique. Ceci implique de distribuer les données à 3 familles d'acteurs :
+  - les biologistes capables d'interpréter les données et d'en tirer des conclusions grâce à leur connaissance d'une thématique ;
+  - les bio-informaticiens et les statisticiens capables d'analyser et d'interpréter les données grâce à leurs méthodes et leur savoir-faire ;
+  - l'assurance qualité qui doit garantir la validité des études grâce à une traçabilité et une préservation rigoureuse des données.
+
+===== Objectifs =====
+
+Dans ce contexte, le traitement des données et des informations de BIOASTER doit se structurer autour d'un système d'information scientifique capable de suivre, organiser et valoriser la donnée scientifique du producteur au consommateur. Le portefeuille de projets internes s’est construit à partir de cette nécessité. Son objectif est de fournir à BIOASTER une colonne vertébrale à partir de laquelle le système d'information pourra croître et se complexifier. Ce portefeuille vise donc à satisfaire les besoins suivants :
+  * la récolte les données produites par les études précliniques, les partenaires et des unités technologiques ;
+  * l’intégration des données phénotypiques (études précliniques ou modèles animaux) et expérimentales (équipements omiques) à partir d’un système de suivi des échantillons ;
+  * la redistribution des données aux bio-informaticiens et aux statisticiens ;
+  * l’analyse intensive des données par les outils statistiques ou bio-informatiques ;
+  * la redistribution des données et des analyses à l’ensemble des experts au travers d’un LIMS, de TranSMART ou tout autre service d’exploration et de visualisation des données.
+
+===== Récapitulatif =====
+
+A ce jours, de nombreuses idées ont été émises et plusieurs projets on démarrer afin d'aboutir au moins à un prototype ou une preuve de concepts. La listes est disponible ci-dessous
+
+| ^Projet ^Description                                ^Qui travaille dessus? ^Statut ^
+^Projet 1  | Automatisation des workflows             | Déploiement de Pegasus comme système de gestion des analyses                          | PV  | Déploiement de Pegasus en cours |
+^Projet 2  | Plateforme Web de traitement des données | Interface de gestion des analyses statistiques et bio-informatique                    | PV  | Réflexion et définition du projet en cours |
+^Projet 3  | Partage des données expérimentales       | Déploiement et exploitation d'OwnCloud                                                | JG  | En production... Il manque le socle au CC ! |
+^Projet 4  | Visualisation des études précliniques    | Déploiement d'eTRIKS/Transmart comme système de partages des études précliniques      | NS  | Définition du projet en cours avec le CCIN2P3 |
+^Projet 5  | [[/pt6/projets_internes/suivi_des_echantillons|Suivi des échantillons]] | Développement d'un système de suivi des échantillons internes comme prérequis au LIMS | AC | Plan Qualité Projet en cours de rédaction |
+^Projet 6  | Boîte à outils bio-informatique          | Déploiement des outils d'analyses de données (binaires, Galaxy, etc.)                 | TLC | Gestion des demandes au fil de l'eau |
+^Projet 7  | Cloud computing                          | Déploiement et développement des outils de suivi d'OpenStack                          | NS  | Réflexion en cours avec le CCIN2P3 et SysFera |
+^Projet 8  | Data warehouse                           | Test et déploiement d'IRODS comme back office de gestion des données                  | NS  | Réflexion en cours |
+^Projet 9  | Récolte des données de l'UTech02         | Développement d'une solution de récolte des données volumineuse                       | AC  | En attente de la réorganisation de l'UTech06 |
+^Projet 10 | Récolte des données précliniques         | Déploiement d'une solution d'electronic Care Report Form                              | PV  | Solutions en cours de sélection |
+^Projet 11 | Tiering des données                      | Développement d'une solution de tiering entre GPFS et HPSS                            | JG  | En attente |
+^Projet 12 | Visualisation des données de cytométrie  | Développement d'une visualisation de type Voronoï des données de cytométrie à partir d'un package R développé à Pasteur | NS   | En attente |

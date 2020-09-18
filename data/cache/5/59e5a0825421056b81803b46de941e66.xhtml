@@ -1,0 +1,57 @@
+
+<h1 class="sectionedit1" id="install_pyspark_and_use_pycharm">Install pyspark and use pycharm</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install pyspark and use pycharm&quot;,&quot;hid&quot;:&quot;install_pyspark_and_use_pycharm&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-50&quot;} -->
+<h2 class="sectionedit2" id="pycharm">pycharm</h2>
+<div class="level2">
+
+<p>
+By default, when you create a pycharm project, it will automatically create a virtual env. You can install pyspark in the dedicated virtual env with the following steps(Only works for Spark 2.2.0 and later).
+</p>
+
+<p>
+Go to File → Settings → Project Interpreter → Click on the + button (top right) and search for PySpark
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;pycharm&quot;,&quot;hid&quot;:&quot;pycharm&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;51-389&quot;} -->
+<h3 class="sectionedit3" id="manually_with_user-provided_spark_installation">Manually with user-provided Spark installation</h3>
+<div class="level3">
+
+<p>
+Create Run configuration:
+</p>
+
+<p>
+Go to Run → Edit configurations
+Add new Python configuration
+Set Script path so it points to the script you want to execute
+Edit Environment variables field so it contains at least:
+</p>
+
+<p>
+SPARK_HOME - it should point to the directory with Spark installation. It should contain directories such as bin (with spark-submit, spark-shell, etc.) and conf (with spark-defaults.conf, spark-env.sh, etc.)
+PYTHONPATH - it should contain $SPARK_HOME/python and optionally $SPARK_HOME/python/lib/py4j-some-version.src.zip if not available otherwise. some-version should match Py4J version used by a given Spark installation (0.8.2.1 - 1.5, 0.9 - 1.6, 0.10.3 - 2.0, 0.10.4 - 2.1, 0.10.4 - 2.2, 0.10.6 - 2.3)
+</p>
+
+<p>
+Apply the settings
+</p>
+
+<p>
+Add PySpark library to the interpreter path (required for code completion):
+</p>
+
+<p>
+Go to File → Settings → Project Interpreter
+Open settings for an interpreter you want to use with Spark
+Edit interpreter paths so it contains path to $SPARK_HOME/python (an Py4J if required)
+Save the settings
+Optionally
+Install or add to path type annotations matching installed Spark version to get better completion and static error detection (Disclaimer - I am an author of the project).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Manually with user-provided Spark installation&quot;,&quot;hid&quot;:&quot;manually_with_user-provided_spark_installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;390-&quot;} -->

@@ -1,0 +1,17 @@
+$ bzr branch bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt; \
+             bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt;/hotfix-1.2.1
+$ cd hotfix-1.2.1
+$ ./bump-version-number.sh 1.2 # ou toute opération sur les méta-données
+$ bzr merge bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt;/&lt;LOGIN&gt;/bug-123
+$ # teste le code
+$ bzr ci -m &quot;Intégration de la branche bug-123&quot;
+$ bzr push :parent
+$ cd ../master
+$ bzr merge ../hotfix-1.2.1
+$ bzr ci -m &quot;Fixe le bogue critique #123&quot;
+$ bzr tag 1.2.1
+$ bzr push :parent
+$ cd ../develop
+$ bzr merge ../master # ou est-ce la branche ../hotfix-1.2.1
+$ bzr ci -m &quot;Fixe le bogue critique #123&quot; # ou &quot;Intégration d'un correctif critique&quot;.
+$ bzr push :parent   

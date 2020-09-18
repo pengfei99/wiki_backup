@@ -1,0 +1,7 @@
+# calculator.m
+function z = add(x)
+z = x+2;
+fileID=fopen('result.txt','w');
+fprintf(fileID,'%f \n',z);
+fclose(fileID);
+end

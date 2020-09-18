@@ -1,0 +1,136 @@
+
+<h1 class="sectionedit1" id="the_saga_pattern">The saga pattern</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The saga pattern&quot;,&quot;hid&quot;:&quot;the_saga_pattern&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-32&quot;} -->
+<h2 class="sectionedit2" id="context">Context</h2>
+<div class="level2">
+
+<p>
+You have applied the <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:database_per_service" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:database_per_service">The Database per Service pattern</a>. Each service has its own database. Some business transactions, however, span multiple services, so you need a mechanism to ensure data consistency across services. For example, let&#039;s imagine that you are building an e-commerce store where customers have a credit limit. The application must ensure that a new order will not exceed the customer&#039;s credit limit. Orders and Customers are in different databases, the application cannot simply use a local ACID transaction.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Context&quot;,&quot;hid&quot;:&quot;context&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;33-656&quot;} -->
+<h2 class="sectionedit3" id="solution">Solution</h2>
+<div class="level2">
+
+<p>
+Implement each business transaction that spans multiple services as a saga. A saga is a sequence of local transactions. Each local transaction updates the database and publishes a message or event to trigger the next local transaction in the saga. If a local transaction fails because it violates a business rule then the saga executes a series of compensating transactions that undo the changes that were made by the preceding local transactions.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Solution&quot;,&quot;hid&quot;:&quot;solution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;657-1127&quot;} -->
+<h3 class="sectionedit4" id="saga_coordination">Saga coordination</h3>
+<div class="level3">
+
+<p>
+There are two ways of saga coordination:
+</p>
+<ul>
+<li class="level1"><div class="li"> Choreography: each local transaction publishes the domain events that trigger local transactions in other events.</div>
+</li>
+<li class="level1"><div class="li"> Orchestration: an orchestrator (object) tells the participants what local transactions to execute.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="example">Example</h4>
+<div class="level4">
+
+<p>
+<strong>Choreography-based saga</strong>
+Let&#039;s reuse the e-commerce store example, if we use the choreography-based saga, to create an order, the system needs to do the following steps:
+</p>
+<ol>
+<li class="level1"><div class="li"> The <strong>order Service</strong> creates an Order in a pending state and publishes an <strong>OrderCreated</strong> event.</div>
+</li>
+<li class="level1"><div class="li"> The <strong>Customer Service</strong> receives the <strong>OrderCreated</strong> event and attempts to reserve credit for that order. Based on the user credit, It publishes either a <strong>Credit Reserved</strong> event or a <strong>CreditLimitExceeded</strong> event.</div>
+</li>
+<li class="level1"><div class="li"> The <strong>order Service</strong> receives the event and changes the state of the order to either approved or canceled.</div>
+</li>
+</ol>
+
+<p>
+If we use the orchestration-based saga, the system needs to do the following steps:
+</p>
+<ol>
+<li class="level1"><div class="li"> The <strong>Order Service</strong> creates an Order in a pending state and creates a CreateOrderSaga (object)</div>
+</li>
+<li class="level1"><div class="li"> The <strong>CreateOrderSaga</strong> sends a <strong>ReserveCredit</strong> command to the <strong>Customer Service</strong></div>
+</li>
+<li class="level1"><div class="li"> The <strong>Customer Service</strong> attempts to reserve credit for that Order and sends back a reply</div>
+</li>
+<li class="level1"><div class="li"> The <strong>CreateOrderSaga</strong> receives the reply and sends either an <strong>ApproveOrder</strong> or <strong>RejectOrder</strong> command to the <strong>Order Service</strong></div>
+</li>
+<li class="level1"><div class="li"> The <strong>Order Service</strong> changes the state of the order to either approved or canceled</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Saga coordination&quot;,&quot;hid&quot;:&quot;saga_coordination&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1128-2641&quot;} -->
+<h2 class="sectionedit5" id="conclusion">Conclusion</h2>
+<div class="level2">
+
+<p>
+This pattern has the following benefits:
+</p>
+<ul>
+<li class="level1"><div class="li"> It enables an application to maintain data consistency across multiple services without using distributed transactions</div>
+</li>
+</ul>
+
+<p>
+It has the following drawbacks:
+</p>
+<ul>
+<li class="level1"><div class="li"> The programming model is more complex. For example, a developer must design compensating transactions that explicitly undo changes made earlier in a saga.</div>
+</li>
+</ul>
+
+<p>
+There are also the following issues to address:
+In order to be reliable, a service must atomically update its database and publish a message/event. It cannot use the traditional mechanism of a distributed transaction that spans the database and the message broker. Instead, it must use one of the patterns listed below.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conclusion&quot;,&quot;hid&quot;:&quot;conclusion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2642-3343&quot;} -->
+<h3 class="sectionedit6" id="related_patterns">Related patterns</h3>
+<div class="level3">
+
+<p>
+<a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:database_per_service" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:database_per_service">The Database per Service pattern</a> creates the need for this pattern
+The following patterns are ways to atomically update state and publish messages/events:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:event_sourcing" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:event_sourcing">Event sourcing</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:application_events" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:application_events">Applicaiton publishes events</a></div>
+</li>
+</ul>
+
+<p>
+A choreography-based saga can publish events using <strong>Aggregates</strong> and <strong>Domain Events</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Related patterns&quot;,&quot;hid&quot;:&quot;related_patterns&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3344-3897&quot;} -->
+<h2 class="sectionedit7" id="code_example">Code Example</h2>
+<div class="level2">
+
+<p>
+The following examples implement the customers and orders example in different ways:
+</p>
+<ul>
+<li class="level1"><div class="li"> Choreography-based saga(<a href="https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders" class="urlextern" title="https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders" rel="nofollow">https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders</a>) where the services publish domain events using the <strong>Eventuate Tram framework</strong> (<a href="https://github.com/eventuate-tram/eventuate-tram-core" class="urlextern" title="https://github.com/eventuate-tram/eventuate-tram-core" rel="nofollow">https://github.com/eventuate-tram/eventuate-tram-core</a>)</div>
+</li>
+<li class="level1"><div class="li"> Orchestration-based saga(<a href="https://github.com/eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders" class="urlextern" title="https://github.com/eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders" rel="nofollow">https://github.com/eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders</a>) where the Order Service uses a saga orchestrator implemented using the <strong>Eventuate Tram Sagas framework</strong> (<a href="https://github.com/eventuate-tram/eventuate-tram-sagas" class="urlextern" title="https://github.com/eventuate-tram/eventuate-tram-sagas" rel="nofollow">https://github.com/eventuate-tram/eventuate-tram-sagas</a>)</div>
+</li>
+<li class="level1"><div class="li"> Choreography and event sourcing-based saga(<a href="https://github.com/eventuate-examples/eventuate-examples-java-customers-and-orders" class="urlextern" title="https://github.com/eventuate-examples/eventuate-examples-java-customers-and-orders" rel="nofollow">https://github.com/eventuate-examples/eventuate-examples-java-customers-and-orders</a>) where the services publish domain events using the <strong>Eventuate event sourcing framework</strong> (<a href="http://eventuate.io/" class="urlextern" title="http://eventuate.io/" rel="nofollow">http://eventuate.io/</a>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Code Example&quot;,&quot;hid&quot;:&quot;code_example&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3898-&quot;} -->

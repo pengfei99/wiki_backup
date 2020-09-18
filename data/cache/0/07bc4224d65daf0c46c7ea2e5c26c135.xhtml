@@ -1,0 +1,117 @@
+
+<h1 class="sectionedit1" id="lesson04kafka_producer">Lesson04: Kafka producer</h1>
+<div class="level1">
+
+<p>
+When a producer sends messages to brokers, we need to ask the following questions?
+</p>
+<ul>
+<li class="level1"><div class="li"> Is every message critical, or can we tolerate the loss of messages? </div>
+</li>
+<li class="level1"><div class="li"> Are we OK with accidentally duplicating messages?</div>
+</li>
+<li class="level1"><div class="li"> Are there any strict latency or throughput requirements we need to support?</div>
+</li>
+</ul>
+
+<p>
+Based on the answers to these questions, we need to configure the producer differently. The design of Kafka producer allows us to fulfill various requirements and find the balance between message safety and latency or throughput.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson04: Kafka producer&quot;,&quot;hid&quot;:&quot;lesson04kafka_producer&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-563&quot;} -->
+<h2 class="sectionedit2" id="kafka_producer_key_components">4.1 Kafka producer key components</h2>
+<div class="level2">
+
+<p>
+Below figure shows a High-level overview of Kafka producer components
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al04_kafka_producer&amp;media=employes:pengfei.liu:data_science:kafka:kafka_producer_component.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_producer_component.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=eb454d&amp;media=employes:pengfei.liu:data_science:kafka:kafka_producer_component.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Kafka producer key components&quot;,&quot;hid&quot;:&quot;kafka_producer_key_components&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;564-762&quot;} -->
+<h3 class="sectionedit3" id="producerrecord">4.1.1 ProducerRecord</h3>
+<div class="level3">
+
+<p>
+All messages sent by a producer must be encapsulated in a ProducerRecord object, which must include:
+</p>
+<ul>
+<li class="level1"><div class="li"> a topic</div>
+</li>
+<li class="level1"><div class="li"> a value(message).</div>
+</li>
+<li class="level1"><div class="li"> a key and/or a partition (Optional). </div>
+</li>
+</ul>
+
+<p>
+Once we send the ProducerRecord, the first thing the producer will do is <strong>serialize</strong> the key and value objects to ByteArrays so they can be sent over the network. This is done by the <strong>serializer</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.1 ProducerRecord&quot;,&quot;hid&quot;:&quot;producerrecord&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;763-1174&quot;} -->
+<h3 class="sectionedit4" id="partitioner">4.1.2  Partitioner</h3>
+<div class="level3">
+
+<p>
+If we specified a partition in the ProducerRecord, the partitioner doesn’t do anything and simply returns the partition we specified in the ProducerRecord. 
+</p>
+
+<p>
+If there is no partition specified inside the ProducerRecord, the partitioner will choose a partition for us, usually based on the ProducerRecord key. Once a partition is selected, the producer knows which topic and partition the record will go to. It then adds the record to a batch of records that will also be sent to the same topic and partition.
+</p>
+
+<p>
+Below is the source code of org.apache.kafka.clients.producer
+</p>
+<pre class="code java"><span class="co3">/**
+     * computes partition for given record.
+     * if the record has partition returns the value otherwise
+     * calls configured partitioner class to compute the partition.
+     */</span>
+    <span class="kw1">private</span> <span class="kw4">int</span> partition<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> serializedKey, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> serializedValue, Cluster cluster<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+integer"><span class="kw3">Integer</span></a> partition <span class="sy0">=</span> record.<span class="me1">partition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> partition <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">?</span>
+                partition <span class="sy0">:</span>
+                partitioner.<span class="me1">partition</span><span class="br0">&#40;</span>
+                        record.<span class="me1">topic</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, record.<span class="me1">key</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serializedKey, record.<span class="me1">value</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serializedValue, cluster<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span></pre>
+
+<p>
+You can notice the <strong>cluster</strong> argument, which is the metadata of brokers cluster. This metadata can be retrieved from any broker. Because the controller(leader broker) gets the metadata from the zookeeper cluster. And other follower brokers sync the metadata with the controller. So all brokers have the same version of Kafka cluster metadata.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.2  Partitioner&quot;,&quot;hid&quot;:&quot;partitioner&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1175-2721&quot;} -->
+<h3 class="sectionedit5" id="buffer_and_sender">4.1.3 Buffer and Sender</h3>
+<div class="level3">
+
+<p>
+The batch of ProducerRecord will be stored in <strong>the Buffer area</strong> until the batch reaches a certain size which is specified by the configuration of the Producer. 
+</p>
+
+<p>
+Once a batch is ready to be sent, <strong>the Sender</strong> which is in a separate thread is responsible for sending those batches of records to the appropriate Kafka brokers.
+</p>
+
+<p>
+When the broker receives the messages, it sends back a response. If the messages were successfully written by brokers to disk, the Sender will return a Future&lt;RecordMetadata&gt; object with the topic, partition, and the offset of the record within the partition. If the broker failed to write the messages, it will return an error. When the producer receives an error, the producer may retry sending the message a few more times before giving up and returning an error.
+</p>
+<pre class="code java"># The producer provides two send methods
+# synchronously send
+Future<span class="sy0">&lt;</span>RecordMetadata<span class="sy0">&gt;</span> send<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+# asynchronously send
+Future<span class="sy0">&lt;</span>RecordMetadata<span class="sy0">&gt;</span> send<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record, Callback callback<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Below figure shows the entire message sending cycle of producer
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al04_kafka_producer&amp;media=employes:pengfei.liu:data_science:kafka:kafka_producer_data_flow.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_producer_data_flow.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=e028da&amp;media=employes:pengfei.liu:data_science:kafka:kafka_producer_data_flow.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.3 Buffer and Sender&quot;,&quot;hid&quot;:&quot;buffer_and_sender&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2722-&quot;} -->

@@ -1,0 +1,18 @@
+====== Montage de l'espace GPFS dans une VM via NFS ======
+
+Cette recette n'est valable que pour un montage NFS version 3. A terme, nous devrions passer à la version 4 qui modifiera le mode d'authentification (tickets Kerberos). 
+
+Installation du client NFS sur une VM scientific linux
+
+<code text>
+yum install nfs-utils nfs-utils-lib
+</code>
+
+Mapping GID/UID : il faut mapper sur les ACLs de GPFS (groupe: bioaster, user: votre_user_id) et donc créer le groupe bioaster, le user et assigner le user au groupe bioaster
+<code text>
+$ groupadd bioaster
+$ useradd pveyre
+$ usermod -g bioaster pveyre
+</code>
+
+Montage de l'es

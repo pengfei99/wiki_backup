@@ -1,0 +1,68 @@
+
+<h1 class="sectionedit1" id="linear_regression">Linear regression</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Linear regression&quot;,&quot;hid&quot;:&quot;linear_regression&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-33&quot;} -->
+<h2 class="sectionedit2" id="what_is_linear_regression">What is linear regression</h2>
+<div class="level2">
+
+<p>
+Linear regression is a basic and commonly used type of predictive analysis.  The overall idea of regression is to examine two things: (1) does a set of predictor variables do a good job in predicting an outcome (dependent) variable?  (2) Which variables in particular are significant predictors of the outcome variable, and in what way do they indicated by the magnitude and sign of the beta estimates impact the outcome variable?  These regression estimates are used to explain the relationship between one dependent variable and one or more independent variables.  
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is linear regression&quot;,&quot;hid&quot;:&quot;what_is_linear_regression&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;34-643&quot;} -->
+<h3 class="sectionedit3" id="what_is_simple_linear_regression">What is simple linear regression</h3>
+<div class="level3">
+
+<p>
+Simple linear regression is a statistical method that allows us to summarize and study relationships between two continuous (quantitative) variables:
+</p>
+
+<p>
+It can be defined by the formula y = c + b*x, where y = estimated <strong>dependent variable</strong> score, c = constant, b = regression coefficient, and x = score on the <strong>independent variable</strong>. 
+</p>
+
+<p>
+We often call x as the predictor, explanatory, or independent variable. And y as the response, outcome, or dependent variable. Because the other terms are used less frequently today, we&#039;ll use the <strong>“predictor”</strong> and <strong>“response”</strong> terms to refer to the variables encountered in this Lesson. 
+</p>
+
+<p>
+Simple linear regression gets its adjective “simple,” because it concerns the study of only one predictor variable. In contrast, multiple linear regression, which we study later in this course, gets its adjective “multiple,” because it concerns the study of two or more predictor variables.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is simple linear regression&quot;,&quot;hid&quot;:&quot;what_is_simple_linear_regression&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;644-1611&quot;} -->
+<h3 class="sectionedit4" id="types_of_relationships">Types of relationships</h3>
+<div class="level3">
+
+<p>
+We can divide relationships types into two :
+</p>
+<ul>
+<li class="level1"><div class="li"> Deterministic (or functional) relationships. </div>
+</li>
+<li class="level1"><div class="li"> Statistical relationships.</div>
+</li>
+</ul>
+
+<p>
+If the value of y can be exactly calculated by c+b*x, we say the relation between x and y is <strong>deterministic</strong>. In a graph, the (x, y) data points fall directly on a line.For example, the relationship between degrees Fahrenheit and degrees Celsius is known to be: Fahr = 9/5*Cels+32. As a result, we can determine the exact value of Fahr, if I have the value of Cels.
+</p>
+
+<p>
+If the value of y can&#039;t be calculated perfectly, we say the relation is statistical. For example, the height and weight of a man, as height increases, you&#039;d expect weight to increase, but not perfectly. In a graph, the (x, y) data points will never fall on a line, they will be around the line y=c+b*x.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Types of relationships&quot;,&quot;hid&quot;:&quot;types_of_relationships&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1612-2445&quot;} -->
+<h3 class="sectionedit5" id="the_best_model_fitting_line">The best model(fitting line)</h3>
+<div class="level3">
+
+<p>
+As in the simple linear regression, there are only two variables, so the regression model can be represented as a single line. By giving a set of variable x1,x2,…, if the model can output y_predicted and the difference between y_predicted and y_real (we could call this value as mean absolute error) is smallest compare to other model(line). We could say this model is the best model or best fitting line.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The best model(fitting line)&quot;,&quot;hid&quot;:&quot;the_best_model_fitting_line&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2446-&quot;} -->

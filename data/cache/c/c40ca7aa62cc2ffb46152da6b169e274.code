@@ -1,0 +1,10 @@
+    sudo yum install nodejs nodejs-less
+    sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo yum update
+    sudo yum install php56w php56w-opcache php56w-pdo php56w-pgsql
+    sudo nano /etc/php.ini #modifier timezone
+    sudo yum remove php php-common #va virer composer si il a été installé précédemment
+    sudo yum install composer
+    sudo yum install php56w-mysql
+    composer install # en étant dans le bon répertoire bien sûr

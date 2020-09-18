@@ -1,0 +1,58 @@
+====== Réunion CCIN2P3-BIOASTER du 14/01/2015 ======
+
+**Date** : 14/01/2015
+**Lieu** : CCIN2P3
+**Participants** : Jacques GARNIER, Nicolas SAPAY, Pierre VEYRE, Ghita RAHAL, Mattieu PUEL, Julien CARPENTIER
+
+===== Information générale =====
+  * Arrivée imminente d'un responsable UT06
+
+===== Schéma de principe =====
+{{pt6:pt6:ccin2p3:schema-archi.png?300}}
+
+Le schéma de principe explique le plan de développement de l'UT06 de BIOASTER autour du cloud OpenStack du CCIN2P3. La [[ccin2p3:partenariat#liste_des_services_a_deployer|liste des services]] que BIOASTER souhaite déployer a également été présentée avec le schéma. Deux services ont retenu l'attention du CCIN2P3 : [[http://pegasus.isi.edu/|Pegasus]] et [[http://research.cs.wisc.edu/htcondor/|HTcondor]] (HTCondor est une dépendance de Pegasus). En particulier, le CCIN2P3 est intéressé par un retour d'expérience sur HTCondor.
+
+Il est à noter qu'une première version de cette liste figure en annexe 5 de la convention avec le CCIN2P3. Ce point a également fait l'objet d'un échange par courrier électronique entre le 24/09/2014 et le 10/10/2014.
+
+===== Configuration actuelle d'OpenStack =====
+
+Le cloud OpenStack doit être le coeur du système et permettant de déployer à la demande des VM de calculs ou de service. Il existe 2 Tenants associés à BIOASTER :
+  * ''bioaster'' : Tenant de service routé vers l'extérieur. Il peut accéder à Internet et au second Tenant de BIOASTER. Les ressource du Tenant ''bioaster'' sont mutualisées avec les autres Tenants CCIN2P3. le nombre de VM sur ''bioaster'' est limité à 3. 
+  * ''htc_bioaster'' : Tenant dédié au calcul. Il n'est pas routé vers l'extérieur et est uniquement accessible depuis les frontales SSH du CCIN2P3 ou les VM du tenant ''bioaster''. Les ressources du Tenant ''htc_bioaster'' ont été mise à disposition exclusive de de BIOASTER par le CCIN2P3 (cf. demande ci-dessus).  Les limites d'utilisation sont celles des machines physiques hébergeant les VM.
+
+L'accès au Tenant ''htc_bioaster'' est facilité par l'utilisation du wrapper OpenStack développé par SysFera pour BIOASTER.
+
+===== Liste des problèmes et des questions =====
+
+BIOASTER a identifiés les problèmes suivants lors de la prise en main d'OpenStack :
+  * **Accès à GPFS depuis les VM :** Les VM OpenStack doivent accéder à l'espace ''/sps/bioaster'', de la même façon qu'un worker de la ferme.
+  * **Accès à AFS depuis les VM :** Le client AFS doit être intégré à l'image de la VM. l'accès se fait nécessairement par une saisie du mot de passe au clavier, ce qui empêche une automatisation. 
+  * **Quota de VM limité sur le Tenant ''bioaster'' :** le quota n'est pas suffisant pour déployer [[ccin2p3:partenariat#liste_des_services_a_deployer|l'ensemble des services]] prévus par BIOASTER.
+  * **Suivi de la consommation :** BIOASTER aura besoin de suivre et comptabiliser l'utilisation du cloud selon plusieurs critères (utilisateur, projet, RAM, etc.). Comment se fera ce suivi côté CCIN2P3? 
+
+===== Accès à GPFS et AFS =====
+==== Accès à GPFS ====
+La migration de ''/sps/inter/bioaster'' vers ''/sps/bioaster'' se fera le 19/01/2015. L'accès à ''/sps/bioaster'' depuis les VM se fait par l'intermédiaire d'un montage NFSv3. Le serveur NFS est directement présenté par GPFS (c'est une fonctionnalité du système). Par contre, le service stockage renvoie un nom de machine plutôt qu'un nom de service. Un alias vers un seul service éviterait de gérer une liste de machine.\\
+
+NFSv4 sera souhaitable pour des raisons de sécurité et de suivi des droits utilisateurs. La mise à niveau sera faite par l'équipe infra (discussions entre Jacques GARNIER et loïc TORTAY)
+ 
+==== Sauvegarde de GPFS (pour info) ====
+GPFS va utiliser les snapshots (1 snapshot/24h). Les snapshots permettent potentiellement de revenir longtemps en arrière. Les snapshots devront ensuite être sauvegardées. A voir avec le CC combien de snapshot il faut garder et combien il faut en sauvegarder.
+
+==== Accès à AFS ====
+L'accès à AFS se fiat en installant le client AFS dans l'image de la VM. l'accès se fait nécessairement par une saisie du mot de passe au clavier, ce qui empêche une automatisation. Pour l'instant, aucune évolution n'est envisagée. Les données nécessaires aux calculs (p.ex. les binaires) seront migrées sur ''/sps/bioaster''.
+
+===== Quota sur le Tenant de service =====
+
+>BIOASTER propose de configurer les 2 tenants ''bioaster'' et ''htc_bioaster'' sur les 2 machines Dell réservées pour BIOASTER. On sur-réserverait alors les ressources pour le service (overprovisionning), mais ça permettrait d'être souple sur l'utilisation des VM de service.\\
+>> Mattieu PUEL explique que dans ces conditions, il sera impossible de maintenir la qualité de service du Tenant ''bioaster'', telle qu'elle existe sur les machines de services du Cloud. Une solution serait de réserver des machines de services pour BIOASTER. Le CCIN2P3 devrait donc investir dans des machines dédiées, comme pour le Tenant ''htc_bioaster''.
+>> Mattieu indique qu'actuellement, l'utilisation du cluster de service se fait à titre gracieux, au détriment d'une souplesse d'utilisation.\\ 
+>>> Nicolas SAPAY indique qu'il est souhaitable d'exploiter les 2 serveurs Dell du Tenant ''htc_bioaster'', puisque les ressources sont disponibles et déjà financées.
+>>> Jacques GARNIER indique qu'il pourrait être envisageable de reverser le quota d'utilisation de la ferme sur le cloud OpenStack.\\
+>> Mattieu PUEL explique qu'il n'est pas possible de configurer le Tenant ''bioaster'' à la fois sur le cluster de service et le cluster de calcul. Mattieu PUEL propose que BIOASTER face une demande officielle d'hébergement de services au CC. BIOASTER ne pourrait donc plus utiliser le cluster de service. 
+>>> Pierre VEYRE va préparer la liste des services que BIOASTER souhaitent déployer courant 2015.
+> BIOASTER et le CCIN2P3 referont le point lorsque cette nouvelle demande sera traité.
+
+===== Développements communs =====
+
+le CCIN2P3 et BIOASTER sont d'accord sur la nécessité développer un suivi de la consommation et de l'exploitation du cloud OpenStack. BIOASTER indique qu'il a la possibilité de monter un projet sur ce thème. BIOASTER propose également d'impliquer SysFera sur ce travail, puisqu'il possède une expertise sur OpenStack. Pour l'instant, la proposition est en suspend. Elle sera transmise officiellement avec le demande d'hébergement de service.

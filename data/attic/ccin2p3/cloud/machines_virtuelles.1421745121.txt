@@ -1,0 +1,8 @@
+====== Machines Virtuelles ======
+
+Les machines virtuelles sont des instances des [[/in2p3/cloud/images|images disponibles]] au CC.
+
+^ Nom ^ Image ^ Responsable ^ Fonction ^
+| **Galaxy** | official-SL-6x-x86_64 | TLC | Héberge le serveur [[/in2p3/logiciels/galaxy|Galaxy]] |
+| **QIIME** | QIIME-1.8.0 | LB | Instance de la VM distribuée par le projet [[/in2p3/logiciels/qiime|QIIME]] |
+

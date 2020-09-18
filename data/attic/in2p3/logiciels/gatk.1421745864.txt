@@ -1,0 +1,45 @@
+====== GATK ======
+
+===== Informations =====
+
+  * **Version** : 2.8-1
+  * **Licence** : MIT (for academics)
+  * **Page Web** : [[http://www.broadinstitute.org/gatk/]]
+  * **Description** : The Genome Analysis Toolkit or GATK is a software package developed at the Broad Institute to analyse next-generation resequencing data. The toolkit offers a wide variety of tools, with a primary focus on variant discovery and genotyping as well as strong emphasis on data quality assurance. Its robust architecture, powerful processing engine and high-performance computing features make it capable of taking on projects of any size.
+
+
+===== Installation =====
+
+**Note** : Archive qui contient les **.jar**.
+
+**Attention** : Pour télécharger l'archive il faut créer un compte (avec vérification d'e-mail) qui n'est (apparemment) pas supprimable !!
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gatk/2.8-1"
+mkdir -p $APP
+cd $SOFTWARE/src
+# No way to do a direct download
+tar xvjf GenomeAnalysisTK-2.8-1.tar.bz2
+mv GenomeAnalysisTK-2.8-1-g932cd3a/GenomeAnalysisTK.jar $APP
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Genome Analysis Toolkit\n"
+}
+
+set version "2.8-1"
+
+set root "/afs/in2p3.fr/throng/bioaster/apps/gatk/${version}"
+
+prepend-path CLASSPATH "${root}"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 2.8-1 installée

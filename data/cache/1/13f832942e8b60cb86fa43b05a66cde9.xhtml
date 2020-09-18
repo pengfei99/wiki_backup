@@ -1,0 +1,251 @@
+
+<h1 class="sectionedit1" id="install_and_configure_hortonworks_sandbox">Install and configure Hortonworks sandbox</h1>
+<div class="level1">
+
+<p>
+Full official tutorial can be found <a href="https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hortonworks-sandbox.html" class="urlextern" title="https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hortonworks-sandbox.html" rel="nofollow">https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hortonworks-sandbox.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install and configure Hortonworks sandbox&quot;,&quot;hid&quot;:&quot;install_and_configure_hortonworks_sandbox&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-181&quot;} -->
+<h2 class="sectionedit2" id="deploy_hortonworks_sandbox">1.Deploy Hortonworks sandbox</h2>
+<div class="level2">
+
+<p>
+Hortonworks sandbox provides three ways to deploy it:
+</p>
+<ul>
+<li class="level1"><div class="li"> vmware image</div>
+</li>
+<li class="level1"><div class="li"> virtual box image</div>
+</li>
+<li class="level1"><div class="li"> docker file</div>
+</li>
+</ul>
+
+<p>
+To deploy the vmware and virtual box image, it&#039;s quite easy, just create a vm based on the image. Then follow the configuration instruction which we will show in the next section.
+</p>
+
+<p>
+Run docker file in a docker container, you will need more works
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.Deploy Hortonworks sandbox&quot;,&quot;hid&quot;:&quot;deploy_hortonworks_sandbox&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;182-579&quot;} -->
+<h3 class="sectionedit3" id="deploy_hortonworks_in_a_docker_container">1.1 Deploy Hortonworks in a docker container</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Install and run docker (See <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:1setup" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:1setup">Part1 : Orientation and setup</a> for docker installation)</div>
+</li>
+<li class="level1"><div class="li"> Downlaod the docker file for HDP (<a href="https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial" class="urlextern" title="https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial" rel="nofollow">https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial</a>)</div>
+</li>
+<li class="level1"><div class="li"> Unzip the file, it should contain one file <strong>docker-deploy-hdp30.sh</strong> and a directory <strong>assets</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Run sh docker-deploy-hdp30.sh</div>
+</li>
+<li class="level1"><div class="li"> Check the docker process docker ps</div>
+</li>
+<li class="level1"><div class="li"> Manage the HDP docker process</div>
+</li>
+</ol>
+<pre class="code"># When you want to stop/shutdown your HDP sandbox, run the following commands:
+docker stop sandbox-hdp
+docker stop sandbox-proxy
+
+# When you want to re-start your sandbox, run the following commands:
+docker start sandbox-hdp
+docker start sandbox-proxy
+
+# If you want to remove sandbox containers. A container is an instance of the Sandbox image. You must stop 
+# container dependencies before removing it. Issue the following commands:
+docker stop sandbox-hdp
+docker stop sandbox-proxy
+docker rm sandbox-hdp
+docker rm sandbox-proxy
+
+# If you want to remove the HDP Sandbox image, issue the following command after stopping and removing the containers:
+docker rmi hortonworks/sandbox-hdp:{release}
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 Deploy Hortonworks in a docker container&quot;,&quot;hid&quot;:&quot;deploy_hortonworks_in_a_docker_container&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;580-1837&quot;} -->
+<h2 class="sectionedit4" id="configure_sandbox_vm_container">2. Configure sandbox VM/Container</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Configure sandbox VM\/Container&quot;,&quot;hid&quot;:&quot;configure_sandbox_vm_container&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1838-1884&quot;} -->
+<h3 class="sectionedit5" id="set_up_ip_hostname_mapping_in_your_host_machine">2.1 Set up IP hostname mapping in your host machine</h3>
+<div class="level3">
+
+<p>
+When you open your sandbox services in your host machine browsers, based on your installation, the IP address could be different.
+</p>
+<ul>
+<li class="level1"><div class="li"> Docker: IP Address = 127.0.0.1</div>
+</li>
+<li class="level1"><div class="li"> VirtualBox: IP Address = 127.0.0.1</div>
+</li>
+<li class="level1"><div class="li"> VMWare: IP Address = 192.168.x.x</div>
+</li>
+</ul>
+<pre class="code"># You need to modify the IP address accordingly
+echo &#039;&lt;IP&gt; sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com&#039; | sudo tee -a /etc/hosts
+
+# In windows
+# 1. Run Notepad as administrator.
+# 2. Open hosts file located in: c:\Windows\System32\drivers\etc\hosts
+# 3. Add {IP-Address} localhost sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
+# 4. Save the file</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Set up IP hostname mapping in your host machine&quot;,&quot;hid&quot;:&quot;set_up_ip_hostname_mapping_in_your_host_machine&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1885-2574&quot;} -->
+<h3 class="sectionedit6" id="connect_to_your_vm">2.2 Connect to your VM</h3>
+<div class="level3">
+<pre class="code"># The sandbox does not use the port 22 for ssh, it uses 2222 instead
+ssh root@sandbox-hdp.hortonworks.com -p 2222
+
+# If you did not do the IP hostname mapping step, you need to replace the hostname by the IP address
+# For the first connection, the password: **hadoop**, you need to modify it.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Connect to your VM&quot;,&quot;hid&quot;:&quot;connect_to_your_vm&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;2575-2918&quot;} -->
+<h3 class="sectionedit7" id="file_transfer_between_sandbox_and_host_machine">2.3 File transfer between sandbox and host machine</h3>
+<div class="level3">
+<pre class="code"># Send file from host to sandbox
+scp -P 2222 /tmp/toto.txt root@sandbox-hdp.hortonworks.com:/home/pliu/.
+
+# Send file from sandbox to host
+scp -P 2222 root@sandbox-hdp.hortonworks.com:&lt;sandbox_directory_file&gt; &lt;local_directory_file&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 File transfer between sandbox and host machine&quot;,&quot;hid&quot;:&quot;file_transfer_between_sandbox_and_host_machine&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;2919-3229&quot;} -->
+<h3 class="sectionedit8" id="reset_ambari_admin_password">2.4 Reset ambari admin password</h3>
+<div class="level3">
+
+<p>
+Ambari Dashboard runs on port: 8080. For example, <a href="http://sandbox-hdp.hortonworks.com:8080" class="urlextern" title="http://sandbox-hdp.hortonworks.com:8080" rel="nofollow">http://sandbox-hdp.hortonworks.com:8080</a>. Or Replace url by the real ip address. (e.g. <a href="http://192.168.184.129:8080/#/main/dashboard" class="urlextern" title="http://192.168.184.129:8080/#/main/dashboard" rel="nofollow">http://192.168.184.129:8080/#/main/dashboard</a> ). You can use the following login to access the page:
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">login</th><th class="col1"> pwd</th><th class="col2"> role </th><th class="col3">Tool access</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">maria_dev</td><td class="col1"> maria_dev </td><td class="col2"> Spark and SQL Developer </td><td class="col3"> Hive, Zeppelin, MapReduce/Tez/Spark, Pig, Solr, HBase/Phoenix, Sqoop, NiFi, Storm, Kafka, Flume </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">raj_ops</td><td class="col1"> raj_ops </td><td class="col2"> Hadoop Warehouse Operator </td><td class="col3"> Hive/Tez, Ranger, Falcon, Knox, Sqoop, Oozie, Flume, Zookeeper</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">holger_gov</td><td class="col1"> holger_gov </td><td class="col2"> Data Steward </td><td class="col3"> Atlas</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">amy_ds</td><td class="col1"> amy_ds</td><td class="col2"> Data Scientist </td><td class="col3"> Spark, Hive, R, Python, Scala </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;3511-3918&quot;} -->
+<p>
+If you want to login as admin, you need to initiate the admin password
+</p>
+<pre class="code"># You need to ssh into the sandbox vm and type the following command
+$ ambari-admin-password-reset </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.4 Reset ambari admin password&quot;,&quot;hid&quot;:&quot;reset_ambari_admin_password&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:8,&quot;range&quot;:&quot;3230-4109&quot;} -->
+<h3 class="sectionedit10" id="change_atlas_password">2.5 Change Atlas password</h3>
+<div class="level3">
+<pre class="code"># Change admin password
+# 1. Open config GUI of atlas via ambari. 
+# 2. In clause advanced atlas-env, you can change the admin password. 
+
+# If you want to add a new user, you need to go to your sandbox vm 
+# 1. Generate the hash of your password
+$ echo -n &quot;Password&quot; | sha256sum
+# 2. Open file /etc/atlas/conf/users-credentials.properties with vim
+$ vim /etc/atlas/conf/users-credentials.properties
+# 3. add a line like this: pliu=ROLE_ADMIN::b012da22fa1439aacbe02971d7321e56a82ad75da84bc6e27358f3593e5b9b24 
+in the file.
+# 4. Restart the atlas service to make it available.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.5 Change Atlas password&quot;,&quot;hid&quot;:&quot;change_atlas_password&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:10,&quot;range&quot;:&quot;4110-4738&quot;} -->
+<h3 class="sectionedit11" id="change_mysql_server_root_password">2.6 change mysql server root password</h3>
+<div class="level3">
+
+<p>
+Hortonworks sandbox uses a mysql server to store the configuration infomation, hive metastore, etc. In some version the password for root is <strong>hadoop</strong>. In some version, the password is empty. 
+</p>
+
+<p>
+But if you can&#039;t login with mysql -u root -p, you need to follow the following instructions to reset the root password.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.6 change mysql server root password&quot;,&quot;hid&quot;:&quot;change_mysql_server_root_password&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;4739-5103&quot;} -->
+<h2 class="sectionedit12" id="common_problems">3. Common problems</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Common problems&quot;,&quot;hid&quot;:&quot;common_problems&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:12,&quot;range&quot;:&quot;5104-5135&quot;} -->
+<h3 class="sectionedit13" id="docker_container_sandbox-proxy_can_t_start">3.1 Docker container sandbox-proxy can&#039;t start</h3>
+<div class="level3">
+
+<p>
+Command: Docker start sandbox-proxy
+Error: Error response from daemon: driver failed programming external connectivity on endpoint sandbox-proxy (8f1dc79b789604e45f88cb15045d8dfc6d8f11f9d195ccd2765a03758759ea94):  (iptables failed: iptables –wait -t nat -A DOCKER -p tcp -d 0/0 –dport 61888 -j DNAT –to-destination 172.18.0.3:61888 ! -i br-7e3d72e7f4ac: iptables: No chain/target/match by that name.
+</p>
+
+<p>
+Solution: To correct this, you need to restart docker daemon <strong>Systemctl restart docker</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Docker container sandbox-proxy can&#039;t start&quot;,&quot;hid&quot;:&quot;docker_container_sandbox-proxy_can_t_start&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:13,&quot;range&quot;:&quot;5136-5689&quot;} -->
+<h3 class="sectionedit14" id="ambari_can_t_start_the_hdp_services">3.2 Ambari can&#039;t start the hdp services</h3>
+<div class="level3">
+
+<p>
+Command: Ambari start all services
+Error: Mysqld daemon can&#039;t start, raise error
+2019-09-20T14:09:43.429317Z 0 [ERROR] InnoDB: Ignoring the redo log due to missing MLOG_CHECKPOINT between the checkpoint 19668090 and the end 19669084.
+2019-09-20T14:09:43.429326Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
+2019-09-20T14:09:44.029878Z 0 [ERROR] Plugin &#039;InnoDB&#039; init function returned error.
+2019-09-20T14:09:44.029892Z 0 [ERROR] Plugin &#039;InnoDB&#039; registration as a STORAGE ENGINE failed.
+</p>
+
+<p>
+Solution: To correct this, you need to clean the InnoDB log file <strong>rm -rf /var/lib/mysql/ib_logfile</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Ambari can&#039;t start the hdp services&quot;,&quot;hid&quot;:&quot;ambari_can_t_start_the_hdp_services&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;5690-6359&quot;} -->
+<h3 class="sectionedit15" id="atlas_add_classification_permission_denied">3.3 Atlas add classification permission denied</h3>
+<div class="level3">
+
+<p>
+Command: Add classification/term, etc.
+Error: Permission denied
+</p>
+
+<p>
+Solution: Atlas needs to write in HBASE, In a cluster managed by ambari, we use Knox (Provides a single point of authentication and access for Apache Hadoop services in a cluster) to make the authentication and access control possible. So before running Atlas, <strong>start Knox, HBase, Solr first</strong>. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Atlas add classification permission denied&quot;,&quot;hid&quot;:&quot;atlas_add_classification_permission_denied&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;6360-6782&quot;} -->
+<h3 class="sectionedit16" id="load_hdfs_data_into_hive_table_pemission_deny">3.4 Load hdfs data into hive table pemission deny</h3>
+<div class="level3">
+
+<p>
+Command: hive load data to hive table
+Error: Permission denied
+</p>
+
+<p>
+Solution: When load data into hive table, hive will move the data from the hdfs source location to hive data warehouse (also a hdfs path). The user who launch this command must make sure he has the right to write in both locations. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 Load hdfs data into hive table pemission deny&quot;,&quot;hid&quot;:&quot;load_hdfs_data_into_hive_table_pemission_deny&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:16,&quot;range&quot;:&quot;6783-&quot;} -->

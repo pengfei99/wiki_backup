@@ -1,0 +1,153 @@
+====== Lesson02 Data Model ======
+
+===== 1. Steps for designing a relational database model (building entities association model) =====
+
+  - Exam business logic
+  - identify entities and relationships between entities
+  - draw the entities relation schema
+
+===== 2. Entity-association model =====
+The principle is based on a modelization based on entities and associations between them.
+
+==== 2.1 What is an entity? ====
+  * An entity is an existing element or an unambiguously distinguishable identifiable concept.
+  * An entity is an object, an event, a place, a person, ...
+  * A set / an entity class contains similar but distinguishable two by two. examples: people, cars in a parking lot, a library of books ...
+  * Entities have properties (to distinguish them) called attributes.
+  * Entities in one set have the same kinds of attributes (with different values).
+  * Each attribute associates an entity with a value and a type (integers, reals, strings ...).
+  * Each Entity must be represented in a unique and unambiguous manner, to be distinguished from all others via an identifier.
+
+Example 1:
+
+The set of entities "person" has the attributes: name, surname, age, address ...
+  * name associates a string of characters with the entity person.
+  * age associates a short integer
+
+The entity book has the attributes: 
+  * book number (4-digit integer) 
+  * author (20-character string) 
+  * title (50-character string) 
+  * publisher (25-character strings)
+
+
+==== 2.2 What is association? ====
+
+  * An association class is a link between 2 or more entities classes.
+  * Associations :
+    *  From 0,1: an entity of A can be connected to none or only one entity of B
+    *  From 1,1: an entity of A is connected to a single entity of B
+    *  From 0 to several (0, N): an entity of A can be connected to none or several entities of B ...
+    *  From 1 to several (1, N): an entity of A may be connected to one or more entities of B
+
+
+When we determined a pair of entities (e1, e2) and we want to associate certain values with this pair, we associate an attribute to this association (as for an entity). By default, an association contains the entities identifiers that participate in the association. But in some cases, we need to add more attributes to an association. For example, when a person borrows a book we want to keep track of the loan date. This date would be meaningless in the Person entity, or in the Book entity, since there may be different loan dates for the same person, just as the book may be borrowed on different dates.
+
+The below figure is an example of the entity association model. It's in French, but you get the idea, right?
+
+{{:employes:pengfei.liu:data_science:data_base:theory:entityassociationmodel.png?400|}}
+
+==== 2.3 Key steps for designing a entity association model ====
+
+  - Identify entities
+  - Associate an identifier to each entity.
+  - Associate the attributes with each entity.
+  - Define associations with cardinalities
+
+
+===== 3. Transform entity association (EA) model to the relational model  =====
+
+==== 3.1 Three Steps of the transformation ====
+
+Step1: Entity transformation
+  * Each entity of the EA model is transformed into a table
+  * Entity properties become attributes of the table
+  * Entity identifier becomes the primary key
+
+Step2: Associations 1,1->x,y transformation
+
+  * When we find a cardinality 1,1, we add the target identifier to the source relation (it becomes a foreign key)
+  
+  * 1,1-1,n example, suppose an author can write many books (1,n) and a book can only have one author(1,1), so we have author(1,n)->write<-(1,1)book, after transformation, we will have the following two tables:
+      * author(author_id,author_name,author_birthdate), author_id in table author is the primary key
+      * book(book_id,book_title,author_id), author_id in table book is the foreign key.
+
+  * 1,1-0,1 example, suppose a laptop may have one or zero cd_room, a cd_room must be equipped on a laptop, so we have laptop(0,1)->equipe<-(1,1)cd_room, after transformation, we will have the following two tables:
+      * laptop(laptop_id,laptop_brand), laptop_id is the primary key of the table laptop
+      * cd_room(cd_id,cd_brand,laptop_id), laptop_id is the foreign key of the table cd_room.
+
+Step3: All other associations
+
+  * The association becomes a table in its own right whose key is the concatenation of the two entities identifiers, including the possible association attributes.
+  
+  * 0,1-0,1 example, suppose a laptop may have one or zero cd_room, a cd_room may or may not be equipped on a laptop, so we have laptop(0,1)->equipe<-(0,1)cd_room, after transformation, we will have three tables, 
+      * laptop(laptop_id,laptop_brand)
+      * cd_room(cd_id,cd_brand)
+      * equipe(laptop_id,cd_id), laptop_id and cd_id are the foregin keys
+  
+  * 0,n-0,1 example, suppose we have a laptop may have zero or more removable devices, a removable device may or may not be equipped on a laptop, and when we equipe a device, we need to add equipe_date so we have laptop(0,n)->equipe(equipe_date)<-(0,1)device, after transformation, we will have three tables:
+      * laptop(laptop_id, laptop_brand)
+      * device(device_id, device_type)
+      * equipe(laptop_id,device_id,equipe_date) 
+
+
+==== 3.2 Fonctional dependencies ====
+
+The conceptual model is a good approach to design your relation model. It is the building foundation of your business model. But, how to make sure our relation model is relevant? A poor design can lead to redundancy and related anomalies. How to come up with a better design by decomposing a relational schema? Dr. Ed. CODD introduced the concept of functional dependencies. A functional dependency (FD) is a relationship between two attributes (generally between primary key and other non-primaries keys)
+
+For Example: Suppose we have an entity Author with three attributes, id is the primary key.
+
+Author(id, lastName, firstName)
+
+We could conclude the following fonctional dependencies : id -> lastName, id -> firstName
+
+=== Fonctional dependencies properties ===
+
+  * Reflexivity X -> X ou ( X,Y) -> X
+    * cityname -> cityname
+    * (cityname, department) -> cityname
+  * Augmentation : If X -> Y then (X,Z) -> (Y,Z)
+    * codezip -> cityname
+    * (codezip, region) -> (cityname, region)
+  * Transitivity : If X -> Y & if Y-> Z then X -> Z
+    * codezip -> department & department -> region
+  * Pseudo-transitivity : If X -> Y & if (T,Y) -> Z then (T,X) -> Z
+    * codezip -> cityname & (department, cityname) -> region
+  * Union : If X -> Y & If X -> Z then X -> (Y,Z)
+    * codezip -> cityname & codezip -> department : codezip -> (cityname, department)
+  * Decomposition : If X -> Y & If Z is included into Y then X -> Z
+    * codezip -> (cityname, department) so codezip -> department & codezip -> cityname
+
+==== 3.3 What is a primary key? ====
+
+Let K be a set of attributes (possibly a singleton) in a relation R, 
+  * K is a superkey for relation R if K functionally determines all attributes of R.
+  * K is a key for R if K is a superkey, but no proper subset of K is a superkey, called candidate key.
+  * A primary key is a candidate key that has been selected as the means of identifying tuples in a relation.
+
+For example, we have an entity CUSTOMER(fisrtName, lastName, codezip, region, department)
+  * (fisrtname,lastname,codezip, region, department) is a superkey
+  * (fisrtname,lastname,codezip) is a superkey
+  * (fisrtname,lastname) is a superkey and a candidate key
+
+Thanks to the functional dependencies, Dr CODD developed the concept of Normalization.
+
+==== data model normalization ====
+
+Data normalization is a method for :
+  * Avoiding duplicate data
+  * Running updates/deletes/inserts without inconsistency
+  * Optimizing the storage space
+  * Decomposing your relation/table without losing any data
+
+We have the following normalization form: 
+  - [[employes:pengfei.liu:data_science:data_base:theory:data_model:1st_normal_from|First normal form]]
+  - [[employes:pengfei.liu:data_science:data_base:theory:data_model:2nd_normal_form|Second normal form]]
+  - [[employes:pengfei.liu:data_science:data_base:theory:data_model:3rd_normal_form|Third normal form]]
+  - [[employes:pengfei.liu:data_science:data_base:theory:data_model:bc_normal_form|Boyce-Codd normal form]]
+
+
+
+===== data base optimisation =====
+
+always index foreign key.

@@ -1,0 +1,150 @@
+<span class="coMULTI">/*
+ * @(#)ZKClientTest.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client.test</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">static</span> org.<span class="me1">junit</span>.<span class="kw1">Assert</span>.<span class="sy0">*;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.List</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.KeeperException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.After</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.Before</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.Test</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">com.globinch.zoo.client.ZKClientManagerImpl</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKClientTest Test Class
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0
+ * http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKClientTest <span class="br0">&#123;</span>
+&nbsp;
+	<span class="kw1">private</span> <span class="kw1">static</span> ZKClientManagerImpl zkmanager <span class="sy0">=</span> <span class="kw1">new</span> ZKClientManagerImpl<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="co1">// ZNode Path</span>
+	<span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path <span class="sy0">=</span> <span class="st0">&quot;/QN-GBZnode&quot;</span><span class="sy0">;</span>
+	<span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data <span class="sy0">=</span> <span class="st0">&quot;www.java.globinch.com ZK Client Data&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * @throws java.lang.Exception
+	 */</span>
+	@Before
+	<span class="kw1">public</span> <span class="kw4">void</span> setUp<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> <span class="br0">&#123;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * @throws java.lang.Exception
+	 */</span>
+	@After
+	<span class="kw1">public</span> <span class="kw4">void</span> tearDown<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> <span class="br0">&#123;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#create(java.lang.String, byte[])}
+	 * .
+	 * 
+	 * @throws InterruptedException
+	 * @throws KeeperException
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		<span class="co1">// data in byte array</span>
+&nbsp;
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeStats(java.lang.String)}
+	 * .
+	 * 
+	 * @throws InterruptedException
+	 * @throws KeeperException
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeStats<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat.<span class="me1">getVersion</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeData(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeData<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#41;</span>zkmanager.<span class="me1">getZNodeData</span><span class="br0">&#40;</span>path,<span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>data<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#update(java.lang.String, byte[])}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testUpdate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="st0">&quot;www.java.globinch.com Updated Data&quot;</span><span class="sy0">;</span>
+		<span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> dataBytes <span class="sy0">=</span> data.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">update</span><span class="br0">&#40;</span>path, dataBytes<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> retrivedData <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#41;</span>zkmanager.<span class="me1">getZNodeData</span><span class="br0">&#40;</span>path,<span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>retrivedData<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeChildren(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeChildren<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		List<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> children<span class="sy0">=</span> zkmanager.<span class="me1">getZNodeChildren</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>children<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#delete(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testDelete<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

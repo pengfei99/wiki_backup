@@ -1,0 +1,148 @@
+
+<h1 class="sectionedit1" id="introduction">Introduction</h1>
+<div class="level1">
+
+<p>
+TensorFlow is an open-source machine learning software built by Google to train neural networks. TensorFlow&#039;s neural networks are expressed in the form of stateful dataflow graphs. Each node in the graph represents the operations performed by neural networks on multi-dimensional arrays. These multi-dimensional arrays are commonly known as “tensors”, hence the name TensorFlow.
+</p>
+
+<p>
+TensorFlow is a deep learning software system. TensorFlow works well for information retrieval, as demonstrated by Google in how they do search ranking in their machine-learning artificial intelligence system, RankBrain. TensorFlow can perform image recognition, as shown in Google&#039;s Inception, as well as human language audio recognition. It&#039;s also useful in solving other problems not specific to machine learning, such as partial differential equations.
+</p>
+
+<p>
+The TensorFlow architecture allows for deployment on multiple CPUs or GPUs within a desktop, server or mobile device. There are also extensions for integration with CUDA, a parallel computing platform from Nvidia. This gives users who are deploying on a GPU direct access to the virtual instruction set and other elements of the GPU that are necessary for parallel computational tasks.
+</p>
+
+<p>
+In this tutorial, you&#039;ll install TensorFlow&#039;s “CPU support only” version. This installation is ideal for people looking to install and use TensorFlow, but who don&#039;t have an Nvidia graphics card or don&#039;t need to run performance-critical applications.
+</p>
+
+<p>
+You can install TensorFlow several ways. Each method has a different use case and development environment:
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1614&quot;} -->
+<h1 class="sectionedit2" id="install_keras_with_tensorflow_as_backend">Install keras with tensorflow as backend</h1>
+<div class="level1">
+
+<p>
+I strongly recommand you to use virtual env to install python dev environment. 
+</p>
+
+<p>
+Follow this tutorial to build a virtuel env <a href="/doku.php?id=employes:pengfei.liu:python:python3_centos7" class="wikilink1" title="employes:pengfei.liu:python:python3_centos7">Install python 3 on centos 7 and virtual env</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install keras with tensorflow as backend&quot;,&quot;hid&quot;:&quot;install_keras_with_tensorflow_as_backend&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1615-1890&quot;} -->
+<h2 class="sectionedit3" id="install_tensorflow">Install tensorflow</h2>
+<div class="level2">
+
+<p>
+I suppose you already have a virtual env which runs on python 3.6
+</p>
+<pre class="code"># go to your virtual env and activate it
+source my_venv/bin/activate
+
+# update your pip first
+pip install --upgrade pip
+
+# install tensorflow
+pip install --upgrade tensorflow</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install tensorflow&quot;,&quot;hid&quot;:&quot;install_tensorflow&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1891-2181&quot;} -->
+<h2 class="sectionedit4" id="install_keras">Install keras</h2>
+<div class="level2">
+<pre class="code">#install dependencies first
+pip install numpy scipy
+pip install scikit-learn
+pip install pillow
+pip install h5py
+
+# install keras 
+
+pip install keras</pre>
+
+<p>
+After the installation of keras, you should find a keras config file keras.json in 
+</p>
+<pre class="code">vim ~/.keras/keras.json
+
+# you should see the following line
+{
+    &quot;floatx&quot;: &quot;float32&quot;,
+    &quot;epsilon&quot;: 1e-07,
+    &quot;backend&quot;: &quot;tensorflow&quot;,
+    &quot;image_data_format&quot;: &quot;channels_last&quot;
+}
+</pre>
+
+<p>
+Specifically, you’ll want to ensure that image_data_format  is set to “channels_last”  (indicating that the TensorFlow image dimension ordering is used rather than “channels_first”  for Theano).
+</p>
+
+<p>
+You’ll also want to ensure that the backend  is properly set to tensorflow  (rather than theano ). Again, both of these requirements should be satisfied by the default Keras configuration but it doesn’t hurt to double check.
+</p>
+
+<p>
+A quick note on image_data_format
+You might be wondering what exactly image_data_format  controls.
+</p>
+
+<p>
+Using TensorFlow, images are represented as NumPy arrays with the shape (height, width, depth), where the depth is the number of channels in the image.
+</p>
+
+<p>
+However, if you are using Theano, images are instead assumed to be represented as (depth, height, width).
+</p>
+
+<p>
+This little nuance is the source of a lot of headaches when using Keras (and a lot of if  statments looking for these particular configurations).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install keras&quot;,&quot;hid&quot;:&quot;install_keras&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2182-3594&quot;} -->
+<h2 class="sectionedit5" id="debugging">Debugging</h2>
+<div class="level2">
+
+<p>
+If you are getting strange results when using Keras (or an error message related to the shape of a given tensor) you should:
+</p>
+
+<p>
+Check your backend.
+Ensure your image dimension ordering matches your backend.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debugging&quot;,&quot;hid&quot;:&quot;debugging&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;3595-3823&quot;} -->
+<h2 class="sectionedit6" id="test_your_keras_tensorflow">Test your Keras+tensorFlow</h2>
+<div class="level2">
+<pre class="code">$ python
+Python 3.6.5 (default, Apr 10 2018, 17:08:37) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import keras
+Using TensorFlow backend.
+&gt;&gt;&gt; </pre>
+
+<p>
+If you see the above lines, we cloud say our keras tensorflow installation is done.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Test your Keras+tensorFlow&quot;,&quot;hid&quot;:&quot;test_your_keras_tensorflow&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;3824-4188&quot;} -->
+<h2 class="sectionedit7" id="what_s_next">What&#039;s next</h2>
+<div class="level2">
+
+<p>
+You can follow this tutorial  to do your first neural network with keras
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What&#039;s next&quot;,&quot;hid&quot;:&quot;what_s_next&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;4189-&quot;} -->

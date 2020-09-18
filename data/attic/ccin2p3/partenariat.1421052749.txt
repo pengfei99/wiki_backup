@@ -1,0 +1,20 @@
+====== Partenariat avec le CCIN2P3 ======
+
+===== Ressources demandées et ressources disponibles =====
+Demande actuelle : 2014/Q4 -> 2015/Q2
+
+^Indrastructure                ^Volume ^Statut ^Remarque
+|Stockage de fichier sous GPFS |      100 To| OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Stockage de fichier sous AFS  |       50 Go| OK    |Sauvegarde selon les conditions par défaut du CC |
+|Base de données PostgreSQL    |      200 Go| OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Base de données MySQL         |      200 Go| OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Serveurs de calcul OpenStack  | 2x16 coeurs| OK    |2 serveurs Dell de 16 coeurs physiques + 768 Go de RAM + 9 To de disque local |
+|Ferme de caclul               | 4x10^6 HS06| OK    |Workers connecté à AFS et GPFS |
+
+
+===== Vue générale de l'architecture =====
+
+===== Plan de déploiement des services =====
+
+{{tag>à_compléter}}
+{{tag>travail_en_cours}}

@@ -1,0 +1,6 @@
+<span class="kw1">package</span> <span class="co2">org.pengfei.dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">interface</span> HelloWorld <span class="br0">&#123;</span>
+    <span class="kw1">public</span> <span class="kw4">void</span> sayHello<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw4">void</span> sayShit<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>

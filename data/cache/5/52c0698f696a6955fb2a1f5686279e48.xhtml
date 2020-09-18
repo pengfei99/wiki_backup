@@ -1,0 +1,165 @@
+
+<h1 class="sectionedit1" id="dynamic_proxy_design_pattern">Dynamic Proxy design pattern</h1>
+<div class="level1">
+
+<p>
+Dynamic proxies allow one single class with one single method to service multiple method calls to arbitrary classes with an arbitrary number of methods. A dynamic proxy can be thought of as a kind of Facade, but one that can pretend to be an implementation of any interface. Under the cover, it routes all method invocations to a single handler  the invoke() method.
+</p>
+
+<p>
+This is used for framework writers, the concrete class implementations won&#039;t be know until run-time.
+</p>
+
+<p>
+This feature is built into the standard JDK, hence no additional dependencies are required.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Dynamic Proxy design pattern" [1-608] -->
+<h1 class="sectionedit2" id="invocation_handler">2. Invocation Handler</h1>
+<div class="level1">
+
+<p>
+Invocation Handler is the heart of the proxy pattern. It allows you to get all methods of any classes. Th
+e following is an example of InvocationHander
+</p>
+<pre class="code file java">ackage org.<span class="me1">pengfei</span>.<span class="me1">dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.InvocationHandler</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.Method</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.util.HashMap</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.util.Map</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> HelloWorldHandler <span class="kw1">implements</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+invocationhandler"><span class="kw3">InvocationHandler</span></a><span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> targetObj<span class="sy0">;</span>
+    <span class="kw1">private</span> <span class="kw1">final</span> Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, Method<span class="sy0">&gt;</span> methods<span class="sy0">=</span> <span class="kw1">new</span> HashMap<span class="sy0">&lt;&gt;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">public</span> HelloWorldHandler<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> obj<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="kw1">super</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">this</span>.<span class="me1">targetObj</span> <span class="sy0">=</span> obj<span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+method"><span class="kw3">Method</span></a> method<span class="sy0">:</span> targetObj.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getDeclaredMethods</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <span class="kw1">this</span>.<span class="me1">methods</span>.<span class="me1">put</span><span class="br0">&#40;</span>method.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,method<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> invoke<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> proxy, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+method"><span class="kw3">Method</span></a> method, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+throwable"><span class="kw3">Throwable</span></a> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> result <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+        doBefore<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        result<span class="sy0">=</span>methods.<span class="me1">get</span><span class="br0">&#40;</span>method.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">invoke</span><span class="br0">&#40;</span>targetObj,args<span class="br0">&#41;</span><span class="sy0">;</span>
+        doAfter<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> result<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> doBefore<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Before method invoke&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> doAfter<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;After method invoke&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT2 SECTION "2. Invocation Handler" [609-1815] -->
+<h1 class="sectionedit3" id="creating_a_dynamic_proxy_instance">3. Creating a dynamic Proxy instance</h1>
+<div class="level1">
+
+<p>
+Suppose we have an Object HelloWord which we want to invoke in the proxy
+</p>
+
+<p>
+First we define a interface
+</p>
+<pre class="code file java"><span class="kw1">package</span> <span class="co2">org.pengfei.dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">interface</span> HelloWorld <span class="br0">&#123;</span>
+    <span class="kw1">public</span> <span class="kw4">void</span> sayHello<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw4">void</span> sayShit<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Then we implement the interface
+</p>
+<pre class="code file java"><span class="kw1">package</span> <span class="co2">org.pengfei.dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> HelloWorldImpl <span class="kw1">implements</span> HelloWorld<span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> sayHello<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;This is pengfei, hello&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> sayShit<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Oh shit!!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Now we could build our proxy to invoke the helloWorld object by using the invocation handler. The proxy use always the same interface which the real object implements to ensure the integrity of the logic of the object.
+</p>
+<pre class="code file java"><span class="kw1">package</span> <span class="co2">org.pengfei.dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.InvocationHandler</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.Proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> test <span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="co1">//Creat an object(instance of HelloWorld) helloWorld </span>
+        HelloWorld helloWorld <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldImpl<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Build an invocation handler which invoke object helloWorld</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+invocationhandler"><span class="kw3">InvocationHandler</span></a> handler <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldHandler<span class="br0">&#40;</span>helloWorld<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Build an proxy based on the helloWorld object and invocation handler</span>
+        HelloWorld proxy<span class="sy0">=</span><span class="br0">&#40;</span>HelloWorld<span class="br0">&#41;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+proxy"><span class="kw3">Proxy</span></a>.<span class="me1">newProxyInstance</span><span class="br0">&#40;</span>
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getClassLoader</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getInterfaces</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                handler
+        <span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        proxy.<span class="me1">sayHello</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        proxy.<span class="me1">sayShit</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT3 SECTION "3. Creating a dynamic Proxy instance" [1816-3473] -->
+<h1 class="sectionedit4" id="conclusion">Conclusion</h1>
+<div class="level1">
+
+<p>
+There are four main steps to build a dynamic proxy object
+</p>
+<ol>
+<li class="level1"><div class="li"> Create your own invocation handler by implementing the InvocationHandler interface</div>
+</li>
+<li class="level1"><div class="li"> Create a proxy Class based on the given classloader and interface (Class clazz = Proxy.getProxyClass(classLoader,new Class[]{…});)</div>
+</li>
+<li class="level1"><div class="li"> Use java reflection mechanism to get the proxy object constructor. (Constructor constructor = clazz.getConstructor(new Class[]{InvocationHandler.class});)</div>
+</li>
+<li class="level1"><div class="li"> Use the proxy constructor to build a proxy object, here we also need to provide the invocation handler which we created at step 1 to the constructor (Interface Proxy = (Interface)constructor.newInstance(new Object[] (handler));)</div>
+</li>
+</ol>
+
+<p>
+To simplyfy the proxy object construction, the step 2~4 is embeded in the constructor
+</p>
+
+<p>
+so we only need 2 step : 1. create invocation handler, create proxy object based on the target interface and invocation handler 
+</p>
+<pre class="code file java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+invocationhandler"><span class="kw3">InvocationHandler</span></a> handler <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldHandler<span class="br0">&#40;</span>helloWorld<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+HelloWorld proxy<span class="sy0">=</span><span class="br0">&#40;</span>HelloWorld<span class="br0">&#41;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+proxy"><span class="kw3">Proxy</span></a>.<span class="me1">newProxyInstance</span><span class="br0">&#40;</span>
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getClassLoader</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getInterfaces</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                handler
+        <span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT4 SECTION "Conclusion" [3474-] -->

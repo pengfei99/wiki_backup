@@ -1,0 +1,59 @@
+====== Tanguy ======
+
+===== Objectifs 2014 =====
+
+  * **Convention** Pasteur
+    * rediger l'annexe technique
+  * **Infrastructure Informatique** à Pasteur
+    * Installation
+    * Formation VMware
+  * **OpenStack** au CC
+    * <del>Mise en place de l'[[/in2p3/logiciels|environnement bioinformatique]] avec le //PT2//</del>
+    * Créer des images personnalisées
+    * Faciliter/Automatiser le lancement
+    * Continuous Improvement
+  * [[/formations|Documentation et Formation]]
+    * <del>Installer [[in2p3/logiciels/remark|remark]] pour servir les présentations</del>
+    * <del>[[/in2p3/cloud|OpenStack]]</del>
+    * <del>[[/in2p3/scheduler|Ferme de calcul]]</del>
+
+===== Importants =====
+
+  * * Mettre en place **Dokuwiki**
+    * <del>Installer avec les plugins tag, templatepagename...</del>
+    * <del>Mettre derrière HTTPS et authentifier par certificat</del>
+    * <del>Mettre en place un backup (on se repose sur ZFS et le backup du CC)</del>
+    * Ecrire la [[in2p3/logiciels/dokuwiki|documentation]]
+    * Mettre à disposition et documenter le plugin d'authentification par certificat.
+    * Lier le plugin à l'AD (en attente de DEUZZI #347100)
+    * page [[/pt6]] avec un diagramme technique de toutes les ressources disponibles
+    * schéma plus "généraliste" orienté "srevices" ([[http://www.cssplay.co.uk/articles/imagemap/examples/ten.html|image cliquable]] (ou [[http://www.w3schools.com/tags/tag_map.asp|map]]) avec liens vers les différentes parties du wiki) sur une page [[/bioinfo]]
+    * page [[/bioinfo]] avec schéma, utilisation, bonnes pratiques, logiciels (par thème)
+  * Installation de **TranSMART** (OpenStack + DB du CC)
+    * [[/in2p3/logiciels/transmart|en cours...]]
+  * Installer **Galaxy** (w/w/o LIMS)
+    * Mettre derrière HTTPS et authentifier par certificat
+  * Installer **BioMAJ**
+  * Installer un serveur pour **Blast**
+    * <del>[[http://openwetware.org/wiki/Wwwblast|wwwblast]] serveur</del> et [[in2p3/logiciels/wwwblast|documenter la procédure]]
+  * Mettre en place les [[in2p3/bases_de_donnees|bases de données]] sur SPS :
+    * NCBI-tRNA bactériens
+    * les données MetaHIT (http://gutmeta.genomics.org.cn/ ) gènes et contigs. 
+    * M5rrn
+
+===== Autres =====
+
+  * Projet **PorPro** pour GC
+    * <del>Développer la maquette</del>
+    * <del>Installer la démo sur VMware pour être accessible</del>
+  * PC de labo
+    * <del>Faire l'[[/instruments|inventaire]] (PCs et instruments)</del>
+    * Temporairement, créer un utilisateur "labo" sur tous les instrument avec un seul mdp
+  * PC de test
+    * commander le nouveau laptop
+    * renvoyer l'ancien
+  * **Certification**
+    * <del>[[securite/certification|Créer un CA]] pour pouvoir sécuriser dès à présent</del>
+    * [[securite/certification/cacert|CAcert]] pour BIOASTER (en attente de l'assureur)
+    * Pour l’intégrer à nos services il faut authentifier avec X509 *et* autoriser avec l'AD/LDAP (voir avec MR et JG) 
+  * Signer "remise de materiel informatique" @Emilie

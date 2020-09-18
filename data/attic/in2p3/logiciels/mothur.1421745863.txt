@@ -1,0 +1,54 @@
+====== Mothur ======
+
+===== Informations =====
+
+  * **Version** : 1.32.1
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://www.mothur.org/wiki/Main_Page]]
+  * **Description** : This project seeks to develop a single piece of open-source, expandable software to fill the bioinformatics needs of the microbial ecology community. We have incorporated the functionality of dotur, sons, treeclimber, s-libshuff, unifrac, and much more. In addition to improving the flexibility of these algorithms, we have added a number of other features including calculators and visualization tools.
+
+===== Installation =====
+
+**Pré-requis** : ''yum install glibc-static'', car sans ça on obtient un ''/usr/bin/ld: cannot find -lm''. [[http://blog.chrysocome.net/2012/09/usrbinld-cannot-find-lm.html|Merci John]] !
+
+Pour le moment **Mothur** est donc compilé sur une VM puis copié sur la ferme. Ci-dessous nous ferons comme si tout se passait normalement.
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/mothur/1.32.1/bin"
+mkdir $APP
+mkdir /sps/inter/bioaster/db/mothur
+cd $SOFTWARE/src
+wget http://www.mothur.org/w/images/9/99/Mothur.1.32.1.zip
+unzip Mothur.1.32.1.zip
+cd Mothur.source/
+vim makefile
+#> USEMPI ?= no # yes => mpic++ not fount 
+#> USEREADLINE ?= no # yes => /usr/bin/ld: cannot find -lreadline
+#> USECOMPRESSION ?= yes
+#> MOTHUR_FILES="\"/sps/inter/bioaster/db/mothur\""
+#>         #TARGET_ARCH += -arch x86_64
+#>         CXXFLAGS += -mtune=native -march=native
+make
+mv mothur uchime $APP
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Software to fill the bioinformatics needs of the microbial ecology community.\n"
+}
+
+set version "1.32.1"
+
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/mothur/${version}/bin"
+
+prepend-path PATH $bin_dir
+</code>
+
+===== Log =====
+
+* **2014.02.06 (tlc)** Version 1.32.1 installée

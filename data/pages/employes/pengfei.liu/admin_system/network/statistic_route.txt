@@ -1,0 +1,51 @@
+====== Statistic route ======
+
+===== Introduction =====
+
+
+Let us use the following sample network architecture for the rest of the examples.
+
+In the diagram below, we have 2 individual networks ( 192.168.1.0 and 192.168.3.0, with subnet mask of 255.255.255.0 ).
+
+We also have a “GATEWAY” machine with 3 network cards. 1st card is connected to 192.168.1.0, 2nd card is connected to 192.168.3.0, and the 3rd card is connected to the external world.
+
+{{:employes:pengfei.liu:admin_system:network:route-command.png?400|}}
+===== Introduction of route command =====
+
+Route command is used to show/manipulate the IP routing table. It's primarily used to setup static routes to specific host or networks via an interface.
+
+<code>
+# route shows the details of the kernel routing table entries
+[root@host-134-158-37-11 pliu]$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         Lyon-COREA.in2p 0.0.0.0         UG    100    0        0 eth0
+134.158.37.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
+169.254.169.254 134.158.37.237  255.255.255.255 UGH   100    0        0 eth0
+
+# to view the real ip address of the server instead of the server name
+[root@host-134-158-37-11 pliu]$ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         134.158.37.254  0.0.0.0         UG    100    0        0 eth0
+134.158.37.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
+169.254.169.254 134.158.37.237  255.255.255.255 UGH   100    0        0 eth0
+
+# Kernel maintains the routing cache information to route the packets faster. We can list the kernel’s routing cache information by using the -C flag.
+
+</code>
+
+==== Add a default gateway ====
+
+
+<code>
+route add default gw 192.168.1.10
+</code>
+
+
+
+===== Make 192.168.3.* Accessible from 192.168.1.* =====
+
+
+
+===== Client ssh config =====

@@ -1,0 +1,13 @@
+fastcgi.server = ( &quot;.php&quot; =&gt;
+                   ( &quot;php-local&quot; =&gt;
+                     (
+                       &quot;socket&quot; =&gt; socket_dir + &quot;/php-fastcgi-1.socket&quot;,
+                       &quot;bin-path&quot; =&gt; &quot;/usr/local/bin/php-cgi&quot;,
+                       &quot;max-procs&quot; =&gt; 1,
+                       &quot;broken-scriptfilename&quot; =&gt; &quot;enable&quot;,
+                     )
+                   ),
+#                   ( &quot;php-tcp&quot; =&gt;
+# [...]
+#                   ),
+                )

@@ -1,0 +1,8 @@
+<span class="co1"># check your spark context version</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>sc.<span class="me1">version</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># check your python env version</span>
+<span class="kw1">import</span> <span class="kw3">sys</span>
+&nbsp;
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">version</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">path</span><span class="br0">&#41;</span>

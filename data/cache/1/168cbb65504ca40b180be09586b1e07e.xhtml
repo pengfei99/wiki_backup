@@ -1,0 +1,117 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm02">BIOA-2014-VM02</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BIOA-2014-VM02&quot;,&quot;hid&quot;:&quot;bioa-2014-vm02&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Machine servant de serveur de fichiers. Celle-ci a été mise en place pour des raisons historiques : le disque <strong>srvfic</strong> était difficile d&#039;accès depuis Paris. Owncloud, le VPN et le disque M ont permis d&#039;améliorer le transfert de fichiers. Le disque T est maintenant (janvier 2016) utilisé comme un espace de <strong>T</strong>ransfer pour échanger des données entre le réseau bureau et le réseau labo de Paris.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/doku.php?id=vms:vmware:bioa-2014-vm02&amp;do=backlink" class="wikilink1" title="vms:vmware:bioa-2014-vm02">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-574&quot;} -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Contacts&quot;,&quot;hid&quot;:&quot;contacts&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;575-646&quot;} -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : Debian GNU/Linux 7.5 (wheezy)</div>
+</li>
+<li class="level1 node"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 2Go + 10Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:3B:FC:7B</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Informations Techniques&quot;,&quot;hid&quot;:&quot;informations_techniques&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;647-888&quot;} -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Installation&quot;,&quot;hid&quot;:&quot;installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;889-914&quot;} -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Syst\u00e8me de base&quot;,&quot;hid&quot;:&quot;systeme_de_base&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;915-1054&quot;} -->
+<h3 class="sectionedit7" id="samba">Samba</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends samba</pre>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=vms:vmware:bioa-2014-vm02&amp;codeblock=2" title="Download Snippet" class="mediafile mf_conf">/etc/samba/smb.conf</a></dt>
+<dd><pre class="code text">[Donnees]
+    comment = Disque Commun Paris
+    read only = no
+    writable = yes
+    path = /mnt/dd2/samba/commun_paris
+    guest ok = yes</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Samba&quot;,&quot;hid&quot;:&quot;samba&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;1055-1319&quot;} -->
+<h3 class="sectionedit8" id="montage">Montage</h3>
+<div class="level3">
+
+<p>
+Pour accéder aux données il suffit d&#039;accéder au montage SMB :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>\\157.99.42.13\Donnees</code> depuis le réseau <strong>bureau</strong></div>
+</li>
+<li class="level1"><div class="li"> <code>\\10.6.2.253\Donnees</code> depuis le réseau <strong>labo</strong></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Montage&quot;,&quot;hid&quot;:&quot;montage&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:8,&quot;range&quot;:&quot;1320-1521&quot;} -->
+<h3 class="sectionedit9" id="les_disques">Les disques</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> VMware name </th><th class="col1"> SCSI number </th><th class="col2"> Size <abbr title="Gigabyte">GB</abbr> </th><th class="col3 leftalign"> Device   </th><th class="col4 leftalign"> Mount point  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> Hard disk 1 </td><td class="col1 leftalign"> 0:0         </td><td class="col2 leftalign"> 2       </td><td class="col3 leftalign"> rootfs   </td><td class="col4 leftalign"> /            </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> Hard disk 2 </td><td class="col1 leftalign"> 0:1         </td><td class="col2 leftalign"> 1400    </td><td class="col3"> /dev/sdb </td><td class="col4 leftalign"> /mnt/disk1   </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Hard disk 3 </td><td class="col1 leftalign"> 0:3         </td><td class="col2 leftalign"> 1800    </td><td class="col3"> /dev/sdc </td><td class="col4 leftalign"> /mnt/disk2   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Hard disk 4 </td><td class="col1 leftalign"> 0:2         </td><td class="col2 leftalign"> 500     </td><td class="col3"> /dev/sde </td><td class="col4"> /mnt/disk_NL </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;1545-1874&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les disques&quot;,&quot;hid&quot;:&quot;les_disques&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:9,&quot;range&quot;:&quot;1522-&quot;} -->

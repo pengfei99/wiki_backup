@@ -1,0 +1,17 @@
+
+<h1 class="sectionedit1" id="integrating_apache_spark_2x_jobs_with_nifi_17">Integrating Apache spark 2.x jobs with NiFi 1.7</h1>
+<div class="level1">
+
+<p>
+There are many ways to integrate Apache NiFi and Apache Spark.
+</p>
+
+<p>
+We can call Apache Spark Streaming via S2S (Apache NiFi&#039;s Site to Site) or Kafka. If you want to execute a regular Apache Spark job, you can do that via Apache Livy which is included in HDP 2.6+. This is how Apache Zeppelin integrates with Apache Spark, so it&#039;s secure and a reasonable approach.
+</p>
+
+<p>
+I use this approach when I want to use Spark to process part of my process in the middle of an Apache NiFi flow.
+</p>
+
+</div>

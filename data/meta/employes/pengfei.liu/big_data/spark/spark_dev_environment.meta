@@ -1,0 +1,13 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1511788086;s:8:"modified";i:1515079589;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1515079589;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:57:"employes:pengfei.liu:big_data:spark:spark_dev_environment";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:143;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:43:"Install a devlopment envirionment for spark";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:43:"install_a_devlopment_envirionment_for_spark";s:5:"title";s:43:"Install a devlopment envirionment for spark";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:37:"spark_dev_env_with_intellij_and_maven";s:5:"title";s:37:"Spark dev env with Intellij and Maven";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:40:"launching_applications_with_spark-submit";s:5:"title";s:40:"Launching Applications with spark-submit";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:308:"Install a devlopment envirionment for spark
+
+Spark dev env with Intellij and Maven
+
+1. Pre-requise
+
+Download a IntelliJ IDEA, install jdk and scala sdk,
+
+First install scala plugin in IntelliJ.
+
+Then you add jdk and scala sdk into Intellij.
+
+To add jdk and scala sdk into IntelliJ, you open IntelliJ click on";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1511788086;s:8:"modified";i:1515079589;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1515079589;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:57:"employes:pengfei.liu:big_data:spark:spark_dev_environment";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:143;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

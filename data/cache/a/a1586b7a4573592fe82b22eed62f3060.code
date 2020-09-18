@@ -1,0 +1,5 @@
+$ vim /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT=&quot;console=ttyS0&quot;
+&nbsp;
+$ update-grub
+$ locale-gen en_US.UTF-8

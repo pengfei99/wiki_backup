@@ -1,0 +1,8 @@
+    echo &quot;[google-chrome]&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;name=google-chrome&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;enabled=1&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;gpgcheck=1&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    yum info google-chrome-stable
+    yum install google-chrome-stable

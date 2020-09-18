@@ -1,0 +1,26 @@
+$ cinder list
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|   ID    |   Status  | Display Name | Size | Volume Type | Bootable |             Attached to              |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|  [...]  | available | testvol1     |  1   |     None    |          |                                      |
+|  [...]  | detaching | testvol2     |  1   |     None    |          | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+|  [...]  | available | vol4         |  1   |     None    |          |                                      |
+|  [...]  | available | vol5         |  1   |     None    |          |                                      |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+&nbsp;
+$ cinder create --display-name monvolume1 5
++---------------------+--------------------------------------+
+|       Property      |                Value                 |
++---------------------+--------------------------------------+
+|     attachments     |                  []                  |
+|  availability_zone  |                 nova                 |
+|      created_at     |      2013-04-19T11:03:50.606663      |
+| display_description |                 None                 |
+|     display_name    |              monvolume1              |
+|          id         | cb252a17-f581-4d70-8049-be358a5fc8bb |
+|       metadata      |                  {}                  |
+|         size        |                  5                   |
+|     snapshot_id     |                 None                 |
+|        status       |               creating               |
+|     volume_type     |                 None                 |
++---------------------+--------------------------------------+

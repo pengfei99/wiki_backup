@@ -1,0 +1,27 @@
+
+<h1 class="sectionedit1" id="redmine">Redmine</h1>
+<div class="level1">
+
+<p>
+L&#039;installation de Redmine est assez simple sous Debian : <a href="http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/" class="urlextern" title="http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/"  rel="nofollow">http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/</a>
+</p>
+<pre class="code">sudo aptitude install redmine redmine-sqlite
+sudo gem install bundler
+cd /usr/share/redmine
+sudo bundle install --without development test
+sudo aptitude install libapache2-mod-passenger
+sudo chown -R www-data:www-data /usr/share/redmine/public/</pre>
+<dl class="code">
+<dt><a href="/_export/code/informatique/logiciels/redmine?codeblock=1" title="Download Snippet" class="mediafile mf_">/etc/apache2/sites-available/redmine</a></dt>
+<dd><pre class="code text">ServerName redmine.paris.bioaster.org
+DocumentRoot /usr/share/redmine/public
+&lt;Directory /usr/share/redmine/public&gt;
+    RailsBaseURI /
+    PassengerResolveSymlinksInDocumentRoot on
+    AllowOverride None
+&lt;/Directory&gt;</pre>
+</dd></dl>
+<pre class="code">sudo a2ensite redmine
+sudo service apache2 reload</pre>
+
+</div>

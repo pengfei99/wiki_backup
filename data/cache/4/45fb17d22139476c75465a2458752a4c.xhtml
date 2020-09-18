@@ -1,0 +1,453 @@
+
+<h1 class="sectionedit1" id="kerberos_installation_and_configuration">Kerberos installation and configuration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Kerberos installation and configuration&quot;,&quot;hid&quot;:&quot;kerberos_installation_and_configuration&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-55&quot;} -->
+<h2 class="sectionedit2" id="introduction_of_kerberos">Introduction of Kerberos</h2>
+<div class="level2">
+
+<p>
+The <strong>Kerberos protocol</strong> is designed to provide reliable authentication over open and insecure networks where communications between the hosts belonging to it may be intercepted
+</p>
+
+<p>
+The Kerberos server itself is known as the Key Distribution Center, or KDC. At a high level, it has three parts:
+</p>
+<ul>
+<li class="level1"><div class="li"> A database of the users and services (known as principals) that it knows about and their respective Kerberos passwords</div>
+</li>
+<li class="level1"><div class="li"> An authentication server (AS) which performs the initial authentication and issues a Ticket Granting Ticket (TGT)</div>
+</li>
+<li class="level1"><div class="li"> A Ticket Granting Server (TGS) that issues subsequent service tickets based on the initial TGT</div>
+</li>
+</ul>
+
+<p>
+A user principal requests authentication from the AS. The AS returns a TGT that is encrypted using the user principal&#039;s Kerberos password, which is known only to the user principal and the AS. The user principal decrypts the TGT locally using its Kerberos password, and from that point forward, until the ticket expires, the user principal can use the TGT to get service tickets from the TGS. Service tickets are what allow a principal to access various services.
+</p>
+
+<p>
+Because cluster resources (hosts or services) cannot provide a password each time to decrypt the TGT, they use a special file, called a keytab, which contains the resource principal&#039;s authentication credentials.
+</p>
+
+<p>
+The set of hosts, users, and services over which the Kerberos server has control is called a realm.
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Term</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">KDC </td><td class="col1">The trusted source for authentication in a Kerberos-enabled environment.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Kerberos Client</td><td class="col1">Any machine in the cluster that authenticates against the KDC.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Principal</td><td class="col1">The unique name of a user or service that authenticates against the KDC</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Keytab</td><td class="col1">A file that includes one or more principals and their keys.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Realm</td><td class="col1">The Kerberos network that includes a KDC and a number of Clients.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1507-1913&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction of Kerberos&quot;,&quot;hid&quot;:&quot;introduction_of_kerberos&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;56-1914&quot;} -->
+<h3 class="sectionedit4" id="naming_convention_of_the_principal">Naming convention of the principal</h3>
+<div class="level3">
+
+<p>
+In theory, A principal in Kerberos 5 is of the following type: component1/component2/…/componentN@REALM
+</p>
+
+<p>
+But, in practice a maximum of two components are used. For example, an entry referring to a user the principal is the following type: Name[/Instance]@REALM
+</p>
+
+<p>
+The instance is optional and is normally used to better qualify the type of user. For example administrator users normally have the admin instance. The following are examples of principals referred to users:
+</p>
+<ul>
+<li class="level1"><div class="li"> toto@PENGFEI.ORG    </div>
+</li>
+<li class="level1"><div class="li"> toto/admin@PENGFEI.ORG </div>
+</li>
+</ul>
+
+<p>
+If, instead, the entries refer to services, the principals assume the following form: Service/Hostname@REALM
+</p>
+
+<p>
+The first component is the name of the service, for example imap, AFS, ftp. Often it is the word host which is used to indicate generic access to the machine (telnet, rsh, ssh). The second component is the complete hostname (FQDN) of the machine providing the requested service. It is important that this component exactly matches (in lower case letters) the <abbr title="Domain Name System">DNS</abbr> reverse resolution of the application server&#039;s IP address. The following are valid examples of principals referring to services:
+</p>
+<ul>
+<li class="level1"><div class="li"> imap/mbox.example.com@EXAMPLE.COM</div>
+</li>
+<li class="level1"><div class="li"> host/server.example.com@EXAMPLE.COM</div>
+</li>
+<li class="level1"><div class="li"> afs/example.com@EXAMPLE.COM</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Naming convention of the principal&quot;,&quot;hid&quot;:&quot;naming_convention_of_the_principal&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1915-3200&quot;} -->
+<h3 class="sectionedit5" id="ticket">Ticket</h3>
+<div class="level3">
+
+<p>
+A ticket is something a client presents to an application server to demonstrate the authenticity of its identity. Tickets are issued by the authentication server and are encrypted using the secret key of the service they are intended for. Since this key is a secret shared only between the authentication server and the server providing the service, not even the client which requested the ticket can know it or change its contents. The main information contained in a ticket includes:
+</p>
+<ul>
+<li class="level1"><div class="li"> The requesting user&#039;s principal (generally the username);</div>
+</li>
+<li class="level1"><div class="li"> The principal of the service it is intended for;</div>
+</li>
+<li class="level1"><div class="li"> The IP address of the client machine from which the ticket can be used. In Kerberos 5 this field is optional and may also be multiple in order to be able to run clients under NAT or multihomed.</div>
+</li>
+<li class="level1"><div class="li"> The date and time (in timestamp format) when the tickets validity commences;</div>
+</li>
+<li class="level1"><div class="li"> The ticket&#039;s maximum lifetime</div>
+</li>
+<li class="level1"><div class="li"> The session key (this has a fundamental role which is described below);</div>
+</li>
+</ul>
+
+<p>
+Each ticket has an expiration (generally 10 hours). This is essential since the authentication server no longer has any control over an already issued ticket. Even though the realm administrator can prevent the issuing of new tickets for a certain user at any time, it cannot prevent users from using the tickets they already possess. This is the reason for limiting the lifetime of the tickets in order to limit any abuse over time.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ticket&quot;,&quot;hid&quot;:&quot;ticket&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;3201-4644&quot;} -->
+<h3 class="sectionedit6" id="kerberos_operation">Kerberos Operation</h3>
+<div class="level3">
+
+<p>
+Finally, having acquired the concepts described in the preceding paragraphs, it is possible to discuss how Kerberos operates. We&#039;ll do this by listing and describing each of the packets which go between the client and KDC and between client and application server during authentication. At this point, it is important to underline that an application server never communicates directly with the Key Distribution Center: the service tickets, even if packeted by TGS, reach the service only through the client wishing to access them. The messages we will discuss are listed below (see also the figure below):
+</p>
+<ul>
+<li class="level1"><div class="li"> AS_REQ is the initial user authentication request (i.e. made with kinit) This message is directed to the KDC component known as Authentication Server (AS);</div>
+</li>
+<li class="level1"><div class="li"> AS_REP is the reply of the Authentication Server to the previous request. Basically it contains the TGT (encrypted using the TGS secret key) and the session key (encrypted using the secret key of the requesting user);</div>
+</li>
+<li class="level1"><div class="li"> TGS_REQ is the request from the client to the Ticket Granting Server (TGS) for a service ticket. This packet includes the TGT obtained from the previous message and an authenticator generated by the client and encrypted with the session key;</div>
+</li>
+<li class="level1"><div class="li"> TGS_REP is the reply of the Ticket Granting Server to the previous request. Located inside is the requested service ticket (encrypted with the secret key of the service) and a service session key generated by TGS and encrypted using the previous session key generated by the AS;</div>
+</li>
+<li class="level1"><div class="li"> AP_REQ is the request that the client sends to an application server to access a service. The components are the service ticket obtained from TGS with the previous reply and an authenticator again generated by the client, but this time encrypted using the service session key (generated by TGS);</div>
+</li>
+<li class="level1"><div class="li"> AP_REP is the reply that the application server gives to the client to prove it really is the server the client is expecting. This packet is not always requested. The client requests the server for it only when mutual authentication is necessary.</div>
+</li>
+</ul>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Aadmin_system%3Asecurity%3Aauthentication%3Akerberos&amp;media=employes:pengfei.liu:admin_system:security:authentication:krbmsg.gif" class="media" title="employes:pengfei.liu:admin_system:security:authentication:krbmsg.gif"><img src="/lib/exe/fetch.php?w=400&amp;tok=a64be3&amp;media=employes:pengfei.liu:admin_system:security:authentication:krbmsg.gif" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Kerberos Operation&quot;,&quot;hid&quot;:&quot;kerberos_operation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;4645-6824&quot;} -->
+<h2 class="sectionedit7" id="tutorial_infra_overview">Tutorial infra overview</h2>
+<div class="level2">
+
+<p>
+In this tutorial, we have two servers
+</p>
+<ul>
+<li class="level1"><div class="li"> 10.70.3.66 kdc.pengfei.org</div>
+</li>
+<li class="level1"><div class="li"> 10.70.3.68 client.pengfei.org</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tutorial infra overview&quot;,&quot;hid&quot;:&quot;tutorial_infra_overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;6825-6966&quot;} -->
+<h2 class="sectionedit8" id="setup_time_server">Setup time server</h2>
+<div class="level2">
+
+<p>
+Kerberos is a time sensitive security service. If the time difference between server and client is more than 5 mins. No authentication can be done.
+</p>
+
+<p>
+As a result, we need to sync the server time to the same ntp server
+</p>
+<pre class="code">yum -y install ntp
+ntpdate &lt;ntp-server-ip&gt;
+systemctl start  ntpd.service
+systemctl enable ntpd.service</pre>
+
+<p>
+I have a more detailed article here <a href="/doku.php?id=employes:pengfei.liu:admin_system:ntp_setup" class="wikilink1" title="employes:pengfei.liu:admin_system:ntp_setup">Network time protocol (NTP)</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Setup time server&quot;,&quot;hid&quot;:&quot;setup_time_server&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;6967-7446&quot;} -->
+<h2 class="sectionedit9" id="server_side">Server side</h2>
+<div class="level2">
+
+<p>
+We need two packages:
+</p>
+<ul>
+<li class="level1"><div class="li"> KDC server package: krb5-server</div>
+</li>
+<li class="level1"><div class="li"> Admin package: krb5-libs</div>
+</li>
+</ul>
+
+<p>
+Install packages:
+</p>
+<pre class="code">yum -y install krb5-server krb5-libs</pre>
+
+<p>
+After this, we have 3 important configuration files to edit
+</p>
+<ul>
+<li class="level1"><div class="li"> /var/kerberos/krb5kdc/kdc.conf</div>
+</li>
+<li class="level1"><div class="li"> /var/kerberos/krb5kdc/kadm5.acl</div>
+</li>
+<li class="level1"><div class="li"> /etc/krb5.conf</div>
+</li>
+</ul>
+
+<p>
+The kdc path is /var/kerberos/krb5kdc
+</p>
+
+<p>
+Sample of /etc/krb5.conf
+</p>
+<pre class="code"># Configuration snippets may be placed in this directory as well
+includedir /etc/krb5.conf.d/
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = PENGFEI.ORG
+ dns_lookup_realm = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+ rdns = false
+ default_ccache_name = KEYRING:persistent:%{uid}
+
+[realms]
+PENGFEI.ORG = {
+kdc = kdc.pengfei.org:88
+admin_server = kdc.pengfei.org:749
+default_domain = pengfei.org
+}
+
+[domain_realm]
+.pengfei.org = PENGFEI.ORG
+pengfei.org = PENGFEI.ORG
+</pre>
+
+<p>
+Sample of /var/kerberos/krb5kdc/kdc.conf 
+</p>
+<pre class="code">
+[kdcdefaults]
+ kdc_ports = 88
+ kdc_tcp_ports = 88
+
+[realms]
+ PENGFEI.ORG = {
+  master_key_type = aes256-cts
+  acl_file = /var/kerberos/krb5kdc/kadm5.acl
+  dict_file = /usr/share/dict/words
+  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+  key_stash_file = /var/kerberos/krb5kdc/stash
+  max_life = 10h 0m 0s
+  max_renewable_life = 7d 0h 0m 0s
+  database_name = /var/kerberos/krb5kdc/principal  
+supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal
+ }
+</pre>
+
+<p>
+Sample of /var/kerberos/krb5kdc/kadm5.acl
+</p>
+<pre class="code">*/admin@PENGFEI.ORG	*</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Server side&quot;,&quot;hid&quot;:&quot;server_side&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;7447-9215&quot;} -->
+<h3 class="sectionedit10" id="createing_kdc_database_to_hold_sensitive_kerberos_data">Createing KDC database to hold sensitive kerberos data</h3>
+<div class="level3">
+
+<p>
+Create the database and set a good password which you can remember. This command also stashes your password on the KDC so you don’t have to enter it each time you start the KDC:
+</p>
+<pre class="code"># This command may take a while to complete based on the CPU power
+kdb5_util create -r PENGFEI.ORG -s</pre>
+
+<p>
+Now on the KDC create a admin principal and also a test user (pliu):
+</p>
+<pre class="code">[root@kdc ~]# kadmin.local
+kadmin.local:  addprinc root/admin
+kadmin.local:  addprinc user1
+kadmin.local:  ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/admin
+kadmin.local:  ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/changepw
+kadmin.local:  exit</pre>
+
+<p>
+Now let&#039;s start the kerberos KDC and kadmin daemons
+</p>
+<pre class="code">systemctl start krb5kdc.service
+systemctl start kadmin.service
+systemctl enable krb5kdc.service
+systemctl enable kadmin.service</pre>
+
+<p>
+Now, let’s create a principal for our KDC server and stick it in it’s keytab:
+</p>
+<pre class="code">[root@kdc ~]# kadmin.local
+kadmin.local:  addprinc -randkey host/kdc.pengfei.org
+kadmin.local:  ktadd host/kdc.pengfei.org</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Createing KDC database to hold sensitive kerberos data&quot;,&quot;hid&quot;:&quot;createing_kdc_database_to_hold_sensitive_kerberos_data&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:10,&quot;range&quot;:&quot;9216-10342&quot;} -->
+<h2 class="sectionedit11" id="client_side">Client side</h2>
+<div class="level2">
+<pre class="code">yum -y install krb5-workstation</pre>
+
+<p>
+You need to edit the /etc/krb5.conf the same way you configure the krb5.conf on the server side.
+</p>
+<pre class="code"># Configuration snippets may be placed in this directory as well
+includedir /etc/krb5.conf.d/
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = PENGFEI.ORG
+ dns_lookup_realm = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+ rdns = false
+ default_ccache_name = KEYRING:persistent:%{uid}
+
+[realms]
+PENGFEI.ORG = {
+kdc = kdc.pengfei.org:88
+admin_server = kdc.pengfei.org:749
+default_domain = pengfei.org
+}
+
+[domain_realm]
+.pengfei.org = PENGFEI.ORG
+pengfei.org = PENGFEI.ORG</pre>
+
+<p>
+Now we need to add host principals on the client
+</p>
+<pre class="code">[root@client ~]# kadmin -p root/admin
+kadmin:  addprinc -randkey host/client.pengfei.org
+kadmin:  ktadd host/kdc.pengfei.org</pre>
+
+<p>
+Test your client by getting a ticket
+</p>
+<pre class="code"># ask for a new ticket
+[pliu@CCLinGridFtpD03 krb5.conf.d]$ kinit
+Password for pliu@BIOASTER.ORG: 
+
+# check the existing ticket
+[pliu@CCLinGridFtpD03 krb5.conf.d]$ klist
+Ticket cache: KEYRING:persistent:42029:42029
+Default principal: pliu@BIOASTER.ORG
+
+Valid starting       Expires              Service principal
+04/23/2018 17:14:23  04/24/2018 03:14:23  krbtgt/BIOASTER.ORG@BIOASTER.ORG
+	renew until 04/30/2018 17:14:23
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Client side&quot;,&quot;hid&quot;:&quot;client_side&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:11,&quot;range&quot;:&quot;10343-11796&quot;} -->
+<h1 class="sectionedit12" id="set_up_ssh_to_use_kerberos_authentication">Set up SSH to use kerberos Authentication</h1>
+<div class="level1">
+
+<p>
+Make sure you can issue a kinit and get back a kerberos ticket without having to specify a password.
+</p>
+<pre class="code"># get a TGT by using the default kdc server in /etc/krb5.conf
+kinit
+
+# check the ticket info
+[pliu@CCLinGridFtpD03 ~]$ klist -f
+Ticket cache: KEYRING:persistent:42029:42029
+Default principal: pliu@BIOASTER.ORG
+
+Valid starting       Expires              Service principal
+02/23/2018 14:43:28  02/24/2018 00:43:28  krbtgt/BIOASTER.ORG@BIOASTER.ORG
+	renew until 03/02/2018 14:43:28, Flags: FRI
+
+#In our case, the ticket is valid for 10h. after 10 hours you have to retype your password for a new ticket
+
+#you can also renew a still valid ticket for 10 more hours.
+[pliu@CCLinGridFtpD03 ~]$ kinit -R
+#You don&#039;t need to enter password
+[pliu@CCLinGridFtpD03 ~]$ klist -f
+Ticket cache: KEYRING:persistent:42029:42029
+Default principal: pliu@BIOASTER.ORG
+
+Valid starting       Expires              Service principal
+02/23/2018 16:14:28  02/24/2018 02:14:28  krbtgt/BIOASTER.ORG@BIOASTER.ORG
+	renew until 03/02/2018 14:43:28, Flags: FRIT
+
+
+# The above kinit command gives you an TGT from Authentication server, you can use it to get a TGS without password.
+
+#You can also get an TGS directly without using TGT.
+#for example, the user pliu, wishing to obtain a ticket which is initial (thus without using the TGT) for an imap service on the machine 
+kinit -S imap/mbox.pengfei.org@PENGFEI.ORG pliu@PENGFEI.ORG
+kinit -k host/fqdn@REALM
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Set up SSH to use kerberos Authentication&quot;,&quot;hid&quot;:&quot;set_up_ssh_to_use_kerberos_authentication&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:12,&quot;range&quot;:&quot;11797-13300&quot;} -->
+<h2 class="sectionedit13" id="step1configuring_ssh_server">Step1 : Configuring SSH Server</h2>
+<div class="level2">
+
+<p>
+Configure /etc/ssh/sshd_config file to include the following lines:
+</p>
+<pre class="code">KerberosAuthentication yes
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+UsePAM no</pre>
+
+<p>
+Restart sshd daemon
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step1 : Configuring SSH Server&quot;,&quot;hid&quot;:&quot;step1configuring_ssh_server&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:13,&quot;range&quot;:&quot;13301-13541&quot;} -->
+<h2 class="sectionedit14" id="step2configureing_the_ssh_client">Step2 : Configureing the SSH Client</h2>
+<div class="level2">
+
+<p>
+Configure /etc/ssh_config to include following lines:
+</p>
+<pre class="code">Host *.pengfei.org
+  GSSAPIAuthentication yes
+  GSSAPIDelegateCredentials yes</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step2 : Configureing the SSH Client&quot;,&quot;hid&quot;:&quot;step2configureing_the_ssh_client&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:14,&quot;range&quot;:&quot;13542-&quot;} -->

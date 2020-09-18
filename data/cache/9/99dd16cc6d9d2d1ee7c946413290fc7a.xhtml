@@ -1,0 +1,90 @@
+
+<h1 class="sectionedit1" id="use_apache_commun_lang3_to_do_string_and_file_templating">Use apache commun lang3 to do string and file templating</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use apache commun lang3 to do string and file templating&quot;,&quot;hid&quot;:&quot;use_apache_commun_lang3_to_do_string_and_file_templating&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-72&quot;} -->
+<h2 class="sectionedit2" id="import_dependencies_via_maven_or_gradle">Import dependencies via maven or gradle</h2>
+<div class="level2">
+
+<p>
+Maven dependencies
+</p>
+<pre class="code">&lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+    &lt;version&gt;3.6&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+<p>
+Gradle dependencies
+</p>
+<pre class="code">// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+compile group: &#039;org.apache.commons&#039;, name: &#039;commons-lang3&#039;, version: &#039;3.6&#039;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Import dependencies via maven or gradle&quot;,&quot;hid&quot;:&quot;import_dependencies_via_maven_or_gradle&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;73-560&quot;} -->
+<h2 class="sectionedit3" id="string_template_code_example">String template code example</h2>
+<div class="level2">
+<pre class="code java"><span class="co1">//The method in a class called MailMessage which returns the text after replace the variable</span>
+<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getMessageFromStringTemplate<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> template, Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>,String<span class="sy0">&gt;</span> valuesMap<span class="br0">&#41;</span><span class="br0">&#123;</span>
+       StrSubstitutor sub <span class="sy0">=</span> <span class="kw1">new</span> StrSubstitutor<span class="br0">&#40;</span>valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw1">return</span> sub.<span class="me1">replace</span><span class="br0">&#40;</span>template<span class="br0">&#41;</span><span class="sy0">;</span>
+   <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//The code in main for test</span>
+MailMessage mailMess<span class="sy0">=</span>MailMessage.<span class="me1">getInstance</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span> valuesMap <span class="sy0">=</span> <span class="kw1">new</span> HashMap<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userName&quot;</span>, <span class="st0">&quot;pengfei&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userMail&quot;</span>, <span class="st0">&quot;haha@pengfei.org&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> template<span class="sy0">=</span><span class="st0">&quot; The user name is ${userName},<span class="es0">\n</span> The user mail is ${userMail}.&quot;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> text <span class="sy0">=</span> mailMess.<span class="me1">getMessageFromStringTemplate</span><span class="br0">&#40;</span>template,valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>text<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;String template code example&quot;,&quot;hid&quot;:&quot;string_template_code_example&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;561-1317&quot;} -->
+<h2 class="sectionedit4" id="file_template_code_example">File template code example</h2>
+<div class="level2">
+<pre class="code java"><span class="co1">//The method in a class called MailMessage which returns the text after replace the variable.</span>
+<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getMessageFromTemplate<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> fileName, Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>,String<span class="sy0">&gt;</span> valuesMap<span class="br0">&#41;</span><span class="br0">&#123;</span>
+       <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> filePath<span class="sy0">=</span>templatePath<span class="sy0">+</span>fileName<span class="sy0">;</span>
+       <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> content <span class="sy0">=</span> <span class="st0">&quot;&quot;</span><span class="sy0">;</span>
+       <span class="kw1">try</span>
+       <span class="br0">&#123;</span>
+           content <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> <span class="br0">&#40;</span> Files.<span class="me1">readAllBytes</span><span class="br0">&#40;</span> Paths.<span class="me1">get</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span> <span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="br0">&#125;</span>
+       <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span>
+       <span class="br0">&#123;</span>
+           log.<span class="me1">error</span><span class="br0">&#40;</span><span class="st0">&quot;Email template file is missing. Java exception: &quot;</span><span class="sy0">+</span>e.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="br0">&#125;</span>
+&nbsp;
+       StrSubstitutor sub <span class="sy0">=</span> <span class="kw1">new</span> StrSubstitutor<span class="br0">&#40;</span>valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw1">return</span> sub.<span class="me1">replace</span><span class="br0">&#40;</span>content<span class="br0">&#41;</span><span class="sy0">;</span>
+   <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//The code in main for test</span>
+<span class="co1">//Suppose we have a file called helloWorld.stemp and it contains the template</span>
+&nbsp;
+MailMessage mailMess<span class="sy0">=</span>MailMessage.<span class="me1">getInstance</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span> valuesMap <span class="sy0">=</span> <span class="kw1">new</span> HashMap<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userName&quot;</span>, <span class="st0">&quot;pengfei&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userMail&quot;</span>, <span class="st0">&quot;haha@pengfei.org&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> text <span class="sy0">=</span> mailMess.<span class="me1">getMessageFromTemplate</span><span class="br0">&#40;</span><span class="st0">&quot;helloWorld.stemp&quot;</span>,valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>text<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+<pre class="code">#The content of the helloWorld.stemp
+
+Dear ${userName},
+
+  This is your registration email : ${userMail}
+  
+BR
+
+Pengfei.org</pre>
+
+<p>
+PS, the file template method only works in java 8. If you are using java 7, you need to change Files.readAllBytes( Paths.get(filePath) ) with outputStream and bufferReader for file reading. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;File template code example&quot;,&quot;hid&quot;:&quot;file_template_code_example&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:4,&quot;range&quot;:&quot;1318-&quot;} -->

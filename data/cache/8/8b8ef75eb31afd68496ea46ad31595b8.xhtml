@@ -1,0 +1,40 @@
+
+<h1 class="sectionedit1" id="create_symbolic_link_in_linux">Create symbolic link in linux</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Create symbolic link in linux" [1-45] -->
+<h2 class="sectionedit2" id="create_a_soft_symbolic_link">Create  a soft symbolic link</h2>
+<div class="level2">
+
+<p>
+ln -s source destination
+</p>
+
+<p>
+for example I&#039;m currently at /tmp/.
+</p>
+
+<p>
+I want to creat a symbolic link my_documents of my home /home/pliu/Documents
+</p>
+
+<p>
+I need to do 
+</p>
+<pre class="code">ln -s /home/pliu/Documents my_documents
+
+#this will create my_documents in my current location /tmp
+lrwxrwxrwx.  1 pliu     pliu       21 Feb  2 17:08 my_documents -&gt; /home/pliu/Documents/
+</pre>
+
+</div>
+<!-- EDIT2 SECTION "Create  a soft symbolic link" [46-449] -->
+<h2 class="sectionedit3" id="remove_a_link">Remove a link</h2>
+<div class="level2">
+<pre class="code">unlink my_documents
+
+$this will unlink, you will not see my_documents in /tmp anymore</pre>
+
+</div>
+<!-- EDIT3 SECTION "Remove a link" [450-] -->

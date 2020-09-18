@@ -1,0 +1,1 @@
+openssl req <span class="re5">-out</span> service.bioaster.org.csr  <span class="re5">-new</span> <span class="re5">-newkey</span> rsa:<span class="nu0">2048</span> <span class="re5">-nodes</span> <span class="re5">-keyout</span> service.bioaster.org.key

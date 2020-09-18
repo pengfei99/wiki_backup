@@ -1,0 +1,41 @@
+Après moultes préripéties, j'ai enfain réussit à crée ma page! Bon ok, c'est vrai, je dois remercier Audrey pour son aide ;-)
+
+
+===== Écriture de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**............................................................................... |
+| Utiliser un IDE | oui | oui | Je connais, Visual Studio (un peu moins Eclipse). Je code en ce moment sous Matlab, RStudio |
+| Mutualiser des bouts de codes : oui, mais comment ?\\ (//libraries// et autres modules) | oui | Un peu | Manuellement (factorisation et externalisation de bouts de codes sous forme de Classes…expérience en C++, Php, Javascript, Matlab et R) |
+| "-h" c'est bien, mais c'est galère, non ? | Sais pas trop | Non | J’ai pas encore pigé la nécessité pour le moment. 
+Je compte sur toi Tanguy pour éclairer ma lanterne ;-)
+ |
+| Y'a un "coding style" à BIOASTER ? | non | oui | J’utilise les bonnes pratiques de la POO… je me base sur le livre « Clean Code Handbook »… voir en pièce jointe du mail d'hiere pour ceux que ça intéresse ; Claire, il y a de bons conseils sur la factorisation de code dans la chapitre sur les fonctions ;-). On en reparle si tu veux. |
+| Documenter à part ou dans le code ? Quid des générateurs de doc ? | oui | oui | Doxygen |
+| pair programming, code review... //Qu'es aco// ? | non | oui | Relecture par un binôme (j’ai testé une seule fois… et j’ai eu un très bon retour d’expérience) |
+
+===== Sauvegarde de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| Et si mon Laptop (où je développe) se crashe ? | oui | oui | Rien pour l’instant\\
+J'utilisais un script batch basé sur « robocopy »  ou SVN pour faire du backup en même temps que le versionning\\
+… on a déjà le backup automatique à Bioaster non ?!
+ |
+| Comment faire pour revenir à une version antérieure ? | | | |
+
+===== Déploiement de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| mettre mon code (la dernière version) sur la ferme ? | | | |
+| donner mon code à d'autres : oui, mais sous quelles conditions ? (licences) | | | |
+
+===== Se tenir au courant =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| nouveaux algorithmes | | | |
+| nouvelles versions de logiciels | | | |
+
+===== Autres =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| gestion de projets | oui | non | |
+| gestion de taches | oui | non | le wiki ?!|

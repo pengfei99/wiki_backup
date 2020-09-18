@@ -1,0 +1,7 @@
+<span class="kw1">from</span> django.<span class="me1">views</span> <span class="kw1">import</span> generic
+&nbsp;
+<span class="kw1">from</span> polls.<span class="me1">models</span> <span class="kw1">import</span> Choice<span class="sy0">,</span> Question
+&nbsp;
+<span class="kw1">class</span> IndexView<span class="br0">&#40;</span>generic.<span class="me1">ListView</span><span class="br0">&#41;</span>:
+    template_name <span class="sy0">=</span> <span class="st0">'polls/index.html'</span>
+    context_object_name <span class="sy0">=</span> <span class="st0">'latest_question_list'</span>

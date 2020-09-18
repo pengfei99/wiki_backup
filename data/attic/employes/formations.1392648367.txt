@@ -1,0 +1,30 @@
+====== Formations ======
+
+  - Un courriel c'est quoi ?
+    * Juste du texte ! (//headers/body//)
+    * Intégration des pièces jointes (signature attachée)
+  - Comment voyagent-ils ?
+    * Serveurs (visibles dans //headers//) et protocoles (SMTP, IMAP, POP)
+    * Peuvent être interceptés
+  - Comment les sécuriser ?!
+    * Le contenu (chiffrement du corps)
+    * Le contenant (chiffrement de la connexion)
+  - Infrastructure de clé publique
+    * PKI vs MdP
+    * Le contenu (certificats et OpenPGP == centralisé et décentralisé, WebOfTrust)
+    * Le contenant (SSL/TLS)
+  - Autres utilisations des Certificats
+    * Authentifications des serveurs et services (plus de phishing)
+    * Authentifications auprès des services (plus de mot de passe, révocation)
+
+  - Hexadécimal
+  - Base64
+  - Wiki
+  - Nétiquette (posting styles)
+  - Tor
+  - Doodle
+  - RSS
+  - Framasoft (Etherpad)
+  - "Propriété Intellectuelle"
+
+{{tag>todo}}

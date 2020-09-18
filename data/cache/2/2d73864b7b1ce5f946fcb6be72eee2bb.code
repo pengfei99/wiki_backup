@@ -1,0 +1,6 @@
+outputDir = <span class="st0">&quot;/tmp/TESTCLEMENT3&quot;</span> <span class="co0"># à changer s'il faut</span>
+<span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> <span class="re1">$outputDir</span>
+<span class="co0"># ne fonctionne que sur la prod</span>
+mysqldump <span class="re5">-T</span> <span class="re1">$outputDir</span> nos_bioaster_searchproject <span class="re5">-u</span> nos_bioaster_sea <span class="re5">-p</span> <span class="re5">--skip-tz-utc</span>
+<span class="co0"># sur la dev il faut passer en root</span>
+mysqldump <span class="re5">-T</span> <span class="re1">$outputDir</span> nos_bioaster_searchproject <span class="re5">-u</span> root <span class="re5">-p</span> <span class="re5">--skip-tz-utc</span> 

@@ -1,0 +1,25 @@
+$ qconf -sq short
+qname                 short
+hostlist              @sequentials
+[...]
+tmpdir                /scratch
+shell                 /bin/sh
+prolog                NONE
+epilog                NONE
+[...]
+s_rt                  01:00:00
+h_rt                  06:00:00
+s_cpu                 00:06:00
+h_cpu                 00:12:00
+s_fsize               5G
+h_fsize               5.01G
+s_data                5G
+h_data                5.01G
+s_stack               INFINITY
+h_stack               INFINITY
+s_core                2.5G
+h_core                3G
+s_rss                 INFINITY
+h_rss                 INFINITY
+s_vmem                512M
+h_vmem                600M

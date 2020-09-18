@@ -1,0 +1,159 @@
+
+<h1 class="sectionedit1" id="git">Git</h1>
+<div class="level1">
+
+<p>
+Git est un gestionnaire de version. Cf wiki, google etc pour plus d&#039;infos… Une fois que du code est versionné sous git il est quasiment impossible de le supprimer <em>sans faire exprès</em>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Git" [1-209] -->
+<h2 class="sectionedit2" id="use_cases">Use cases</h2>
+<div class="level2">
+
+<p>
+Git propose bien plus de commandes que les trois plus communément utilisées (<code>add</code>, <code>commit</code>, <code>push</code>)
+Ici sont répertoriés les commandes à appeler en fonction des besoins. 
+Si votre besoin ne correspond pas à ceux listés ci-dessous <a href="https://en.wikipedia.org/wiki/The_Hitchhiker's_Guide_to_the_Galaxy" class="urlextern" title="https://en.wikipedia.org/wiki/The_Hitchhiker&#039;s_Guide_to_the_Galaxy"  rel="nofollow">don&#039;t panic !</a> Et veuillez vous dirigez calmement vers le développeur de l&#039;UTEC06 le plus proche.
+</p>
+
+</div>
+
+<h4 id="annuler_mon_dernier_commit">Annuler mon dernier commit</h4>
+<div class="level4">
+
+<p>
+Vous vouliez commiter un seul fichier et par habitude vous avez tapé <code>commit -am</code> au lieu de <code>commit -m</code> ? Ou bien vous avez des fichiers qui ne devaient pas être comités (info sensibles ) ?
+</p>
+
+<p>
+Voici comment faire :
+</p>
+
+<p>
+<code>git reset HEAD~</code>
+</p>
+
+<p>
+Cette commande vous placera au dernier commit, sans pour autant ignorer vos modifications locales.
+</p>
+
+</div>
+
+<h4 id="modifier_le_message_de_mon_dernier_commit">Modifier le message de mon dernier commit</h4>
+<div class="level4">
+
+<p>
+Vous venez de faire une typo en écrivant votre message de commit ? Pas de problème. Il serait possible de faire :
+<code>git reset HEAD~</code> de reajouter vos fichier et de recommiter, mais 3 commandes c&#039;est beaucoup trop !
+</p>
+
+<p>
+Une solution plus simple consiste à taper 
+<code>git commit –amend</code>
+qui vous ouvrira un éditeur de texte afin de modifier le message de votre commit.
+</p>
+
+</div>
+
+<h4 id="modifier_l_editeur_de_texte_par_defaut">Modifier l&#039;éditeur de texte par défaut</h4>
+<div class="level4">
+
+<p>
+<code>git config –global core.editor “vim”</code>
+</p>
+
+</div>
+
+<h4 id="modifier_l_histoire">Modifier l&#039;histoire</h4>
+<div class="level4">
+
+<p>
+Pour changer les 3 derniers commits:
+</p>
+
+<p>
+<code>git rebase –interactive HEAD~3</code>
+</p>
+
+<p>
+L&#039;éditeur de texte va s&#039;ouvrir et vous expliquer ce que vous pouvez faire: annuler un commit, modifier le message de commit, merger plusieurs commits, etc.
+</p>
+
+<p>
+Cela modifie l&#039;histoire. Il faudra donc faire un <code>git push -f</code> après coup. Cela n&#039;est pas possible sur les branches protégées (modifiable directement depuis gitlab)
+</p>
+
+</div>
+
+<h4 id="annuler_toutes_les_modifications_d_un_fichier_depuis_le_dernier_commit">Annuler toutes les modifications d&#039;un fichier depuis le dernier commit</h4>
+<div class="level4">
+
+<p>
+<code>git checkout – monfichiermodifie.txt</code>
+</p>
+
+</div>
+
+<h4 id="unstage_un_fichier">Unstage un fichier</h4>
+<div class="level4">
+
+<p>
+<code>touch A B C</code> A, B et C sont dits modifiés
+</p>
+
+<p>
+<code>git add A B</code> A et B sont dits staged; C est dit modifié
+</p>
+
+<p>
+<code>git reset –hard B</code> A est staged; B et C sont dits modifiés
+</p>
+
+<p>
+<code>git commit -m “Commit A only”</code> A est commité; B et C sont dits modifiés
+</p>
+
+<p>
+<code>git add B</code> A est commité; B est staged; C est modifié.
+</p>
+
+</div>
+
+<h4 id="recuperer_les_commits_distants_sans_creer_de_commit_de_merge">Récupérer les commits distants sans créer de commit de merge</h4>
+<div class="level4">
+
+<p>
+Si vous avez commité sur une branche qui entre temps a reçu des commits d&#039;un collaborateur, un <code>git pull</code> entraînera un commit supplémentaire.
+</p>
+
+<p>
+Il convient de faire plutôt (en admettant que la branche en question soit la branche master):
+</p>
+
+<p>
+<code>git fetch &amp;&amp; git rebase origin/master</code>
+</p>
+
+<p>
+Cela réappliquera vos commits locaux après récupération des commits distants.
+</p>
+
+</div>
+
+<h4 id="supprimer_localement_les_branches_mergees">Supprimer localement les branches mergées</h4>
+<div class="level4">
+<pre class="code">git branch --merged | grep -v &quot;\*&quot; | grep -v &quot;master&quot; | xargs -n 1 git branch -d</pre>
+
+<p>
+Cette commande supprimera toutes les branches locales (excepté master) qui sont mergées et donc supprimables sans risque.
+</p>
+
+</div>
+
+<h4 id="afficher_les_logs_git_de_maniere_bien_plus_claire">Afficher les logs git de manière bien plus claire</h4>
+<div class="level4">
+<pre class="code">git log --graph --pretty=format:&#039;%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#039; --abbrev-commit --date=relative</pre>
+
+</div>
+<!-- EDIT2 SECTION "Use cases" [210-] -->

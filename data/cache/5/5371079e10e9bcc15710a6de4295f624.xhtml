@@ -1,0 +1,147 @@
+
+<h1 class="sectionedit1" id="configure_yarn_memory_allocation_for_hadoop_cluster">Configure yarn Memory Allocation for hadoop cluster</h1>
+<div class="level1">
+
+<p>
+Memory allocation can be tricky on low RAM nodes because default values are not suitable for nodes with less than 8GB of RAM. This section will highlight how memory allocation works for MapReduce jobs, and provide a sample configuration for 2GB RAM nodes.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Configure yarn Memory Allocation for hadoop cluster" [1-324] -->
+<h2 class="sectionedit2" id="the_memory_allocation_properties">The Memory Allocation Properties</h2>
+<div class="level2">
+
+<p>
+A YARN job is executed with two kind of resources:
+</p>
+
+<p>
+An Application Master (AM) is responsible for monitoring the application and coordinating distributed executors in the cluster.
+Some executors that are created by the AM actually run the job. For a MapReduce jobs, they’ll perform map or reduce operation, in parallel.
+Both are run in containers on slave nodes. Each slave node runs a NodeManager daemon that’s responsible for container creation on the node. The whole cluster is managed by a ResourceManager that schedules container allocation on all the slave-nodes, depending on capacity requirements and current charge.
+</p>
+
+<p>
+Four types of resource allocations need to be configured properly for the cluster to work. These are:
+</p>
+
+<p>
+How much memory can be allocated for YARN containers on a single node. This limit should be higher than all the others; otherwise, container allocation will be rejected and applications will fail. However, it should not be the entire amount of RAM on the node.
+</p>
+
+<p>
+This value is configured in yarn-site.xml with yarn.nodemanager.resource.memory-mb.
+How much memory a single container can consume and the minimum memory allocation allowed. A container will never be bigger than the maximum, or else allocation will fail and will always be allocated as a multiple of the minimum amount of RAM.
+</p>
+
+<p>
+Those values are configured in yarn-site.xml with yarn.scheduler.maximum-allocation-mb and yarn.scheduler.minimum-allocation-mb.
+How much memory will be allocated to the ApplicationMaster. This is a constant value that should fit in the container maximum size.
+</p>
+
+<p>
+This is configured in mapred-site.xml with yarn.app.mapreduce.am.resource.mb.
+How much memory will be allocated to each map or reduce operation. This should be less than the maximum size.
+</p>
+
+<p>
+This is configured in mapred-site.xml with properties mapreduce.map.memory.mb and mapreduce.reduce.memory.mb.
+</p>
+
+<p>
+The relationship between all those properties can be seen in the following figure:
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahadoop%3Amemory_allocation&amp;media=employes:pengfei.liu:big_data:hadoop:hadoop-2-memory-allocation.png" class="media" title="employes:pengfei.liu:big_data:hadoop:hadoop-2-memory-allocation.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=f82c91&amp;media=employes:pengfei.liu:big_data:hadoop:hadoop-2-memory-allocation.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "The Memory Allocation Properties" [325-2418] -->
+<h2 class="sectionedit3" id="sample_configuration_for_2gb_nodes">Sample Configuration for 2GB Nodes</h2>
+<div class="level2">
+
+<p>
+For 2GB nodes, a working configuration may be:
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Property	</th><th class="col1">Value </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">yarn.nodemanager.resource.memory-mb	</td><td class="col1">1536</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">yarn.scheduler.maximum-allocation-mb	</td><td class="col1">1536</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">yarn.scheduler.minimum-allocation-mb	</td><td class="col1">128</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">yarn.app.mapreduce.am.resource.mb	</td><td class="col1">512</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">mapreduce.map.memory.mb	</td><td class="col1">256</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">mapreduce.reduce.memory.mb	</td><td class="col1">256</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [2515-2772] -->
+<p>
+Edit $HADOOP_HOME/etc/hadoop/yarn-site.xml and add the following lines:
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hadoop:memory_allocation&amp;codeblock=0" title="Download Snippet" class="mediafile mf_xml">yarn-site.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.nodemanager.resource.memory-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>1536<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.scheduler.maximum-allocation-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>1536<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.scheduler.minimum-allocation-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>128<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.nodemanager.vmem-check-enabled<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>false<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+Edit $HADOOP_HOME/etc/hadoop/mapred-site.xml and add the following lines:
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hadoop:memory_allocation&amp;codeblock=1" title="Download Snippet" class="mediafile mf_xml">mapred-site.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.app.mapreduce.am.resource.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>512<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>mapreduce.map.memory.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>256<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>mapreduce.reduce.memory.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>256<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT3 SECTION "Sample Configuration for 2GB Nodes" [2419-3727] -->
+<h1 class="sectionedit5" id="yarn_memory_config_on_multi_node">Yarn memory config on multi node</h1>
+<div class="level1">
+
+<p>
+<span style='color:#ed1c24; '>The above config file need to be copied to each node to make it effective.</span>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Yarn memory config on multi node" [3728-] -->

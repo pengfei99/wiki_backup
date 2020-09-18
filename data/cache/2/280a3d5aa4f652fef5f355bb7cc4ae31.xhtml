@@ -1,0 +1,193 @@
+
+<h1 class="sectionedit1" id="hive_internal_and_external_tables">Hive Internal and External tables</h1>
+<div class="level1">
+
+<p>
+Hive has two types of tables which are as follows:
+</p>
+<ul>
+<li class="level1"><div class="li"> Managed Table (Internal Table)</div>
+</li>
+<li class="level1"><div class="li"> External Table</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hive Internal and External tables&quot;,&quot;hid&quot;:&quot;hive_internal_and_external_tables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-161&quot;} -->
+<h2 class="sectionedit2" id="featured_difference_between_hive_internal_tables_vs_external_tables">Featured Difference between Hive Internal Tables vs External Tables</h2>
+<div class="level2">
+
+<p>
+Let’s now discuss the Hive Internal tables vs External tables comparison.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Featured Difference between Hive Internal Tables vs External Tables&quot;,&quot;hid&quot;:&quot;featured_difference_between_hive_internal_tables_vs_external_tables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;162-320&quot;} -->
+<h3 class="sectionedit3" id="hive_managed_tables">Hive Managed Tables</h3>
+<div class="level3">
+
+<p>
+It is also know an internal table. When we create a table in Hive, it by default manages the data. This means that Hive moves the data into its warehouse directory.
+</p>
+
+<p>
+Managed Tables  When we load data into a Managed table, then Hive moves data into Hive warehouse directory.
+</p>
+
+<p>
+For example:
+</p>
+<pre class="code">CREATE TABLE managed_table (dummy STRING);
+LOAD DATA INPATH &#039;/user/tom/data.txt&#039; INTO table managed_table;</pre>
+
+<p>
+This moves the file hdfs:<em>user/tom/data.txt into Hive’s warehouse directory for the managed_table table, which is hdfs:</em>user/hive/warehouse/managed_table.
+</p>
+
+<p>
+Further, if we drop the table using: 
+</p>
+<pre class="code">DROP TABLE managed_table</pre>
+
+<p>
+Then this will delete the table metadata including its data. The data no longer exists anywhere. This is what it means for HIVE to manage the data.
+</p>
+
+</div>
+
+<h4 id="example">Example</h4>
+<div class="level4">
+
+<p>
+For example, we want to insert the above csv file into the Hive 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hive:internal_external_table&amp;codeblock=2" title="Download Snippet" class="mediafile mf_csv">rabbit_demo.csv</a></dt>
+<dd><pre class="code file csv">id,sex,age,infected
+1001,Male,1,Yes
+1002,Female,2,No
+1003,Male,3,Yes
+1004,Female,4,Yes
+1005,Male,5,No</pre>
+</dd></dl>
+
+<p>
+Note hive command is case sensitive unlike sql
+</p>
+<pre class="code"># mosaic is the database name in which you want to insert rabbits table
+# If the database does not exit, create the database first
+CREATE DATABASE IF NOT EXISTS mosaic;
+
+# You can delete a database with tables in it.
+DROP DATABASE database_name CASCADE;
+
+# Without skip header line, you will see hive will load also the header as data. Note that, we define the header 
+# is the first line, if you want to remove the first two or three lines. It&#039;s possible too.
+CREATE TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT &#039;rabbit t virus infection&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; LINES TERMINATED BY &#039;\n&#039; STORED AS TEXTFILE tblproperties (&quot;skip.header.line.count&quot;=&quot;1&quot;);
+
+# load data to table, if your data is no your local file system.
+# Beware if you run this in Beeline, make sure the user in beeline has the right to read rabbit_demo.csv
+# This command takes the input path as a local file system path
+LOAD DATA LOCAL INPATH &#039;/tmp/rabbit.csv&#039; OVERWRITE INTO TABLE rabbits;
+
+# This command takes the input path as a hdfs file system path
+LOAD DATA INPATH &#039;/tmp/demo_data/rabbit.csv&#039; OVERWRITE INTO TABLE mosaic.rabbits;
+
+# If your data is on GPFS
+$ hdfs dfs -put /tmp/rabbit_demo.csv /usr/hadoop/. 
+# make sure hive has the right to read the data, otherwise you will see empty table
+$ hdfs dfs -chown hive:hdfs /usr/hadoop/rabbit_demo.csv
+
+LOAD DATA INPATH &#039;/usr/hadoop/rabbit_demo.csv&#039; OVERWRITE INTO TABLE rabbits;
+# Note that, after this command the csv will be moved to the hive warehouse, so you won&#039;t find it in /usr/hadoop/ anymore.
+
+# You can also include data location in one line
+CREATE TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT &#039;rabbit t virus infection&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; LINES TERMINATED BY &#039;\n&#039; STORED AS TEXTFILE LOCATION &#039;/tmp/rabbit_demo.csv&#039; tblproperties (&quot;skip.header.line.count&quot;=&quot;1&quot;);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hive Managed Tables&quot;,&quot;hid&quot;:&quot;hive_managed_tables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;321-3378&quot;} -->
+<h3 class="sectionedit4" id="hive_external_tables">Hive External Tables</h3>
+<div class="level3">
+
+<p>
+We can also create an external table. It tells Hive to refer to the data that is at an existing location outside the warehouse directory.
+</p>
+
+<p>
+we can control the creation and deletion of the data. The location of the external data is specified at the table creation time:
+</p>
+<pre class="code">CREATE EXTERNAL TABLE external_table(dummy STRING)
+LOCATION &#039;/user/tom/external_table&#039;;
+LOAD DATA INPATH &#039;/user/tom/data.txt&#039; INTO TABLE external_table;</pre>
+
+<p>
+Now, with the EXTERNAL keyword, Apache Hive knows that it is not managing the data. So it doesn’t move data to its warehouse directory. It does not even check whether the external location exists at the time it is defined. This very useful feature because it means we create the data lazily after creating the table.
+</p>
+
+<p>
+The important thing to notice is that when we drop an external table, Hive will leave the data untouched and only delete the metadata.
+</p>
+
+</div>
+
+<h4 id="example1">Example</h4>
+<div class="level4">
+
+<p>
+We can retake the example of the internal hive table, just add keyword external
+</p>
+<pre class="code">CREATE EXTERNAL TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT &#039;rabbit t virus infection&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; LINES TERMINATED BY &#039;\n&#039; STORED AS TEXTFILE tblproperties (&quot;skip.header.line.count&quot;=&quot;1&quot;);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hive External Tables&quot;,&quot;hid&quot;:&quot;hive_external_tables&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;3379-4691&quot;} -->
+<h2 class="sectionedit5" id="security">Security</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Managed Tables</strong>  Hive solely controls the Managed table security. Within Hive, security needs to be managed; probably at the schema level (depends on organization).</div>
+</li>
+<li class="level1"><div class="li"> <strong>External Tables</strong>  These tables’ files are accessible to anyone who has access to HDFS file structure. So, it needs to manage security at the HDFS file/folder level.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Security&quot;,&quot;hid&quot;:&quot;security&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:5,&quot;range&quot;:&quot;4692-5060&quot;} -->
+<h2 class="sectionedit6" id="when_to_use_managed_and_external_table">When to use Managed and external table</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;When to use Managed and external table&quot;,&quot;hid&quot;:&quot;when_to_use_managed_and_external_table&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:6,&quot;range&quot;:&quot;5061-5112&quot;} -->
+<h3 class="sectionedit7" id="use_managed_table_when">Use Managed table when</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> We want Hive to completely manage the lifecycle of the data and table.</div>
+</li>
+<li class="level1"><div class="li"> Data is temporary</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use Managed table when&quot;,&quot;hid&quot;:&quot;use_managed_table_when&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:7,&quot;range&quot;:&quot;5113-5245&quot;} -->
+<h3 class="sectionedit8" id="use_external_table_when">Use External table when</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Data is used outside of Hive. For example, the data files are read and processed by an existing program that does not lock the files.</div>
+</li>
+<li class="level1"><div class="li"> We are not creating a table based on the existing table.</div>
+</li>
+<li class="level1"><div class="li"> We need data to remain in the underlying location even after a DROP TABLE. This may apply if we are pointing multiple schemas at a single data set.</div>
+</li>
+<li class="level1"><div class="li"> The hive shouldn’t own data and control settings, directories etc., we may have another program or process that will do these things.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use External table when&quot;,&quot;hid&quot;:&quot;use_external_table_when&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;5246-5774&quot;} -->
+<h2 class="sectionedit9" id="conclusion">Conclusion</h2>
+<div class="level2">
+
+<p>
+In conclusion, Managed tables are like normal database table in which we can store data and query on. On dropping Managed tables, the data stored in them is also deleted and data is lost forever. While dropping External tables will delete metadata but not the data.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conclusion&quot;,&quot;hid&quot;:&quot;conclusion&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;5775-&quot;} -->

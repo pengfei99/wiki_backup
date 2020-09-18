@@ -1,0 +1,20 @@
+Class CarFactory{
+  public
+    list&lt;CarPieces&gt;;
+&nbsp;
+  public:
+    method buildWheels(){}
+    method buildGlasses(){}
+    method buildWheels(){}
+&nbsp;
+    function buildCar(){
+      this-&gt;buildWheels();
+      this-&gt;buildGlasses();
+      ...
+      car = this-&gt;_mountPieces()
+      return car
+    }
+&nbsp;
+  private:
+    method _mountPieces{}
+}

@@ -1,0 +1,72 @@
+====== FASTX-Toolkit ======
+
+===== Informations =====
+
+  * **Version** : 0.0.14
+  * **Licence** : AGPLv3 ou +
+  * **Page Web** : [[http://hannonlab.cshl.edu/fastx_toolkit/]]
+  * **Description** : The FASTX-Toolkit is a collection of command line tools for Short-Reads FASTA/FASTQ files preprocessing.
+
+===== Installation =====
+
+**Note** : La librairie dont dépend le logiciel (**libgtextutils**) est installé en même temps et non comme un paquet à part.
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/fastx_toolkit/0.0.14"
+mkdir -p $APP
+cd $SOFTWARE/src
+
+# libgtextutils
+wget -O libgtextutils-0.7.tar.gz "https://github.com/agordon/libgtextutils/releases/download/0.7/libgtextutils-0.7.tar.gz"
+tar xvzf libgtextutils-0.7.tar.gz
+cd libgtextutils-0.7
+./configure --prefix $APP 
+vim src/gtextutils/Makefile # remove the 2 spaces after "-L"
+make && make install
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$APP/lib/pkgconfig"
+
+# fastx_toolkit
+wget -O fastx_toolkit-0.0.14.tar.bz2 "https://github.com/agordon/fastx_toolkit/releases/download/0.0.14/fastx_toolkit-0.0.14.tar.bz2"
+tar xvjf fastx_toolkit-0.0.14.tar.bz2
+cd fastx_toolkit-0.0.14
+# remove all the spaces after "-L"
+vim src/fastx_trimmer/Makefile
+vim src/fastx_quality_stats/Makefile
+vim src/fastq_quality_converter/Makefile
+vim src/fastq_to_fasta/Makefile
+vim src/fastq_quality_filter/Makefile
+vim src/fastq_quality_trimmer/Makefile
+vim src/fastx_artifacts_filter/Makefile
+vim src/fastx_reverse_complement/Makefile
+vim src/fasta_nucleotide_changer/Makefile
+vim src/fastx_renamer/Makefile
+vim src/fastq_masker/Makefile
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "The FASTX-Toolkit is a collection of command line tools for Short-Reads FASTA/FASTQ files preprocessing.\n"
+}
+
+set version "0.0.14"
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/fastx_toolkit/${version}"
+
+prepend-path PATH "${app}/bin"
+prepend-path LIBRARY_PATH "${app}/lib"
+prepend-path LD_LIBRARY_PATH "${app}/lib"
+prepend-path C_INCLUDE_PATH "${app}/include"
+prepend-path CPLUS_INCLUDE_PATH "${app}/include"
+prepend-path PKG_CONFIG_PATH "${app}/lib/pkgconfig"
+prepend-path ACLOCAL_PATH "${app}/share/aclocal"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 0.0.14 installée

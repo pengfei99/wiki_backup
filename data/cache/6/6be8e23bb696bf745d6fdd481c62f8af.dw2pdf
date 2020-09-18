@@ -1,0 +1,134 @@
+<a name="ut6reunions-bioaster-cc08062015__"></a>
+<h1><bookmark content="Réunion Bioaster - CC IN2P3 du 8 juin 2015" level="0" /><a name="ut6reunions-bioaster-cc08062015__reunion_bioaster_-_cc_in2p3_du_8_juin_2015">Réunion Bioaster - CC IN2P3 du 8 juin 2015</a></h1>
+<div class="level1">
+
+<p>
+<strong>Participants :</strong> Mattieu Puel, Pierre Veyre
+</p>
+<hr />
+
+<p>
+<strong>Création de nos propres flavor “Bioaster”</strong>
+</p>
+
+<p>
+Pas possible.On devra donner la liste des flavors à créer
+</p>
+
+<p>
+<strong>Tanguy et Pierre doivent pouvoir tuer n’importe quelle VM et faire du debug de VM … (ie nova server diagnostic) : droits admin etc  … ?</strong>
+</p>
+
+<p>
+Ok pour le droit de détruire des VMs : faire une demande de rôle “czar” Open Stack, Mattieu a fait la manip en direct pour les tenants bioaster et htc-bioaster, à nous de tester maintenant …
+</p>
+
+<p>
+Pas possible d&#039;avoir les droits “admin”
+</p>
+
+<p>
+<strong>Script de déploiement automatique de l’environnement WINGS+PEGASUS+HTCONDOR+GPFS : faire un script python/nova ?</strong>
+</p>
+
+<p>
+Il faut utiliser HEAT pour faire de l&#039;orchestration. OK Bioaster va faire le béta-testeur car pas encore utilisé au CC. Pierre va faire le test prochainement.
+</p>
+
+<p>
+<strong>Script de déploiement automatique de l’environnement Galaxy + CloudMan : faire un script python/nova ?</strong>
+</p>
+
+<p>
+Idem.
+</p>
+
+<p>
+<strong>Connaitre exactement les différences de configuration de nos tenants</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Tenant bioaster</strong></div>
+</li>
+</ul>
+
+<p>
+2 noeuds dans VIL1, rack emerson6, c6100, stockage partagé dans GPFS, migration possible en live, 2x1Gb dont 1 pour le management l&#039;autre pour la VM, machines mutualisées-hébergées, adressage IP publique
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Tenant htc-bioaster</strong></div>
+</li>
+</ul>
+
+<p>
+2 noeuds dans VIL1, rack emerson6, r720-xt, pas de stockage partagé, migration possible en live, 2x1Gb dont 1 pour le management l&#039;autre pour la VM, machines dédiées, pas d&#039;adressage IP publique
+</p>
+
+<p>
+<strong>Point sur Swift</strong>
+</p>
+
+<p>
+C&#039;est en “prod” mais peu utilisé, ok pour avoir un peu de ressources mais si ça devient gros il faudra voir pour acheter nos propres ressources
+</p>
+
+<p>
+Tanguy et Pierre doivent réfléchir pour une demande de quota n&#039;excédant pas 500 Go !
+</p>
+
+<p>
+<strong>Demander une machine physique de test pour faire un execute node HTCondor</strong>
+</p>
+
+<p>
+A voir plutôt en fin d&#039;année avec Suzanne et Rolf
+</p>
+
+<p>
+<strong>Point sur le réseau inter-tenants</strong>
+</p>
+
+<p>
+Ok pour ouverture de ports, à voir avec telecom@CC
+</p>
+
+<p>
+<strong>Point sur les nouvelles commandes activées (resize, confirm resize etc …)</strong>
+</p>
+
+<p>
+C&#039;est au coup par coup, pas moyen de savoir.
+</p>
+
+<p>
+<strong>Comptes Open Stack génériques</strong>
+</p>
+
+<p>
+Ok, faire des mails à cloud@cc pour chaque compte générique dédié à un outil (pegasus, htcondor, galaxy, …)
+</p>
+
+<p>
+<strong>Nfs v4 et kerberos qui devraient arriver en fin d’année</strong>
+</p>
+
+<p>
+Ok, ça va être chaud. Voir avec Rémi Ferrand pour avoir des idées qui s&#039;est occupé de la forge de ticket Kerberos pour UGE
+</p>
+
+<p>
+<strong>Pb Debian 8 (cf Tanguy)</strong>
+</p>
+
+<p>
+A reproduire, Mattieu ne recommande pas Debian, utiliser plutôt CentOs, SL ou Ubuntu Server
+</p>
+
+<p>
+<strong>Pb de spawning quand on approche du quota d’instances </strong>
+</p>
+
+<p>
+A reproduire …
+</p>
+
+</div>

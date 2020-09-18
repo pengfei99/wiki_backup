@@ -1,0 +1,14 @@
+====== Authentifier les utilisateurs ======
+
+C'est facile, il suffit d'utiliser le bundle ''BioasterCertLogin''… enfin, dès qu'il sera écrit !
+
+<WRAP round todo >
+  * [[http://symfony.com/doc/current/cookbook/security/custom_provider.html|Créer un UserProvider]] pour récupérer les données de la BD  ; c'est [[http://propelorm.org/documentation/cookbook/symfony2/the-symfony2-security-component-and-propel.html|facile avec Propel]] !
+  * [[http://symfony.com/doc/current/cookbook/security/api_key_authentication.html|Créer un certificateAuthenticator]] pour récupérer les données de certificat passé par le serveur web.
+
+Il faudrait avoir 2 authentifications : certificat ou mot de passe.
+Mettre ça sur la même page, mais en deux parties. Si le certificat est détecté, on propose le "one clic connection", sinon, il faut remplir de formulaire.
+
+Pour l'auth par AD, utiliser le plugin de Pierre : [[https://github.com/ztec/ZtecSecurityActiveDirectoryBundle|ZtecSecurityActiveDirectoryBundle]]
+
+</WRAP>

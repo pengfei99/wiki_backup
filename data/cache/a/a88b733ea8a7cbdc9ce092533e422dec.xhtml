@@ -1,0 +1,94 @@
+
+<h1 class="sectionedit1" id="install_vmware_tools_on_a_centos7_guest_via_vmware_player">Install vmware tools on a centos7 guest via vmware player</h1>
+<div class="level1">
+
+<p>
+The VMware tools enable you to create share folders between guest and host, print in the guest os, etc. So it&#039;s nice to have them. In this tutorial, I will show you how to install them.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install vmware tools on a centos7 guest via vmware player&quot;,&quot;hid&quot;:&quot;install_vmware_tools_on_a_centos7_guest_via_vmware_player&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-260&quot;} -->
+<h2 class="sectionedit2" id="prerequisites">0. Prerequisites</h2>
+<div class="level2">
+
+<p>
+VMware tools are written in perl, and it will use gcc, make, kernel-headers, etc. to compile drivers in your guest <abbr title="Operating System">OS</abbr>. In my example, the guest os is centos 7. So you need to install the following dependencies
+</p>
+<pre class="code"># centos 7 
+$ sudo yum install perl gcc make kernel-headers kernel-devel -y
+
+# ubuntu
+sudo apt-get install build-essential</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0. Prerequisites&quot;,&quot;hid&quot;:&quot;prerequisites&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;261-641&quot;} -->
+<h2 class="sectionedit3" id="mount_the_vmware_tools_cd_rom_and_install">1. Mount the VMware tools cd rom and install</h2>
+<div class="level2">
+
+<p>
+In this tutorial, I used VMware workstation 12 player. Open it, click on Player→ Manager → Install VMware tools.
+</p>
+
+<p>
+This will trigger a cd room mount, you should see it on your desktop.
+</p>
+<pre class="code"># blkid list all block device
+$ blkid
+/dev/sr0: UUID=&quot;2017-03-17-07-21-14-00&quot; LABEL=&quot;VMware Tools&quot; TYPE=&quot;iso9660&quot; 
+
+# create a directory to mount the CD
+$ sudo mkdir /media/VMware_Tools
+# Mount the CD 
+$ sudo mount /dev/sr0 /media/VMware_Tools/
+# You wiil receive a message that your CD/DVD files should now be accessible read-only
+
+# check the contennt
+$ ls -lah /media/VMware_Tools
+manifest.txt     VMwareTools-10.1.6-5214329.tar.gz  vmware-tools-upgrader-64
+run_upgrader.sh  vmware-tools-upgrader-32
+
+# If you want to make the mount permanent, you can add the following line in your /etc/fstab
+UUID=2017-03-17-07-21-14-00             /media/VMware_Tools   iso9660 ro,user,auto  0 0 
+
+# Untar the VMwareTools-10.1.6-5214329.tar.gz,  you should see a folder vmware-tools-distrib
+
+# Run the vmware-install.pl script
+$ cd vmware-tools-distrib/
+$ ls
+bin  caf  doc  etc  FILES  INSTALL  installer  lib  vgauth  vmware-install.pl
+
+$ sudo ./vmware-install.pl
+# Follow the instruction, finish the installation </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Mount the VMware tools cd rom and install&quot;,&quot;hid&quot;:&quot;mount_the_vmware_tools_cd_rom_and_install&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;642-1907&quot;} -->
+<h2 class="sectionedit4" id="create_share_folder">2. Create share folder</h2>
+<div class="level2">
+
+<p>
+2.1 Create or choose a folder in your Host <abbr title="Operating System">OS</abbr> which you want to share with your Guest <abbr title="Operating System">OS</abbr>. For example, I choose C:\Users\pliu\Downloads\vm_shareFolder as my share folder.
+</p>
+
+<p>
+2.2 Now, I need to go to vmware workstation to config it as share folder.
+</p>
+
+<p>
+Click on Player → Manage → Virtual Machine Settings → Options (Tab after Hardware) → Shared Folders
+</p>
+
+<p>
+Now, you just follow the instruction, the share folder is created. 
+</p>
+
+<p>
+2.3 Go to your Guest <abbr title="Operating System">OS</abbr>, the share folder is mounted on /mnt/hgfs
+</p>
+
+<p>
+2.4 Set un a quick access point
+$ ln -s /mnt/hgfs/shared-directory ~/Desktop/Name-of-the-folder
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Create share folder&quot;,&quot;hid&quot;:&quot;create_share_folder&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1908-&quot;} -->

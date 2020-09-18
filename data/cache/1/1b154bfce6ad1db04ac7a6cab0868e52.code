@@ -1,0 +1,2 @@
+$ rpm <span class="re5">-Uvh</span> http:<span class="sy0">//</span>fr2.rpmfind.net<span class="sy0">/</span>linux<span class="sy0">/</span>epel<span class="sy0">/</span><span class="nu0">7</span><span class="sy0">/</span>x86_64<span class="sy0">/</span>e<span class="sy0">/</span>epel-release-<span class="nu0">7</span>-<span class="nu0">5</span>.noarch.rpm
+$ <span class="kw2">sudo</span> <span class="kw2">yum install</span> R

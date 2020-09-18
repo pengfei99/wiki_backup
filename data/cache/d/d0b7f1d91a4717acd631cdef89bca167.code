@@ -1,0 +1,10 @@
+# The below query <span class="kw1">CREATE</span> a <span class="kw1">CROSS</span> <span class="kw1">JOIN</span> <span class="br0">&#40;</span>catesian product<span class="br0">&#41;</span> <span class="kw1">ON</span> two <span class="kw1">TABLES</span> <span class="kw1">THEN</span> <span class="kw1">FILTER</span> the <span class="kw1">RESULT</span> <span class="kw1">WITH</span> the <span class="kw1">WHERE</span> clause
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> Sales<span class="sy0">.</span>LastSaleDate
+<span class="kw1">FROM</span> Customers<span class="sy0">,</span> Sales
+<span class="kw1">WHERE</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+&nbsp;
+# The <span class="kw1">INNER</span> <span class="kw1">JOIN</span> will <span class="kw1">FILTER</span> the <span class="kw1">RESULT</span> while doing <span class="kw1">INNER</span> <span class="kw1">JOIN</span>
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> Sales<span class="sy0">.</span>LastSaleDate
+<span class="kw1">FROM</span> Customers
+   <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales
+   <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID

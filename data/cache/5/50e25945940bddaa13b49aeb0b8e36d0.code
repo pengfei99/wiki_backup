@@ -1,0 +1,30 @@
+&lt;VirtualHost *:80&gt;
+    ServerName owncloud.bioaster.org
+    ServerAlias ccbioappl03.in2p3.fr 134.158.36.23
+    Redirect permanent / https://owncloud.bioaster.org/
+&lt;/VirtualHost&gt;
+&nbsp;
+&lt;VirtualHost *:443&gt;
+    ServerName owncloud.bioaster.org
+    ServerAlias ccbioappl03.in2p3.fr 134.158.36.23
+    DocumentRoot /var/www/html/owncloud
+&nbsp;
+    AssignUserId biodata bioaster
+    php_admin_value session.save_path &quot;/var/lib/php/session/biodata&quot;
+&nbsp;
+    SSLEngine       on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+&nbsp;
+    SSLCertificateFile      /etc/pki/tls/certs/owncloud.bioaster.org.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/owncloud.bioaster.org.key
+&nbsp;
+    #SSLVerifyClient none
+    #
+    #SSLCACertificatePath    configuration/certificates
+    #SSLCACertificateFile    configuration/certificates/cacert.pem
+&nbsp;
+    &lt;IfModule mod_headers.c&gt;
+        Header always set Strict-Transport-Security &quot;max-age=25768000; includeSubDomains; preload&quot;
+    &lt;/IfModule&gt;
+&lt;/VirtualHost&gt;

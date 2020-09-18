@@ -1,0 +1,278 @@
+
+<p>
+<strong>Date : 13/01/2016    &amp;   19/01/2016  </strong>
+</p>
+
+<p>
+<strong>Participants</strong> : <abbr title="Audrey Cauchard">AC</abbr>, <abbr title="Yoann Mouscaz">YM</abbr>, <abbr title="Nicolas Sapay">NS</abbr>, TLC, <abbr title="Guillaume Boissy">GB</abbr>   +<abbr title="Anthony Berger">AB</abbr>    <em>(excusés : <abbr title="Pierre Veyre">PV</abbr>)</em>
+</p>
+
+<p>
+<strong>Précédente réunion le <a href="/ut6/reunions/reunion_ut6_22.12.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_22.12.2015">22/12/2015  &amp;  05/01/2016</a></strong>
+</p>
+
+<h1 class="sectionedit1" id="ordre_du_jour">Ordre du jour</h1>
+<div class="level1">
+
+<p>
+<em>
+Les sujets <del>barrés</del> sont en attente.<br/>
+
+Les sujets <span class="wrap_round wrap_box ">surlignés en gris</span> sont traités s&#039;il y a assez de temps OU n&#039;ont pas été traités par manque de temps<br/>
+
+Les sujets <span class="wrap_danger ">surlignés en rouge</span> sont prioritaires.
+</em>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Ordre du jour" [197-491] -->
+<h3 class="sectionedit2" id="itis_ab_utec6">IT/IS (AB) &amp; UTEC6</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>] GLPI : clonage en Prod (helpdesk.bioaster.org)</div>
+<ul>
+<li class="level2"><div class="li"> Dès à présent, GO pour utilisation en Validation/beta de tous les échanges entre UTEC6 et IT/IS!</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>].RAF mail dans la semaine pour détailler…</div>
+</li>
+<li class="level2"><div class="li"> autres : Cloture &lt;&gt; résolu  ; <abbr title="Guillaume Boissy">GB</abbr> : détailler les protocoles de résolution dans les tickets (ou base de connaissance pour procédure + complexe)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] Granularité des droits utilisateurs sur les VMs du socle BIOASTER1. Exemple : actuellement Novius peut avoir accès au root sur la machine biospecimens de prod…</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>] : corrigé : groupe +password   +[<abbr title="Guillaume Boissy">GB</abbr>].RAF = vérifier droits suffisants à confirmer par Novius via Sudo aux prochaines connexions</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] Socle Lyon Gerland full : commande de nouveaux disques ?</div>
+<ul>
+<li class="level2"><div class="li"> [tous] l&#039;idée est de ne pas déporter le CC @socleBA1 !!!  =⇒  évangélisation des utilisateurs (purge,…)!  + mais avoir une zone de confort suffisante pour ne pas en faire un pb de support chronique et chronophage </div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] voir avec LC si +10To ajouté ou non au budget 2016…</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>] Fait : Ajout DD 1,4 To comme résolution rapide.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Nicolas Sapay">NS</abbr>] Faut-il vraiment utiliser .local dans les adresse ?</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>]  Non =⇒ insister auprès de DEUZZI pour qu&#039;ils fassent ce qu&#039;on leur demande (notamment pour devtools.bioster.org)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] Propositions de catégories pour GLPI à rendre à Anthony</div>
+<ul>
+<li class="level2"><div class="li"> [tous].RAF =⇒ envoi par mail @<abbr title="Anthony Berger">AB</abbr> après consolidation interne (<abbr title="Guillaume Boissy">GB</abbr> préconise 1 item/solution)</div>
+</li>
+<li class="level2"><div class="li"> +&#039;Machines virtuelles&#039; pour Vmware , OpenStack,…</div>
+</li>
+<li class="level2"><div class="li"> +&#039;Support Bioinfo&#039;</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>] Go Live officiel mi-Février</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] Demande d&#039;ajouts de champs à l&#039;AD (pour LIMS via Shibboleth)</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Anthony Berger">AB</abbr>] OK mais requiert un travail important d&#039;éditions dans l&#039;AD ⇒ UTEC6 se partage le travail avec Céline F.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">[TLC] Shibboleth</div>
+<ul>
+<li class="level2"><div class="li"> [+<abbr title="Anthony Berger">AB</abbr>] Pb d&#039;interruption lors de l&#039;interogation de l&#039;AD par Shibboleth</div>
+<ul>
+<li class="level3"><div class="li"> Résolu : récursivité Java.flag=yes/no  niveau Shibboleth  (Redmine : par défaut = recursif,  Shibboleth : par défaut =non!  )</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Tout est terminé exception faite de la récupération param dans SciForma  (pas les infos pour l&#039;attaquer)</div>
+<ul>
+<li class="level3"><div class="li"> warning : fédération des Shibboleth</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [UTEC6] devtools = serveurs pour les outils de dev (Redmine, design, soft schéma WWWsqldesigner, gitlab si on en avait besoin,….)</div>
+<ul>
+<li class="level2"><div class="li">  devtools fera l&#039;objet d&#039;une &#039;shibbothelisation&#039; en premier </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [UTEC6] besoins de droits admin sur les PCs surl lesquels on fait du support =⇒ [<abbr title="Guillaume Boissy">GB</abbr>].RAF : voit avec LC faisabilité…</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "IT/IS (AB) & UTEC6" [492-3019] -->
+<h3 class="sectionedit3" id="points_generaux">Points généraux</h3>
+<div class="level3">
+
+<p>
+<em class="u">Candidat au nom du projet LIMS:</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <abbr title="Network Of Experiments">NoE</abbr> (network of Experiments)   ⇒ grand gagnat par KO ==⇒  GO!</div>
+</li>
+<li class="level1"><div class="li"> Totem</div>
+</li>
+<li class="level1"><div class="li"> L1M5</div>
+</li>
+<li class="level1"><div class="li"> BioDataX</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Points généraux" [3020-3184] -->
+<h3 class="sectionedit4" id="vie_de_la_societe">Vie de la société</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> RTT : rappel des RTT obligatoires</div>
+</li>
+<li class="level1"><div class="li"> clotûre exercice budgétaire 2015: note de frais,…</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Avancée du dossier pour l&#039;ANR</div>
+<ul>
+<li class="level2"><div class="li"> 1 Programme (UTEC) + 1 Projet innovation interne (set-up) + 1 / Projet interne et/ou collaboratif [participatif] (e.g. REALISM)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h4 id="vie_de_l_equipepoint_rh">Vie de l&#039;équipe / point RH</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] entretiens annuels + Evaluation 2015 + Objectifs 2016.S1</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>, TLC] gestion du départ de Tanguy (date prévisionnelle : 29/02)</div>
+<ul>
+<li class="level2"><div class="li"> prochaine date TLC @<abbr title="Bioaster 1">BA1</abbr> (planif. travaux + repas de Noel!) : Lundi 25 - Mardi 26</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>, <abbr title="Yoann Mouscaz">YM</abbr>, <abbr title="Nicolas Sapay">NS</abbr>] recrutement en cours</div>
+<ul>
+<li class="level2"><div class="li"> CDI &#039;Data Scientist&#039; : 35 cand. transférés de la RH - 3 à 4 “pertinents” - 1er entretien avec Stéphane BALLEREAU  =⇒ [<abbr title="Guillaume Boissy">GB</abbr>] : le 11/01 : candidat non retenu (mais SB avait une réponse positive pour un poste dans une sturcture équivalente à Cambridge)</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Nicolas Sapay">NS</abbr> + <abbr title="Yoann Mouscaz">YM</abbr>] Stagiares : Demandes de matériels informatique OK. Demandes de badges OK.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Pb Bascule de SRVFIC =⇒ terminé ?   doute? </div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] : Zéro réponse pour <a href="http://aramis.resinfo.org/" class="urlextern" title="http://aramis.resinfo.org/"  rel="nofollow">ARAMIS 2016</a> @ Bron (07/04/16). Pas d&#039;intérêt ? =⇒ [<abbr title="Guillaume Boissy">GB</abbr>] GO pour inscription <abbr title="Yoann Mouscaz">YM</abbr>.</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] : backup de TLC sur formation Biospecimens serait apprécié  ⇒ [<abbr title="Guillaume Boissy">GB</abbr>] : OK</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="interaction_avec_les_autres_unitesservices">Interaction avec les autres Unités / Services</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Rencontre bilatérale hebdo avec Services Informatique (<abbr title="Guillaume Boissy">GB</abbr>+LC)  (UTEC6 &amp; service info):</div>
+<ul>
+<li class="level2"><div class="li"> [LC+<abbr title="Guillaume Boissy">GB</abbr>] : demande de la DUP, update activités + fonctionnement IT/IS et UTEC6 : next 21/01 @ IP</div>
+</li>
+<li class="level2"><div class="li"> [LC] : recrutement en cours d&#039;un stagiaire, sujet = outil de supervision du réseau</div>
+</li>
+<li class="level2"><div class="li"> [LC] : confirmation d&#039;un écart de 5000€ sur le devis du CC concernant l&#039;hébergement du socle + bureau : erreur ou vraie raison ?  =⇒ LC se renseigne auprès de Séverine</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Bioinfo / BioStats / … des UTECs</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Accueil de Alexei NOVOLOACA, stagiaire stats &amp; multiomiques d&#039;UTEC2 dans l&#039;open-space GeekSky</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Pierre Veyre">PV</abbr>] UTEC7: visite commune labs…</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC2 TICKET : VMs sur-approvisionnées en espace (4,40To sur disque de 4To) - UTEC2 vide VMS sur SPS + <abbr title="Anthony Berger">AB</abbr> migre VM sur autre disque (cf section IT)</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC7 : Intégration du process UTEC7 - Homogénisation de l&#039;arborescence, besoin des droits sur fichiers M</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC7 : Logiciel SampleTrack - Réunion programmée le 13/01 avec <abbr title="Adama Ouattara">AO</abbr>, <abbr title="Guillaume Boissy">GB</abbr>, <abbr title="Nicolas Sapay">NS</abbr> &amp; <abbr title="Audrey Cauchard">AC</abbr></div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC3 TICKET : Benoit-Paris, problème d&#039;accès au Webdav ⇒ TLC</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC3 : Demande QSI, instrument UTEC3 écrivait données sur SRVFIC. Voir pour changer pour pas que ça aille sur M.</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] UTEC2 TICKET : espace temporaire pour transfert données auteur en ligne de commandes</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] Formation + dépannage UTECs sur Paris 2&amp;3 février</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> QSI/PMO</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] Intégration de la formation Owncloud au parcours du nouvel arrivant - souvent oublié donc permet le lissage des demandes</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] “Dépoussiérage”/mise aux normes formation “Cahier de labo et gestion des données” pour les nouveaux arrivants</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] Problème M : perte de droits sur fichiers pour PMO &amp; Me - Demande faite à ME le 8/01 pas de réponse</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] prochaine formation des UTECs à la gestion des non-conformités (vs. GLPI…)</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Audrey Cauchard">AC</abbr>] ISO90001 : Demande QSI, intégration des données UTEC3</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Vie de la société" [3185-6409] -->
+<h3 class="sectionedit5" id="partnershipsbd">Partnerships / BD</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr> + <abbr title="Yoann Mouscaz">YM</abbr>] : projets avec bMx</div>
+<ul>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Rappel du contexte et contours du projet (Metagenomics priorité N°1; CdP=AT/Aasma)</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] rencontre avec JF GORSE Jeudi prochain pour faire un point sur les projets</div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Contexte : acquisition de bMx d&#039;une société de bioinfo &#039;Applied maths&#039; </div>
+</li>
+<li class="level2"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] Contexte : suite à rencontre de CG avec CEO de l&#039;Institut Mérieux, provoquer rencontre <abbr title="Guillaume Boissy">GB</abbr> et BIOFORTIS</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr> + <abbr title="Nicolas Sapay">NS</abbr>] NOVADISCOVERY : solution GitHealth (Nov 2015)  puis leur solution d&#039;analyse (Ma 12/01)</div>
+</li>
+<li class="level1"><div class="li"> </div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Nicolas Sapay">NS</abbr>]Invitation des bio-informaticiens lyonnais [<abbr title="Yoann Mouscaz">YM</abbr>] Lyonnais au début pour passer ensuite à un peu plus loin, ou uniquement lyonnais du début à la fin ?</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] eTRIKS : Community Meeting @Amsterdam</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Yoann Mouscaz">YM</abbr>] LaBRI / Université Bordeaux - Marie Beurton-Aimar</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] pres. le 18/11 @Meet The Industry Day - session “From Big Data to Smart Data” … !?</div>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Guillaume Boissy">GB</abbr>] meeting “Horizon Maths 2015” (FSMP) 14/12 @IBM, Courbevoie - “Santé &amp; Données”, sessions: BigData &amp; Santé + Confidentialité&amp;Sécurité  : bof!</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Partnerships / BD" [6410-7477] -->
+<h1 class="sectionedit6" id="projets">PROJETs</h1>
+<div class="level1">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Question </th><th class="col1 leftalign">Quoi?                  </th><th class="col2 leftalign">Qui?          </th><th class="col3 leftalign">Avancement / Action   </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0">1 </th><td class="col1">BCOM </td><td class="col2"><abbr title="Nicolas Sapay">NS</abbr> </td><td class="col3"> Contrat en cours de relecture : j&#039;ai besoin de temps !!! </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0">2 </th><td class="col1">Biospecimens</td><td class="col2"><abbr title="Yoann Mouscaz">YM</abbr></td><td class="col3"></td>
+	</tr>
+</table></div>
+
+</div>
+<!-- EDIT7 TABLE [7501-] --><!-- EDIT6 SECTION "PROJETs" [7478-] -->

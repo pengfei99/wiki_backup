@@ -1,0 +1,5 @@
+<span class="co1">// channel must be not blocking</span>
+channel.<span class="me1">configureBlocking</span><span class="br0">&#40;</span><span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// register() 方法的第二个参数 specifies the event(e.g. Connect, Accept, Read, Write) which the watcher will monitor</span>
+<span class="co1">// in our case we monitor only read event </span>
+SelectionKey key<span class="sy0">=</span>channel.<span class="me1">register</span><span class="br0">&#40;</span>selector, Selectionkey.<span class="me1">OP_READ</span><span class="br0">&#41;</span>

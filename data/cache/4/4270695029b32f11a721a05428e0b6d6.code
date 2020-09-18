@@ -1,0 +1,2 @@
+git clone https://github.com/yyuu/pyenv-virtualenv.git  pyenv/plugins/pyenv-virtualenv
+eval &quot;$(pyenv virtualenv-init -)&quot; # put it in bashrc

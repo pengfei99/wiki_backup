@@ -1,0 +1,4 @@
+===== Fixed Bug Eclipse (Kepler) après MàJ SL6 =====
+<code>sudo vi /opt/eclipse/eclipse.ini
+Add "-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false"
+</code>

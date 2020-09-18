@@ -1,0 +1,44 @@
+====== Messagerie Instantanée ======
+
+Un serveur gérant le protocole **XMPP** est disponible à BIOASTER.
+
+Les comptes sont créés par les employés eux-mêmes en fournissant les paramètres suivants :
+
+  * **Identifiant :** //prenom.nom//@bioaster.org ;
+  * **Serveur :** ccbioappl01.in2p3.fr ;
+  * **Proxy :**  proxy.bioaster.org (pour le transfert de fichier).
+
+Différents clients peuvent être utilisés, et quelques-uns sont décrits ci-après.
+
+===== PSI =====
+
+Psi peut être téléchargé directement depuis [[http://psi-im.org/download/|le site web]] du projet. Une fois installé, il se configure comme suit.
+
+Dans la barre de menu sélectionnez ''Général > Configuration des comptes'' et dans la nouvelle fenêtre cliquez ''Ajouter''. Comme nom de compte, mettez ''bioaster.org'' et comme serveur ''ccbioappl01.in2p3.fr''. À la fenêtre d'avertissement, cliquez ''Faire confiance au certificat''.
+
+Entrez maintenant votre identifiant — votre adresse courriel BIOASTER — qui doit être de la forme **//prénom.nom//@bioaster.org**. Pour utiliser votre client de manière efficace, voici les
+options recommandées :
+
+  * Dans le menu ''Général > Options'', cochez toutes les cases sur l’onglet ''Compte'' ;
+  * Dans l’onglet ''Connexion'' cochez ''Compressez les échanges'' ;
+  * Dans l'onglet ''Divers'' saisissez dans le champ ''Proxy'' l'adresse ''proxy.bioaster.org''.
+
+La {{services/messagerie_instantanee-20140311.pdf|procédure complète}} décris l'ajout de contact et la création de salons de discussion.
+
+===== Pidgin =====
+
+[[http://www.pidgin.im/|Pidgin]] n'est pas officiellement supporté à BIOASTER, mais fonctionne très bien.
+
+Pour le configurer, il suffit de renseigner les informations fournies ci-dessus dans les fenêtres appropriées.
+
+Ajouter un compte dans le menu ''Comptes > Gérer des comptes'' on peut ajouter des comptes.
+
+{{services/pidgin_comptes.png?direct&400|}}
+
+Renseigner le nom d' ''Utilisateur'', le ''Domaine'' et le ''Mot de Passe''. Pensez à cocher la case ''Créer ce nouveau compte sur le serveur'' si celui-ci n'existe pas déjà.
+
+{{services/pidgin_compte_essentiel.png?direct&400|}}
+
+Dans l'onglet ''Avancé'', renseignez le nom du ''Serveur de Connexion'' et le nom du ''Proxy pour le transfert des fichiers''.
+
+{{services/pidgin_compte_avance.png?direct&400|}}

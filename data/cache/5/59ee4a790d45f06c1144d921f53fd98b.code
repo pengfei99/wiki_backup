@@ -1,0 +1,13 @@
+<span class="co0">#stop apache</span>
+systemctl stop httpd
+<span class="co0">#show semaphores</span>
+ipcs <span class="re5">-s</span>
+&nbsp;
+<span class="co0">#create a clean script </span>
+<span class="kw2">vim</span> clean.sh
+<span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">`</span>ipcs <span class="re5">--semaphores</span> <span class="sy0">|</span> <span class="kw2">grep</span> apache <span class="sy0">|</span> <span class="kw2">awk</span> <span class="st_h">'{print $2}'</span><span class="sy0">`</span> ;
+<span class="kw1">do</span>
+ipcrm <span class="re5">--semaphore-id</span> <span class="re1">$i</span>;
+<span class="kw1">done</span> ;

@@ -1,0 +1,70 @@
+====== Boyce-Codd normal form ======
+
+Boyce–Codd normal form (or BCNF or 3.5NF) is a normal form used in database normalization. It is a slightly stronger version of the third normal form (3NF). BCNF was developed in 1975 by Raymond F. Boyce and Edgar F. Codd to address certain types of anomalies not dealt with by 3NF as originally defined.
+
+If a relational schema is in BCNF then all redundancy based on functional dependency has been removed, although other types of redundancy may still exist. For a table to satisfy the Boyce-Codd Normal Form, it should satisfy the following two conditions:
+
+  * It should be in the Third Normal Form.
+  * And, for any dependency A->B, A should be a super key.
+
+The second point sounds a bit tricky, right? In simple words, it means, that for a dependency A->B, A cannot be a non-prime attribute, if B is a prime attribute.
+
+====== Example 1 ======
+
+^student_id^subject^professor^
+|101|Java|Bob|
+|101|C++|Jean|
+|102|Java|Alice|
+|103|C#|Tod|
+|104|Java|Bob|
+
+In the table above:
+
+  * One student can enroll in multiple subjects. For example, a student with student_id 101, has opted for subjects - Java & C++
+  * For each subject, a professor is assigned to the student.
+  * And, there can be multiple professors (e.g. Alice and Bob) teaching one subject as we have for Java.
+
+**What do you think should be the Primary Key?**
+
+Well, in the table above student_id, subject together form the primary key, because using student_id and subject, we can find all the columns of the table.
+
+One more important point to note here is, one professor teaches only one subject, but one subject may have two different professors.
+
+Hence, there is a dependency between subject and professor here, where the subject depends on the professor name. why is not professor depends on subject?  For example, we take java as subject, there are two possible professors, we can't determine a unique professor, but for a professor Bob, we can determine the subject is java. 
+
+This table satisfies the 1st Normal form because all the values are atomic, column names are unique and all the values stored in a particular column are of the same domain.
+
+This table also satisfies the 2nd Normal Form as there is no Partial Dependency.
+
+And, there is no Transitive Dependency, hence the table also satisfies the 3rd Normal Form.
+
+But this table is not in Boyce-Codd Normal Form. Because student_id, subject form primary key, which means subject column is a prime attribute. But, there is one more dependency, professor->subject. And while the subject column is a prime attribute, professor is a non-prime attribute, which is not allowed by BCNF.
+
+**Why it causes problems?**
+
+For example if student 102 does not want to follow Java anymore, we will lose also the information of Alice is teaching Java.
+
+**How to satisfait Boyce-Codd Normal form?**
+
+To make this relation(table) satisfy BCNF, we will decompose this table into two tables, student table, and professor table.
+
+Below we have the structure for both the tables.
+
+^student_id^professor^
+|101|Bob|
+|101|Jean|
+|102|Alice|
+|103|Tod|
+|104|Bob|
+
+^professor^subject^
+|Bob|Java|
+|Jean|C++|
+|Alice|Java|
+|Tod|C#|
+|Bob|Java|
+
+
+====== A more Generic Explanation ======
+
+{{:employes:pengfei.liu:data_science:data_base:theory:data_model:bcnf_generic_explain.png?400|}}

@@ -1,0 +1,7 @@
+====== Connect to an aws ec2 vm via ssh ======
+
+When you create your vm in ec2, you need to provide a key pair. And this is essential to allow ssh connection.
+
+<code>
+ssh -i aws_vm.pem centos@ec2-52-47-136-8.eu-west-3.compute.amazonaws.com
+</code>

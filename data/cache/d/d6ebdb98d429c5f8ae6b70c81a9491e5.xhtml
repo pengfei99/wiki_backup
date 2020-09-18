@@ -1,0 +1,86 @@
+
+<h1 class="sectionedit1" id="pipeline_16s_dependencies_installation">Pipeline 16s dependencies installation</h1>
+<div class="level1">
+
+<p>
+1. task Clustering_openReference
+</p>
+
+<p>
+It requires python lib qiime, h5py and system lib tkinter
+</p>
+<pre class="prettyprint">
+sudo pip install h5py
+sudo pip install qiime
+sudo yum install tkinter
+</pre>
+<p>
+PS: qiime installation may take 30 mins, it&#039;s normal, don&#039;t quit your installation process
+</p>
+
+<p>
+It also requires a usearch61 bin file (/mnt/gpfs/pt2/Apps/CentOS7/vsearch/bin/usearch61), copy it to /usr/bin/usearch61
+</p>
+
+<p>
+2. task raw matrix generation 
+</p>
+
+<p>
+It requires R and R package phyloseq
+</p>
+<pre class="prettyprint">
+yum install libcurl-devel
+yum install R
+
+sudo R
+
+# phyloseq requires a R package igraph (The default cran package has bug and do not compile)
+# The following script install directly from developper git repo.
+
+install.packages(&quot;devtools&quot;)
+library(devtools)
+install_github(&quot;igraph/rigraph&quot;)
+
+# after install igraph, we can begin phyloseq
+
+source(&#039;http://bioconductor.org/biocLite.R&#039;)
+biocLite(&#039;phyloseq&#039;)
+
+
+</pre>
+<p>
+# task matrix normalization
+It requires a R package DESeq2
+</p>
+<pre class="prettyprint">
+yum install libxml2-devel
+
+# install xml dependency
+install.packages(&quot;XML&quot;)
+
+source(&#039;http://bioconductor.org/biocLite.R&#039;)
+
+# install annotate dependency
+biocLite(&quot;annotate&quot;)
+
+# install RCurl dependency
+biocLite(&quot;RCurl&quot;)
+
+biocLite(&quot;DESeq2&quot;)
+</pre>
+<p>
+4. task matrix consolidation
+It requires perl and bioperl
+</p>
+<pre class="prettyprint">
+sudo yum install perl-CPAN
+sudo yum install perl-App-cpanminus
+cpan local::lib
+
+install YAML
+
+force install Bio::Seq
+force install Bio::SeqIO
+</pre>
+</div>

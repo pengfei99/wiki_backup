@@ -1,0 +1,4 @@
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>1<span class="br0">&#125;</span>monitor,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcAccess</span>
+<span class="re0">olcAccess</span>:<span class="re1"> <span class="br0">&#123;</span>0<span class="br0">&#125;</span>to * by dn.base=&quot;gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth&quot; read by dn.base=&quot;cn=admin,dc=pengfei,dc=org&quot; read by * none</span>

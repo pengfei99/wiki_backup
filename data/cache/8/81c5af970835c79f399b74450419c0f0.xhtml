@@ -1,0 +1,96 @@
+
+<h1 class="sectionedit1" id="run_django_python_web_app_with_apache">Run django python web app with apache</h1>
+<div class="level1">
+
+<p>
+1. Get the wsgi_mod source
+</p>
+<pre class="code">Under centos 7 you have to compile the module by yourself.
+
+You can find the tar ball of wsgi in https://github.com/GrahamDumpleton/mod_wsgi/releases
+
+Download the version you want. Then untar it.
+
+For example, I choose mod_wsgi-4.5.7, it will donwload 4.5.7.tar.gz .</pre>
+<pre class="prettyprint">
+wget https://github.com/GrahamDumpleton/mod_wsgi/archive/4.5.7.tar.gz
+tar -xzvf 4.5.7.tar.gz
+cd mod_wsgi-4.5.7
+</pre>
+<p>
+2. Build the wsgi_mod.so
+</p>
+
+<p>
+Befor you compile it, you need to build the dependencies. 
+</p>
+<pre class="prettyprint">
+$ ./configure --with-apxs=/usr/bin/apxs --with-python=/path/to/your/python
+
+#In my case, it looks like this
+
+./configure --with-apxs=/etc/apache2/bin/apxs --with-python=/home/pliu/.pyenv/versions/3.5.1/bin/python
+
+
+$ make &amp; make install
+
+
+</pre>
+<p>
+If you can&#039;t find apxs , you need to install package httpd-devel
+</p>
+
+<p>
+<code>yum install httpd-devel</code>
+</p>
+
+<p>
+3. Put the generated wsgi_mode.so into /etc/httpd/modules/
+</p>
+<pre class="code"> In folder conf.modules.d, put &#039;&#039;LoadModule wsgi_module modules/mod_wsgi.so&#039;&#039;
+ </pre>
+
+<p>
+4. Add apche conf for your django app, you need to specify not only your app location, but also your virtual env location. You also need to make sure apache has to right to access and execute these files
+</p>
+<pre class="prettyprint">
+WSGIScriptAlias /django /var/www/mysite/mysite/wsgi.py
+WSGIPythonPath /var/www/mysite:/var/www/vir_env/noe_vir_env/lib/python3.5/site-packages
+
+&lt;Directory /var/www/mysite/mysite&gt;
+&lt;Files wsgi.py&gt;
+Require all granted
+&lt;/Files&gt;
+
+    Order allow,deny
+    Allow from all
+
+&lt;/Directory&gt;
+
+&lt;Location /django/polls&gt;
+  AuthType shibboleth
+  Require shibboleth
+&lt;/Location&gt;
+  
+</pre>
+<p>
+5. Clean after Build
+</p>
+
+<p>
+To cleanup after installation, run:
+</p>
+
+<p>
+<code>make clean</code>
+</p>
+
+<p>
+If you need to build the module for a different version of Apache, you should run:
+</p>
+
+<p>
+<code>make distclean</code>
+</p>
+
+</div>

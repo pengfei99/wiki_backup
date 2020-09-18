@@ -1,0 +1,48 @@
+====== Install R and R studio ======
+
+<code>
+# Install R + RStudio on Ubuntu 16.04
+
+sudo apt-key adv –keyserver keyserver.ubuntu.com –recv-keys E084DAB9
+
+# Ubuntu 12.04: precise
+# Ubuntu 14.04: trusty
+# Ubuntu 16.04: xenial
+# Basic format of next line deb https://<my.favorite.cran.mirror>/bin/linux/ubuntu <enter your ubuntu version>/
+sudo add-apt-repository 'deb https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/'
+sudo apt-get update
+sudo apt-get install r-base
+sudo apt-get install r-base-dev
+
+# Download and Install RStudio
+sudo apt-get install gdebi-core
+wget https://download1.rstudio.org/rstudio-1.0.44-amd64.deb
+sudo gdebi rstudio-1.0.143-amd64.deb
+rm rstudio-1.0.44-amd64.deb
+
+# To remove R
+ sudo dpkg --remove rstudio
+</code>
+
+
+PS. The access to key server for cran via http may not always available, there is another way to add pgp key.
+
+If you see the following error,
+
+<code>
+W: GPG error: https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/ InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 51716619E084DAB9
+W: The repository 'https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/ InRelease' is not signed.
+N: Data from such a repository can't be authenticated and is therefore potentially dangerous to use.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+
+</code>
+
+try this,
+
+<code>
+gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 51716619E084DAB9
+
+gpg -a --export E084DAB9 | sudo apt-key add -
+</code>
+
+The first line download pgp key, the second line add the pgp key to apt trust key. 

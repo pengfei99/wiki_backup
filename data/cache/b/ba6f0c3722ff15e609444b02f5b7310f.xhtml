@@ -1,0 +1,461 @@
+
+<p>
+<code>Use nss-pam-ldapd as authentication in centos 7</code>
+</p>
+
+<p>
+<strong>0. Disable selinux</strong>
+</p>
+
+<p>
+<strong>1. Install required packages</strong>
+</p>
+
+<p>
+<code>yum install -y nss-pam-ldapd nscd</code>
+</p>
+
+<p>
+<strong>2. Configure nslcd to connect to the ldap server</strong>
+</p>
+
+<p>
+Edit the config file of nslcd at /etc/nslcd.conf
+</p>
+
+<p>
+It should look like this
+</p>
+<pre class="prettyprint">
+# This is the configuration file for the LDAP nameservice
+# switch library&#039;s nslcd daemon. It configures the mapping
+# between NSS names (see /etc/nsswitch.conf) and LDAP
+# information in the directory.
+# See the manual page nslcd.conf(5) for more information.
+
+# The user and group nslcd should run as.
+uid nslcd
+gid ldap
+
+# The uri pointing to the LDAP server to use for name lookups.
+# Multiple entries may be specified. The address that is used
+# here should be resolvable without using LDAP (obviously).
+#uri ldap://127.0.0.1/
+#uri ldaps://127.0.0.1/
+#uri ldapi://%2fvar%2frun%2fldapi_sock/
+# Note: %2f encodes the &#039;/&#039; used as directory separator
+uri ldap://134.158.37.6
+
+# The LDAP version to use (defaults to 3
+# if supported by client library)
+#ldap_version 3
+
+# The distinguished name of the search base.
+base ou=Users,dc=bioaster,dc=org
+
+# The distinguished name to bind to the server with.
+# Optional: default is to bind anonymously.
+binddn cn=admin,dc=bioaster,dc=org
+
+# The credentials to bind with.
+# Optional: default is no credentials.
+# Note that if you set a bindpw you should check the permissions of this file.
+bindpw password_of_admin
+
+# The distinguished name to perform password modifications by root by.
+#rootpwmoddn cn=admin,dc=example,dc=com
+
+# The default search scope.
+#scope sub
+#scope one
+#scope base
+
+# Customize certain database lookups.
+#base   group  ou=Groups,dc=example,dc=com
+#base   passwd ou=People,dc=example,dc=com
+#base   shadow ou=People,dc=example,dc=com
+#scope  group  onelevel
+#scope  hosts  sub
+
+# Bind/connect timelimit.
+#bind_timelimit 30
+
+# Search timelimit.
+#timelimit 30
+
+# Idle timelimit. nslcd will close connections if the
+# server has not been contacted for the number of seconds.
+#idle_timelimit 3600
+
+# Use StartTLS without verifying the server certificate.
+#ssl start_tls
+#tls_reqcert never
+
+# CA certificates for server certificate verification
+#tls_cacertdir /etc/ssl/certs
+#tls_cacertfile /etc/ssl/ca.cert
+
+# Seed the PRNG if /dev/urandom is not provided
+#tls_randfile /var/run/egd-pool
+
+# SSL cipher suite
+# See man ciphers for syntax
+#tls_ciphers TLSv1
+
+# Client certificate and key
+# Use these, if your server requires client authentication.
+#tls_cert
+#tls_key
+
+# Mappings for Services for UNIX 3.5
+#filter passwd (objectClass=User)
+#map    passwd uid              msSFU30Name
+#map    passwd userPassword     msSFU30Password
+#map    passwd homeDirectory    msSFU30HomeDirectory
+#map    passwd homeDirectory    msSFUHomeDirectory
+#filter shadow (objectClass=User)
+#map    shadow uid              msSFU30Name
+#map    shadow userPassword     msSFU30Password
+#filter group  (objectClass=Group)
+#map    group  member           msSFU30PosixMember
+
+# Mappings for Services for UNIX 2.0
+#filter passwd (objectClass=User)
+#map    passwd uid              msSFUName
+#map    passwd userPassword     msSFUPassword
+#map    passwd homeDirectory    msSFUHomeDirectory
+#map    passwd gecos            msSFUName
+#filter shadow (objectClass=User)
+#map    shadow uid              msSFUName
+#map    shadow userPassword     msSFUPassword
+#map    shadow shadowLastChange pwdLastSet
+#filter group  (objectClass=Group)
+#map    group  member           posixMember
+
+# Mappings for Active Directory
+#pagesize 1000
+#referrals off
+#idle_timelimit 800
+#filter passwd (&amp;(objectClass=user)(!(objectClass=computer))(uidNumber=*)(unixHomeDirectory=*))
+#map    passwd uid              sAMAccountName
+#map    passwd homeDirectory    unixHomeDirectory
+#map    passwd gecos            displayName
+#filter shadow (&amp;(objectClass=user)(!(objectClass=computer))(uidNumber=*)(unixHomeDirectory=*))
+#map    shadow uid              sAMAccountName
+#map    shadow shadowLastChange pwdLastSet
+#filter group  (objectClass=group)
+
+# Alternative mappings for Active Directory
+# (replace the SIDs in the objectSid mappings with the value for your domain)
+#pagesize 1000
+#referrals off
+#idle_timelimit 800
+#filter passwd (&amp;(objectClass=user)(objectClass=person)(!(objectClass=computer)))
+#map    passwd uid           cn
+#map    passwd uidNumber     objectSid:S-1-5-21-3623811015-3361044348-30300820
+#map    passwd gidNumber     objectSid:S-1-5-21-3623811015-3361044348-30300820
+#map    passwd homeDirectory &quot;/home/$cn&quot;
+#map    passwd gecos         displayName
+#map    passwd loginShell    &quot;/bin/bash&quot;
+#filter group (|(objectClass=group)(objectClass=person))
+#map    group gidNumber      objectSid:S-1-5-21-3623811015-3361044348-30300820
+
+# Mappings for AIX SecureWay
+#filter passwd (objectClass=aixAccount)
+#map    passwd uid              userName
+#map    passwd userPassword     passwordChar
+#map    passwd uidNumber        uid
+#map    passwd gidNumber        gid
+#filter group  (objectClass=aixAccessGroup)
+#map    group  cn               groupName
+#map    group  gidNumber        gid
+# This comment prevents repeated auto-migration of settings.
+ssl no
+tls_cacertdir /etc/openldap/cacerts
+
+</pre>
+<p>
+If the config is correct, you can try to login with an uid of ldap account. For example, if you have a user with uid=test.
+</p>
+
+<p>
+<code>$ su - test</code>
+</p>
+
+<p>
+You should see 
+</p>
+<pre class="prettyprint">
+su: warning: cannot change directory to /home/pliu: No such file or directory
+/usr/bin/id: cannot find name for group ID 10000
+[test@cclintestpam02 root]$ 
+</pre>
+<p>
+<strong>3. Configure nsswitch.conf</strong>
+</p>
+
+<p>
+Edit the config file /etc/nsswitch.conf.
+It should look like this
+</p>
+<pre class="prettyprint">
+#
+# /etc/nsswitch.conf
+#
+# An example Name Service Switch config file. This file should be
+# sorted with the most-used services at the beginning.
+#
+# The entry &#039;[NOTFOUND=return]&#039; means that the search for an
+# entry should stop if the search in the previous entry turned
+# up nothing. Note that if the search failed due to some other reason
+# (like no NIS server responding) then the search continues with the
+# next entry.
+#
+# Valid entries include:
+#
+#       nis                     Use NIS+ (NIS version 3)
+#       nis                     Use NIS (NIS version 2), also called YP
+#       dns                     Use DNS (Domain Name Service)
+#       files                   Use the local files
+#       db                      Use the local database (.db) files
+#       compat                  Use NIS on compat mode
+#       hesiod                  Use Hesiod for user lookups
+#       [NOTFOUND=return]       Stop searching if not found so far
+#
+
+# To use db, put the &quot;db&quot; in front of &quot;files&quot; for entries you want to be
+# looked up first in the databases
+#
+# Example:
+#passwd:    db files nis nis
+#shadow:    db files nis nis
+#group:     db files nis nis
+
+passwd:     files sss ldap
+shadow:     files sss ldap
+group:      files sss ldap
+
+#hosts:     db files nis nis dns
+hosts:      files dns myhostname
+
+# Example - obey only what nis tells us...
+#services:   nis [NOTFOUND=return] files
+#networks:   nis [NOTFOUND=return] files
+#protocols:  nis [NOTFOUND=return] files
+#rpc:        nis [NOTFOUND=return] files
+#ethers:     nis [NOTFOUND=return] files
+#netmasks:   nis [NOTFOUND=return] files
+
+bootparams: nis [NOTFOUND=return] files
+
+ethers:     files
+netmasks:   files
+networks:   files
+protocols:  files
+rpc:        files
+services:   files sss
+
+netgroup:   files sss ldap
+
+publickey:  nis
+
+automount:  files ldap
+aliases:    files nis
+</pre>
+<p>
+<strong>4.Configure pam to use ldap as authenticator</strong>
+You have to modify the following config file under /etc/pam.d/:
+</p>
+<ul>
+<li class="level1"><div class="li"> system-auth, </div>
+</li>
+<li class="level2"><div class="li"> su,</div>
+</li>
+<li class="level2"><div class="li"> passwd, </div>
+</li>
+<li class="level2"><div class="li"> su-l,</div>
+</li>
+<li class="level2"><div class="li"> password-auth</div>
+</li>
+</ul>
+
+<p>
+<span style='color:#ed1c24; '>system-auth</span> should look like this
+</p>
+<pre class="prettyprint">#%PAM-1.0
+# This file is auto-generated.
+# User changes will be destroyed the next time authconfig is run.
+auth        sufficient    pam_ldap.so
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+auth        sufficient    pam_ldap.so use_first_pass
+auth        required      pam_deny.so
+
+account     sufficient    pam_ldap.so
+account     required      pam_unix.so broken_shadow
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+account     [default=bad success=ok user_unknown=ignore] pam_ldap.so
+account     required      pam_permit.so
+
+password    sufficient    pam_ldap.so
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha256 shadow nullok try_first_pass use_authtok
+password    sufficient    pam_ldap.so use_authtok
+password    required      pam_deny.so
+
+session     required      pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     optional      pam_ldap.so
+session     optional      pam_ldap.so
+session     optional      pam_permit.so
+</pre>
+<p>
+<span style='color:#ed1c24; '>su</span> should look like this
+</p>
+<pre class="prettyprint">#%PAM-1.0
+auth            sufficient      pam_ldap.so
+auth		sufficient	pam_rootok.so
+# Uncomment the following line to implicitly trust users in the &quot;wheel&quot; group.
+#auth		sufficient	pam_wheel.so trust use_uid
+# Uncomment the following line to require a user to be in the &quot;wheel&quot; group.
+#auth		required	pam_wheel.so use_uid
+auth		substack	system-auth
+auth		include		postlogin
+account		sufficient	pam_succeed_if.so uid = 0 use_uid quiet
+account		include		system-auth
+account         sufficient      pam_ldap.so
+password	include		system-auth
+session		include		system-auth
+session         sufficient      pam_ldap.so
+session		include		postlogin
+session		optional	pam_xauth.so
+</pre>
+<p>
+passwd should look like this
+</p>
+<pre class="prettyprint">
+#%PAM-1.0
+auth       include	system-auth
+account    include	system-auth
+password   sufficient   pam_ldap.so
+password   substack	system-auth
+-password   optional	pam_gnome_keyring.so use_authtok
+password   substack	postlogin
+</pre>
+<p>
+<span style='color:#ed1c24; '>su-l</span> should look like this
+</p>
+<pre class="prettyprint">
+#%PAM-1.0
+session         required        pam_mkhomedir.so skel=/etc/skel umask=0022
+auth		include		su
+account		include		su
+password	include		su
+session		optional	pam_keyinit.so force revoke
+session		include		su
+</pre>
+<p>
+<span style='color:#ed1c24; '>password-auth</span> should look like this
+</p>
+<pre class="prettyprint">
+#%PAM-1.0
+# This file is auto-generated.
+# User changes will be destroyed the next time authconfig is run.
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+auth        sufficient    pam_ldap.so use_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so broken_shadow
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+account     [default=bad success=ok user_unknown=ignore] pam_ldap.so
+account     required      pam_permit.so
+
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha256 shadow nullok try_first_pass use_authtok
+password    sufficient    pam_ldap.so use_authtok
+password    required      pam_deny.so
+
+session     required      pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     optional      pam_ldap.so
+</pre>
+<p>
+<strong>5. Configure sshd_config</strong>
+</p>
+
+<p>
+The default sshd_config in some vm image is not set propely.
+</p>
+
+<p>
+For example, it has <code> AllowGroups root </code>by default.
+</p>
+
+<p>
+A working sshd_config should look like this :
+</p>
+<pre class="prettyprint">
+# File is managed by Puppet
+AddressFamily any
+
+#AllowGroups root
+#AllowGroups root
+#AllowGroups root
+AllowTcpForwarding yes
+ChallengeResponseAuthentication no
+ClientAliveCountMax 3
+ClientAliveInterval 0
+Compression yes
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+HostbasedAuthentication no
+IgnoreUserKnownHosts no
+KeepAlive yes
+KerberosTicketCleanup yes
+MaxStartups 10
+PasswordAuthentication yes
+PermitEmptyPasswords no
+PermitRootLogin yes
+PermitUserEnvironment no
+PrintLastLog yes
+PrintMotd yes
+Protocol 2
+RSAAuthentication yes
+RhostsRSAAuthentication yes
+ServerKeyBits 768
+StrictModes yes
+Subsystem sftp /usr/libexec/openssh/sftp-server
+SyslogFacility AUTH
+TCPKeepAlive yes
+UseLogin no
+UsePAM yes
+UsePrivilegeSeparation yes
+X11DisplayOffset 10
+X11Forwarding yes
+X11UseLocalhost yes
+XAuthLocation /usr/bin/xauth
+</pre>
+<p>
+<strong>6. Restart nslcd and ssshd</strong>
+</p>
+
+<p>
+<code>systemctl restart nslcd</code>
+</p>
+
+<p>
+<code>systemctl restart sshd</code>
+</p>

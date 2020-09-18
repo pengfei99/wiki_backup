@@ -1,0 +1,31 @@
+====== SequenceServer ======
+
+===== Informations =====
+
+  * **Version** : 0.8.7
+  * **Licence** : //Open Source// (for academics) & //Commercial//
+  * **Page Web** : [[http://www.sequenceserver.com]]
+  * **Description** : SequenceServer lets you rapidly set up a BLAST+ server with an intuitive user interface for use locally or over the web.
+
+===== Installation =====
+
+<code>
+sudo aptitude install --without-recommends ruby ruby-gems ncbi-blast+
+sudo gem install sequenceserver
+vim .sequenceserver.conf
+# bin: /usr/bin
+# database: /var/db/blast
+sudo mkdir -p /var/db/blast
+</code>
+
+<code>
+sudo aptitude intall build-essential apache2 \
+              libssl-dev zlib1g-dev apache2-threaded-dev \
+              ruby-dev libapr1-dev libaprutil1-dev libcurl4-gnutls-dev
+sudo gem install passenger
+sudo passenger-install-apache2-module
+</code>
+
+===== Log =====
+
+  * **2014.08.08 (tlc)** Version 0.8.7 installée

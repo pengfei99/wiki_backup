@@ -1,0 +1,54 @@
+====== Tanguy ======
+
+===== Objectifs 2014 =====
+
+  * **Convention** Pasteur
+    * rediger l'annexe technique
+      * [[/pt6/infra/reponse_a_GdM|réponse à Gabriel DE MIRANDA]]
+  * **Infrastructure Informatique** à Pasteur
+    * Installation
+    * Formation VMware
+  * **OpenStack** au CC
+    * <del>Mise en place de l'[[/in2p3/logiciels|environnement bioinformatique]] avec le //PT2//</del>
+    * Créer des images personnalisées
+    * Faciliter/Automatiser le lancement
+    * Continuous Improvement
+  * [[/formations|Documentation et Formation]]
+    * <del>Installer [[in2p3/logiciels/remark|remark]] pour servir les présentations</del>
+    * <del>[[/in2p3/cloud|OpenStack]]</del>
+    * <del>[[/in2p3/scheduler|Ferme de calcul]]</del>
+
+===== Importants =====
+
+  * Installation de **TranSMART** (OpenStack + DB du CC)
+    * [[/in2p3/logiciels/transmart|en cours...]]
+  * Installer **Galaxy** (w/w/o LIMS)
+    * Mettre derrière HTTPS et authentifier par certificat
+  * Installer **BioMAJ**
+  * Mettre en place les [[in2p3/bases_de_donnees|bases de données]] sur SPS :
+    * NCBI-tRNA bactériens
+    * les données MetaHIT (http://gutmeta.genomics.org.cn/ ) gènes et contigs. 
+    * M5rrn
+
+===== Autres =====
+
+  * PC de labo
+    * <del>Faire l'[[/instruments|inventaire]] (PCs et instruments)</del>
+    * Temporairement, créer un utilisateur "labo" sur tous les instrument avec un seul mdp
+  * <del>PC de test</del>
+    * <del>commander le nouveau laptop</del>
+    * <del>renvoyer l'ancien</del>
+  * Installer et évaluer [[https://dev.launchpad.net/Running|Launchpad]] pour remplacer [[/si/outils/reviewboard|ReviewBoard]]
+  * Utiliser Redmin comme système de gestion de projet. Pourrait-il remplacer un système de revue de code ?\\ Utiliser les plugins suivants :
+    * [[http://www.redmine.org/plugins/redmine_issue_checklist|Checklist]]
+    * [[http://www.redmine.org/plugins/redmine_luxury_buttons|Luxury Buttons]]
+    * [[http://www.redmine.org/plugins/codereview|Code Review]]
+    * [[http://www.redmine.org/plugins/redmine_scm|SCM creator]], branches créées localement dans un espace accessible //via// ''bzr+ssh'' ?!
+  * **Certification**
+    * <del>[[securite/certification|Créer un CA]] pour pouvoir sécuriser dès à présent</del>
+    * [[securite/certification/cacert|CAcert]] pour BIOASTER (en attente de l'assureur)
+    * Pour l’intégrer à nos services il faut authentifier avec X509 *et* autoriser avec l'AD/LDAP (voir avec MR et JG) 
+  * Signer "remise de materiel informatique" @Emilie
+  * Ancre pour la page [[/bioinformatique/themes_et_questions]]
+  * Problème bioinformatique de [[/samuel.bellais_bioaster.org|Samuel BELLAIS]]
+  * Page des [[/dp|délégués du personnel]]

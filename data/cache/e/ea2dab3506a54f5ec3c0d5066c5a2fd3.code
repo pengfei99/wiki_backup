@@ -1,0 +1,29 @@
+server.port = 443
+#server.bind = &quot;localhost&quot;
+#server.use-ipv6 = &quot;enable&quot;
+&nbsp;
+# IPv4 listening socket
+#$SERVER[&quot;socket&quot;] == &quot;0.0.0.0:80&quot; { }
+&nbsp;
+#include &quot;vhosts.d/wiki.conf&quot;
+&nbsp;
+server.document-root = vhosts_dir + &quot;/dokuwiki/&quot;
+$HTTP[&quot;url&quot;] =~ &quot;/(\.|_)ht&quot; { url.access-deny = ( &quot;&quot; ) }
+$HTTP[&quot;url&quot;] =~ &quot;^/(bin|data|inc|conf)/&quot;  { url.access-deny = ( &quot;&quot; ) }
+ssl.engine = &quot;enable&quot;
+ssl.pemfile = &quot;/etc/ssl/private/ccbiowiki1.in2p3.fr-combined.pem&quot;
+&nbsp;
+$HTTP[&quot;url&quot;] =~ &quot;^&quot; { index-file.names = (&quot;doku.php&quot;) }
+    url.rewrite = (
+      &quot;^/lib/.*$&quot;              =&gt; &quot;$0&quot;,
+      &quot;^/_media/(.*)?\?(.*)$&quot;  =&gt; &quot;/lib/exe/fetch.php?media=$1&amp;$2&quot;,
+      &quot;^/_media/(.*)$&quot;         =&gt; &quot;/lib/exe/fetch.php?media=$1&quot;,
+      &quot;^/_detail/(.*)?\?(.*)$&quot; =&gt; &quot;/lib/exe/detail.php?media=$1&amp;$2&quot;,
+      &quot;^/_detail/(.*)?$&quot;       =&gt; &quot;/lib/exe/detail.php?media=$1&quot;,
+      &quot;^/_export/([^/]+)/(.*)\?(.*)$&quot; =&gt; &quot;/doku.php?do=export_$1&amp;id=$2&amp;$3&quot;,
+      &quot;^/_export/([^/]+)/(.*)&quot; =&gt; &quot;/doku.php?do=export_$1&amp;id=$2&quot;,
+      &quot;^/doku.php.*&quot;           =&gt; &quot;$0&quot;,
+      &quot;^/feed.php.*&quot;           =&gt; &quot;$0&quot;,
+      &quot;^/(.*)\?(.*)&quot;           =&gt; &quot;/doku.php?id=$1&amp;$2&quot;,
+      &quot;^/(.*)&quot;                 =&gt; &quot;/doku.php?id=$1&quot;
+    )

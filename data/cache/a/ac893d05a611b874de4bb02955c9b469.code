@@ -1,0 +1,16 @@
+[global]
+workgroup = BIOASTER
+netbios name = LILIA
+interfaces = 127.0.0.1, 10.69.1.214
+bind interfaces only = yes
+; hosts allow = 127.0.0.1, 10.69.1.214
+; hosts deny = 0.0.0.0/0
+; log level = 3
+&nbsp;
+[sequencing]
+path = /Sequencing
+comment = Sequencing Data
+browsable = yes
+read only = no
+writable = yes
+valid users = tanguy

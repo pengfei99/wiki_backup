@@ -1,0 +1,18 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1526544867;s:8:"modified";i:1526550410;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:40:"Configure mariadb to allow remote access";s:11:"description";a:2:{s:15:"tableofcontents";a:5:{i:0;a:4:{s:3:"hid";s:40:"configure_mariadb_to_allow_remote_access";s:5:"title";s:40:"Configure mariadb to allow remote access";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:75:"step_1_change_the_mariadb_config_file_to_bind_to_the_real_network_interface";s:5:"title";s:76:"Step 1. change the mariadb config file to bind to the real network interface";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:2;a:4:{s:3:"hid";s:53:"step_2_add_access_rights_to_clients_in_mariadb_server";s:5:"title";s:54:"Step 2. Add access rights to clients in mariadb server";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:3;a:4:{s:3:"hid";s:44:"step_3_configure_firewall_to_allow_port_3306";s:5:"title";s:45:"Step 3. Configure firewall to allow port 3306";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:4;a:4:{s:3:"hid";s:44:"step_4_connect_to_server_via_a_remote_client";s:5:"title";s:45:"Step 4. connect to server via a remote client";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:503:"Configure mariadb to allow remote access
+
+Mariadb by default listen to the loopback network interface (localhost, 127.0.0.1) not the real network interface.
+
+Step 1. change the mariadb config file to bind to the real network interface
+
+
+# Under centos 7, the config file is at /etc/my.cnf
+
+vim /etc/my.cnf
+
+# comment the line skip-networking, this line will ignor the tcp/ip request from the real network interface
+# add two lines
+
+bind-address = 0.0.0.0
+port =3306
+
+# save the file and restart serve…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1526544867;s:8:"modified";i:1526550410;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

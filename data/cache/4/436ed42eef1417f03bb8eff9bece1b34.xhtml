@@ -1,0 +1,109 @@
+
+<h1 class="sectionedit1" id="stage_de_julie_hardy_m2_bioinformatique_bordeaux_01_mars_2017_-_31_aout_2017">Stage de Julie Hardy (M2 Bioinformatique Bordeaux) 01 mars 2017 - 31 août 2017</h1>
+<div class="level1">
+
+<p>
+<em class="u"><strong>Curation and traceability of biological data</strong></em>
+</p>
+
+<p>
+This project is divide into several parts. 
+</p>
+
+<p>
+First, all the data related to biological samples from each UTEC have been normalized. 
+</p>
+
+<p>
+Then, once these exhaustive listings have been obtained, the aim is to create differents templates for each type of samples
+</p>
+
+<p>
+At the end samples in each template will be integrated into <abbr title="Network Of Experiments">NoE</abbr> database via an Extract-Transform-Load (ETL) solution.
+</p>
+
+<p>
+<strong>Extract and transform data in one template</strong>
+</p>
+
+<p>
+1. Check the type of your samples
+</p>
+<ol>
+<li class="level1"><div class="li">   Plasmid</div>
+</li>
+<li class="level2"><div class="li">   Clinical</div>
+</li>
+<li class="level2"><div class="li">   Antibody</div>
+</li>
+<li class="level2"><div class="li">  Bacterium</div>
+</li>
+<li class="level2"><div class="li"> Cell &amp; amibe</div>
+</li>
+</ol>
+
+<p>
+2. Go to scripts/Template_full/Data_inject and pick up you corresponding type 
+</p>
+<pre class="code">      NB: Composition of one of file&#039;s template :</pre>
+<ol>
+<li class="level1"><div class="li"> Excel&#039;s file only xlsx or csv : raw files</div>
+</li>
+<li class="level6"><div class="li"> get_connection.py : return the model_header for scripts.py </div>
+</li>
+<li class="level6"><div class="li"> scripts.py : create the template final full with the data from the differents UTECs</div>
+</li>
+<li class="level6"><div class="li"> template_connection.csv : connection between the header&#039;s model and the UTEC&#039;s header  </div>
+</li>
+<li class="level6"><div class="li"> template_model.xlsx : only model&#039;s header  </div>
+</li>
+</ol>
+
+<p>
+3. Extract your header and paste in template_connection check if all the header correspond to the model header :
+</p>
+<pre class="code">  if the header is not in the file, add it in the column header model </pre>
+
+<p>
+4. Copy the column header model and paste in template_model 
+</p>
+
+<p>
+5. Add the name and the sheetname of your UTEC&#039;s file and run scripts.py 
+</p>
+
+<p>
+6. Now you got all the data merged in one template 
+</p>
+
+<p>
+<strong>Files</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Data_UTEC: raw data of all the template per UTEC</div>
+</li>
+<li class="level1"><div class="li"> curation_data: Pre-curation of the template</div>
+</li>
+<li class="level1"><div class="li"> presentations:  all the presentations</div>
+</li>
+<li class="level1"><div class="li"> rapport: report, Gantt, and specification</div>
+</li>
+<li class="level1"><div class="li"> scripts</div>
+</li>
+<li class="level1"><div class="li"> Extract_header: scripts per UTEC to extract header and analyze with Cytoscape</div>
+</li>
+<li class="level1"><div class="li"> network_file: visualization and analyze file with Cytoscape</div>
+</li>
+<li class="level1"><div class="li"> Template_full: </div>
+</li>
+<li class="level1"><div class="li"> Connection_Header: mapping between reference&#039;s template and UTEC&#039;s template</div>
+</li>
+<li class="level1"><div class="li"> Data_inject: scripts per type of sample to inject data in reference&#039;s template </div>
+</li>
+<li class="level1"><div class="li"> template_final: calculate percentage of filling per column</div>
+</li>
+<li class="level1"><div class="li"> template_final_BD: refrence&#039;s template filling</div>
+</li>
+</ul>
+
+</div>

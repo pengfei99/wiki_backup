@@ -1,0 +1,144 @@
+====== About images, containers, and storage drivers ======
+
+The origin doc: https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/
+
+To use storage drivers effectively, you must understand how Docker builds and stores images. Then, you need an understanding of how these images are used by containers. Finally, you’ll need a short introduction to the technologies that enable both images and container operations.
+
+Understanding how Docker manages the data within your images and containers will help you understand the best way to design your containers and Dockerize your applications, and avoid performance problems along the way.
+
+===== Images and layers =====
+
+A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the very last one is read-only. Consider the following Dockerfile:
+
+<code>
+FROM ubuntu:15.04
+COPY . /app
+RUN make /app
+CMD python /app/app.py
+</code>
+
+This Dockerfile contains four commands, each of which creates a layer. The FROM statement starts out by creating a layer from the ubuntu:15.04 image. The COPY command adds some files from your Docker client’s current directory. The RUN command builds your application using the make command. Finally, the last layer specifies what command to run within the container.
+
+Each layer is only a set of differences from the layer before it. The layers are stacked on top of each other. When you create a new container, you add a new writable layer on top of the underlying layers. This layer is often called the “container layer”. All changes made to the running container, such as writing new files, modifying existing files, and deleting files, are written to this thin writable container layer. The diagram below shows a container based on the Ubuntu 15.04 image.
+
+{{:employes:pengfei.liu:admin_system:container:docker:container-layers.jpg?400|}}
+
+
+**A storage driver handles the details about the way these layers interact with each other. Different storage drivers are available, which have advantages and disadvantages in different situations.**
+
+===== Container and layers =====
+
+The major difference between a container and an image is the top writable layer. All writes to the container that add new or modify existing data are stored in this writable layer. When the container is deleted, the writable layer is also deleted. The underlying image remains unchanged.
+
+Because each container has its own writable container layer, and all changes are stored in this container layer, multiple containers can share access to the same underlying image and yet have their own data state. The diagram below shows multiple containers sharing the same Ubuntu 15.04 image.
+
+{{:employes:pengfei.liu:admin_system:container:docker:sharing-layers.jpg?400|}}
+
+**Note: If you need multiple images to have shared access to the exact same data, store this data in a Docker volume and mount it into your containers.**
+
+**Docker uses storage drivers to manage the contents of the image layers and the writable container layer. Each storage driver handles the implementation differently, but all drivers use stackable image layers and the copy-on-write (CoW) strategy.**
+
+===== Container size on disk =====
+
+To view the approximate size of a running container, you can use the **docker ps -s** command. Two different columns relate to size.
+
+  * size: the amount of data (on disk) that is used for the writable layer of each container
+  * virtual size: the amount of data used for the read-only image data used by the container plus the container’s writable layer size. Multiple containers may share some or all read-only image data. Two containers started from the same image share 100% of the read-only data, while two containers with different images which have layers in common share those common layers. Therefore, you can’t just total the virtual sizes. This will over-estimate the total disk usage by a potentially non-trivial amount.
+
+The total disk space used by all of the running containers on disk is some combination of each container’s **size** and the **virtual size** values. If multiple containers started from the same exact image, the total size on disk for these containers would be SUM (size of containers) plus one container’s (virtual size- size).
+
+
+===== The copy-on-write (CoW) strategy =====
+
+Copy-on-write is a strategy of sharing and copying files for maximum efficiency. If a file or directory exists in a lower layer within the image, and another layer (including the writable layer) needs read access to it, it just uses the existing file. The first time another layer needs to modify the file (when building the image or running the container), the file is copied into that layer and modified. This minimizes I/O and the size of each of the subsequent layers. These advantages are explained in more depth below.
+
+===== Sharing promotes smaller images =====
+
+When you use docker pull to pull down an image from a repository, or when you create a container from an image that does not yet exist locally, each layer is pulled down separately, and stored in Docker’s local storage area, which is usually /var/lib/docker/ on Linux hosts. You can see these layers being pulled in this example:
+
+<code>
+$ docker pull ubuntu:15.04
+
+15.04: Pulling from library/ubuntu
+1ba8ac955b97: Pull complete
+f157c4e5ede7: Pull complete
+0b7e98f84c4c: Pull complete
+a3ed95caeb02: Pull complete
+Digest: sha256:5e279a9df07990286cce22e1b0f5b0490629ca6d187698746ae5e28e604a640e
+Status: Downloaded newer image for ubuntu:15.04
+</code>
+
+===== Data volumes and the storage driver =====
+
+When a container is deleted, any data written to the container that is not stored in a data volume is deleted along with the container.
+
+A data volume is a directory or file in the Docker host’s filesystem that is mounted directly into a container. Data volumes are not controlled by the storage driver. Reads and writes to data volumes bypass the storage driver and operate at native host speeds. You can mount any number of data volumes into a container. Multiple containers can also share one or more data volumes.
+
+The diagram below shows a single Docker host running two containers. Each container exists inside of its own address space within the Docker host’s local storage area (/var/lib/docker/...). There is also a single shared data volume located at /data on the Docker host. This is mounted directly into both containers.
+
+{{:employes:pengfei.liu:admin_system:container:docker:shared-volume.jpg?400|}}
+
+Data volumes reside outside of the local storage area on the Docker host, further reinforcing their independence from the storage driver’s control. When a container is deleted, any data stored in data volumes persists on the Docker host.
+
+For detailed information about data volumes, see Managing data in containers(https://docs.docker.com/v17.09/engine/tutorials/dockervolumes/).
+
+
+====== Common problems ======
+
+===== 1. No more space in /centos-root =====
+
+As we discussed before, the default storage for docker image and containers are located in
+/var/lib/docker (for centos7). This use the space of /centos-root, which may not be so big as space. You may want to move it somewhere else.  
+
+There are two solutions:
+
+1. change docker storage base directory
+2. Use a symlink 
+
+==== 1.1 Change docker storage base dir ====
+
+1. You need to stop all docker container
+2. Stop docker daemon
+3. Create a drop-in file "docker.conf" at /etc/systemd/system/docker.service.d by default, docker.service.d folder will not be present. So you will have to create it. 
+
+<code>
+# this command will create a override conf file
+systemctl edit docker.service
+
+# or you can create it by yourself
+sudo mkdir /etc/systemd/system/docker.service.d
+sudo vi /etc/systemd/system/docker.service.d/docker.conf
+
+# add following line, the /mnt/new_volume is the new storage location and devicemapper is the storage driver.
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --graph="/mnt/new_volume" --storage-driver=devicemapper 
+
+</code>
+
+==== 1.2 Use a symlink ====
+
+<code>
+# 1. Stop docker: service docker stop. Verify no docker process is running (ps faux
+Double check docker really isn’t running.)
+
+# 2. Take a look at the current docker directory: 
+ls /var/lib/docker/
+
+# 3. Make a backup, the -p for preserve acl
+tar -pzcvf /home/pliu/docker_database/var_lib_docker-bkp-$(date +%s).tar.gz /var/lib/docker
+
+# 4. Move the docker directory to your new partition: 
+mv /var/lib/docker /home/pliu/docker_database/current/docker
+
+# 5. Make a symlink: 
+ln -s /home/pliu/docker_database/current/docker /var/lib/docker
+
+# 6. Take a peek at the directory structure to make sure it looks like it did before the mv: ls /var/lib/docker/ (note the trailing slash to resolve the symlink)
+
+# 7. Start docker back up service docker start
+systemctl start docker
+
+# 8. Restart your containers
+docker run sandbox-hdp
+</code>

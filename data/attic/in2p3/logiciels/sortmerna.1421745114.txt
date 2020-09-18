@@ -1,0 +1,46 @@
+====== SortMeRNA ======
+
+===== Informations =====
+
+  * **Version** : 1.9
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://bioinfo.lifl.fr/RNA/sortmerna/]]
+  * **Description** : SortMeRNA is a software designed to rapidly filter ribosomal RNA fragments from metatranscriptomic data produced by next-generation sequencers. It is capable of handling large RNA databases and sorting out all fragments matching to the database with high accuracy and specificity. 
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/sortmerna/1.9"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://bioinfo.lifl.fr/RNA/sortmerna/code/sortmerna-1.9.tar.gz
+tar xvzf sortmerna-1.9.tar.gz
+cd sortmerna-1.9
+./configure --prefix $APP
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "A software designed to rapidly filter ribosomal RNA fragments from metatranscriptomic data.\n"
+}
+
+set version "1.9"
+
+set app_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/sortmerna/${version}"
+set include_dir "${app_dir}/include"
+
+prepend-path PATH "${app_dir}/bin"
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+prepend-path SORTMERNADIR "${app_dir}/sortmerna/automata"
+</code>
+
+===== Log =====
+
+* **2014.02.06 (tlc)** Version 1.9 installée

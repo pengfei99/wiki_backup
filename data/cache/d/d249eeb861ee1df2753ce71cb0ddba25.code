@@ -1,0 +1,8 @@
+<span class="kw1">from</span> django.<span class="me1">conf</span>.<span class="me1">urls</span>.<span class="me1">i18n</span> <span class="kw1">import</span> i18n_patterns
+&nbsp;
+urlpatterns <span class="sy0">=</span> i18n_patterns<span class="br0">&#40;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^profile/'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'bauser.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^auth/'</span><span class="sy0">,</span>include<span class="br0">&#40;</span><span class="st0">'auth_shib.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'core.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^admin/'</span><span class="sy0">,</span> admin.<span class="kw3">site</span>.<span class="me1">urls</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span>

@@ -1,0 +1,111 @@
+
+<h1 class="sectionedit1" id="data_structure">Data Structure</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Data Structure&quot;,&quot;hid&quot;:&quot;data_structure&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+A data structure is a specialized format for organizing and storing data. General data structure types include the array, the file, the record, the table, the tree, and so on. Any data structure is designed to organize data to suit a specific purpose so that it can be accessed and worked with in appropriate ways. In computer programming, a data structure may be selected or designed to store data for the purpose of working on it with various algorithms.
+</p>
+
+<p>
+A data structure is more than just the specification of the data type(Int, String, etc.), it also defines the relations between data which are in the same structure. For example, in a Tree[String] structure, all items must be a string, but some string has children, some does not.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-796&quot;} -->
+<h3 class="sectionedit3" id="terminologies">Terminologies</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Data: Data is information that has been translated into a form that is efficient for movement or processing. Relative to today&#039;s computers and transmission media, data is information converted into binary digital form. It is acceptable for data to be used as a singular subject or a plural subject. Raw data is a term used to describe data in its most basic digital format.</div>
+</li>
+<li class="level1"><div class="li"> Data type: is a classification that specifies which type of value a variable has and what type of mathematical, relational or logical operations can be applied to it without causing an error. A string, for example, is a data type that is used to classify text and an integer is a data type used to classify whole numbers.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Terminologies&quot;,&quot;hid&quot;:&quot;terminologies&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;797-1526&quot;} -->
+<h3 class="sectionedit4" id="logic_structure_vs_physic_structure">Logic structure vs Physic structure</h3>
+<div class="level3">
+
+<p>
+Short answer, logical data structure simply denotes the content, context, and meaning of the data in question. While the physical data structure shows us the actual location and format of the data stored in memory(hardware point of view). 
+</p>
+
+<p>
+Depending on which language and the compiler or interpreter you use, the physic structure changes from the same Logic structure. For example, you can directly manipulate memory as in C. It gives you pointer access and memory use without respect to type, contrary to strongly typed languages like Java. Data is modeled and stored on a contiguous indexed array, some of which is for the temporary memory on the stack or persistent memory on the heap. Heap memory persists until you explicitly tell the memory allocator to forget that memory. In the array of memory, there are the standard type declarations, which to a computer is an interpretation of bits, 0&#039;s and/or 1&#039;s.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Logic structure vs Physic structure&quot;,&quot;hid&quot;:&quot;logic_structure_vs_physic_structure&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1527-2488&quot;} -->
+<h2 class="sectionedit5" id="basic_data_structures">Basic Data Structures</h2>
+<div class="level2">
+
+<p>
+To illustrate these basic data structures with real code examples, we choose Java as our programming language. The below data structures hierarchy shows the Java collections lib.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Basic Data Structures&quot;,&quot;hid&quot;:&quot;basic_data_structures&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2489-2702&quot;} -->
+<h3 class="sectionedit6" id="collections">Collections</h3>
+<div class="level3">
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Adata_structure&amp;media=employes:pengfei.liu:java:java-collection-hierarchy.jpeg" class="media" title="employes:pengfei.liu:java:java-collection-hierarchy.jpeg"><img src="/lib/exe/fetch.php?w=400&amp;tok=52c2de&amp;media=employes:pengfei.liu:java:java-collection-hierarchy.jpeg" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Adata_structure&amp;media=employes:pengfei.liu:java:java-collection-hierarchy.png" class="media" title="employes:pengfei.liu:java:java-collection-hierarchy.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=7a9b92&amp;media=employes:pengfei.liu:java:java-collection-hierarchy.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h4 id="list">List</h4>
+<div class="level4">
+
+<p>
+<strong>ArrayList</strong> class uses a dynamic array for storing the elements. It inherits AbstractList class and implements List interface.
+</p>
+
+<p>
+The important points about Java ArrayList class are:
+</p>
+<ul>
+<li class="level1"><div class="li"> Java ArrayList class can contain duplicate elements.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList class maintains insertion order.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList class is non synchronized.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList allows random access because array works at the index basis.</div>
+</li>
+</ul>
+
+<p>
+In Java ArrayList class, manipulation is slow because a lot of shifting needs to occur if any element is removed from the array list.
+</p>
+<pre class="code">import java.util.*;  
+class ArrayList2{  
+ public static void main(String args[]){  
+  //Creating arraylist  
+  ArrayList&lt;String&gt; list=new ArrayList&lt;String&gt;();
+  
+  //Adding object in arraylist 
+  list.add(&quot;Ravi&quot;); 
+  list.add(&quot;Vijay&quot;);  
+  list.add(&quot;Ravi&quot;);  
+  list.add(&quot;Ajay&quot;); 
+   
+  //Traversing list through Iterator  
+  Iterator itr=list.iterator();  
+  while(itr.hasNext()){  
+   System.out.println(itr.next());  
+  }  
+ }  
+}  </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Collections&quot;,&quot;hid&quot;:&quot;collections&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2703-&quot;} -->

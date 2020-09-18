@@ -1,0 +1,47 @@
+{
+  &quot;entities&quot;: [
+    {
+      &quot;typeName&quot;: &quot;GPFS_Path&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;it's only a simple attribute&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;file_name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-18T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;csv&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    },
+{
+      &quot;typeName&quot;: &quot;GPFS_Path&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;rabbit tissu image&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;file_name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/rabbit&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-19T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;jpg&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    }
+&nbsp;
+]
+}

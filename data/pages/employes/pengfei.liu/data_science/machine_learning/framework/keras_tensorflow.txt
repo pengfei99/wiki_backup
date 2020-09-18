@@ -1,0 +1,106 @@
+====== Introduction ======
+
+TensorFlow is an open-source machine learning software built by Google to train neural networks. TensorFlow's neural networks are expressed in the form of stateful dataflow graphs. Each node in the graph represents the operations performed by neural networks on multi-dimensional arrays. These multi-dimensional arrays are commonly known as "tensors", hence the name TensorFlow.
+
+TensorFlow is a deep learning software system. TensorFlow works well for information retrieval, as demonstrated by Google in how they do search ranking in their machine-learning artificial intelligence system, RankBrain. TensorFlow can perform image recognition, as shown in Google's Inception, as well as human language audio recognition. It's also useful in solving other problems not specific to machine learning, such as partial differential equations.
+
+The TensorFlow architecture allows for deployment on multiple CPUs or GPUs within a desktop, server or mobile device. There are also extensions for integration with CUDA, a parallel computing platform from Nvidia. This gives users who are deploying on a GPU direct access to the virtual instruction set and other elements of the GPU that are necessary for parallel computational tasks.
+
+In this tutorial, you'll install TensorFlow's "CPU support only" version. This installation is ideal for people looking to install and use TensorFlow, but who don't have an Nvidia graphics card or don't need to run performance-critical applications.
+
+You can install TensorFlow several ways. Each method has a different use case and development environment:
+
+
+
+====== Install keras with tensorflow as backend ======
+
+I strongly recommand you to use virtual env to install python dev environment. 
+
+Follow this tutorial to build a virtuel env [[employes:pengfei.liu:python:python3_centos7|Install python 3 on centos 7 and virtual env]] 
+
+===== Install tensorflow =====
+
+I suppose you already have a virtual env which runs on python 3.6
+
+<code>
+# go to your virtual env and activate it
+source my_venv/bin/activate
+
+# update your pip first
+pip install --upgrade pip
+
+# install tensorflow
+pip install --upgrade tensorflow
+</code> 
+
+===== Install keras =====
+
+<code>
+#install dependencies first
+pip install numpy scipy
+pip install scikit-learn
+pip install pillow
+pip install h5py
+
+# install keras 
+
+pip install keras
+</code>
+
+After the installation of keras, you should find a keras config file keras.json in 
+
+<code>
+vim ~/.keras/keras.json
+
+# you should see the following line
+{
+    "floatx": "float32",
+    "epsilon": 1e-07,
+    "backend": "tensorflow",
+    "image_data_format": "channels_last"
+}
+
+</code>
+
+Specifically, you’ll want to ensure that image_data_format  is set to "channels_last"  (indicating that the TensorFlow image dimension ordering is used rather than "channels_first"  for Theano).
+
+
+You’ll also want to ensure that the backend  is properly set to tensorflow  (rather than theano ). Again, both of these requirements should be satisfied by the default Keras configuration but it doesn’t hurt to double check.
+
+A quick note on image_data_format
+You might be wondering what exactly image_data_format  controls.
+
+Using TensorFlow, images are represented as NumPy arrays with the shape (height, width, depth), where the depth is the number of channels in the image.
+
+However, if you are using Theano, images are instead assumed to be represented as (depth, height, width).
+
+This little nuance is the source of a lot of headaches when using Keras (and a lot of if  statments looking for these particular configurations).
+
+===== Debugging =====
+
+If you are getting strange results when using Keras (or an error message related to the shape of a given tensor) you should:
+
+Check your backend.
+Ensure your image dimension ordering matches your backend.
+
+===== Test your Keras+tensorFlow =====
+
+<code>
+$ python
+Python 3.6.5 (default, Apr 10 2018, 17:08:37) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import keras
+Using TensorFlow backend.
+>>> 
+</code>
+
+If you see the above lines, we cloud say our keras tensorflow installation is done.
+
+===== What's next =====
+
+You can follow this tutorial  to do your first neural network with keras
+
+
+
+

@@ -1,0 +1,75 @@
+
+<p>
+Le but de cette page est de montrer comment une vue en twig peut faire référence à une route (et à la méthode du <em>controller</em> associée) en l’appelant <em>via</em> la méthode POST afin de ne pas mettre les arguments dans l&#039;<abbr title="Uniform Resource Locator">URL</abbr>.
+</p>
+
+<p>
+Si vous désirez rediriger vers une vue, en POST, à partir du <em>controller</em> alors vous devez utiliser la méthode <a href="http://symfony.com/doc/current/controller/forwarding.html" class="urlextern" title="http://symfony.com/doc/current/controller/forwarding.html"  rel="nofollow">forward</a> du <em>controller</em>.
+</p>
+
+<h4 id="theorie">Théorie</h4>
+<div class="level4">
+
+<p>
+L&#039;idée est tout simplement de faire un formulaire. Dans le <em>path</em> défini il ne faut pas mettre d&#039;arguments sinon il seront affichés dans la barre d&#039;adresse (ex : <a href="http://localhost:8000/biospecimens/fr/connected/workflow" class="urlextern" title="http://localhost:8000/biospecimens/fr/connected/workflow"  rel="nofollow">http://localhost:8000/biospecimens/fr/connected/workflow</a><strong>?toto=4</strong>). Il faut définir la méthode de form à POST et définir les bons paramètres de routing.
+</p>
+
+</div>
+
+<h4 id="implementation">Implémentation</h4>
+<div class="level4">
+
+<p>
+Dans notre exemple nous essayerons de passer le paramètre “toto” qui aura pour valeur “userDemand.id” (variable définie dans la vue) à la route biospecimens_connected_workflow et à son action associée. Le tout en POST.
+</p>
+
+<p>
+<strong>Côté vue</strong>
+</p>
+<pre class="code html4strict"><span class="sc2">&lt;<a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a> <span class="kw3">action</span><span class="sy0">=</span><span class="st0">&quot;{{ path('biospecimens_connected_workflow',{}) }}&quot;</span> <span class="kw3">method</span><span class="sy0">=</span><span class="st0">&quot;post&quot;</span>&gt;</span>  <span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;hidden&quot;</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;toto&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;{{userDemand.id}}&quot;</span>&gt;</span> <span class="sc2">&lt;<a href="http://december.com/html/4/element/button.html"><span class="kw2">button</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;submit&quot;</span>&gt;</span>  {{userDemand.id}}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/button.html"><span class="kw2">button</span></a>&gt;</span> <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a>&gt;</span></pre>
+
+<p>
+Notez qu&#039;on <strong>ne</strong> donne <strong>pas</strong> de paramètres à biospecimens_connected_workflow ! L&#039;array de paramètres est vide.
+</p>
+
+<p>
+<strong>Définition de la route</strong>
+</p>
+
+<p>
+en YML :
+</p>
+<pre class="code yml">biospecimens_connected_workflow:
+    path : /biospecimens/fr/connected/workflow
+    defaults: {_controller:BSBiospecimensBundle:Workflow:workflow}
+    requirements:
+      _method: POST</pre>
+
+<p>
+en annotation dans le controller :
+</p>
+<pre class="code php">   <span class="co4">/**
+     * @Route(&quot;/biospecimens/fr/connected/workflow&quot;, name=&quot;biospecimens_connected_workflow&quot;)
+     * @Method(&quot;POST&quot;)
+     */</span></pre>
+
+<p>
+<strong>Récupération des paramètres côtés controller</strong>
+</p>
+
+<p>
+La méthode du controller appelée a juste besoin de Request $request en paramètre et rien d&#039;autre. Pour récupérer les paramètres il faut utiliser $request→get(&#039;monparametre&#039;)
+</p>
+
+<p>
+Exemple: 
+</p>
+<pre class="code php">  <span class="kw2">public</span> <span class="kw2">function</span> workflowAction<span class="br0">&#40;</span>Request <span class="re0">$request</span><span class="br0">&#41;</span>
+  <span class="br0">&#123;</span>
+    dump<span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'toto'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="re0">$id</span> <span class="sy0">=</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'toto'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    dump<span class="br0">&#40;</span><span class="re0">$request</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="br0">&#125;</span></pre>
+
+</div>

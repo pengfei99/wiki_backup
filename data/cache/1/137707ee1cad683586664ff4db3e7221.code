@@ -1,0 +1,6 @@
+# automatically create the link
+$ sudo systemctl set-default graphical.target
+&nbsp;
+# if the automatic link creation does not work, you can manuanlly create the link
+$ sudo rm /etc/systemd/system/default.target
+$ sudo ln -s /usr/lib/systemd/system/graphical.target /etc/systemd/system/default.target

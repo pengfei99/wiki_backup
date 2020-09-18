@@ -1,0 +1,42 @@
+====== STAR ======
+
+===== Informations =====
+
+  * **Version** : 2.3.0e
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://code.google.com/p/rna-star/]]
+  * **Description** : STAR aligns RNA-seq reads to a reference genome using uncompressed suffix arrays.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster/"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/star/2.3.0e/bin"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://rna-star.googlecode.com/files/STAR_2.3.0e.tgz
+tar xvzf STAR_2.3.0e.tgz
+cd STAR_2.3.0e
+make
+mv STAR $APP/
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "STAR aligns RNA-seq reads to a reference genome using uncompressed suffix arrays.\n"
+}
+
+set version "2.3.0e"
+
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/star/2.3.0e/bin"
+
+prepend-path PATH $bin_dir
+</code>
+
+===== Log =====
+
+* **2014.02.05 (tlc)** Version 2.3.0e installée

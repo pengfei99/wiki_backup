@@ -1,0 +1,266 @@
+
+<h1 class="sectionedit1" id="projet_de_developpement">Projet de développement</h1>
+<div class="level1">
+
+<p>
+Deux outils principaux sont utilisés : 
+</p>
+<ul>
+<li class="level1"><div class="li"> Une forge, dans notre cas <a href="https://gitlab.in2p3.fr/bioaster/" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/"  rel="nofollow">le GitLab du CC</a> ;</div>
+</li>
+<li class="level1"><div class="li"> Un gestionnaire de révision, <strong>Git</strong>, mais on pourrait <a href="/informatique/outils/bazaar/pourquoi" class="wikilink1" title="informatique:outils:bazaar:pourquoi">en utiliser un autre</a>.</div>
+</li>
+</ul>
+
+<p>
+Ici, nous allons suivre les différentes étapes du cycle de vie du projet.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+Coller ici le schéma qui représente tout le processus.
+</p>
+
+<p>
+Celui-ci correspondait au <a href="/informatique/developpement/developpement_de_projet/cycle_de_vie_d_un_ticket" class="wikilink1" title="informatique:developpement:developpement_de_projet:cycle_de_vie_d_un_ticket">cycle de vie d&#039;un ticket</a>, et au <a href="/informatique/developpement/developpement_de_projet/cycle_de_vie_des_branches" class="wikilink1" title="informatique:developpement:developpement_de_projet:cycle_de_vie_des_branches">cycle de vie des branches</a> quand on utilisait Redmine et Bazaar.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Projet de développement" [1-738] -->
+<h2 class="sectionedit4" id="mise_en_place">Mise en place</h2>
+<div class="level2">
+
+<p>
+Après avoir créé un compte sur GitLab, on s&#039;assurera d&#039;avoir déclaré sa clé SSH (<code>~/.ssh/id_rsa.pub</code>) dans son profile.
+</p>
+
+<p>
+On choisit un projet existant ou on en crée un nouveau.
+</p>
+
+<p>
+On clone le projet avec la commande <code>git clone git@gitlab.in2p3.fr:/bioaster/&lt;PROJET&gt;</code>.
+</p>
+
+<p>
+Pour créer le dépôt en ligne de commande :
+</p>
+<pre class="code">$ symfony new &lt;PROJET&gt;
+$ cd &lt;PROJET&gt;
+$ git init
+$ git add .
+$ git commit -m &quot;Création du projet Symfony&quot;
+$ git remote add origin git@gitlab.in2p3.fr:bioaster/&lt;PROJET&gt;.git
+$ git push -u origin master</pre>
+
+</div>
+<!-- EDIT4 SECTION "Mise en place" [739-1307] -->
+<h2 class="sectionedit5" id="identification_d_un_nouveau_besoin">Identification d&#039;un nouveau besoin</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Le chef de projet (<strong>C</strong>) discute avec l&#039;utilisateur (<strong>U</strong>) d&#039;une fonctionnalité que celui-ci veut ajouter au logiciel.</div>
+</li>
+<li class="level1"><div class="li"> Le C établie un <code>use case</code> et/ou des <code>user stories</code> avec l&#039;U.</div>
+</li>
+<li class="level1"><div class="li"> Le C crée le ou les tickets (<em>issues</em>) dans la forge et pensant à indiquer le nom de l&#039;U et lui associer un label : feature, bug, design…</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Identification d'un nouveau besoin" [1308-1702] -->
+<h2 class="sectionedit6" id="lancer_un_cycle_de_developpement">Lancer un cycle de développement</h2>
+<div class="level2">
+
+<p>
+Ceci se fait au cours d&#039;une réunion d&#039;équipe.
+</p>
+<ul>
+<li class="level1"><div class="li"> Le C crée une nouvelle <code>version</code> (<em>milestone</em>) dans la forge.</div>
+</li>
+<li class="level1"><div class="li"> Le C associe des tickets à cette version.</div>
+</li>
+<li class="level1"><div class="li"> Le C assigne des développeurs (<strong>D</strong>) aux différents tickets.</div>
+</li>
+</ul>
+
+<p>
+Il n&#039;existe pas pour le moment de manière de montrer que l&#039;on accepte un ticket… ou alors implicitement quand la branche est crée.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Lancer un cycle de développement" [1703-2121] -->
+<h2 class="sectionedit7" id="travailler_sur_une_nouvelle_fonctionnalite_ou_un_bug_fix">Travailler sur une nouvelle fonctionnalité (ou un bug fix)</h2>
+<div class="level2">
+
+<p>
+Il faut d&#039;assurer que D a créé une <em>fork</em> du projet dans GitLab et qu&#039;il a un clone local.
+</p>
+<pre class="code">$ git clone git@gitlab.in2p3.fr:&lt;LOGIN&gt;/&lt;PROJET&gt;.git
+$ cd &lt;PROJET&gt;
+$ git remote add upstream git@gitlab.in2p3.fr:bioaster/&lt;PROJET&gt;.git</pre>
+
+<p>
+On se servira de la branche <code>upstream</code> pour récupérer les mises à jour.
+</p>
+
+<p>
+On utilisera régulièrement <code>git status</code> pour voir l&#039;état du dépôt.
+</p>
+
+<p>
+Ensuite, pour chaque ticket, le D doit :
+</p>
+<ul>
+<li class="level1"><div class="li"> S&#039;assurer que le <code>master</code> local est à jour ;<br/>
+<pre class="code text">$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master # Doit normalement faire un fast-forward</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Créer une nouvelle branche de <code>feature</code> ou de <code>bug</code> dans son dépôt ;<br/>
+<pre class="code text">$ git checkout -b feature-123
+$ git push -u origin feature-123 # Enregistre origin comme branche amont</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Suivre une branche particulière déjà créée par quelqu&#039;un d&#039;autre ou à partir d&#039;une autre machine;<br/>
+<pre class="code text">$ git checkout -b feature-4 origin/feature-4</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Développer et commiter les modifications ;<br/>
+<pre class="code text">$ # Par exemple, on ajoute un fichier de commentaire
+$ vim README.md
+$ git add README.md
+$ git commit -m &quot;Ajout du lien vers le site web&quot;</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Intégrer les derniers changement de la branche <code>master</code> ; <br/>
+<pre class="code text">$ git fetch upstream # mise à jour de upstream/master
+$ git merge --no-ff upstream/master # Demande un message de commit &quot;Implémente une fonctionnalité (Fix #123)&quot;
+# Re lancer les tests unitaires s'ils existent et corriger les problèmes/conflits
+$ git push</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Dans GitLab on va sur la branche et on fait une <em>merge request</em> entre la branche de sa <em>fork</em> et celle du dépôt original. Ce merge sera en <code>–no-ff</code> pour éviter les historiques moches.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Vous pourriez avoir besoin de récupérer l&#039;avancée de votre master pendant le développement de votre branche. Pour cela : <br/>
+<pre class="code text">$ git checkout master
+$ git pull
+$ git checkout votreBranche      
+$ git fetch origin    #facultatif        
+$ git merge origin/master
+#remplir le commit et sauver
+$ git push</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Travailler sur une nouvelle fonctionnalité (ou un bug fix)" [2122-4288] -->
+<h2 class="sectionedit8" id="integrer_des_fonctionnalites_a_la_version_en_cours_de_developpement">Intégrer des fonctionnalités à la version en cours de développement</h2>
+<div class="level2">
+
+<p>
+Quand une fonctionnalité est prête (une <em>merge request</em> a été créée), elle peut alors être testée et intégrée.
+</p>
+<ul>
+<li class="level1"><div class="li"> Le C crée une branche pour tester le code.<br/>
+<pre class="code text">$ git fetch
+$ git checkout master
+$ git checkout -b test-feature-123
+$ git merge --no-ff origin/feature-123</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> C teste le code.<br/>
+<pre class="code text">$ composer install
+$ php app/console doctrine:migrations:migrate
+$ phpunit -c app # ou quelque chose dans le genre</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> C teste la fonctionnalité.</div>
+</li>
+<li class="level1"><div class="li"> C accepte, ou pas, la fonctionnalité (<em>merge request</em>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Intégrer des fonctionnalités à la version en cours de développement" [4289-4928] -->
+<h2 class="sectionedit9" id="cloturer_un_cycle_de_developpement">Clôturer un cycle de développement</h2>
+<div class="level2">
+
+<p>
+Ceci se passe lors de la réunion de fin de <em>sprint</em> quand toute l&#039;équipe et tous les utilisateurs sont présents.
+</p>
+<ul>
+<li class="level1"><div class="li"> C branche <code>develop</code> dans <code>release</code>.<br/>
+<pre class="code text">$ git checkout master
+$ git checkout -b release-1.2
+$ git push</pre>
+</div>
+</li>
+</ul>
+
+<p>
+La branche peut aussi être créée depuis l&#039;interface de GitLab.
+</p>
+
+<p>
+Ce modèle de <em>GitLabFlow</em> est plus simple que le <em>GitFlow</em> classique.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Clôturer un cycle de développement" [4929-5370] -->
+<h2 class="sectionedit10" id="corriger_un_bogue">Corriger un bogue</h2>
+<div class="level2">
+
+<p>
+Quelques <strong>bonnes pratiques</strong> générales :
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>On branche à partir de la révision où le bug a été introduit.</strong> <br/>
+On branche de <code>master</code>, peut importe du moment que la bonne révision existe dans la branche parent.</div>
+</li>
+<li class="level1"><div class="li"> <strong>On écrit un test avant même de corriger le bug</strong>, cela permet de s&#039;assurer que le bug ne réapparaîtra pas. <br/>
+Ce test peut faire partie d&#039;une méthode de test déjà existante (<code>testMethod()</code>) ou être un test dédié (<code>testBug13()</code>).</div>
+</li>
+</ul>
+
+<p>
+Il est traité <span class="curid"><a href="/informatique/developpement/developpement_de_projet#travailler_sur_une_nouvelle_fonctionnalite_ou_un_bug_fix" class="wikilink1" title="informatique:developpement:developpement_de_projet">comme n&#039;importe quelle fonctionnalité</a></span> et est intégré à un <em>sprint</em>.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Corriger un bogue" [5371-6080] -->
+<h2 class="sectionedit11" id="maintenir_les_depots_au_quotidien">Maintenir les dépôts au quotidien</h2>
+<div class="level2">
+
+<p>
+Le C est en charge de veiller à ce que les dépôts de code soient dans un bon état. Ceci consiste principalement à faire <span class="curid"><a href="/informatique/developpement/developpement_de_projet#integrer_des_fonctionnalites_a_la_version_en_cours_de_developpement" class="wikilink1" title="informatique:developpement:developpement_de_projet">les intégrations de nouvelles fonctionnalités</a></span>.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Maintenir les dépôts au quotidien" [6081-6429] -->
+<h2 class="sectionedit12" id="bonne_utilisation_du_git_reset">Bonne utilisation du git reset</h2>
+<div class="level2">
+
+<p>
+Un très bon article explicatif sur pourquoi faire un reset et comment faire : <a href="http://www.git-attitude.fr/2016/05/11/git-reset/" class="urlextern" title="http://www.git-attitude.fr/2016/05/11/git-reset/"  rel="nofollow">http://www.git-attitude.fr/2016/05/11/git-reset/</a>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Bonne utilisation du git reset" [6430-6602] -->
+<h2 class="sectionedit13" id="tips">Tips</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Comment voir l&#039;historique de la branche sur laquelle on travail et pas celles provenant d&#039;ancien merge ?</div>
+</li>
+</ul>
+
+<p>
+Typiquement imaginons nous travaillons sur le branche “B2” qui a été mergé avec la “B1”. Si on tape uniquement <code>git log</code> on verra les logs de B2, suivis de ceux de B1. Si on veut éviter ce comportement on utilise l&#039;argument <code>- -not</code> suivi du nom de la branche que l&#039;on veut exclure.
+Exemple :
+</p>
+<pre class="code"> git log B2 --not B1</pre>
+
+</div>
+<!-- EDIT13 SECTION "Tips" [6603-] -->

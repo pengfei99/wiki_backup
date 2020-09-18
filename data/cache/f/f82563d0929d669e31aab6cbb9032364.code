@@ -1,0 +1,21 @@
+{
+    &quot;repositories&quot;: [
+        {
+            &quot;type&quot;: &quot;package&quot;,
+            &quot;package&quot;: {
+                &quot;name&quot;: &quot;jquery/jquery&quot;,
+                &quot;version&quot;: &quot;1.11.1&quot;,
+                &quot;dist&quot;: {
+                    &quot;url&quot;: &quot;http://code.jquery.com/jquery-1.11.1.js&quot;,
+                    &quot;type&quot;: &quot;file&quot;
+                }
+            }
+        }
+    ],
+    &quot;require&quot;: {
+        ... other dependencies
+        &quot;twbs/bootstrap&quot;: &quot;3.0.*&quot;,
+        &quot;jquery/jquery&quot;:  &quot;1.11.*&quot;,
+        &quot;braincrafted/bootstrap-bundle&quot;: &quot;~2.0&quot;
+    }
+}

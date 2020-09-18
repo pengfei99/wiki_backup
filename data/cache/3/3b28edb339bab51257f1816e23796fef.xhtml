@@ -1,0 +1,170 @@
+
+<h4 id="user_stories_du_projet_flems">User stories du projet FLEMS</h4>
+<div class="level4">
+
+<p>
+Phrases de type : “En tant qu&#039;administrateur, je veux pouvoir supprimer un compte utilisateur, de cette manière cette utilisateur ne pourra plus se logguer.”.
+</p>
+
+<p>
+Si besoin un CDC sera rédigé à partir de ces user stories.
+</p>
+
+</div>
+
+<h5 id="authentification">Authentification</h5>
+<div class="level5">
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir m’authentifier avec un login/mot de passe, de cette manière l&#039;accès aux données est sécurisé </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir m’authentifier avec un certificat (StartSSL, CaCert, …), de cette manière l&#039;accès aux données est sécurisé.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir réinitialiser mon mot de passe avec une confirmation envoyée par email, de cette manière je n&#039;ai pas besoin de solliciter un administrateur pour faire cela et je suis indépendant pendant mon temps d&#039;utilisation de l&#039;outil. </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir être averti de la politique de gestion des cookies appliquée sur la plateforme, de cette manière mes droits sont respectés. </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir consulter les mentions légales applicables sur la plateforme,  de cette manière mes droits sont respectés.</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">En tant qu&#039;administrateur, je dois pouvoir restreindre le droit d&#039;accès d&#039;un utilisateur à l&#039;application pour un temps donné et pour une raison valable,  de cette manière un utilisateur momentanément banni ne pourra plus accéder à l&#039;application.</td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [286-1445] -->
+</div>
+
+<h5 id="gestion_des_droits_autorisations">Gestion des droits, autorisations</h5>
+<div class="level5">
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">En tant qu&#039;utilisateur, mes droits d&#039;accès aux projets (et WPs) sont gérés par PROMISE (ou autre application identifiée pour ce but) et transmis ensuite à FLEMS via <abbr title="Application Programming Interface">API</abbr>, de cette manière la confidentialité des données est assurée.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;utilisateur, je peux avoir accès à 0 à n projet(s), de cette manière la confidentialité des données est assurée. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">En tant qu&#039;utilisateur externe (partenaire), je ne dois pas pouvoir consulter les données relatives aux projets dont je ne fais pas partie,  de cette manière l&#039;accès aux données reste confidentiel.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">En tant qu&#039;utilisateur, si j&#039;ai accès à un projet ou plus précisément à un WP j&#039;ai également droit d&#039;accès à toutes les données (fichiers, métadonnées) le concernant, de cette manière le bon accès aux données et métadonnées est assurée.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">En tant qu&#039;administrateur, je peux libérer l&#039;accès d&#039;une expérience restreinte de manière à la partager avec certaines personnes identifiées, de cette manière le bon accès aux données et métadonnées est assurée.</td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [1490-2561] -->
+</div>
+
+<h5 id="gestion_des_projets">Gestion des Projets</h5>
+<div class="level5">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><em>(J&#039;ai du mal avec le “en tant que projet…”)</em> En tant que projet, je dois avoir au moins un utilisateur identifié comme “propriétaire”, de cette manière le propriétaire peut m&#039;éditer ou me supprimer à tout moment.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;administrateur, je dois pouvoir éditer/supprimer n&#039;importe quel projet/WP,  de cette manière le contrôle de l&#039;application est total.</td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [2590-2974] -->
+</div>
+
+<h5 id="gestion_des_experiences">Gestion des expériences</h5>
+<div class="level5">
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir créer et attacher une expérience à un projet dont j&#039;ai accès, de cette manière seule les personnes appartenant au projet/wp peuvent le remplir.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir récupérer une expérience existante attachée à un projet dont j&#039;ai accès et l&#039;attacher à un autre projet dont j&#039;ai aussi accès, de cette manière la réutilisation des expériences entre projets similaires est possible et encourageable.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir attacher un ou plusieurs instruments (et configuration(s)) à une expérience, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir attacher un ou plusieurs softwares (et configuration(s)) à une expérience, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir attacher un protocole à une expérience, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [3008-4094] -->
+</div>
+
+<h5 id="enregistrement_des_metadonnees">Enregistrement des metadonnées</h5>
+<div class="level5">
+
+</div>
+
+<h5 id="gestionteleversementstockagetelechargement_des_fichiers">Gestion/Téléversement/Stockage/Téléchargement des fichiers</h5>
+<div class="level5">
+
+</div>
+
+<h5 id="interfacage_avec_esamples">Interfaçage avec eSAMPLES</h5>
+<div class="level5">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir attacher un ou plusieurs échantillon(s)/souche(s) référencés dans eSAMPLES à une expérience, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir voir dans quel(s) projet(s)/expérience(s) est utilisé un échantillon/une souche référencé dans eSAMPLES, de cette manière la vision globale de l&#039;utilisation d&#039;un échantillon/souche est facilitée.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">En tant qu&#039;utilisateur externe (partenaire), je ne dois pas pouvoir voir dans quel(s) projet(s)/expérience(s) est utilisé un échantillon/une souche référencé dans eSAMPLES, de cette manière la confidentialité des données est assurée.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir scanner un code barre pour pouvoir attacher un échantillon/une souche référencé dans eSAMPLES à une expérience, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [4239-5226] -->
+</div>
+
+<h5 id="interfacage_avec_symbiosis">Interfaçage avec SYMBIOSIS</h5>
+<div class="level5">
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir utiliser un fichier (ou path de fichier) appartenant à une expérience pour un export vers SYMBIOSIS, de cette manière le processus d&#039;envoi du fichier vers SYMBIOSIS est grandement facilité.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir ajouter à une expérience un fichier venant de l&#039;utilisation de SYMBIOSIS, de cette manière le processus de téléversement du fichier dans FLEMS est grandement facilité.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">En tant qu&#039;utilisateur, je dois pouvoir ajouter à une expérience le(s) software(s)/script(s) et leur(s) configuration(s) utilisés pour cette expérience via SYMBIOSIS, de cette manière la traçabilité et la reproductibilité de l&#039;expérience sont assurées.</td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [5264-5990] -->
+</div>

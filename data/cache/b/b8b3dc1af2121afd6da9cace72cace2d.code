@@ -1,0 +1,145 @@
+<span class="co0"># This is the configuration file for the LDAP nameservice</span>
+<span class="co0"># switch library's nslcd daemon. It configures the mapping</span>
+<span class="co0"># between NSS names (see /etc/nsswitch.conf) and LDAP</span>
+<span class="co0"># information in the directory.</span>
+<span class="co0"># See the manual page nslcd.conf(5) for more information.</span>
+&nbsp;
+<span class="co0"># The user and group nslcd should run as.</span>
+uid nslcd
+gid ldap
+&nbsp;
+<span class="co0"># The uri pointing to the LDAP server to use for name lookups.</span>
+<span class="co0"># Multiple entries may be specified. The address that is used</span>
+<span class="co0"># here should be resolvable without using LDAP (obviously).</span>
+<span class="co0">#uri ldap://127.0.0.1/</span>
+<span class="co0">#uri ldaps://127.0.0.1/</span>
+<span class="co0">#uri ldapi://%2fvar%2frun%2fldapi_sock/</span>
+<span class="co0"># Note: %2f encodes the '/' used as directory separator</span>
+uri ldap:<span class="sy0">//</span>134.158.37.6
+&nbsp;
+<span class="co0"># The LDAP version to use (defaults to 3</span>
+<span class="co0"># if supported by client library)</span>
+<span class="co0">#ldap_version 3</span>
+&nbsp;
+<span class="co0"># The distinguished name of the search base.</span>
+base <span class="re2">ou</span>=Users,<span class="re2">dc</span>=bioaster,<span class="re2">dc</span>=org
+&nbsp;
+<span class="co0"># The distinguished name to bind to the server with.</span>
+<span class="co0"># Optional: default is to bind anonymously.</span>
+binddn <span class="re2">cn</span>=admin,<span class="re2">dc</span>=bioaster,<span class="re2">dc</span>=org
+&nbsp;
+<span class="co0"># The credentials to bind with.</span>
+<span class="co0"># Optional: default is no credentials.</span>
+<span class="co0"># Note that if you set a bindpw you should check the permissions of this file.</span>
+bindpw password_of_admin
+&nbsp;
+<span class="co0"># The distinguished name to perform password modifications by root by.</span>
+<span class="co0">#rootpwmoddn cn=admin,dc=example,dc=com</span>
+&nbsp;
+<span class="co0"># The default search scope.</span>
+<span class="co0">#scope sub</span>
+<span class="co0">#scope one</span>
+<span class="co0">#scope base</span>
+&nbsp;
+<span class="co0"># Customize certain database lookups.</span>
+<span class="co0">#base   group  ou=Groups,dc=example,dc=com</span>
+<span class="co0">#base   passwd ou=People,dc=example,dc=com</span>
+<span class="co0">#base   shadow ou=People,dc=example,dc=com</span>
+<span class="co0">#scope  group  onelevel</span>
+<span class="co0">#scope  hosts  sub</span>
+&nbsp;
+<span class="co0"># Bind/connect timelimit.</span>
+<span class="co0">#bind_timelimit 30</span>
+&nbsp;
+<span class="co0"># Search timelimit.</span>
+<span class="co0">#timelimit 30</span>
+&nbsp;
+<span class="co0"># Idle timelimit. nslcd will close connections if the</span>
+<span class="co0"># server has not been contacted for the number of seconds.</span>
+<span class="co0">#idle_timelimit 3600</span>
+&nbsp;
+<span class="co0"># Use StartTLS without verifying the server certificate.</span>
+<span class="co0">#ssl start_tls</span>
+<span class="co0">#tls_reqcert never</span>
+&nbsp;
+<span class="co0"># CA certificates for server certificate verification</span>
+<span class="co0">#tls_cacertdir /etc/ssl/certs</span>
+<span class="co0">#tls_cacertfile /etc/ssl/ca.cert</span>
+&nbsp;
+<span class="co0"># Seed the PRNG if /dev/urandom is not provided</span>
+<span class="co0">#tls_randfile /var/run/egd-pool</span>
+&nbsp;
+<span class="co0"># SSL cipher suite</span>
+<span class="co0"># See man ciphers for syntax</span>
+<span class="co0">#tls_ciphers TLSv1</span>
+&nbsp;
+<span class="co0"># Client certificate and key</span>
+<span class="co0"># Use these, if your server requires client authentication.</span>
+<span class="co0">#tls_cert</span>
+<span class="co0">#tls_key</span>
+&nbsp;
+<span class="co0"># Mappings for Services for UNIX 3.5</span>
+<span class="co0">#filter passwd (objectClass=User)</span>
+<span class="co0">#map    passwd uid              msSFU30Name</span>
+<span class="co0">#map    passwd userPassword     msSFU30Password</span>
+<span class="co0">#map    passwd homeDirectory    msSFU30HomeDirectory</span>
+<span class="co0">#map    passwd homeDirectory    msSFUHomeDirectory</span>
+<span class="co0">#filter shadow (objectClass=User)</span>
+<span class="co0">#map    shadow uid              msSFU30Name</span>
+<span class="co0">#map    shadow userPassword     msSFU30Password</span>
+<span class="co0">#filter group  (objectClass=Group)</span>
+<span class="co0">#map    group  member           msSFU30PosixMember</span>
+&nbsp;
+<span class="co0"># Mappings for Services for UNIX 2.0</span>
+<span class="co0">#filter passwd (objectClass=User)</span>
+<span class="co0">#map    passwd uid              msSFUName</span>
+<span class="co0">#map    passwd userPassword     msSFUPassword</span>
+<span class="co0">#map    passwd homeDirectory    msSFUHomeDirectory</span>
+<span class="co0">#map    passwd gecos            msSFUName</span>
+<span class="co0">#filter shadow (objectClass=User)</span>
+<span class="co0">#map    shadow uid              msSFUName</span>
+<span class="co0">#map    shadow userPassword     msSFUPassword</span>
+<span class="co0">#map    shadow shadowLastChange pwdLastSet</span>
+<span class="co0">#filter group  (objectClass=Group)</span>
+<span class="co0">#map    group  member           posixMember</span>
+&nbsp;
+<span class="co0"># Mappings for Active Directory</span>
+<span class="co0">#pagesize 1000</span>
+<span class="co0">#referrals off</span>
+<span class="co0">#idle_timelimit 800</span>
+<span class="co0">#filter passwd (&amp;(objectClass=user)(!(objectClass=computer))(uidNumber=*)(unixHomeDirectory=*))</span>
+<span class="co0">#map    passwd uid              sAMAccountName</span>
+<span class="co0">#map    passwd homeDirectory    unixHomeDirectory</span>
+<span class="co0">#map    passwd gecos            displayName</span>
+<span class="co0">#filter shadow (&amp;(objectClass=user)(!(objectClass=computer))(uidNumber=*)(unixHomeDirectory=*))</span>
+<span class="co0">#map    shadow uid              sAMAccountName</span>
+<span class="co0">#map    shadow shadowLastChange pwdLastSet</span>
+<span class="co0">#filter group  (objectClass=group)</span>
+&nbsp;
+<span class="co0"># Alternative mappings for Active Directory</span>
+<span class="co0"># (replace the SIDs in the objectSid mappings with the value for your domain)</span>
+<span class="co0">#pagesize 1000</span>
+<span class="co0">#referrals off</span>
+<span class="co0">#idle_timelimit 800</span>
+<span class="co0">#filter passwd (&amp;(objectClass=user)(objectClass=person)(!(objectClass=computer)))</span>
+<span class="co0">#map    passwd uid           cn</span>
+<span class="co0">#map    passwd uidNumber     objectSid:S-1-5-21-3623811015-3361044348-30300820</span>
+<span class="co0">#map    passwd gidNumber     objectSid:S-1-5-21-3623811015-3361044348-30300820</span>
+<span class="co0">#map    passwd homeDirectory &quot;/home/$cn&quot;</span>
+<span class="co0">#map    passwd gecos         displayName</span>
+<span class="co0">#map    passwd loginShell    &quot;/bin/bash&quot;</span>
+<span class="co0">#filter group (|(objectClass=group)(objectClass=person))</span>
+<span class="co0">#map    group gidNumber      objectSid:S-1-5-21-3623811015-3361044348-30300820</span>
+&nbsp;
+<span class="co0"># Mappings for AIX SecureWay</span>
+<span class="co0">#filter passwd (objectClass=aixAccount)</span>
+<span class="co0">#map    passwd uid              userName</span>
+<span class="co0">#map    passwd userPassword     passwordChar</span>
+<span class="co0">#map    passwd uidNumber        uid</span>
+<span class="co0">#map    passwd gidNumber        gid</span>
+<span class="co0">#filter group  (objectClass=aixAccessGroup)</span>
+<span class="co0">#map    group  cn               groupName</span>
+<span class="co0">#map    group  gidNumber        gid</span>
+<span class="co0"># This comment prevents repeated auto-migration of settings.</span>
+ssl no
+tls_cacertdir <span class="sy0">/</span>etc<span class="sy0">/</span>openldap<span class="sy0">/</span>cacerts

@@ -1,0 +1,9 @@
+# /usr/share/doc/lighttpd/fastcgi.txt.gz
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs:ConfigurationOptions#mod_fastcgi-fastcgi
+&nbsp;
+server.modules += ( &quot;mod_fastcgi&quot; )
+&nbsp;
+fastcgi.server = ( &quot;.php&quot; =&gt; ((
+                             &quot;bin-path&quot; =&gt; &quot;/usr/bin/php5-cgi&quot;,
+                             &quot;socket&quot; =&gt; &quot;/tmp/php.socket&quot;
+                 )))

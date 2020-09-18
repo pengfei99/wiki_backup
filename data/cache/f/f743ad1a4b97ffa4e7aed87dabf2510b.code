@@ -1,0 +1,69 @@
+<span class="co1"># SECURITY WARNING: keep the secret key used in production secret!</span>
+SECRET_KEY <span class="sy0">=</span> <span class="st0">'7++em6a-8zg+liv+82=3zc1=r$)im92acxm&amp;&amp;du5%y*8vr1o^!'</span>
+&nbsp;
+<span class="co1"># Database</span>
+<span class="co1"># https://docs.djangoproject.com/en/1.10/ref/settings/#databases</span>
+<span class="co1"># SQLite settings</span>
+<span class="co1"># 'ENGINE': 'django.db.backends.sqlite3',</span>
+<span class="co1"># 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),</span>
+<span class="co1"># psql settings</span>
+DB_ENGINE <span class="sy0">=</span> <span class="st0">'django.db.backends.postgresql_psycopg2'</span>
+DB_NAME <span class="sy0">=</span> <span class="st0">'NoE_dev'</span>
+DB_USER <span class="sy0">=</span> <span class="st0">'cdelestre'</span>
+DB_PWD <span class="sy0">=</span> <span class="st0">'cdelestre'</span>
+DB_HOST <span class="sy0">=</span> <span class="st0">'localhost'</span>
+DB_PORT <span class="sy0">=</span> <span class="st0">''</span>
+&nbsp;
+<span class="co1"># mandatory for Django Debug Toolbar</span>
+INTERNAL_IPS <span class="sy0">=</span> <span class="br0">&#91;</span><span class="st0">'127.0.0.1'</span><span class="br0">&#93;</span>
+&nbsp;
+<span class="co1"># &lt;shib_attr_name&gt; : (&lt;Required or Not&gt;, &lt;application_attr_name&gt;)</span>
+SHIB_ATTR_MAP <span class="sy0">=</span> <span class="br0">&#123;</span>
+    <span class="st0">&quot;uid&quot;</span>: <span class="br0">&#40;</span><span class="kw2">True</span><span class="sy0">,</span> <span class="st0">&quot;uid&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;cn&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;username&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;dn&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;dn&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;mail&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;mail&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;department&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;department&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;wps&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;wps&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;location&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;location&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;country&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;country&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="st0">&quot;city&quot;</span>: <span class="br0">&#40;</span><span class="kw2">False</span><span class="sy0">,</span> <span class="st0">&quot;city&quot;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+   <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1"># Shib settings</span>
+&nbsp;
+SESSION_SERIALIZER <span class="sy0">=</span> <span class="st0">'django.contrib.sessions.serializers.PickleSerializer'</span>
+&nbsp;
+AUTO_LOGOUT_DELAY <span class="sy0">=</span> <span class="nu0">60</span>
+&nbsp;
+MOCK_SHIB <span class="sy0">=</span> <span class="kw2">True</span>
+&nbsp;
+SHIB_LOGIN_URL <span class="sy0">=</span> <span class="st0">&quot;https://pengfei.org/Shibboleth.sso/Login&quot;</span>
+&nbsp;
+SHIB_REDIREC_URL <span class="sy0">=</span> <span class="st0">&quot;https://pengfei.org/django/auth/login/&quot;</span>
+&nbsp;
+APP_HOME_URL <span class="sy0">=</span> <span class="st0">&quot;https://pengfei.org/django/&quot;</span>
+&nbsp;
+APP_LOGIN_URL <span class="sy0">=</span> <span class="st0">&quot;https://pengfei.org/django/auth/login/&quot;</span>
+&nbsp;
+<span class="co1"># Specify public page uri list</span>
+<span class="co1"># these pages can be read by anyone even without login</span>
+<span class="co1"># It takes only uri.</span>
+&nbsp;
+PUBLIC_PAGE_URI <span class="sy0">=</span> <span class="br0">&#91;</span><span class="st0">'/django/'</span><span class="sy0">,</span> <span class="st0">'/django'</span><span class="sy0">,</span> <span class="st0">'/django/auth/login/'</span><span class="br0">&#93;</span>
+&nbsp;
+FAKE_USER_ATTR <span class="sy0">=</span> <span class="br0">&#123;</span>
+    <span class="st0">&quot;uid&quot;</span>: <span class="st0">&quot;cdelestre&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;username&quot;</span>: <span class="st0">&quot;Clément DELESTRE&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;dn&quot;</span>: <span class="st0">&quot;CN=MICHEL Jean-Michel,OU=UTEC06,OU=DUT,OU=DST,OU=UTILISATEURS,<span class="es0">\</span>
+           DC=Bioaster,DC=local&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;mail&quot;</span>: <span class="st0">&quot;cdelestre@bioaster.org&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;wps&quot;</span>: <span class="st0">&quot;EBODIAG::WP1;EBODIAG::WP2;EBODIAG::WP3;EBODIAG::WP4;<span class="es0">\</span>
+            EBODIAG::WP5;REALISM::WP1;REALISM::WP2;REALISM::WP3;<span class="es0">\</span>
+            REALISM::WP23&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;location&quot;</span>: <span class="st0">&quot;BIOASTER Paris - Niveau 42 - Bural des réclamations&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;country&quot;</span>: <span class="st0">&quot;France&quot;</span><span class="sy0">,</span>
+    <span class="st0">&quot;city&quot;</span>: <span class="st0">&quot;Paris&quot;</span><span class="sy0">,</span>
+   <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1"># End shib settings</span>

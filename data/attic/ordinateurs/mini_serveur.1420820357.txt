@@ -1,0 +1,34 @@
+====== Mini Serveur ======
+
+===== Introduction =====
+
+Le //mini serveur// est un [[https://ccbiowiki1.in2p3.fr/pt6/vmware#hyperviseur_esxi_sur_poweredge_t110_ii|hôte ESXi]] qui héberge les VMs de Paris.
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : Jacques
+
+===== Informations Techniques =====
+
+  * **Modèle** : -
+  * **Numéro de Série** : //Service Tag// XYZ, //Express Service Code// XYZ
+  * **Système d'Exploitation** : - 
+  * **Matériel** : 
+    * //RAM//: -
+    * //Disques durs//: -
+    * //Adresse MAC// : -
+  * **Prise** : 1.2.3
+  * **Adresse IP** : [[http://1.2.3.4|1.2.3.4]]
+
+===== Machines virtuelles =====
+
+  * [[ccin2p3:machines_virtuelles:BIOA-2014-VM01|BIOA-2014-VM01]] : pfSense qui sert de point d'accès au réseau virtuel de Paris
+  * [[ccin2p3:machines_virtuelles:BIOA-2014-VM02|BIOA-2014-VM02]] : Serveur de fichier
+  * [[ccin2p3:machines_virtuelles:BIOA-2014-VM03|BIOA-2014-VM03]] : Serveur web
+
+===== Journal =====
+
+  * **2014.06.18 (tlc)** Enregistrement dans le wiki
+
+{{tag>todo}}

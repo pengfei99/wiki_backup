@@ -1,0 +1,1 @@
+php app<span class="sy0">/</span>console doctrine:fixtures:load <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>UserBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadUserData.php

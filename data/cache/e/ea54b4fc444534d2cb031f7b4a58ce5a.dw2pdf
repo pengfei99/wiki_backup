@@ -1,0 +1,99 @@
+<a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__"></a>
+<h1><bookmark content="Shiny Server" level="0" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__shiny_server">Shiny Server</a></h1>
+<div class="level1">
+
+<p>
+Shiny Server enables users to host and manage Shiny applications on the Internet. Shiny is an R package which uses a reactive programming model to simplify the development of R-powered web applications. Shiny Server can manage R processes running various Shiny applications over different URLs and ports. Using Shiny Server offers a variety of benefits over simply running Shiny in R directly. These features allow the administrator to:
+</p>
+<ul>
+<li class="level1"><div class="li"> Host multiple applications simultaneously, each at its own URL.</div>
+</li>
+<li class="level1"><div class="li"> Support web browsers which don&#039;t support WebSocket, including Internet Explorer 8 &amp; 9.</div>
+</li>
+<li class="level1"><div class="li"> Enable system users to develop and manage their own Shiny applications.</div>
+</li>
+<li class="level1"><div class="li"> Automatically have R processes that crash or are terminated restart for the next user requesting the application.</div>
+</li>
+</ul>
+
+</div>
+
+<h2><bookmark content="Informations" level="1" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__informations">Informations</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 1.3.0.403</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : AGPL v3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://www.rstudio.com/products/shiny/shiny-server/" class="urlextern" title="http://www.rstudio.com/products/shiny/shiny-server/"  rel="nofollow">http://www.rstudio.com/products/shiny/shiny-server/</a></div>
+</li>
+</ul>
+<!-- EDIT1 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_info plugin_wrap" style="width: 40%;">
+<p>
+La <a href="http://www.rstudio.com/products/shiny/shiny-server/" class="urlextern" title="http://www.rstudio.com/products/shiny/shiny-server/"  rel="nofollow"> version gratuite</a> n&#039;offre pas de fonctionnalités de sécurité et d&#039;authentification…
+</p>
+</div><!-- EDIT2 PLUGIN_WRAP_END [0-] -->
+</div>
+
+<h2><bookmark content="Applications en cours de test/évaluation" level="1" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__applications_en_cours_de_testevaluation">Applications en cours de test/évaluation</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/ut6/projets_internes/plateforme_bioinfo/module_visualisation/phyloseq" class="wikilink1" title="ut6:projets_internes:plateforme_bioinfo:module_visualisation:phyloseq"> Phyloseq</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/projets_internes/plateforme_bioinfo/module_visualisation/metaap" class="wikilink1" title="ut6:projets_internes:plateforme_bioinfo:module_visualisation:metaap"> MetaMapR</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/projets_internes/plateforme_bioinfo/module_visualisation/seed" class="wikilink1" title="ut6:projets_internes:plateforme_bioinfo:module_visualisation:seed"> Simple Exploration of Ecological Datasets : SEED</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2><bookmark content="Notes de déploiement" level="1" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__notes_de_deploiement">Notes de déploiement</a></h2>
+<div class="level2">
+
+<p>
+<a href="/ut6/projets_internes/plateforme_bioinfo/module_visualisation/instance_shiny" class="wikilink1" title="ut6:projets_internes:plateforme_bioinfo:module_visualisation:instance_shiny"> Shiny server</a>
+</p>
+<!-- EDIT3 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_todo plugin_wrap" style="width: 30%;">
+<p>
+!! UTILISER UNE PLUS GROSSE FLAVOR, CA RAME !!
+Une fois l&#039;instance crée proprement, générer l&#039;image Open Stack
+</p>
+</div><!-- EDIT4 PLUGIN_WRAP_END [0-] --><!-- EDIT5 PLUGIN_WRAP_START [0-] --><div class="wrap_clear plugin_wrap"></div><!-- EDIT6 PLUGIN_WRAP_END [0-] -->
+<p>
+Les fichiers de configuration du serveur, l&#039;interface web personnalisée ainsi que le code des applications installées (et modifiées) sont versionnés avec bazaar
+</p>
+
+<p>
+<strong>Chemin d&#039;accès au dépôt :</strong> /afs/in2p3.fr/throng/bioaster/repo/shiny
+</p>
+
+</div>
+
+<h2><bookmark content="Sécurité" level="1" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__securite">Sécurité</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Accessible que depuis les réseaux Bioaster</div>
+</li>
+<li class="level1"><div class="li"> A terme, utilisation d&#039;un<a href="/ut6/projets_internes/plateforme_bioinfo/reverse_proxy" class="wikilink1" title="ut6:projets_internes:plateforme_bioinfo:reverse_proxy"> reverse proxy</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2><bookmark content="Idées / pointeurs" level="1" /><a name="ut6projets_internesplateforme_bioinfomodule_visualisationshiny__ideespointeurs">Idées / pointeurs</a></h2>
+<div class="level2">
+
+<p>
+Jeter un oeil à :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://ggvis.rstudio.com/" class="urlextern" title="http://ggvis.rstudio.com/"  rel="nofollow">http://ggvis.rstudio.com/</a> </div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.htmlwidgets.org/" class="urlextern" title="http://www.htmlwidgets.org/"  rel="nofollow">http://www.htmlwidgets.org/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://shiny.snap.uaf.edu/random_forest_example/" class="urlextern" title="http://shiny.snap.uaf.edu/random_forest_example/"  rel="nofollow">http://shiny.snap.uaf.edu/random_forest_example/</a> </div>
+</li>
+</ul>
+
+</div>

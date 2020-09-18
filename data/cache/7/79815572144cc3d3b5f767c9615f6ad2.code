@@ -1,0 +1,82 @@
+<span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;UTF-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;project</span> <span class="re0">xmlns</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span>
+<span class="sc3">         <span class="re0">xmlns:xsi</span>=<span class="st0">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span class="sc3">         <span class="re0">xsi:schemaLocation</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;modelVersion<span class="re2">&gt;</span></span></span>4.0.0<span class="sc3"><span class="re1">&lt;/modelVersion<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.pengfei<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-tutor<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.0-SNAPSHOT<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.1.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-streaming_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-hive_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-mllib_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;build<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;plugins<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.scala-tools<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-scala-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.15.2<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;executions<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;execution<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;goals<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>compile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>testCompile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;/goals<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;/execution<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/executions<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-compiler-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>3.6.0<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;source<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/source<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;target<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/target<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.maven.plugins<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-surefire-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.19<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;skip<span class="re2">&gt;</span></span></span>true<span class="sc3"><span class="re1">&lt;/skip<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc3"><span class="re1">&lt;/plugins<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/build<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/project<span class="re2">&gt;</span></span></span>

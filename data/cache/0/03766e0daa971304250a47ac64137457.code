@@ -1,0 +1,12 @@
+<span class="co1">// function to write data in hdfs</span>
+<a href="http://scala-lang.org"><span class="kw1">def</span></a> WriteDataToDisk<span class="br0">&#40;</span>df<span class="sy0">:</span>DataFrame,outputPath<span class="sy0">:</span>String,fileName<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+    df.<span class="me1">coalesce</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>.<span class="me1">write</span>.<span class="me1">mode</span><span class="br0">&#40;</span>SaveMode.<span class="me1">Overwrite</span><span class="br0">&#41;</span>
+      .<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;header&quot;</span>,<span class="st0">&quot;true&quot;</span><span class="br0">&#41;</span>
+      .<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;mapreduce.fileoutputcommitter.marksuccessfuljobs&quot;</span>,<span class="st0">&quot;false&quot;</span><span class="br0">&#41;</span> <span class="co1">//Avoid creating of crc files</span>
+      .<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;encoding&quot;</span>, <span class="st0">&quot;UTF-8&quot;</span><span class="br0">&#41;</span>
+      .<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;delimiter&quot;</span>, <span class="st0">&quot;,&quot;</span><span class="br0">&#41;</span> 
+      .<span class="me1">csv</span><span class="br0">&#40;</span>outputPath+<span class="st0">&quot;/&quot;</span>+fileName<span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">// call function</span>
+WriteDataToDisk<span class="br0">&#40;</span>productVisitNumber,<span class="st0">&quot;/tmp/demo_data&quot;</span>,<span class="st0">&quot;product_visit_number&quot;</span><span class="br0">&#41;</span>  

@@ -1,0 +1,5 @@
+<span class="sc3"><span class="re1">&lt;logger</span> <span class="re0">name</span>=<span class="st0">&quot;org.labkey&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;level</span> <span class="re0">value</span>=<span class="st0">&quot;debug&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;appender-ref</span> <span class="re0">ref</span>=<span class="st0">&quot;LABKEY&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;appender-ref</span> <span class="re0">ref</span>=<span class="st0">&quot;LABKEYDEBUG&quot;</span><span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;/logger<span class="re2">&gt;</span></span></span>

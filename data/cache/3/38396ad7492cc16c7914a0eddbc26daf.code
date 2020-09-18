@@ -1,0 +1,10 @@
+#HADOOP_HEAPSIZE sets the JVM heap size for all Hadoop project servers such as HDFS, YARN, and MapReduce
+#HADOOP_HEAPSIZE is an integer passed to the JVM as the maximum memory (Xmx) argument.
+#for example, if you need to give 8Go memory
+export HADOOP_HEAPSIZE=8192
+&nbsp;
+#HADOOP_NAMENODE_OPTS is specific to the NameNode and sets all JVM flags, which must be specified. 
+#HADOOP_NAMENODE_OPTS overrides the HADOOP_HEAPSIZE Xmx value for the NameNode. 
+&nbsp;
+# For example the initial heap is 1GB, the max is 4GB.
+export HADOOP_NAMENODE_OPTS=&quot;-Xms1024M -Xmx4028M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:+PrintTenuringDistribution -XX:OnOutOfMemoryError={{AGENT_COMMON_DIR}}/killparent.sh -Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_NAMENODE_OPTS&quot;

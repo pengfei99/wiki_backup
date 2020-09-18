@@ -1,0 +1,4 @@
+$ vim /usr/share/tomcat/.grails/transmartConfig/DataSource.groovy
+  # url = &quot;jdbc:postgresql://192.168.0.12:5432/transmart&quot;
+$ transmartstop
+$ transmartstart

@@ -1,0 +1,14 @@
+====== Creating a data science python env with Anaconda ======
+
+In this codna env, we will install TensorFlow, Keras,etc
+
+
+===== Install tensorflow on conda base env =====
+
+<code>
+# chcke the availbable tensorflow package version
+conda search tensorflow
+
+# intall it
+conda install tensorflow
+</code>

@@ -1,0 +1,86 @@
+====== Redmine ======
+
+L'outil de gestion de projets Redmine est utilisé principalement par l'UT6. \\
+Il est disponible à l'adresse suivante : https://devtools.bioaster.org/redmine
+
+<WRAP center info>
+**Info.**\\ 
+Cette outil remplace la [[http://forge.bioaster.org|forge]] qui avait été mise à disposition précédemment et qui sert encore pour certains projets démarrés en 2015 : http://forge.bioaster.org
+</WRAP>
+
+Points à noter :
+
+  * La base de données est hébergées au CC et est donc sauvegardée quotidiennement ;
+  * L'authentification des utilisateurs se fait //via// l'AD BIOASTER (seuls les groupes sont à créer et à configurer);
+  * La syntaxe des wiki est [[http://www.redmine.org/projects/redmine/wiki/RedmineTextFormattingTextile|Textile]];
+  * Seul le rôle de Manager permet de créer des projets.
+
+===== Suivi opérationnel des projets de l'UTEC6 =====
+
+==== Cas d'utilisation ====
+
+Quelques cas: 
+  *  Le LIMS;
+  *  Les travaux sur tranSMART/REALISM;
+  *  Les stages;
+  * ...
+
+
+==== Bonnes pratiques ====
+
+Les rubriques à utiliser:
+  * **Projets et sous-projet :** 1 gros projet doit être décomposé en sous-projet. Par exemple, le développement d'un module du LIMS est un sous-projet du projet LIMS.  
+  * **Wiki :** à utiliser pour la documentation technique (spécifications, définition des tables, méthode d'implémentation)
+  * **Demande :** 1 demande correspond à 1 lot cohérent de fonctionnalités à implémenter (p.ex. un ensemble bibliothèque de fonctions, un API...)
+  * **Sous-demande :** 1 sous-lot de fonctionnalités liées à 1 demande (p.ex. une bibliothèque de fonction).
+  * **Sous-sous-demande :** il est possible de faire autant de niveau de décomposition que nécessaire.
+  * **Gantt :** à utiliser si un suivi de la demande dans le temps est nécessaire (p.ex. pour un stage de M2).
+  * **Dépôt :** pour l'instant, les dépôts se font sur [[informatique:developpement:developpement_de_projet|Git]]/[[https://gitlab.in2p3.fr|Gitlab]]
+
+<WRAP info> A ce jour, il n'est pas prévu de lier les tickets GitLab aux ticket Redmine. Les tickets GitLab sont à un niveau de granularité beaucoup plus fin que ceux de Redmine. De même, les 'merge' sont a gérer dans GitLab</WRAP> 
+
+==== Les trackers ====
+
+  * **Bug :** pour les bug et les problèmes à résoudre
+  * **Feature** pour l'implémentation de nouvelles fonctionnalités
+  * **Support** pour le support et le suivi
+  * **Documentation** pour la documentation et les rapports
+  * **Study** pour les études de faisabilités, les analyses, etc.
+  * **Use Case** pour la définition et la création de use case.  
+===== Choses à faire =====
+
+  * Sécuriser avec Shibboleth en s'inspirant de :
+    * https://www.redmine.org/plugins/redmine_remote_user_auth
+    * https://services.renater.fr/federation/technique/applications/config/redmine
+  * Sauvegardes : OK pour la BD, mais les fichiers attachés ne sont pas sauvegardés
+
+===== Installation =====
+
+L'installation est faite grâce au rôle Ansible disponible dans le GitLab du CC : https://gitlab.in2p3.fr/bioaster/ansible
+
+<code yml>
+- name: Server for web development tools
+  hosts: devtools
+  vars:
+    - redmine_version: "3.1.1"
+    - redmine_archive_sha256sum: 57307b919bcc38ada8c5bd06e49d914e428cf11f0fc2cf02d13c5d00afddeecf
+    - db_redmine_name: bio_project
+    - db_redmine_user: bio_project
+    - db_redmine_hostname: ccmysql.in2p3.fr
+#    - db_redmine_password: "defined in group_vars/all/private.yml"
+  roles:
+    - { role: redmine,
+        vhost_name: devtools.bioaster.org,
+        archive_url: "http://www.redmine.org/releases/redmine-{{ redmine_version }}.tar.gz",
+        sha256sum: "{{ redmine_archive_sha256sum }}",
+        version: "{{ redmine_version }}",
+        install_directory: /var/www/html,
+        database_hostname: "{{ db_redmine_hostname }}",
+        database_name: "{{ db_redmine_name }}",
+        database_user: "{{ db_redmine_user }}",
+        database_password: "{{ db_redmine_password }}",
+        backup_folder: /path/to/local/backups }
+</code>
+
+
+

@@ -1,0 +1,157 @@
+
+<h1 class="sectionedit1" id="reunion_du_30_mars_2017">Réunion du 30 Mars 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9union du 30 Mars 2017&quot;,&quot;hid&quot;:&quot;reunion_du_30_mars_2017&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CD</div>
+</li>
+<li class="level1"><div class="li"> JHA</div>
+</li>
+<li class="level1"><div class="li"> YM</div>
+</li>
+<li class="level1"><div class="li"> PDU</div>
+</li>
+<li class="level1"><div class="li"> PV</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Personnes pr\u00e9sentes&quot;,&quot;hid&quot;:&quot;personnes_presentes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-114&quot;} -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Débriefing 1er interview NeT (UTEC04 - NM et CM)</div>
+</li>
+<li class="level1"><div class="li"> Notion OGM &amp; Bioagent</div>
+</li>
+<li class="level1"><div class="li"> Storage</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ordre du jour :&quot;,&quot;hid&quot;:&quot;ordre_du_jour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;115-234&quot;} -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">JHA : Débriefing interview UTEC04</em>
+</p>
+
+<p>
+Il ressort de l&#039;interview que l&#039;UTEC04 a 3 fichiers Excel de recensement d&#039;échantillons. La majeure partie de leur référencement correspond à des plasmides (environ 220) et à des OGM. Les fichiers vont être envoyés à JHA pour analyse et clusterisation. <br/>
+
+Chaque plasmide est couplé à un fichier <a href="http://migale.jouy.inra.fr/?q=fr/faq-appli-genbank" class="urlextern" title="http://migale.jouy.inra.fr/?q=fr/faq-appli-genbank" rel="nofollow">GenBank</a>. pour versions &gt; 1 : Il faudrait prévoir une liaison plasmide ↔ fichier de type GenBank automatiquement.
+Leurs échantillons sont BSL 1 et 2 uniquement. <br/>
+
+Pour mémo : NM propose un filtre de recherche pour la recherche des échantillons correspondant à une checkbox (échantillon encore existant ou non).<br/>
+
+Nous avons pu visiter la zone des frigos et le labo P1 de l&#039;UTEC04 pour nous rendre compte de comment étaient ranger des échantillons à l&#039;UTEC04. Les photos sont sur owncloud <code>$OWNCLOUD/NoE/Photos/Frigos/UTEC04</code> et le détail sera retransmis dans la retranscription du questionnaire de JHA.<br/>
+
+Leur approche de la notion d&#039;échantillon et d&#039;OGM nous a permis d&#039;aborder le sujet suivant de la réunion d&#039;aujourd&#039;hui.
+</p>
+
+<p>
+<em class="u">La notion d&#039;OGM et de Biological agent</em>
+</p>
+
+<p>
+Suite aux discussions ayant eu lieu lors de la réunion, quelques modifications doivent être fait en base de données. Il faut que : <br/>
+
+</p>
+<ul>
+<li class="level1 node"><div class="li"> la table Pathogen :</div>
+<ul>
+<li class="level3"><div class="li"> soit renommée en table Bioagent</div>
+</li>
+<li class="level3"><div class="li"> soit liée en OneToMany à la table MappingGMO</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> la table MappingGMO :</div>
+<ul>
+<li class="level2"><div class="li"> ne soit plus liée à la table sample en ManyToMany, mais qu&#039;il y ait un fk sample_id <strong>(pouvant être nulle)</strong> dans MappingGMO</div>
+</li>
+<li class="level2"><div class="li"> la ForeignKey (fk) “bacterium_id” pointant vers Classification de type bactérie soit remplacée par une fk “bioagent_id” pointant vers Bioagent.id</div>
+</li>
+<li class="level2"><div class="li"> la fk “plasmid_id” pointant sur la Classification de type plasmide soit remplacée par une fk “ext_material_id” <strong>(pouvant être nulle)</strong> pointant vers une Classification de type “bio tools” (à produire). <em class="u"><strong> Exemples : </strong></em> <em>Plasmid –&gt; Plasmid1, Plasmid2, Plasmid3; Gene –&gt; CRISPR; methods –&gt; UV; …</em></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> la table Demand (correspondant aux déclarations d&#039;OGM) :</div>
+<ul>
+<li class="level2"><div class="li"> soit créée</div>
+</li>
+<li class="level2"><div class="li"> ait pour champs : demand_id (en rapport avec l&#039;id de la demande fait par l&#039;AQ)</div>
+</li>
+<li class="level2"><div class="li"> ait en relations : une fk AQ_user_id et une relation ManyToMany vers Employee</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> la table Sample :</div>
+<ul>
+<li class="level2"><div class="li"> contienne un champ booléen is_OGM. Exemple : c&#039;est un échantillon de type OGM (Classification Sample égale à un OGM répertorié dans la classification échantillon)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Au niveau du code il faudra que :
+</p>
+<ul>
+<li class="level1"><div class="li"> on contrôle si un Sample contient un/des OGM (contains_OGM dans le constructeur du model Sample)</div>
+</li>
+<li class="level1"><div class="li"> on contrôle si un Bioagent est un OGM (== s&#039;il est référencé dans MappingOGM)</div>
+</li>
+</ul>
+
+<p>
+Au niveau du 1er formulaire de création SampleForm, plusieurs use cases identifiés :
+</p>
+<ul>
+<li class="level1 node"><div class="li"> j&#039;ajoute un OGM que j&#039;ai acheté :</div>
+<ul>
+<li class="level2"><div class="li"> je renseigne la bactérie (ou autre type d&#039;échantillon pouvant donner un OGM) dans “type” (== Sample Classification), si je suis un utilisateur recensé comme manipulateur OGM pour ce type d&#039;échantillon ET qu&#039;il possède une version OGM que je peux manipuler, alors une checkbox “is_OGM” apparait en dessous de mon champs type, si je la coche une liste de ext_material (Classification à faire) apparait en fonction du type d&#039;échantillon sélectionné.</div>
+</li>
+<li class="level2"><div class="li"> Mon Sample à is_GMO à True</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> j&#039;ajoute un échantillon contenant un ou plusieurs OGM</div>
+<ul>
+<li class="level2"><div class="li"> je renseigne le formulaire propre à mon échantillon et je clique sur “add a biological agent”, puis je renseigne le type de mon biological agent, si je suis un utilisateur référencé par l&#039;AQ comme manipulateur d&#039;OGM pour ce type d&#039;échantillon alors une check box “is_GMO” apparait en dessous du champs “type de bioagent”. Si je coche cette checkbox je peux alors choisir un ext_material en rapport avec le type de bioagent selectionné et mes droits de manipulation d&#039;OGM.</div>
+</li>
+<li class="level2"><div class="li"> Je peux répéter cela n fois (n=&lt;10 pour le moment) par échantillon</div>
+</li>
+<li class="level2"><div class="li"> Si au moins un de mes Bioagent est OGM, alors il faudra que mon Sample soit indiqué comme “contenant des OGM” lors de ma recherche</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<em class="u">Gestion des storages</em>
+</p>
+
+<p>
+Avant toute chose il faut revenir vers l&#039;AQ pour leur indiquer les erreurs recensées dans le fichier (Q00-11-V01_Equipement_BIOASTER1.xlsx sur Owncloud) par les experts.
+</p>
+
+<p>
+Ensuite il faudra extraire en CSV les informations d&#039;intérêts pour pouvoir le <em>parser</em> plus simplement en Python.
+</p>
+
+<p>
+Il faudra aussi qu&#039;on sache combien de tiroirs il y a par frigo. 
+</p>
+
+<p>
+Quand nous aurons réunis toutes ces informations nous pourrons alors implémenter l&#039;ETL.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9sum\u00e9&quot;,&quot;hid&quot;:&quot;resume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;235-&quot;} -->

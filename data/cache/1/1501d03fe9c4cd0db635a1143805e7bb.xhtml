@@ -1,0 +1,48 @@
+
+<h1 class="sectionedit1" id="ssp_datalab">SSP DataLab</h1>
+<div class="level1">
+
+<p>
+service statistique public (SSP) datalab is realized inside INSEE. Its objective is to provide a platform for data scientist.   
+</p>
+
+<p>
+The challenge is to create a cloud based platform which provides tools and techniques for data storage, cleaning, analysis, and so on. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SSP DataLab&quot;,&quot;hid&quot;:&quot;ssp_datalab&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-295&quot;} -->
+<h2 class="sectionedit2" id="tech_choice">Tech choice</h2>
+<div class="level2">
+
+<p>
+We have choose <strong>containers</strong> instead of <strong>Virtual Machines</strong>.
+</p>
+
+<p>
+Containers are often compared to Virtual Machines (VMs), since both of them allow multiple types of software to be run in contained environments.
+</p>
+
+<p>
+Containers are an abstraction of the application layer (meaning that each container simulates a different software application). Though each container runs isolated processes, multiple containers share a common Operating System.
+</p>
+
+<p>
+VMs are an abstraction of the hardware layer (meaning that each VM simulates a physical machine that can run software). VM technology can use one physical server to run the equivalent of many servers (each of which is called a VM). So, while multiple VMs run on one physical machine, each VM has its own copy of an Operating System, applications and their related files, libraries and dependencies.
+</p>
+
+<p>
+Running software in containerized environments generally uses less space and memory than running software within different VMs, since the latter requires a separate copy of the Operating System to run on each VM.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tech choice&quot;,&quot;hid&quot;:&quot;tech_choice&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;296-1376&quot;} -->
+<h2 class="sectionedit3" id="ssp_datalab_cloud_architecture">SSP datalab(cloud) architecture</h2>
+<div class="level2">
+
+<p>
+The core of SSP datalab is a web application called <strong>ONYXIA</strong>. It has an api backend which can connect to a k8s or mesos cluster and a UI which allows users to deploy services on the backend container cluster.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SSP datalab(cloud) architecture&quot;,&quot;hid&quot;:&quot;ssp_datalab_cloud_architecture&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1377-&quot;} -->

@@ -1,0 +1,24 @@
+
+<h1 class="sectionedit1" id="authentifier_les_utilisateurs">Authentifier les utilisateurs</h1>
+<div class="level1">
+
+<p>
+C&#039;est facile, il suffit d&#039;utiliser le bundle <code>BioasterCertLogin</code>… enfin, dès qu&#039;il sera écrit !
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap"><ul>
+<li class="level1"><div class="li"> <a href="http://symfony.com/doc/current/cookbook/security/custom_provider.html" class="urlextern" title="http://symfony.com/doc/current/cookbook/security/custom_provider.html"  rel="nofollow">Créer un UserProvider</a> pour récupérer les données de la BD  ; c&#039;est <a href="http://propelorm.org/documentation/cookbook/symfony2/the-symfony2-security-component-and-propel.html" class="urlextern" title="http://propelorm.org/documentation/cookbook/symfony2/the-symfony2-security-component-and-propel.html"  rel="nofollow">facile avec Propel</a> !</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://symfony.com/doc/current/cookbook/security/api_key_authentication.html" class="urlextern" title="http://symfony.com/doc/current/cookbook/security/api_key_authentication.html"  rel="nofollow">Créer un certificateAuthenticator</a> pour récupérer les données de certificat passé par le serveur web.</div>
+</li>
+</ul>
+
+<p>
+Il faudrait avoir 2 authentifications : certificat ou mot de passe.
+Mettre ça sur la même page, mais en deux parties. Si le certificat est détecté, on propose le “one clic connection”, sinon, il faut remplir de formulaire.
+</p>
+
+<p>
+Pour l&#039;auth par AD, utiliser le plugin de Pierre : <a href="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle" class="urlextern" title="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle"  rel="nofollow">ZtecSecurityActiveDirectoryBundle</a>
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>

@@ -1,0 +1,12 @@
+'host'          = 'srvadmin.bioaster.local';
+'port'          = 389;
+'base_dn'       = 'OU=UTILISATEURS BIOASTER ACTIFS,DC=Bioaster,DC=local';
+'search_filter' = '(&amp;(objectClass=user)(objectCategory=person)(homeMDB=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(mail=%s))';
+'version'       = 3;
+'use_tls'       = 0;
+'referrals'     = 0;
+'deref_options' = 0;
+'login'         = 'CN=SRVGLPI_Service,OU=GLPI,OU=Application,OU=GroupeSecu,DC=Bioaster,DC=local';
+'password'      = '************';
+'admins'        = array(&quot;tanguy.lecarrour@bioaster.org&quot;);
+'debug'         = 1;

@@ -1,0 +1,33 @@
+**Date** : 25/06/2014
+
+**Participants** : JG, TLC, NS
+
+====== Ordre du jour ======
+Précédente réunion le [[pt6/reunions/reunion_pt6_10.06.2014|10/06/2014]]
+  - <del>Déploiement de TranSMART, bioMAJ, WWWblast et Galaxy</del>
+  - Cloud OpenStack et poste ouvert au PT6.
+  - Création d’un Data Warehouse à BIOASTER (avec le CT1).
+  - Les stations de travail des bio-informaticiens et la relation avec la ferme et le cloud.
+  - Mise en place d'une PKI Microsoft à BIOASTER.
+  - Owncloud.
+  - Organisation du Wiki : modification/déplacement des namespaces. 
+  - Répartition des tâches : listes des activités et des projets en cours.
+  - Annonces diverses et variées...
+
+====== Commentaires et actions ======
+  - En attente de la prochain discussion sur la convention avec le CC-IN2P3 | NS
+  - En attente d'un retour de Ghita | NS 
+  - Rencontre avec Kitware => Elaborer un Use case PT2 / IBM => présentation commerciale des solutions | NS
+  - Recensement des machines en cours | JG+TLC / Discussion en cours à Deuzzi sur la normalisation des postes de travail | JG
+  - En attente de Deuzzi sur la quantité de travail nécessaire | JG
+  - Owncloud configuré sur vmware@ccin2P3.fr : [[http://ccbioappl04.in2p3.fr/owncloud/]]. Solution prometteuse avec plusieurs plugin disponibles (dont un plugin iRODS) | JG+TLC
+  - Ajouter la section PT7 | NS
+  - Liste des activités du PT | NS
+  - Trouver une solution pour gérer les mots de passe de façon centralisé => discuter avec MR et LC | JG
+  - Modification de la procédure de création de compte sur Prosody (Jabber) | TLC 
+  - Gestion des ticket à BIOASTER => à voir avec MR | JG
+
+====== Archives ======
+  - [[pt6/reunions/reunion_pt6_06.06.2014|06/06/2014]]
+  - [[pt6/reunions/reunion_pt6_10.06.2014|10/06/2014]]
+  - [[pt6/reunions/reunion_pt6_25.06.2014|25/06/2014]]

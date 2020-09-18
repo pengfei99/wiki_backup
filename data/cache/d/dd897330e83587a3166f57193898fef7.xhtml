@@ -1,0 +1,156 @@
+
+<h1 class="sectionedit1" id="tracabilite_des_workflows_et_des_donnees">Tracabilité des workflows et des données</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Tracabilité des workflows et des données" [1-58] -->
+<h3 class="sectionedit2" id="user_stories">User stories</h3>
+<div class="level3">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir sauvegarder ses données d&#039;acquisition + les métadata associées aux données tout en gardant le lien <code>patient clinique ↔ échantillon biologique ↔ data numérique</code> </td><td class="col1"> Utec7 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir créer des workflows d&#039;analyse (Matlab/R) et les sauvegarder les métadata associés aux workflows (info sur les algorithms utilisés, paramètres, unités et description des paramètres, description des data d&#039;entrée, description des résultats en sortie) </td><td class="col1"> Utec7 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Un utilisateur Utec7 doit pouvoir excécuter ses workflows et sauvegarder ses résultats d&#039;analyse tout en gardant le lien <code>patient clinique ↔ échantillon biologique ↔ data numérique ↔ workflow d&#039;analyse ↔ résultats</code> afin d&#039;avoir une tracabilité du flow d&#039;information </td><td class="col1"> Utec7 </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [83-934] -->
+</div>
+<!-- EDIT2 SECTION "User stories" [59-935] -->
+<h3 class="sectionedit4" id="metadonnees_d_acquisition">Metadonnées d&#039;acquisition</h3>
+<div class="level3">
+
+<p>
+Les métadonnées des données d&#039;acquisition sont principalement définies par les constructeurs d&#039;instruments et sont généralement les paramètres de configuration des instruments d&#039;acquisition. Elles varient en fonction des instruments.
+</p>
+
+<p>
+Les informations nécessaires sont 
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Instrument</strong>: </div>
+<ul>
+<li class="level2"><div class="li"> ID, Nom, Description de l&#039;instrument d&#039;acquisition</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Configuration</strong>:</div>
+<ul>
+<li class="level2"><div class="li"> Nom, Description des paramètres de configuration</div>
+</li>
+<li class="level2"><div class="li"> Valeurs des paramètres (<code>text</code>, <code>float</code>, <code>integer</code>, <code>bool</code>, <code>array</code>) </div>
+</li>
+<li class="level2"><div class="li"> Unités des paramètres (<code>text</code>)</div>
+</li>
+<li class="level2"><div class="li"> Le cas échéant, les contraintes sur les paramètres (essentiellement des intervals qui décrivent des bornes bornes <code>[min, max]</code>) </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Data</strong>: </div>
+<ul>
+<li class="level2"><div class="li"> ID, Nom, Repository, Description des data générées (Les data gardent un lien vers l&#039;expérience)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Metadonnées d'acquisition" [936-1799] -->
+<h3 class="sectionedit5" id="metadonnees_d_analyse">Metadonnées d&#039;analyse</h3>
+<div class="level3">
+
+<p>
+Pour résumé, les métadata des workflows d&#039;analyse doivent les décrire de manière non-ambiguë
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Algorithme</strong>: ID, Nom, Description des algorithmes d&#039;analyse (instruments d&#039;analyse)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Configuration</strong>:</div>
+<ul>
+<li class="level2"><div class="li"> Nom, Description des paramètres</div>
+</li>
+<li class="level2"><div class="li"> Valeurs des paramètres (<code>text</code>, <code>float</code>, <code>integer</code>, <code>bool</code>, <code>array</code>) </div>
+</li>
+<li class="level2"><div class="li"> Unités des paramètres (<code>text</code>)</div>
+</li>
+<li class="level2"><div class="li"> Contraintes sur les paramètres (essentiellement des intervals qui décrivent des bornes bornes <code>[min, max]</code>)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Résultats</strong>: ID, Nom, Repository, Description des résultats d&#039;analyse (Les résultats garde un lien vers l&#039;expérience bioinfo) </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Metadonnées d'analyse" [1800-2470] -->
+<h3 class="sectionedit6" id="donnees_d_acquisition">Données d&#039;acquisition</h3>
+<div class="level3">
+
+</div>
+
+<h5 id="spectrometrie_de_masse">Spectrométrie de masse</h5>
+<div class="level5">
+<ul>
+<li class="level1"><div class="li"> Fichiers de données brutes <a href="http://www.thermofisher.com/en/home.html" class="urlextern" title="http://www.thermofisher.com/en/home.html"  rel="nofollow">Thermo Fisher</a> (*.raw), <a href="https://www.bruker.com/fr.html" class="urlextern" title="https://www.bruker.com/fr.html"  rel="nofollow">Bruker</a> (*.d, *.baf) : Taille moyenne entre 50 Mo et 3 Go</div>
+</li>
+<li class="level1"><div class="li"> Fichiers de données brutes convertis (<a href="http://www.psidev.info/mzml" class="urlextern" title="http://www.psidev.info/mzml"  rel="nofollow">*.mzML</a>, <a href="http://tools.proteomecenter.org/wiki/index.php?title=Formats:mzXML" class="urlextern" title="http://tools.proteomecenter.org/wiki/index.php?title=Formats:mzXML"  rel="nofollow">*.mzXML</a> essentiellement) : Taille moyenne : Idem</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="spectrometrie_rmn">Spectrométrie RMN</h5>
+<div class="level5">
+<ul>
+<li class="level1"><div class="li"> Fichiers de données brutes Bruker (.fid), fichiers convertis en <a href="http://nmrml.org/" class="urlextern" title="http://nmrml.org/"  rel="nofollow">.nmrML</a></div>
+<ul>
+<li class="level2"><div class="li"> Acquisition 1D : taille &lt; 10 Mo en général</div>
+</li>
+<li class="level2"><div class="li"> Acquisition 2D : taille moyenne entre 100 Mo et 500 Mo (à confimer)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Données d'acquisition" [2471-3183] -->
+<h3 class="sectionedit7" id="resultats_d_analyse">Résultats d&#039;analyse</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Les données d&#039;analyse sont les données d&#039;acquisitions (+ métadonnées associées)</div>
+</li>
+<li class="level1"><div class="li"> Les résultats d&#039;analyse sont </div>
+<ul>
+<li class="level2"><div class="li"> 1D, 2D plots</div>
+</li>
+<li class="level2"><div class="li"> Histograms</div>
+</li>
+<li class="level2"><div class="li"> Tableaux</div>
+</li>
+<li class="level2"><div class="li"> Pathways enrichis</div>
+</li>
+<li class="level2"><div class="li"> Modèles prédictifs (objets mathématiques: e.g. matrices, vecteurs) ⇔ Tableaux </div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Résultats d'analyse" [3184-3504] -->
+<h3 class="sectionedit8" id="illustration_des_workflows_utec_7">Illustration des Workflows Utec 7</h3>
+<div class="level3">
+
+<p>
+<a href="/_detail/use-cases-analyse-de-donnees/utec7/tracabilite-workflow/utec7-analysis-workflows.png?id=use-cases-analyse-de-donnees%3Autec7%3Atracabilite-workflow%3Astart" class="media" title="use-cases-analyse-de-donnees:utec7:tracabilite-workflow:utec7-analysis-workflows.png"><img src="/_media/use-cases-analyse-de-donnees/utec7/tracabilite-workflow/utec7-analysis-workflows.png?w=800&amp;tok=71136c" class="media" alt="" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Illustration des Workflows Utec 7" [3505-] -->

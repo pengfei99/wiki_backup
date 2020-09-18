@@ -1,0 +1,168 @@
+
+<h1 class="sectionedit1" id="symfony">Symfony</h1>
+<div class="level1">
+
+<p>
+<a href="http://symfony.com" class="urlextern" title="http://symfony.com"  rel="nofollow">Symfony</a> est un ensemble de composants réutilisables pour PHP qui permet de déployer rapidement des applications web. 
+</p>
+
+<p>
+<a href="http://symfony.com/doc/current/book/index.html" class="urlextern" title="http://symfony.com/doc/current/book/index.html"  rel="nofollow">La documentation officielle</a> est très complète.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention :</strong> <br/>
+Les développements logiciels BIOASTER utilisent maintenant <a href="https://gitlab.in2p3.fr/bioaster/" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/"  rel="nofollow">GitLab</a> et Git. <br/>
+Les pages sont en cours de réécriture, mais certaines mentions à Redmine et Bazaar peuvent toujours être trouvées.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Symfony" [1-557] -->
+<h2 class="sectionedit4" id="installer_l_environnement_de_travail">Installer l&#039;environnement de travail</h2>
+<div class="level2">
+
+<p>
+Afin de pouvoir travailler dans de bonnes conditions, certains paquets de base devrons être installés. Les noms peuvent varier selon les distributions.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Installer l'environnement de travail" [558-762] -->
+<h3 class="sectionedit5" id="debian_gnulinux_8">Debian GNU/Linux 8</h3>
+<div class="level3">
+<pre class="code">  $ sudo aptitude install curl bzr php5-cli php5-curl php5-mysql php5-intl mysql-server mysql-client
+  $ sudo aptitude install phpunit
+  $ sudo aptitude install nodejs
+  $ sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
+  $ wget https://www.npmjs.org/install.sh
+  $ sudo bash install.sh
+  $ sudo npm install -g less</pre>
+
+</div>
+<!-- EDIT5 SECTION "Debian GNU/Linux 8" [763-1151] -->
+<h3 class="sectionedit6" id="ubuntu">Ubuntu</h3>
+<div class="level3">
+<pre class="code">  $ sudo aptitude install curl bzr php5-cli php5-curl php5-mysql php5-intl mysql-server mysql-client
+  $ sudo aptitude install phpunit
+  $ sudo aptitude install nodejs npm
+  $ sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
+  $ sudo npm install -g less</pre>
+
+</div>
+<!-- EDIT6 SECTION "Ubuntu" [1152-1461] -->
+<h3 class="sectionedit7" id="scientific_linux_7">Scientific Linux 7</h3>
+<div class="level3">
+<pre class="code">  $ wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+  $ sudo rpm -Uvh epel-release-7*.rpm
+  $ sudo yum install curl bzr php-cli php-mysql php-xml mariadb-server mariadb php-intl
+      
+  $ # installer phpunit avec composer
+  
+  $ sudo yum install nodejs nodejs-less</pre>
+
+</div>
+<!-- EDIT7 SECTION "Scientific Linux 7" [1462-1805] -->
+<h3 class="sectionedit8" id="pour_toutes_les_distributions">Pour toutes les distributions</h3>
+<div class="level3">
+
+<p>
+Installer <code>composer</code> :
+</p>
+<pre class="code">  $ curl -s http://getcomposer.org/installer | php
+  $ chmod a+x composer.phar
+  $ mv composer.phar ~/bin/composer # ou, pour tout le système, dans /usr/bin</pre>
+
+<p>
+Installer <code>symfony</code> :
+</p>
+<pre class="code">  $ curl -LsS http://symfony.com/installer &gt; symfony.phar
+  $ chmod a+x symfony.phar
+  $ mv symfony.phar ~/bin/symfony # ou, pour tout le système, dans /usr/bin</pre>
+
+</div>
+<!-- EDIT8 SECTION "Pour toutes les distributions" [1806-2231] -->
+<h2 class="sectionedit9" id="demarrer_a_partir_d_un_modele_d_application">Démarrer à partir d&#039;un modèle d&#039;application</h2>
+<div class="level2">
+
+<p>
+Pour faciliter le démarrage de projet, un &#039;&#039;template symfony“ a été mis en place en. On peut s&#039;en servir en le clonant depuis la forge :
+</p>
+<pre class="code">  $ git clone git@gitlab.in2p3.fr:bioaster/template-symfony.git mon_projet
+  $ cd mon_projet
+  
+  # créer la bd et donner les droits à un utilisateur
+  
+  # Modifier le nom du projet et sa licence
+  $ vim composer.json 
+  $ composer install
+  
+  $ php app/console doctrine:database:drop --force
+  $ php app/console doctrine:database:create
+  $ php app/console cache:warmup --env=dev
+  
+  $ php app/console server:run</pre>
+
+<p>
+Le développement peut alors être fait en “local”.
+</p>
+
+<p>
+On peut maintenant facilement <a href="/informatique/developpement/symfony/travailler_sur_une_nouvelle_fonctionnalite" class="wikilink1" title="informatique:developpement:symfony:travailler_sur_une_nouvelle_fonctionnalite">travailler sur un nouvelle fonctionnalité</a> afin, par exemple, d&#039;<a href="/informatique/developpement/symfony/ajouter_un_objet" class="wikilink1" title="informatique:developpement:symfony:ajouter_un_objet">ajouter un objet</a> au projet, ainsi que toutes les actions qui sont nécessaires pour le manipuler.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Démarrer à partir d'un modèle d'application" [2232-3266] -->
+<h2 class="sectionedit10" id="recettes_pour">Recettes pour…</h2>
+<div class="level2">
+
+<p>
+Pages en vrac plus ou moins à jour pour faire différentes choses. La plupart mentionnent toujours Bazaar et Propel, et ne peuvent donc pas être utilisées telles qu&#039;elles sont !
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/creer_un_projet" class="wikilink1" title="informatique:developpement:symfony:creer_un_projet">Créer un projet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/utiliser_un_gestionnaire_de_parametres" class="wikilink1" title="informatique:developpement:symfony:utiliser_un_gestionnaire_de_parametres">Utiliser un gestionnaire de paramètres</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/creer_un_base_de_donnees" class="wikilink1" title="informatique:developpement:symfony:creer_un_base_de_donnees">Connecter une base de données</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/migration_doctrine" class="wikilink1" title="informatique:developpement:symfony:migration_doctrine">Gérer les migrations avec Doctrine</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/travailler_avec_une_base_de_donnees" class="wikilink1" title="informatique:developpement:symfony:travailler_avec_une_base_de_donnees">Travailler avec la base de données</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/charger_des_donnees" class="wikilink1" title="informatique:developpement:symfony:charger_des_donnees">Charger des données</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/tester_le_code" class="wikilink1" title="informatique:developpement:symfony:tester_le_code">Tester le code</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/demarrer_le_serveur_de_test" class="wikilink1" title="informatique:developpement:symfony:demarrer_le_serveur_de_test">Démarrer le serveur de test</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/ajouter_une_page" class="wikilink1" title="informatique:developpement:symfony:ajouter_une_page">Ajouter des pages</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/ajouter_un_formulaire" class="wikilink1" title="informatique:developpement:symfony:ajouter_un_formulaire">Ajouter un formulaire</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/ajouter_un_objet" class="wikilink1" title="informatique:developpement:symfony:ajouter_un_objet">Ajouter un objet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/gerer_les_erreurs_http" class="wikilink1" title="informatique:developpement:symfony:gerer_les_erreurs_http">Gérer les erreurs HTTP</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/utiliser_assetic" class="wikilink1" title="informatique:developpement:symfony:utiliser_assetic">Utiliser Assetic</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/utiliser_bootstrap" class="wikilink1" title="informatique:developpement:symfony:utiliser_bootstrap">Ajouter le support de Bootstrap</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/authentifier_les_utilisateurs" class="wikilink1" title="informatique:developpement:symfony:authentifier_les_utilisateurs">Authentifier les utilisateurs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/interface_d_adiministration" class="wikilink1" title="informatique:developpement:symfony:interface_d_adiministration">Créer une interface d&#039;administration</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/travailler_sur_une_nouvelle_fonctionnalite" class="wikilink1" title="informatique:developpement:symfony:travailler_sur_une_nouvelle_fonctionnalite">Travailler sur un nouvelle fonctionnalité</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/bonnes_pratiques" class="wikilink1" title="informatique:developpement:symfony:bonnes_pratiques">Bonnes pratiques</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/divers" class="wikilink1" title="informatique:developpement:symfony:divers">Divers</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/ajouter_un_bundle" class="wikilink1" title="informatique:developpement:symfony:ajouter_un_bundle">Ajouter un bundle extérieur au projet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/supprimer_un_bundle" class="wikilink1" title="informatique:developpement:symfony:supprimer_un_bundle">Supprimer un bundle</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/symfony/rediriger_en_post_via_un_twig" class="wikilink1" title="informatique:developpement:symfony:rediriger_en_post_via_un_twig">Rediriger en post via un twig</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Recettes pour…" [3267-] -->

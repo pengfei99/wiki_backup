@@ -1,0 +1,17 @@
+<span class="re0">DN</span>:<span class="re1"> cn=Pengfei Liu,ou=Users,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> top</span>
+<span class="re0">objectClass</span>:<span class="re1"> account</span>
+<span class="re0">objectClass</span>:<span class="re1"> posixAccount</span>
+<span class="re0">objectClass</span>:<span class="re1"> shadowAccount</span>
+<span class="re0">cn</span>:<span class="re1"> Liu</span>
+<span class="re0">uid</span>:<span class="re1"> pliu</span>
+<span class="re0">uidNumber</span>:<span class="re1"> 9999</span>
+<span class="re0">gidNumber</span>:<span class="re1"> 100</span>
+<span class="re0">homeDirectory</span>:<span class="re1"> /home/pliu</span>
+<span class="re0">loginShell</span>:<span class="re1"> /bin/bash</span>
+<span class="re0">gecos</span>:<span class="re1"> Pengfei the boss</span>
+<span class="re0">userPassword</span>:<span class="re1"> <span class="br0">&#123;</span>ssha<span class="br0">&#125;</span>dGSuSVTBQ74dXL2F/gjx2kHQzpGrxZhuLAjmnw==</span>
+<span class="re0">shadowLastChange</span>:<span class="re1"> 17058</span>
+<span class="re0">shadowMin</span>:<span class="re1"> 0</span>
+<span class="re0">shadowMax</span>:<span class="re1"> 99999</span>
+<span class="re0">shadowWarning</span>:<span class="re1"> 7</span>

@@ -1,0 +1,88 @@
+====== Convert RDD to dataframe ======
+
+
+There are many ways to convert rdd to dataframe
+
+  * From existing RDD using a reflection
+  * From existing RDD by programmatically specifying the schema
+
+===== Example of refection =====
+
+<code>
+#prepare data
+vim /tmp/people.txt
+
+Michael,29
+Andy,30
+Justin,19
+
+#define dependencies
+scala> import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
+scala> import org.apache.spark.sql.Encoder
+scala> import spark.implicits._
+
+#define case class for the rdd (like a schema of the RDD)
+scala> case class Person(name: String, age: Long)
+
+#read file as rdd then convert it to data frame
+val peopleDF= spark.sparkContext.textFile("file:///tmp/people.txt").map(_.split(",")).map(attributes => Person(attributes(0), attributes(1).trim.toInt)).toDF()
+
+
+#you can also use sc to do it separatly
+val textFile=sc.textFile("file:///tmp/people.txt")
+val testDF = textFile.map(_.split(",")).map(attributes => Person(attributes(0), attributes(1).trim.toInt)).toDF()
+</code>
+
+===== Example of schema =====
+
+
+We need to define a schema of the data 
+
+A schema in spark is a <color #ed1c24>StructType</color> which contains a seq of StructField
+
+For our example, we have name(String) and age(Integer).
+
+<code>
+# define schema
+val schema = StructType(
+    Seq(
+      StructField(name = "name", dataType = StringType, nullable = false),
+      StructField(name = "age", dataType = IntegerType, nullable = false)
+    )
+  )
+  
+# transform file rdd to row rdd 
+val rowRDD = textFile.map(lines=>lines.split(",")).map(atts=> Row(atts(0),atts(1).toInt))
+
+#create dataframe with row rdd and schema
+scala> val peopleDF= spark.createDataFrame(rowRDD,schema)
+peopleDF: org.apache.spark.sql.DataFrame = [name: string, age: int]
+
+#beware, the data type in row RDD must be the same in schema, otherwise the convert will fail
+
+</code>
+
+Now you can do all the dataframe operations (e.g. select, sort, filter, groupby, etc.)
+You can also use sql script to play with dataframe
+
+<code>
+#create a temproal view for sql
+scala> peopleDF.createOrReplaceTempView("people")
+ 
+scala> val results = spark.sql("SELECT name,age FROM people")
+
+scala> results.collect
+res25: Array[org.apache.spark.sql.Row] = Array([Michael,29], [Andy,30], [Justin,19])
+
+
+scala> results.map(attributes => "name: " + attributes(0)+","+"age:"+attributes(1)).show()
+
++--------------------+
+|               value|
++--------------------+
+|name: Michael,age:29|
+|   name: Andy,age:30|
+| name: Justin,age:19|
++--------------------+
+
+</code>

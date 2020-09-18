@@ -1,0 +1,113 @@
+====== Spark file input and output ======
+
+Spark can read text, json, SequenceFile, from local file system, HDFS and Amazon S3. It can also read data from data base (e.g. MySql, HBase, Hive). In this tutorial, we only show how to read file from file system (local, remote).
+
+Read data from Hbae[[employes:pengfei.liu:big_data:spark:spark_hbase_io|Use spark to get and set data in HBase]] 
+
+
+===== Read write file from file system without format=====
+The command for read file from file system (local or remote) is the same 
+
+<code>
+vim /tmp/test.json
+#put the following lines
+{"name":"Michael"}
+{"name":"Andy", "age":30}
+{"name":"Justin", "age":19}
+
+# read from local file system, read is not an action, so it will do nothing
+scala> val textFile = sc.textFile("file:///tmp/test.json")
+
+#read from hdfs. 
+scala> val textFile = sc.textFile("hdfs://pengfei.org:9000/test_data/test.json")
+
+#reade from aws s3
+scala> val textFile = sc.textFile("s3a://yourAccessKey:yourSecretKey@/test_data/sonnets.txt")
+
+# first is an action, it shows the first line of the file
+scala> textFile.first
+res0: String = {"name":"Michael"}
+
+# write to antoher file
+scala> textFile.saveAsTextFile("file:///tmp/copy_of_test.json")
+
+[pliu@localhost tmp]$ cd copy_of_test.json/
+[pliu@localhost copy_of_test.json]$ ls
+part-00000  part-00001  _SUCCESS
+
+[pliu@localhost copy_of_test.json]$ cat part-00000 
+{"name":"Michael"}
+{"name":"Andy", "age":30}
+[pliu@localhost copy_of_test.json]$ cat part-00001
+{"name":"Justin", "age":19}
+</code>
+You could notice, the output is not a simple file, is a directory. And the file has been spit into two files part-00000 and part-00001.
+
+Don't panic, spark can read it really easy
+
+<code>
+scala> val copyFile=sc.textFile("file:///tmp/copy_of_test.json")
+copyFile: org.apache.spark.rdd.RDD[String] = file:///tmp/copy_of_test.json MapPartitionsRDD[4] at textFile at <console>:24
+
+scala> copyFile.collect
+res4: Array[String] = Array({"name":"Justin", "age":19}, {"name":"Michael"}, {"name":"Andy", "age":30})
+
+</code>
+Ps s3a is the amazon hdfs, s3n is the native hdfs.
+
+===== Read write file from file system with format =====
+
+<code>
+val dataFrame = spark.read.json("example.json")
+val dataFrame = spark.read.csv("example.csv")
+val dataFrame = spark.read.parquet("example.parquet")
+</code>
+
+===== Parse json in spark =====
+
+<code>
+#import the spark json lib
+scala> import scala.util.parsing.json.JSON
+import scala.util.parsing.json.JSON
+
+#parsing to json, not an action
+scala> val result= textFile.map(s=>JSON.parseFull(s))
+result: org.apache.spark.rdd.RDD[Option[Any]] = MapPartitionsRDD[5] at map at <console>:27
+
+#check the result
+scala> result.foreach({r=> r match {case Some (map: Map[String,Any])=>println(map) case None => println("Parsing failed") case other => println("Other structure"+other)}})                                                  
+Map(name -> Michael)
+Map(name -> Andy, age -> 30.0)
+Map(name -> Justin, age -> 19.0)
+
+</code>
+
+<file scala SparkFileIO.scala>
+package org.pengfei.spark
+
+import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.util.parsing.json.JSON
+
+object SparkFileIO {
+
+  def main(args: Array[String]): Unit = {
+    val conf = new SparkConf().setAppName("SparkFileIO").setMaster("local")
+    val sc = new SparkContext(conf)
+
+    val inputFile= "file:///tmp/test.json"
+
+    val textFile= sc.textFile(inputFile)
+    val result= textFile.map(s=>JSON.parseFull(s))
+
+    result.foreach( {r => r match {
+      case Some(map: Map[String, Any]) => println(map)
+      case None => println("Parsing failed")
+      case other => println("Unknown data structure: " + other)
+    }
+    }
+    )
+  }
+}
+
+</file>

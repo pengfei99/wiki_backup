@@ -1,0 +1,45 @@
+<span class="kw1">import</span> fuzzywuzzy
+<span class="kw1">import</span> <span class="kw3">re</span>
+&nbsp;
+<span class="co1"># function to replace rows in the provided column of the provided dataframe</span>
+<span class="co1"># that match the provided string above the provided ratio with the provided string</span>
+<span class="kw1">def</span> replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">,</span> column<span class="sy0">,</span> string_to_match<span class="sy0">,</span> min_ratio<span class="sy0">=</span><span class="nu0">90</span><span class="br0">&#41;</span>:
+    <span class="co1"># get a list of unique strings</span>
+    strings <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># get the top 10 closest matches to our input string</span>
+    matches <span class="sy0">=</span> fuzzywuzzy.<span class="me1">process</span>.<span class="me1">extract</span><span class="br0">&#40;</span>string_to_match<span class="sy0">,</span> strings<span class="sy0">,</span>
+                                         limit<span class="sy0">=</span><span class="nu0">10</span><span class="sy0">,</span> scorer<span class="sy0">=</span>fuzzywuzzy.<span class="me1">fuzz</span>.<span class="me1">token_sort_ratio</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># only get matches with a ratio &gt; 90</span>
+    close_matches <span class="sy0">=</span> <span class="br0">&#91;</span>matches<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="kw1">for</span> matches <span class="kw1">in</span> matches <span class="kw1">if</span> matches<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">&gt;=</span> min_ratio<span class="br0">&#93;</span>
+&nbsp;
+    <span class="co1"># get the rows of all the close matches in our dataframe</span>
+    rows_with_matches <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">isin</span><span class="br0">&#40;</span>close_matches<span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># replace all rows with close matches with the input matches</span>
+    df.<span class="me1">loc</span><span class="br0">&#91;</span>rows_with_matches<span class="sy0">,</span> column<span class="br0">&#93;</span> <span class="sy0">=</span> string_to_match
+&nbsp;
+    <span class="co1"># let us know the function's done</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;All done!&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># This function return a darray of unique values of a dataframe column</span>
+<span class="co1"># it takes a dataframe and column name</span>
+<span class="kw1">def</span> get_column_unique_entry_size<span class="br0">&#40;</span>df<span class="sy0">,</span> column<span class="br0">&#41;</span>:
+    entries <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    entries.<span class="me1">sort</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span>entries.<span class="me1">size</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> entries
+&nbsp;
+<span class="co1"># This function takes a list of string (date with expected format 08/08/1888), it checks if all elements repects this format</span>
+<span class="co1"># or not, it takes a list of string (date), print the wrong format string, and the correct format string count.</span>
+<span class="kw1">def</span> getWrongDateFormat<span class="br0">&#40;</span>dateList<span class="br0">&#41;</span>:
+    n<span class="sy0">=</span><span class="nu0">0</span>
+    <span class="kw1">for</span> date <span class="kw1">in</span> dateList:
+        pattern <span class="sy0">=</span> <span class="kw3">re</span>.<span class="kw2">compile</span><span class="br0">&#40;</span><span class="st0">&quot;[0-9]+/[0-9]+/[0-9]+&quot;</span><span class="br0">&#41;</span>
+        <span class="kw1">if</span> pattern.<span class="me1">match</span><span class="br0">&#40;</span>date<span class="br0">&#41;</span>:
+            n<span class="sy0">=</span>n+<span class="nu0">1</span>
+        <span class="kw1">else</span>:
+            <span class="kw1">print</span><span class="br0">&#40;</span>date<span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Correct format date size : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;All date size : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span><span class="kw2">len</span><span class="br0">&#40;</span>dateList<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>

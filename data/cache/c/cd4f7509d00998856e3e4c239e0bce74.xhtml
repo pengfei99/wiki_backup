@@ -1,0 +1,54 @@
+
+<h1 class="sectionedit1" id="ldap_architecture">Ldap architecture</h1>
+<div class="level1">
+
+<p>
+Our ldap server has 4 main sections,
+</p>
+<ol>
+<li class="level1"><div class="li"> In ou=Users, we store all user account</div>
+</li>
+<li class="level1"><div class="li"> In ou=Organizations, we store all user organizations.</div>
+</li>
+<li class="level1"><div class="li"> In ou=Groups, we store long term group (such as group in each utec)</div>
+</li>
+<li class="level1"><div class="li"> In ou=Projects, we store shor-mid term group for project duration</div>
+</li>
+</ol>
+
+<p>
+The folloing shows a general architecture with gid and uid range reservation.
+</p>
+
+<p>
+To avoid confict between linux native gid and uid, our uid starts after 100000. gid starts after 5000
+</p>
+<pre class="prettyprint">
+dc=bioaster,dc=org
+|
+|_____ou=Users,dc=bioaster,dc=org (uid range 100000~199999)
+|
+|_____ou=Organizations,dc=bioaster,dc=org (gid range 5000~5999)
+|
+|_____ou=Groups,dc=bioaster,dc=org (gid range 10000~49999)
+       |
+       |_______ou=UTEC01,ou=Groups,dc=bioaster,dc=org (gid range 10000~10999)
+       |_______ou=UTEC02,ou=Groups,dc=bioaster,dc=org (gid range 11000~11999)
+       |_______ou=UTEC03,ou=Groups,dc=bioaster,dc=org (gid range 12000~12999)
+       |_______ou=UTEC04,ou=Groups,dc=bioaster,dc=org (gid range 13000~13999)
+       |_______ou=UTEC05,ou=Groups,dc=bioaster,dc=org (gid range 14000~14999)
+       |_______ou=UTEC06,ou=Groups,dc=bioaster,dc=org (gid range 16000~19999)     
+       |       |_____cn=Utec06_System_Admin,ou=UTEC06,ou=Groups,dc=bioaster,dc=org
+       |       |_____etc.
+       |
+       |_______ou=UTEC07,ou=Groups,dc=bioaster,dc=org (gid range 15000~15999)
+       |
+       |_______etc.( can use gid range 20000~49999)
+|
+|_____ou=Projects,dc=bioaster,dc=org (gid range 50000~70000)
+       |
+       |_______ou=Noe,ou=Projects,dc=bioaster,dc=org
+                |
+                |____cn=Noe_web_dev,ou=Noe,ou=Peojects,dc=bioaster,dc=org
+</pre>
+</div>

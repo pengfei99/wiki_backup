@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="zero_-_copy_principal">Zero - Copy Principal</h1>
+<div class="level1">
+
+<p>
+According to wikipedia,
+</p>
+
+<p>
+“Zero-copy” describes computer operations in which the CPU does not perform the task of copying data from one memory area to another. This is frequently used to save CPU cycles and memory bandwidth when transmitting a file over a network.[1]
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zero - Copy Principal&quot;,&quot;hid&quot;:&quot;zero_-_copy_principal&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-307&quot;} -->
+<h2 class="sectionedit2" id="traditional_way_of_the_file_transfer">Traditional way of the file transfer.</h2>
+<div class="level2">
+
+<p>
+Let&#039;s consider the traditional way of the file transfer. when a client requests a file from the static website. Firstly, website static files read from the disk and write the exact same files to the response socket. This is a very inefficient activity though it appears as the CPU is not performing much activity here.
+</p>
+
+<p>
+The kernel reads the data off of disk and pushes it across the kernel-user boundary to the application, and then the application pushes it back across the kernel-user boundary to be written out to the socket. In effect, the application serves as an inefficient intermediary that gets the data from the disk file to the socket.
+</p>
+
+<p>
+Every time there is a data transfer beyond the kernel user-boundary, there will be consumption of CPU cycles and memory bandwidth, resulting in a drop in performance especially when the data volumes are huge. 
+</p>
+
+<p>
+The following figure illustrates a non-zero-copy example.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Azero_copy&amp;media=employes:pengfei.liu:data_science:kafka:no_zero_copy_exp.png" class="media" title="employes:pengfei.liu:data_science:kafka:no_zero_copy_exp.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=8808a3&amp;media=employes:pengfei.liu:data_science:kafka:no_zero_copy_exp.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+You can notice the data go through the kernel user boundary and copied by the application, then send back to the socket which goes through the kernel again.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Traditional way of the file transfer.&quot;,&quot;hid&quot;:&quot;traditional_way_of_the_file_transfer&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;308-1508&quot;} -->
+<h2 class="sectionedit3" id="zero_copy_way_of_the_file_transfer">Zero copy way of the file transfer</h2>
+<div class="level2">
+
+<p>
+The idea is the application asks the kernel to send data from ReadBuffer to SocketBuffer without going through the kernel user boundary. As a result, there will be fewer CPU cycles and memory bandwidth.
+</p>
+
+<p>
+The following figure illustrates a zero-copy example.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Azero_copy&amp;media=employes:pengfei.liu:data_science:kafka:zero_copy_example.png" class="media" title="employes:pengfei.liu:data_science:kafka:zero_copy_example.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=763289&amp;media=employes:pengfei.liu:data_science:kafka:zero_copy_example.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zero copy way of the file transfer&quot;,&quot;hid&quot;:&quot;zero_copy_way_of_the_file_transfer&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1509-&quot;} -->

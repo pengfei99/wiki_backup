@@ -1,0 +1,20 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1518776468;s:8:"modified";i:1518790766;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:27:"Globus gridftp installation";s:11:"description";a:2:{s:15:"tableofcontents";a:5:{i:0;a:4:{s:3:"hid";s:27:"globus_gridftp_installation";s:5:"title";s:27:"Globus gridftp installation";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:37:"install_globus_data_management_server";s:5:"title";s:37:"Install globus data management server";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:35:"grid_ftp_server_configure_and_start";s:5:"title";s:35:"Grid ftp server configure and start";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:3;a:4:{s:3:"hid";s:30:"install_globus_grid_ftp_client";s:5:"title";s:30:"Install globus grid ftp client";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:4;a:4:{s:3:"hid";s:27:"use_client_to_transfer_data";s:5:"title";s:27:"Use client to transfer data";s:4:"type";s:2:"ul";s:5:"level";i:3;}}s:8:"abstract";s:503:"Globus gridftp installation
+
+Install globus data management server
+
+
+#set lange en encording
+export LANG=en_US.UTF-8
+
+#download the repo rpm
+cd /tmp/
+wget http://www.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo-latest.noarch.rpm
+
+#install repo
+rpm -hUv globus-toolkit-repo-latest.noarch.rpm
+
+#install globus data management server
+yum install globus-data-management-server
+
+#if you encounter errors because of missing packages, you need to install them
+#In my case, I don't have udt for …";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1518776468;s:8:"modified";i:1518790766;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

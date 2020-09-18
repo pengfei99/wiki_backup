@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="rstudio">RStudio</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "RStudio" [1-23] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 0.98.1056</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : AGPL v3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://www.rstudio.com/products/RStudio" class="urlextern" title="http://www.rstudio.com/products/RStudio"  rel="nofollow">http://www.rstudio.com/products/RStudio</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [24-414] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_info plugin_wrap">
+<p>
+Le test ayant été fait sur Debian GNU/Linux, je ne fournis pas les commandes exactes pour SL6 ici !
+</p>
+
+<p>
+Les instructions en fonction de la distribution se trouve sur cette page : <a href="http://www.rstudio.com/products/rstudio/download-server" class="urlextern" title="http://www.rstudio.com/products/rstudio/download-server"  rel="nofollow">http://www.rstudio.com/products/rstudio/download-server</a>
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] --><pre class="code"># Pour Debian 7 faire attention à bien avoir la bonne version d&#039;OpenSSL installée
+$ wget http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl0.9.8_0.9.8o-4squeeze14_amd64.deb
+$ sudo dpkg -i libssl0.9.8_0.9.8o-4squeeze14_amd64.deb
+
+# Installer R (si il n&#039;est pas présent RStudio crashera sans même se plaindre !)
+$ sudo apt-get install r-base
+
+# Télécharger et installer le paquet RStudio.
+$ sudo apt-get install gdebi-core
+$ wget http://download2.rstudio.org/rstudio-server-0.98.1056-amd64.deb
+$ sudo gdebi rstudio-server-0.98.1056-amd64.deb
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [415-1272] -->
+<h2 class="sectionedit6" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.09.10 (tlc)</strong> Version 0.98.1056 installée sur une VM à Paris</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Log" [1273-] -->

@@ -1,0 +1,112 @@
+
+<h1 class="sectionedit1" id="the_database_per_service_pattern">The Database per Service pattern</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The Database per Service pattern&quot;,&quot;hid&quot;:&quot;the_database_per_service_pattern&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-48&quot;} -->
+<h2 class="sectionedit2" id="context">Context</h2>
+<div class="level2">
+
+<p>
+Let’s imagine you are developing an online store application using the Microservice architecture pattern. Most services need to persist data in some kind of database. For example, the Order Service stores information about orders and the Customer Service stores information about customers.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Context&quot;,&quot;hid&quot;:&quot;context&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;49-363&quot;} -->
+<h2 class="sectionedit3" id="problem">Problem?</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> To keep services loosely coupled, so they can be developed, deployed and scaled independently. As a result, their database must be independent too. </div>
+</li>
+<li class="level1"><div class="li"> Some business transactions must enforce <strong>invariants</strong> that span multiple services. For example, the Place Order use case must verify that a new Order will not exceed the customer’s credit limit(invariants). Other business transactions, must update data owned by multiple services.</div>
+</li>
+<li class="level1"><div class="li"> Some business transactions need to query data that is owned by multiple services. For example, the View Available Credit must query the Customer service DB to find the credit limit and Orders Service to calculate the total amount of the open orders.</div>
+</li>
+<li class="level1"><div class="li"> Some queries must join data that is owned by multiple services. For example, finding customers in a particular region and their recent orders requires a join between customers and orders.</div>
+</li>
+<li class="level1"><div class="li"> Databases must sometimes be replicated and shared in order to scale.</div>
+</li>
+<li class="level1"><div class="li"> Different services have different data storage requirements. For some services, a relational database is the best choice. Other services might need a NoSQL database such as MongoDB, which is good at storing complex, unstructured data, or Neo4J, which is designed to efficiently store and query graph data.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Problem?&quot;,&quot;hid&quot;:&quot;problem&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;364-1656&quot;} -->
+<h2 class="sectionedit4" id="solution">Solution</h2>
+<div class="level2">
+
+<p>
+Keep each microservice’s persistent data private to that service and accessible only via its <abbr title="Application Programming Interface">API</abbr>. A service’s transactions only involve its database.
+</p>
+
+<p>
+The following diagram shows the structure of this pattern.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Asystem_architecture%3Amicroservice%3Adatabase_per_service&amp;media=employes:pengfei.liu:system_architecture:microservice:databaseperservice.png" class="media" title="employes:pengfei.liu:system_architecture:microservice:databaseperservice.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=d3a690&amp;media=employes:pengfei.liu:system_architecture:microservice:databaseperservice.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+The service&#039;s database is effectively part of the implementation of that service. It cannot be accessed directly by other services.
+</p>
+
+<p>
+There are a few different ways to keep a service’s persistent data private. You do not need to provision a database server for each service. For example, if you are using a relational database then the options are:
+</p>
+<ul>
+<li class="level1"><div class="li"> Private-tables-per-service – each service owns a set of tables that must only be accessed by that service</div>
+</li>
+<li class="level1"><div class="li"> Schema-per-service – each service has a database schema that’s private to that service</div>
+</li>
+<li class="level1"><div class="li"> Database-server-per-service – each service has its own database server.</div>
+</li>
+</ul>
+
+<p>
+Private-tables-per-service and schema-per-service have the lowest overhead. Using a schema per service is appealing since it makes ownership clearer. Some high throughput services might need their own database server.
+</p>
+
+<p>
+It is a good idea to create barriers that enforce this modularity. You could, for example, assign a different database user id to each service and use a database access control mechanism such as grants. Without some kind of barrier to enforce encapsulation, developers will always be tempted to bypass a service’s <abbr title="Application Programming Interface">API</abbr> and access it’s data directly.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Solution&quot;,&quot;hid&quot;:&quot;solution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1657-3191&quot;} -->
+<h2 class="sectionedit5" id="conclusion">Conclusion</h2>
+<div class="level2">
+
+<p>
+<strong>Using a database per service has the following benefits:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Helps ensure that the services are loosely coupled. Changes to one service’s database do not impact any other services.</div>
+</li>
+<li class="level1"><div class="li"> Each service can use the type of database that is best suited to its needs. For example, a service that does text searches could use ElasticSearch. A service that manipulates a social graph could use Neo4j.</div>
+</li>
+</ul>
+
+<p>
+<strong>Using a database per service has the following drawbacks:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases don’t support them. The best solution is to use the Saga pattern. Services publish events when they update data. Other services subscribe to events and update their data in response.</div>
+</li>
+<li class="level1"><div class="li"> Implementing queries that join data that is now in multiple databases is challenging.</div>
+</li>
+<li class="level1"><div class="li"> The complexity of managing multiple SQL and NoSQL databases.</div>
+</li>
+</ul>
+
+<p>
+There are various solutions:
+</p>
+<ul>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr> Composition - the application performs the join rather than the database. For example, a service (or the <abbr title="Application Programming Interface">API</abbr> gateway) could retrieve a customer and their orders by first retrieving the customer from the customer service and then querying the order service to return the customer’s most recent orders.</div>
+</li>
+<li class="level1"><div class="li"> Command Query Responsibility Segregation (CQRS) - maintain one or more materialized views that contain data from multiple services. The views are kept by services that subscribe to events that each service publishes when it updates its data. For example, the online store could implement a query that finds customers in a particular region and their recent orders by maintaining a view that joins customers and orders. The view is updated by a service that subscribes to customer and order events.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conclusion&quot;,&quot;hid&quot;:&quot;conclusion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;3192-&quot;} -->

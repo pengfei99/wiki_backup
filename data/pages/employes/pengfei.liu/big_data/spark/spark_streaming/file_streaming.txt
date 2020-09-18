@@ -1,0 +1,79 @@
+====== Spark file Streaming ======
+
+Spark can monitor a directory, for all new files in the directory, spark can treat it when it was awaken.
+
+Suppose we have a program which writes log file in /tmp/log/. every 30 secs. We want to write a little spark script which counts the number of word
+
+<code>
+#create spark streaming context which will be wake up every 20 sec
+scala> import org.apache.spark.streaming._
+import org.apache.spark.streaming._
+
+scala> val ssc = new StreamingContext(sc, Seconds(20))
+
+
+#get lines from streaming context
+scala> val lines = ssc.textFileStream("file:///tmp/log")
+
+#break lines to a array of words
+scala> val words=lines.flatMap(_.split(" "))
+
+#map reduce word
+scala> val wordCounts = words.map(x=>(x,1)).reduceByKey(_ + _)
+
+
+scala> wordCounts.print()
+
+#start the streaming lincener
+scala> ssc.start()
+
+scala> -------------------------------------------
+Time: 1516032880000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032900000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032920000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032940000 ms
+-------------------------------------------
+(is,1)
+(greate,1)
+(apple,1)
+(go,1)
+(pengfei,4)
+(girls,1)
+(eats,1)
+(home,1)
+(to,1)
+(loves,1)
+...
+
+</code>
+
+You will notice that, if the log file is already processed by spark once, it will not re processed any more. Even you move the file out and back in the directory. To test your programe you have to create a new file in /tmp/log. To stop the process, you have to use ctl+c.
+
+<file scala wordCoundFileStreaming.scala>
+import org.apache.spark._ 
+import org.apache.spark.streaming._
+
+object WordCountStreaming {  
+  def main(args: Array[String]) {  
+  //set up sparkConf to run as local with 2 thread, one for listening , one for treat data
+    val sparkConf = new SparkConf().setAppName("WordCountFileStreaming").setMaster("local[2]")  
+    val ssc = new StreamingContext(sparkConf, Seconds(20))//set listener time interval for 20 sec
+    val lines = ssc.textFileStream("file:///tmp/log")  //monitor dir /tmp/log 
+    val words = lines.flatMap(_.split(" "))  
+    val wordCounts = words.map(x => (x, 1)).reduceByKey(_ + _)  
+    wordCounts.print()  
+    ssc.start()  
+   
+    ssc.awaitTermination()  
+  }  
+}  
+</file>

@@ -1,0 +1,340 @@
+
+<h1 class="sectionedit1" id="kafka_installation_and_configuration">Kafka installation and configuration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Kafka installation and configuration" [1-52] -->
+<h2 class="sectionedit2" id="publish-subscribe_messaging_system">Publish-subscribe messaging system</h2>
+<div class="level2">
+
+<p>
+In the publish-subscribe system, messages are persisted in a topic. Unlike point-to-point system, consumers can subscribe to one or more topic and consume all the messages in that topic. In the Publish-Subscribe system, message producers are called publishers and message consumers are called subscribers. A real-life example is Dish TV, which publishes different channels like sports, movies, music, etc., and anyone can subscribe to their own set of channels and get them whenever their subscribed channels are available.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Publish-subscribe messaging system" [53-624] -->
+<h2 class="sectionedit3" id="what_is_kafka">What is Kafka?</h2>
+<div class="level2">
+
+<p>
+Apache Kafka is a distributed publish-subscribe messaging system and a robust queue that can
+handle a high volume of data and enables you to pass messages from one end-point to another.
+Kafka is suitable for both offline and online message consumption. Kafka messages are persisted
+on the disk and replicated within the cluster to prevent data loss. Kafka is built on top of the
+ZooKeeper synchronization service. It integrates very well with Apache Storm and Spark for
+real-time streaming data analysis
+</p>
+
+</div>
+<!-- EDIT3 SECTION "What is Kafka?" [625-1157] -->
+<h2 class="sectionedit4" id="kafka_use_case">Kafka use case</h2>
+<div class="level2">
+
+<p>
+<strong>Metrics</strong> - Kafka is often used for operational monitoring data. This involves aggregating
+statistics from distributed applications to produce centralized feeds of operational data.
+</p>
+
+<p>
+<strong>Log Aggregation Solution</strong> - Kafka can be used across an organization to collect logs
+from multiple services and make them available in a standard format to multiple consumers.
+</p>
+
+<p>
+<strong>Stream Processing</strong> - Popular frameworks such as Storm and Spark Streaming read
+data from a topic, processes it, and write processed data to a new topic where it becomes
+available for users and applications. Kafka’s strong durability is also very useful in the
+context of stream processing.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Kafka use case" [1158-1846] -->
+<h2 class="sectionedit5" id="install_kafka">Install kafka</h2>
+<div class="level2">
+
+<p>
+A critical dependency of Apache Kafka is Apache Zookeeper, which is a distributed configuration and synchronization service. Zookeeper serves as the coordination interface between the Kafka brokers and consumers. The Kafka servers share information via a Zookeeper cluster. Kafka stores basic metadata in Zookeeper such as information about topics, brokers, consumer offsets (queue readers) and so on.
+</p>
+
+<p>
+Since all the critical information is stored in the Zookeeper and it normally replicates this data across its ensemble, failure of Kafka broker / Zookeeper does not affect the state of the Kafka cluster. Kafka will restore the state, once the Zookeeper restarts. This gives zero downtime for Kafka. The leader election between the Kafka broker is also done by using Zookeeper in the event of leader failure.
+</p>
+
+<p>
+To learn more about ZooKeeper, <a href="/doku.php?id=employes:pengfei.liu_bioaster.org:data_science:zookeeper:install_and_configuration" class="wikilink1" title="employes:pengfei.liu_bioaster.org:data_science:zookeeper:install_and_configuration">Zookeeper</a>
+</p>
+
+<p>
+Download the kafka binary from <a href="http://kafka.apache.org/downloads.html" class="urlextern" title="http://kafka.apache.org/downloads.html" rel="nofollow">http://kafka.apache.org/downloads.html</a>
+</p>
+
+<p>
+Then place the binary in your server
+</p>
+<pre class="code">mkdir /opt/kafka
+
+cd /opt/kafka
+
+tar -xzvf  kafka_2.11-1.0.0.tgz 
+
+cd /opt/kafka/kafka_2.11-1.0.0/config
+
+vim server.properties</pre>
+
+<p>
+change the default config to adapter your environment
+</p>
+<pre class="code">#default
+broker.id=0
+zookeeper.connect=localhost:2181
+
+#in my environment
+zookeeper.connect=hadoop-nn.pengfei.org:2181,hadoop-dn1.pengfei.org:2181,hadoop-dn2.pengfei.org:2181
+broker.id=1 (2,3 in other two machines)
+</pre>
+
+<p>
+The above config is the minimun config to run kafka, you may need to dig more.
+</p>
+
+<p>
+if your zookeeper cluster already running or controlled by zookeeper, you don&#039;t need to chage the config of /opt/kafka/kafka_2.11-1.0.0/config/zookeeper.properties
+</p>
+
+<p>
+if you want to use kafka to control the zookeeper daemon, you need to edit the zookeeper.properties
+</p>
+
+<p>
+Here is an example
+</p>
+<pre class="code"># the directory where the snapshot is stored.
+dataDir=/opt/zookeeper/zookeeper-3.4.10/data
+# the port at which the clients will connect
+clientPort=2181
+# disable the per-ip limit on the number of connections since this is a non-production config
+maxClientCnxns=0
+
+# The number of milliseconds of each tick
+tickTime=2000
+
+# The number of ticks that the initial synchronization phase can take
+initLimit=10
+
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+syncLimit=5
+
+#zoo servers
+server.1=hadoop-nn.pengfei.org:2888:3888
+server.2=hadoop-dn1.pengfei.org:2888:3888
+server.3=hadoop-dn2.pengfei.org:2888:3888
+</pre>
+
+<p>
+It&#039;s the same as the zoo.cfg in zookeeper
+</p>
+<pre class="code"># The number of milliseconds of each tick
+tickTime=2000
+# The number of ticks that the initial 
+# synchronization phase can take
+#initLimit=10
+initLimit=5
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+#syncLimit=5
+syncLimit=5
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just 
+# example sakes.
+dataDir=/opt/zookeeper/zookeeper-3.4.10/data
+# the port at which the clients will connect
+clientPort=2181
+# the maximum number of client connections.
+# increase this if you need to handle more clients
+#maxClientCnxns=60
+#
+# Be sure to read the maintenance section of the 
+# administrator guide before turning on autopurge.
+#
+# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
+#
+# The number of snapshots to retain in dataDir
+#autopurge.snapRetainCount=3
+# Purge task interval in hours
+# Set to &quot;0&quot; to disable auto purge feature
+#autopurge.purgeInterval=1
+
+server.1=hadoop-nn.pengfei.org:2888:3888
+server.2=hadoop-dn1.pengfei.org:2888:3888
+server.3=hadoop-dn2.pengfei.org:2888:3888
+</pre>
+
+<p>
+To run the zookeeper daemon in kafak
+</p>
+<pre class="code">cd /opt/kafka/kafka_2.11-1.0.0
+sh bin/zookeeper-server-start.sh config/zookeeper.properties</pre>
+
+<p>
+Run the kafka server (with one broker)
+</p>
+<pre class="code">sh bin/kafka-server-start.sh config/server.properties</pre>
+
+<p>
+you can run multi broker on the same server
+</p>
+<pre class="code">#run three broker on the same server
+sh bin/kafka-server-start.sh /config/server1.properties
+sh bin/kafka-server-start.sh /config/server2.properties
+sh bin/kafka-server-start.sh /config/server3.properties
+
+#you need to make sure the &quot;broker.id&quot;, &quot;port number&quot; and &quot;log file path&quot; are unique in each
+#server.properties to avoid conflict
+
+##########server1.properties
+# The id of the broker. This must be set to a unique integer for each broker.
+broker.id=1
+# The port the socket server listens on
+port=9093
+# A comma seperated list of directories under which to store log files
+log.dirs=/tmp/kafka-logs-1
+
+##########server2.properties
+# The id of the broker. This must be set to a unique integer for each broker.
+broker.id=2
+# The port the socket server listens on
+port=9094
+# A comma seperated list of directories under which to store log files
+log.dirs=/tmp/kafka-logs-2
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Install kafka" [1847-6737] -->
+<h2 class="sectionedit6" id="create_topic_in_kafka">Create topic in kafka</h2>
+<div class="level2">
+
+<p>
+Create a topic with one partitions and three replication
+</p>
+<pre class="code">#create a topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --create --zookeeper hadoop-nn.bioaster.org --replication-factor 3 --partitions 1 --topic test-topic
+Created topic &quot;test-topic&quot;.
+
+#check status of a topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org --topic test-topic
+Topic:test-topic	PartitionCount:1	ReplicationFactor:3	Configs:
+	Topic: test-topic	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1</pre>
+
+<p>
+Create a topic with three partitions and three replication
+</p>
+<pre class="code">[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 3 --topic Hello-Kafka
+
+Created topic &quot;Hello-Kafka&quot;.
+
+#get status of the topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org:2181 --topic Hello-Kafka
+Topic:Hello-Kafka	PartitionCount:3	ReplicationFactor:3	Configs:
+	Topic: Hello-Kafka	Partition: 0	Leader: 1	Replicas: 1,2,3	Isr: 1
+	Topic: Hello-Kafka	Partition: 1	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1
+	Topic: Hello-Kafka	Partition: 2	Leader: 3	Replicas: 3,1,2	Isr: 3,1,2
+</pre>
+
+<p>
+List all topic in one broker
+</p>
+<pre class="code">[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --list --zookeeper hadoop-nn.bioaster.org:2181
+Hello-Kafka
+test-topic
+</pre>
+
+</div>
+<!-- EDIT6 SECTION "Create topic in kafka" [6738-8138] -->
+<h2 class="sectionedit7" id="run_producer_and_consummer_by_using_kafka_cli">Run producer and consummer by using kafka cli</h2>
+<div class="level2">
+
+<p>
+Start producer to send messages
+</p>
+<pre class="code"># In the broker-list, you could put one or more kafka brokers
+# In this example, we use only one, the name of the broker is defined in server.properties  
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-console-producer.sh --broker-list hadoop-nn.bioaster.org:9092 --topic Hello-Kafka
+#now you are in producer consol, all the text you enter below will be published in topic Hello-Kafka
+&gt;hello
+&gt;my first message
+&gt;my second message
+&gt;my third message
+</pre>
+
+<p>
+Start two consumers to receive messages
+</p>
+<pre class="code">###in server hadoop-dn1.bioaster.org
+hadoop@CCLinDataWHD02 bin]$ sh kafka-console-consumer.sh --zookeeper hadoop-dn1.bioaster.org:2181 --topic Hello-Kafka --from-beginning
+Using the ConsoleConsumer with old consumer is deprecated and will be removed in a future major release. Consider using the new consumer by passing [bootstrap-server] instead of [zookeeper].
+hello
+my first message
+my second message
+my third message
+my fouth message
+my fifth message
+
+
+###in server hadoop-dn2.bioaster.org
+[hadoop@CCLinDataWHD03-0 bin]$ sh kafka-console-consumer.sh --zookeeper hadoop-dn2.bioaster.org:2181 --topic Hello-Kafka --from-beginning
+Using the ConsoleConsumer with old consumer is deprecated and will be removed in a future major release. Consider using the new consumer by passing [bootstrap-server] instead of [zookeeper].
+hello
+my third message
+my first message
+my second message
+my fouth message
+my fifth message
+
+
+##You could notice, if your consumer connecter after many message has been published
+##the order may not be correct. But the latest message will be correct
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Run producer and consummer by using kafka cli" [8139-9815] -->
+<h2 class="sectionedit8" id="basic_topic_operations">Basic topic operations</h2>
+<div class="level2">
+
+<p>
+List all topics 
+</p>
+<pre class="code">
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --list --zookeeper hadoop-nn.bioaster.org:2181
+Hello-Kafka
+test-topic
+
+#show detail of topic test-topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org:2181 --topic test-topic
+Topic:test-topic	PartitionCount:1	ReplicationFactor:3	Configs:
+	Topic: test-topic	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,1,3
+
+#we know that it has one partition and 3 replicas
+
+#Now we want to change the partition from one to two
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --zookeeper hadoop-nn.bioaster.org:2181 --alter --topic test-topic --partitions 2
+WARNING: If partitions are increased for a topic that has a key, the partition logic or ordering of the messages will be affected
+Adding partitions succeeded!
+
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org:2181 --topic test-topic
+Topic:test-topic	PartitionCount:2	ReplicationFactor:3	Configs:
+	Topic: test-topic	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,1,3
+	Topic: test-topic	Partition: 1	Leader: 3	Replicas: 3,2,1	Isr: 3,2,1
+</pre>
+
+<p>
+Delet a topic
+</p>
+<pre class="code">[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --zookeeper hadoop-nn.bioaster.org:2181 --delete --topic test-topic
+Topic test-topic is marked for deletion.
+Note: This will have no impact if delete.topic.enable is not set to true.
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --list --zookeeper hadoop-nn.bioaster.org:2181
+Hello-Kafka</pre>
+
+</div>
+<!-- EDIT8 SECTION "Basic topic operations" [9816-] -->

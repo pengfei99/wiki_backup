@@ -1,0 +1,282 @@
+
+<h1 class="sectionedit1" id="bonnes_pratiques_de_codage">Bonnes pratiques de codage</h1>
+<div class="level1">
+
+<p>
+Il n&#039;y a pas de consensus mondial sur les <strong>“bonnes pratiques”</strong> à appliquer quand on écrit un programme. Cependant, de nombreuses réflexions ont été menées par de brillants informaticiens ayant passé de nombreuses années à travailler à l&#039;amélioration de leur <strong><em>art</em></strong>.
+</p>
+
+<p>
+Ici sont mentionnés quelques éléments sur lesquels nous nous sommes mis d&#039;accord et que nous devrions appliquer au sein de BIOASTER.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+Nous ne nous sommes <strong>pas encore</strong> mis d&#039;accord… mais le but est de mettre sur cette page toutes les bonnes pratiques que nous nous engageons à appliquer, surtout parce que nous avons réalisé qu&#039;elles nous apportaient beaucoup.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+La plupart de ces pratiques sont étudiées plus en détail dans le livre ”<a href="/_media/bioinformatique/books/cleancodeahandbookofagilesoftwarecraftsmanship.pdf" class="media mediafile mf_pdf" title="bioinformatique:books:cleancodeahandbookofagilesoftwarecraftsmanship.pdf (2.9 MB)">Clean code handbook</a>”. Les références au livre sur cette page sont notées, par exemple, <code>[cch:p64]</code> pour la page 64 et <code>[cch:c8]</code> pour la chapitre 8.
+</p>
+
+<p>
+Les conseils donnés ici ne sont pas des vérités absolues ; il peuvent donc être amenés à changer si nous en trouvons des meilleurs.
+</p>
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+Je mettrais bien ici les 2-3 règles d&#039;or à respecter… histoire de ne pas avoir à lire toute la page.
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Bonnes pratiques de codage" [1-1306] -->
+<h2 class="sectionedit6" id="documenter">Documenter</h2>
+<div class="level2">
+
+<p>
+Commençons par une citation :
+</p>
+<!-- EDIT7 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_box plugin_wrap">
+<p>
+<strong>Le code est la documentation !</strong><br/>
+
+<em>– Socrate, c. 440 avant notre ère</em>
+</p>
+</div><!-- EDIT8 PLUGIN_WRAP_END [0-] -->
+<p>
+… tout ça pour dire que la documentation est souvent redondante avec le code et la maintenir à jour est un effort supplémentaire. Un code clair et bien écrit devrait être suffisant pour pouvoir comprendre <strong>en première lecture</strong> le fonctionnement du programme. La plupart des pratiques décrites sur cette page visent d&#039;ailleurs à rendre le code plus clair et plus facile à comprendre.
+</p>
+
+<p>
+Cependant, de nombreuses choses doivent tout de même être expliquées dans programme : but du programme, justification technique de l&#039;emploi d&#039;un algorithme plutôt que d&#039;un autre…
+</p>
+
+<p>
+Ces commentaires s&#039;ils sont écrits en respectant certains standards peuvent facilement être lu par des générateurs de documentation (ex : <a href="/bioinformatique/doxygen" class="wikilink1" title="bioinformatique:doxygen">Doxygen</a>) afin de produire des documentations plus lisibles (coloration syntaxique, suppression du code au profit des <em>signatures</em>…) et plus facilement navigables (liens hypertextes entre les éléments ayant une relation) dans différents formats : <abbr title="HyperText Markup Language">HTML</abbr>, LaTeX, pdf, docx…
+</p>
+
+<p>
+Des exemples sur la manière de documenter le code seront donnés à chaque section de cette page.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Documenter" [1307-2600] -->
+<h2 class="sectionedit9" id="bien_commencer_un_programme">Bien commencer un programme</h2>
+<div class="level2">
+
+<p>
+La première chose lue est souvent, pour ne pas dire toujours, la première ligne ! Autant donc, être clair dès le début sur la fonction première du programme.
+</p>
+<pre class="code">$ less `which bzr`
+#!/usr/bin/python
+
+# Copyright (C) 2005, 2006, 2007, 2008, 2009 Canonical Ltd
+#
+# [...longue notice de droit d&#039;auteur...]
+# 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+&quot;&quot;&quot;Bazaar -- a free distributed version-control tool&quot;&quot;&quot;</pre>
+
+</div>
+<!-- EDIT9 SECTION "Bien commencer un programme" [2601-3102] -->
+<h2 class="sectionedit10" id="obtenir_de_l_aide">Obtenir de l&#039;aide</h2>
+<div class="level2">
+
+<p>
+Confronté à un nouveau programme (en ligne de commande), le premier réflexe est souvent d&#039;invoquer le programme avec l&#039;option d&#039;aide : <code>-h</code>, <code>–help</code>, voir même <code>man commande</code>.<br/>
+
+Il est donc important de fournir un message d&#039;aide permettant à l&#039;utilisateur de pouvoir utiliser le programme convenablement sans avoir à trouver et à lire la documentation ou même le code.
+</p>
+
+<p>
+De nombreuses bibliothèques logicielles ont été écrites afin de faciliter cette tâche. Celles-ci dépendent du langage utilisé. En voici <a href="/bioinformatique/python_help" class="wikilink1" title="bioinformatique:python_help">un exemple en Python</a>.
+</p>
+<pre class="code">$ bzr --help
+Bazaar 2.1.1 -- a free distributed version-control tool
+http://bazaar-vcs.org/
+
+Basic commands:
+  bzr init           makes this directory a versioned branch
+  bzr branch         make a copy of another branch
+  [...]</pre>
+
+</div>
+<!-- EDIT10 SECTION "Obtenir de l'aide" [3103-3962] -->
+<h2 class="sectionedit11" id="conventions_de_nommage">Conventions de nommage</h2>
+<div class="level2">
+
+<p>
+<strong>Use Intention-Revealing Names</strong> [cch:p18]<br/>
+
+La règle d&#039;or est que les noms des objets (variables, fonctions, classes) doivent toujours <strong>décrire leur rôle précis</strong> dans l&#039;algorithme.<br/>
+
+Une bonne pratique de nommage est donc celle qui nécessite <strong>le moins de commentaires</strong> dans le code.
+</p>
+
+<p>
+<span style='color:red; '>Mauvaise pratique :</span>
+</p>
+<pre class="code">  int d; //elapsed time in days</pre>
+
+<p>
+<span style='color:green; '>Bonne pratique :</span>
+</p>
+<pre class="code">  int elapsedTimeInDays;
+  int daysSinceModification;</pre>
+<!-- EDIT12 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+Personnellement je ne suis pas trop <a href="https://en.wikipedia.org/wiki/Camelcase" class="urlextern" title="https://en.wikipedia.org/wiki/Camelcase"  rel="nofollow">CamelCase</a>.<br/>
+
+Je pencherais plutôt pour un bon vieil <strong>under_score</strong>. Surtout que les noms de constantes en <strong>CamelCase</strong> contiennent des underscores ! Autant donc les utiliser dès le début.<br/>
+
+Si on pouvait aussi éviter la <a href="https://en.wikipedia.org/wiki/Hungarian_notation" class="urlextern" title="https://en.wikipedia.org/wiki/Hungarian_notation"  rel="nofollow">notation hongroise</a> qui prefix le nom avec le type…
+</p>
+</div><!-- EDIT13 PLUGIN_WRAP_END [0-] -->
+<p>
+<span style='color:green; '>Bonne pratique (?) :</span>
+</p>
+<pre class="code">  int elapsed_time_in_days;
+  int days_since_modification;</pre>
+
+</div>
+<!-- EDIT11 SECTION "Conventions de nommage" [3963-5011] -->
+<h2 class="sectionedit14" id="indentation">Indentation</h2>
+<div class="level2">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Indent_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style"  rel="nofollow">Le style d&#039;indentation</a>, bien que n&#039;étant pas fondamentalement très important, peut aider à la lisibilité du code.
+</p>
+
+<p>
+Le choix des <strong>caractères d&#039;indentation</strong> (espaces ou tabulations) peut aussi paraitre trivial, mais se révèle en fait <strong>vital</strong> quand on travaille avec un langage (stupide) comme <em>Python</em> dont les blocs sont délimités par les niveaux d&#039;indentation.<br/>
+
+Dans la plupart des éditeurs de texte, on peut choisir de faire apparaitre les caractères invisibles, ce qui peut s&#039;avérer très pratique.
+</p>
+<!-- EDIT15 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+Pour ma part, je j&#039;utilise <a href="https://en.wikipedia.org/wiki/Indent_style#Allman_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style#Allman_style"  rel="nofollow">le style Allman</a> - j&#039;ai tout de même une légère tendance à la compression de temps en temps -, et <strong>uniquement des espaces</strong>.<br/>
+
+Tant qu&#039;on évite les horreurs du genre <a href="https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style"  rel="nofollow">BSD KNF</a> et les mélanges tab/space, ça me va !
+</p>
+</div><!-- EDIT16 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT14 SECTION "Indentation" [5012-6002] -->
+<h2 class="sectionedit17" id="structures_et_classes">Structures et classes</h2>
+<div class="level2">
+
+<p>
+<strong>The Law of Demeter</strong> [cch:p97] (voir <a href="/_media/bioinformatique/books/demeter.pdf" class="media mediafile mf_pdf" title="bioinformatique:books:demeter.pdf (64.2 KB)">ce papier</a>)<br/>
+
+Une structure expose des variables (publiques), un objet expose des fonctions…
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Structures et classes" [6003-6212] -->
+<h2 class="sectionedit18" id="fonctions_classes_et_methodes_factorisation_de_code">Fonctions, classes et méthodes (factorisation de code)</h2>
+<div class="level2">
+
+<p>
+Les fonctions et les méthodes (fonctions appartenant à une classe), sont de <strong>petits bouts de code</strong> (le plus petit possible) qui font <strong>une seule chose</strong> et qui le font bien !
+</p>
+
+<p>
+Leur nom doit décrire précisément ce qu&#039;elles font, et contiennent souvent <strong>un verbe ou un mot clé</strong>. Le nom devant permettre de savoir exactement ce que la fonction fait (dans les grandes lignes) il est important de <strong>ne pas avoir d&#039;effet de bord</strong> (<em>side effects</em>), à moins de le préciser dans le nom de la fonction ; mais ceci est souvent maladroit.
+</p>
+
+<p>
+Une fonction devrait avoir besoin d&#039;un <strong>minimum d&#039;arguments</strong> pour travailler : 0, 1, 2, voir 3 mais pas plus ! <br/>
+
+Le nombre d&#039;arguments conditionne l’intelligibilité du code et aussi la complexité des tests unitaires à écrire pour tester tous les cas possibles. <br/>
+
+Un trop grand nombre d&#039;arguments est souvent un appel à refactorisation du code. Certains arguments fonctionnellement proches peuvent être regroupés dans une même structure/classe avant d&#039;être passés à la fonction.
+</p>
+
+<p>
+<span style='color:red; '>Mauvaise pratique :</span>
+</p>
+<pre class="code text">Circle makeCircle(double x, double y, double radius);</pre>
+
+<p>
+<span style='color:green; '>Bonne pratique :</span>
+</p>
+<pre class="code text">Circle makeCircle(Point center, double radius);</pre>
+<!-- EDIT19 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap"><ul>
+<li class="level1"><div class="li"> [cch:46] Prefer Exceptions to Returning Error Codes</div>
+</li>
+<li class="level1"><div class="li"> [cch:114] Bondaries: isolate from external library interfaces</div>
+</li>
+</ul>
+</div><!-- EDIT20 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT18 SECTION "Fonctions, classes et méthodes (factorisation de code)" [6213-7689] -->
+<h2 class="sectionedit21" id="tester_son_code">Tester son code</h2>
+<div class="level2">
+
+<p>
+Il est important de tester <strong>toutes les fonctionnalités</strong> de son code afin de voir si des modifications introduites sur une section ont un impact négatif sur une autre section du code. Ceci est particulièrement vrai quand le code est correctement factorisé, on peut alors <strong>tester indépendamment</strong> chaque fonction, classe et méthode. 
+Cette pratique est connue sous le nom de <a href="https://fr.wikipedia.org/wiki/Test_unitaire" class="urlextern" title="https://fr.wikipedia.org/wiki/Test_unitaire"  rel="nofollow">tests unitaires</a>.
+</p>
+
+<p>
+Les tests sont en général regroupés dans une partie différente de l&#039;arborescence de fichiers (dossier <code>test</code>) et sont <strong>lancés après chaque modification</strong>, avant même d&#039;enregistrer les modifications dans le système de gestion de versions.
+</p>
+
+<p>
+<em class="u">Exemple</em> : dans un projet géré par <code>make</code>, les tests sont lancés avec la commande <code>make check</code>.
+</p>
+
+<p>
+De nombreux <a href="https://fr.wikipedia.org/wiki/Test_unitaire#Environnements_de_test" class="urlextern" title="https://fr.wikipedia.org/wiki/Test_unitaire#Environnements_de_test"  rel="nofollow">environnements de tests</a> existent pour chaque langage et peuvent être facilement intégrés à n&#039;importe quel projet.
+</p>
+
+</div>
+<!-- EDIT21 SECTION "Tester son code" [7690-8726] -->
+<h2 class="sectionedit22" id="utilisation_des_index_dans_les_listes">Utilisation des index dans les listes</h2>
+<div class="level2">
+
+<p>
+Voici un exemple [cch:p9] utilisant une constante bien nommée pour accéder aux éléments d&#039;une liste. Notons aussi le renommage de la fonction pour obtenir les <em>flaggedCells</em>.
+</p>
+
+<p>
+<span style='color:red; '>Mauvaise pratique :</span>
+</p>
+<pre class="code">public List&lt;int[]&gt; getThem() {
+    List&lt;int[]&gt; list1 = new ArrayList&lt;int[]&gt;();
+    for (int[] x : theList)
+        if (x[0] == 4)
+            list1.add(x);
+    return list1;
+}</pre>
+
+<p>
+<span style='color:green; '>Bonne pratique :</span>
+</p>
+<pre class="code">public List&lt;int[]&gt; getFlaggedCells() {
+    List&lt;int[]&gt; flaggedCells = new ArrayList&lt;int[]&gt;();
+    for (int[] cell : gameBoard)
+        if (cell[STATUS_VALUE] == FLAGGED)
+            flaggedCells.add(cell);
+    return flaggedCells;
+}</pre>
+
+</div>
+<!-- EDIT22 SECTION "Utilisation des index dans les listes" [8727-9477] -->
+<h2 class="sectionedit23" id="comparaison_de_valeurs">Comparaison de valeurs</h2>
+<div class="level2">
+
+<p>
+Plutôt que de comparer des valeurs comme ci-dessus (<code>cell[STATUS_VALUE] == FLAGGED</code>), utiliser des méthodes (<code>.isFlagged</code>) sur un objet :
+</p>
+<pre class="code">public List&lt;Cell&gt; getFlaggedCells() {
+    List&lt;Cell&gt; flaggedCells = new ArrayList&lt;Cell&gt;();
+    for (Cell cell : gameBoard)
+        if (cell.isFlagged())
+            flaggedCells.add(cell);
+    return flaggedCells;
+}</pre>
+<div class="tags"><span>
+	<a href="/tag/todo?do=showtag&amp;tag=ToDo" class="wikilink1" title="tag:todo" rel="tag">ToDo</a>
+</span></div>
+
+</div>
+<!-- EDIT23 SECTION "Comparaison de valeurs" [9478-] -->

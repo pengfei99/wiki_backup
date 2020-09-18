@@ -1,0 +1,62 @@
+====== Bases de Données ======
+
+Les bases de données sont séparées en deux catégories : dans un fichier à plat ou dans un SGBD.
+
+===== Fichiers à plat =====
+
+Les fichiers à plats sont stockés dans le dossier ''/sps/inter/bioaster/db/''. Ce dossier est accessible de tous les nœuds de calcul et de toutes les machines virtuelles.
+
+==== BLAST ====
+
+Tous les outils de **Blast** sont disponible //via// **module**.
+<code>
+module load blast
+</code>
+
+Pour installer de nouvelles bases des données ou mettre les anciennes à jours :
+<code>
+cd /sps/inter/bioaster/db/blast
+update_blastdb.pl nr nt env_nr env_nt 16SMicrobial
+</code>
+
+La variable d'environnement ''BLASTDB'' est définie par **module**, les bases peuvent immédiatement être utilisées.
+
+==== UCSC ====
+
+<code>
+cd /sps/inter/bioaster/db/ucsc
+rsync -avzP rsync://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/ hg38
+rsync -avzP rsync://hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/ mm10
+</code>
+
+Lire le fichier ''README.txt'' pour une description de tous les fichiers disponibles, ainsi que les instructions pour les mettre à jours.
+==== HMP ====
+
+[[http://www.hmpdacc.org/HMRGD/|HMP Reference Genome sequence data]] : récupération des différents fichiers de la section //All Body Sites//.
+
+<code>
+cd /sps/inter/bioaster/db/hmrgd
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_nuc.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_cds.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_pep.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_gbk.tar.gz
+</code>
+
+Les archives contiennent des fichiers de la forme ''local/db/repository/ncbi/dacc_reference_genomes/20130402/all_gbk_20130402/18203.DS483479-DS483503.nuc.gbk'' et sont pour le moment laissées en l'état.
+==== MD5 ====
+
+Récupération des fichiers du projet [[http://tools.metagenomics.anl.gov/m5nr/|M5nr]]. 
+
+<code>
+cd /sps/inter/bioaster/db/md5/
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5nr.gz
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5nr_blast.tar.gz
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5rna.gz
+</code>
+
+Les fichiers pour **blast** sont extraits et liés dans le dossier ''/sps/inter/bioaster/db/blast/'' pour être utilisables sans modification de l'environnement.
+
+===== SGBD =====
+
+Service fourni par le [[start|CC-IN2P3]].
+

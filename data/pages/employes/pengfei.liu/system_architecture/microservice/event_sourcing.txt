@@ -1,0 +1,5 @@
+====== Event sourcing ======
+
+===== Context =====
+
+A service typically needs to atomically update the database and publish messages/events. For example, perhaps it uses the Saga pattern. In order to be reliable, each step of a saga must atomically update the database and publish messages/events. Alternatively, it might use the Domain event pattern, perhaps to implement CQRS. In either case, it is not viable to use a distributed transaction that spans the database and the message broker to atomically update the database and publish messages/events.

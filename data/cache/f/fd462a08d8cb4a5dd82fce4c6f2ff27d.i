@@ -1,0 +1,27 @@
+a:52:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:28:"Apache Kafka spark streaming";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1;}i:4;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:100:"Kafka is a very popular message broker system. In this tutorial, we use kafka as data stream source.";}i:2;i:45;}i:5;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:145;}i:6;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:145;}i:7;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:79:"To do this, we must have a kafka cluster. To install a kafka cluster, see this ";}i:2;i:147;}i:8;a:3:{i:0;s:12:"internallink";i:1;a:2:{i:0;s:66:"employes:pengfei.liu:data_science:kafka:installation_configuration";i:1;s:36:"Kafka installation and configuration";}i:2;i:226;}i:9;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:333;}i:10;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:335;}i:11;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:17:"Kafka preparation";i:1;i:2;i:2;i:335;}i:2;i:335;}i:12;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:335;}i:13;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:335;}i:14;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:75:"Suppose we have a kafka cluster installed, we have 3 broker in the cluster:";}i:2;i:366;}i:15;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:441;}i:16;a:3:{i:0;s:10:"listu_open";i:1;a:0:{}i:2;i:441;}i:17;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:441;}i:18;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:441;}i:19;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:22:" hadoop-nn.pengfei.org";}i:2;i:445;}i:20;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:467;}i:21;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:467;}i:22;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:467;}i:23;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:467;}i:24;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:23:" hadoop-dn1.pengfei.org";}i:2;i:471;}i:25;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:494;}i:26;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:494;}i:27;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:494;}i:28;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:494;}i:29;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:23:" hadoop-dn2.pengfei.org";}i:2;i:498;}i:30;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:521;}i:31;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:521;}i:32;a:3:{i:0;s:11:"listu_close";i:1;a:0:{}i:2;i:521;}i:33;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:521;}i:34;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:53:"The election of key broker and follower is automatic.";}i:2;i:523;}i:35;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:576;}i:36;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:576;}i:37;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:53:"Now,we need to create a topic and a message producer.";}i:2;i:578;}i:38;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:631;}i:39;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:949:"
+#create a topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --create --zookeeper hadoop-nn.bioaster.org --replication-factor 3 --partitions 3 --topic Hello-Kafka
+
+#check topic status
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org --topic Hello-Kafka
+Topic:Hello-Kafka       PartitionCount:3        ReplicationFactor:3     Configs:
+        Topic: Hello-Kafka      Partition: 0    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3
+        Topic: Hello-Kafka      Partition: 1    Leader: 2       Replicas: 2,3,1 Isr: 1,2,3
+        Topic: Hello-Kafka      Partition: 2    Leader: 3       Replicas: 3,1,2 Isr: 1,2,3
+        
+# As kafka use zookeepr as backend, so we use --zookeeper hadoop-nn.bioaster.org:2181, 2181 is the default port number. if you don't change it, you can leave it empty.
+
+# --replication-factor 3 means the message in the topic has three copies --partitions 3 the topic has 3 partitions
+";i:1;N;i:2;N;}i:2;i:638;}i:40;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:754:"
+# create a producer
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-console-producer.sh --broker-list hadoop-nn.bioaster.org:9092 --topic Hello-Kafka
+>hello kafka
+# broker-list can have one or many brokers, in this example, we use broker hadoop-nn.bioaster.org, the 9092 is the defaut kafka broker port. You can use any broker in the cluster. It will be the same.
+
+
+# create a consumer for testing 
+[hadoop@CCLinDataWHD02 bin]$ sh kafka-console-consumer.sh --zookeeper hadoop-nn.bioaster.org:2181 --topic Hello-Kafka --from-beginning
+>hello kafka
+# the consumer use zookeeper to get message. --from-beginning means this consumer will get all message of the topic from beginnig.
+#In the consumer side, if you see hello kafka, it means the kafka cluster is working
+";i:1;N;i:2;N;}i:2;i:1602;}i:41;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1602;}i:42;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:61:"Our spark script will be also a consumer of topic Hello-Kafka";}i:2;i:2367;}i:43;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2429;}i:44;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:2429;}i:45;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:18:"Prepare your spark";i:1;i:2;i:2;i:2429;}i:2;i:2429;}i:46;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:2429;}i:47;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:2429;}i:48;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:93:"The api for kafka and flume is not included in the default jar file. You need to download it ";}i:2;i:2461;}i:49;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2554;}i:50;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:2555;}i:51;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:2555;}}

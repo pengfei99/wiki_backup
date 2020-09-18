@@ -1,0 +1,55 @@
+====== Zeppelin JDBC interpreter ======
+
+
+The JDBC interpreter is created by default in Zeppelin. But the default configuration does not work at all.
+
+You need to change some configuration and add some jars to make it work. In this tutorial, we show how to use this interpreter to connect to a mysql database and a hive metastore.
+
+Check this page https://zeppelin.apache.org/docs/latest/interpreter/jdbc.html
+
+
+===== Common errors =====
+
+==== 1. Access denied ====
+
+Error message:
+
+<code>
+FAILED: HiveAccessControlException Permission denied: user [admin] does not have [USE] privilege on [null] [ERROR_STATUS]
+</code>
+
+Cause: No allow rules in ranger
+
+Solution: Add allow rules in ranger. 
+  - Login to range admin UI (http://lin03.udl.org:6080/login.jsp in my cluster)
+  - Access Manager-> Service Manager-> Hive -> List of policies -> Edit
+  - It should have some policy rules for default user hive, just add the user id in the same rules as hive.
+
+{{:ranger_policy_rules.png?400|}}
+==== 2. Can't find hive configuration in zookeeper ====
+
+Error message:
+
+<code>
+java.sql.SQLException: org.apache.hive.jdbc.ZooKeeperHiveClientException: Unable to read HiveServer2
+</code>
+
+Cause: ZooKeeper configuration not found
+
+Solution: 
+1. Check the hive.url attribute value in JDBC interpreter. It must looks like this: 
+<code>
+jdbc:hive2://lin02.udl.org:2181,lin03.udl.org:2181,lin04.udl.org:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2
+</code>
+2. Check the zookeeper namespace under hiveserver2 
+<code>
+#login to your cluster, and connect to the zookeeper client
+
+$ zookeeper-client
+
+$ ls /hiveserver2
+
+# it should return something like this
+[serverUri=lin03:10000;version=3.1.0.3.1.4.0-315;sequence=0000000003]
+
+</code>

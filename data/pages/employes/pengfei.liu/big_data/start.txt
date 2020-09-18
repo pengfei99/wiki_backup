@@ -1,0 +1,137 @@
+====== Big data ======
+
+===== Big data infrastructure distribution =====
+
+HDP : [[employes:pengfei.liu:big_data:hdp:start|Hortornworks hadoop distribution]]
+
+
+===== Big data infrastructure component=====
+
+==== Cluster management and monitoring tool ====
+
+
+Ambari: [[employes:pengfei.liu:big_data:hadoop_cluster:ambari_installation|Apache Ambari]]
+
+cloudera Manager : [[employes:pengfei.liu:big_data:hadoop_cluster:cloudera_manager|Cloudera Enterprise 6.0.x installation]]
+
+
+
+==== Data formats in big data platforms ====
+
+
+[[employes:pengfei.liu:big_data:data_format:start|Different data formats in big data ecosystem]]
+
+
+==== MapReduce ====
+
+[[employes:pengfei.liu:big_data:hdfs_cli|HDFS and mapreduce basic cli]]
+
+==== Yarn ====
+
+
+[[employes:pengfei.liu:big_data:yarn|Yarn]]
+
+==== Hive ====
+
+[[employes:pengfei.liu:big_data:hive:install_config|Install and configure Hive]]
+
+[[employes:pengfei.liu:big_data:hive:internal_external_table|Hive Internal and External tables]]
+
+==== Spark ====
+
+[[employes:pengfei.liu:big_data:spark:start|Spark doc list]]
+==== ZooKeeper ====
+
+[[employes:pengfei.liu:data_science:zookeeper:start|ZooKeeper docs]]
+
+===== Data ingestion tool =====
+
+==== sqoop ====
+
+[[employes:pengfei.liu:data_science:sqoop:start|Sqoop documents]]
+==== KafKa ====
+
+Kafka docs: [[employes:pengfei.liu:data_science:kafka:start|Kafka docs]]
+==== Flume ====
+
+Flume installation [[employes:pengfei.liu:data_science:flume:installation_configuration|Flume installation and configuration]]
+
+==== Nifi ====
+
+
+Nifi installation : [[employes:pengfei.liu:data_science:nifi:installation_configuration|Install and configure nifi]] 
+
+NiFi Spark integration : [[employes:pengfei.liu:data_science:nifi:spark_integration|Integrating Apache spark 2.x jobs with NiFi 1.7]]
+
+===== Data storage =====
+
+HDFS: [[employes:pengfei.liu:big_data:hadoop:install_config_hadoop|Install hdfs on multi node cluster]]
+
+
+Minio: 
+
+
+===== Data management =====
+
+
+
+==== IRoDs: ====
+ 
+
+irods installation guide : [[informatique:data_management:irods|Introduction of IRODS installation]]
+
+irods ldap guide : [[informatique:data_management:irods_ldap|Irods pam/sssd/ldap authentication]]
+===== Data curation =====
+
+Data cleaning with pandas, numpy : [[employes:pengfei.liu:data_science:data_curation:data_cleaning_python|Data Cleaning]]
+===== Data analysis =====
+
+Zeppelin Notebook for data analysis and viz 
+
+Install and configure Zeppelin [[employes:pengfei.liu:big_data:zeppelin:install_and_configure|Install Apache Zeppelin on Centos 7]]
+
+Add sparkR interpreter [[employes:pengfei.liu:big_data:zeppelin:r_interpreter|Install and configure R interpreter in Zeppelin]]
+
+==== WorkFlow manager ====
+
+AirFlow : [[employes:pengfei.liu:data_science:work_flow_management:airflow:install_config|AirFlow instllation guide]]
+
+data pipeline : [[employes:pengfei.liu:data_science:work_flow_management:airflow:pipeline_16s|Pipeline 16s dependencies installation]]
+===== Data governance  =====
+
+Data governance introduction: [[employes:pengfei.liu:big_data:data_governance:introduction|Data governance]]
+
+Atls documentation: [[employes:pengfei.liu:big_data:data_governance:atlas:start|Atlas documentations]]
+
+
+
+===== Data transfer =====
+
+[[employes:pengfei.liu:big_data:data_transfer:vsftpd|FTP data transfer protocol]]
+
+
+
+==== Text search engine ====
+
+Elastic search :
+
+[[employes:pengfei.liu:big_data:elastic_search:install_and_configure|Install and configure elasticsearch and kibana]]
+
+[[employes:pengfei.liu:big_data:elastic_search:rest_api|Elastic search rest api]]
+
+==== NoSql database ====
+[[employes:pengfei.liu:big_data:hbase:overview_hbase|HBase overview]]
+
+[[employes:pengfei.liu:big_data:hbase:install_hbase|Install Hbase]]
+==== Data analysis tools ====
+
+[[employes:pengfei.liu:data_science:r:install_configure_r|Install R and R studio]]
+
+
+===== Data format =====
+
+[[employes:pengfei.liu:big_data:data_format:start|Different data formats in big data ecosystem]]
+
+===== Security =====
+
+Knox:  

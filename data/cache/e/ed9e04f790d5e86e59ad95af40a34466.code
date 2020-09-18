@@ -1,0 +1,1 @@
+bzcat Debian-7.vdi.bz2 | glance image-create --name=&quot;Debian-7&quot; --is-public=False --container-format=bare --disk-format=vdi

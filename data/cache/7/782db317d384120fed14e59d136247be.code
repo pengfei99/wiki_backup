@@ -1,0 +1,7 @@
+# Dans la VM
+$ mkfs.xfs /dev/vdb
+$ mkdir /data
+$ cat &gt;&gt; /etc/fstab &lt;&lt;EOF
+/dev/vdb /data xfs nosuid,nodev 1 2
+EOF
+$ mount /data

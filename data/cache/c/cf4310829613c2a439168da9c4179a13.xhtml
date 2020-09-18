@@ -1,0 +1,157 @@
+
+<h1 class="sectionedit1" id="optimisation_des_performances_sous_matlab">Optimisation des performances sous Matlab</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Optimisation des performances sous Matlab" [1-57] -->
+<h2 class="sectionedit2" id="convertir_un_fichier_m_en_exe_utilisant_matlab_compiler">Convertir un fichier .M en .exe utilisant MATLAB Compiler</h2>
+<div class="level2">
+
+<p>
+<a href="https://fr.mathworks.com/videos/getting-started-standalone-applications-using-matlab-compiler-100088.html" class="urlextern" title="https://fr.mathworks.com/videos/getting-started-standalone-applications-using-matlab-compiler-100088.html"  rel="nofollow">https://fr.mathworks.com/videos/getting-started-standalone-applications-using-matlab-compiler-100088.html</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Convertir un fichier .M en .exe utilisant MATLAB Compiler" [58-236] -->
+<h2 class="sectionedit3" id="matlab_java_heap_memory">Matlab Java Heap Memory</h2>
+<div class="level2">
+
+<p>
+Matlab runs on a jvm, the jvm heap memory defined how many objects you can load in your jvm, the default heap size is between 256 and 384.
+</p>
+
+<p>
+You need to increase the heap size if your program creates many objects 
+</p>
+
+<p>
+The following link shows how to configure it.
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/help/matlab/matlab_external/java-heap-memory-preferences.html" class="urlextern" title="https://fr.mathworks.com/help/matlab/matlab_external/java-heap-memory-preferences.html"  rel="nofollow">https://fr.mathworks.com/help/matlab/matlab_external/java-heap-memory-preferences.html</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Matlab Java Heap Memory" [237-622] -->
+<h2 class="sectionedit4" id="coding_convention">Coding convention</h2>
+<div class="level2">
+
+<p>
+The Matlab coding convention book is here 
+<a href="https://wiki.bioaster.org/_media/ut6/bioinformatique/matlabstyle2_book.pdf" class="urlextern" title="https://wiki.bioaster.org/_media/ut6/bioinformatique/matlabstyle2_book.pdf"  rel="nofollow">Download Matlab Style Book</a>
+</p>
+
+<p>
+The clean code book for best coding practices
+<a href="/_media/bioinformatique/cleancodeahandbookofagilesoftwarecraftsmanship.pdf" class="media mediafile mf_pdf" title="bioinformatique:cleancodeahandbookofagilesoftwarecraftsmanship.pdf (2.9 MB)">cleancodeahandbookofagilesoftwarecraftsmanship.pdf</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Coding convention" [623-922] -->
+<h2 class="sectionedit5" id="utilisation_de_matlab_au_cc">Utilisation de Matlab au CC</h2>
+<div class="level2">
+
+<p>
+<a href="https://wiki.bioaster.org/bioinformatique/matlab" class="urlextern" title="https://wiki.bioaster.org/bioinformatique/matlab"  rel="nofollow">https://wiki.bioaster.org/bioinformatique/matlab</a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Utilisation de Matlab au CC" [923-1013] -->
+<h2 class="sectionedit6" id="other_usefull_link">Other usefull link</h2>
+<div class="level2">
+
+<p>
+<a href="http://www.hpc.lsu.edu/training/weekly-materials/2016-Fall/Performance-Matlab-Code-26Oct2016.pdf" class="urlextern" title="http://www.hpc.lsu.edu/training/weekly-materials/2016-Fall/Performance-Matlab-Code-26Oct2016.pdf"  rel="nofollow">http://www.hpc.lsu.edu/training/weekly-materials/2016-Fall/Performance-Matlab-Code-26Oct2016.pdf</a>
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/company/newsletters/articles/programming-patterns-maximizing-code-performance-by-optimizing-memory-access.html" class="urlextern" title="https://fr.mathworks.com/company/newsletters/articles/programming-patterns-maximizing-code-performance-by-optimizing-memory-access.html"  rel="nofollow">https://fr.mathworks.com/company/newsletters/articles/programming-patterns-maximizing-code-performance-by-optimizing-memory-access.html</a>
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/videos/optimizing-and-accelerating-your-matlab-code-107711.html" class="urlextern" title="https://fr.mathworks.com/videos/optimizing-and-accelerating-your-matlab-code-107711.html"  rel="nofollow">https://fr.mathworks.com/videos/optimizing-and-accelerating-your-matlab-code-107711.html</a>
+</p>
+
+<p>
+<a href="http://www.matlabtips.com/optimizing-your-code/" class="urlextern" title="http://www.matlabtips.com/optimizing-your-code/"  rel="nofollow">http://www.matlabtips.com/optimizing-your-code/</a>
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/help/matlab/performance-and-memory.html" class="urlextern" title="https://fr.mathworks.com/help/matlab/performance-and-memory.html"  rel="nofollow">https://fr.mathworks.com/help/matlab/performance-and-memory.html</a>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Other usefull link" [1014-1490] -->
+<h2 class="sectionedit7" id="cr_session_du_01062017">CR session du 01/06/2017</h2>
+<div class="level2">
+
+<p>
+Présents : <strong> <abbr title="Pengfei Liu">PLU</abbr>, <abbr title="Sophie Dixneuf">SDI</abbr>, ZS, AO, <abbr title="Pierre Veyre">PV</abbr></strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Le code de Zohreh a été compilé et testé sur la ferme de calcul du CC ⇒ temps record de traitement d&#039;une image : 79 secondes !!</div>
+</li>
+<li class="level1"><div class="li"> On va créer un script générique pour automatiser les analyses sur la ferme de calcul du CC, il prendra en paramètres :</div>
+<ul>
+<li class="level3"><div class="li"> Le chemin du répertoire des images à traiter sur GPFS (un répertoire = une expérience)</div>
+</li>
+<li class="level3"><div class="li"> Le chemin vers l&#039;image background de référence</div>
+</li>
+<li class="level3"><div class="li"> Le chemin du répertoire où stocker les résultats sur GPFS</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Zohreh et Sophie vont demander un compte au centre de calcul et pourront lancer le script ⇒ OK vu avec <abbr title="Pierre Veyre">PV</abbr></div>
+</li>
+<li class="level1"><div class="li"> Introduction à la programmation objet dans Matlab par le Docteur Adama </div>
+</li>
+<li class="level1"><div class="li"> Sophie va abandonner la librairie vl-feat et utiliser les fonctions internes de Matlab (TODO)</div>
+</li>
+<li class="level1"><div class="li"> Une fois le code de Sophie “stabilisé” on le compilera et on le scriptera comme pour le code Zohreh</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "CR session du 01/06/2017" [1491-2448] -->
+<h2 class="sectionedit8" id="cr_session_du_16052017">CR session du 16/05/2017</h2>
+<div class="level2">
+
+<p>
+Présents : <strong><abbr title="Pengfei Liu">PLU</abbr>, <abbr title="Sophie Dixneuf">SDI</abbr>, ZS, AO, <abbr title="Pierre Veyre">PV</abbr></strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Les codes de Zohreh et de Fabian sont sur Gitlab</div>
+<ul>
+<li class="level2"><div class="li"> ⇒ Celui de Sophie va bientôt y être intégré aussi</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Le Matlab Java Heap Memory a été augmenté sur la VM de Zohreh (max = 8GB)</div>
+<ul>
+<li class="level2"><div class="li"> Cela va être fait sur les autres VMs CODIRA</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> La vm de Zohreh  a été upgradé en RAM (16 <abbr title="Guillaume Boissy">GB</abbr> ⇒ 32 <abbr title="Guillaume Boissy">GB</abbr> puis finalement 20 <abbr title="Guillaume Boissy">GB</abbr>)</div>
+<ul>
+<li class="level2"><div class="li"> Cela va être fait sur les autres VMs CODIRA</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Le code de Zohreh va être compilé pour un test d’utilisation sur la ferme de calcul du CC</div>
+</li>
+<li class="level1"><div class="li"> Optimisation du code du Zohreh (profiling du code, figure, close/clear all force)</div>
+</li>
+</ul>
+
+<p>
+On a divisé le temps de traitement d’une image par deux (250 sec. ⇒ ~ 130 sec.) on doit pouvoir encore faire mieux. 
+</p>
+
+<p>
+Un autre workshop est prévu pour continuer l’optimisation du code de Zohreh et aborder celui de Sophie
+</p>
+
+</div>
+<!-- EDIT8 SECTION "CR session du 16/05/2017" [2449-] -->

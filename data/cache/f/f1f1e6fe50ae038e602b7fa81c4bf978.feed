@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="FeedCreator 1.7.2-ppt DokuWiki" -->
+<?xml-stylesheet href="https://ccbiowiki1.in2p3.fr/lib/exe/css.php?s=feed" type="text/css"?>
+<rdf:RDF
+    xmlns="http://purl.org/rss/1.0/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel rdf:about="https://ccbiowiki1.in2p3.fr/feed.php">
+        <title>BIOASTER</title>
+        <description></description>
+        <link>https://ccbiowiki1.in2p3.fr/</link>
+        <image rdf:resource="https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico" />
+       <dc:date>2015-03-06T12:17:18+01:00</dc:date>
+        <items>
+            <rdf:Seq>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/informatique?rev=1425640595&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/sidebar?rev=1425640468&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/shiny?rev=1425635299&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1425567662&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/ut6/reunions/start?rev=1425563558&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1425558764&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150305?rev=1425558688&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150212?rev=1425549693&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/imprimantes?rev=1425379012&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/ut6/reunions/reunion_ut6_17.02.2015?rev=1425034353&amp;do=diff"/>
+            </rdf:Seq>
+        </items>
+    </channel>
+    <image rdf:about="https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico">
+        <title>BIOASTER</title>
+        <link>https://ccbiowiki1.in2p3.fr/</link>
+        <url>https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico</url>
+    </image>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/informatique?rev=1425640595&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-06T12:16:35+01:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>informatique</title>
+        <link>https://ccbiowiki1.in2p3.fr/informatique?rev=1425640595&amp;do=diff</link>
+        <description>Cette page répertorie tous les moyens informatiques à disposition des employés de BIOASTER.
+
+N'hésitez pas à rajouter ce qui manque, et à documenter ce que vous connaissez bien.
+
+Les outils disponibles
+
+	*  Wiki
+	*  Jitsi
+	*  KeePass2
+	*  Putty
+	*  Mobaxterm
+	*  SSH
+	*  Bazaar
+	*  OwnCloud
+	*  Forge Redmine</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/sidebar?rev=1425640468&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-06T12:14:28+01:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>sidebar</title>
+        <link>https://ccbiowiki1.in2p3.fr/sidebar?rev=1425640468&amp;do=diff</link>
+        <description>*  Accueil
+	*  Unités Technologiques
+		*  UT1
+		*  UT2
+		*  UT3
+		*  UT5
+		*  UT6
+		*  UT7
+
+	*  Instruments
+	*  Employés
+	*  Informatique
+	*  Bio-informatique</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/shiny?rev=1425635299&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-06T10:48:19+01:00</dc:date>
+        <dc:creator>pierre.veyre@bioaster.org</dc:creator>
+        <title>in2p3:logiciels:shiny - [Accès] </title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels/shiny?rev=1425635299&amp;do=diff</link>
+        <description>Informations
+
+	*  Version : 1.3.0.403
+	*  Licence : GPLv3 ou +
+	*  Page Web : &lt;http://www.rstudio.com/products/shiny/shiny-server/&gt;
+	*  Page Web : &lt;https://plot.ly/r/&gt;
+	*  Description : Shiny is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge. Plotly lets you collaboratively make and share beautiful, web-base…</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1425567662&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-05T16:01:02+01:00</dc:date>
+        <dc:creator>pierre.veyre@bioaster.org</dc:creator>
+        <title>in2p3:logiciels - [Services] </title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1425567662&amp;do=diff</link>
+        <description>Si votre logiciel ne figure pas dans la liste, merci de vous référer à la procédure d'installation.
+
+Le responsable est la personne a contacté pour toute information relative à l'utilisation du logiciel. Pour tout problème technique, merci de vous adresser au personnel du PT6.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/ut6/reunions/start?rev=1425563558&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-05T14:52:38+01:00</dc:date>
+        <dc:creator>nicolas.sapay@bioaster.org</dc:creator>
+        <title>ut6:reunions:start - [Activités et Objectifs de l'UTEC6 pour 2015 : hypothèses et propositions] </title>
+        <link>https://ccbiowiki1.in2p3.fr/ut6/reunions/start?rev=1425563558&amp;do=diff</link>
+        <description>Date : 17/02/2015
+
+Participants : JG, TLC, AC, PV, NS
+
+Précédente réunion le 03/02/2015
+
+Les sujets barrés sont en attente.
+
+Les sujets surlignés en gris sont traités s'il y a assez de temps
+
+Les sujets surlignés en rouge sont prioritaires.
+Question Quoi?                  Qui?          Avancement    1 Suivie des ticketsNSMigration en cours. Ouverture du port vers l'extérieur en attente car difficulté côté réseau. Le wiki sera accessible depuis Paris par le VPN2 Projet REALISMNSDémo de Clinsight …</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1425558764&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-05T13:32:44+01:00</dc:date>
+        <dc:creator>blandine.rimbault@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo - [Points permanents Paris] </title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1425558764&amp;do=diff</link>
+        <description>Cette page comporte trois sections :
+
+	*  l'ordre du jour contient tous les sujets qui seront abordés lors de la prochaine réunion ;
+	*  les sujets à aborder sont des idées qu'il faudra discuter plus tard, c'est en quelque sorte la boite à idées ;
+	*  les archives contiennent les liens vers les minutes des réunions précédentes.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150305?rev=1425558688&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-05T13:31:28+01:00</dc:date>
+        <dc:creator>blandine.rimbault@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:20150305 - [Kit de communication] </title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150305?rev=1425558688&amp;do=diff</link>
+        <description>*  Début : 09:30
+	*  Fin : 10:30
+	*  Participants : AG, AR, BB, BR, FP, JT, LCH, MRL, SD, TLC
+	*  Secrétaire : BR
+	*  Modérateur : TLC
+
+Point sur la réunion des référents Qualité / Sécurité du 3 mars 2015 [BR / MRL]
+
+	*  CHSCT / accidents
+
+Première réunion du CHSCT le 19 mars
+
+2 accidents bénins à Lyon (allergie aux gants, blessure)</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150212?rev=1425549693&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-05T11:01:33+01:00</dc:date>
+        <dc:creator>blandine.rimbault@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:20150212 - [Trousse de secours / LCH] </title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20150212?rev=1425549693&amp;do=diff</link>
+        <description>*  Début : &lt;09:34&gt;
+	*  Fin : &lt;10:35&gt;
+	*  Participants : AG, AR, BB, BR, FP, GC, GG, JT, LCH, MRL, SDE, TLC, CMA, CV, SB, YB
+	*  Secrétaire : SDE
+	*  Modérateur : JT
+
+Annonce des nouveaux projets / TOUS
+
+Dorénavant à chaque début de réunion, nous énoncerons les nouveaux projets.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/imprimantes?rev=1425379012&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-03-03T11:36:52+01:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:imprimantes</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/imprimantes?rev=1425379012&amp;do=diff</link>
+        <description>Sharp MX-2614
+
+Fonctions : Imprimante/Photocopieur/Scanner/Fax
+
+L'imprimante dispose de son propre site web d'administration : &lt;http://157.99.156.44/main.html&gt;
+
+Les drivers et le manuel sont disponibles sur le site du fabricant.
+
+Pour les documents confidentiels pensez à utiliser le mode rétention.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/ut6/reunions/reunion_ut6_17.02.2015?rev=1425034353&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2015-02-27T11:52:33+01:00</dc:date>
+        <dc:creator>nicolas.sapay@bioaster.org</dc:creator>
+        <title>ut6:reunions:reunion_ut6_17.02.2015 - created</title>
+        <link>https://ccbiowiki1.in2p3.fr/ut6/reunions/reunion_ut6_17.02.2015?rev=1425034353&amp;do=diff</link>
+        <description>Date : 17/02/2015
+
+Participants : JG, TLC, AC, PV, NS
+
+Précédente réunion le 03/02/2015
+
+Les sujets barrés sont en attente.
+
+Les sujets surlignés en gris sont traités s'il y a assez de temps
+
+Les sujets surlignés en rouge sont prioritaires.
+Question Quoi?                  Qui?          Avancement    1 Gestion de projetNSMigration en cours. Ouverture du port vers l'extérieur en attente car difficulté côté réseau. Le wiki sera accessible depuis Paris par le VPN2 Projet REALISMNSDémo de Clinsight l…</description>
+    </item>
+</rdf:RDF>

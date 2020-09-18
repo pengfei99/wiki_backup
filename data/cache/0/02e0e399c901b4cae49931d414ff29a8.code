@@ -1,0 +1,6 @@
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master # Doit normalement faire un fast-forward
+$ git checkout feature-123
+$ git merge --no-ff master
+$ git push

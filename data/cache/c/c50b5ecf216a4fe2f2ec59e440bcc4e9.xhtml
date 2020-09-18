@@ -1,0 +1,44 @@
+
+<h1 class="sectionedit1" id="implementer_--help_en_python">Implémenter &#039;--help&#039; en Python</h1>
+<div class="level1">
+
+<p>
+Ceci n&#039;est pas <em>la</em> solution finale, mais est une approche qui fonctionne bien pour moi. Toutes les contrubutions sont les bienvenues. 
+</p>
+
+<p>
+Il faut d&#039;abord récupérer le modèle de script Python et les bibliothèques :
+</p>
+<pre class="code">  $ bzr branch bzr+ssh://&lt;LOGIN&gt;@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/templates/
+  $ cd /home/&lt;LOGIN&gt;/lib/python
+  $ bzr branch bzr+ssh://&lt;LOGIN&gt;@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/python_libraries/common
+  $ export PYTHONPATH=&quot;$PYTHONPATH:/home/&lt;LOGIN&gt;/lib/python&quot;</pre>
+
+<p>
+La classe de base est <code>Script</code>. Elle contient toutes les méthodes nécessaires. Il faut en redéfinir quelques unes :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/bioinformatique/python_help?codeblock=0" title="Download Snippet" class="mediafile mf_">usage()</a></dt>
+<dd><pre class="code python"><span class="kw1">def</span> usage<span class="br0">&#40;</span><span class="kw2">self</span><span class="br0">&#41;</span>:
+    <span class="st0">&quot;&quot;&quot;Return the usage message.&quot;&quot;&quot;</span>
+    <span class="kw1">return</span> <span class="st0">&quot;&quot;&quot;Usage:  %prog  ARG1</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/bioinformatique/python_help?codeblock=1" title="Download Snippet" class="mediafile mf_">define_options()</a></dt>
+<dd><pre class="code python"><span class="kw1">def</span> define_options<span class="br0">&#40;</span><span class="kw2">self</span><span class="br0">&#41;</span>:
+    <span class="st0">&quot;&quot;&quot;Define options for the script.&quot;&quot;&quot;</span>
+    <span class="kw2">self</span>.<span class="kw3">parser</span>.<span class="me1">add_option</span><span class="br0">&#40;</span><span class="st0">&quot;-t&quot;</span><span class="sy0">,</span> <span class="st0">&quot;--test&quot;</span><span class="sy0">,</span>
+                           action<span class="sy0">=</span><span class="st0">&quot;store_true&quot;</span><span class="sy0">,</span> default<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>
+                           <span class="kw2">help</span><span class="sy0">=</span><span class="st0">&quot;This is a test.&quot;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/bioinformatique/python_help?codeblock=2" title="Download Snippet" class="mediafile mf_">main()</a></dt>
+<dd><pre class="code python"><span class="kw1">def</span> main<span class="br0">&#40;</span><span class="kw2">self</span><span class="sy0">,</span> options<span class="sy0">,</span> arguments<span class="br0">&#41;</span>:
+    <span class="st0">&quot;&quot;&quot;Main method called by run().&quot;&quot;&quot;</span>
+    <span class="kw1">if</span> <span class="kw2">len</span><span class="br0">&#40;</span>arguments<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">1</span>:
+        <span class="kw1">return</span> <span class="kw2">self</span>.<span class="me1">usage_error</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="kw2">self</span>.<span class="me1">do_something</span><span class="br0">&#40;</span>arguments<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">,</span> options.<span class="kw3">test</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>

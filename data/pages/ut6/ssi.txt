@@ -1,0 +1,43 @@
+====== Sécurité des systèmes d'information ======
+
+===== ANSSI =====
+
+http://www.ssi.gouv.fr 
+
+[[http://www.cert.ssi.gouv.fr/ | Actualités et alertes publiées par l'ANSSI ]]
+
+Au quotidien, les principales lacunes de sécurité constatées par le Centre de cyberdéfense sont :
+
+  * des systèmes et des applications, dont les sites Web, qui ne sont pas à jour de leurs correctifs de sécurité
+  * une politique de gestion des mots de passe insuffisante (mots de passe par défaut ou trop simples et non renouvelés régulièrement…)
+  * une absence de séparation des usages entre utilisateur et administrateur des réseaux
+  * un laxisme manifeste dans la gestion des droits d’accès
+  * une absence de surveillance des systèmes d’information (analyse des journaux réseaux et de sécurité)
+  * un cloisonnement insuffisant des systèmes qui permet à une attaque de se propager au sein des réseaux
+  * une absence de restrictions d’accès aux périphériques (supports USB…)
+  * une ouverture excessive d’accès externes incontrôlés au système d’information (nomadisme, télétravail ou télé administration des systèmes)
+  * une sensibilisation et une maturité insuffisantes des utilisateurs et des dirigeants face à la menace dont ils ne perçoivent pas les risques.
+
+
+
+[[http://www.ssi.gouv.fr/uploads/IMG/pdf/NP_Securite_Web_NoteTech.pdf | Recommandations pour la sécurisation des sites web]]
+ 
+[[http://www.ssi.gouv.fr/entreprise/bonnes-pratiques/reseaux/ | Bonnes pratiques réseaux ]]
+
+[[http://www.ssi.gouv.fr/administration/guide/30-tdbssi-guide-delaboration-de-tableaux-de-bord-de-securite-des-systemes-dinformation/ | Guides d’élaboration de tableaux de bord de sécurité des systèmes d’information]]
+
+[[http://www.ssi.gouv.fr/guide/ebios-2010-expression-des-besoins-et-identification-des-objectifs-de-securite/ | Expression des Besoins et Identification des Objectifs de Sécurité ]]
+
+
+===== Divers =====
+
+[[http://www.cvedetails.com/ | CVE Details]]
+
+[[https://cve.mitre.org/ | CVE Mitre ]]
+
+[[https://oval.mitre.org/ | Open Vulnerability and Assessment Language (OVAL)]] 
+
+[[http://webcast.in2p3.fr/videos-6359 |Journée ARAMIS Actualités des vulnérabilités web etc ... (Avril 2015)]]
+
+[[http://www.tenable.com/products/nessus-vulnerability-scanner | Nessus : Vulnerability Assessment & Management Solution]]
+

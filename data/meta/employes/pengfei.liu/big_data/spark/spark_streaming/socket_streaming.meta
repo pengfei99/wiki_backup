@@ -1,0 +1,17 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1516107119;s:8:"modified";i:1516108571;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1516108571;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:68:"employes:pengfei.liu:big_data:spark:spark_streaming:socket_streaming";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:1213;}s:5:"title";s:22:"Spark socket streaming";s:11:"description";a:2:{s:15:"tableofcontents";a:5:{i:0;a:4:{s:3:"hid";s:22:"spark_socket_streaming";s:5:"title";s:22:"Spark socket streaming";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:14:"simple_example";s:5:"title";s:14:"Simple example";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:25:"start_the_spark_streaming";s:5:"title";s:25:"start the spark streaming";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:3;a:4:{s:3:"hid";s:40:"send_message_to_socket_8888_on_localhost";s:5:"title";s:40:"Send message to socket 8888 on localhost";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:4;a:4:{s:3:"hid";s:29:"result_of_the_spark_streaming";s:5:"title";s:29:"Result of the spark streaming";s:4:"type";s:2:"ul";s:5:"level";i:3;}}s:8:"abstract";s:503:"Spark socket streaming
+
+Spark socket streaming can listen to a socket
+
+Simple example
+
+In this example, we just listen to a socket (localhost, port 8888)and count all the words send to this socket.
+
+start the spark streaming
+
+
+scala> import org.apache.spark.streaming._
+scala> import org.apache.spark._
+scala> import org.apache.spark.storage.StorageLevel
+scala> val ssc = new StreamingContext(sc,Seconds(60))
+scala> val lines = ssc.socketTextStream("localhost",8888,StorageLevel.MEMORY_AND_DISK_SER)
+…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1516107119;s:8:"modified";i:1516108571;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1516108571;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:68:"employes:pengfei.liu:big_data:spark:spark_streaming:socket_streaming";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:1213;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

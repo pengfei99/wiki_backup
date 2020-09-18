@@ -1,0 +1,44 @@
+====== Certification ======
+
+Pour les chiffrements des courriels et la connexion par certificats.
+
+<code>
+# Liens
+
+* <http://pages.cs.wisc.edu/~zmiller/ca-howto/>
+* <https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat>
+* <http://www.ipsec-howto.org/x595.html>
+* <http://www.madboa.com/geek/openssl/#cert-self>
+* <http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html>
+* <http://www.flatmtn.com/article/setting-openssl-create-certificates>
+* <http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php>
+* <http://advancedhomeserver.com/openssl-and-your-root-certificate/>
+
+# Créer un CA
+
+    # Config and paths to modify in /etc/pki/tls/openssl.cnf
+    
+    /etc/pki/tls/misc/CA -newca
+    # /etc/pki/CA/private/cakey.pem
+    
+    /etc/pki/tls/misc/CA -newreq
+    # newkey.pem & newreq.pem
+    
+    /etc/pki/tls/misc/CA -sign
+    mv newkey.pem real_name-key.pem
+    mv newreq.pem real_name-cert.pem
+
+# Créer un certificat serveur
+
+# Tester le certificat serveur 
+
+# Créer un certificat client
+
+# Tester le certificat client
+
+# Revoquer le certificat client
+
+# Tester le certificat client révoqué
+</code>
+
+{{tag>todo}}

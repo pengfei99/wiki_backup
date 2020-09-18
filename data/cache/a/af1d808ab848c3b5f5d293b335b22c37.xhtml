@@ -1,0 +1,512 @@
+
+<h1 class="sectionedit1" id="lesson01kafka_basics">Lesson01: Kafka basics</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson01: Kafka basics&quot;,&quot;hid&quot;:&quot;lesson01kafka_basics&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-38&quot;} -->
+<h2 class="sectionedit2" id="important_concepts_and_terms">1.1 Important concepts and terms</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 Important concepts and terms&quot;,&quot;hid&quot;:&quot;important_concepts_and_terms&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;39-84&quot;} -->
+<h3 class="sectionedit3" id="publish-subscribe_messaging_system">Publish-subscribe messaging system</h3>
+<div class="level3">
+
+<p>
+In the publish-subscribe system, messages are persisted in a topic. Unlike point-to-point system, consumers can subscribe to one or more topic and consume all the messages in that topic. In the Publish-Subscribe system, message producers are called publishers and message consumers are called subscribers. A real-life example is Dish TV, which publishes different channels like sports, movies, music, etc., and anyone can subscribe to their own set of channels and get them whenever their subscribed channels are available.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Publish-subscribe messaging system&quot;,&quot;hid&quot;:&quot;publish-subscribe_messaging_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;85-656&quot;} -->
+<h3 class="sectionedit4" id="what_is_kafka">1.1.1 What is Kafka?</h3>
+<div class="level3">
+
+<p>
+<strong>Apache Kafka is a distributed publish-subscribe messaging system and a robust queue</strong> that can handle a high volume of data and enables you to pass messages from one end-point to another. Kafka is suitable for both offline and online message consumption. <strong>Kafka messages are persisted on the disk and replicated within the cluster to prevent data loss</strong>. Kafka is built on top of the ZooKeeper synchronization service. It integrates very well with Apache Storm and Spark for real-time streaming data analysis
+</p>
+
+</div>
+
+<h4 id="kafka_use_cases">Kafka use cases</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <strong>stream processing</strong>: Popular frameworks such as Storm and Spark Streaming read data from a topic, processes it, and write processed data to a new topic where it becomes available for users and applications. Kafka’s strong durability is also very useful in the context of stream processing.</div>
+</li>
+<li class="level1"><div class="li"> website activity tracking</div>
+</li>
+<li class="level1"><div class="li"> <strong>metrics collection and monitoring</strong>: Kafka is often used for operational monitoring data. This involves aggregating statistics from distributed applications to produce centralized feeds of operational data.</div>
+</li>
+<li class="level1"><div class="li"> <strong>log aggregation</strong>: Kafka can be used across an organization to collect logs from multiple services and make them available in a standard format to multiple consumers.</div>
+</li>
+<li class="level1"><div class="li"> real-time analytics</div>
+</li>
+<li class="level1"><div class="li"> CEP</div>
+</li>
+<li class="level1"><div class="li"> ingesting data into Spark</div>
+</li>
+<li class="level1"><div class="li"> ingesting data into Hadoop</div>
+</li>
+<li class="level1"><div class="li"> CQRS</div>
+</li>
+<li class="level1"><div class="li"> replay messages</div>
+</li>
+<li class="level1"><div class="li"> error recovery</div>
+</li>
+<li class="level1"><div class="li"> guaranteed distributed commit log for in-memory computing (microservices)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="summery_kafka_key_concepts">Summery Kafka key concepts</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Broker → In a kafka cluster, we may have one or many server. The server is called broker</div>
+</li>
+<li class="level1"><div class="li"> Topic → Each message in kafka must has a category, we call the category a Topic </div>
+</li>
+<li class="level1"><div class="li"> Partition → Each Topic can have one or more Partitions.</div>
+</li>
+<li class="level1"><div class="li"> Producer → A program or process which can send messages to Broker </div>
+</li>
+<li class="level1"><div class="li"> Consumer → A program or process which read messages from Broker</div>
+</li>
+<li class="level1"><div class="li"> Consumer group → Each consumer belongs to a consumer group. When you create a consumer, you can specify consumer group name, otherwise kafka will assign a default group name.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.1 What is Kafka?&quot;,&quot;hid&quot;:&quot;what_is_kafka&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;657-2762&quot;} -->
+<h3 class="sectionedit5" id="message_and_batch">1.1.2 Message and Batch</h3>
+<div class="level3">
+
+<p>
+<strong>The unit of data within Kafka is called a message</strong>. A message is simply an array of bytes as far as Kafka is concerned, so the data contained within it does not have a specific format or meaning to Kafka. 
+</p>
+
+<p>
+<strong>A message can have an optional bit of metadata, which is referred to as a key.</strong> The key is also a byte array and, as with the message, has no specific meaning to Kafka. Keys are used when messages are to be written to partitions in a more controlled manner. 
+</p>
+
+<p>
+<strong>For efficiency, messages are written into Kafka in batches. A batch is just a collection of messages</strong>, all of which are being produced to the same topic and partition. An individual roundtrip across the network for each message would result in excessive overhead, and collecting messages together into a batch reduces this. Of course, this is <strong>a tradeoff between latency and throughput</strong>: the larger the batches, the more messages that can be handled per unit of time, but the longer it takes an individual message to propagate. Batches are also typically compressed, providing more efficient data transfer and storage at the cost of some processing power.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.2 Message and Batch&quot;,&quot;hid&quot;:&quot;message_and_batch&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2763-3932&quot;} -->
+<h3 class="sectionedit6" id="sechema">1.1.3 Sechema</h3>
+<div class="level3">
+
+<p>
+<strong>It is recommended that additional structure, or schema, be imposed on the message content</strong>(e.g. json, XML and avro). Many Kafka developers favor the use of Apache Avro, which is a serialization framework originally developed for Hadoop. Avro provides a compact serialization format; schemas that are separate from the message payloads and that do not require code to be generated when they change; and strong data typing and schema evolution, with both backward and forward compatibility.
+</p>
+
+<p>
+A consistent data format is important in Kafka, as it allows writing and reading messages to be decoupled. By using well-defined schemas and storing them in a common repository, the messages in Kafka can be understood without coordination.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.3 Sechema&quot;,&quot;hid&quot;:&quot;sechema&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3933-4691&quot;} -->
+<h3 class="sectionedit7" id="topics_and_partition">1.1.4 Topics and partition</h3>
+<div class="level3">
+
+<p>
+<strong>Messages in Kafka are categorized into topics</strong>. <strong>Topics are additionally broken down into a number of partitions</strong>. Note that as a topic typically has multiple partitions, there is no guarantee of message time-ordering across the entire topic.
+</p>
+
+<p>
+The following figure shows a topic with four partitions, with writes being appended to the end of each one.
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_topics.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_topics.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=dda23f&amp;media=employes:pengfei.liu:data_science:kafka:kafka_topics.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+The number here is the partition offset. All records(messages) in partitions are assigned sequential id number(starts from 0) called the offset. The offset identifies each record location within the partition. As a result, we can guarantee the message time-ordering inside of one partition.
+</p>
+
+<p>
+<strong>Partitions are also the way that Kafka provides redundancy and scalability.</strong> Each partition can be hosted on a different server, which means that a single topic can be scaled horizontally across multiple servers to provide performance far beyond the ability of a single server.
+</p>
+
+<p>
+To avoid data loss, partition has replications. We will give more details in the partition replication section.
+</p>
+
+</div>
+
+<h4 id="topic_retention">Topic retention</h4>
+<div class="level4">
+
+<p>
+Retention is the durable storage of messages for some period of time. Kafka brokers are configured with a default retention setting for topics:
+</p>
+<ul>
+<li class="level1"><div class="li"> for some period of time (e.g., 7 days)</div>
+</li>
+<li class="level1"><div class="li"> for a certain size in bytes (e.g., 1 <abbr title="Gigabyte">GB</abbr>)</div>
+</li>
+</ul>
+
+<p>
+Once these limits are reached, messages are expired and deleted so that the retention configuration is a minimum amount of data available at any time. Individual topics can also be configured with their own retention settings.
+</p>
+
+<p>
+For example
+</p>
+<ol>
+<li class="level1"><div class="li"> a tracking topic might be retained for several days</div>
+</li>
+<li class="level1"><div class="li"> application metrics might be retained for only a few hours. </div>
+</li>
+<li class="level1"><div class="li"> Topics can also be configured as <strong>log compacted</strong>, which means that Kafka will retain only the last message produced with a specific key. This can be useful for changelog-type data, where only the last update is interesting.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.4 Topics and partition&quot;,&quot;hid&quot;:&quot;topics_and_partition&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;4692-6689&quot;} -->
+<h3 class="sectionedit8" id="stream">1.1.5 Stream</h3>
+<div class="level3">
+
+<p>
+The term stream is often used when discussing data within systems like Kafka. <strong>Most often, a stream is considered to be a single topic of data, regardless of the number of partitions. This represents a single stream of data moving from the producers to the consumers.</strong> This way of referring to messages is most common when discussing
+stream processing, which is when frameworks (e.g. Kafka Streams, Apache Samza, and Storm) operate on the messages in real-time. There is also batch processing which is when offline frameworks (e.g. Hadoop, hive) work on bulk data at a later time. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.5 Stream&quot;,&quot;hid&quot;:&quot;stream&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;6690-7298&quot;} -->
+<h3 class="sectionedit9" id="producers_and_consumers">1.1.6 Producers and Consumers</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="producer">Producer</h4>
+<div class="level4">
+
+<p>
+<strong>Producers create new messages. In general, a message will be written to a specific topic. By default, the producer does not care what partition</strong> a specific message is written to and will balance messages over all partitions of a topic evenly. 
+</p>
+
+<p>
+<strong>In some cases, the producer will direct messages to specific partitions by using the message key.</strong> A partitioner will generate a hash of the key and map it to a specific partition. This assures that all messages produced with a given key will get written to the same partition.
+</p>
+
+</div>
+
+<h4 id="consumer">Consumer</h4>
+<div class="level4">
+
+<p>
+<strong>Consumers read messages.</strong> The consumer subscribes to one or more topics and reads the messages in the order in which they were produced. The consumer keeps track of which messages it has already consumed by keeping track of the offset of messages. <strong>Each message in a given partition has a unique offset</strong>. By storing the offset of the last consumed message for each partition, either in Zookeeper or in Kafka itself, a consumer can stop and restart
+without losing its place.
+</p>
+
+</div>
+
+<h4 id="consumer_group">Consumer group</h4>
+<div class="level4">
+
+<p>
+消费者组就是让多个消费者并行消费信息而存在的，而且它们不会消费到同一个消息. 
+(not sure)A single consumer in a group does not track the offset of messages. The group do the track. 
+</p>
+<pre class="code">consumer group:a
+    consumerA
+    consumerB
+    consumerC</pre>
+
+</div>
+
+<h4 id="topic_log">Topic log</h4>
+<div class="level4">
+
+<p>
+<strong>A topic is associated with a log</strong> which is a data structure on disk. 
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>Records from a producer(s)</strong> are appended to the end of a topic log. <strong>A topic log consists of many partitions</strong> that are spread over multiple files which can be spread on multiple brokers. </div>
+</li>
+<li class="level1"><div class="li"> Consumers read from Kafka topics at their cadence and can pick where they are (offset) in the topic log. <strong>Each consumer group</strong> tracks offset from where they left off reading. </div>
+</li>
+</ol>
+
+<p>
+Kafka distributes topic log partitions on different nodes in a cluster for high performance with horizontal scalability. Spreading partitions aids in writing data quickly. Topic log partitions are Kafka way to shard reads and writes to the topic log. Also, partitions are needed to have multiple consumers in a consumer group work at the same time. Kafka replicates partitions to many nodes to provide failover.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_consumer_producer.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_consumer_producer.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=d44a06&amp;media=employes:pengfei.liu:data_science:kafka:kafka_consumer_producer.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.6 Producers and Consumers&quot;,&quot;hid&quot;:&quot;producers_and_consumers&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;7299-9668&quot;} -->
+<h3 class="sectionedit10" id="broker_and_cluster">1.1.7 Broker and cluster</h3>
+<div class="level3">
+
+<p>
+<strong>A single Kafka server is called a broker</strong>. The broker receives messages from producers, assigns offsets to them, and commits the messages to storage on disk. It also services consumers, responding to fetch requests for partitions and responding with the messages that have been committed to disk. Depending on the specific hardware and its performance characteristics, a single broker can easily handle thousands of partitions and millions of messages per second.
+</p>
+
+</div>
+
+<h4 id="controller">Controller</h4>
+<div class="level4">
+
+<p>
+<strong>Kafka brokers are designed to operate as part of a cluster.</strong> Within a cluster of brokers, <strong>one broker will also function as the cluster controller (first arrived broker is elected automatically).</strong> The controller is responsible for administrative operations, including assigning partitions to brokers and monitoring for broker failures. 
+</p>
+
+</div>
+
+<h4 id="leader">Leader</h4>
+<div class="level4">
+
+<p>
+A partition is owned by a single broker in the cluster, and that broker is called the leader broker of the partition. All consumers and producers operating on that partition must use the leader broker. A replication of the partition may be assigned to multiple brokers(as seen in Figure 1-7). This provides redundancy of messages in the partition, such that another broker can take over leadership if there is a broker failure. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_partition_replication.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_partition_replication.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=cd85ef&amp;media=employes:pengfei.liu:data_science:kafka:kafka_partition_replication.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.7 Broker and cluster&quot;,&quot;hid&quot;:&quot;broker_and_cluster&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;9669-11066&quot;} -->
+<h3 class="sectionedit11" id="multiple_clusters">1.1.8 Multiple Clusters</h3>
+<div class="level3">
+
+<p>
+As Kafka deployments grow, it is often advantageous to have multiple clusters. There are several reasons why this can be useful:
+</p>
+<ul>
+<li class="level1"><div class="li"> Segregation of types of data</div>
+</li>
+<li class="level1"><div class="li"> Isolation for security requirements</div>
+</li>
+<li class="level1"><div class="li"> Multiple datacenters (disaster recovery)</div>
+</li>
+</ul>
+
+<p>
+When working with multiple datacenters in particular, it is often required that messages be copied between them. In this way, online applications can have access to user activity at both sites. <strong>The replication mechanisms within the Kafka clusters are designed only to work within a single cluster, not between multiple clusters</strong>.
+</p>
+
+</div>
+
+<h4 id="mirrormaker">MirrorMaker</h4>
+<div class="level4">
+
+<p>
+The Kafka project includes a tool called MirrorMaker, used for this purpose. At its core, MirrorMaker is simply a Kafka consumer and producer, linked together with a queue. Messages are consumed from one Kafka cluster and produced for another.
+</p>
+
+<p>
+Figure 1-8 shows an example of an architecture that uses MirrorMaker, aggregating messages from two local clusters into an aggregate cluster, and then copying that cluster to other datacenters. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_mirror_maker.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_mirror_maker.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=3101d0&amp;media=employes:pengfei.liu:data_science:kafka:kafka_mirror_maker.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.8 Multiple Clusters&quot;,&quot;hid&quot;:&quot;multiple_clusters&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:11,&quot;range&quot;:&quot;11067-12219&quot;} -->
+<h3 class="sectionedit12" id="in-sync_replica_isr">1.1.9 In-Sync Replica (ISR)</h3>
+<div class="level3">
+
+<p>
+Kafka considers that <strong>a record/message is committed when all replicas in the In-Sync Replica set (ISR) have confirmed that they have written the record to disk.</strong> The acks=all setting requests that an ack is sent once all in-sync replicas (ISR) have the record.
+</p>
+
+</div>
+
+<h4 id="apache_kafka_ack-value_producer_config">1.1.9.1 Apache Kafka ack-value (Producer config)</h4>
+<div class="level4">
+
+<p>
+An acknowledgment (ACK) is a signal passed between communicating processes to signify acknowledgment, i.e., receipt of the message sent. <strong>The ack-value is a producer configuration parameter</strong> (So, you will not find it in the server.properties file) in Apache Kafka and can be set to the following values:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>acks=0</strong>: The producer never waits for an ack from the broker.<strong> No guarantee can be made that the broker has received the message</strong>. No retry to send the record again since the producer never knows that the record was lost. <strong>This setting provides lower latency and higher throughput at the cost of much higher risk of message loss</strong>.</div>
+</li>
+<li class="level1"><div class="li"> <strong>acks=1</strong>: The producer gets an ack after the leader has received the record. <strong>The leader will write the record to its log but will respond without awaiting a full acknowledgment from all followers</strong>. The message will be lost only if the leader fails immediately after acknowledging the record, but before the followers have replicated it. <strong>This setting is the middle ground for latency, throughput, and durability. It is slower but more durable than acks=0.</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>acks=all(or -1)</strong>: The producer gets an ack when all in-sync replicas have received the record. The leader will wait for the full set of in-sync replicas to acknowledge the record. <strong>This means that it takes a longer time to send a message with ack value all, but it gives the strongest message durability</strong>.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="what_is_the_isr_in-sync_replica">1.1.9.2 What is the ISR (In-Sync Replica)?</h4>
+<div class="level4">
+
+<p>
+The ISR is simply all the replicas of a partition that are “in-sync” with the leader. The definition of “in-sync” depends on the topic configuration, but by default, it means that a replica is or has been fully caught up with the leader in the last 10 seconds. The setting for this time period is: <strong>replica.lag.time.max.ms</strong> and has a server default which can be overridden on a per topic basis.
+</p>
+
+<p>
+PS: In Kafka 2.5, the default value of zookeeper.session.timeout.ms has been increased from 6s to 18s and <strong>replica.lag.time.max.ms from 10s to 30s</strong>.
+</p>
+
+<p>
+The ISR consists of <strong>the leader replica and any additional follower replicas that are also considered in-sync</strong>. Followers sends Fetch Requests periodically(by default every 500ms) to leader to sync replicate data. <strong>If a follower fails or lagging behind, after 10 seconds it will be removed from the ISR.</strong>
+</p>
+
+</div>
+
+<h4 id="what_is_isr_for">1.1.9.3 What is ISR for?</h4>
+<div class="level4">
+
+<p>
+The ISR acts as a tradeoff between data safety and latency. 
+</p>
+
+</div>
+
+<h4 id="isr_achilles_heel">1.1.9.4 ISR Achilles heel</h4>
+<div class="level4">
+
+<p>
+If all followers are going slow, then the ISR might only consist of the leader. So an acks=all message might get acknowledged when only a single replica (the leader) has it. To avoid this, the <strong>min-insync.replicas</strong> in broker/topic configuration needs to be set<strong> to (at least)2</strong> for example. If the ISR does shrink to one replica, then the incoming messages are rejected. It acts as a safety measure for when we care deeply about avoiding message loss.
+</p>
+
+<p>
+Note: <strong>The minimum number of in-sync replicas has nothing to do with the throughput</strong>. Setting the minimum number of in-sync replicas to larger than 1 may ensure less or no data loss, but throughput varies depending on the ack value configuration. The default minimum in-sync replicas number is 1.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1.9 In-Sync Replica (ISR)&quot;,&quot;hid&quot;:&quot;in-sync_replica_isr&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:12,&quot;range&quot;:&quot;12220-15816&quot;} -->
+<h2 class="sectionedit13" id="why_kafka">2. Why Kafka?</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Why Kafka?&quot;,&quot;hid&quot;:&quot;why_kafka&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:13,&quot;range&quot;:&quot;15817-15843&quot;} -->
+<h3 class="sectionedit14" id="multiple_producers">2.1 Multiple Producers</h3>
+<div class="level3">
+
+<p>
+Kafka is able to seamlessly handle multiple producers, whether those clients are using many topics or the same topic. This makes the system ideal for aggregating data from many frontend systems and making it consistent. 
+</p>
+
+<p>
+For example, a site that serves content to users via a number of microservices can have a single topic for page views that all services can write to using a common format. Consumer applications can then receive a single stream of page views for all applications on the site without having to coordinate consuming from multiple topics, one for each application. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Multiple Producers&quot;,&quot;hid&quot;:&quot;multiple_producers&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:14,&quot;range&quot;:&quot;15844-16462&quot;} -->
+<h3 class="sectionedit15" id="multiple_consumers">2.2 Multiple Consumers</h3>
+<div class="level3">
+
+<p>
+In addition to multiple producers, Kafka is designed for multiple consumers to read any single stream of messages without interfering with each other. <strong>This is in contrast to many queuing systems where once a message is consumed by one client, it is not available to any other.</strong> Multiple Kafka consumers can choose to operate as part of a
+group and share a stream, assuring that the entire group processes a given message only once.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Multiple Consumers&quot;,&quot;hid&quot;:&quot;multiple_consumers&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:15,&quot;range&quot;:&quot;16463-16933&quot;} -->
+<h3 class="sectionedit16" id="disk-based_retention">2.3 Disk-Based Retention</h3>
+<div class="level3">
+
+<p>
+Durable message retention means that <strong>consumers do not always need to work in real-time</strong>. Messages are committed to disk and will be stored with configurable retention rules. If a consumer falls behind or stopped, there is no danger of losing data or blocking the producer. Because the messages will be retained in Kafka. This allows consumers to restart and pick up processing messages where they left off with no data loss.
+</p>
+
+<p>
+To avoid large files in the file system which will reduce the read/write performance. Kafka set the maximum size for each topic log file. For example, A topic which has more than 100 million records is stored in three log file.
+The name of the log file is the starter offset of the record in each file. 
+</p>
+<pre class="code">00000000000000000000.index
+00000000000000000000.log
+00000000000000000000.timeindex
+
+00000000000005367851.index
+00000000000005367851.log
+00000000000005367851.timeindex
+
+00000000000009936472.index
+00000000000009936472.log
+00000000000009936472.timeindex</pre>
+
+<p>
+Kafka broker有一个参数，log.segment.bytes，限定了每个日志段文件的大小. You can set any size which is less than 1GB. 一个日志段文件满了，就自动开一个新的日志段文件来写入，避免单个文件过大，影响文件的读写性能，这个过程叫做<strong>log rolling</strong>，正在被写入的那个日志段文件，叫做<strong>active log segment</strong>。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 Disk-Based Retention&quot;,&quot;hid&quot;:&quot;disk-based_retention&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:16,&quot;range&quot;:&quot;16934-18356&quot;} -->
+<h3 class="sectionedit17" id="high_performence">2.4 High performence</h3>
+<div class="level3">
+
+<p>
+<strong>Kafka writes to filesystem sequentially</strong> which is fast. On a modern fast drive, Kafka can easily write up to 700 <abbr title="Megabyte">MB</abbr> or more bytes of data a second. (操作系统每次从磁盘读写数据的时候，需要先寻址，也就是先要找到数据在磁盘上的物理位置，然后再进行数据读写，如果是机械硬盘，寻址就需要较长的时间。kafka用的是<strong>顺序写</strong>，追加数据是追加到末尾，磁盘顺序写的性能极高，在磁盘个数一定，转数达到一定的情况下，基本和内存速度一致. <strong>随机写</strong>的话寻址就需要较长的时间，性能会较低)
+</p>
+
+<p>
+<strong>Kafka scales writes and reads by sharding topic logs into partitions</strong>. Recall topics logs can be split into multiple partitions which can be stored on multiple different servers, and those servers can use multiple disks. Multiple producers can write to different partitions of the same topic. Multiple consumers from multiple consumer groups can read from different partitions efficiently.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.4 High performence&quot;,&quot;hid&quot;:&quot;high_performence&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:17,&quot;range&quot;:&quot;18357-19399&quot;} -->
+<h3 class="sectionedit18" id="horizental_scalability">2.5 Horizental scalability</h3>
+<div class="level3">
+
+<p>
+Kafka’s flexible scalability makes it easy to handle any amount of data. Users can start with a single broker as a proof of concept, expand to a small development cluster of three brokers, and move into production with a larger cluster of tens or even hundreds of brokers that grows over time as the data scales up.
+</p>
+
+<p>
+<strong>Expansions can be performed while the cluster is online</strong>, with no impact on the availability of the system as a whole. This also means that a cluster of multiple brokers can handle the failure of an individual broker, and continue servicing clients. <strong>Clusters that need to tolerate more simultaneous failures can be configured with higher replication factors</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.5 Horizental scalability&quot;,&quot;hid&quot;:&quot;horizental_scalability&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:18,&quot;range&quot;:&quot;19400-20123&quot;} -->
+<h3 class="sectionedit19" id="kafka_uses_zero-copy_principal">2.6 Kafka uses zero-copy principal</h3>
+<div class="level3">
+
+<p>
+先来看看非零拷贝的情况，数据的拷贝从内存拷贝到kafka服务进程那块，又拷贝到socket缓存那块，整个过程耗费的时间比较高。
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_no_zero_copy.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_no_zero_copy.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=e8a7be&amp;media=employes:pengfei.liu:data_science:kafka:kafka_no_zero_copy.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+kafka利用了Linux的sendFile技术（NIO），省去了进程切换和一次数据拷贝，让性能变得更好
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_zero_copy.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_zero_copy.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=da737a&amp;media=employes:pengfei.liu:data_science:kafka:kafka_zero_copy.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+For more detail on zero-copy principal, plz visit <a href="/doku.php?id=employes:pengfei.liu:data_science:kafka:zero_copy" class="wikilink1" title="employes:pengfei.liu:data_science:kafka:zero_copy">Zero - Copy Principal</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.6 Kafka uses zero-copy principal&quot;,&quot;hid&quot;:&quot;kafka_uses_zero-copy_principal&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:19,&quot;range&quot;:&quot;20124-20727&quot;} -->
+<h2 class="sectionedit20" id="kafka_netwrok_architecture">3. Kafka netwrok architecture</h2>
+<div class="level2">
+
+<p>
+kafka的网络设计和Kafka的调优有关，这也是为什么它能支持高并发的原因
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Akafka%3Al01_basics&amp;media=employes:pengfei.liu:data_science:kafka:kafka_broker_architecture.png" class="media" title="employes:pengfei.liu:data_science:kafka:kafka_broker_architecture.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=51b2fe&amp;media=employes:pengfei.liu:data_science:kafka:kafka_broker_architecture.png" class="media" alt="" width="600" /></a>
+</p>
+<ol>
+<li class="level1"><div class="li"> 首先客户端发送请求全部会由Acceptor来处理，一个broker里面会存在n个processor线程（默认是3个。Acceptor不会对客户端的请求做任何的处理，直接封装成一个个socketChannel发送给这些processor形成一个队列，发送的方式是轮询（roundrobin），就是先给第一个processor发送，然后再给第二个，第三个，然后又回到第一个。</div>
+</li>
+<li class="level1"><div class="li"> 消费者线程去消费这些socketChannel时，会获取一个个request请求，这些request请求中就会伴随着数据。线程池里面默认有8个线程，这些线程是用来处理request的，解析请求，如果request是写请求，就写到磁盘里。读的话返回结果。</div>
+</li>
+<li class="level1"><div class="li"> processor会从response中读取响应数据，然后再返回给客户端。</div>
+</li>
+</ol>
+
+<p>
+这就是Kafka的网络三层架构。所以如果我们需要对kafka进行增强调优，增加processor并增加线程池里面的处理线程，就可以达到效果。request和response那一块部分其实就是起到了一个缓存的效果，是考虑到processor们生成请求太快，线程数不够不能及时处理的问题。
+</p>
+
+<p>
+所以这就是一个加强版的reactor网络线程模型。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Kafka netwrok architecture&quot;,&quot;hid&quot;:&quot;kafka_netwrok_architecture&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:20,&quot;range&quot;:&quot;20728-&quot;} -->

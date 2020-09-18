@@ -1,0 +1,4 @@
+# Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ echo &quot;mptctl&quot; &gt;&gt; /etc/modules # Pour une raison obscure et si l'on ne veut pas être assailli d'e-mails

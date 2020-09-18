@@ -1,0 +1,8 @@
+<span class="co4">/**
+ * Workpackage
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass=&quot;BS\BiospecimensBundle\Entity\WorkpackageRepository&quot;)
+ */</span>
+<span class="kw2">class</span> Workpackage<span class="br0">&#123;</span>
+<span class="br0">&#125;</span>

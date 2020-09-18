@@ -1,0 +1,76 @@
+
+<h1 class="sectionedit1" id="wwwblast">wwwblast</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "wwwblast" [1-24] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2.2.26</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://openwetware.org/wiki/Wwwblast" class="urlextern" title="http://openwetware.org/wiki/Wwwblast"  rel="nofollow">http://openwetware.org/wiki/Wwwblast</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : A wwwblast installation allows a researcher to use BLAST to search a sequence database using a graphical user interface.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [25-308] -->
+<h2 class="sectionedit3" id="commentaires">Commentaires</h2>
+<div class="level2">
+
+<p>
+Le “logiciel” est plus que dépassé. L&#039;auteur avoue lui même utiliser <a href="/in2p3/logiciels/sequenceserver" class="wikilink1" title="in2p3:logiciels:sequenceserver">SequenceServer</a>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Commentaires" [309-459] -->
+<h2 class="sectionedit4" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+Le logiciel a besoin de la commande <strong>tcsh</strong> car les scripts cgi sont écrits dans ce langage.
+</p>
+<pre class="code">yum install tcsh
+cd /usr/local
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/wwwblast-2.2.26-x64-linux.tar.gz
+tar xvzf wwwblast-2.2.26-x64-linux.tar.gz
+mv blast wwwblast</pre>
+
+</div>
+<!-- EDIT4 SECTION "Installation" [460-786] -->
+<h2 class="sectionedit5" id="integration">Intégration</h2>
+<div class="level2">
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/wwwblast?codeblock=1" title="Download Snippet" class="mediafile mf_conf_">&quot;/etc/httpd/conf.d/welcome.conf&quot;</a></dt>
+<dd><pre class="code apache">&lt;<span class="kw3">VirtualHost</span> *:<span class="nu0">80</span>&gt;
+    <span class="kw1">ServerName</span> wwwblast.bioaster.org
+    <span class="kw1">DocumentRoot</span> /usr/local/wwwblast
+&nbsp;
+    <span class="kw1">SetEnv</span> BLASTDB /sps/inter/bioaster/db/blast/
+&nbsp;
+    <span class="co1"># Paths to resources are hardcoded as &quot;../blast/&quot;</span>
+    <span class="kw1">Alias</span> /blast /var/www/wwwblast 
+&nbsp;
+    &lt;<span class="kw3">Directory</span> /usr/local/wwwblast&gt;
+        <span class="kw1">Options</span> <span class="kw2">FollowSymLinks</span> ExecCGI
+        <span class="kw1">DirectoryIndex</span> index.html index.cgi
+        <span class="kw1">AddHandler</span> cgi-<span class="kw1">script</span> .cgi .pl
+    &lt;/<span class="kw3">Directory</span>&gt;
+&lt;/<span class="kw3">VirtualHost</span>&gt;</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT5 SECTION "Intégration" [787-1305] -->
+<h2 class="sectionedit6" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.02.28 (tlc)</strong> Version 2.2.6 installée</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Log" [1306-] -->

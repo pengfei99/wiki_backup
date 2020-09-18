@@ -1,0 +1,264 @@
+
+<h1 class="sectionedit1" id="machine_learning_introduction">Machine learning Introduction</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Machine learning Introduction" [1-45] -->
+<h2 class="sectionedit2" id="what_is_machine_learning">what is Machine learning?</h2>
+<div class="level2">
+
+<p>
+The first definition given by by Arthur Samuel in 1959: “Machine Learning is the field of study that gives computers the ability to learn without being explicitly programmed.”
+</p>
+
+<p>
+And more recently, in 1997, Tom Mitchell gave a “well-posed” definition that has proven more useful to engineering types: “A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.”
+</p>
+
+<p>
+“A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.” – Tom Mitchell, Carnegie Mellon University
+</p>
+
+</div>
+<!-- EDIT2 SECTION "what is Machine learning?" [46-821] -->
+<h2 class="sectionedit3" id="examples_of_machine_learning_problems_include">Examples of machine learning problems include,</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> “Is this cancer?”, </div>
+</li>
+<li class="level1"><div class="li"> “What is the market value of this house?”, </div>
+</li>
+<li class="level1"><div class="li"> “Which of these people are good friends with each other?”, </div>
+</li>
+<li class="level1"><div class="li"> “Will this rocket engine explode on take off?”, </div>
+</li>
+<li class="level1"><div class="li"> “Will this person like this movie?”, </div>
+</li>
+<li class="level1"><div class="li"> “How do you fly this thing?”. </div>
+</li>
+</ul>
+
+<p>
+All of these problems are excellent targets for an ML project, and in fact ML has been applied to each of them with great success.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Examples of machine learning problems include," [822-1306] -->
+<h2 class="sectionedit4" id="different_machine_learning_types">Different machine learning types</h2>
+<div class="level2">
+
+<p>
+Among the different types of ML tasks, a crucial distinction is drawn between supervised and unsupervised learning:
+</p>
+<ul>
+<li class="level1"><div class="li"> Supervised machine learning: The program is “trained” on a pre-defined set of “training examples”, which then facilitate its ability to reach an accurate conclusion when given new data.</div>
+</li>
+<li class="level1"><div class="li"> Unsupervised machine learning: The program is given a bunch of data and must find patterns and relationships therein.</div>
+</li>
+</ul>
+
+<p>
+There are other more complex types of ML,
+</p>
+<ul>
+<li class="level1"><div class="li"> Reinforcement learning from </div>
+</li>
+<li class="level1"><div class="li"> Deep learning</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Different machine learning types" [1307-1886] -->
+<h2 class="sectionedit5" id="different_machine_learning_algo">Different machine learning algo</h2>
+<div class="level2">
+
+<p>
+The common used algorithm in ML
+</p>
+<ul>
+<li class="level1"><div class="li"> Linear regression</div>
+</li>
+<li class="level1"><div class="li"> Logistic regression</div>
+</li>
+<li class="level1"><div class="li"> Decision Tree</div>
+</li>
+<li class="level1"><div class="li"> Support Vector machine (SVM)</div>
+</li>
+<li class="level1"><div class="li"> Naive Bayes classifiers</div>
+</li>
+<li class="level1"><div class="li"> K-NearestNeighbor (KNN)</div>
+</li>
+<li class="level1"><div class="li"> K-means clustering</div>
+</li>
+<li class="level1"><div class="li"> Random decision forests</div>
+</li>
+<li class="level1"><div class="li"> Dimension reduction (Two branch: Feature selection and Feature extraction)</div>
+</li>
+<li class="level1"><div class="li"> Gradient Boost </div>
+</li>
+<li class="level1"><div class="li"> Adaboost</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Different machine learning algo" [1887-2283] -->
+<h2 class="sectionedit6" id="supervised_machine_learning">Supervised Machine Learning</h2>
+<div class="level2">
+
+<p>
+In the majority of supervised learning applications, the ultimate goal is to develop a finely tuned predictor function h(x) (sometimes called the “hypothesis”). “Learning” consists of using sophisticated mathematical algorithms to optimize this function so that, given input data x about a certain domain (say, square footage of a house), it will accurately predict some interesting value h(x) (say, market price for said house).
+</p>
+
+<p>
+In practice, x almost always represents multiple data points. So, for example, a housing price predictor might take not only square-footage (x1) but also number of bedrooms (x2), number of bathrooms (x3), number of floors (x4), year built (x5), zip code (x6), and so forth. Determining which inputs to use is an important part of ML design. However, for the sake of explanation, it is easiest to assume a single input value is used.
+</p>
+
+<p>
+So let’s say our simple predictor has this form:
+</p>
+
+<p>
+h of x equals theta 0 plus theta 1 times x : h(x)=T0+T1x
+</p>
+
+<p>
+where theta 0 (T0) and theta 1 (T1) are constants. Our goal is to find the perfect values of theta 0 and theta 1 to make our predictor work as well as possible.
+</p>
+
+<p>
+Optimizing the predictor h(x) is done using training examples. For each training example, we have an input value x_train, for which a corresponding output, y, is known in advance. 
+For each example, we find the difference between the known, correct value y, and our predicted value h(x_train). With enough training examples, these differences give us a useful way to measure the “wrongness” of h(x). 
+We can then tweak h(x) by tweaking the values of theta 0 and theta 1 to make it “less wrong”. This process is repeated over and over until the system has converged on the best values for theta 0 and theta 1. In this way, 
+the predictor becomes trained, and is ready to do some real-world predicting.
+</p>
+
+<p>
+Machine Learning Regression: A Note on Complexity
+</p>
+
+<p>
+The above example is technically a simple problem of univariate linear regression, which in reality can be solved by deriving a simple normal equation and skipping this “tuning” process altogether. However, consider a predictor that looks like this:
+</p>
+
+<p>
+Four dimensional equation example
+</p>
+
+<p>
+This function takes input in four dimensions and has a variety of polynomial terms. Deriving a normal equation for this function is a significant challenge. Many modern machine learning problems take thousands or even millions of dimensions of data to build predictions using hundreds of coefficients. Predicting how an organism’s genome will be expressed, or what the climate will be like in fifty years, are examples of such complex problems.
+</p>
+
+<p>
+Many modern ML problems take thousands or even millions of dimensions of data to build predictions using hundreds of coefficients.
+Fortunately, the iterative approach taken by ML systems is much more resilient in the face of such complexity. Instead of using brute force, a machine learning system “feels its way” to the answer. For big problems, this works much better. While this doesn’t mean that ML can solve all arbitrarily complex problems (it can’t), it does make for an incredibly flexible and powerful tool.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Supervised Machine Learning" [2284-5500] -->
+<h3 class="sectionedit7" id="two_major_subcategories_of_supervised_machine_learning">Two major subcategories of supervised Machine learning</h3>
+<div class="level3">
+
+<p>
+Under supervised ML, two major subcategories are:
+</p>
+
+<p>
+- Regression machine learning systems: Systems where the value being predicted falls somewhere on a continuous spectrum. These systems help us with questions of “How much?” or “How many?”.
+</p>
+
+<p>
+- Classification machine learning systems: Systems where we seek a yes-or-no prediction, such as “Is this tumer cancerous?”, “Does this cookie meet our quality standards?”, and so on.
+</p>
+
+</div>
+
+<h4 id="classification_problems_in_supervised_machine_learning">Classification problems in supervised Machine learning</h4>
+<div class="level4">
+
+<p>
+In classification, a regression predictor is not very useful. What we usually want is a predictor that makes a guess somewhere between 0 and 1. In a cookie quality classifier, a prediction of 1 would represent a very confident guess that the cookie is perfect and utterly mouthwatering. A prediction of 0 represents high confidence that the cookie is an embarrassment to the cookie industry. Values falling within this range represent less confidence, so we might design our system such that prediction of 0.6 means “Man, that’s a tough call, but I’m gonna go with yes, you can sell that cookie,” while a value exactly in the middle, at 0.5, might represent complete uncertainty. This isn’t always how confidence is distributed in a classifier but it’s a very common design and works for purposes of our illustration.
+</p>
+
+<p>
+It turns out there’s a nice function that captures this behavior well. It’s called the sigmoid function, g(z), and it looks something like this:
+</p>
+
+<p>
+h of x equals g of z.
+</p>
+
+</div>
+
+<h5 id="classification_work_flow">Classification work flow</h5>
+<div class="level5">
+
+<p>
+Identify feature data → prepare training data → train the classifier → test the accuracy of the classifier → if bad accuracy, add new feature or remove bad feature data and repeat the process. 
+</p>
+
+</div>
+
+<h5 id="features_selection_classification_problems">features selection Classification problems</h5>
+<div class="level5">
+
+<p>
+- informative : The feature data must help classifier to separate different class. Like skin color of appel and orange can be usefull feature. But color of strawberry and cherry are not usefull feature data.
+</p>
+
+<p>
+- independent : Each feature data must be independent. For example, if we have weight of orange and appel in kg and g both as feature data. The classifier may take weight more than it is. This can make classifier inaccurate. 
+</p>
+
+<p>
+- simple : Simple feature data can make classifier more accurate. for example, the distance of two city is  the feature data to determine how long a mail will arrive. If you replace distance by gps location. It will be harder for classifier to determine how long.
+</p>
+
+</div>
+
+<h4 id="regression_problems_in_supervised_machine_learning">Regression problems in supervised machine learning</h4>
+<div class="level4">
+
+</div>
+<!-- EDIT7 SECTION "Two major subcategories of supervised Machine learning" [5501-8125] -->
+<h3 class="sectionedit8" id="most_common_used_algo_in_sml">Most common used algo in sml:</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Linear regression</div>
+</li>
+<li class="level1"><div class="li"> Logistic regression</div>
+</li>
+<li class="level1"><div class="li"> Decision Tree</div>
+</li>
+<li class="level1"><div class="li"> Support Vector machine (SVM)</div>
+</li>
+<li class="level1"><div class="li"> KNN</div>
+</li>
+<li class="level1"><div class="li"> Random forest</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Most common used algo in sml:" [8126-8291] -->
+<h2 class="sectionedit9" id="unsupervised_machine_learning">Unsupervised Machine Learning</h2>
+<div class="level2">
+
+<p>
+Unsupervised machine learning is typically tasked with finding relationships within data. There are no training examples used in this process. Instead, the system is given a set data and tasked with finding patterns and correlations therein. A good example is identifying close-knit groups of friends in social network data.
+</p>
+
+<p>
+The Machine Learning algorithms used to do this are very different from those used for supervised learning, and the topic merits its own post. However, for something to chew on in the meantime, take a look at clustering algorithms such as k-means, and also look into dimensionality reduction systems such as principle component analysis. Our prior post on big data discusses a number of these topics in more detail as well.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Unsupervised Machine Learning" [8292-9086] -->
+<h2 class="sectionedit10" id="deep_learning">Deep learning</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT10 SECTION "Deep learning" [9087-9113] -->
+<h2 class="sectionedit11" id="reinforced_learning">Reinforced learning</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT11 SECTION "Reinforced learning" [9114-] -->

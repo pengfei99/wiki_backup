@@ -1,0 +1,8 @@
+&lt;VirtualHost *:80&gt;
+ServerName blast.paris.bioaster.org
+DocumentRoot /var/www/sequenceserver
+&lt;Directory var/www/sequenceserver&gt;
+        Allow from all
+        Options -MultiViews
+&lt;/Directory&gt;
+&lt;/VirtualHost&gt;

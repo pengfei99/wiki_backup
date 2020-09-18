@@ -1,0 +1,40 @@
+====== FreeBayes ======
+
+===== Informations =====
+
+  * **Version** : v0.9.14-18-g36789d8
+  * **Licence** : MIT
+  * **Page Web** : [[https://github.com/ekg/freebayes]]
+  * **Description** : FreeBayes is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs (single-nucleotide polymorphisms), indels (insertions and deletions), MNPs (multi-nucleotide polymorphisms), and complex events (composite insertion and substitution events) smaller than the length of a short-read sequencing alignment.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-4/freebayes/v0.9.14-18-g36789d8"
+mkdir -p $APP
+cd $SOFTWARE/src
+git clone --recursive git://github.com/ekg/freebayes.git
+make
+mv bin $APP/
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Bayesian genetic variant detector\n"
+}
+
+set version "v0.9.14-18-g36789d8"
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-4/freebayes/${version}"
+
+prepend-path PATH "${app}/bin"
+</code>
+
+===== Log =====
+
+  * **2014.06.11 (tlc)** Version v0.9.14-18-g36789d8 installée

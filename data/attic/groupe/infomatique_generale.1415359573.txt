@@ -1,0 +1,22 @@
+===== HOWTOs / documentations de services =====
+
+==== Jabber / XMPP / Prosody ====
+
+Le serveur est ccbioappl01.in2p3.fr\\
+On ne l'accède pas directement mais en rebond sur ccbiowiki1.in2p3.fr\\
+
+=== Ajout d'un utilisateur ===
+
+sudo prosody adduser jean.dupot@bioaster.org \\
+
+=== Modification d'un mot de passe ===
+
+sudo prosodyctl passwd jean.dupot@bioaster.org\\
+
+=== Destruction d'un compte ===
+
+sudo prosodyctl deluser jean.dupot@bioaster.org\\
+
+=== Liste des utilisateurs ===
+
+sudo prosodyctl mod_listusers\\

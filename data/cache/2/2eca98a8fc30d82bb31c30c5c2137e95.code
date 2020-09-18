@@ -1,0 +1,44 @@
+<span class="co3">/**
+ * 
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.concurrent.CountDownLatch</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.AsyncCallback.StatCallback</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.WatchedEvent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * @author bpaikay
+ *
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKWatcher <span class="kw1">implements</span> Watcher, StatCallback <span class="br0">&#123;</span>
+	CountDownLatch latch<span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * 
+	 */</span>
+	<span class="kw1">public</span> ZKWatcher<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		latch <span class="sy0">=</span> <span class="kw1">new</span> CountDownLatch<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> processResult<span class="br0">&#40;</span><span class="kw4">int</span> rc, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> ctx, Stat stat<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// TODO Auto-generated method stub</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> process<span class="br0">&#40;</span>WatchedEvent event<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		 <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Watcher fired on path: &quot;</span> <span class="sy0">+</span> event.<span class="me1">getPath</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; state: &quot;</span> <span class="sy0">+</span> 
+                 event.<span class="me1">getState</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; type &quot;</span> <span class="sy0">+</span> event.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         latch.<span class="me1">countDown</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> await<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+         latch.<span class="me1">await</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+     <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

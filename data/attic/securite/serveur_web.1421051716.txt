@@ -1,0 +1,53 @@
+====== Configurer un serveur web ======
+
+===== Lighttpd =====
+
+[[http://www.lighttpd.net|Lighttpd]] est utilisé pour servir du contenu sur le réseau. Il est configuré pour utilisé le protocole **HTTPS** avec les [[securite:certification|certificats émis par le CA de BIOASTER]].
+
+<code text /etc/lighttpd/lighttpd.conf>
+ssl.engine = "enable"
+ssl.pemfile = "/path/to/certificate+key-combined.pem"
+</code>
+
+<code text /etc/lighttpd/conf-enabled/20-server.tld.conf>
+$SERVEUR["socket"] == ":443" {
+   server.name = "serveur.tld"
+   server.document-root = "/var/www"
+   ssl.engine = "enable"
+   ssl.pemfile = "/path/to/certificate+key-combined.pem"
+        
+   ssl.verifyclient.exportcert = "enable"
+   ssl.verifyclient.activate   = "enable"
+   ssl.verifyclient.username   = "SSL_CLIENT_S_DN_CN" # PHP: $_SERVER['SSL_CLIENT_S_DN_EMAILADDRESS']
+   ssl.verifyclient.enforce    = "enable"
+   ssl.verifyclient.depth      = 3
+   ssl.ca-file                 = "/etc/ssl/crt/trusted_certificates.pem"
+}
+</code>
+
+**Attention :** Le fichier ''trusted_certificate.pem'' doit contenir tous les certificats de confiance pour la vérification des certificats clients ! [[securite/certificats_de_confiance|Une page est dédiée]] à sa génération en fonction de l'OS.
+
+===== Apache2 =====
+
+Une configuration possible copiée d'[[http://www.freebsddiary.org/openssl-client-authentication.php|un article de FreeBDS]] :
+
+<code>
+SSLEngine       on
+SSLProtocol     all
+SSLCipherSuite  HIGH:MEDIUM
+
+SSLCertificateFile      /usr/local/etc/apache/ssl.crt/server_cert.pem
+SSLCertificateKeyFile   /usr/local/etc/apache/ssl.key/server_key.pem
+
+SSLVerifyClient none
+
+SSLCACertificatePath    configuration/certificates
+SSLCACertificateFile    configuration/certificates/cacert.pem
+
+<Location /stuff>
+     SSLVerifyClient require
+     SSLVerifyDepth  1
+</Location>
+</code>
+
+La directive pointant vers le fichier de certificat est ''SSLCACertificateFile''. Ce fichier contient la concaténation de tous les certificats de confiance.

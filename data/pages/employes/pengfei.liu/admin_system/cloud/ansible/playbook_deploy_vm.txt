@@ -1,0 +1,52 @@
+====== Use ansible to create vm in openstack ======
+
+1. Pre-requisites
+
+    * Openstack client (To see your current version nova --version)
+
+2. Configure your hosts or your inventory
+
+  You need to connect to a server which has openstack client and can connect to your hyperviser openstack.
+  
+  For example we have a server, we will call it ansible_master
+  
+<code>  
+[ansible_master]
+134.158.37.4 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=<keyPath>
+</code>
+You should have a line in your hosts or inventory like this.
+
+
+PS. check before if you can ssh to the server
+
+3. Get the playbook
+
+The playbook is available in https://github.com/pengfei99/Dev_Ops/tree/master/VM_Management/playbook-openstack
+
+Download playbook-openstack.
+
+4. run the playbook
+
+''$ ansible-playbook site.yml''
+
+====== Use ansible to create vm in vmware ======
+
+1. Pre-requisites
+
+  * Make sure your server can connect to vcenter.bioaster.local.
+  * Install pysphere 0.1.7 or higher
+
+2. Configure your hosts or your inventory
+
+  See the section above
+  
+3. Get the playbook
+
+The playbook is available in https://github.com/pengfei99/Dev_Ops/tree/master/VM_Management/playbook-vmware
+
+Download playbook-vmware.
+
+4. run the playbook
+
+''$ ansible-playbook site.yml''
+

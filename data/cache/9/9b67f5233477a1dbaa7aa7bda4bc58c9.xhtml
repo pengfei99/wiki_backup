@@ -1,0 +1,423 @@
+
+<h1 class="sectionedit1" id="gestion_des_utilisateurs">Gestion des utilisateurs</h1>
+<div class="level1">
+
+<p>
+La plateforme est accessible aussi bien au personnel de Bioaster qu&#039;à des personnes extérieures impliquées dans des projets collaboratifs de Bioaster. En fonction de son appartenance à une UTEC, une UTEM, un partenaire ou un projet, l&#039;utilisateur se voit attribuer des droits sur des ressources/outils de calcul, des données, des modules ou des outils/applications.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap"><ul>
+<li class="level1"><div class="li"> <strong>NS :</strong> J&#039;ai rapidement discuté avec MR. A priori, on a officiellement le droit d&#039;accéder à l&#039;AD et de créer des groupes. Voir des utilisateurs. En ce qui concerne l&#039;ajout d&#039;attribut, il faut voir lesquels ont besoins d&#039;être ajoutés, si on peut le faire en batch et en discuter avec MR+LCO avant de se lancer.</div>
+</li>
+<li class="level1"><div class="li"> <strong>NS :</strong> Il faut vérfier comment ajouter un partenaire extérieur dans l&#039;AD, donc une personne avec une adresse non bioaster.org.</div>
+</li>
+<li class="level1"><div class="li"> <strong>NS :</strong> On part du principe que l&#039;on s&#039;appuie autant que possible sur l&#039;AD, donc d&#039;éviter autant que possible de créer un second annuaire spécifique. </div>
+</li>
+</ul>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Gestion des utilisateurs" [1-1060] -->
+<h3 class="sectionedit4" id="user_stories">User stories</h3>
+<div class="level3">
+<!-- EDIT5 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>[TLC]</strong> On va dire que je pinaille, mais je ne pense pas qu&#039;on puisse appeler ces “phrases” des <em>user stories</em>. Celles-ci doivent en effet être de la forme :
+</p>
+<pre class="code">  As a (role), I want (feature), so that (benefit).</pre>
+
+<p>
+Pour prendre un exemple concret, on pourrait écrire :
+</p>
+<pre class="code">  En tant qu&#039;administrateur, je veux pouvoir supprimer un compte utilisateur, de cette manière cette utilisateur ne pourra plus se logguer.</pre>
+
+<p>
+Mais cela n&#039;enlève rien a ton inventaire, c&#039;est juste l&#039;utilisation du terme <em>user stories</em> que je ne trouve pas approprié.
+</p>
+</div><!-- EDIT6 PLUGIN_WRAP_END [0-] -->
+</div>
+
+<h5 id="authentification">Authentification</h5>
+<div class="level5">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur doit pouvoir s’authentifier avec un login/mot de passe </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Un utilisateur doit pouvoir s’authentifier avec un certificat (StartSSL, CaCert, …)  </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Un utilisateur doit pouvoir réinitialiser son mot de passe avec une confirmation envoyée par email </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur doit être averti de la politique de gestion des cookies appliquée sur la plateforme </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Un utilisateur doit pouvoir consulter les mentions légales applicables sur la plateforme </td><td class="col1"> UTEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT7 TABLE [1690-2236] -->
+</div>
+
+<h5 id="gestion_des_droits_autorisation">Gestion des droits, autorisation</h5>
+<div class="level5">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur peut avoir accès à 0 ou à plusieurs applications </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur doit pouvoir visualiser ses droits d’accès aux applications </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Un utilisateur doit pouvoir faire une demande d’accès (en ligne) à une application  </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs UTECs </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs UTEMs </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs projets </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Un utilisateur doit pouvoir explorer l’espace GPFS de ses UTECs/UTEMs/projets (lecture seule ?) </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Chaque UTEC/UTEM/projet a au moins un utilisateur référent </td><td class="col1"> UTEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT8 TABLE [2278-2978] -->
+</div>
+
+<h5 id="administration">Administration</h5>
+<div class="level5">
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur ne choisit pas son mot de passe, il est généré à partir d’algorithme qui en gère la complexité </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur ne peut pas être supprimé. Si un utilisateur doit être supprimé, la date de suppression de son compte et la raison de suppression doivent être renseignées, le champ « actif » de son profil doit être positionné à « False » </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">L’utilisateur référant d’une entité est obligatoirement un employé de Bioaster </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur référent à des droits d&#039;administration des utilisateurs sur l&#039;entité qu&#039;il gère </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Lorsqu’un utilisateur est rattaché ou détaché d’une entité (UTEC/UTEM/projet), l’utilisateur référant de l’entité est notifié par mail </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Un administrateur doit pouvoir allouer/révoquer des droits sur une application à un utilisateur </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Un administrateur doit pouvoir visualiser toutes les demandes de réinitialisation de mot de passe </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Un administrateur doit pouvoir visualiser l’historique des connexions d’un utilisateur donné </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">Un administrateur doit pouvoir bloquer l&#039;accès complet ou partiel (à une entité) à un utilisateur </td><td class="col1"> UEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT9 TABLE [3003-4243] -->
+</div>
+<!-- EDIT4 SECTION "User stories" [1061-4246] -->
+<h3 class="sectionedit10" id="dictionnaire_et_modele_de_donnees">Dictionnaire et modèle de données</h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>Structure d&#039;un utilisateur :</strong></em>
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">id </td><td class="col1"> Identifiant </td><td class="col2 leftalign"> Identifiant unique de l’utilisateur	</td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">first_name </td><td class="col1"> Prénom </td><td class="col2"> Prénom de l’utilisateur </td><td class="col3"> Texte (100) </td><td class="col4"> Oui </td><td class="col5"> Ex : Anatole </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">last_name </td><td class="col1"> Nom </td><td class="col2 leftalign"> Nom de l’utilisateur	</td><td class="col3"> Texte (100) </td><td class="col4"> Oui </td><td class="col5"> Ex : France </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">email </td><td class="col1"> Email </td><td class="col2"> Email de l’utilisateur. Si utilisateur Bioaster forcément @bioaster.org </td><td class="col3 leftalign"> Texte (256)	</td><td class="col4"> Oui </td><td class="col5"> Format d’email valide (voir regexp/validator) </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">dn </td><td class="col1"> Nom distinctif </td><td class="col2"> Distinguished name du certificat de l’utilisateur </td><td class="col3"> Texte (256) </td><td class="col4"> Non </td><td class="col5">Sensé être unique car contient l’email. Todo : trouver regexp pour validateur </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">active </td><td class="col1"> Utilisateur actif </td><td class="col2"> Est-ce-que l’utilisateur a le droit de se connecter (ce champ servira à bloquer un utilisateur) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">password </td><td class="col1"> Mot de passe </td><td class="col2"> Mot de passe d’authentification  de l’utilisateur </td><td class="col3"> Texte (8-12) ? </td><td class="col4">Oui </td><td class="col5">Imposer des règles de complexité ? Ne peut être généré que par un algorithme ?</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">last_update </td><td class="col1"> Date de dernière modification </td><td class="col2"> Date de dernière modification des données du profil de l’utilisateur </td><td class="col3">Date </td><td class="col4"> Oui </td><td class="col5"> Automatique </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">creation_date </td><td class="col1"> Date de création </td><td class="col2"> Date de la création du profil de l’utilisateur </td><td class="col3"> Date </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">supression_date </td><td class="col1"> Date de suppression </td><td class="col2"> Date de la suppression du profil de l’utilisateur </td><td class="col3"> Date </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0">suppression_reason </td><td class="col1"> Motif de suppression </td><td class="col2 leftalign"> Motif pour lequel le compte a été supprimé	</td><td class="col3"> Texte (taille ?)</td><td class="col4"> Non </td><td class="col5">Champ libre ou liste de valeur possible : bannissement, a quitté Bioaster, …</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0">super_user </td><td class="col1 leftalign"> Super utilisateur	</td><td class="col2"> Donne accès à toutes les applications avec tous les droits (réservé aux administrateurs) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0">phone_number </td><td class="col1"> Numéro de téléphone </td><td class="col2"> Numéro de téléphone de l’utilisateur </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Trouvé regexp ou validateur « phone number »</td>
+	</tr>
+	<tr class="row14">
+		<td class="col0">uid </td><td class="col1">Identifiant AFS </td><td class="col2"> Identifiant AFS (uid) de l’utilisateur </td><td class="col3"> Numérique </td><td class="col4"> Non </td><td class="col5"> Pour le montage à la volée de l’espace AFS. Ex : 1789 </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0">afs_login </td><td class="col1"> Login AFS </td><td class="col2"> Login AFS de l&#039;utilisateur </td><td class="col3"> texte (8 ?) </td><td class="col4"> Non </td><td class="col5"> Ex : pveyre </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0">afs_path </td><td class="col1"> Racine AFS </td><td class="col2"> Répertoire racine de l’utilisateur sur l’espace AFS </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0">corporate </td><td class="col1"> Utilisateur Bioaster </td><td class="col2">L’utilisateur est-il un employé de Bioaster </td><td class="col3"> Booléen </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+</table></div>
+<!-- EDIT11 TABLE [4332-6670] -->
+<p>
+<em class="u"><strong>Structure d&#039;une UTEC :</strong></em>
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique de l’UTEC </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">code </td><td class="col1"> Code </td><td class="col2"> Code de l’UTEC </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Exemple : UTEC-1 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">nom </td><td class="col1"> Nom </td><td class="col2"> Nom complet de l’UTEC </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5">Exemple : Collections d’échantillons biologiques </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">gpfs_path </td><td class="col1"> Racine GPFS </td><td class="col2"> Répertoire racine de l’UTEC sur l’espace de stockage GPFS </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /sps/bioaster/UTEC1 ou juste const racine bioster + /UTEC1 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">lyon_volume</td><td class="col1"> Nom du volume sur la baie EMC à BIOASTER1 </td><td class="col2"> texte </td><td class="col3"> non </td><td class="col4"> Le volume sert de stockage temporaire et d&#039;espace de travail </td><td class="col5"></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Lyon_path </td><td class="col1"> Racine  sur le volume de l&#039;UTEC </td><td class="col2"> Répertoire racine de l’UTEC sur son volume de travail </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /UTEC1 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">villeurbanne_volume </td><td class="col1"> Nom du volume sur la baie EMC au CCIN2P3 </td><td class="col2"> texte </td><td class="col3"> non </td><td class="col4"> Le volume sert de stockage temporaire et d&#039;espace de travail </td><td class="col5"></td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">villeurbanne_path </td><td class="col1"> Racine  sur le volume de l&#039;UTEC </td><td class="col2"> Répertoire racine de l’UTEC sur son volume de travail </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /UTEC1 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">paris_volume </td><td class="col1"> Nom du volume sur la baie EMC à Paris </td><td class="col2"> texte </td><td class="col3"> non </td><td class="col4"> non disponible à ce jour </td><td class="col5"></td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">Paris_path </td><td class="col1"> Racine  sur le volume de l&#039;UTEC </td><td class="col2"> Répertoire racine de l’UTEC sur son volume de travail </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /UTEC1 </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign">email	</td><td class="col1 leftalign"> Email	</td><td class="col2 leftalign"> Alias mail de l’UTEC	</td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5 rightalign">	Validateur mail </td>
+	</tr>
+</table></div>
+<!-- EDIT12 TABLE [6705-8102] --><!-- EDIT13 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap" style="width: 40%;">
+<p>
+<strong>NS:</strong> J&#039;ai rajouté les espaces de travail sur les baies EMC à Lyon, Villeurbanne et Paris. Est-ce une bonne idée? Cette espace n&#039;existe que pour usage interne aux UTECS.
+</p>
+</div><!-- EDIT14 PLUGIN_WRAP_END [0-] --><!-- EDIT15 PLUGIN_WRAP_START [0-] --><div class="wrap_clear plugin_wrap"></div><!-- EDIT16 PLUGIN_WRAP_END [0-] -->
+<p>
+<em class="u"><strong>Structure d&#039;une UTEM :</strong></em>
+</p>
+<div class="table sectionedit17"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique de l’UTEM </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> code </td><td class="col1"> Code </td><td class="col2"> Code de l’UTEM </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Exemple : </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> nom </td><td class="col1"> Nom </td><td class="col2"> Nom complet de l’UTEM </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5 leftalign">Exemple :  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> gpfs_path </td><td class="col1"> Racine GPFS </td><td class="col2"> Répertoire racine de l’UTEM sur l’espace de stockage GPFS </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /sps/bioaster/UTEM1 ou juste const racine bioster + /UTEM1 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> email	</td><td class="col1 leftalign"> Email	</td><td class="col2 leftalign"> Alias mail de l’UTEM	</td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Validateur mail </td>
+	</tr>
+</table></div>
+<!-- EDIT17 TABLE [8369-8934] --><!-- EDIT18 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap"><ul>
+<li class="level1"><div class="li"> <strong>NS:</strong> Un membre d&#039;UTEM n&#039;a pas de path GPFS car il intervient sur des projets et qu&#039;il n&#039;y a pas de recherche interne par UTHEM. Cepndant, et pour anticiper un peut, j&#039;ajouterai quand même cet attribut, même s&#039;il n&#039;existe pas sur GPFS. </div>
+</li>
+<li class="level1"><div class="li"> Liste à pucePeut-être faudrait-il penser à une table “Partner” aussi. (id, name, label/code [ex : “bmx_biospecimens”] pour faciliter les permissions car un partenaire peut être présent dans plusieurs projets mais les groupes de personnes du partenaire attachés aux projets ne sont pas forcément les mêmes et ne doivent donc pas forcément avoir accès à tous les projets, mail_referent)</div>
+</li>
+<li class="level1"><div class="li"> Liste à puce<strong>NS:</strong> Propose une structure de table</div>
+</li>
+</ul>
+</div><!-- EDIT19 PLUGIN_WRAP_END [0-] -->
+<p>
+<em class="u"><strong>Structure d&#039;un projet :</strong></em>
+</p>
+<div class="table sectionedit20"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique d’un projet </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> nom </td><td class="col1"> Nom </td><td class="col2"> Nom du projet </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Ex : Realism </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> summary </td><td class="col1"> Résumé </td><td class="col2"> Texte de présentation du projet </td><td class="col3"> Texte (long) </td><td class="col4">Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> gpfs_path </td><td class="col1"> Racine GPFS </td><td class="col2"> Répertoire racine du projet sur l’espace de stockage GPFS </td><td class="col3"> Texte </td><td class="col4"> ? </td><td class="col5"> Note : cf chemin cahier de laboratoire ?</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> corporate </td><td class="col1"> Projet interne </td><td class="col2"> Projet interne à Bioaster (sans partenaire extérieur) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+</table></div>
+<!-- EDIT20 TABLE [9704-10289] --><!-- EDIT21 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap" style="width: 40%;">
+<p>
+Faut-il descendre jusqu&#039;au Work Package ?<br/>
+
+<strong>NS :</strong> a priori oui!
+</p>
+</div><!-- EDIT22 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT10 SECTION "Dictionnaire et modèle de données" [4247-10396] -->
+<h3 class="sectionedit23" id="qui_a_besoin_de_quoi">Qui a besoin de quoi ?</h3>
+<div class="level3">
+
+<p>
+<strong>Infos “utilisateur”</strong>
+</p>
+<div class="table sectionedit24"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Information </th><th class="col1"> eSAMPLES (Audrey) </th><th class="col2"> Symbiosis (Pierre) </th><th class="col3"> FLEMS (Yoann) </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> email       </td><td class="col1 leftalign"> 1        </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> nom         </td><td class="col1 leftalign"> 1        </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> prénom      </td><td class="col1 leftalign"> 1        </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> groupes     </td><td class="col1 leftalign"> 1        </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> afs_path    </td><td class="col1 leftalign"> 0        </td><td class="col2"> 1 </td><td class="col3"> 0 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> uid         </td><td class="col1 leftalign"> 0        </td><td class="col2"> 1 </td><td class="col3"> 0 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> afs_login   </td><td class="col1 leftalign"> 0        </td><td class="col2"> 1 </td><td class="col3"> 0 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> ssh_public_key  </td><td class="col1 leftalign"> 0    </td><td class="col2"> 1 </td><td class="col3"> 0 </td>
+	</tr>
+</table></div>
+<!-- EDIT24 TABLE [10456-10809] -->
+<p>
+groupes = UTEC, UTEM, PROJET, WP
+</p>
+
+<p>
+<strong>Infos “groupe”</strong>
+</p>
+<div class="table sectionedit25"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Information </th><th class="col1"> eSAMPLES (Audrey) </th><th class="col2"> Symbiosis (Pierre) </th><th class="col3"> FLEMS (Yoann) </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> nom         </td><td class="col1 leftalign"> 1        </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> gpfs_path    </td><td class="col1 leftalign"> 0       </td><td class="col2"> 1 </td><td class="col3"> 0 </td>
+	</tr>
+</table></div>
+<!-- EDIT25 TABLE [10865-11007] -->
+<p>
+…
+</p>
+<!-- EDIT26 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_tip plugin_wrap"><ul>
+<li class="level1"><div class="li"> L&#039;<strong>email</strong> est l&#039;identifiant unique, il n&#039;a donc pas besoin d&#039;être récupéré !</div>
+</li>
+</ul>
+</div><!-- EDIT27 PLUGIN_WRAP_END [0-] --><!-- EDIT28 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap"><ul>
+<li class="level1"><div class="li"> Les <strong>projets</strong> ne devraient-ils pas être gérés comme des <strong>groupes</strong> ?<br/>
+Dans mon ancienne vie, on faisait comme ça, et ça marchait très bien.</div>
+</li>
+</ul>
+</div><!-- EDIT29 PLUGIN_WRAP_END [0-] --><!-- EDIT30 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+[YM] : Serait-il possible d&#039;avoir la liste des champs de l&#039;AD dispo quelquepart, du genre ici ? Je pourrai dire alors ce qui m&#039;intéresse d&#039;avoir dans tout ça
+</p>
+</div><!-- EDIT31 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT23 SECTION "Qui a besoin de quoi ?" [10397-11495] -->
+<h3 class="sectionedit32" id="implementation">Implémentation</h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>Quelques pointeurs :</strong></em>
+</p>
+
+<p>
+<a href="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html" class="urlextern" title="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html"  rel="nofollow">http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html</a>
+</p>
+
+<p>
+<a href="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle" class="urlextern" title="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle"  rel="nofollow">https://github.com/ztec/ZtecSecurityActiveDirectoryBundle</a>
+</p>
+
+<p>
+<a href="https://auth0.com/docs/server-platforms/symfony" class="urlextern" title="https://auth0.com/docs/server-platforms/symfony"  rel="nofollow">https://auth0.com/docs/server-platforms/symfony</a>
+</p>
+
+<p>
+<a href="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/" class="urlextern" title="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/"  rel="nofollow">http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/</a>
+</p>
+
+</div>
+<!-- EDIT32 SECTION "Implémentation" [11496-] -->

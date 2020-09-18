@@ -1,0 +1,58 @@
+a:6:{s:2:"id";s:21:"noe:reunions:07092017";s:6:"prefix";s:208:"====== Réunion du 07 Septembre 2017 ======
+
+
+===== Personnes présentes =====
+
+  * CD
+  * YM
+
+==== Ordre du jour : ====
+
+  * Rendu formulaires de création d'échantillon
+  * Champs dynamiques
+
+";s:4:"text";s:2347:"==== Résumé ====
+
+__Rendu formulaires de création d'échantillon__
+
+Discussion autour des images à afficher sur le SampleDynForm. Demande auprès de la com' envoyée par mail @ EB.\\
+L'idée sera d'implémenter un algo pour parcourir les noeuds des deux classifications selectionnées par l'utilisateur et de trouver l'image en rapport avec le noeud le moins loin possible de la valeur choisie.\\ 
+Il faudra prévoir un dossier spécial contenant ces images, qui porteront les mêmes noms que les classifications. Exemple : bacteria.png \\
+Une dizaine d'images seraient un bon commencement.
+
+__Formulaire/Champs dynamiques__
+
+Le rendu des deux formulaires de création d'échantillons a avancé. \\
+Pour le premier formulaire (champs statiques) il reste à faire :
+  * Filtrer les BSL en fonction des storages
+  * Filtrer les storages en fonction des labo/UTECs
+  * Faire la classification bioagent
+  * Mettre étoiles devant champs obligatoires (ou après)
+  * Afficher les noms des frigos et/ou tiroirs
+  * réunir les champs proches (par logique) sur une même ligne
+  * introduire flatpicker pour les DateTimeField
+  * afficher uniquement les projets de l'utilisateur
+  * Afficher le champs OGM que si l'utilisateur est un OGM user
+  * Afficher le champs MOT que si l'utilisateur est un MOT user
+
+Pour le second (champs dynamiques), quand il existera, il reste à faire:
+  * image différentes selon types de classifications selectionnées (type + origine)
+  * S'assurer que tous les validateurs sont en place (automatiques + manuels)
+  * Gérer les dates avec flatpickr : https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945 https://chmln.github.io/flatpickr/getting-started/
+  * Concaténer les propositions de champs dynamiques venant de la NET avec les templates produits par JHA
+
+__Autre__
+
+Reste à faire avant beta test V1 par la NET :
+  * merger la branche de Pengfei (auth-shib/secu-dev-Pengfei)
+  * finaliser code de JHA + merge de la branche au master
+  * finir la fonctionnalité recherche datatable
+  * définir quoi mettre (quels types d'infos) dans le dropdown de datatable 
+  * finir l'édition d'un échantillon
+  * avoir une page d'information d'un échantillon propre et sexy
+  * code barre
+  * créer un échantillon enfant
+  * 
+
+
+";s:6:"suffix";s:0:"";s:4:"date";i:1504788396;s:6:"client";s:8:"ymouscaz";}

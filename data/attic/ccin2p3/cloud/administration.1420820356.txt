@@ -1,0 +1,176 @@
+====== Administrer une machine virtuelle ======
+
+La procédure BIOASTER est basée sur le guide OpenStack du CC-IN2P3. Ce dernier sert de document de base pour toutes les bonnes pratiques concernant OpenStack. 
+
+Avant de lire cette page, assurez-vous d'avoir consulté [[ccin2p3:in2p3:cloud?&#se_connecter_au_nuage|la page d'utilisation du nuage]].
+
+===== Lister les VM =====
+
+Voici comment obtenir la **liste des VM** existantes : 
+
+<code text>
+$ nova list
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+
+| ID                                   | Name        | Status  | Task State | Power State | Networks                             |
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+
+| b5330873-1760-4373-8159-e687076031c4 | Galaxy      | ACTIVE  | None       | Running     | bioaster=172.17.6.8, 134.158.246.43  |
+| 697168f7-321b-41eb-8ce1-5c52c94f77f6 | Qiime       | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.4, 134.158.246.25  |
+| d3222016-e97a-45e9-8cee-d1572d29e0b8 | Qiime       | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.7, 134.158.246.137 |
+| ded3b1ce-a675-406c-882d-ed267a84e8ec | Test2       | ACTIVE  | None       | Running     | bioaster=172.17.6.6, 134.158.246.133 |
+| 0bdbf2be-c1a2-4a9b-871a-7fefac56be47 | debian_test | ACTIVE  | None       | Running     | bioaster=172.17.6.5                  |
+| bbeb560e-7c5f-4183-8286-2427ff92e984 | test_tlc    | SHUTOFF | None       | Shutdown    | bioaster=172.17.6.9                  |
++--------------------------------------+-------------+---------+------------+-------------+--------------------------------------+
+</code>
+
+La colonne //status// indique l'état actuel de la machine et conditionne les actions qui peuvent être faites dessus.
+
+===== Arrêter =====
+
+Arrêter un VM inutile permet d'économiser des ressources.
+
+<code text>
+$ nova stop test_tlc
+</code>
+
+===== Démarrer =====
+
+Permet de redémarrer une machine qui a été arrêtée.
+
+<code text>
+$ nova start test_tlc
+</code>
+
+===== Détruire =====
+
+Détruire une VM est une action qui **ne peut pas être annulée**. Toutes les données de la VM seront perdues, à moins qu'elles ne soient sur un disque ou un espace AFS/SPS monté sur la VM.
+
+<code text>
+$ nova delete test_tlc
+</code>
+
+===== Ajouter une IP publique =====
+
+Pour qu'un service tournant sur une VM soit accessible depuis l'extérieur il faut qu'elle soit :
+
+  * accessible grâce à une adresse IP publique ;
+  * accessible en passant par un proxy disposant d'une adresse IP publique.
+
+Ici est décrit le premier cas où le serveur hébergeant le service possède une adresse IP publique.
+
+La première étape consiste à vérifier si des adresses IP publiques sont disponibles.
+
+<code text>
+$ nova floating-ip-list
++-----------------+--------------------------------------+------------+------+
+| Ip              | Instance Id                          | Fixed Ip   | Pool |
++-----------------+--------------------------------------+------------+------+
+| 134.158.246.10  | None                                 | None       | nova |
+| 134.158.246.25  | 697168f7-321b-41eb-8ce1-5c52c94f77f6 | 172.17.6.4 | nova |
+| 134.158.246.26  | None                                 | None       | nova |
+| 134.158.246.43  | b5330873-1760-4373-8159-e687076031c4 | 172.17.6.8 | nova |
+| 134.158.246.133 | ded3b1ce-a675-406c-882d-ed267a84e8ec | 172.17.6.6 | nova |
+| 134.158.246.137 | d3222016-e97a-45e9-8cee-d1572d29e0b8 | 172.17.6.7 | nova |
+| 134.158.246.191 | None                                 | None       | nova |
++-----------------+--------------------------------------+------------+------+
+</code>
+
+Si aucune IP n'est disponible, il faut essayer d'en créer une.
+
+<code text>
+$ nova floating-ip-create
++----------------+-------------+----------+------+
+| Ip             | Instance Id | Fixed Ip | Pool |
++----------------+-------------+----------+------+
+| 134.158.246.25 | None        | None     | nova |
++----------------+-------------+----------+------+
+</code>
+
+On peut ensuite assigner l'IP à la VM.
+
+<code text>
+$ nova add-floating-ip mavm 134.158.246.25
+</code>
+
+===== Configurer le pare-feu =====
+
+Il est nécessaire de configurer le pare-feu afin de pouvoir contacter les services déployés sur les VM. Dans l'exemple suivant, on ouvre le port pour les connexions SSH.
+
+<code text>
+$ nova secgroup-list
++---------+-------------+
+| Name    | Description |
++---------+-------------+
+| default | default     |
++---------+-------------+
+
+$ nova secgroup-list-rules default 
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
++-------------+-----------+---------+-----------+--------------+
+
+$ nova secgroup-add-rule default tcp 22 22 0.0.0.0/0 
+</code>
+
+Les groupes peuvent être assignés aux VM lors du //boot// grâce à l'option ''--security-groups <NOM_DES_GROUPES>''.
+
+Pour que les services soient accessibles depuis l'extérieur, il faut faire une demande d'ouverture de port sur le pare-feu de l'IN2P3 en utilisant le [[https://cc-usersupport.in2p3.fr/otrs/customer.pl|système de tickets]].
+
+===== Ajouter un disque =====
+
+Si aucun disque disponible n'existe, il faut en créer un avec ''cinder''.
+
+<code text>
+$ cinder list
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|   ID    |   Status  | Display Name | Size | Volume Type | Bootable |             Attached to              |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+|  [...]  | available | testvol1     |  1   |     None    |          |                                      |
+|  [...]  | detaching | testvol2     |  1   |     None    |          | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+|  [...]  | available | vol4         |  1   |     None    |          |                                      |
+|  [...]  | available | vol5         |  1   |     None    |          |                                      |
++---------+-----------+--------------+------+-------------+----------+--------------------------------------+
+
+$ cinder create --display-name monvolume1 5
++---------------------+--------------------------------------+
+|       Property      |                Value                 |
++---------------------+--------------------------------------+
+|     attachments     |                  []                  |
+|  availability_zone  |                 nova                 |
+|      created_at     |      2013-04-19T11:03:50.606663      |
+| display_description |                 None                 |
+|     display_name    |              monvolume1              |
+|          id         | cb252a17-f581-4d70-8049-be358a5fc8bb |
+|       metadata      |                  {}                  |
+|         size        |                  5                   |
+|     snapshot_id     |                 None                 |
+|        status       |               creating               |
+|     volume_type     |                 None                 |
++---------------------+--------------------------------------+
+</code>
+
+Il faut ensuite attacher ce disque à la VM.
+
+<code text>
+$ nova volume-attach monserveur 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb /dev/vdb
++----------+--------------------------------------+
+| Property | Value                                |
++----------+--------------------------------------+
+| device   | /dev/vdb                             |
+| serverId | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+| id       | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
+| volumeId | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
++----------+--------------------------------------+
+</code>
+
+Le disque doit ensuite être formaté (si nécessaire) et monté dans la VM.
+
+<code text>
+# Dans la VM
+$ mkfs.xfs /dev/vdb
+$ mkdir /data
+$ cat >> /etc/fstab <<EOF
+/dev/vdb /data xfs nosuid,nodev 1 2
+EOF
+$ mount /data
+</code>

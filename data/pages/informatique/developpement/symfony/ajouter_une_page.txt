@@ -1,0 +1,81 @@
+====== Ajouter des pages ======
+
+Dans symfony, les contrôlleurs sont rangés dans des modules nommés //Bundle//. Les modules, s'ils sont bien développés, peuvent être utilisés indépendemment dans d'autres applications.
+
+Un **bundle par défaut** est disponible, mais d'autres peuvent être créés facilement :
+
+    $ php app/console generate:bundle --namespace=Bioaster/TestBundle --format=annotation --dir=src --no-interaction
+
+Sauf raison valable, il est conseillé de travailler dans ''src/AppBundle''.
+
+La première étape est de **router** l'URL de la page demandée jusqu'au contrôleur. Ceci est fait grâce à 2 variables :
+
+  * le préfix où le bundle est ancré : <code yml app/config/routing.yml>
+bioaster_test:
+    resource: "@BioasterTestBundle/Controller/"
+    type:     annotation
+    prefix:   /
+</code>
+  * la route définie pour chaque méthode du contrôleur : <code php src/Bioaster/TestBundle/Controller/DefaultController.php>
+class DefaultController extends Controller
+{
+    /**
+     * @Route("/hello/{name}")
+     */
+    public function indexAction($name)
+    {
+        […]
+</code>
+
+Dans l'exemple ci-dessus, la méthode ''indexAction'' est accessible par l'URL ''/hello/mon_nom''.
+
+En définissant un préfix a ''/test '', la même action aurait été accessible à ''/test/hello/mon_nom''.
+
+Les routes disponibles peuvent facilement être retrouvées :
+
+    $ php app/console router:debug
+    [router] Current routes
+     Name                         Method Scheme Host Path 
+     …                             
+     bioaster_test_default_index  ANY    ANY    ANY  /test/hello/{name}                
+     homepage                     ANY    ANY    ANY  /app/example  
+
+Une URL peut aussi être testée pour voir quelle action de quel contrôleur est appelée :
+
+    $ php app/console router:match /test/hello/test
+    Route "bioaster_test_default_index" matches
+    
+    [router] Route "bioaster_test_default_index"
+    Name         bioaster_test_default_index
+    Path         /test/hello/{name}
+    Path Regex   #^/test/hello/(?P<name>[^/]++)$#s
+    …
+    Defaults     _controller: BioasterTestBundle:Default:index
+
+Il reste maintenant à ajoutre de nouvelles routes, de nouveaux contrôleurs, de nouvelles actions et de nouvelles vues.
+
+<code php src/Bioaster/TestBundle/Controller/TestController.php>
+<?php
+
+namespace Bioaster\TestBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+class TestController extends Controller
+{
+    /**
+     * @Route("/hello2/{name}", name = "test2")
+     */
+    public function indexAction($name)
+    {
+        return $this->render('default/index.html.twig', array(
+            'name' => $name
+        ));
+    }
+}
+</code>
+
+Il est important de garder chaque action du contrôleur assez courte (10-20 lignes) et d'implémenter la logique de manipulation de données dans le modèle pour respecter la philosophie de symfony : //"thin controllers and fat models"//.
+
+Avec Propel, le code s'ajoute par exemple à ''src/AppBundle/Model/User.php''.

@@ -1,0 +1,17 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1517498064;s:8:"modified";i:1517587787;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:29:"Create symbolic link in linux";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:29:"create_symbolic_link_in_linux";s:5:"title";s:29:"Create symbolic link in linux";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:27:"create_a_soft_symbolic_link";s:5:"title";s:28:"Create  a soft symbolic link";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:13:"remove_a_link";s:5:"title";s:13:"Remove a link";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:406:"Create symbolic link in linux
+
+Create  a soft symbolic link
+
+ln -s source destination
+
+for example I'm currently at /tmp/.
+
+I want to creat a symbolic link my_documents of my home /home/pliu/Documents
+
+I need to do 
+
+
+ln -s /home/pliu/Documents my_documents
+
+#this will create my_documents in my current location /tmp
+lrwxrwxrwx.  1 pliu     pliu       21 Feb  2 17:08 my_documents -> /home/pliu/Documents/";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1517498064;s:8:"modified";i:1517587787;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

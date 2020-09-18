@@ -1,0 +1,485 @@
+
+<h2 class="sectionedit1" id="trucs_utiles">Trucs utiles</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT1 SECTION "Trucs utiles" [2-26] -->
+<h3 class="sectionedit2" id="imprimer_en_format_paysage">Imprimer en format paysage</h3>
+<div class="level3">
+
+<p>
+<a href="https://help.libreoffice.org/Calc/Printing_Sheets_in_Landscape_Format/fr" class="urlextern" title="https://help.libreoffice.org/Calc/Printing_Sheets_in_Landscape_Format/fr" rel="nofollow">le liens</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Imprimer en format paysage" [27-153] -->
+<h3 class="sectionedit3" id="impossible_de_s_identifier_sur_le_wiki">Impossible de s&#039;identifier sur le wiki</h3>
+<div class="level3">
+
+<p>
+Supprimer cookies et historiques de téléchargements sur firefox.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Impossible de s'identifier sur le wiki" [154-269] -->
+<h3 class="sectionedit4" id="my_bashrc">My ~/.bashrc</h3>
+<div class="level3">
+<pre class="code shell">alias gedit=&quot;gedit 2&gt; /dev/null &amp;&quot;
+alias ksnapshot=&quot;ksnapshot 2&gt; /dev/null &amp;&quot;
+PS1=&quot;\[\033[36m\]\u\[\033[m\]@\[\033[32m\] \[\033[0;31m\]\w\[\033[m\] (\$(git branch 2&gt;/dev/null | grep '^*' | colrm 1 2)) \$ &quot;
+export PYENV_ROOT=&quot;$HOME/pyenv&quot;
+export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;
+eval &quot;$(pyenv init -)&quot;
+eval &quot;$(pyenv virtualenv-init -)&quot;
+alias psql=&quot;/usr/pgsql-9.5/bin/psql&quot;
+export ownCloud=$HOME/ownCloud</pre>
+
+</div>
+<!-- EDIT4 SECTION "My ~/.bashrc" [270-712] -->
+<h3 class="sectionedit5" id="git">Git</h3>
+<div class="level3">
+
+<p>
+Modifier le message du dernier commit après avoir poussé.
+</p>
+<pre class="code">git commit --amend</pre>
+
+<p>
+Par la suite il faudra utiliser l&#039;option –force à push :
+</p>
+<pre class="code">git push --force</pre>
+
+</div>
+<!-- EDIT5 SECTION "Git" [713-911] -->
+<h3 class="sectionedit6" id="python">Python</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="pyenv">Pyenv</h4>
+<div class="level4">
+
+<p>
+<a href="https://wiki.bioaster.org/ut6/projets_internes/bp_python" class="urlextern" title="https://wiki.bioaster.org/ut6/projets_internes/bp_python" rel="nofollow">source</a>
+</p>
+
+<p>
+Install virtualenv
+</p>
+<pre class="code shell">git clone https://github.com/yyuu/pyenv-virtualenv.git  pyenv/plugins/pyenv-virtualenv
+eval &quot;$(pyenv virtualenv-init -)&quot; # put it in bashrc</pre>
+
+<p>
+Use
+</p>
+<pre class="code shell">pyenv virtualenv 3.5.1 python351
+mkdir Python351Test &amp;&amp; cd Python351Test/ 
+pyenv local python351
+# displays &quot;(python351) &quot; at the begining of the shell</pre>
+
+</div>
+<!-- EDIT6 SECTION "Python" [912-1370] -->
+<h3 class="sectionedit7" id="symfony">Symfony</h3>
+<div class="level3">
+
+<p>
+<a href="http://symfony.com/doc/current/best_practices/controllers.html" class="urlextern" title="http://symfony.com/doc/current/best_practices/controllers.html" rel="nofollow"> Controller best practices</a>
+</p>
+
+<p>
+<a href="https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/index.md" class="urlextern" title="https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/index.md" rel="nofollow">FOSCommentBundleDoc</a>
+</p>
+
+<p>
+Ne pas oublier :
+Quand un repository est crée pour une entité il faut ajouter l’annotation Entity dans l&#039;entité concernée par ce repository (généralement Symfony fait ça tout seul si c&#039;est lui qui a généré l&#039;entité)
+</p>
+<pre class="code php"><span class="co4">/**
+ * Workpackage
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass=&quot;BS\BiospecimensBundle\Entity\WorkpackageRepository&quot;)
+ */</span>
+<span class="kw2">class</span> Workpackage<span class="br0">&#123;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h4 id="migrations">Migrations</h4>
+<div class="level4">
+
+<p>
+Après avoir joué avec les annotations Doctrine dans notre entité on génère les getters et setters de la manière suivante :
+</p>
+<pre class="code">php app/console doctrine:generate:entities ACMEMyBundle:Entity</pre>
+
+<p>
+Exemple :
+</p>
+<pre class="code">php app/console doctrine:generate:entities BSBiospecimensBundle:ClinicalData</pre>
+
+<p>
+Pour migrer la BDD (après changer les relations, les types des champs etc) :
+</p>
+<pre class="code">php app/console doctrine:migrations:diff
+php app/console doctrine:migrations:status
+php app/console doctrine:migrations:migrate</pre>
+
+</div>
+
+<h4 id="autres">Autres</h4>
+<div class="level4">
+
+<p>
+Pour générer un formulaire automatiquement il faut utiliser la commande :
+</p>
+<pre class="code">doctrine:generate:form</pre>
+
+<p>
+Exemple :
+</p>
+<pre class="code">php app/console doctrine:generate:form BSBiospecimensBundle:ClinicalData</pre>
+<pre class="code">/etc/php.ini</pre>
+
+<p>
+ a été modifié pour changer memory limit : 
+</p>
+<pre class="code">memory_limit = 256M</pre>
+
+</div>
+<!-- EDIT7 SECTION "Symfony" [1371-2869] -->
+<h3 class="sectionedit8" id="programmation_en_generale">Programmation en générale</h3>
+<div class="level3">
+
+<p>
+<a href="http://stackoverflow.com/questions/1866794/naming-classes-how-to-avoid-calling-everything-a-whatevermanager" class="urlextern" title="http://stackoverflow.com/questions/1866794/naming-classes-how-to-avoid-calling-everything-a-whatevermanager" rel="nofollow"> Éviter de mettre des &quot;manager&quot; partout</a>
+</p>
+
+<p>
+<a href="http://www.bright-green.com/blog/2003_02_25/naming_java_classes_without_a.html" class="urlextern" title="http://www.bright-green.com/blog/2003_02_25/naming_java_classes_without_a.html" rel="nofollow"> Que mettre à la place de manager ?</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Programmation en générale" [2870-3183] -->
+<h3 class="sectionedit9" id="atom">Atom</h3>
+<div class="level3">
+
+<p>
+Pour ouvrir atom avec tous les fichiers d&#039;un projet
+</p>
+<pre class="code shell">    atom ProjectDir</pre>
+
+<p>
+Pour installer des packages
+</p>
+
+<p>
+Ouvrir <span style='color:black; background-color:lightgrey;'>Settings</span> (<strong>Edit → Preferences</strong> ou <strong>CTRL + ,</strong>) puis <span style='color:black; background-color:lightgrey;'>Install</span> (<span style='color:black; background-color:lightgrey;'>Packages</span> indique uniquement les packages installés).
+</p>
+
+<p>
+Si par erreur la barre d&#039;outils s&#039;en va, il suffit d&#039;appuyer sur <span style='color:black; background-color:lightgrey;'>ALT</span> puis cliquer sur <strong>View → Toggle menu bar</strong> pour la faire revenir
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Atom" [3184-3708] -->
+<h3 class="sectionedit10" id="installation_biospecimens">Installation biospecimens</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="php_et_composer_et_autres_packages">PHP et Composer et autres packages</h4>
+<div class="level4">
+
+<p>
+Inspiré de la page 
+<a href="https://wiki.bioaster.org/noe?s[]=noe" class="urlextern" title="https://wiki.bioaster.org/noe?s[]=noe" rel="nofollow"> NoE</a>
+</p>
+<pre class="code shell">    sudo yum install nodejs nodejs-less
+    sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo yum update
+    sudo yum install php56w php56w-opcache php56w-pdo php56w-pgsql
+    sudo nano /etc/php.ini #modifier timezone
+    sudo yum remove php php-common #va virer composer si il a été installé précédemment
+    sudo yum install composer
+    sudo yum install php56w-mysql
+    composer install # en étant dans le bon répertoire bien sûr</pre>
+
+<p>
+La commande composer install affichera certainement l&#039;erreur suivante :
+</p>
+<pre class="code"> 
+[Composer\Downloader\TransportException]                                                                                                                         
+  Your configuration does not allow connections to http://code.jquery.com/jquery-1.11.1.js. See https://getcomposer.org/doc/06-config.md#secure-http for details.  </pre>
+
+<p>
+Pour palier à ce problème il faut simplement rajouter à <em>s</em> à http (pour mettre https) à l&#039;<abbr title="Uniform Resource Locator">URL</abbr> de JQuery :
+</p>
+<pre class="code yaml"><span class="co3">   &quot;url&quot;</span><span class="sy2">: </span><span class="st0">&quot;https://code.jquery.com/jquery-1.11.1.js&quot;</span>,
+   <span class="co1"># anciennement : &quot;url&quot;: &quot;http://code.jquery.com/jquery-1.11.1.js&quot;,</span></pre>
+
+<p>
+Modification à faire dans <em>composer.json</em> <strong><em class="u">et</em></strong> dans <em>composer.lock</em> si existant.
+</p>
+
+</div>
+
+<h4 id="maria_db">Maria DB</h4>
+<div class="level4">
+<pre class="code shell">    sudo yum install mariadb
+    systemctl start mariadb
+    mysql -u root</pre>
+
+<p>
+Une fois que nous sommes en mode SQL :
+</p>
+<pre class="code mysql">    <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=CREATE"><span class="kw1">create</span></a> <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=DATABASE"><span class="kw2">database</span></a> biospecimens_dev<span class="sy2">;</span>
+    <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=SHOW"><span class="kw1">show</span></a> <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=DATABASES"><span class="kw1">databases</span></a><span class="sy2">;</span></pre>
+<pre class="code shell">    mysql -u root biospecimens_dev</pre>
+<pre class="code mysql">    <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=SHOW"><span class="kw1">show</span></a> <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=TABLES"><span class="kw1">tables</span></a><span class="sy2">;</span>
+    <a href="http://search.oracle.com/search/search?group=MySQL&amp;q=DESCRIBE"><span class="kw1">describe</span></a> bacteria_ab<span class="sy2">;</span></pre>
+
+</div>
+
+<h4 id="migration_bdd">Migration BDD</h4>
+<div class="level4">
+<pre class="code shell">    php app/console cache:warmup --env=dev
+    php app/console doctrine:migrations:status
+    php app/console doctrine:migrations:migrate</pre>
+
+</div>
+
+<h4 id="asset_css_nodejs">Asset / CSS /NodeJS</h4>
+<div class="level4">
+
+<p>
+Dans  <span style='color:black; background-color:lightgrey;'>parameters.yml</span> remplacer  <span style='color:black; background-color:lightgrey;'> node_path: /usr/bin/nodejs</span> par <span style='color:black; background-color:lightgrey;'>node_path: /usr/bin/node</span>
+</p>
+<pre class="code shell">    php app/console assetic:dump</pre>
+
+<p>
+Et bien sûr :
+</p>
+<pre class="code shell">    php app/console server:run</pre>
+
+<p>
+Et normalement ça marche ! <a href="http://localhost:8000/biospecimens/fr/" class="urlextern" title="http://localhost:8000/biospecimens/fr/" rel="nofollow">http://localhost:8000/biospecimens/fr/</a>
+</p>
+
+</div>
+
+<h4 id="structure_bdd">Structure BDD</h4>
+<div class="level4">
+
+<p>
+<a href="https://devtools.bioaster.org/wwwsqldesigner/" class="urlextern" title="https://devtools.bioaster.org/wwwsqldesigner/" rel="nofollow"> sqldesigner</a>
+charger le fichier bs-v8
+</p>
+
+<p>
+CTRL + molette pour zoomer/dézoomer
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Installation biospecimens" [3709-6290] -->
+<h3 class="sectionedit11" id="biospecimens_idees">BioSpecimens Idées</h3>
+<div class="level3">
+
+<p>
+<a href="https://coderwall.com/p/eiqd_g/symfony2-the-translation-miracle" class="urlextern" title="https://coderwall.com/p/eiqd_g/symfony2-the-translation-miracle" rel="nofollow">enlever les fr/ partout !</a> ce liens ( <a href="http://stackoverflow.com/questions/17610234/add-locale-and-requirements-to-all-routes-symfony2" class="urlextern" title="http://stackoverflow.com/questions/17610234/add-locale-and-requirements-to-all-routes-symfony2" rel="nofollow">http://stackoverflow.com/questions/17610234/add-locale-and-requirements-to-all-routes-symfony2</a> ) peut aussi être utile
+</p>
+
+<p>
+<a href="http://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html" class="urlextern" title="http://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html" rel="nofollow">fixtureBundle pour loader des data</a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "BioSpecimens Idées" [6291-6659] -->
+<h3 class="sectionedit12" id="noe">NoE</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Installer PostGresSQL à partir de la page de pengfeï</div>
+</li>
+<li class="level1"><div class="li"> Se créer un user postgres SQL</div>
+</li>
+<li class="level1"><div class="li"> Renseigner ce login/mdp au fichier settings.py de NoE</div>
+</li>
+</ol>
+
+<p>
+Après avoir installé les bons paquets il faut modifier le fichier /var/lib/pgsql/9.5/data/pg_hba.conf
+</p>
+<pre class="code">sudo cat /var/lib/pgsql/9.5/data/pg_hba.conf
+[sudo] password for cdelestre: 
+# bla bla bla
+...
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# &quot;local&quot; is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# IPv6 local connections:
+host    all             all             ::1/128                 trust
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+#local   replication     postgres                                peer
+#host    replication     postgres        127.0.0.1/32            ident
+#host    replication     postgres        ::1/128                 ident</pre>
+
+<p>
+Ensuite faire
+</p>
+<pre class="code">sudo su postgres </pre>
+
+<p>
+pour pouvoir taper <strong>psql</strong> et créer un autre user (cf Yoann ou la doc de postgres, c&#039;est vous qui voyez) puis créez la BDD en l&#039;assignant à votre login :
+</p>
+<pre class="code">createdb -e -O  cdelestre NoE_dev</pre>
+
+<p>
+N&#039;oubliez pas de redémarrer le SGBD :
+</p>
+<pre class="code">sudo systemctl restart postgresql-9.5.service</pre>
+
+<p>
+Vous devriez pouvoir faire 
+<strong>psql database_name</strong> à partir de votre login 
+Faites <strong>\list</strong> pour lister les bases de données existantes.
+</p>
+<pre class="code">alter DATABASE &quot;NoE_dev&quot; OWNER TO cdelestre;</pre>
+
+<p>
+Renseigner le user et mdp pour django:
+</p>
+<pre class="code">/usr/bin/gedit NoE/settings.py &amp;
+        &#039;USER&#039;: &#039;cdelestre&#039;,
+        &#039;PASSWORD&#039;: &#039;cdelestre&#039;,
+        &#039;HOST&#039;: &#039;localhost&#039;,</pre>
+
+<p>
+Ne pas oublier :
+</p>
+<pre class="code">pip install -r requirements.txt</pre>
+
+<p>
+Enfin tappez :
+</p>
+<pre class="code">        
+python manage.py migrate</pre>
+
+</div>
+
+<h4 id="pqsl">pqsl</h4>
+<div class="level4">
+
+<p>
+Sous centOS il y a un mismatch entre la version du serveur et celle du client :
+</p>
+<pre class="code">psql NoE_dev
+
+psql (9.2.15, serveur 9.5.5)
+ATTENTION : psql version 9.2, version du serveur 9.5.
+         Certaines fonctionnalités de psql pourraient ne pas fonctionner.
+Saisissez « help » pour l&#039;aide.</pre>
+
+<p>
+Utilisez la commande <code>which</code> pour savoir d&#039;où vient votre commande psql (chez moi c&#039;est <strong>/usr/bin/psql</strong>) et utilisez <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&amp;#configure_postgresql" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&amp;#configure_postgresql" rel="nofollow">la page de pengfeï</a> pour installer un client correspondant à votre version de serveur. Cherchez où le client a été installé. Moi c&#039;est dans <strong>/usr/pgsql-9.5/bin/psql</strong> .
+</p>
+<pre class="code">/usr/pgsql-9.5/bin/psql NoE_dev
+psql (9.5.5)
+Saisissez « help » pour l&#039;aide.
+#Absence du message d&#039;erreur !</pre>
+
+<p>
+On peut donc remplacer la commande avec un alias :
+</p>
+<pre class="code">alias psql=&quot;/usr/pgsql-9.5/bin/psql&quot;</pre>
+
+</div>
+<!-- EDIT12 SECTION "NoE" [6660-9546] -->
+<h3 class="sectionedit13" id="owncloud_client">OwnCloud Client</h3>
+<div class="level3">
+
+<p>
+La doc est 
+<a href="https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&amp;package=owncloud-client" class="urlextern" title="https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&amp;package=owncloud-client" rel="nofollow">ici</a> pour le client owncloud de plusieurs <abbr title="Operating System">OS</abbr> (Ubuntu Debian Fedora CentOS RHEL etc.)
+</p>
+
+</div>
+<!-- EDIT13 SECTION "OwnCloud Client" [9547-9774] -->
+<h2 class="sectionedit14" id="balises_utiles">Balises utiles</h2>
+<div class="level2">
+<pre class="code">    Utiliser la balise &lt;code&gt; pour mettre du code</pre>
+
+<p>
+<strong> Exemple de citation </strong><br/>
+
+<em>– La personne qui a dit le message ci-dessus</em>
+</p>
+
+<p>
+<span style='color:blue; background-color:lightgrey;'> &lt;color foreground/ background&gt; pour mettre de la couleur</span>
+</p>
+
+<p>
+D&#039;autres info utiles sur <a href="https://www.dokuwiki.org/wiki:syntax" class="urlextern" title="https://www.dokuwiki.org/wiki:syntax" rel="nofollow">la doc officielle de dokuwiki</a>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Balises utiles" [9775-10136] -->
+<h2 class="sectionedit15" id="recettes">Recettes</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT15 SECTION "Recettes" [10137-10157] -->
+<h3 class="sectionedit16" id="caneles">Canelés</h3>
+<div class="level3">
+
+<p>
+<a href="http://www.cuisine-etudiant.fr/recette/355-canneles-bordelais" class="urlextern" title="http://www.cuisine-etudiant.fr/recette/355-canneles-bordelais" rel="nofollow">Liens vers la recette</a>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> Remarques :</div>
+<ul>
+<li class="level3"><div class="li"> Les moules en silicone c&#039;est pour les nuls (je suis poli).</div>
+</li>
+<li class="level3"><div class="li"> Minimum 3 cuillères à soupe de rhum.  </div>
+</li>
+<li class="level3"><div class="li"> Beurrer les moules c&#039;est pour les noobs (ou ceux qui aiment donner un arrière goût de beurre à leurs gâteaux), perso j&#039;utilise de la graisse alimentaire (je ne parle pas de kebab) <a href="http://www.cerfdellier.com/4354-ouragan-demoulage-aerosol-500ml.html" class="urlextern" title="http://www.cerfdellier.com/4354-ouragan-demoulage-aerosol-500ml.html" rel="nofollow">Ouragan est connu notamment</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT16 SECTION "Canelés" [10158-10692] -->
+<h3 class="sectionedit17" id="gateau_chocolat">Gâteau chocolat</h3>
+<div class="level3">
+
+<p>
+<a href="http://www.marmiton.org/recettes/recette_gateau-au-chocolat-des-ecoliers_20654.aspx" class="urlextern" title="http://www.marmiton.org/recettes/recette_gateau-au-chocolat-des-ecoliers_20654.aspx" rel="nofollow">Liens vers la recette</a>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> Remarques :</div>
+<ul>
+<li class="level3"><div class="li"> Fonctionne aussi bien avec 150g de chocolat.</div>
+</li>
+<li class="level3"><div class="li"> On peut également ajouter des noix, des noisettes etc.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT17 SECTION "Gâteau chocolat" [10693-10967] -->
+<h2 class="sectionedit18" id="autres1">Autres</h2>
+<div class="level2">
+
+<p>
+<a href="http://becausebioinformatics.tumblr.com/" class="urlextern" title="http://becausebioinformatics.tumblr.com/" rel="nofollow">Pourquoi la bioinfo c&#039;est nul</a>
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Autres" [10968-] -->

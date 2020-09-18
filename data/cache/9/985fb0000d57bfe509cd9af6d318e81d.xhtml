@@ -1,0 +1,39 @@
+
+<h1 class="sectionedit1" id="java_thread_pool">Java Thread Pool</h1>
+<div class="level1">
+
+<p>
+Why you need thread pool in Java? The answer is usually when you develop a simple, concurrent application in Java, you create some Runnable objects and then create the corresponding Thread objects to execute them. Creating a thread in Java is an expensive operation. And if you start creating new thread instance every time to execute a task, application performance will degrade surely.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Java Thread Pool&quot;,&quot;hid&quot;:&quot;java_thread_pool&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-422&quot;} -->
+<h2 class="sectionedit2" id="threads_pool">Threads pool</h2>
+<div class="level2">
+
+<p>
+There are various thread pools in java:
+</p>
+
+<p>
+Single Thread Executor: A thread pool with only one thread. So all the submitted tasks will be executed sequentially. Method : Executors.newSingleThreadExecutor()
+</p>
+
+<p>
+Cached Thread Pool: A thread pool that creates as many threads it needs to execute the task in parallel. The old available threads will be reused for the new tasks. If a thread is not used for 60 seconds, it will be terminated and removed from the pool. Method : Executors.newCachedThreadPool()
+</p>
+
+<p>
+Fixed Thread Pool: A thread pool with a fixed number of threads. If a thread is not available for the task, the task is put in a queue waiting for the other task to ends. Method : Executors.newFixedThreadPool()
+</p>
+
+<p>
+Scheduled Thread Pool: A thread pool made to schedule future task. Method : Executors.newScheduledThreadPool()
+</p>
+
+<p>
+Single Thread Scheduled Pool: A thread pool with only one thread to schedule future task. Method : Executors.newSingleThreadScheduledExecutor()
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Threads pool&quot;,&quot;hid&quot;:&quot;threads_pool&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;423-&quot;} -->

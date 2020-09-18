@@ -1,0 +1,228 @@
+
+<h1 class="sectionedit1" id="zookeeper_04the_zookeeper_acls">ZooKeeper 04: The ZooKeeper ACLs</h1>
+<div class="level1">
+
+<p>
+ZooKeeper&#039;s data model provides a mechanism to control access to znodes using <abbr title="Access Control List">ACL</abbr>. While creating a znode, the ACLs determine the permissions with respect to the various operations that you can perform on the znodes. The ZooKeeper <abbr title="Access Control List">ACL</abbr> model is similar to the Unix/Linux file permissions in terms of permitting or preventing operations. <strong>It also uses permission bits to permit or prevent access on Znode</strong>. However, the ZooKeeper node <strong>doesn&#039;t have the concept of ownership</strong>. ACLs are determined on the basis of the authentication mechanism of the client and the ZooKeeper service.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper 04: The ZooKeeper ACLs&quot;,&quot;hid&quot;:&quot;zookeeper_04the_zookeeper_acls&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-633&quot;} -->
+<h2 class="sectionedit2" id="client_authentication">4.1 Client authentication</h2>
+<div class="level2">
+
+<p>
+Because ZooKeeper needs to deal with Humain and machine clients. So it uses a system called <strong>Scheme:ID</strong> to identify a client.
+</p>
+
+<p>
+<strong>Scheme</strong> defines the types of Client, it has the following possible value:
+</p>
+<ul>
+<li class="level1"><div class="li"> World scheme: This represents anyone who is connecting to the ZooKeeper service</div>
+</li>
+<li class="level1"><div class="li"> Auth scheme: This represents any authenticated user, but doesn&#039;t use any ID</div>
+</li>
+<li class="level1"><div class="li"> Digest scheme: This represents the username and password way of authentication</div>
+</li>
+<li class="level1"><div class="li"> IP scheme: This represents authentication with the IP address of the client</div>
+</li>
+<li class="level1"><div class="li"> Host scheme: This represents anyone within the same hosting server</div>
+</li>
+</ul>
+
+<p>
+<strong>ID</strong> is the id of the client based on the <strong>scheme</strong>. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Client authentication&quot;,&quot;hid&quot;:&quot;client_authentication&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;634-1337&quot;} -->
+<h3 class="sectionedit3" id="world_scheme">4.1.1 World scheme</h3>
+<div class="level3">
+
+<p>
+<strong>World scheme</strong> has only one ID (anyone). This represents any user in the world. For example, we type in the following command to set the znode accessible by anyone. Here <strong>crdwa</strong> is the permission associated with the client. Check section 4.2 to see the permission details.
+</p>
+<pre class="code"># It means anyone can do create/read/write/delete/admin on Znode /tmp
+setAcl /tmp world:anyone:crdwa</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.1 World scheme&quot;,&quot;hid&quot;:&quot;world_scheme&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1338-1763&quot;} -->
+<h3 class="sectionedit4" id="auth_scheme">4.1.2 Auth scheme</h3>
+<div class="level3">
+
+<p>
+Auth scheme represents any authenticated users, so no need to use any ID. <strong>But in practice, if you try to set <abbr title="Access Control List">ACL</abbr> on a znode using auth scheme and not provide any ID</strong>, it tells you that is not a valid ID, or some form of ID is needed.
+</p>
+<pre class="code"># This will raise an error message
+setAcl /tmp auth:crdwa</pre>
+
+<p>
+To do it correctly we need to add user name and password to the command
+</p>
+<pre class="code"># It means an authenticated user can do create/read/write/delete/admin on Znode /tmp
+setAcl /tmp auth:username:password:crdwa</pre>
+
+<p>
+The above command still throws error, because the username and password are never registered in the zookeeper. 
+</p>
+
+<p>
+To register a username/pwd pair, we need to use <strong>addauth</strong> Command. Suppose we have two username/pwd paires: toto:pwd1, titi:pwd2 
+</p>
+<pre class="code"># general form 
+addauth digest &lt;username&gt;:&lt;pwd&gt;
+
+# example 1
+addauth digest toto:pwd1
+
+# example 2, the znode name is optionnal
+addauth digest titi:pwd2</pre>
+
+<p>
+Now we can setacl with the id toto or titi
+</p>
+<pre class="code"># set acl to /tmp
+setAcl /tmp auth:toto:pwd1:crdwa
+
+# if we login with another client and try to access /tmp, you receive the following message
+[zk: 127.0.0.1:2181(CONNECTED) 0] get /tmp
+org.apache.zookeeper.KeeperException$NoAuthException: KeeperErrorCode = NoAuth for /tmp
+
+# if you do a getAcl
+[zk: 127.0.0.1:2181(CONNECTED) 3] getAcl /tmp
+&#039;digest,&#039;titi:tXE6n5rWxi3HOpV0Td9wTswRkDs=
+: cdrwa
+&#039;digest,&#039;toto:zTPgpkViifORWafT6PF+xAjvKgw=
+: cdrwa
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.2 Auth scheme&quot;,&quot;hid&quot;:&quot;auth_scheme&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1764-3240&quot;} -->
+<h3 class="sectionedit5" id="digest_scheme">4.1.3 Digest Scheme</h3>
+<div class="level3">
+
+<p>
+Digest scheme represents an individual user with authentication. This uses username:password string that is hashed using the SHA-1 hashing algorithm, and that hashed string is in turn base64 encoded. According to the ZooKeeper website, it is stated that the MD5 hash of &lt;username&gt;:&lt;password&gt; is used as an <abbr title="Access Control List">ACL</abbr> ID identity. 
+</p>
+<pre class="code"># set acl by using digest scheme, you don&#039;t need to register the username/pwd anymore. The digest will do it 
+setAcl /tmp digest:tata:pwd3:crdwa
+
+# check the new acl
+getAcl /tmp</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.3 Digest Scheme&quot;,&quot;hid&quot;:&quot;digest_scheme&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;3241-3791&quot;} -->
+<h3 class="sectionedit6" id="host_scheme">4.1.4 Host Scheme</h3>
+<div class="level3">
+
+<p>
+It uses the postfix of the host <abbr title="Uniform Resource Locator">URL</abbr> to check the permission. For example, if we set the following acl
+</p>
+<pre class="code">setAcl /tmp host:pengfei.com:crwda
+
+# if a client connect to zk with host:host2.pengfei.org, it will be permitted, but host:host3.centos.org will be denied.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.4 Host Scheme&quot;,&quot;hid&quot;:&quot;host_scheme&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:6,&quot;range&quot;:&quot;3792-4096&quot;} -->
+<h3 class="sectionedit7" id="ip_scheme">4.1.5 IP Scheme</h3>
+<div class="level3">
+
+<p>
+IP scheme represents any user within the same IP address.
+</p>
+<pre class="code">setAcl /tmp ip:127.0.0.1:crdwa</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1.5 IP Scheme&quot;,&quot;hid&quot;:&quot;ip_scheme&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;4097-4229&quot;} -->
+<h2 class="sectionedit8" id="zookeeper_acl_permissions">4.2 ZooKeeper ACL permissions</h2>
+<div class="level2">
+
+<p>
+ZooKeeper <abbr title="Access Control List">ACL</abbr> has the following permissions:
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Permission </th><th class="col1"> Definition</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> Create </td><td class="col1"> Creation of Znode</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> Read </td><td class="col1"> Read data of a Znode or list all children node of a Znode</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Write </td><td class="col1"> Write data of a Znode </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Delete </td><td class="col1"> Deletion of a Znode</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> Admin </td><td class="col1"> Modify the <abbr title="Access Control List">ACL</abbr> of a Znode </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;4319-4547&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 ZooKeeper ACL permissions&quot;,&quot;hid&quot;:&quot;zookeeper_acl_permissions&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4230-4549&quot;} -->
+<h2 class="sectionedit10" id="pluggable_authentication_and_scheme">4.3 Pluggable authentication and scheme</h2>
+<div class="level2">
+
+<p>
+In addition to the authentication schemes mentioned in the preceding list, ZooKeeper also supports a pluggable authentication mechanism, which makes it possible to integrate third-party authentication schemes if needed. Any authentication schemes in ZooKeeper consist of the following two main authentication operations:
+</p>
+<ol>
+<li class="level1"><div class="li"> Firstly, the authentication framework in ZooKeeper authenticates the client. The client authentication occurs when the client connects to the ZooKeeper service by validating client information.</div>
+</li>
+<li class="level1"><div class="li"> Secondly, the authentication framework finds the entries in the <abbr title="Access Control List">ACL</abbr>, which correspond to the client. <abbr title="Access Control List">ACL</abbr> entries are pairs that consist of &lt;IDs, Permissions&gt; pairs, where IDs are some strings that identify the client.</div>
+</li>
+</ol>
+
+<p>
+SASL kerberos authentication is a popular authentication for zookeeper. For more information on how to configure it, please visit: <a href="https://docs.cloudera.com/documentation/enterprise/5-3-x/topics/cdh_sg_zookeeper_security.html" class="urlextern" title="https://docs.cloudera.com/documentation/enterprise/5-3-x/topics/cdh_sg_zookeeper_security.html" rel="nofollow">https://docs.cloudera.com/documentation/enterprise/5-3-x/topics/cdh_sg_zookeeper_security.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3 Pluggable authentication and scheme&quot;,&quot;hid&quot;:&quot;pluggable_authentication_and_scheme&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:10,&quot;range&quot;:&quot;4550-5571&quot;} -->
+<h2 class="sectionedit11" id="acl_does_not_propagate_to_the_child">4.4 ACL does not propagate to the child</h2>
+<div class="level2">
+
+<p>
+An important point about znode ACLs is that the A<strong>CL associated with a particular znode doesn&#039;t propagate to its children</strong>. A client&#039;s authentication with ZooKeeper is optional; if the ACLs associated with a znode require a client to authenticate, then it must authenticate using any of the previously mentioned authentication mechanisms. An <abbr title="Access Control List">ACL</abbr> is the combination of an authentication mechanism, an identity for that mechanism, and a set of permissions.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4 ACL does not propagate to the child&quot;,&quot;hid&quot;:&quot;acl_does_not_propagate_to_the_child&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:11,&quot;range&quot;:&quot;5572-6082&quot;} -->
+<h2 class="sectionedit12" id="predefined_acl">4.5 Predefined ACL</h2>
+<div class="level2">
+
+<p>
+There are a number of predefined ACLs in ZooKeeper. These IDs, as defined by ZooKeeper ACLs, are shown in the following table:
+</p>
+<div class="table sectionedit13"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"><abbr title="Access Control List">ACL</abbr> ID </th><th class="col1"> <abbr title="Access Control List">ACL</abbr> Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> ANYONE_ID_UNSAFE </td><td class="col1"> This ID represents anyone</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> AUTH_IDS </td><td class="col1"> This is used to set ACLs, which get substituted with the IDs of the authenticated client </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> OPEN_<abbr title="Access Control List">ACL</abbr>_UNSAFE </td><td class="col1"> This denotes a completely open <abbr title="Access Control List">ACL</abbr>, and grants all permissions except the ADMIN permission </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> CREATOR_ALL_<abbr title="Access Control List">ACL</abbr> </td><td class="col1"> This <abbr title="Access Control List">ACL</abbr> grants all the permissions to the creator of the znode </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> READ_<abbr title="Access Control List">ACL</abbr>_UNSAFE </td><td class="col1"> This <abbr title="Access Control List">ACL</abbr> gives the world the ability to read </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;6242-6687&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.5 Predefined ACL&quot;,&quot;hid&quot;:&quot;predefined_acl&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;6083-&quot;} -->

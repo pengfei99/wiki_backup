@@ -1,0 +1,32 @@
+TLS_CACERTDIR   /etc/openldap/certs
+&nbsp;
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON    on
+&nbsp;
+URI ldaps://10.70.3.66:636
+BASE dc=pengfei,dc=org
+TLS_CACERT /etc/openldap/certs/cert.pem
+TLS_REQCERT allow
+&nbsp;
+&nbsp;
+# on the client run the ldapsearch with ldaps protocol
+ldapsearch -x -LLL -H ldaps://10.70.3.66 -b dc=pengfei,dc=org dn
+dn: dc=pengfei,dc=org
+&nbsp;
+dn: cn=admin,dc=pengfei,dc=org
+&nbsp;
+dn: ou=Users,dc=pengfei,dc=org
+&nbsp;
+dn: ou=Groups,dc=pengfei,dc=org
+&nbsp;
+# in the /var/log/openldap/slapd.log, you could see the tls connextion is established.
+&nbsp;
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 ACCEPT from IP=10.70.3.66:54080 (IP=0.0.0.0:636)
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 TLS established tls_ssf=256 ssf=256
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 BIND dn=&quot;&quot; method=128
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 RESULT tag=97 err=0 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH base=&quot;dc=pengfei,dc=org&quot; scope=2 deref=0 filter=&quot;(objectClass=*)&quot;
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH attr=dn
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SEARCH RESULT tag=101 err=0 nentries=6 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=2 UNBIND
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 closed

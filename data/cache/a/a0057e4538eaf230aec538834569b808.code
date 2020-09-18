@@ -1,0 +1,14 @@
+{
+    ...
+    &quot;scripts&quot;: {
+        &quot;post-install-cmd&quot;: [
+            ...
+            &quot;Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install&quot;
+        ],
+        &quot;post-update-cmd&quot;: [
+            ...
+            &quot;Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install&quot;
+        ]
+    }
+    ...
+}

@@ -1,0 +1,31 @@
+====== Mise en place d'une pipeline d'analyse Métagénomique======
+
+===== Simulation des jeux de données =====
+
+==== Grinder ====
+
+
+Téléchargement:[[http://sourceforge.net/projects/biogrinder/|Grinder]]
+
+Avantages:  
+ * Librairies de shotgun ou amplicons reads
+ * Distribution arbitraire du nombre de reads et de leurs longueurs
+  * Simulations des erreurs de séquencage et de PCR (chimères, mutations ponctuelles et homopolyméres)
+  * Soutien de jeux de données paired-end et mate paire
+  * Paramètres de l'abondance du rang spécifique ou de l'abondance donnée manuellement pour chaque génome, gène ou protéine.
+  * Création d'ensemble de données avec une richesse donnée (alpha diversity)
+  * Jeux de données indépendants peuvent partager une nombre variable de génome (beta diversity)
+  * Modélisation du biais crée par des longueurs variables de génome ou nombre de copies de génes
+
+Désavantage:
+  * Ne donne pas de score de qualitée.
+
+Dépendances:
+  * Perl
+  * Make
+
+Lancement:
+  - perl Makefile.PL
+  - make
+  - make install
+

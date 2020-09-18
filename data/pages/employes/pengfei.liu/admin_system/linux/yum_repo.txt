@@ -1,0 +1,92 @@
+====== Configure yum and manage Yum repo ======
+
+===== Configure yum =====
+
+The configuration information for yum and related utilities is located at /etc/yum.conf. This file contains one mandatory [main] section, which enables you to set yum options that have a global effect, and can also contain one or more [repository] sections, which allow you to set repository-specific options. However, it is recommended to define individual repositories in new or existing .repo files in the /etc/yum.repos.d/ directory. The values you define in individual [repository] sections of the /etc/yum.conf file override values set in the [main] section.
+
+An example of the yum main configuration
+
+<code>
+[main]
+cachedir=/var/cache/yum/$basearch/$releasever
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+installonly_limit=3
+bugtracker_url=http://bugs.centos.org/set_project.php?project_id=23&ref=http://bugs.centos.org/bug_report_page.php?category=yum
+distroverpkg=centos-release
+
+</code>
+
+You can get all the option explanation from this address: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-configuring_yum_and_yum_repositories
+
+==== Viewing the Current Configuration ====
+
+Once, your configuration is done. To display the current values of global yum options (that is, the options specified in the [main] section of the /etc/yum.conf file), execute the yum-config-manager command with no command-line options:
+
+<code>
+yum-config-manager
+</code>
+
+
+===== Manage your yum repo =====
+
+==== Adding, Enabling, and Disabling a yum repository ====
+
+To define a new repository, you can either add a [repository] section to the /etc/yum.conf file, or to a .repo file in the /etc/yum.repos.d/ directory. All files with the .repo file extension in this directory are read by yum.
+
+Note it is recommended to define your repositories in a .repo and put it in the /etc/yum.repos.d/ directory instead of in /etc/yum.conf.
+
+Warning: The repo must be trusted, otherwise it could lead to security, stability issues.
+
+Check this url for all trusted repos: https://wiki.centos.org/fr/AdditionalResources/Repositories/
+
+
+Yum repositories commonly provide their own .repo file. To add such a repository to your system and enable it, run the following command as root:
+
+<code>
+# repository_url is a link to the .repo file
+yum-config-manager --add-repo repository_url
+
+# adding an exmaple repo
+yum-config-manager --add-repo http://www.example.com/example.repo
+
+# Enable a repo, you can get the repoId via yum repolist all
+yum-config-manager --enable repoId
+
+# Replace the repoId by *, you can enable all repo
+yum-config-manager --enable \*
+
+# Disabling a Yum Repository
+yum-config-manager --disable repoId
+</code>
+
+==== Reset your yum base repo ====
+
+The CentOS 7 base release repo conf is located at "/etc/yum.repos.d/CentOS-Base.repo". It contains three parts:
+  * Base
+  * Extras
+  * Updates
+
+If this conf is corrupted, you can no longer download or update packages from the centos 7 base release repo.
+
+You can reset it by doing the following steps
+
+<code>
+# erase the corrupted repo, --nodeps means remove centos-release without dependencies
+rpm -e centos-release --nodeps
+
+# add the new correct repo
+rpm -Uvh http://mirror.centos.org/centos/7/os/x86_64/Packages/centos-release-7-6.1810.2.el7.centos.x86_64.rpm
+
+# The above URL may change with time, the best way to get the latest url. Goto http://mirror.centos.org/centos/7/os/x86_64/Packages, then find the latest centos-release-7 on the page
+
+# You can check the new repo
+yum repolist
+</code>
+
+

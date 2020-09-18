@@ -1,0 +1,119 @@
+
+<h1 class="sectionedit1" id="espace_de_stockage">Espace de stockage</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Espace de stockage" [1-34] -->
+<h2 class="sectionedit2" id="outils_de_gestion_des_fichiers">Outils de gestion des fichiers</h2>
+<div class="level2">
+
+<p>
+Le compte générique <code>biodata</code> peut être utiliser pour lire/écrire/modifier les fichiers sur les systèmes de fichier du CCIN2P3. <br/>
+
+</p>
+
+<p>
+<code> Laboratoire de rattachement (code bi) <img class="emojione" alt="&#x1f615;" src="//cdn.jsdelivr.net/emojione/assets/png/1F615.png?v=1.2.4"/>\
+ nom court    : BIOASTER<em>
+ nom          : INSTITUT DE RECHERCHE TECHNOLOGIQUE BIOASTER<br/>
+
+ directeur    : Nathalie Garcon <br/>
+
+
+User description : biodata<br/>
+
+  uid          : 42605<br/>
+
+  name         : Bioaster<br/>
+
+  firstname    : Dataman<br/>
+
+  email        : biodata@bioaster.org<br/>
+
+  labo         : bi (BIOASTER)<br/>
+
+  group(s)     : bioaster</em>
+  mailcertif   : <br/>
+
+  creation     : 05/10/2015 12:58:30<br/>
+
+  modification : 05/10/2015 12:59:22</code><br/>
+
+</p>
+
+<p>
+Le mot de passe du compte est dans la base de données commune, dans le répertoire <code>CC-IN2P3/</code>. Nicolas Sapay (nicolas.sapay@bioaster.org) possède les droits pour régénérer le mot de passe.<br/>
+
+Le shell par défaut de biodata est Bash. 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Outils de gestion des fichiers" [35-942] -->
+<h2 class="sectionedit3" id="afsandrew_file_system">AFS : Andrew File System</h2>
+<div class="level2">
+
+<p>
+<a href="http://cc.in2p3.fr/AFS" class="urlextern" title="http://cc.in2p3.fr/AFS"  rel="nofollow">AFS</a> est un peu le système de fichier à tout faire au CCIN2P3. C&#039;est ici que sont localisés les <code>home directory</code> des utilisateurs. Ils sont accessible avec la variable d&#039;environnement <code>$HOME</code>. Il existe également un répertoire partagé pour le groupe Bioaster [<code>/afs/in2p3.fr/throng/bioaster</code>], accessible avec la variable d&#039;environnement <code>$THRONG_DIR</code>. 
+</p>
+
+<p>
+L&#039;utilisation d&#039;AFS est bien documentée au CCINP2P3 :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://cc.in2p3.fr/docenligne/236/fr" class="urlextern" title="http://cc.in2p3.fr/docenligne/236/fr"  rel="nofollow">http://cc.in2p3.fr/docenligne/236/fr</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://cc.in2p3.fr/docenligne/234/fr" class="urlextern" title="http://cc.in2p3.fr/docenligne/234/fr"  rel="nofollow">http://cc.in2p3.fr/docenligne/234/fr</a></div>
+</li>
+</ul>
+
+<p>
+Il y a aussi une <a href="http://cctools.in2p3.fr/mrtguser/compta_afs.php?type=throng" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/compta_afs.php?type=throng"  rel="nofollow">interface</a> pour suivre son utilisation. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "AFS : Andrew File System" [943-1635] -->
+<h2 class="sectionedit4" id="gpfsgeneral_parallel_file_system">GPFS : General Parallel File System</h2>
+<div class="level2">
+
+<p>
+GPFS est l&#039;infrastructure de stockage permanent des fichiers de données primaires, et plus généralement de tout ce qui n&#039;est pas personnel, donc stocké dans le <code>$HOME</code> de l&#039;utilisateur. GPFS est accessible par le chemin <code>/sps/bioaster/</code>. SPS est l&#039;acronyme de “Semi Permanent Storage”, car GPFS est utilisé par les projets hébergés au <a href="http://cc.in2p3.fr/SPS" class="urlextern" title="http://cc.in2p3.fr/SPS"  rel="nofollow">CCIN2P3 pour du stockage semi-permanent</a>. Dans le cas de BIOASTER, GPFS est utilisé comme système de stockage permanent, associé à de la sauvegarde, <a href="https://ccwiki.in2p3.fr/_media/infrastructure:storage:backup:conditions_utilisation_service_sauvegarde_cc_-_in2p3.pdf" class="urlextern" title="https://ccwiki.in2p3.fr/_media/infrastructure:storage:backup:conditions_utilisation_service_sauvegarde_cc_-_in2p3.pdf"  rel="nofollow">selon les conditions du CCIN2P3</a>.  
+</p>
+
+</div>
+<!-- EDIT4 SECTION "GPFS : General Parallel File System" [1636-2367] -->
+<h2 class="sectionedit5" id="monitoring">Monitoring</h2>
+<div class="level2">
+
+<p>
+Le suivi de GPFS est décrit dans la <a href="https://ccspsmon.in2p3.fr/faq.html" class="urlextern" title="https://ccspsmon.in2p3.fr/faq.html"  rel="nofollow">FAQ du CCIN2P3</a>. Il existe également une <a href="https://ccspsmon.in2p3.fr/" class="urlextern" title="https://ccspsmon.in2p3.fr/"  rel="nofollow">interface graphique</a>.
+</p>
+
+<p>
+Afficher le quota:
+</p>
+<pre class="code text">$ spsquota list /sps/bioaster
+Fileset quota for '/sps/bioaster': Explicit quota defined
+Space used:     47.31 GB, Hard quota:         1 TB, Soft quota:         1 TB
+Files used:          364, Hard quota:          1 M, Soft quota:          1 M</pre>
+
+<p>
+Afficher le taux d&#039;utilisation:
+</p>
+<pre class="code text">$ df -kH /sps/bioaster
+Filesystem         Size  Used Avail Use% Mounted on
+/dev/sps_bioaster   59T  3.5T   55T   6% /sps/bioaster</pre>
+
+<p>
+Afficher la taille des dossiers:
+</p>
+<pre class="code text">$ du --si --max-depth=1 /sps/bioaster/db
+55G     /sps/bioaster/db/blast
+8.6G    /sps/bioaster/db/hmrgd
+0       /sps/bioaster/db/idx
+26G     /sps/bioaster/db/md5
+0       /sps/bioaster/db/mothur
+23G     /sps/bioaster/db/ucsc
+112G    /sps/bioaster/db</pre>
+
+</div>
+<!-- EDIT5 SECTION "Monitoring" [2368-] -->

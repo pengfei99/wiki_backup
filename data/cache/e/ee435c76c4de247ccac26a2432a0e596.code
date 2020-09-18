@@ -1,0 +1,7 @@
+function buildCar(){
+  wheels = buildWheels();
+  glasses = buildGlasses();
+  ...
+  car = mountCarPieces(wheels, glasses, ...)
+  return car
+}

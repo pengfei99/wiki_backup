@@ -1,0 +1,43 @@
+
+<h1 class="sectionedit1" id="mode_d_authentification_dans_noe">Mode d&#039;authentification dans NoE</h1>
+<div class="level1">
+
+<p>
+Les utilisateurs de <abbr title="Network Of Experiments">NoE</abbr> doivent se connecter via <a href="https://devtools.bioaster.org/redmine/projects/user_management/wiki" class="urlextern" title="https://devtools.bioaster.org/redmine/projects/user_management/wiki"  rel="nofollow"> Shibboleth</a>. 
+</p>
+
+<p>
+Shibboleth est pour le moment pluggé à l&#039;Active Directory de BIOASTER et à <a href="https://devtools.bioaster.org/redmine/projects/user_management/wiki/Sciforma" class="urlextern" title="https://devtools.bioaster.org/redmine/projects/user_management/wiki/Sciforma"  rel="nofollow"> Sciforma</a>. Par la suite, il devrait aussi être relié au document AQ recensant les cahiers de laboratoire.
+</p>
+
+<p>
+De cette manière, l&#039;application <abbr title="Network Of Experiments">NoE</abbr> n&#039;a pas a gérer les mot de passes, ni l&#039;attribution des utilisateurs aux projets et à leurs workpackage.
+</p>
+
+<p>
+A la connexion (validée par Shibboleth), un cookie de session est attribué au client de l&#039;utilisateur. De cette façon il n&#039;aura pas a rerentrer son mot de passe sur un temps à définir (actuellement 24h).
+</p>
+
+<p>
+Le logout de l&#039;application ne sera que pleinement effectif si l&#039;utilisateur se logout de Shibboleth.
+</p>
+
+<p>
+En prod il faut aller sur la page <a href="http://localhost:8000/auth/login/" class="urlextern" title="http://localhost:8000/auth/login/"  rel="nofollow">http://localhost:8000/auth/login/</a> afin de créer un employé.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Mode d'authentification dans NoE" [1-1046] -->
+<h1 class="sectionedit2" id="questions_autour_de_sciforma">Questions autour de Sciforma</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Un utilisateur est attaché à un Projet, un WP et une tache ainsi qu&#039;à une date de début et à une date de fin. Quand la date de fin est passée, la liaison entre l&#039;utilisateur et le Projet/WP/tache est-elle rompue ?</div>
+</li>
+<li class="level1"><div class="li"> Il y a plusieurs version de projet/WP (0,1,2,3,4), peut-on confirmer que c&#039;est bien la version 0 qui est a prendre en compte ?</div>
+</li>
+<li class="level1"><div class="li"> Si un utilisateur est absent (maladie, congé, …) et qu&#039;un autre prend sa place dans un projet temporairement, ce dernier voit-il ses droits modifié dans Sciforma pour un temps donné ? Si non, est-ce possible de mettre cela en place aisément ?</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Questions autour de Sciforma" [1047-] -->

@@ -1,0 +1,38 @@
+
+<h2 class="sectionedit1" id="fixed_bug_eclipse_kepler_apres_maj_sl6">Fixed Bug Eclipse (Kepler) après MàJ SL6</h2>
+<div class="level2">
+<pre class="code">sudo vi /opt/eclipse/eclipse.ini
+Add &quot;-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false&quot;</pre>
+
+</div>
+<!-- EDIT1 SECTION "Fixed Bug Eclipse (Kepler) après MàJ SL6" [1-160] -->
+<h2 class="sectionedit2" id="building_des_genomes_pour_bowtie2">Building des genomes pour Bowtie2</h2>
+<div class="level2">
+<pre class="code">/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build &lt;FASTA&gt; &lt;NOM&gt;
+Exemple :
+/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build hg19.fa hg19.fa</pre>
+
+</div>
+<!-- EDIT2 SECTION "Building des genomes pour Bowtie2" [161-367] -->
+<h2 class="sectionedit3" id="compilation_des_scripts_python">Compilation des scripts Python</h2>
+<div class="level2">
+<pre class="code">python -m compileall /home/cauchard/Sources/Bioaster/</pre>
+
+</div>
+<!-- EDIT3 SECTION "Compilation des scripts Python" [368-480] -->
+<h2 class="sectionedit4" id="pour_desactiver_selinux">Pour désactiver SELINUX</h2>
+<div class="level2">
+<pre class="code">Check status : sestatus
+
+Dans le fichier /etc/sysconfig/selinux
+Positionner selinux=disabled au lieu de selinux=enforcing
+Rebooter</pre>
+
+</div>
+<!-- EDIT4 SECTION "Pour désactiver SELINUX" [481-663] -->
+<h2 class="sectionedit5" id="pour_installer_librairie_reportlab_python">Pour installer librairie reportlab Python</h2>
+<div class="level2">
+<pre class="code">easy_install reportlab</pre>
+
+</div>
+<!-- EDIT5 SECTION "Pour installer librairie reportlab Python" [664-] -->

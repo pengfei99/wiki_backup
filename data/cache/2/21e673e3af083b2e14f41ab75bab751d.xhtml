@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="ambari_bleuprints">Ambari bleuprints</h1>
+<div class="level1">
+
+<p>
+The confluence doc:
+<a href="https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-APIResourcesandSyntax" class="urlextern" title="https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-APIResourcesandSyntax" rel="nofollow">https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-APIResourcesandSyntax</a>
+</p>
+
+<p>
+Ambari Blueprints are a declarative definition of a cluster. With a Blueprint, you specify a Stack, the Component layout and the Configurations to materialize a Hadoop cluster instance (via a REST <abbr title="Application Programming Interface">API</abbr>) without having to use the Ambari Cluster Install Wizard.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ambari bleuprints&quot;,&quot;hid&quot;:&quot;ambari_bleuprints&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-411&quot;} -->
+<h2 class="sectionedit2" id="api_resources_and_syntax">API Resources and Syntax</h2>
+<div class="level2">
+
+<p>
+The following table lists the basic Blueprints <abbr title="Application Programming Interface">API</abbr> resources.
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Resource</th><th class="col1"> Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">GET /blueprints</td><td class="col1"> Returns the available blueprints.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">POST /blueprints/:name</td><td class="col1"> Creates a blueprint.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">POST /clusters/:name</td><td class="col1"> Creates a cluster.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">GET /clusters/:name?format=blueprint	</td><td class="col1"> Export the current cluster layout as a blueprint.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;513-770&quot;} -->
+<p>
+Api call example
+</p>
+<pre class="code"># Get all available bleuprints
+curl -H &quot;X-Requested-By: ambari&quot; -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/blueprints
+
+# Get the bleuprint of cluster HyperThesau
+curl -H &quot;X-Requested-By: ambari&quot; -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/clusters/HyperThesau?format=blueprint &gt; blueprint.json
+
+# Get the cluster 
+curl -H &quot;X-Requested-By: ambari&quot; -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/clusters/HyperThesau/configurations &gt; configuration.json</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;API Resources and Syntax&quot;,&quot;hid&quot;:&quot;api_resources_and_syntax&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;412-&quot;} -->

@@ -1,0 +1,26 @@
+====== Bug de Firefox dans la gestion des certificats ======
+
+**Firefox 27.0.1** (Windows) présente un bug gênant dans la gestion des certificats ! Celui-ci se produit quand plusieurs certificats signés clients peuvent être présentés au même site web. 
+
+Le bug ne se produisait pas avec deux certificats émis pas CAcert. Le fenêtre de sélection s'affichait correctement. Après l'ajout d'un troisième certificat, signé par le CA de BIOASTER, la fenêtre de sélection ne s'affiche plus !
+
+... bien sûr, au moment de rédiger ce bug, le bug ne se produit plus et je ne peux donc pas faire de copie d'écrans ! Voilà donc la liste de choix avant et après l'ajout du second certificat.
+
+===== Connexion avec un seul certificat disponible =====
+
+{{securite/navigateur_internet/liste_certificats-1.png?direct&400|}}
+
+===== Ajout d'un second certificat =====
+
+{{securite/navigateur_internet/liste_certificats-2.png?direct&400|}}
+
+===== Connexion avec deux certificats disponibles =====
+
+{{securite/navigateur_internet/liste_certificats-3.png?direct&400|}}
+
+===== Bug lors de la connexion avec deux certificats disponibles =====
+
+//**Heureusement**//, lors du redémarrage de **Firefox**, le bug se reproduit !!! Aucun choix n'est proposé et répondre ''OK'' envoie le premier certificat disponible.
+
+{{securite/navigateur_internet/liste_certificats-4.png?direct&200|}}
+

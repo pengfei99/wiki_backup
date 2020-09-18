@@ -1,0 +1,71 @@
+
+<h1 class="sectionedit1" id="configure_spark_interpreter_to_use_pyspark">Configure spark interpreter to use pyspark</h1>
+<div class="level1">
+
+<p>
+The spark interpreter is pre-installed on zeppelin (My Zeppelin version is 0.8.0). So you should also have the default configuration for pyspark, sparkR. 
+</p>
+
+<p>
+The default configuration in spark interpreter for pyspark uses the system(the server which runs zeppelin) default python. In my case, it&#039;s python 2.7.5(centos7).
+</p>
+
+<p>
+In this tutorial, I will first install anaconda3, and reconfigure the spark interpreter pyspark parameter.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure spark interpreter to use pyspark&quot;,&quot;hid&quot;:&quot;configure_spark_interpreter_to_use_pyspark&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-487&quot;} -->
+<h2 class="sectionedit2" id="step1_install_anaconda3">Step1. Install anaconda3</h2>
+<div class="level2">
+
+<p>
+Follow this tutorial to install latest anaconda3 : <a href="/doku.php?id=employes:pengfei.liu:python:env_installation:install_anaconda" class="wikilink2" title="employes:pengfei.liu:python:env_installation:install_anaconda" rel="nofollow">Install anaconda</a>
+</p>
+
+<p>
+Two important points:
+1. The default installation path of anaconda is /root. We recommend you to use /opt/anaconda3 as the installation path.
+2. You should install anaconda on the server which runs Zeppelin and all worker nodes
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step1. Install anaconda3&quot;,&quot;hid&quot;:&quot;step1_install_anaconda3&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;488-890&quot;} -->
+<h2 class="sectionedit3" id="step2_configure_the_path_in_zeppelin">Step2. Configure the path in Zeppelin</h2>
+<div class="level2">
+
+<p>
+Click on Interpreter→spark2→Edit, you should see the following line, 
+</p>
+<pre class="code">//old config
+zeppelin.pyspark.python	python
+
+//New config, /opt/anaconda3/bin/python3 is my anaconda python path
+// This line will tell zeppelin which python to use when pyspark run pure python package
+zeppelin.pyspark.python	/opt/anaconda3/bin/python3
+
+// You also need to add two new lines in spark interpreter
+// This line tells spark worker where is the python bin
+PYSPARK_DRIVER_PYTHON	/opt/anaconda3/bin/python3
+// This line tells spark mater where is the python bin. It&#039;s redundant with zeppelin.pyspark.python. So if you have one, it&#039;s enough
+PYSPARK_PYTHON	/opt/anaconda3/bin/python3 </pre>
+
+<p>
+Save and update your interpreter
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step2. Configure the path in Zeppelin&quot;,&quot;hid&quot;:&quot;step2_configure_the_path_in_zeppelin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;891-1658&quot;} -->
+<h2 class="sectionedit4" id="step3_check_your_new_pyspark_environment">Step3. Check your new pyspark environment</h2>
+<div class="level2">
+<pre class="code python"><span class="co1"># check your spark context version</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>sc.<span class="me1">version</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># check your python env version</span>
+<span class="kw1">import</span> <span class="kw3">sys</span>
+&nbsp;
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">version</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">path</span><span class="br0">&#41;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step3. Check your new pyspark environment&quot;,&quot;hid&quot;:&quot;step3_check_your_new_pyspark_environment&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1659-&quot;} -->

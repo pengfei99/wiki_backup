@@ -1,0 +1,45 @@
+
+<h1 class="sectionedit1" id="cas">CAS</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+<br/>
+
+<strong>Travail en cours !!</strong>
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+Déployé avec Maven en suivant la documentation : <a href="http://jasig.github.io/cas/4.0.x/installation/Maven-Overlay-Installation.html" class="urlextern" title="http://jasig.github.io/cas/4.0.x/installation/Maven-Overlay-Installation.html"  rel="nofollow">http://jasig.github.io/cas/4.0.x/installation/Maven-Overlay-Installation.html</a>
+</p>
+
+<p>
+La VM est déployée comme d&#039;habitude :
+</p>
+<pre class="code">  $ nova boot --key-name=cloudkey --image=official-centos-7x-x86_64 --flavor=m1.tiny --security-groups=default test-cas</pre>
+
+<p>
+Le dépôt temporaire d&#039;orchestration peut-être (pour le moment) récupéré comme ceci :
+</p>
+<pre class="code">  $ bzr branch bzr+ssh://LOGIN@ccage.in2p3.fr/~tlecarro/repo/orchestration</pre>
+
+<p>
+On peut ensuite vérifier l&#039;inventaire et lancer le <code>playbook</code> :
+</p>
+<pre class="code">  $ ansible-playbook -i inventory cas.yml</pre>
+
+</div>
+<!-- EDIT1 SECTION "CAS" [1-649] -->
+<h2 class="sectionedit4" id="problemes">Problèmes</h2>
+<div class="level2">
+
+<p>
+Le déploiement de CAS se passe bien, mais la configurations des <code>beans</code> est plus problématique !
+La syntaxe du fichier <code>deployerConfigContext.xml</code> n&#039;est apparemment pas la bonne même si c&#039;est celle donnée dans les exemples (<a href="http://jasig.github.io/cas/4.0.x/installation/Database-Authentication.html" class="urlextern" title="http://jasig.github.io/cas/4.0.x/installation/Database-Authentication.html"  rel="nofollow">ici</a> et <a href="https://github.com/UniconLabs/simple-cas4-overlay-template/blob/master/src/main/webapp/WEB-INF/spring-configuration/propertyFileConfigurer.xml" class="urlextern" title="https://github.com/UniconLabs/simple-cas4-overlay-template/blob/master/src/main/webapp/WEB-INF/spring-configuration/propertyFileConfigurer.xml"  rel="nofollow">là</a>)…
+</p>
+
+<p>
+Ceci est dépendant du framework Spring (<a href="http://www.springbyexample.org/examples/intro-to-ioc-creating-a-spring-application.html" class="urlextern" title="http://www.springbyexample.org/examples/intro-to-ioc-creating-a-spring-application.html"  rel="nofollow">1</a>, <a href="http://www.springbyexample.org/examples/contact-webapp-spring-config.html" class="urlextern" title="http://www.springbyexample.org/examples/contact-webapp-spring-config.html"  rel="nofollow">2</a>), à creuser…
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Problèmes" [650-] -->

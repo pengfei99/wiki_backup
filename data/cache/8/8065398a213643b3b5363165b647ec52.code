@@ -1,0 +1,2 @@
+sudo yum install davfs2
+sudo mount.davfs https://owncloud.bioaster.org/remote.php/webdav/ /media/OwnCloud/

@@ -1,0 +1,71 @@
+====== Lesson04: Kafka producer ======
+
+When a producer sends messages to brokers, we need to ask the following questions?
+
+  * Is every message critical, or can we tolerate the loss of messages? 
+  * Are we OK with accidentally duplicating messages?
+  * Are there any strict latency or throughput requirements we need to support?
+
+Based on the answers to these questions, we need to configure the producer differently. The design of Kafka producer allows us to fulfill various requirements and find the balance between message safety and latency or throughput.
+
+===== 4.1 Kafka producer key components =====
+
+Below figure shows a High-level overview of Kafka producer components
+
+{{:employes:pengfei.liu:data_science:kafka:kafka_producer_component.png?600|}}
+
+
+==== 4.1.1 ProducerRecord ====
+
+All messages sent by a producer must be encapsulated in a ProducerRecord object, which must include:
+  * a topic
+  * a value(message).
+  * a key and/or a partition (Optional). 
+
+Once we send the ProducerRecord, the first thing the producer will do is **serialize** the key and value objects to ByteArrays so they can be sent over the network. This is done by the **serializer**.
+
+==== 4.1.2  Partitioner ====
+
+If we specified a partition in the ProducerRecord, the partitioner doesn’t do anything and simply returns the partition we specified in the ProducerRecord. 
+
+If there is no partition specified inside the ProducerRecord, the partitioner will choose a partition for us, usually based on the ProducerRecord key. Once a partition is selected, the producer knows which topic and partition the record will go to. It then adds the record to a batch of records that will also be sent to the same topic and partition.
+
+Below is the source code of org.apache.kafka.clients.producer
+
+<code java>
+/**
+     * computes partition for given record.
+     * if the record has partition returns the value otherwise
+     * calls configured partitioner class to compute the partition.
+     */
+    private int partition(ProducerRecord<K, V> record, byte[] serializedKey, byte[] serializedValue, Cluster cluster) {
+        Integer partition = record.partition();
+        return partition != null ?
+                partition :
+                partitioner.partition(
+                        record.topic(), record.key(), serializedKey, record.value(), serializedValue, cluster);
+    }
+</code>
+
+You can notice the **cluster** argument, which is the metadata of brokers cluster. This metadata can be retrieved from any broker. Because the controller(leader broker) gets the metadata from the zookeeper cluster. And other follower brokers sync the metadata with the controller. So all brokers have the same version of Kafka cluster metadata.
+
+==== 4.1.3 Buffer and Sender====
+
+The batch of ProducerRecord will be stored in **the Buffer area** until the batch reaches a certain size which is specified by the configuration of the Producer. 
+
+Once a batch is ready to be sent, **the Sender** which is in a separate thread is responsible for sending those batches of records to the appropriate Kafka brokers.
+
+When the broker receives the messages, it sends back a response. If the messages were successfully written by brokers to disk, the Sender will return a Future<RecordMetadata> object with the topic, partition, and the offset of the record within the partition. If the broker failed to write the messages, it will return an error. When the producer receives an error, the producer may retry sending the message a few more times before giving up and returning an error.
+
+
+<code java>
+# The producer provides two send methods
+# synchronously send
+Future<RecordMetadata> send(ProducerRecord<K, V> record);
+
+# asynchronously send
+Future<RecordMetadata> send(ProducerRecord<K, V> record, Callback callback);
+</code>
+
+Below figure shows the entire message sending cycle of producer
+{{:employes:pengfei.liu:data_science:kafka:kafka_producer_data_flow.png?600|}}

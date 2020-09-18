@@ -1,0 +1,150 @@
+====== Ajouter le support de Bootstrap ======
+
+Le bundle [[http://bootstrap.braincrafted.com/getting-started.html|Braincrafted]] fournit l'intégration de [[http://getbootstrap.com/|Twitter Bootstrap]].
+
+On installe ensuite le bundle avec Composer:
+
+<code txt composer.json>
+{
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery",
+                "version": "1.11.1",
+                "dist": {
+                    "url": "http://code.jquery.com/jquery-1.11.1.js",
+                    "type": "file"
+                }
+            }
+        }
+    ],
+    "require": {
+        ... other dependencies
+        "twbs/bootstrap": "3.0.*",
+        "jquery/jquery":  "1.11.*",
+        "braincrafted/bootstrap-bundle": "~2.0"
+    }
+}
+</code>
+
+On lance l'installation :
+
+    $ composer update
+
+On l'active dans symfony :
+
+<code txt app/AppKernel.php>
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+        );
+        // ...
+    }
+}
+</code>
+
+Il est nécessaire d'installer un compilateur LESS. Ceci se fait sur Debian comme ceci :
+
+    $ sudo vim /etc/apt/sources.list
+        deb http://http.debian.net/debian wheezy-backports main
+    $ sudo aptitude update
+    $ sudo aptitude -t wheezy-backports install nodejs
+    $ sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
+    $ wget https://www.npmjs.org/install.sh
+    $ sudo bash install.sh
+    $ sudo npm install -g less
+
+Ou sous Ubuntu :
+
+    $ sudo aptitude install nodejs npm
+    $ sudo npm install -g less
+
+Et pour une fois, c'est plus simple sur SL6 :
+
+    $ sudo yum install nodejs nodejs-less
+
+Il faut ensuite configurer l'outil :
+
+<code yml app/config/config.yml>
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [ ]
+    filters:
+        cssrewrite: ~
+        less:
+            node: /usr/bin/node
+            node_paths: [/usr/lib/node_modules]
+            apply_to: "\.less$"
+braincrafted_bootstrap:
+    less_filter: less
+</code>
+
+Pour compiler les fichiers css nécessaires :
+
+    php app/console assetic:dump
+
+Rendre les ''glyphicons'' disponibles :
+
+<code txt composer.json>
+{
+    ...
+    "scripts": {
+        "post-install-cmd": [
+            ...
+            "Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install"
+        ],
+        "post-update-cmd": [
+            ...
+            "Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install"
+        ]
+    }
+    ...
+}
+</code>
+
+Le template par défaut peut maintenant être adapté :
+
+<code html app/Resources/views/base.html.twig>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+    {% block stylesheets %}{% endblock %}
+    
+    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+</head>
+
+<body>
+    {% block body %}{% endblock %}
+    
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>
+</code>
+
+On peut ignorer certains des fichiers qui sont automatiquement générés et qui ne doivent pas être utilisés directement :
+
+    $ vim .bzrignore
+      web/css/bootstrap*
+      web/fonts/glyphicons*
+      web/js/bootstrap*
+      web/js/jquery*
+    $ bzr add
+    $ bzr ci -m "Mise en place de Twitter Bootstrap"

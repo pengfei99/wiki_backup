@@ -1,0 +1,43 @@
+====== Ajouter un bundle extérieur à un projet symfony ======
+
+Rappel : chaque partie d'un site est un bundle ! 
+
+====Exécuter la commande suivante ====
+    php app/console generate:bundle  
+
+====Choisir le namespace====
+Nommer votre bundle comme bon vous semble, il faut juste qu'il se termine par un suffixe "Bundle".
+Par convention, on le compose en trois parties : **OC/PlateformBundle**.\\
+
+-**OC** : namespace de la racine (pseudo, nom du site, nom de l'entreprise,ect ...)\\
+-**Plateform** : nom du bundle en lui-même\\
+-**Bundle** : suffixe obligatoire.\\
+
+Exemple : **Sdz/BlogBundle** (Sdz : nom du site, Blog : nom du bundle).
+
+====Choisir le nom du bundle====
+
+On appui sur Entrée par convention.
+
+Exemple : notre bundle se nommera **SdzBlogBundle**. 
+
+====Choisir la destination====
+
+Par convention, les bundles sont placés dans le répertoire **/src**.\\ 
+Appuyez de nouveau sur Entrée.
+
+====Choisir le format de configuration====
+
+Par défaut on utilisera le fichier yml.
+
+====Confirmation====
+Appuyer sur Entrée et voilà ! Le bundle est créé. 
+
+Puis de détail [[https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/utilisons-la-console-pour-creer-un-bundle|ici]].
+
+======Recettes pour ... ======
+
+Pages pour installer et faire fonctionner les bundles cités ci-dessous : 
+
+  * [[/informatique/developpement/symfony/ajouter_un_bundle/foscommentbundle|FOSCommentBundle]]
+  * [[/informatique/developpement/symfony/ajouter_un_bundle/fosuserbundle|FOSUserBundle]]

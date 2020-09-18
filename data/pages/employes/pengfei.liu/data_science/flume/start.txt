@@ -1,0 +1,27 @@
+====== Flume tutorials ======
+
+Flume is a standard, simple, robust, flexible, and extensible tool for data ingestion from various data producers (webservers) into Hadoop. In this series of tutorials, we will be using simple and illustrative examples to explain the basics of Apache Flume and how to use it in practice.
+
+===== Flume introduction =====
+[[employes:pengfei.liu:data_science:flume:introduction|Flume Introduction]]
+
+===== Install and configuration =====
+
+[[employes:pengfei.liu:data_science:flume:installation_configuration|Flume installation and configuration]]
+
+===== Flume agent configuration =====
+
+[[employes:pengfei.liu:data_science:flume:agent_configuration|Flume Agent configuration]]
+===== Flume working examples =====
+Flume seq generator agent : [[employes:pengfei.liu:data_science:flume:seg_generator_agent_configuration|Flume agent seq generator source, mem channel, hdfs sink]]
+
+Flume netcat agent:
+[[employes:pengfei.liu:data_science:flume:netcat_logger_agent|Flume agent with netcat source, logger sink]]
+
+Flume tweeter agent : 
+[[employes:pengfei.liu:data_science:flume:tweeter_hdfs_agent|Flume agent with tweeter source, hdfs sink]]
+
+Flume spool dir agent : [[employes:pengfei.liu:data_science:flume:local_file_to_hdfs|Flume agent fetch data from local file system to hdfs]]
+
+Flume work with spark streaming [[employes:pengfei.liu:big_data:spark:spark_streaming:flume_streaming|Flume spark streaming]]
+

@@ -1,0 +1,64 @@
+====== GNU Bazaar ======
+
+**GNU Bazaar**, abrégé //**bzr**//, est un outil de versionnement qui permet de garder une trace de toutes les modifications apportées à un ensemble de fichiers. Ce [[https://fr.wikipedia.org/wiki/Gestion_de_versions|genre d'outils]] est particulièrement utilisé en informatique pour le développement collaboratif, mais il peut être utilisé pour n'importe quel type de document. 
+
+Il existe plusieurs clients, graphiques ou en ligne de commande, sous GNU/Linux et Windows. Une fois installés, ils permettent d'effectuer les mêmes opérations assez facilement. Les concepts de base importants à saisir seront illustrés en utilisant le client en ligne de commande disponible sous tous les systèmes GNU.
+
+La [[http://wiki.bazaar.canonical.com/WindowsDownloads|version pour Windows]] inclus, en plus de bazaar lui-même, les extensions pour l'explorateur de fichiers et l'outil //bazaar explorer//.
+
+===== Introduction aux concepts de base =====
+
+La première chose à faire est de se présenter auprès de bazaar. En effet, chaque //version// (aussi appelée //révision//) est attribuée à un auteur.
+
+    $ bzr whoami "Tanguy LE CARROUR <tanguy.lecarrour@bioaster.org>"
+
+On peut dès lors créer un dossier dans lequel on travaillera. Sauf exception, tous les fichiers et sous dossiers seront versionnés.
+
+    $ mkdir mon_projet && cd mon_projet
+    $ bzr init
+
+Un dossier initialisé est aussi appelé une //branche//. La notion de branche sera abordée un peu plus tard.
+
+On peut maintenant créer des fichiers et les ajouter à la liste des fichiers suivis par bazaar.
+
+    $ touch mon_fichier.txt
+    $ bzr add mon_fichier.txt
+
+On peut maintenant enregistrer (//commit//) la première version du travail.
+
+    $ bzr ci -m "Ajout d'un nouveau fichier au projet."
+
+Par défaut, la commande ''commit'' (abrégée en ''ci'') enregistre les modifications de tous les fichiers surveillés. Les noms de fichier peuvent être passés en argument pour n'enregistrer que certains d'en eux. Pour voir les fichiers modifiés pouvant être enregistrés, il suffit d'utiliser la commande ''bzr status''.
+ 
+On peut voir toutes les modifications enregistrées dans l'historique.
+
+    $ bzr log
+    ---------
+    revno: 1
+    commiter: Tanguy LE CARROUR <tanguy.lecarrour@bioaster.org>
+    timestamp: Tue 2014-05-06 15:16:04 +0100
+    message:
+      Ajout d'un nouveau fichier au projet.
+
+Si au lieu d'enregistrer les modifications on veut les annuler, il suffit d'utiliser la commande ''revert''.
+
+    $ vim mon_fichier.txt
+    $ bzr st
+    modified:
+      mon_fichier.txt
+    $ bzr revert mon_fichier.txt
+
+Sans rentrer dans les détails du [[/si/developpement_collaboratif|travail collaboratif sur un projet]] tout de suite, on peut présenter la commande ''branch'' qui permet, associée à une connexion SSH, de sauvegarder son travail sur un serveur distant.
+
+    # Commande pour créer une branche, à utiliser uniquement si le projet n'existe pas
+    $ bzr branch . bzr+ssh://mon.serveur.fr/~tanguy/repo/mon_projet
+    # Commande à exécuter si la branche existe déjà 
+    $ bzr push bzr+ssh://mon.serveur.fr/~tanguy/repo/mon_projet
+
+===== Pour aller plus loin... =====
+
+Pour mieux comprendre les concepts et les commandes abordés, on pourra se référer à la page traitant du [[/si/developpement_collaboratif|travail collaboratif sur un projet]] et à la [[http://doc.bazaar.canonical.com/bzr.2.6/en/|documentation officielle]].
+
+Certains concepts nécessitent des pages dédiées :
+  * [[/si/outils/bazaar/fusion_de_branches|bonnes pratiques de fusion de branches]]
+  * [[/si/outils/bazaar/depots|travailler avec des dépôts]]

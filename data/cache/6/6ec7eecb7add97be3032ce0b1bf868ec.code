@@ -1,0 +1,4 @@
+$ git fetch
+$ git checkout master
+$ git checkout -b test-feature-123
+$ git merge --no-ff origin/feature-123

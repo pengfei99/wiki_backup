@@ -1,0 +1,7 @@
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+invocationhandler"><span class="kw3">InvocationHandler</span></a> handler <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldHandler<span class="br0">&#40;</span>helloWorld<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+HelloWorld proxy<span class="sy0">=</span><span class="br0">&#40;</span>HelloWorld<span class="br0">&#41;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+proxy"><span class="kw3">Proxy</span></a>.<span class="me1">newProxyInstance</span><span class="br0">&#40;</span>
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getClassLoader</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getInterfaces</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                handler
+        <span class="br0">&#41;</span><span class="sy0">;</span>

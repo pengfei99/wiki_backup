@@ -1,0 +1,5 @@
+biospecimens_connected_workflow:
+    path : /biospecimens/fr/connected/workflow
+    defaults: {_controller:BSBiospecimensBundle:Workflow:workflow}
+    requirements:
+      _method: POST

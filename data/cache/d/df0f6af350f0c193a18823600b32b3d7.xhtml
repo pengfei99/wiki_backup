@@ -1,0 +1,155 @@
+
+<h1 class="sectionedit1" id="reunion_ccin2p3-bioaster_du_14012015">Réunion CCIN2P3-BIOASTER du 14/01/2015</h1>
+<div class="level1">
+
+<p>
+<strong>Date</strong> : 14/01/2015<br/>
+
+<strong>Lieu</strong> : CCIN2P3<br/>
+
+<strong>Participants</strong> : Jacques GARNIER, Nicolas SAPAY, Pierre VEYRE, Ghita RAHAL, Mattieu PUEL, Julien CARPENTIER
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Réunion CCIN2P3-BIOASTER du 14/01/2015" [1-211] -->
+<h2 class="sectionedit2" id="information_generale">Information générale</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Arrivée imminente d&#039;un responsable UT06</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Information générale" [212-292] -->
+<h2 class="sectionedit3" id="schema_de_principe_des_deploiements_au_ccin2p3">Schéma de principe des déploiements au CCIN2P3</h2>
+<div class="level2">
+
+<p>
+<a href="/_detail/ut6/pt6/pt6/ccin2p3/schema-archi.png?id=reunion%3Areunion_14.01.2015" class="media" title="ut6:pt6:pt6:ccin2p3:schema-archi.png"><img src="/_media/ut6/pt6/pt6/ccin2p3/schema-archi.png?w=300&amp;tok=dd1e2b" class="media" alt="" width="300" /></a>
+</p>
+
+<p>
+Le schéma de principe explique le plan de développement de l&#039;UT06 de BIOASTER autour du cloud OpenStack du CCIN2P3. La <a href="/ccin2p3/partenariat#liste_des_services_a_deployer" class="wikilink1" title="ccin2p3:partenariat">liste des services</a> que BIOASTER souhaite déployer a également été présentée avec le schéma. Deux services ont retenu l&#039;attention du CCIN2P3 : <a href="http://pegasus.isi.edu/" class="urlextern" title="http://pegasus.isi.edu/"  rel="nofollow">Pegasus</a> et <a href="http://research.cs.wisc.edu/htcondor/" class="urlextern" title="http://research.cs.wisc.edu/htcondor/"  rel="nofollow">HTcondor</a> (HTCondor est une dépendance de Pegasus). En particulier, le CCIN2P3 est intéressé par un retour d&#039;expérience sur HTCondor.
+</p>
+
+<p>
+Il est à noter qu&#039;une première version de cette liste figure en annexe 5 de la convention avec le CCIN2P3. Ce point a également fait l&#039;objet d&#039;un échange par courrier électronique entre le 24/09/2014 et le 10/10/2014.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Schéma de principe des déploiements au CCIN2P3" [293-1166] -->
+<h2 class="sectionedit4" id="configuration_actuelle_d_openstack">Configuration actuelle d&#039;OpenStack</h2>
+<div class="level2">
+
+<p>
+Le cloud OpenStack doit être le coeur du système et permettant de déployer à la demande des VM de calculs ou de service. Il existe 2 Tenants associés à BIOASTER :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>bioaster</code> : Tenant de service routé vers l&#039;extérieur. Il peut accéder à Internet et au second Tenant de BIOASTER. Les ressources du Tenant <code>bioaster</code> sont mutualisées avec les autres Tenants CCIN2P3. le nombre de VM sur <code>bioaster</code> est limité à 3. </div>
+</li>
+<li class="level1"><div class="li"> <code>htc_bioaster</code> : Tenant dédié au calcul. Il n&#039;est pas routé vers l&#039;extérieur et est uniquement accessible depuis les frontales SSH du CCIN2P3 ou les VM du tenant <code>bioaster</code>. Les ressources du Tenant <code>htc_bioaster</code> ont été mise à disposition exclusive de de BIOASTER par le CCIN2P3 (cf. demande ci-dessus).  Les limites d&#039;utilisation sont celles des machines physiques hébergeant les VM.</div>
+</li>
+</ul>
+
+<p>
+L&#039;accès au Tenant <code>htc_bioaster</code> est facilité par l&#039;utilisation du wrapper OpenStack développé par SysFera pour BIOASTER.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Configuration actuelle d'OpenStack" [1167-2184] -->
+<h2 class="sectionedit5" id="liste_des_problemes_et_des_questions">Liste des problèmes et des questions</h2>
+<div class="level2">
+
+<p>
+BIOASTER a identifiés les problèmes suivants lors de la prise en main d&#039;OpenStack :
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Accès à GPFS depuis les VM :</strong> Les VM OpenStack doivent accéder à l&#039;espace <code>/sps/bioaster</code>, de la même façon qu&#039;un worker de la ferme.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Accès à AFS depuis les VM :</strong> Le client AFS doit être intégré à l&#039;image de la VM. l&#039;accès se fait nécessairement par une saisie du mot de passe au clavier, ce qui empêche une automatisation. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Quota de VM limité sur le Tenant <code>bioaster</code> :</strong> le quota n&#039;est pas suffisant pour déployer <a href="/ccin2p3/partenariat#liste_des_services_a_deployer" class="wikilink1" title="ccin2p3:partenariat">l&#039;ensemble des services</a> prévus par BIOASTER.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Suivi de la consommation :</strong> BIOASTER aura besoin de suivre et comptabiliser l&#039;utilisation du cloud selon plusieurs critères (utilisateur, projet, RAM, etc.). Comment se fera ce suivi côté CCIN2P3? </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Liste des problèmes et des questions" [2185-3087] -->
+<h2 class="sectionedit6" id="acces_a_gpfs_et_afs">Accès à GPFS et AFS</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Accès à GPFS et AFS" [3088-3121] -->
+<h3 class="sectionedit7" id="acces_a_gpfs">Accès à GPFS</h3>
+<div class="level3">
+
+<p>
+La migration de <code>/sps/inter/bioaster</code> vers <code>/sps/bioaster</code> se fera le 19/01/2015. L&#039;accès à <code>/sps/bioaster</code> depuis les VM se fait par l&#039;intermédiaire d&#039;un montage NFSv3. Le serveur NFS est directement présenté par GPFS (c&#039;est une fonctionnalité du système). Par contre, le service stockage renvoie un nom de machine plutôt qu&#039;un nom de service. Un alias vers un seul service éviterait de gérer une liste de machine.<br/>
+
+</p>
+
+<p>
+NFSv4 sera souhaitable pour des raisons de sécurité et de suivi des droits utilisateurs. La mise à niveau sera faite par l&#039;équipe infra (discussions entre Jacques GARNIER et loïc TORTAY)
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Accès à GPFS" [3122-3775] -->
+<h3 class="sectionedit8" id="sauvegarde_de_gpfs_pour_info">Sauvegarde de GPFS (pour info)</h3>
+<div class="level3">
+
+<p>
+GPFS va utiliser les snapshots (1 snapshot/24h). Les snapshots permettent potentiellement de revenir longtemps en arrière. Les snapshots devront ensuite être sauvegardées. A voir avec le CC combien de snapshots il faut garder et combien il faut en sauvegarder.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Sauvegarde de GPFS (pour info)" [3776-4081] -->
+<h3 class="sectionedit9" id="acces_a_afs">Accès à AFS</h3>
+<div class="level3">
+
+<p>
+L&#039;accès à AFS se fait en installant le client AFS dans l&#039;image de la VM. l&#039;accès se fait nécessairement par une saisie du mot de passe au clavier, ce qui empêche une automatisation. Pour l&#039;instant, aucune évolution n&#039;est envisagée. Les données nécessaires aux calculs (p.ex. les binaires) seront migrées sur <code>/sps/bioaster</code>.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Accès à AFS" [4082-4443] -->
+<h2 class="sectionedit10" id="quota_sur_le_tenant_de_service">Quota sur le Tenant de service</h2>
+<div class="level2">
+<blockquote><div class="no">
+BIOASTER propose de configurer les 2 tenants <code>bioaster</code> et <code>htc_bioaster</code> sur les 2 machines Dell réservées pour BIOASTER. On sur-réserverait alors les ressources pour le service (overprovisionning), mais ça permettrait d&#039;être souple sur l&#039;utilisation des VM de service.</div></blockquote>
+<blockquote><div class="no">
+<blockquote><div class="no">
+ Mattieu PUEL explique que dans ces conditions, il sera impossible de maintenir la qualité de service du Tenant <code>bioaster</code>, telle qu&#039;elle existe sur les machines de services du Cloud. Une solution serait de réserver des machines de services pour BIOASTER. Le CCIN2P3 devrait donc investir dans des machines dédiées, comme pour le Tenant <code>htc_bioaster</code>.<br/>
+ Mattieu indique qu&#039;actuellement, l&#039;utilisation du cluster de service se fait à titre gracieux, au détriment d&#039;une souplesse d&#039;utilisation.</div></blockquote>
+</div></blockquote>
+<blockquote><div class="no">
+<blockquote><div class="no">
+<blockquote><div class="no">
+ Nicolas SAPAY indique qu&#039;il est souhaitable d&#039;exploiter les 2 serveurs Dell du Tenant <code>htc_bioaster</code>, puisque les ressources sont disponibles et déjà financées.<br/>
+ Jacques GARNIER indique qu&#039;il pourrait être envisageable de reverser le quota d&#039;utilisation de la ferme sur le cloud OpenStack.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<blockquote><div class="no">
+<blockquote><div class="no">
+ Mattieu PUEL explique qu&#039;il n&#039;est pas possible de configurer le Tenant <code>bioaster</code> à la fois sur le cluster de service et le cluster de calcul (i.e. les 2 serveurs Dell). BIOASTER ne pourrait donc pas utiliser le cluster de service si les 2 Tenants <code>bioaster</code> et <code>htc_bioaster</code> sont paramétrés sur le cluster de calcul. Mattieu PUEL propose que BIOASTER face une demande officielle d&#039;hébergement de services au CC. </div></blockquote>
+</div></blockquote>
+<blockquote><div class="no">
+<blockquote><div class="no">
+<blockquote><div class="no">
+ Pierre VEYRE va préparer la liste des services que BIOASTER souhaitent déployer courant 2015.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<blockquote><div class="no">
+ BIOASTER et le CCIN2P3 referont le point lorsque cette nouvelle demande sera traité.</div></blockquote>
+
+</div>
+<!-- EDIT10 SECTION "Quota sur le Tenant de service" [4444-6200] -->
+<h2 class="sectionedit11" id="developpements_communs">Développements communs</h2>
+<div class="level2">
+
+<p>
+Le CCIN2P3 et BIOASTER sont d&#039;accord sur la nécessité développer un suivi de la consommation et de l&#039;exploitation du cloud OpenStack. BIOASTER indique qu&#039;il a la possibilité de monter un projet sur ce thème. BIOASTER propose également d&#039;impliquer SysFera sur ce travail, puisqu&#039;il possède une expertise sur OpenStack. Pour l&#039;instant, la proposition est en suspend. Elle sera transmise officiellement avec le demande d&#039;hébergement de service.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Développements communs" [6201-] -->

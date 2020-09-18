@@ -1,0 +1,15 @@
+====== Ordre du jour ======
+  - Déploiement de TranSMART, bioMAJ, WWWblast et Galaxy
+  - Cloud OpenStack et poste ouvert au PT6.
+  - Création d’un Data Warehouse à BIOASTER (avec le CT1).
+  - <del>Matlab</del> [[http://www.gnu.org/software/octave/|Octave]] et station de travail des bio-inforamticiens
+  - Répartition des tâches. 
+  - Annonces diverses et variées : ECCB 2014, formation Cloud, Tarif du PT6…
+  - Créer un [[/securite/certification|CA Bioaster Lyon]] pour que Jacques puisse créer des certificats pour les collègues de Claire (CAcert n'est pas évident, même pour elle) /TLC
+
+====== Commentaires et actions ======
+
+  * 7) Bien... mais pas top ! Encourage les utilisateurs à être feignants. De plus, la clé privée ne devrait **jamais** être en la possession de quelqu'un d'autre que de son propriétaire. Solutions possibles :
+    * [[http://www.startssl.com/|StartSSL]]
+    * [[https://pki.openca.org/|OpenCA]]
+    * page de génération de certificats : http://stackoverflow.com/questions/9197484/generating-client-side-certificates-in-browser-and-signing-on-server

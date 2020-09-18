@@ -1,0 +1,32 @@
+<span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Form\Type<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Propel\PropelBundle\Form\BaseAbstractType<span class="sy0">;</span>
+<span class="kw2">use</span> Symfony\Component\Form\FormBuilderInterface<span class="sy0">;</span>
+<span class="kw2">use</span> Symfony\Component\OptionsResolver\OptionsResolverInterface<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> PersonType <span class="kw2">extends</span> BaseAbstractType
+<span class="br0">&#123;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> setDefaultOptions<span class="br0">&#40;</span>OptionsResolverInterface <span class="re0">$resolver</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$resolver</span><span class="sy0">-&gt;</span><span class="me1">setDefaults</span><span class="br0">&#40;</span><a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'data_class'</span> <span class="sy0">=&gt;</span> <span class="st_h">'AppBundle\Model\Person'</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw2">public</span> <span class="kw2">function</span> getName<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <span class="st_h">'person'</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co4">/**
+     * {@inheritdoc}
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> buildForm<span class="br0">&#40;</span>FormBuilderInterface <span class="re0">$builder</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a> <span class="re0">$options</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$builder</span>
+            <span class="sy0">-&gt;</span><span class="me1">add</span><span class="br0">&#40;</span><span class="st_h">'first_name'</span><span class="br0">&#41;</span>
+            <span class="sy0">-&gt;</span><span class="me1">add</span><span class="br0">&#40;</span><span class="st_h">'last_name'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

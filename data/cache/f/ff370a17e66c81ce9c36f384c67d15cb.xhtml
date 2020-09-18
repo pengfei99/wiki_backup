@@ -1,0 +1,93 @@
+
+<h1 class="sectionedit1" id="reunion_du_05_octobre_2017">Réunion du 05 Octobre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 05 Octobre 2017" [1-44] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [45-92] -->
+<h2 class="sectionedit3" id="tests_de_l_application">Tests de l&#039;application</h2>
+<div class="level2">
+
+<p>
+Application déployée ( <a href="https://biospecimens-15.bioaster.org" class="urlextern" title="https://biospecimens-15.bioaster.org"  rel="nofollow">https://biospecimens-15.bioaster.org</a> ) au commit <a href="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/cbf1418003557f83334fbf102d2039693d0e3579" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/cbf1418003557f83334fbf102d2039693d0e3579"  rel="nofollow">cbf14180</a> et testée par <abbr title="Yoann Mouscaz">YM</abbr> et <abbr title="Clément Delestre">CD</abbr>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Tests de l'application" [93-338] -->
+<h3 class="sectionedit4" id="retours_de_bugs">Retours de bugs</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Long à résoudre (au moins un jour)</div>
+</li>
+<li class="level1"><div class="li"> Moyen à résoudre (entre 1 et 8h)</div>
+<ul>
+<li class="level2"><div class="li"> Moteur de recherche ; ça foire quand on fait une demande sur un échantillon humain (cf screen shot de Yoann) </div>
+</li>
+<li class="level2"><div class="li"> Quand on clique sur “mot de passe oublié” on peut saisir une adresse mail qui n&#039;est pas enregistrée dans la BDD sans que ça n&#039;affiche la moindre erreur.</div>
+</li>
+<li class="level2"><div class="li"> Dans la partie “admin” lorsque l&#039;on génère un mot de passe ça prend beaucoup de temps. De plus ça ne met pas l&#039;utilisateur en “enabled” automatiquement.  Enfin le liens envoyé est en “<strong>admin</strong>/” !</div>
+</li>
+<li class="level2"><div class="li"> Quand un échantillon évolue de l&#039;étape 6 vers 5 (retour en arrière) par défaut ça montre le mail d&#039;annulation</div>
+</li>
+<li class="level2"><div class="li"> Quand on supprime une demande ça ne supprime pas le Thread associé en OtO </div>
+</li>
+<li class="level2"><div class="li"> Quand on valide un commentaire ça met du temps et on peut cliquer plein de fois. GARE AUX SPAMS</div>
+</li>
+<li class="level2"><div class="li"> On peut supprimer les PJ des autres.</div>
+</li>
+<li class="level2"><div class="li"> On ne doit pas pouvoir “répondre” à un commentaire si on a pas les droits de lecture de la demande</div>
+</li>
+<li class="level2"><div class="li"> Quand on supprime une pièce jointe liée à une demande ça ne fait rien.</div>
+</li>
+<li class="level2"><div class="li"> Quand une demande est stoppée avant l&#039;étape 4 ça affiche “stoppée” que pour le virus et pas pour l&#039;humain (cf la demande faites par Clément)</div>
+</li>
+<li class="level2"><div class="li">  <code>request.CRITICAL: Uncaught PHP Exception Doctrine\ORM\Query\QueryException: “[Semantical Error] line 0, col 243 near &#039;isolatedFrom)&#039;: Error: Class BS\BiospecimensBundle\Entity\MicroorganismsCollection has no field or association named isolatedFrom” at /var/www/biospecimens-sf/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php line 63 {“exception”:“[object] (Doctrine\\ORM\\Query\\QueryException(code: 0): [Semantical Error] line 0, col 243 near &#039;isolatedFrom)&#039;: Error: Class BS\\BiospecimensBundle\\Entity\\MicroorganismsCollection has no field or association named isolatedFrom at /var/www/biospecimens-sf/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php:63, Doctrine\\ORM\\Query\\QueryException(code: 0): SELECT DISTINCT s FROM BSBiospecimensBundle:MicroorganismsCollection s INNER JOIN s.supplier crb LEFT JOIN crb.contacts contacts INNER JOIN crb.adress adress WHERE s.isBacteria = true AND LOWER(s.genus) = :genus AND s.host = :host AND LOWER(s.isolatedFrom) = :isolatedFrom at /var/www/biospecimens-sf/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php:41)”} []</code> → moteur de recherche</div>
+</li>
+<li class="level2"><div class="li"> Mettre des <code>target=“_blank”</code> un peu partout</div>
+</li>
+<li class="level2"><div class="li"> Lorsqu&#039;on supprime un supplier (attaché <em>via</em> le moteur de recherche) d&#039;une bactérie on retourne vers un virus. → tester tous les cas possibles</div>
+</li>
+<li class="level2"><div class="li"> Quand on crée une société en backoffice et qu&#039;on veut y joindre une entité on a un formulaire avec nom prénom… Chelou</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Rapide à résoudre (moins d&#039;une heure)</div>
+<ul>
+<li class="level2"><div class="li"> Le liens vers le site de BIOASTER dans la navbar du haut n&#039;est pas bon</div>
+</li>
+<li class="level2"><div class="li"> Mettre à jour les images en fonction des remarques effectuées lors du poster JOBIM</div>
+</li>
+<li class="level2"><div class="li"> Demande sans compte : À l&#039;étape récapitulative ça m&#039;affiche “Civility : empty” alors que j&#039;ai choisi “doctor”</div>
+</li>
+<li class="level2"><div class="li"> Quand on déroule une demande dans le tableau de bord pour afficher les échantillons il faut écrire “annulé” pour un échantillon annulé</div>
+</li>
+<li class="level2"><div class="li"> La flèche de chosen n&#039;était pas chargée ( fixé à l&#039;arrache en faisant <code>cp ./web/node_modules/chosen-js/chosen-sprite@2x.png ./web/css/</code> )  → Faudra mieux gérer les dépendances front end.</div>
+</li>
+<li class="level2"><div class="li"> Baisser la police car “projet-workpackage” dépasse dans le back office</div>
+</li>
+<li class="level2"><div class="li"> Quand on met un commentaire “étape finie” on doit afficher le code demande et pas son ID</div>
+</li>
+<li class="level2"><div class="li"> Partie admin “import data” ; typo dans les labels (accent à serogroupe, autreS propriétés, charactérisation de la souche) + enlever les deux points sur toute la ligne où ça foire + importer chosen quand y&#039;a une liste à choix + voir si on peut remplacer certains champs textes par des listes à choix</div>
+</li>
+<li class="level2"><div class="li"> Dans la liste des collections de microorganismes quand on veut éditer ça affiche une pop up “êtes vous sûr ?”</div>
+</li>
+<li class="level2"><div class="li"> Typo “retour à la listE des projets” il manque le E</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Retours de bugs" [339-] -->

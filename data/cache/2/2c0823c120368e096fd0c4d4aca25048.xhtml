@@ -1,0 +1,28 @@
+
+<p>
+Suite à la réunion du 12 Juillet entre <abbr title="Pengfei Liu">PLU</abbr> <abbr title="Guillaume Boissy">GB</abbr> et <abbr title="Clément Delestre">CD</abbr> il a été demandé à <abbr title="Pengfei Liu">PLU</abbr> de dimensionner les solution possibles pour monitor les stats de biospecimens et autre applications web (e.g. <abbr title="Network Of Experiments">NoE</abbr>)
+</p>
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"># </th><th class="col1 leftalign">Description?                  </th><th class="col2 leftalign">Points forts          </th><th class="col3 leftalign">Points faibles  </th><th class="col4">Isofonctionnel </th><th class="col5">Temps </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0">1 </th><td class="col1"> Install server awstats, copy log files and analyze log files manually. </td><td class="col2 leftalign"> * solution rapid.  </td><td class="col3 leftalign"> * No log update     </td><td class="col4 leftalign"> Yes  </td><td class="col5"> ~3 days </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0">2 </th><td class="col1"> Use Rsync to copy log files from web application servers to awstats server, <br/>
+edit daily cron job to analyze log files and do the log rotation </td><td class="col2 leftalign"> * Log files transfer  and log analysis is done automatically  </td><td class="col3"> * Log files are transfered as plain text data no log curation or filter possible </td><td class="col4"> Yes </td><td class="col5"> 5 days</td>
+	</tr>
+	<tr class="row3">
+		<th class="col0">3 </th><td class="col1"> Install syslog-ng server on awstats server, and syslog-ng client on biospecimens. <br/>
+Edit daily cron job to analyze log files and do the log rotation. <br/>
+Edit ansible play book to deploy syslog-ng client </td><td class="col2"> * The syslog-ng server can be our centralize log server. This server can make us respect the data center log saving law. <br/>
+* Log files can be parsed into structrued data (e.g. xml, json), can be applied to all kinds of log files </td><td class="col3"> * Take a long time to do </td><td class="col4"> Yes </td><td class="col5"> Hard to say, 10-15 days maybe</td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [198-1253] -->
+<p>
+Other comments and suggestions:
+</p>

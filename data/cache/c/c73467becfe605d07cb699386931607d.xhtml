@@ -1,0 +1,15 @@
+
+<h1 class="sectionedit1" id="event_sourcing">Event sourcing</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Event sourcing&quot;,&quot;hid&quot;:&quot;event_sourcing&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="context">Context</h2>
+<div class="level2">
+
+<p>
+A service typically needs to atomically update the database and publish messages/events. For example, perhaps it uses the Saga pattern. In order to be reliable, each step of a saga must atomically update the database and publish messages/events. Alternatively, it might use the Domain event pattern, perhaps to implement CQRS. In either case, it is not viable to use a distributed transaction that spans the database and the message broker to atomically update the database and publish messages/events.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Context&quot;,&quot;hid&quot;:&quot;context&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-&quot;} -->

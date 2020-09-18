@@ -1,0 +1,5 @@
+<span class="co1">// during registration</span>
+SelectionKey key <span class="sy0">=</span> channel.<span class="me1">register</span><span class="br0">&#40;</span>selector, SelectionKey.<span class="me1">OP_READ</span>,theObject<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// after registration</span>
+key.<span class="me1">attach</span><span class="br0">&#40;</span>theObject<span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> attachedObj <span class="sy0">=</span>key.<span class="me1">attachment</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>

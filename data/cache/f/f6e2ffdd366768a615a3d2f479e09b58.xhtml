@@ -1,0 +1,529 @@
+
+<h1 class="sectionedit1" id="data_cleaning">Data Cleaning</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we will show how to clean data before analyze them.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Data Cleaning&quot;,&quot;hid&quot;:&quot;data_cleaning&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-100&quot;} -->
+<h2 class="sectionedit2" id="handling_missing_values">1. Handling missing values</h2>
+<div class="level2">
+
+<p>
+There are 4 steps for handling missing values
+</p>
+<ol>
+<li class="level1"><div class="li"> Get the missing value (per column, percentage in the entire dataset)</div>
+</li>
+<li class="level1"><div class="li"> Find out why the value is missing (not recorded vs not existant)</div>
+</li>
+<li class="level1"><div class="li"> Drop missing value</div>
+</li>
+<li class="level1"><div class="li"> Filling in missing with an estimated value</div>
+</li>
+</ol>
+
+<p>
+The following python script (pythong version: 2.7) use the data set “NFL Play by Play 2009-2017 (v4).csv”, you can use “Building_Permits.csv” for practice.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:data_curation:data_cleaning_python&amp;codeblock=0" title="Download Snippet" class="mediafile mf_py">Find_replace_missing_value.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+&nbsp;
+<span class="co1">##########################################</span>
+<span class="co1"># Prepare data set #######################</span>
+<span class="co1">##########################################</span>
+&nbsp;
+nfl_data <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/NFL Play by Play 2009-2017 (v4).csv&quot;</span><span class="br0">&#41;</span>
+sf_permits <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/Building_Permits.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#set random number generator seed, to have the same sample in every execution of the code</span>
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># get 5 sample of the nfl data set</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>nfl_data.<span class="me1">sample</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">##########################################</span>
+<span class="co1"># Get missing value number ###############</span>
+<span class="co1">##########################################</span>
+&nbsp;
+nfl_missing_value_count<span class="sy0">=</span>nfl_data.<span class="me1">isnull</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="kw2">sum</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># look at the number of missing value in the first ten columns</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>nfl_missing_value_count<span class="br0">&#91;</span><span class="nu0">0</span>:<span class="nu0">10</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># get the total missing value percentage</span>
+<span class="co1"># nfl_data.shape =&gt; (407688, 102) 407688 is rwo number, 102 is the column number</span>
+nfl_total_cells<span class="sy0">=</span>np.<span class="me1">product</span><span class="br0">&#40;</span>nfl_data.<span class="me1">shape</span><span class="br0">&#41;</span>
+<span class="co1"># print(nfl_total_cells)</span>
+nfl_total_missing<span class="sy0">=</span>nfl_missing_value_count.<span class="kw2">sum</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="co1"># print(nfl_total_missing)</span>
+&nbsp;
+nfl_miss_percent<span class="sy0">=</span><span class="kw2">float</span><span class="br0">&#40;</span>nfl_total_missing<span class="br0">&#41;</span>/<span class="kw2">float</span><span class="br0">&#40;</span>nfl_total_cells<span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Total missing percentage : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span>nfl_miss_percent*<span class="nu0">100</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">########################################</span>
+<span class="co1">####Find out why the value is missing ##</span>
+<span class="co1">#######################################</span>
+&nbsp;
+<span class="st0">&quot;&quot;&quot;
+Value missing because of :
+&nbsp;
+1. not recorded -&gt; need to estimate a value and replace it
+2. not exist -&gt; no need to guess the value. Keep it as NaN.
+&nbsp;
+For example, in nfl data set 
+&nbsp;
+By looking at (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016), I can see that this column has information
+on the number of seconds left in the game when the play was made. This means that these values are probably missing 
+because they were not recorded, rather than because they don't exist. So, it would make sense for us to try and guess 
+what they should be rather than just leaving them as NA's.
+&nbsp;
+On the other hand, there are other fields, like `PenalizedTeam` that also have lot of missing fields. In this case, 
+though, the field is missing because if there was no penalty then it doesn't make sense to say *which* team was 
+penalized. For this column, it would make more sense to either leave it empty or to add a third value like &quot;neither&quot; 
+and use that to replace the NA's.
+&quot;&quot;&quot;</span>
+&nbsp;
+<span class="co1">#####################################</span>
+<span class="co1">#######Drop missing value ###########</span>
+<span class="co1">####################################</span>
+&nbsp;
+<span class="co1"># remove all the rows that contain a missing value</span>
+nfl_data.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove all columns with at least one missing value</span>
+nfl_columns_with_na_dropped <span class="sy0">=</span> nfl_data.<span class="me1">dropna</span><span class="br0">&#40;</span>axis<span class="sy0">=</span><span class="nu0">1</span><span class="br0">&#41;</span>
+nfl_columns_with_na_dropped.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># just how much data did we lose?</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Columns in original dataset: %d <span class="es0">\n</span>&quot;</span> % nfl_data.<span class="me1">shape</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Columns with na's dropped: %d&quot;</span> % nfl_columns_with_na_dropped.<span class="me1">shape</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">##############################################</span>
+<span class="co1">### Filling in missing value automatically ##</span>
+<span class="co1">#############################################</span>
+&nbsp;
+<span class="co1"># get a small subset of the NFL dataset</span>
+subset_nfl_data <span class="sy0">=</span> nfl_data.<span class="me1">loc</span><span class="br0">&#91;</span>:<span class="sy0">,</span> <span class="st0">'EPA'</span>:<span class="st0">'Season'</span><span class="br0">&#93;</span>.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>subset_nfl_data.<span class="me1">sample</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all NA's with 0</span>
+subset_nfl_data.<span class="me1">fillna</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all NA's the value with the value that comes directly after it (next row) in the same column, </span>
+<span class="co1"># then replace all the reamining na's with 0</span>
+subset_nfl_data.<span class="me1">head</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+subset_nfl_data.<span class="me1">fillna</span><span class="br0">&#40;</span>method <span class="sy0">=</span> <span class="st0">'bfill'</span><span class="sy0">,</span> axis<span class="sy0">=</span><span class="nu0">0</span><span class="br0">&#41;</span>.<span class="me1">fillna</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Handling missing values&quot;,&quot;hid&quot;:&quot;handling_missing_values&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;101-3995&quot;} -->
+<h2 class="sectionedit3" id="scale_and_normalize_data">Scale and normalize data</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scale and normalize data&quot;,&quot;hid&quot;:&quot;scale_and_normalize_data&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;3996-4033&quot;} -->
+<h3 class="sectionedit4" id="scaling">Scaling</h3>
+<div class="level3">
+
+<p>
+This means that you&#039;re transforming your data so that it fits within a specific scale, like 0-100 or 0-1. You want to scale data when you&#039;re using methods based on measures of how far apart data points, like support vector machines, or SVM or k-nearest neighbors, or KNN. With these algorithms, a change of “1” in any numeric feature is given the same importance.
+</p>
+
+<p>
+For example, you might be looking at the prices of some products in both Yen and US Dollars. One US Dollar is worth about 100 Yen, but if you don&#039;t scale your prices methods like SVM or KNN will consider a difference in price of 1 Yen as important as a difference of 1 US Dollar! This clearly doesn&#039;t fit with our intuitions of the world. With currency, you can convert between currencies. But what about if you&#039;re looking at something like height and weight? It&#039;s not entirely clear how many pounds should equal one inch (or how many kilograms should equal one meter).
+</p>
+
+<p>
+By scaling your variables, you can help compare different variables on equal footing. To help solidify what scaling looks like, let&#039;s look at a made-up example. 
+</p>
+
+<p>
+<strong>Scaling only change the range of your data, it does not change the shape of your data (In a graph).</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scaling&quot;,&quot;hid&quot;:&quot;scaling&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;4034-5257&quot;} -->
+<h3 class="sectionedit5" id="normalization">Normalization</h3>
+<div class="level3">
+
+<p>
+Scaling just changes the range of your data. Normalization is a more radical transformation. The point of normalization is to change your observations so that they can be described as a normal distribution.
+</p>
+
+<p>
+Normal distribution: Also known as the “bell curve”, this is a specific statistical distribution where a roughly equal observations fall above and below the mean, the mean and the median are the same, and there are more observations closer to the mean. The normal distribution is also known as the Gaussian distribution.
+</p>
+
+<p>
+In general, you&#039;ll only want to normalize your data if you&#039;re going to be using a machine learning or statistics technique that assumes your data is normally distributed. Some examples of these include t-tests, ANOVAs, linear regression, linear discriminant analysis (LDA) and Gaussian naive Bayes. (Pro tip: any method with “Gaussian” in the name probably assumes normality.)
+</p>
+
+<p>
+The method were using to normalize here is called the Box-Cox Transformation. 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:data_curation:data_cleaning_python&amp;codeblock=1" title="Download Snippet" class="mediafile mf_py">scale_normalize_data.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+&nbsp;
+<span class="kw1">from</span> scipy <span class="kw1">import</span> stats
+&nbsp;
+<span class="kw1">from</span> mlxtend.<span class="me1">preprocessing</span> <span class="kw1">import</span> minmax_scaling
+&nbsp;
+<span class="kw1">import</span> seaborn <span class="kw1">as</span> sns
+&nbsp;
+<span class="kw1">import</span> matplotlib.<span class="me1">pyplot</span> <span class="kw1">as</span> plt
+&nbsp;
+kickstarters_2017<span class="sy0">=</span>pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day2_normallization/ks-projects-201801.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling data #############################################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1"># generate 1000 data points randomly drawn from an exponential distribution</span>
+original_data <span class="sy0">=</span> np.<span class="kw3">random</span>.<span class="me1">exponential</span><span class="br0">&#40;</span>size <span class="sy0">=</span> <span class="nu0">1000</span><span class="br0">&#41;</span>
+<span class="co1">#print(original_data[1],original_data[2])</span>
+<span class="co1"># mix-max scale the data between 0 and 1, it does not change the data distribution shape</span>
+scaled_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>original_data<span class="sy0">,</span> columns <span class="sy0">=</span> <span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+<span class="co1">#print(scaled_data[1],original_data[2])</span>
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>original_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Normalize data #############################################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1"># normalize the exponential data with boxcox</span>
+normalized_data <span class="sy0">=</span> stats.<span class="me1">boxcox</span><span class="br0">&#40;</span>original_data<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>original_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>normalized_data<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Normalized data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling usd_goal_real of kickstarters #####################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1">#print(kickstarters_2017.sample(5))</span>
+&nbsp;
+<span class="co1"># select the usd_goal_real column</span>
+usd_goal <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_goal_real</span>
+&nbsp;
+<span class="co1"># scale the goals from 0 to 1</span>
+scaled_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>usd_goal<span class="sy0">,</span> columns <span class="sy0">=</span> <span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># plot the original &amp; scaled data together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>kickstarters_2017.<span class="me1">usd_goal_real</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling goal of kickstarters #####################</span>
+<span class="co1">#####################################################################</span>
+goal <span class="sy0">=</span> kickstarters_2017.<span class="me1">goal</span>
+scaled_goal_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>goal<span class="sy0">,</span>columns<span class="sy0">=</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>kickstarters_2017.<span class="me1">goal</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_goal_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Normalize the positive_pledges #############################################</span>
+<span class="co1">#####################################################################</span>
+<span class="co1"># get the index of all positive pledges (Box-Cox only takes postive values)</span>
+index_of_positive_pledges <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_pledged_real</span> <span class="sy0">&gt;</span> <span class="nu0">0</span>
+<span class="co1"># get only positive pledges (using their indexes)</span>
+positive_pledges <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_pledged_real</span>.<span class="me1">loc</span><span class="br0">&#91;</span>index_of_positive_pledges<span class="br0">&#93;</span>
+<span class="co1"># normalize the pledges (w/ Box-Cox)</span>
+normalized_pledges <span class="sy0">=</span> stats.<span class="me1">boxcox</span><span class="br0">&#40;</span>positive_pledges<span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>positive_pledges<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>normalized_pledges<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Normalized data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+plt.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Normalization&quot;,&quot;hid&quot;:&quot;normalization&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;5258-9856&quot;} -->
+<h2 class="sectionedit6" id="parsing_dates">Parsing dates</h2>
+<div class="level2">
+
+<p>
+In pandas dataframe, if you don&#039;t specify, the date will be object string type, we need to transform it into datetime64, After the modification, we can use day, month, year on a date to do data analysis.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:data_curation:data_cleaning_python&amp;codeblock=2" title="Download Snippet" class="mediafile mf_py">parsing_date.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+<span class="kw1">from</span> utils <span class="kw1">import</span> getWrongDateFormat
+<span class="kw1">import</span> seaborn <span class="kw1">as</span> sns
+<span class="kw1">import</span> <span class="kw3">datetime</span>
+<span class="kw1">import</span> matplotlib.<span class="me1">pyplot</span> <span class="kw1">as</span> plt
+&nbsp;
+<span class="co1"># read in our data</span>
+earthquakes <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day3_date_format/database.csv&quot;</span><span class="br0">&#41;</span>
+landslides <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day3_date_format/catalog.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(landslides['date'].head())</span>
+&nbsp;
+<span class="co1">#print(earthquakes['Date'].head())</span>
+&nbsp;
+<span class="co1"># parse the date with the a given date format</span>
+landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span> <span class="sy0">=</span> pd.<span class="me1">to_datetime</span><span class="br0">&#40;</span>landslides<span class="br0">&#91;</span><span class="st0">'date'</span><span class="br0">&#93;</span><span class="sy0">,</span> format <span class="sy0">=</span> <span class="st0">&quot;%m/%d/%y&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(landslides['date_parsed'].head())</span>
+&nbsp;
+<span class="co1"># parse the date with auto determin format</span>
+earthquakes<span class="br0">&#91;</span><span class="st0">'Date_parsed'</span><span class="br0">&#93;</span> <span class="sy0">=</span> pd.<span class="me1">to_datetime</span><span class="br0">&#40;</span>earthquakes<span class="br0">&#91;</span><span class="st0">'Date'</span><span class="br0">&#93;</span><span class="sy0">,</span> infer_datetime_format<span class="sy0">=</span><span class="kw2">True</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(earthquakes['Date_parsed'].head())</span>
+&nbsp;
+<span class="co1"># get array of all days in parsed date column</span>
+day_of_month_landslides <span class="sy0">=</span> landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">day</span>
+<span class="co1"># get array of all months in parsed date column</span>
+month_of_year_landslides <span class="sy0">=</span> landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">month</span>
+&nbsp;
+day_of_month_landslides <span class="sy0">=</span> day_of_month_landslides.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+day_of_month_earthquakes <span class="sy0">=</span> earthquakes<span class="br0">&#91;</span><span class="st0">'Date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">day</span>.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># show the days in a plot</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>day_of_month_landslides<span class="sy0">,</span>kde<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>bins<span class="sy0">=</span><span class="nu0">31</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Landslides&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>day_of_month_earthquakes<span class="sy0">,</span>kde<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>bins<span class="sy0">=</span><span class="nu0">31</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Earthquakes&quot;</span><span class="br0">&#41;</span>
+plt.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="co1">#print(month_of_year_landslides)</span>
+&nbsp;
+&nbsp;
+<span class="co1"># find out the bad date format in the column</span>
+dateList<span class="sy0">=</span>earthquakes<span class="br0">&#91;</span><span class="st0">'Date'</span><span class="br0">&#93;</span>.<span class="me1">tolist</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+getWrongDateFormat<span class="br0">&#40;</span>dateList<span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parsing dates&quot;,&quot;hid&quot;:&quot;parsing_dates&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;9857-11690&quot;} -->
+<h2 class="sectionedit7" id="character_encoding">Character encoding</h2>
+<div class="level2">
+
+<p>
+In python code, you can use the following code to define python source code encoding
+</p>
+<pre class="code"># -*- coding: utf-8 -*-</pre>
+
+<p>
+If you read a file (csv, excel, etc), you need to determine the encoding of the file. Then open it with the right encoding.
+</p>
+<pre class="code"># helpful character encoding module
+import chardet
+
+# start with a string
+before = &quot;This is the euro symbol: €&quot;
+
+# check to see what datatype it is
+type(before)
+
+# encode it to a different encoding, replacing characters that raise errors
+after = before.encode(&quot;utf-8&quot;, errors = &quot;replace&quot;)
+
+# check the type
+type(after)
+
+# convert it back to utf-8
+print(after.decode(&quot;utf-8&quot;))
+
+##################################################
+##########Read file with other encoding ##########
+################################################
+
+# look at the first ten thousand bytes to guess the character encoding
+with open(&quot;../input/kickstarter-projects/ks-projects-201801.csv&quot;, &#039;rb&#039;) as rawdata:
+    result = chardet.detect(rawdata.read(10000))
+
+# check what the character encoding might be
+print(result)
+
+{&#039;encoding&#039;: &#039;Windows-1252&#039;, &#039;confidence&#039;: 0.73, &#039;language&#039;: &#039;&#039;}
+
+# So chardet is 73% confidence that the right encoding is &quot;Windows-1252&quot;. Let&#039;s see if that&#039;s correct:
+# read in the file with the encoding detected by chardet
+kickstarter_2016 = pd.read_csv(&quot;../input/kickstarter-projects/ks-projects-201612.csv&quot;, encoding=&#039;Windows-1252&#039;)
+
+# look at the first few lines
+kickstarter_2016.head()
+
+
+# save our file (will be saved as UTF-8 by default!)
+kickstarter_2016.to_csv(&quot;ks-projects-201801-utf8.csv&quot;)</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Character encoding&quot;,&quot;hid&quot;:&quot;character_encoding&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;11691-13286&quot;} -->
+<h2 class="sectionedit8" id="clean_inconsistent_data_entry">Clean_Inconsistent_data_Entry</h2>
+<div class="level2">
+
+<p>
+There are 3 main steps :
+</p>
+<ul>
+<li class="level1"><div class="li"> convert all characters to lower case</div>
+</li>
+<li class="level1"><div class="li"> eliminate scaling white spaces</div>
+</li>
+<li class="level1"><div class="li"> find similar word, identify typo and correct typo </div>
+</li>
+</ul>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:data_curation:data_cleaning_python&amp;codeblock=5" title="Download Snippet" class="mediafile mf_py">clean_inconsistent_data.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+<span class="kw1">import</span> fuzzywuzzy
+<span class="kw1">from</span> fuzzywuzzy <span class="kw1">import</span> process
+<span class="kw1">from</span> utils <span class="kw1">import</span> *
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># read in our data</span>
+suicide_attacks <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day4_clean_inconsistent_data_entry/PakistanSuicideAttacks_v11.csv&quot;</span><span class="sy0">,</span>encoding<span class="sy0">=</span><span class="st0">'Windows-1252'</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1"># print (suicide_attacks.sample(5))</span>
+<span class="co1">#######################################</span>
+<span class="co1">####Clean column city #################</span>
+<span class="co1">#####################################</span>
+cities <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+cities.<span class="me1">sort</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>cities.<span class="me1">size</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># convert all to lower case</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span> <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">lower</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove trailing white spaces</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span> <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">strip</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span><span class="st0">'City'</span><span class="br0">&#41;</span>
+<span class="co1"># cities = suicide_attacks['City'].unique()</span>
+<span class="co1"># cities.sort()</span>
+&nbsp;
+&nbsp;
+<span class="co1"># find 10 first matches which looks like d.i khan</span>
+<span class="co1">#matches = fuzzywuzzy.process.extract(&quot;d.i khan&quot;,cities,limit=10,scorer=fuzzywuzzy.fuzz.token_sort_ratio)</span>
+&nbsp;
+<span class="co1">#print(matches)</span>
+&nbsp;
+<span class="co1"># use the following function to replace close matches to &quot;d.i khan&quot; with &quot;d.i khan&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span> column<span class="sy0">=</span><span class="st0">'City'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;d.i khan&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span><span class="st0">'City'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># use the following function to replace close matches to &quot;Kuram agency&quot; with &quot;Kuram agency&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span> column<span class="sy0">=</span><span class="st0">'City'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;Kuram agency&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+cities<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'City'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">####################################################################</span>
+<span class="co1">#### clean the province column #####################################</span>
+<span class="co1">###################################################################</span>
+province<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'Province'</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>province<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># convert all to lower case</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span><span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">lower</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove trailling space</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span><span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">strip</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all matches &quot;Baluchistan&quot; to &quot;Baluchistan&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span>column<span class="sy0">=</span><span class="st0">'Province'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;baluchistan&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+province<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'Province'</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>province<span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Clean_Inconsistent_data_Entry&quot;,&quot;hid&quot;:&quot;clean_inconsistent_data_entry&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;13287-15744&quot;} -->
+<h2 class="sectionedit9" id="require_functions">require functions</h2>
+<div class="level2">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:data_curation:data_cleaning_python&amp;codeblock=6" title="Download Snippet" class="mediafile mf_py">utils.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> fuzzywuzzy
+<span class="kw1">import</span> <span class="kw3">re</span>
+&nbsp;
+<span class="co1"># function to replace rows in the provided column of the provided dataframe</span>
+<span class="co1"># that match the provided string above the provided ratio with the provided string</span>
+<span class="kw1">def</span> replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">,</span> column<span class="sy0">,</span> string_to_match<span class="sy0">,</span> min_ratio<span class="sy0">=</span><span class="nu0">90</span><span class="br0">&#41;</span>:
+    <span class="co1"># get a list of unique strings</span>
+    strings <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># get the top 10 closest matches to our input string</span>
+    matches <span class="sy0">=</span> fuzzywuzzy.<span class="me1">process</span>.<span class="me1">extract</span><span class="br0">&#40;</span>string_to_match<span class="sy0">,</span> strings<span class="sy0">,</span>
+                                         limit<span class="sy0">=</span><span class="nu0">10</span><span class="sy0">,</span> scorer<span class="sy0">=</span>fuzzywuzzy.<span class="me1">fuzz</span>.<span class="me1">token_sort_ratio</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># only get matches with a ratio &gt; 90</span>
+    close_matches <span class="sy0">=</span> <span class="br0">&#91;</span>matches<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="kw1">for</span> matches <span class="kw1">in</span> matches <span class="kw1">if</span> matches<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">&gt;=</span> min_ratio<span class="br0">&#93;</span>
+&nbsp;
+    <span class="co1"># get the rows of all the close matches in our dataframe</span>
+    rows_with_matches <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">isin</span><span class="br0">&#40;</span>close_matches<span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># replace all rows with close matches with the input matches</span>
+    df.<span class="me1">loc</span><span class="br0">&#91;</span>rows_with_matches<span class="sy0">,</span> column<span class="br0">&#93;</span> <span class="sy0">=</span> string_to_match
+&nbsp;
+    <span class="co1"># let us know the function's done</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;All done!&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># This function return a darray of unique values of a dataframe column</span>
+<span class="co1"># it takes a dataframe and column name</span>
+<span class="kw1">def</span> get_column_unique_entry_size<span class="br0">&#40;</span>df<span class="sy0">,</span> column<span class="br0">&#41;</span>:
+    entries <span class="sy0">=</span> df<span class="br0">&#91;</span>column<span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    entries.<span class="me1">sort</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span>entries.<span class="me1">size</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> entries
+&nbsp;
+<span class="co1"># This function takes a list of string (date with expected format 08/08/1888), it checks if all elements repects this format</span>
+<span class="co1"># or not, it takes a list of string (date), print the wrong format string, and the correct format string count.</span>
+<span class="kw1">def</span> getWrongDateFormat<span class="br0">&#40;</span>dateList<span class="br0">&#41;</span>:
+    n<span class="sy0">=</span><span class="nu0">0</span>
+    <span class="kw1">for</span> date <span class="kw1">in</span> dateList:
+        pattern <span class="sy0">=</span> <span class="kw3">re</span>.<span class="kw2">compile</span><span class="br0">&#40;</span><span class="st0">&quot;[0-9]+/[0-9]+/[0-9]+&quot;</span><span class="br0">&#41;</span>
+        <span class="kw1">if</span> pattern.<span class="me1">match</span><span class="br0">&#40;</span>date<span class="br0">&#41;</span>:
+            n<span class="sy0">=</span>n+<span class="nu0">1</span>
+        <span class="kw1">else</span>:
+            <span class="kw1">print</span><span class="br0">&#40;</span>date<span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Correct format date size : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;All date size : &quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span><span class="kw2">len</span><span class="br0">&#40;</span>dateList<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;require functions&quot;,&quot;hid&quot;:&quot;require_functions&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;15745-&quot;} -->

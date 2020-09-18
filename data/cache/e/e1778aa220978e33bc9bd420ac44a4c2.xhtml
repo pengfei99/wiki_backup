@@ -1,0 +1,45 @@
+
+<h1 class="sectionedit1" id="afsandrew_file_system">AFS : Andrew File System</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "AFS : Andrew File System" [1-40] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Andrew_File_System" class="urlextern" title="https://en.wikipedia.org/wiki/Andrew_File_System"  rel="nofollow">AFS ou Andrew File System</a> est un système d&#039;archivage distribué inspiré de NFS, et créé à l&#039;Université Carnegie-Mellon.
+NFSv4 a été fortement inspiré à son tour par AFS.
+Son principal défaut est qu&#039;il n&#039;est pas compatible avec ipv6.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [41-364] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">yum install -y openafs-client</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [365-436] -->
+<h2 class="sectionedit4" id="configuration">Configuration</h2>
+<div class="level2">
+<pre class="code">cd /usr/vice/etc
+echo &quot;in2p3.fr&quot; &gt; ThisCell
+echo &quot;in2p3.fr in&quot; &gt; CellAlias
+echo &quot;test.in2p3.fr tin&quot; &gt;&gt; CellAlias
+echo &quot;in2p3.fr&quot; &gt; SuidCells
+echo &quot;/afs:/var/cache/afs:200000&quot; &gt; cacheinfo</pre>
+
+</div>
+<!-- EDIT4 SECTION "Configuration" [437-666] -->
+<h2 class="sectionedit5" id="demarrage_et_enregistrement">Démarrage et enregistrement</h2>
+<div class="level2">
+<pre class="code">service afs start
+chkconfig --level 2345 afs on</pre>
+
+<p>
+Les données devraient maintenant être accessibles sous <code>/afs</code>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Démarrage et enregistrement" [667-] -->

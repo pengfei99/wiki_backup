@@ -1,0 +1,51 @@
+====== Choix d'un e-CRF pour la gestion des études cliniques ======
+
+Voir la présentation de Karen : {{:pt6:e-crf_02_10_2014_vf.pptx|}}
+
+<WRAP info>
+**Pondération :** exprimée de 1 à 4 en fonction de l'importance \\
+**Solutions :** pour chaque fonctionnalité, 0 = absente, 1 = présente
+</WRAP>
+
+^Critères^^Solutions^^^^|
+^Fonctionnalité ^Pondération ^Clean Web (Karen)\\ http://cleanweb.tentelemed.com^Clin File (Karen)\\ http://www.clinfile.com^Voozanoo (Pierre)\\ https://portal.voozanoo.net/^MedSharing (Karen)\\ http://www.medsharing.fr^Clininfo (Pierre)\\ http://www.clininfo.fr|
+^Obligatoire pour le PT1^^^^^^|
+|Connexion sécurisée|4|?|?|?|?|?|
+|Gestion des droits et **profils** utilisateurs|4|?|?|?|?|?|
+|Logiciel installable sur n'importe quel poste|4|?|?|?|?|?|
+|Paramétrage simple à loisir de formulaires/Multi-études|4|?|?|?|?|?|
+|Licences multi-sites et illimitées|4|?|?|?|?|?|
+|Compatible Windows, Mac, Linux|4|?|?|?|?|?|
+|Paramétrage par interfaces graphiques/assistants|4|?|?|?|?|?|
+|Paramétrage par fichier de configuration (csv, xml, ...)|4|?|?|?|?|?|
+|Mise en place de contrôle de saisie et de cohérence|4|?|?|?|?|?|
+|Gestion des pièces jointes|4|?|?|?|?|?|
+|Existe t-il des dvpts spécifiques pour des prélèvements biologiques|4|?|?|?|?|?|
+|Gestion par code-barres|4|?|?|?|?|?|
+|Monitoring (dashboard) de l'étude => suivi des visites|3|?|?|?|?|?|
+|Monitoring (dashboard) de l'étude => listing des queries en cours|4|?|?|?|?|?|
+|Monitoring : Mise en évidence et gestion des erreurs|4|?|?|?|?|?|
+|Trame de compte-rendu|3|?|?|?|?|?|
+|Gestion des queries (corrections, données manquantes, ...)|4|?|?|?|?|?|
+|Gestion des signatures électroniques|4|?|?|?|?|?|
+|Internationalisation (multi-langues Français/Anglais)|4|?|?|?|?|?|
+|Gel de données|4|?|?|?|?|?|
+|Audit-trial et traçabilité de toutes les actions|4|?|?|?|?|?|
+|Archivage, obligation réglementaire au format PDF+certificat|4|?|?|?|?|?|
+|Module d'impression papier de l'e=e-CRF|4|?|?|?|?|?|
+|Format compatible avec les principaux logiciels d'analyse (SAS, SPSS, Oracle)Voir avec la bioinfo !!|4|?|?|?|?|?|
+|Responsive écrans tactiles|2|?|?|?|?|?|
+|Gestion administrative: mise en ligne des documents de l'étude (SOP, guidelines) - Annuaire|1|?|?|?|?|?|
+|Mode hors connexion|1|?|?|?|?|?|
+|Module de randomisation|1|?|?|?|?|?|
+|Module de gestion des unités thérapeutiques |1|?|?|?|?|?|
+|Import de données (Excel, Access)|1|?|?|?|?|?|
+|Plateforme d'échanges en ligne entre acteurs et utilisateurs |1|?|?|?|?|?|
+
+^Obligatoire pour le PT6^^^^^^|
+|Hébergement chez nous (CC)|4|?|?|?|?|?|
+|Export txt ou csv|?|?|?|?|?|?|
+|Export XML|?|?|?|?|?|?|
+|Export SQL|?|?|?|?|?|?|
+|Possibilités d'établir des passerelles automatisées avec d'autres systèmes d'info|4|?|?|?|?|?|
+|API REST|2| | | | |

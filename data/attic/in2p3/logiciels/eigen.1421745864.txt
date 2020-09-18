@@ -1,0 +1,39 @@
+====== Eigen ======
+
+===== Informations =====
+
+  * **Version** : 3.2.0
+  * **Licence** : MPL2
+  * **Page Web** : [[http://eigen.tuxfamily.org/index.php]]
+  * **Description** : Eigen is a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
+
+===== Installation =====
+
+<code>
+export APPS="/afs/in2p3.fr/throng/bioaster/apps/"
+wget http://bitbucket.org/eigen/eigen/get/3.2.0.tar.bz2
+tar xjvf eigen_3.2.0.tar.bz2
+mkdir -p $APPS/eigen/3.2.0/include
+cp -r eigen-eigen-ffa86ffb5570/Eigen/ $APPS/eigen/3.2.0/include
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.\n"
+}
+
+set version "3.2.0"
+
+set include_dir "/afs/in2p3.fr/throng/bioaster/apps/eigen/${version}/include"
+
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 3.2.0 installée

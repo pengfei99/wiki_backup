@@ -1,0 +1,352 @@
+
+<h1 class="sectionedit1" id="grid_computing">Grid computing</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Grid computing" [1-30] -->
+<h2 class="sectionedit2" id="pre-requise">Pre-requise</h2>
+<div class="level2">
+
+<p>
+In this article, we describe how to use the grid @cc.in2p3.fr.
+</p>
+
+<p>
+1. First you need to connect to a interactive terminal in cc.
+</p>
+
+<p>
+ssh pliu@ccage.in2p3.fr
+</p>
+
+<p>
+2. Make sure you have the univa grid engine(i.e. qsub) client to submit job.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Pre-requise" [31-286] -->
+<h2 class="sectionedit3" id="prepare_your_script">Prepare your script</h2>
+<div class="level2">
+
+<p>
+For example, we want to read a input file, do some calculation and write the result on a output file
+</p>
+
+<p>
+ <code>vim my_script.sh</code>
+</p>
+<pre class="code">#Read file input.txt
+value=$(&lt;/sps/bioaster/pt6/pliu/qsub/input.txt)
+#Write the output in file output.txt
+echo &quot;Hello $value!!!&quot; &gt;&gt; /sps/bioaster/pt6/pliu/qsub/output.txt</pre>
+
+<p>
+NOTE that, all the access on file is only available on the /sps/…
+(NFS/GPFS)
+</p>
+
+<p>
+It&#039;s not possible to ask worker to access your local file system.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Prepare your script" [287-781] -->
+<h2 class="sectionedit4" id="submit_your_script_to_the_grid">Submit your script to the grid</h2>
+<div class="level2">
+
+<p>
+Now, let&#039;s submit the scipt to the grid.
+</p>
+<pre class="code">qsub -P P_bioaster -N JOBPLIU02 -l sps=1 -q long mon_script.sh </pre>
+
+<p>
+<code>-P P_bioaster</code> means this job is for prject bioaster
+</p>
+
+<p>
+<code>-N JOBPLIU02</code> means the name of this job is <code>JOBPLIU02</code>
+</p>
+
+<p>
+<code>sps=1</code> means job need sps access
+</p>
+
+<p>
+<code>-q long</code> means job will be submit to the queue long.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Submit your script to the grid" [782-1160] -->
+<h3 class="sectionedit5" id="submit_job_with_multi-coeur">Submit job with multi-coeur</h3>
+<div class="level3">
+<pre class="code">qsub -pe multicores &lt;coreNumber&gt; -q &lt;queueName&gt; &lt;yourScriptToRun&gt;
+# you need to make sure the queue supports multi core job
+# for example, mc_huge is the mc version of huge
+qsub -pe multicores 8 -q mc_huge</pre>
+
+<p>
+After you submit your job, two file will be generated.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Submit job with multi-coeur" [1161-1477] -->
+<h2 class="sectionedit6" id="monitor_your_submitted_job">Monitor your submitted job</h2>
+<div class="level2">
+<pre class="code">shell&gt; qsub -P P_bioaster -N JOBPLIUCompress01 -l sps=1 -q long sendjob.sh 
+Your job 27418587 (&quot;JOBPLIUCompress01&quot;) has been submitted
+
+shell&gt; qstat -j 27418587
+==============================================================
+job_number:                 27418587
+jclass:                     NONE
+exec_file:                  job_scripts/27418587
+submission_time:            11/15/2017 10:48:12.940
+owner:                      pliu
+uid:                        42029
+group:                      bioaster
+gid:                        1072
+supplementary group:        ccin2p3, bioaster, bioas_st, 1104235630
+sge_o_home:                 /afs/in2p3.fr/home/p/pliu
+sge_o_log_name:             pliu
+sge_o_path:                 /usr/local/python/python-2.7/bin:/opt/sge/bin/lx-amd64:/usr/afsws/bin:/usr/afsws/etc:/usr/kerberos/bin:/usr/local/bin:/usr/local/shared/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/afs/in2p3.fr/cernlib/amd64_sl5/pro/bin:/afs/in2p3.fr/home/p/pliu/bin:/usr/local/oracle/product/instantclient/11.2.0.3:/usr/local/openstack/bin:/afs/in2p3.fr/throng/bioaster/bin:.
+sge_o_shell:                /bin/bash
+sge_o_workdir:              /afs/in2p3.fr/home/p/pliu
+sge_o_host:                 cca009
+account:                    sge
+hard resource_list:         os=sl6,sps=1
+mail_list:                  pliu@cca009.in2p3.fr
+notify:                     FALSE
+job_name:                   JOBPLIUCompress01
+priority:                   0
+jobshare:                   0
+hard_queue_list:            long
+env_list:                   NNTPSERVER=news.in2p3.fr,MANPATH=/opt/sge/man:/usr/afsws/man:/usr/athena/man:/usr/share/man:/usr/man:/usr/local/man,PACK_LIB=-lpacklib,HOSTNAME=cca009,THRONG=bioaster,PASSWORD_EXPIRES=123,HOST=cca009,TERM=xterm,SHELL=/bin/bash,HISTSIZE=1000,FM_FLS_HOST=ccfls,TMPDIR=/scratch,SSH_CLIENT=10.69.10.232 55168 22,SGE_CELL=ccin2p3,GS_LIB=/usr/local/lib/ghostscript:/usr/local/lib/ghostscript/fonts,YP=NO,OPGS_LIB=/usr/local/g5g/g5g-V3.0/OPGS/lib,QTDIR=/usr/lib64/qt-3.3,OLDPWD=/sps/bioaster/pt6/pliu,CERN_CRA=/afs/in2p3.fr/cernlib/@sys/pro/src/car,QTINC=/usr/lib64/qt-3.3/include,OS=Linux,SSH_TTY=/dev/pts/23,OS_USER_DOMAIN_NAME=Default,ROGUEHOME=/usr/local/shared/products/rogue/rogue,XAPPLRESDIR=/usr/local/lib/X11/app-defaults,GROUP=bioaster,USER=pliu,LD_LIBRARY_PATH=/usr/local/python/python-2.7/lib:/usr/lib64/atlas:/opt/sge/lib/lx-amd64::/usr/local/lib:/usr/local/oracle/product/instantclient/11.2.0.3,LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.tbz=01;31:*.tbz2=01;31:*.bz=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.axa=01;36:*.oga=01;36:*.spx=01;36:*.xspf=01;36:,BATCH_SYSTEM=GE,SGE_TEST_SCRIPT_TIMEOUT=900,ENV=/afs/in2p3.fr/home/p/pliu/.kshrc,HOME_PIOFS=/piofs/group/bioaster/pliu,OS_PROJECT_NAME=bioaster,MAILCAPS=/afs/in2p3.fr/home/p/pliu/.mailcap:/usr/local/lib/mailcap,FMNODE=ccshp,RSH=rsh,PAGER=less,SITE=CCIN2P3,CERN_CMZ=/afs/in2p3.fr/cernlib/@sys/pro/src/cmz,SYSTEM=Linux,CERN=/afs/in2p3.fr/cernlib/@sys,TNS_ADMIN=/usr/local/shared/products/oracle,MAIL=/afs/in2p3.fr/mail/p/pliu/spoolfile,PATH=/usr/local/python/python-2.7/bin:/opt/sge/bin/lx-amd64:/usr/afsws/bin:/usr/afsws/etc:/usr/kerberos/bin:/usr/local/bin:/usr/local/shared/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/afs/in2p3.fr/cernlib/amd64_sl5/pro/bin:/afs/in2p3.fr/home/p/pliu/bin:/usr/local/oracle/product/instantclient/11.2.0.3:/usr/local/openstack/bin:/afs/in2p3.fr/throng/bioaster/bin:.,OS_IDENTITY_API_VERSION=3,INITIALISED=YES,KERN_LIB=-lkernlib,WWW_HOME=http://www.in2p3.fr/,SERVICE=NONE,PWD=/afs/in2p3.fr/home/p/pliu,OS_PASSWORD=6521963a-fabf-11e2-ba12-020000006c0d,FMHOME=/usr/local/frame5,EDITOR=emacs,SGE_EXECD_PORT=10501,CERN_DOC_DIR=/afs/cern.ch/asis/share/cern/doc/ps.dir,CERN_ROOT=/afs/in2p3.fr/cernlib/@sys/pro,CERN_LEVEL=pro,SGE_QMASTER_PORT=10500,MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles,SGE_ROOT=/opt/sge,SYSNAME=amd64_sl6,LOADEDMODULES=NONE,OPGS_RUN_TIME=/usr/local/g5g/g5g-V3.0/OPGS/run_time,CERN_CAR=/afs/in2p3.fr/cernlib/@sys/pro/src/car,CERN_LIB=/afs/in2p3.fr/cernlib/@sys/pro/lib,THRONG_DIR=/afs/in2p3.fr/throng/bioaster,PS1=${PWD}(${?})&gt;,OS_AUTH_URL=https://cckeystone.in2p3.fr:5000/v3/,USE_SYSTEMD=true,GROUP_DIR=NONE,ENVIRONMENT=ACCESS,HISTCONTROL=ignoredups,KRB5CCNAME=FILE:/tmp/krb5cc_42029_R4gd97,OS_USERNAME=pliu,LESSCHARSET=latin1,SHLVL=1,HOME=/afs/in2p3.fr/home/p/pliu,CERN_BIN=/afs/in2p3.fr/cernlib/@sys/pro/bin,CERN_INCL=/afs/in2p3.fr/cernlib/@sys/pro/include,CFLAGS=-L/usr/local/python/python-2.7/lib,HOME_BACKUP=/afs/in2p3.fr/ubackup/p/pliu,CCUSAGE=interactive,LOGNAME=pliu,VISUAL=emacs,QTLIB=/usr/lib64/qt-3.3/lib,CVS_RSH=ssh,SSH_CONNECTION=10.69.10.232 55168 134.158.240.114 22,MOZILLA_HOME=/usr/local/netscape,DOC_DIR=/afs/in2p3.fr/common/doc,OPGS_INCL=/usr/local/g5g/g5g-V3.0/OPGS/include,MODULESHOME=/usr/share/Modules,OS_VOLUME_API_VERSION=2,ROGUE_CC_LIB=/usr/local/shared/products/rogue/rogue/cc.lib,LESSOPEN=||/usr/bin/lesspipe.sh %s,SGE_CLUSTER_NAME=prod84,KUIPPAGER=xterm -e vi &amp;,ORACLE_HOME=/usr/local/oracle/product/instantclient/11.2.0.3,ROGUE_GCC_LIB=/usr/local/shared/products/rogue/rogue/gcc.lib,G_BROKEN_FILENAMES=1,OS_PROJECT_DOMAIN_NAME=Default,BASH_FUNC_module()=() {  eval `/usr/bin/modulecmd bash $*`
+},_=/opt/sge/bin/lx-amd64/qsub
+script_file:                sendjob.sh
+project:                    P_bioaster
+department:                 defaultdepartment
+binding:                    NONE
+mbind:                      NONE
+submit_cmd:                 qsub -P P_bioaster -N JOBPLIUCompress01 -l sps=1 -q long sendjob.sh
+start_time            1:    11/15/2017 10:48:17.244
+job_state             1:    r
+exec_host_list        1:    ccwsge1111.in2p3.fr:1
+granted_req.          1:    sps=1
+usage                 1:    wallclock=00:01:38, cpu=00:36:14, mem=2057.84124 GBs, io=1.97276 GB, iow=0.010 s, ioops=1728769, vmem=11.436G, maxvmem=11.436G, rss=37.844M, pss=34.317M, smem=3.664M, pmem=34.180M, maxrss=37.844M, maxpss=34.317M
+scheduling info:            (Collecting of scheduler job information is turned off)</pre>
+
+</div>
+<!-- EDIT6 SECTION "Monitor your submitted job" [1478-8644] -->
+<h1 class="sectionedit7" id="remove_a_job_from_queue">Remove a job from queue</h1>
+<div class="level1">
+<pre class="code"># remove a specific job
+qdel [Job ID]
+
+# remove all jobs of a user
+qdel -u [User ID]</pre>
+
+</div>
+<!-- EDIT7 SECTION "Remove a job from queue" [8645-8785] -->
+<h1 class="sectionedit8" id="job_result">Job result</h1>
+<div class="level1">
+
+<p>
+The output will in two file show as followed
+</p>
+
+<p>
+<code>JOBPLIU02.e13783490</code> is the error message 
+</p>
+
+<p>
+<code>JOBPLIU02.o13783490</code> is the job stat and cost message.
+</p>
+
+<p>
+It looks like this
+</p>
+<pre class="code">***************************************************************
+*                  Grid Engine Batch System                   *
+*           IN2P3 Computing Centre, Villeurbanne FR           *
+***************************************************************
+* User:                    pliu                               *
+* Group:                   bioaster                           *
+* Jobname:                 JOBPLIU02                          *
+* JobID:                   13783490                           *
+* Queue:                   long                               *
+* Worker:                  ccwsge0720.in2p3.fr                *
+* Operating system:        Linux 2.6.32-642.13.1.el6.x86_64   *
+* Project:                 P_bioaster                         *
+***************************************************************
+* Submitted on:            Tue May 23 14:12:34 2017           *
+* Started on:              Tue May 23 14:12:49 2017           *
+***************************************************************
+
+
+***************************************************************
+* Ended on:                Tue May 23 14:12:52 2017           *
+* Exit status:             0                                  *
+* Consumed                                                    *
+*   cpu (HS06):            00:00:00                           *
+*   cpu scaling factor:    9.670000                           *
+*   cpu time:              0 / 172800                         *
+*   efficiency:            00 %                               *
+*   io:                    0.00000GB                          *
+*   vmem:                  N/A                                *
+*   maxvmem:               N/A                                *
+*   maxrss:                N/A                                *
+***************************************************************</pre>
+
+</div>
+<!-- EDIT8 SECTION "Job result" [8786-10856] -->
+<h1 class="sectionedit9" id="use_grid_in_interactive_mod">Use grid in interactive mod</h1>
+<div class="level1">
+<pre class="code">qlogin -P P_bioaster -l sps=1
+
+qlogin -P P_bioaster -pe multicores 4 -l sps=1 -q mc_interactive</pre>
+
+<p>
+it will promp a terminal of the worker which execute your job.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Use grid in interactive mod" [10857-11075] -->
+<h1 class="sectionedit10" id="get_info_about_a_queue">Get info about a queue</h1>
+<div class="level1">
+<pre class="code">shell&gt; qconf -sql
+admin
+admin_test
+demon
+huge
+interactive
+long
+[...]</pre>
+<pre class="code">$ qconf -sq short
+qname                 short
+hostlist              @sequentials
+[...]
+tmpdir                /scratch
+shell                 /bin/sh
+prolog                NONE
+epilog                NONE
+[...]
+s_rt                  01:00:00
+h_rt                  06:00:00
+s_cpu                 00:06:00
+h_cpu                 00:12:00
+s_fsize               5G
+h_fsize               5.01G
+s_data                5G
+h_data                5.01G
+s_stack               INFINITY
+h_stack               INFINITY
+s_core                2.5G
+h_core                3G
+s_rss                 INFINITY
+h_rss                 INFINITY
+s_vmem                512M
+h_vmem                600M</pre>
+
+</div>
+<!-- EDIT10 SECTION "Get info about a queue" [11076-11882] -->
+<h1 class="sectionedit11" id="run_matlab_script_in_grid">Run matlab script in grid</h1>
+<div class="level1">
+<pre class="code">#!/bin/bash
+
+#run my first mablab job;
+
+qsub -P P_bioaster -N &quot;Pengfei_matlab_test&quot; -l sps=1 -q long &lt;&lt; EOF 
+
+#!/bin/bash
+cd /sps/bioaster/pt6/matlab/pengfei_test
+matlab -nodisplay -nosplash -nodesktop -r &#039;try calculator(98); catch; end; quit&#039;
+
+EOF
+</pre>
+
+</div>
+<!-- EDIT11 SECTION "Run matlab script in grid" [11883-12189] -->
+<h1 class="sectionedit12" id="compile_matlab_script_to_executable">Compile matlab script to executable</h1>
+<div class="level1">
+<pre class="code">mcc -m calculator.m -o cal_exe </pre>
+
+<p>
+It will generate the following 5 files
+</p>
+<pre class="code">-rwxr--r-- 1 pliu   bioaster  87K May 29 14:41 cal_exe
+-rw-r--r-- 1 pliu   bioaster 1.8K May 29 14:41 mccExcludedFiles.log
+-rw-r--r-- 1 pliu   bioaster 3.7K May 29 14:41 readme.txt
+-rw-r--r-- 1 pliu   bioaster    6 May 29 14:41 requiredMCRProducts.txt
+-rwxr--r-- 1 pliu   bioaster  875 May 29 14:41 run_cal_exe.sh</pre>
+
+<p>
+To run the executable,
+</p>
+<pre class="code">sh run_cal_exe.sh args</pre>
+
+<p>
+If you have matlab runtime on your pc, it should do the job,
+</p>
+
+<p>
+otherwise, you will receive the following error:
+</p>
+<pre class="code">------------------------------------------
+Setting up environment variables
+---
+LD_LIBRARY_PATH is .:10/runtime/glnxa64:10/bin/glnxa64:10/sys/os/glnxa64:10/sys/opengl/lib/glnxa64
+./cal_exe: error while loading shared libraries: libmwlaunchermain.so: cannot open shared object file: No such file or directory</pre>
+
+<p>
+You need to install the matlab runtime (MCR) on your pc.
+</p>
+
+<p>
+The following page will guide you how to install MCR
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html" class="urlextern" title="https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html" rel="nofollow">https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html</a>
+</p>
+
+<p>
+After install MCR, we could run the script
+</p>
+<pre class="code">./run_cal_exe.sh &lt;mcr_directory&gt; &lt;argument_list&gt;
+#If you have version 9.1 of the MATLAB Runtime installed in /mathworks/home/application/v91, run the shell script as:
+
+./run_cal_exe.sh /mathworks/home/application/v91
+</pre>
+
+<p>
+If you want to run the matlab executable on a worker in grid of CC.
+</p>
+
+<p>
+you can use the mcr installed by cc.
+</p>
+
+<p>
+their location is /usr/local/matlab/, you also need to specify the version of your matlab mcr,
+</p>
+
+<p>
+for example, if your code is compile with R2016b, you need to use mcr R2016b.
+</p>
+
+<p>
+Suppose we have compiled the calculator.m with R2016b, to run it, we need the following command
+</p>
+<pre class="code">sh run_cal_exe.sh /usr/local/matlab/R2016b 2</pre>
+
+<p>
+where /usr/local/matlab/R2016b is the path of mcr.
+</p>
+
+<p>
+There is cc page which explains all about matlab in cc.
+<a href="https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc" class="urlextern" title="https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc" rel="nofollow">https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc</a>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Compile matlab script to executable" [12190-] -->

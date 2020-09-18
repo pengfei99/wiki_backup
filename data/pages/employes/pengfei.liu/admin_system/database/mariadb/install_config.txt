@@ -1,0 +1,273 @@
+====== Install mysql on centos7 ======
+
+There is a page with all intallation guide of installing mysql on all linux
+
+https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html
+
+===== Get the rpm source repo=====
+
+You can find all the available rpm in here, https://dev.mysql.com/downloads/repo/yum/
+
+download and install it.
+
+<code>
+yum localinstall mysql57-community-release-el7-11.noarch.rpm 
+</code>
+
+The installation command adds the MySQL Yum repository to your system's repository list and downloads the GnuPG key to check the integrity of the software packages. See Section 2.1.3.2, “Signature Checking Using GnuPG” for details on GnuPG key checking.
+
+You can check that the MySQL Yum repository has been successfully added by the following command (for Fedora, replace yum in the command with dnf):
+
+<code>
+yum repolist enabled | grep "mysql.*-community.*"
+</code>
+
+===== Select your mysql version =====
+To install the latest release from the latest GA series, no configuration is needed. To install the latest release from a specific series other than the latest GA series, disable the subrepository for the latest GA series and enable the subrepository for the specific series before running the installation command. If your platform supports yum-config-manager, you can do that by issuing these commands, which disable the subrepository for the 5.7 series and enable the one for the 5.6 series:
+
+<code>
+shell> sudo yum-config-manager --disable mysql57-community
+shell> sudo yum-config-manager --enable mysql56-community
+</code>
+
+Besides using yum-config-manager or the dnf config-manager command, you can also select a release series by editing manually the /etc/yum.repos.d/mysql-community.repo file. This is a typical entry for a release series' subrepository in the file:
+
+<code>
+[mysql57-community]
+name=MySQL 5.7 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/6/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+
+</code>
+
+Find the entry for the subrepository you want to configure, and edit the enabled option. Specify enabled=0 to disable a subrepository, or enabled=1 to enable a subrepository. For example, to install MySQL 5.6, make sure you have enabled=0 for the above subrepository entry for MySQL 5.7, and have enabled=1 for the entry for the 5.6 series:
+
+<code>
+# Enable to use MySQL 5.6
+[mysql56-community]
+name=MySQL 5.6 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-5.6-community/el/6/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+</code>
+
+
+You should only enable subrepository for one release series at any time. When subrepositories for more than one release series are enabled, the latest series will be used by Yum.
+
+Verify that the correct subrepositories have been enabled and disabled by running the following command and checking its output (for Fedora, replace yum in the command with dnf):
+
+''shell> yum repolist enabled | grep mysql''
+
+===== Install the mysql server =====
+
+''shell> sudo yum install mysql-community-server''
+
+===== Start the server daemon =====
+
+<code>
+shell> sudo service mysqld start
+Starting mysqld:[ OK ]
+
+shell> sudo service mysqld status
+mysqld (pid 3066) is running.
+</code>
+
+At the initial start up of the server, the following happens, given that the data directory of the server is empty:
+
+The server is initialized.
+
+SSL certificate and key files are generated in the data directory.
+
+The validate_password plugin is installed and enabled.
+
+A superuser account 'root'@'localhost is created. A password for the superuser is set and stored in the error log file. To reveal it, use the following command:
+
+''shell> sudo grep 'temporary password' /var/log/mysqld.log''
+
+Change the root password as soon as possible by logging in with the generated, temporary password and set a custom password for the superuser account:
+
+
+<code>
+shell> mysql -uroot -p
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
+</code>
+
+====== Install mysql server on mode offline ======
+
+
+
+
+
+In most cases, you need to install the **mysql-community-server, mysql-community-client, mysql-community-libs, mysql-community-common, and mysql-community-libs-compat** packages to get a functional, standard MySQL installation. To perform such a standard, basic installation, go to the folder that contains all those packages.
+
+You can download all these packages from here https://dev.mysql.com/downloads/mysql/
+
+<code>
+-rw-r--r--   1 pliu bioaster  24M Nov 14 10:52 mysql-community-client-5.7.20-1.el7.x86_64.rpm
+-rw-r--r--   1 pliu bioaster 272K Nov 14 10:52 mysql-community-common-5.7.20-1.el7.x86_64.rpm
+-rw-r--r--   1 pliu bioaster 2.2M Nov 14 10:52 mysql-community-libs-5.7.20-1.el7.x86_64.rpm
+-rw-r--r--   1 pliu bioaster 2.1M Nov 14 10:52 mysql-community-libs-compat-5.7.20-1.el7.x86_64.rpm
+-rw-r--r--   1 pliu bioaster 164M Nov 14 10:52 mysql-community-server-5.7.20-1.el7.x86_64.rpm
+</code>
+
+''sudo yum install mysql-community-{server,client,common,libs}-*''
+
+
+**It does not work, it requires some other dependencies.**
+
+====== Install mariadb on centos 7 ======
+
+MariaDB is a drop-in replacement for MySQL. It is easy to install, offers many speed and performance improvements, and is easy to integrate into most MySQL deployments. Answers for compatibility questions can be found at: MariaDB versus MySQL  Compatibility. MariaDB offers more storage engines than MySQL, including Cassandra (NoSQL, in MariaDB Version 10), XtraDB (drop-in replacement for InnoDB), and OQGRAPH (in MariaDB Version 10).
+
+Pre-Flight Check
+These instructions are intended for installing MariaDB on a single CentOS 7 node.
+I’ll be working from a Liquid Web Self Managed CentOS 7 server, and I’ll be logged in as root.
+
+<code>
+sudo yum install mariadb-server
+sudo systemctl start mariadb
+# Be sure that MySQL/MariaDB starts at boot:
+sudo systemctl enable mariadb
+
+systemctl status mariadb
+# during the mysql secure installation, you will set the password for root 
+mysql_secure_installation
+</code>
+
+===== Connect to mysql server =====
+
+<code>
+mysql -u root -p
+</code>
+
+===== Create database and user =====
+<code>
+# create database
+create database retail_db;
+
+# create user with localhost access, to give remote access, you need to change localhost to a ip or url.
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+create user 'retail_dba'@'localhost' identified by 'retail_dba_pwd';
+
+# drop user
+DROP USER ‘username’@‘localhost’;
+
+# grant access 
+# the first * is the database name, the second * is the table name
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+# 
+grant all privileges on retail_db. * to 'retail_dba'@'localhost';
+
+# create user to access database
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' IDENTIFIED BY 'password';
+grant all privileges on retail_db to 'retail_dba'@'localhost' identified by 'retail_dba_pwd';
+
+# active permission changes
+FLUSH PRIVILEGES;
+</code>
+===== Exporting the Database =====
+
+The mysqldump console utility is used to export databases to SQL text files, making it relatively easy to transfer and move around. You will need the database name itself as well as the username and password to an account with privileges allowing at least full read only access to the database.
+
+Export your database using the following command structure:
+<code>mysqldump -u username -p database_name > data-dump.sql</code>
+
+username is the username you can log in to the database with
+database_name is the name of the database that will be exported
+data-dump.sql is the file in the current directory that the output will be saved to
+The command will produce no visual output, but you can inspect the contents of filename.sql to check if it's a legitimate SQL dump file by running the following command:
+
+<code>
+head -n 5 data-dump.sql
+</code>
+
+===== Import .sql file to database =====
+
+<code>
+mysql -u retail_dba -p retail_db < /tmp/retail_db.sql 
+</code>
+
+====== Grant remote access to mysql/mariadb server ======
+
+===== 0. Configure your firewall to allow access of port 3306 =====
+
+<code>
+# In centos7, we use firewalld. So the command is
+
+firewall-cmd --permanent --add-port=3306/tcp
+
+firewall-cmd --reload
+</code>
+
+===== 1. find the default config file =====
+
+<code>
+# The config file location depends on your linux distribution
+/etc/my.cnf                              (*nix/BSD)
+$MYSQL_HOME/my.cnf                       (*nix/BSD) *Most Notably /etc/mysql/my.cnf
+SYSCONFDIR/my.cnf                        (*nix/BSD)
+
+# In centos7, it located at /etc/my.cnf
+> vim /etc/my.cnf
+
+# locate the [mysqld] section, if you see the following line
+    # skip-networking refuse all remote access
+    skip-networking
+    ...
+    # only accept the ip address in the conf
+    bind-address = <some ip-address>
+    ... 
+    
+# remove or comment these two lines. Your mysql server is ready to accept any remote connection.    
+</code>
+
+To make this take effet, you need to restart the server
+
+<code>
+systemctl restart mariadb
+</code>
+
+===== 2. Grant privileges to user and table =====
+
+<code>
+# The first * in *.* is the name of the database, the second is the name of the table
+# 'root' is the user name
+# The % in '192.168.100.%' is the wildcard, so all ip looks like 192.168.100.* is acceptable
+# The  IDENTIFIED BY 'pwd' can be omitted, if omitted, you don't need to enter password to connect
+# WITH GRANT OPTION is optional which means you give user the right to grant access to the database  
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.100.%' IDENTIFIED BY 'pwd' WITH GRANT OPTION;
+
+# The above command gives user root connected from 192.168.100.* with password 'pwd' all access on all tables with grant option. 
+
+# Suppose we have a database named retail_db, and you want give user retail_dba access on all tables in the db, you can use the following command
+
+GRANT ALL PRIVILEGES ON retail_db.* TO 'retail_dba'@'192.168.100.%' IDENTIFIED BY 'pwd'
+
+# If you want retail_dba connected from 172.17.*.* does not require password, you can use the following command
+
+GRANT ALL PRIVILEGES ON retail_db.* TO 'retail_dba'@'172.17.%.%'
+
+# Unlike, postgresql, a user can have a distinct password for each remote host.
+
+# After you add all the privileges, you can check all user with remote access privileges with the below command.
+
+SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';
+</code>
+
+====== Remove priviliges ======
+
+<code>
+# 1. You need to remove the privileges on the database
+REVOKE ALL PRIVILEGES ON retail_db.* FROM 'retail_dba'@'172.17.%.%';
+
+# 2. Then remove the user
+drop user 'retail_dba'@'172.17.%.%'
+</code>
+
+===== JDBC driver =====
+
+https://mariadb.com/kb/en/library/about-mariadb-connector-j/

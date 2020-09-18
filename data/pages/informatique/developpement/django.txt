@@ -1,0 +1,89 @@
+====== Django ======
+
+[[https://www.djangoproject.com/|Django]] est un web framework basé sur le langage python (2 et 3).
+[[https://docs.djangoproject.com/|La documentation officielle]] est très complète.
+
+===== Installer l'environnement de travail =====
+
+A compléter/édulcorer.
+
+  * [[ut6/projets_internes/bp_python | pyenv et virtualenv/virtualenv-wrapper]]
+  * Une fois que pyenv et le virtualenv du projet sont créés : <Code>pip install -e django/</Code>
+
+
+==== Recettes pour… ====
+
+Pages en vrac pour faire différentes choses en 1.10 :
+
+  * [[/informatique/developpement/django/creer_un_projet|Créer un projet]]
+  * [[/informatique/developpement/django/creer_un_projet?&#migration_de_la_base_de_donnees_du_projet | Faire une migration]]
+  * [[/informatique/developpement/django/creer_un_superuser | Créer un superuser/admin]]
+  * [[/informatique/developpement/django/debug_toolbar|Installer la debug toolbar]]
+
+==== Mémo commandes manage.py ====
+  * Pour lancer le serveur de dev : <Code> ./manage.py runserver </Code>
+  * Pour supprimer toutes les données dans une db : <Code> ./manage.py flush </Code>
+  * Pour lancer le shell django : <Code> ./manage.py shell </Code>
+  * Rajouter [[https://gitlab.in2p3.fr/bioaster/NoE/commit/b254833a634930ae67a531540dfcf908bcc563b9|ce bout de code]] au bon endroit et ensuite pouvoir afficher toutes les routes du projet en console avec <Code> ./manage.py showurls </Code>
+
+==== App utiles ====
+    * [[https://www.djangopackages.com/|repository de packages/apps Django]]
+    * Auth
+      * [[https://docs.djangoproject.com/fr/1.8/howto/auth-remote-user/|S'authentifier avec un service tiers]]
+      * [[http://django.readthedocs.org/en/latest/topics/auth/customizing.html|Customiser l'auth native]]
+      * [[http://stackoverflow.com/questions/7850207/django-and-shibboleth| Fil Stackoverflow sur Django - Shibboleth]]
+      * [[https://5chub3r7.wordpress.com/2014/12/05/how-to-not-use-shibboleth-with-the-django-web-framework/|How to use Shibboleth with Django]]
+    * Permission
+      * [[https://github.com/django-guardian/django-guardian|Django-guardian]]
+      * [[https://github.com/dfunckt/django-rules|Django Rules]]
+      * [[https://github.com/lambdalisue/django-permission|Django Permission]]
+    * grid/table
+      * [[https://django-tables2.readthedocs.org/en/latest/|django-tables2]]
+    * Gestion de jobs
+      * [[http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html|Utiliser Celery avec Django]]
+      * [[https://wiki.openstack.org/wiki/Celery | Setup Celery ]] and [[https://wiki.openstack.org/wiki/DistributedTaskManagement | Distributed Task Management]]
+      * [[http://dispy.sourceforge.net/ | dispy: Distributed and Parallel Computing with/for Python]]
+      * [[http://python-rq.org/ | Redis Queue ]]
+    * Envoi de mails
+      * [[https://github.com/pinax/django-mailer|Django Mailer]]
+    * File Manager
+      * [[https://github.com/divio/django-filer| Django Filer]]
+      * [[https://github.com/sehmaschine/django-filebrowser| Django File Browser]]
+      * [[https://github.com/garmoncheg/django_multiuploader| Django Multiuploader]]
+    * Search engine
+      * [[https://github.com/etianen/django-watson|Django Watson (FTS)]]
+      * [[https://github.com/django-haystack/django-haystack| Django Haystack]] peut être couplé avec Solr, ElasticSearch, Xapian, ...
+    * Intégration continue et tests
+      * [[https://github.com/kmmbvnr/django-jenkins|Django Jenkins]]
+      * [[https://github.com/rbarrois/factory_boy | Factory boy]]
+
+
+
+==== Liens utiles ====
+
+  * Tutoriels/docs
+    * [[https://docs.djangoproject.com/fr/1.9/intro/tutorial01/|Tuto officiel]]
+    * [[https://www.youtube.com/watch?v=3DccH9AMwFQ&amp;list=PLEsfXFp6DpzRgedo9IzmcpXYoSeDg29Tx|Tuto vidéo découpé en étapes]]
+    * [[http://sametmax.com/ce-quil-faut-savoir-en-django/|Tutos Sam&Max]]
+    * [[http://gettingstartedwithdjango.com/|MOOC Django]]
+    * [[http://django-story.readthedocs.org/en/latest/|Django raconté à un ami]]
+    * [[https://larlet.fr/david/biologeek/archives/20080211-astuces-et-bonnes-pratiques-django/|Astuces et bonnes pratiques]] /!\ date de 2008 /!\
+    * [[http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html|ORM Django, astuces à connaitre]]
+    * [[https://docs.djangoproject.com/fr/1.9/topics/templates/|Moteur de template Django]]
+    * [[http://indexerror.net/|Forum francophone d'aide Django/Python du style stackoverflow]]
+    * [[https://docs.djangoproject.com/fr/1.9/ref/forms/validation/|Validateurs Django (django.core.validators)]]
+    * [[https://docs.djangoproject.com/fr/1.9/ref/forms/fields/#error-messages|Validateurs de champs]]
+    * [[https://www.djangorocks.com/snippets/indexing-your-django-models.html|Indexation des Models Django]]
+    * [[https://docs.djangoproject.com/fr/1.9/topics/email/|Envoi de mail de base]]
+    * [[https://docs.djangoproject.com/fr/1.9/topics/logging/|Gestion des logs]]
+    * [[http://mathieu.agopian.info/blog/gunicorn-un-server-wsgi-ultra-simple-a-utiliser-et-configurer.html|Installation de gunicorn]]
+  * Aide au dev :
+    * [[https://www.djangopackages.com/|repository de packages/apps Django]]
+    * [[https://github.com/django-debug-toolbar/django-debug-toolbar|Django Debug Toolbar]]
+    * [[https://www.djangorocks.com/snippets/mail-staff.html|Snippet pour envoi de mail en masse]]
+    * [[http://www.labri.fr/perso/fleury/posts/tools/setting-a-full-testing-framework-for-django-and-more.html|Mettre en place ses tests pour son appli Django]]
+  * Nice to read :
+    * [[http://blog.sendwithus.com/python-templating-performance-showdown-django-vs-jinja/|Benchmarking Django template vs Jinja]]
+    * [[http://sametmax.com/cookies-sessions-et-redirections-dans-un-middleware-django/|Cookies, sessions et redirections dans un middleware Django]]
+    * [[https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps|How to Run Django with mod_wsgi and Apache with a virtualenv Python environment]]
+    * [[https://micropyramid.com/blog/django-generic-many-to-many-field/|Gestion de champs Many to Many]]

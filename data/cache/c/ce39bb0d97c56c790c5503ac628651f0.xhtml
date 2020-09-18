@@ -1,0 +1,508 @@
+
+<h1 class="sectionedit1" id="git_basics">Git basics</h1>
+<div class="level1">
+
+<p>
+For more information about git, read this book <a href="https://git-scm.com/book/en/v2" class="urlextern" title="https://git-scm.com/book/en/v2" rel="nofollow">https://git-scm.com/book/en/v2</a>
+</p>
+
+<p>
+Git is a free and open-source distributed <strong>version control</strong> system designed to handle everything from small to very large projects with speed and efficiency. Git is easy to learn and has a tiny footprint with lightning-fast performance. It outclasses SCM tools like Subversion, CVS, Perforce, and ClearCase with features like cheap local branching, convenient staging areas, and multiple workflows. 
+</p>
+
+<p>
+The major difference between Git and any other VCS (Subversion and friends included) is the way Git thinks about its data. Conceptually, most other systems store information as a list of file-based changes. These other systems (CVS, Subversion, Perforce, Bazaar, and so on) think of the information they store as a set of files and the changes made to each file over time (this is commonly described as delta-based version control).
+</p>
+
+<p>
+Git doesn’t think of or store its data this way. Instead, Git thinks of its data more like a series of snapshots of a miniature filesystem. With Git, every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn’t store the file again, just a link to the previous identical file it has already stored. Git thinks about its data more like a stream of snapshots.
+</p>
+
+<p>
+<strong>Git Has Integrity</strong>
+Everything in Git is checksummed before it is stored and is then referred to by that checksum. This means it’s impossible to change the contents of any file or directory without Git knowing about it. This functionality is built into Git at the lowest levels and is integral to its philosophy. You can’t lose information in transit or get file corruption without Git being able to detect it.
+</p>
+
+<p>
+<strong>The Three States</strong>
+Pay attention now — here is the main thing to remember about Git if you want the rest of your learning process to go smoothly. Git has three main states that your files can reside in: modified, staged, and committed:
+</p>
+<ul>
+<li class="level1"><div class="li"> Modified means that you have changed the file but have not committed it to your database yet.</div>
+</li>
+<li class="level1"><div class="li"> Staged means that you have marked a modified file in its current version to go into your next commit snapshot.</div>
+</li>
+<li class="level1"><div class="li"> Committed means that the data is safely stored in your local database.</div>
+</li>
+</ul>
+
+<p>
+This leads us to the three main sections of a Git project:
+</p>
+<ul>
+<li class="level1"><div class="li"> the working tree: is a single checkout of one version of the project. These files are pulled out of the compressed database in the Git directory and placed on disk for you to use or modify. </div>
+</li>
+<li class="level1"><div class="li"> the staging area: is a file, generally contained in your Git directory, that stores information about what will go into your next commit. Its technical name in Git parlance is the “index”, but the phrase “staging area” works just as well. </div>
+</li>
+<li class="level1"><div class="li"> the Git directory: is where Git stores the metadata and object database for your project. This is the most important part of Git, and it is what is copied when you clone a repository from another computer.</div>
+</li>
+</ul>
+
+<p>
+<strong>The basic Git workflow</strong>
+</p>
+<ol>
+<li class="level1"><div class="li"> You modify files in your working tree(your projet source code).</div>
+</li>
+<li class="level1"><div class="li"> You selectively add the changes you want to be part of your next commit(i.e. git add), those changes are added to the staging area.</div>
+</li>
+<li class="level1"><div class="li"> You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory(local).</div>
+</li>
+<li class="level1"><div class="li"> You push your commits to the remote git repos(can be multiple server repos)</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Git basics&quot;,&quot;hid&quot;:&quot;git_basics&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-3596&quot;} -->
+<h2 class="sectionedit2" id="install_git">0. Install git</h2>
+<div class="level2">
+
+<p>
+Install on centos 7 
+</p>
+<pre class="code"># RPM based distribution, such as RHEL, Fedora and CentOS
+$ sudo yum install git-all
+$ sudo dnf install git-all
+
+# debian-based distribution, 
+$ sudo apt install git-all
+
+# check git version
+git version</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0. Install git&quot;,&quot;hid&quot;:&quot;install_git&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;3597-3865&quot;} -->
+<h2 class="sectionedit3" id="configure_git">1. Configure git</h2>
+<div class="level2">
+
+<p>
+Git comes with a tool called git config that lets you get and set configuration variables that control
+all aspects of how Git looks and operates. These variables can be stored in three different places with three different scopes:
+</p>
+<ol>
+<li class="level1"><div class="li"> /etc/gitconfig file (System): It contains values applied to every user on the system and all their repositories. If you pass the option –system to git config, it reads and writes from this file specifically. (Because this is a system configuration file, you would need administrative or superuser privilege to make changes to it.)</div>
+</li>
+<li class="level1"><div class="li"> ~/.gitconfig or ~/.config/git/config file (User): it contains Values specific personally to you, the user. You can make Git read and write to this file specifically by passing the –global option, and this affects all of the repositories you work with on your system.</div>
+</li>
+<li class="level1"><div class="li"> config file in the Git directory (that is, .git/config) of whatever repository you’re currently using: Specific to that single repository. You can force Git to read from and write to this file with the –local option, but that is in fact the default. (Unsurprisingly, you need to be located</div>
+</li>
+</ol>
+
+<p>
+Each level overrides values in the prevoius level(e.g. local → global → system)
+</p>
+<pre class="code"># You can view all of your settings and where they are coming from using:
+$ git config --list --show-origin
+# does not work in the old version of git
+
+# Set up your identity(name and email), this information are immutable once they are baked into your commits 
+
+$ git config --global user.name &quot;Your Name&quot;
+$ git config --global user.email &quot;you@example.com&quot;
+
+#check your config
+git config --list
+
+# set up default git input editor, when Git needs you to type in a message
+$ git config --global core.editor emacs</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Configure git&quot;,&quot;hid&quot;:&quot;configure_git&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;3866-5643&quot;} -->
+<h2 class="sectionedit4" id="getting_a_git_repository">2 Getting a Git Repository</h2>
+<div class="level2">
+
+<p>
+You typically obtain a Git repository in one of two ways:
+1. You can take a local directory that is currently not under version control, and turn it into a Git
+repository, or
+2. You can clone an existing Git repository from elsewhere.
+In either case, you end up with a Git repository on your local machine, ready for work.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2 Getting a Git Repository&quot;,&quot;hid&quot;:&quot;getting_a_git_repository&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;5644-6007&quot;} -->
+<h3 class="sectionedit5" id="initializing_a_repository_in_an_existing_directory">2.1 Initializing a Repository in an Existing Directory</h3>
+<div class="level3">
+
+<p>
+If you have a project directory that is currently not under version control and you want to start
+controlling it with Git, you first need to go to that project’s directory.
+</p>
+<pre class="code">$ cd /path/to/my_project
+$ git init
+# This creates a new subdirectory named .git that contains all of your necessary repository files — a Git repository skeleton. At this point, nothing in your project is tracked yet.
+# You need to use git add to add content to your staging area.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Initializing a Repository in an Existing Directory&quot;,&quot;hid&quot;:&quot;initializing_a_repository_in_an_existing_directory&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;6008-6548&quot;} -->
+<h3 class="sectionedit6" id="clone_an_existing_repository">2.2 Clone an existing repository</h3>
+<div class="level3">
+<pre class="code">&gt; git clone &lt;url of your remote git repo&gt;
+#example
+&gt; git clone git@gitlab.in2p3.fr:pengfei/JavaDPTutor.git
+Cloning into &#039;JavaDPTutor&#039;...
+remote: Counting objects: 161, done.
+remote: Compressing objects: 100% (124/124), done.
+remote: Total 161 (delta 26), reused 161 (delta 26)
+Receiving objects: 100% (161/161), 43.14 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (26/26), done.
+Checking connectivity... done</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Clone an existing repository&quot;,&quot;hid&quot;:&quot;clone_an_existing_repository&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;6549-7017&quot;} -->
+<h2 class="sectionedit7" id="recording_changes_to_the_repository">3. Recording changes to the Repository</h2>
+<div class="level2">
+<pre class="code"># If your repository is cloned from a server, you should check your repository status first
+$ git status 
+# On branch master
+nothing to commit, working directory clean
+
+# Make some changes, 
+$ vim README
+
+# Now rerun git status
+$ git status
+#On branch master
+#Untracked files:
+#(use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+#
+#	README
+#nothing added to commit but untracked files present (use &quot;git add&quot; to track)
+
+# add file to git, -A means all if is a folder
+git add -A README 
+# commit file to local git repo
+&gt;git commit -m &quot;Add readme&quot;
+[test_git 3921e8a] Add readme
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README
+
+# push local git repo to remote repo
+&gt;git push -u origin test_git
+Counting objects: 4, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 344 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: 
+remote: To create a merge request for test_git, visit:
+remote:   https://gitlab.in2p3.fr/pengfei/JavaDPTutor/merge_requests/new?merge_request%5Bsource_branch%5D=test_git
+remote: 
+To git@gitlab.in2p3.fr:pengfei/JavaDPTutor.git
+ * [new branch]      test_git -&gt; test_git
+Branch test_git set up to track remote branch test_git from origin.
+
+# checking the commit history
+$ git log</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Recording changes to the Repository&quot;,&quot;hid&quot;:&quot;recording_changes_to_the_repository&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;7018-8389&quot;} -->
+<h3 class="sectionedit8" id="commit_changes_to_a_new_branch">3.1 Commit changes to a new branch</h3>
+<div class="level3">
+<pre class="code"># check branch status
+/afs/in2p3.fr/home/p/pliu/git/JavaDPTutor(0)&gt;git branch
+* master
+
+# create a new branch
+&gt;git checkout -b test_git
+
+# recheck branch status
+&gt; git branch
+  master
+* test_git
+
+# change branch
+&gt; git checkout master
+Switched to branch &#039;master&#039;
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Commit changes to a new branch&quot;,&quot;hid&quot;:&quot;commit_changes_to_a_new_branch&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;8390-8716&quot;} -->
+<h2 class="sectionedit9" id="undoing_things">4. Undoing things</h2>
+<div class="level2">
+
+<p>
+If you accidentally commit something you don&#039;t want(e.g. password in the source code), you want to remove it. You can&#039;t remove it by committing a new version, because the old version will still in the historic of the git. 
+</p>
+
+<p>
+You have two situations:
+</p>
+<ol>
+<li class="level1"><div class="li"> The commit is not pushed (only exists in your local repo)</div>
+</li>
+<li class="level1"><div class="li"> The commit has been pushed to the remote repo </div>
+</li>
+</ol>
+
+<p>
+At any stage, you may want to undo something. Here, we’ll review a few basic tools for undoing changes that you’ve made. Be careful, because you can’t always undo some of these undos. This is one of the few areas in Git where you may lose some work if you do it wrong.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Undoing things&quot;,&quot;hid&quot;:&quot;undoing_things&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;8717-9387&quot;} -->
+<h3 class="sectionedit10" id="undo_commit_comments_and_add_additional_files">4.1 Undo commit comments and add additional files</h3>
+<div class="level3">
+
+<p>
+One of the common undos takes place when you commit too early and possibly forget to add some files, or you mess up your commit message. If you want to redo that commit, make the additional changes you forgot, stage them, and commit again using the –amend option. Note that, this can only add additional files and change the commit message of the last commit, does not remove files that already added in the staging area
+</p>
+<pre class="code">$ git commit -m &quot;latest commit&quot;
+$ git add forgotten_file
+$ git commit --amend &quot;new commit message will overide the latest commit&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Undo commit comments and add additional files&quot;,&quot;hid&quot;:&quot;undo_commit_comments_and_add_additional_files&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:10,&quot;range&quot;:&quot;9388-10018&quot;} -->
+<h3 class="sectionedit11" id="unstaging_a_staged_file">4.2 Unstaging a staged file</h3>
+<div class="level3">
+
+<p>
+A staged file is a file which you have added to your stageing area (git add …). But you don&#039;t do the commit. Imaging that you just add a file you don&#039;t want to. To remove it, do the following commands
+</p>
+<pre class="code"># Stage the file
+$ git add &lt;file_name&gt;
+
+# Unstage the file of the given file name
+$ git reset HEAD &lt;file_name&gt;</pre>
+
+<p>
+Note: It’s true that git reset can be a dangerous command, especially if you provide the –hard flag. However, in the scenario described above, the file in your working directory is not touched, so it’s relatively safe.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 Unstaging a staged file&quot;,&quot;hid&quot;:&quot;unstaging_a_staged_file&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:11,&quot;range&quot;:&quot;10019-10613&quot;} -->
+<h3 class="sectionedit12" id="roll_back_to_the_last_commit">4.3 Roll back to the last commit</h3>
+<div class="level3">
+
+<p>
+Imagine that you modified a file, and realize that want to keep these changes. You want to roll back to the last committed version.
+</p>
+<pre class="code"># modify the README file, add some new text
+$ git status  
+
+# On branch master
+# Changes not staged for commit:
+#   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+#   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+#
+#	modified:   README
+
+$ git checkout -- README
+# You will find your modification has been rolled back to the last commit version.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3 Roll back to the last commit&quot;,&quot;hid&quot;:&quot;roll_back_to_the_last_commit&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;10614-11191&quot;} -->
+<h2 class="sectionedit13" id="working_with_remotes">5. Working with Remotes</h2>
+<div class="level2">
+
+<p>
+To be able to collaborate on any Git project, you need to know how to manage your remote
+repositories. Remote repositories are versions of your project that are hosted on the Internet or
+network somewhere. You can have several of them, each of which generally is either read-only or
+read/write for you. Collaborating with others involves managing these remote repositories and
+pushing and pulling data to and from them when you need to share work
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Working with Remotes&quot;,&quot;hid&quot;:&quot;working_with_remotes&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;11192-11676&quot;} -->
+<h3 class="sectionedit14" id="showing_your_remotes">5.1 showing your remotes</h3>
+<div class="level3">
+<pre class="code"># It lists the short names of each remote servers you have, the option -v shows you the URLs of the short name
+$ git remote -v</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1 showing your remotes&quot;,&quot;hid&quot;:&quot;showing_your_remotes&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:14,&quot;range&quot;:&quot;11677-11854&quot;} -->
+<h3 class="sectionedit15" id="adding_remote_repositories">5.2 Adding remote repositories</h3>
+<div class="level3">
+<pre class="code">$ git remote add pb https://github.com/paulboone/ticgit
+
+# you can check the newly added repo with
+$ git remote -v
+
+# now you can fetch all the information that the repo pb has but you don&#039;t yet
+$ git fetch pb
+
+# you can also push information to the repo pb, master is the branch name
+$ git push pb master</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2 Adding remote repositories&quot;,&quot;hid&quot;:&quot;adding_remote_repositories&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:15,&quot;range&quot;:&quot;11855-12218&quot;} -->
+<h3 class="sectionedit16" id="inspecting_a_remote">5.3 Inspecting a Remote</h3>
+<div class="level3">
+<pre class="code"># You can get more information about remote repo with
+$ git remote show pb</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.3 Inspecting a Remote&quot;,&quot;hid&quot;:&quot;inspecting_a_remote&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:16,&quot;range&quot;:&quot;12219-12344&quot;} -->
+<h3 class="sectionedit17" id="renaming_and_removing_remotes">5.4 Renaming and Removing remotes</h3>
+<div class="level3">
+<pre class="code"># You can change your remote shortname with
+$ git remote rename pb paul
+
+# you can remove a remote repo with
+$ git remote remove paul</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.4 Renaming and Removing remotes&quot;,&quot;hid&quot;:&quot;renaming_and_removing_remotes&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:17,&quot;range&quot;:&quot;12345-12539&quot;} -->
+<h2 class="sectionedit18" id="tagging">6. Tagging</h2>
+<div class="level2">
+
+<p>
+Like most VCSs, Git has the ability to tag specific points in a repository’s history as being important.
+Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6. Tagging&quot;,&quot;hid&quot;:&quot;tagging&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:18,&quot;range&quot;:&quot;12540-12759&quot;} -->
+<h3 class="sectionedit19" id="listing_your_tags">6.1 Listing your tags</h3>
+<div class="level3">
+<pre class="code"># This will list all tags
+$ git tag
+
+# You can search for tags that match a particular pattern.
+$ git tag -l &quot;v1.8*&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.1 Listing your tags&quot;,&quot;hid&quot;:&quot;listing_your_tags&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:19,&quot;range&quot;:&quot;12760-12925&quot;} -->
+<h3 class="sectionedit20" id="creating_tags">6.2 Creating tags</h3>
+<div class="level3">
+
+<p>
+Git supports two types of tags
+</p>
+<ul>
+<li class="level1"><div class="li"> lightweight: A lightweight tag is very much like a branch that doesn’t change — it’s just a pointer to a specific commit.</div>
+</li>
+<li class="level1"><div class="li"> annotated: Annotated tags, however, are stored as full objects in the Git database. They’re checksummed;</div>
+</li>
+</ul>
+
+<p>
+contain the tagger name, email, and date; have a tagging message, and can be signed and verified with GNU Privacy Guard (GPG). It’s generally recommended that you create annotated tags so you can have all this information.
+</p>
+
+<p>
+<strong>Creating annotated tags</strong>
+</p>
+<pre class="code">$ git tag -a v1.0 -m &quot;version 1.0&quot;
+
+# git show will show you the tag data along with the commit that was tagged 
+$ git show v1.0
+tag v1.0
+Tagger: liu &lt;pengfei.liu@bioaster.org&gt;
+Date:   Tue Aug 6 14:50:46 2019 +0200
+
+version 1.0
+
+commit c979769347a06e1b91e8cccb0d11bff8d1847147
+Author: liu &lt;pengfei.liu@bioaster.org&gt;
+Date:   Mon Jul 29 14:00:44 2019 +0200
+
+    remove the wrong add wrong file
+
+diff --git a/wrong_file b/wrong_file
+new file mode 100644
+index 0000000..cdbc178
+</pre>
+
+<p>
+<strong>Tagging Later</strong>
+</p>
+
+<p>
+You can also tag commits after you’ve moved past them. Suppose your have the following commit history
+</p>
+<pre class="code">$ git log --pretty=oneline
+c979769347a06e1b91e8cccb0d11bff8d1847147 remove the wrong add wrong file
+72d685d90a7c85ef88e02b63f2324d21d4ced150 Adding readme file
+ba07659b8207a61a48c74bb75bf76bfbf25704b4 first commit for scala logging
+
+# You only need to add the checksum (or part of it) of a commit to the adding tag command
+$ git tag -a v0.5 -m &quot;half way to the victory&quot; 72d685d90a7c85
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.2 Creating tags&quot;,&quot;hid&quot;:&quot;creating_tags&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:20,&quot;range&quot;:&quot;12926-14502&quot;} -->
+<h3 class="sectionedit21" id="sharing_tags">6.3 sharing Tags</h3>
+<div class="level3">
+
+<p>
+By default, the git push command doesn’t transfer tags to remote servers. You will have to explicitly push tags to a shared server after you have created them. This process is just like sharing remote branches — you can run git push origin &lt;tagname&gt;.
+</p>
+<pre class="code"># push one tag
+$ git push origin v1.0
+
+# if you have many tags, and you want to push them all,
+$ git push origin --tags
+# Note, it will push both lightweight and annotated tags</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3 sharing Tags&quot;,&quot;hid&quot;:&quot;sharing_tags&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:21,&quot;range&quot;:&quot;14503-14980&quot;} -->
+<h3 class="sectionedit22" id="deleting_tags">6.4 deleting Tags</h3>
+<div class="level3">
+<pre class="code"># This only delete the tag on your local repo, this tag still exist on your remote repo
+$ git tag -d v1.0
+
+# Delete the tag on the remote server
+$ git push origin --delete v1.0</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.4 deleting Tags&quot;,&quot;hid&quot;:&quot;deleting_tags&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:22,&quot;range&quot;:&quot;14981-15202&quot;} -->
+<h3 class="sectionedit23" id="checking_out_tags">6.5 Checking out tags</h3>
+<div class="level3">
+
+<p>
+If you want to view the versions of files a tag is pointing to, you can do a git checkout of that tag, although this puts your repository in “detached HEAD” state, which has some ill side effects:
+</p>
+
+<p>
+Note, if you delete a tag on your local repo, you can&#039;t checkout this tag from the remote repo
+</p>
+<pre class="code">$ git checkout v0.5
+
+# you can check your git status
+[pliu@localhost scala_logging]$ git status
+# HEAD detached at v0.5
+# Untracked files:
+#   (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+#
+#	second_wrong_file
+
+
+# You are in &#039;detached HEAD&#039; state. You can look around, make experimental
+# changes and commit them, and you can discard any commits you make in this
+# state without impacting any branches by performing another checkout.
+# If you want to create a new branch to retain commits you create, you may
+# do so (now or later) by using -b with the checkout command again. Example:
+# git checkout -b &lt;new-branch&gt;
+
+[pliu@localhost scala_logging]$ git checkout -b v0.5-beta
+Switched to a new branch &#039;v0.5-beta&#039;
+[pliu@localhost scala_logging]$ git status
+# On branch v0.5-beta
+# Untracked files:
+#   (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+#
+#	second_wrong_file
+</pre>
+
+<p>
+In “detached HEAD” state, if you make changes and then create a commit, the tag will stay the same,
+but your new commit won’t belong to any branch and will be unreachable, except by the exact
+commit hash. Thus, if you need to make changes — say you’re fixing a bug on an older version, for
+instance — you will generally want to create a branch
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.5 Checking out tags&quot;,&quot;hid&quot;:&quot;checking_out_tags&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:23,&quot;range&quot;:&quot;15203-&quot;} -->

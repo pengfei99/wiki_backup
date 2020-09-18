@@ -1,0 +1,632 @@
+
+<h1 class="sectionedit1" id="nio学习总结">NIO学习总结</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;NIO\u5b66\u4e60\u603b\u7ed3&quot;,&quot;hid&quot;:&quot;nio\u5b66\u4e60\u603b\u7ed3&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-31&quot;} -->
+<h2 class="sectionedit2" id="java_nio_概览">1.Java NIO 概览</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.Java NIO \u6982\u89c8&quot;,&quot;hid&quot;:&quot;java_nio_\u6982\u89c8&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;32-63&quot;} -->
+<h3 class="sectionedit3" id="nio简介">1.1 NIO简介:</h3>
+<div class="level3">
+
+<p>
+Java NIO 是 java 1.4, 之后新出的一套IO接口NIO中的N可以理解为Non-blocking，不单纯是New。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 NIO\u7b80\u4ecb:&quot;,&quot;hid&quot;:&quot;nio\u7b80\u4ecb&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;64-201&quot;} -->
+<h3 class="sectionedit4" id="nio的特性_nio与io区别">1.2 NIO的特性/NIO与IO区别:</h3>
+<div class="level3">
+
+<p>
+1)IO是面向流的，NIO是面向缓冲区的；
+2)IO流是阻塞的，NIO流是不阻塞的;
+3)NIO有选择器，而IO没有。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 NIO\u7684\u7279\u6027\/NIO\u4e0eIO\u533a\u522b:&quot;,&quot;hid&quot;:&quot;nio\u7684\u7279\u6027_nio\u4e0eio\u533a\u522b&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;202-377&quot;} -->
+<h3 class="sectionedit5" id="读数据和写数据方式">1.3 读数据和写数据方式:</h3>
+<div class="level3">
+
+<p>
+从通道(channel)进行数据读取 ：创建一个缓冲区(buffer)，然后请求通道读取数据。
+从通道进行数据写入 ：创建一个缓冲区，填充数据，并要求通道写入数据。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.3 \u8bfb\u6570\u636e\u548c\u5199\u6570\u636e\u65b9\u5f0f:&quot;,&quot;hid&quot;:&quot;\u8bfb\u6570\u636e\u548c\u5199\u6570\u636e\u65b9\u5f0f&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;378-630&quot;} -->
+<h3 class="sectionedit6" id="nio核心组件简单介绍">1.3 NIO核心组件简单介绍</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Channels</div>
+</li>
+<li class="level1"><div class="li"> Buffers</div>
+</li>
+<li class="level1"><div class="li"> Selectors</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.3 NIO\u6838\u5fc3\u7ec4\u4ef6\u7b80\u5355\u4ecb\u7ecd&quot;,&quot;hid&quot;:&quot;nio\u6838\u5fc3\u7ec4\u4ef6\u7b80\u5355\u4ecb\u7ecd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;631-713&quot;} -->
+<h2 class="sectionedit7" id="java_nio_之_buffer_缓冲区">2. Java NIO 之 Buffer(缓冲区)</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Java NIO \u4e4b Buffer(\u7f13\u51b2\u533a)&quot;,&quot;hid&quot;:&quot;java_nio_\u4e4b_buffer_\u7f13\u51b2\u533a&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;714-761&quot;} -->
+<h3 class="sectionedit8" id="buffer_缓冲区_介绍">2.1 Buffer(缓冲区)介绍:</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Java NIO Buffers用于和NIO Channel交互。 我们从Channel中读取数据到buffers里，从Buffer把数据写入到Channels；</div>
+</li>
+<li class="level1"><div class="li"> Buffer本质上就是一块内存区；</div>
+</li>
+<li class="level1"><div class="li"> 一个Buffer有三个属性是必须掌握的，分别是：capacity容量、position位置、limit限制。</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Buffer(\u7f13\u51b2\u533a)\u4ecb\u7ecd:&quot;,&quot;hid&quot;:&quot;buffer_\u7f13\u51b2\u533a_\u4ecb\u7ecd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;762-1096&quot;} -->
+<h3 class="sectionedit9" id="buffer的常见方法">2.2 Buffer的常见方法</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Buffer clear(): empty buffer</div>
+</li>
+<li class="level1"><div class="li"> Buffer compact(): 将所有未读的数据拷贝到Buffer起始处。然后将position设到最后一个未读元素后面。limit属性设置成capacity。现在Buffer准备好写数据了，但是不会覆盖未读的数据。</div>
+</li>
+<li class="level1"><div class="li"> Buffer flip(): Reset limit to the current pointer position, then reset the pointer to 0  </div>
+</li>
+<li class="level1"><div class="li"> Buffer rewind(): Reset pointer to 0</div>
+</li>
+<li class="level1"><div class="li"> Buffer position(int newPosition): set pointer to the given position</div>
+</li>
+<li class="level1"><div class="li"> mark() and reset(): mark标记Buffer中的一个特定position, 调用Buffer.reset()方法恢复到这个position</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Buffer\u7684\u5e38\u89c1\u65b9\u6cd5&quot;,&quot;hid&quot;:&quot;buffer\u7684\u5e38\u89c1\u65b9\u6cd5&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;1097-1725&quot;} -->
+<h3 class="sectionedit10" id="buffer的使用方式_方法介绍">2.3 Buffer的使用方式/方法介绍</h3>
+<div class="level3">
+
+<p>
+分配缓冲区（Allocating a Buffer）:
+</p>
+<pre class="code java"><span class="co1">//以ByteBuffer为例子 写入数据到缓冲区（Writing Data to a Buffer）</span>
+ByteBuffer buf <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">28</span><span class="br0">&#41;</span><span class="sy0">;</span> </pre>
+
+<p>
+写数据到Buffer有两种方法：
+</p>
+<pre class="code java"><span class="nu0">1</span>. 从Channel中写数据到Buffer： 
+<span class="kw4">int</span> bytesRead <span class="sy0">=</span> inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">//read into buffer.</span>
+&nbsp;
+<span class="nu0">2</span>. 通过put写数据： buf.<span class="me1">put</span><span class="br0">&#40;</span><span class="nu0">127</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 Buffer\u7684\u4f7f\u7528\u65b9\u5f0f\/\u65b9\u6cd5\u4ecb\u7ecd&quot;,&quot;hid&quot;:&quot;buffer\u7684\u4f7f\u7528\u65b9\u5f0f_\u65b9\u6cd5\u4ecb\u7ecd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;1726-2156&quot;} -->
+<h3 class="sectionedit11" id="buffer常用方法测试">2.4 Buffer常用方法测试</h3>
+<div class="level3">
+
+<p>
+说实话，NIO编程真的难，通过后面这个测试例子，你可能才能勉强理解前面说的Buffer方法的作用。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.4 Buffer\u5e38\u7528\u65b9\u6cd5\u6d4b\u8bd5&quot;,&quot;hid&quot;:&quot;buffer\u5e38\u7528\u65b9\u6cd5\u6d4b\u8bd5&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:11,&quot;range&quot;:&quot;2157-2327&quot;} -->
+<h2 class="sectionedit12" id="java_nio_之_channel_通道">3. Java NIO 之 Channel（通道）</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Java NIO \u4e4b Channel\uff08\u901a\u9053\uff09&quot;,&quot;hid&quot;:&quot;java_nio_\u4e4b_channel_\u901a\u9053&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:12,&quot;range&quot;:&quot;2328-2377&quot;} -->
+<h3 class="sectionedit13" id="channel_通道_介绍">3.1 Channel（通道）介绍</h3>
+<div class="level3">
+
+<p>
+通常来说NIO中的所有IO都是从 Channel（通道） 开始的。
+</p>
+
+<p>
+NIO Channel通道和流的区别：
+</p>
+<ul>
+<li class="level1"><div class="li"> 通道可以读也可以写，流一般来说是单向的（只能读或者写，所以之前我们用流进行IO操作的时候需要分别创建一个输入流和一个输出流）。</div>
+</li>
+<li class="level1"><div class="li"> 通道可以异步读写。</div>
+</li>
+<li class="level1"><div class="li"> 通道总是基于缓冲区Buffer来读写。</div>
+</li>
+</ul>
+
+<p>
+Java NIO中最重要的几个Channel的实现：
+</p>
+<ul>
+<li class="level1"><div class="li"> FileChannel： 用于文件的数据读写</div>
+</li>
+<li class="level1"><div class="li"> DatagramChannel： 用于UDP的数据读写</div>
+</li>
+<li class="level1"><div class="li"> SocketChannel： 用于TCP的数据读写，一般是客户端实现</div>
+</li>
+<li class="level1"><div class="li"> ServerSocketChannel: 允许我们监听TCP链接请求，每个请求会创建会一个SocketChannel，一般是服务器实现</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Channel\uff08\u901a\u9053\uff09\u4ecb\u7ecd&quot;,&quot;hid&quot;:&quot;channel_\u901a\u9053_\u4ecb\u7ecd&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:13,&quot;range&quot;:&quot;2378-3149&quot;} -->
+<h3 class="sectionedit14" id="filechannel的使用">3.2 FileChannel的使用</h3>
+<div class="level3">
+
+<p>
+Because FileChannel是抽象类, normally, we need to use the getChannel() method of InputStream ， OutputStream 或 RandomAccessFile 获取FileChannel. 
+</p>
+
+<p>
+We can also convert other channels to FileChannel, for example, ByteChannel. They both implemented the SeekableByteChannel interface.
+</p>
+
+<p>
+使用FileChannel读取数据到Buffer（缓冲区）以及利用Buffer（缓冲区）写入数据到FileChannel：
+</p>
+<pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> FileChannelTxt<span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> args<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+&nbsp;
+<span class="co1">//1.创建一个RandomAccessFile（随机访问文件）对象，        </span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> raf<span class="sy0">=</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;D:<span class="es0">\\</span>niodata.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//通过RandomAccessFile对象的getChannel()方法。FileChannel是抽象类。        </span>
+FileChannel inChannel <span class="sy0">=</span>raf.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//2.创建一个读数据缓冲区对象</span>
+ByteBuffer buf<span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//3.从通道中读取数据</span>
+<span class="kw4">int</span> bytesRead <span class="sy0">=</span> inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//创建一个写数据缓冲区对象</span>
+ByteBuffer buf2<span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//write data to buffer, then write buffer to channel</span>
+buf2.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;filechannel test&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf2.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+inChannel.<span class="me1">write</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">while</span><span class="br0">&#40;</span>bytesRead <span class="sy0">!=-</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+&nbsp;
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Read &quot;</span><span class="sy0">+</span>bytesRead<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//Buffer有两种模式，写模式和读模式。在写模式下调用flip()之后，Buffer从写模式变成读模式。</span>
+buf.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//如果还有未读内容    </span>
+<span class="kw1">while</span><span class="br0">&#40;</span>buf.<span class="me1">hasRemaining</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">char</span><span class="br0">&#41;</span>buf.<span class="me1">get</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="co1">//清空缓存区</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+bytesRead <span class="sy0">=</span>inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//关闭RandomAccessFile（随机访问文件）对象</span>
+raf.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 FileChannel\u7684\u4f7f\u7528&quot;,&quot;hid&quot;:&quot;filechannel\u7684\u4f7f\u7528&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:14,&quot;range&quot;:&quot;3150-4796&quot;} -->
+<h3 class="sectionedit15" id="socketchannel和serversocketchannel的使用">3.3 SocketChannel和ServerSocketChannel的使用</h3>
+<div class="level3">
+
+<p>
+利用SocketChannel和ServerSocketChannel实现客户端与服务器端简单通信：
+</p>
+
+<p>
+SocketChannel 用于创建基于tcp协议的客户端对象，通过 connect()方法 ，SocketChannel对象可以连接到其他tcp服务器程序。
+</p>
+
+<p>
+SeverSocketChannel use accept() method to accept connexion from client side.
+</p>
+
+<p>
+For code example, please check Lesson01/Section05_Exploring_NIO/ChannelBasedIOExample.exp8(); 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 SocketChannel\u548cServerSocketChannel\u7684\u4f7f\u7528&quot;,&quot;hid&quot;:&quot;socketchannel\u548cserversocketchannel\u7684\u4f7f\u7528&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:15,&quot;range&quot;:&quot;4797-5268&quot;} -->
+<h3 class="sectionedit16" id="️34_datagramchannel的使用">️3.4 DatagramChannel的使用</h3>
+<div class="level3">
+
+<p>
+DataGramChannel，类似于java 网络编程的DatagramSocket类；使用UDP进行网络传输， UDP是无连接，面向数据报文段的协议，对传输的数据不保证安全与完整 ；和上面介绍的SocketChannel和ServerSocketChannel的使用方法类似，所以这里就简单介绍一下如何使用
+</p>
+
+<p>
+1. get a DataGramChannel
+</p>
+<pre class="code java"><span class="co1">//1.通过DatagramChannel的open()方法创建一个DatagramChannel对象</span>
+DatagramChannel datagramChannel <span class="sy0">=</span> DatagramChannel.<span class="me1">open</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//绑定一个port（端口）</span>
+datagramChannel.<span class="me1">bind</span><span class="br0">&#40;</span><span class="kw1">new</span> InetSocketAddress<span class="br0">&#40;</span><span class="nu0">1234</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+2. 接收
+</p>
+<pre class="code java">ByteBuffer buf <span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+channel.<span class="me1">receive</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+3. 发送消息
+由于UDP下，服务端和客户端通信并不需要建立连接，只需要知道对方地址即可发出消息，但是是否发送成功或者成功被接收到是没有保证的;发送消息通过send方法发出，改方法返回一个int值，表示成功发送的字节数
+</p>
+
+<p>
+这个例子发送一串字符：“datagramchannel”到主机名为”localhost”服务器的端口1234上。
+</p>
+<pre class="code java">ByteBuffer buf <span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;datagramchannel&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> send <span class="sy0">=</span> channel.<span class="me1">send</span><span class="br0">&#40;</span>buffer, <span class="kw1">new</span> InetSocketAddress<span class="br0">&#40;</span><span class="st0">&quot;localhost&quot;</span>,<span class="nu0">1234</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;\ufe0f3.4 DatagramChannel\u7684\u4f7f\u7528&quot;,&quot;hid&quot;:&quot;\ufe0f34_datagramchannel\u7684\u4f7f\u7528&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:16,&quot;range&quot;:&quot;5269-6619&quot;} -->
+<h3 class="sectionedit17" id="scatter_gather">3.5 Scatter / Gather</h3>
+<div class="level3">
+
+<p>
+Channel 提供了一种被称为 Scatter/Gather 的新功能，也称为本地矢量 I/O。Scatter/Gather 是指在多个缓冲区上实现一个简单的 I/O 操作。正确使用 Scatter / Gather可以明显提高性能。
+</p>
+
+<p>
+大多数现代操作系统都支持本地矢量I/O（native vectored I/O）操作。当您在一个通道上请求一个Scatter/Gather操作时，该请求会被翻译为适当的本地调用来直接填充或抽取缓冲区，减少或避免了缓冲区拷贝和系统调用；
+</p>
+
+<p>
+Scatter/Gather应该使用直接的ByteBuffers以从本地I/O获取最大性能优势。
+</p>
+<ul>
+<li class="level1"><div class="li"> Scatter: 从一个Channel读取的信息分散到N个缓冲区中(Buffer).</div>
+</li>
+<li class="level1"><div class="li"> Gather: 将N个Buffer里面内容按照顺序发送到一个Channel.</div>
+</li>
+</ul>
+
+<p>
+Important note: 无论是scatter还是gather操作，都是按照buffer在数组中的顺序来依次读取或写入的
+</p>
+
+</div>
+
+<h4 id="scattering_reads">3.5.1 Scattering Reads</h4>
+<div class="level4">
+
+<p>
+“scattering read”是把数据从单个Channel写入到多个buffer
+</p>
+<pre class="code java">ByteBuffer header <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">128</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer body <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">1024</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">//read()方法内部会负责把数据按顺序写进传入的buffer数组内。一个buffer写满后，接着写到下一个buffer中。</span>
+<span class="co1">//举个例子，假如通道中有200个字节数据，那么header会被写入128个字节数据，body会被写入72个字节数据；</span>
+ByteBuffer<span class="br0">&#91;</span><span class="br0">&#93;</span> bufferArray <span class="sy0">=</span><span class="br0">&#123;</span>header,body<span class="br0">&#125;</span><span class="sy0">;</span>
+channel.<span class="me1">read</span><span class="br0">&#40;</span>bufferArray<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="gathering_writes">3.5.2 Gathering Writes</h4>
+<div class="level4">
+
+<p>
+“gathering write”把多个buffer的数据写入到同一个channel中
+</p>
+<pre class="code java">ByteBuffer header <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">128</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer body <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">1024</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer<span class="br0">&#91;</span><span class="br0">&#93;</span> bufferArray <span class="sy0">=</span><span class="br0">&#123;</span>header,body<span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="co1">//write()方法内部会负责把数据按顺序写入到channel中。</span>
+<span class="co1">//并不是所有数据都写入到通道，写入的数据要根据position和limit的值来判断，只有position和limit之间的数据才会被写入；</span>
+<span class="co1">// 举个例子，假如以上header缓冲区中有128个字节数据，但此时position=0，limit=58；那么只有下标索引为0-57的数据才会被写入到通道中。</span>
+channel.<span class="me1">write</span><span class="br0">&#40;</span>bufferArray<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.5 Scatter \/ Gather&quot;,&quot;hid&quot;:&quot;scatter_gather&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:17,&quot;range&quot;:&quot;6620-8764&quot;} -->
+<h3 class="sectionedit18" id="通道之间的数据传输">3.6 通道之间的数据传输</h3>
+<div class="level3">
+
+<p>
+在Java NIO中如果一个channel是FileChannel类型的，那么他可以直接把数据传输到另一个channel。
+</p>
+<ul>
+<li class="level1"><div class="li"> transferFrom() :transferFrom方法把数据从通道源传输到FileChannel</div>
+</li>
+<li class="level1"><div class="li"> transferTo() :transferTo方法把FileChannel数据传输到另一个channel</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="transferfrom">3.6.1 transferFrom</h4>
+<div class="level4">
+
+<p>
+FileChannel的transferFrom()方法可以将数据从源通道传输到FileChannel中
+</p>
+<pre class="code java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> fromFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;fromFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      fromChannel <span class="sy0">=</span> fromFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> toFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;toFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      toChannel <span class="sy0">=</span> toFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<span class="kw4">long</span> position <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>  
+<span class="kw4">long</span> count <span class="sy0">=</span> fromChannel.<span class="me1">size</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+toChannel.<span class="me1">transferFrom</span><span class="br0">&#40;</span>position, count, fromChannel<span class="br0">&#41;</span><span class="sy0">;</span>  </pre>
+
+<p>
+方法的输入参数position表示从position处开始向目标文件写入数据，count表示最多传输的字节数。如果源通道的剩余空间小于 count 个字节，则所传输的字节数要小于请求的字节数。
+</p>
+
+<p>
+此外要注意，在SoketChannel的实现中，SocketChannel只会传输此刻准备好的数据（可能不足count字节）。因此，SocketChannel可能不会将请求的所有数据(count个字节)全部传输到FileChannel中。
+</p>
+
+</div>
+
+<h4 id="transferto">3.6.2 transferTo</h4>
+<div class="level4">
+<pre class="code java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> fromFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;fromFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      fromChannel <span class="sy0">=</span> fromFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> toFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;toFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      toChannel <span class="sy0">=</span> toFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<span class="kw4">long</span> position <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>  
+<span class="kw4">long</span> count <span class="sy0">=</span> fromChannel.<span class="me1">size</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+fromChannel.<span class="me1">transferTo</span><span class="br0">&#40;</span>position, count, toChannel<span class="br0">&#41;</span><span class="sy0">;</span>  </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.6 \u901a\u9053\u4e4b\u95f4\u7684\u6570\u636e\u4f20\u8f93&quot;,&quot;hid&quot;:&quot;\u901a\u9053\u4e4b\u95f4\u7684\u6570\u636e\u4f20\u8f93&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:18,&quot;range&quot;:&quot;8765-10479&quot;} -->
+<h2 class="sectionedit19" id="selector">4. Selector</h2>
+<div class="level2">
+
+<p>
+Selector 一般称 为选择器 ，当然你也可以翻译为 多路复用器 。它是Java NIO核心组件中的一个，用于检查一个或多个NIO Channel（通道）的状态是否处于可读、可写。如此可以实现单线程管理多个channels,也就是可以管理多个网络链接。
+</p>
+
+<p>
+使用Selector的好处在于： 使用更少的线程来就可以来处理通道了， 相比使用多个线程，避免了线程上下文切换带来的开销。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Selector&quot;,&quot;hid&quot;:&quot;selector&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:19,&quot;range&quot;:&quot;10480-10973&quot;} -->
+<h3 class="sectionedit20" id="use_a_selector">4.1 Use a Selector</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="create_a_selector">4.1.1 create a selector</h4>
+<div class="level4">
+<pre class="code java">Selector selector <span class="sy0">=</span> Selector.<span class="me1">open</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="register_a_channel_to_a_selector">4.1.2 register a channel to a selector</h4>
+<div class="level4">
+<pre class="code java"><span class="co1">// channel must be not blocking</span>
+channel.<span class="me1">configureBlocking</span><span class="br0">&#40;</span><span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// register() 方法的第二个参数 specifies the event(e.g. Connect, Accept, Read, Write) which the watcher will monitor</span>
+<span class="co1">// in our case we monitor only read event </span>
+SelectionKey key<span class="sy0">=</span>channel.<span class="me1">register</span><span class="br0">&#40;</span>selector, Selectionkey.<span class="me1">OP_READ</span><span class="br0">&#41;</span></pre>
+
+<p>
+FileChannel can&#039;t be used by a Selector, because it does not extend the abstract class SelectableChannel. So it does not have the method abstract SelectableChannel configureBlocking(boolean block). 
+</p>
+
+<p>
+SelectableChannel抽象类的configureBlocking（） 方法是由 AbstractSelectableChannel抽象类实现的，SocketChannel、ServerSocketChannel、DatagramChannel都是直接继承了 AbstractSelectableChannel抽象类。
+</p>
+
+<p>
+SelectionKey的四个常量:
+</p>
+<ul>
+<li class="level1"><div class="li"> SelectionKey.OP_CONNECT</div>
+</li>
+<li class="level1"><div class="li"> SelectionKey.OP_ACCEPT</div>
+</li>
+<li class="level1"><div class="li"> SelectionKey.OP_READ</div>
+</li>
+<li class="level1"><div class="li"> SelectionKey.OP_WRITE</div>
+</li>
+</ul>
+
+<p>
+通道触发了一个事件意思是该事件已经就绪。比如某个Channel成功连接到另一个服务器称为“connect就绪 ”。一个Server Socket Channel准备好接收新进入的连接称为“accept就绪”。一个有数据可读的通道可以说是“ 读就绪 ”。等待写数据的通道可以说是“ 写就绪 ”。
+</p>
+<pre class="code java"><span class="co1">//如果你对不止一种事件感兴趣，使用或运算符即可 </span>
+<span class="kw4">int</span> interestSet <span class="sy0">=</span> SelectionKey.<span class="me1">OP_READ</span> <span class="sy0">|</span> SelectionKey.<span class="me1">OP_WRITE</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="selectionkey">4.1.3 SelectionKey</h4>
+<div class="level4">
+
+<p>
+Once a channel is registered to a selector, A selectionKey is created, which offers following information
+</p>
+<pre class="code">//返回SelectionKey的attachment，attachment可以在注册channel的时候指定。
+key.attachment(); 
+
+// 返回该SelectionKey对应的channel。
+key.channel();
+ 
+// 返回该SelectionKey对应的Selector。
+key.selector();
+
+//返回代表需要Selector监控的IO操作的bit mask
+key.interestOps(); 
+
+// 返回一个bit mask，代表在相应channel上可以进行的IO操作。
+key.readyOps(); 
+</pre>
+
+<p>
+我们可以通过以下方法来判断Selector是否对Channel的某种事件感兴趣
+</p>
+<pre class="code java"><span class="kw4">int</span> interestSet <span class="sy0">=</span> selectionKey.<span class="me1">interestOps</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInAccept <span class="sy0">=</span><span class="br0">&#40;</span>interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_ACCEPT</span><span class="br0">&#41;</span> <span class="sy0">==</span> SelectionKey.<span class="me1">OP_ACCEPT</span>；
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInConnect <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_CONNECT</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInRead <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_READ</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInWrite <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_WRITE</span><span class="sy0">;</span></pre>
+
+<p>
+我们可以通过以下方法来判断Channel这些操作是否就绪
+</p>
+<pre class="code java"><span class="co1">//创建ready集合的方法</span>
+<span class="kw4">int</span> readySet <span class="sy0">=</span> selectionKey.<span class="me1">readyOps</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//检查这些操作是否就绪的方法</span>
+key.<span class="me1">isAcceptable</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">//是否可读，是返回 true</span>
+<span class="kw4">boolean</span> isWritable<span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可写，是返回 true</span>
+<span class="kw4">boolean</span> isConnectable<span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可连接，是返回 true</span>
+<span class="kw4">boolean</span> isAcceptable <span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可接收，是返回 true</span></pre>
+
+<p>
+可以将一个对象或者更多信息附着到SelectionKey上，这样就能方便的识别某个给定的通道。例如，可以附加 与通道一起使用的Buffer，或是包含聚集数据的某个对象。使用方法如下：
+</p>
+<pre class="code java"><span class="co1">// during registration</span>
+SelectionKey key <span class="sy0">=</span> channel.<span class="me1">register</span><span class="br0">&#40;</span>selector, SelectionKey.<span class="me1">OP_READ</span>,theObject<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// after registration</span>
+key.<span class="me1">attach</span><span class="br0">&#40;</span>theObject<span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> attachedObj <span class="sy0">=</span>key.<span class="me1">attachment</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Use a Selector&quot;,&quot;hid&quot;:&quot;use_a_selector&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:20,&quot;range&quot;:&quot;10974-14425&quot;} -->
+<h3 class="sectionedit21" id="从selector中选择channel_selecting_channels_via_a_selector">4.2 从Selector中选择channel(Selecting Channels via a Selector)</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="three_different_types_of_selectionkey">4.2.1 Three different types of SelectionKey</h4>
+<div class="level4">
+
+<p>
+In a Selector, we can find three different types of SelectionKey
+</p>
+<ul>
+<li class="level1"><div class="li"> 已注册的键的集合(Registered key set): 所有与选择器关联的通道所生成的键的集合称为已经注册的键的集合。并不是所有注册过的键都仍然有效。这个集合通过 keys() 方法返回，并且可能是空的。这个已注册的键的集合不是可以直接修改的；试图这么做的话将引发java.lang.UnsupportedOperationException。</div>
+</li>
+<li class="level1"><div class="li"> 已选择的键的集合(Selected key set): 所有与选择器关联的通道所生成的键的集合称为已经注册的键的集合。并不是所有注册过的键都仍然有效。这个集合通过 keys() 方法返回，并且可能是空的。这个已注册的键的集合不是可以直接修改的；试图这么做的话将引发java.lang.UnsupportedOperationException。</div>
+</li>
+<li class="level1"><div class="li"> 已取消的键的集合(Cancelled key set): 已注册的键的集合的子集，这个集合包含了 cancel() 方法被调用过的键(这个键已经被无效化)，但它们还没有被注销。这个集合是选择器对象的私有成员，因而无法直接访问。</div>
+</li>
+</ul>
+
+<p>
+注意：当键被取消（ 可以通过isValid( ) 方法来判断）时，它将被放在相关的选择器的已取消的键的集合里。注册不会立即被取消，但键会立即失效。当再次调用 select( ) 方法时（或者一个正在进行的select()调用结束时），已取消的键的集合中的被取消的键将被清理掉，并且相应的注销也将完成。通道会被注销，而新的SelectionKey将被返回。当通道关闭时，所有相关的键会自动取消（记住，一个通道可以被注册到多个选择器上）。当选择器关闭时，所有被注册到该选择器的通道都将被注销，并且相关的键将立即被无效化（取消）。一旦键被无效化，调用它的与选择相关的方法就将抛出CancelledKeyException。
+</p>
+
+</div>
+
+<h4 id="select_方法介绍">4.2.2 select()方法介绍</h4>
+<div class="level4">
+
+<p>
+在刚初始化的Selector对象中，这三个集合都是空的。 通过Selector的select（）方法可以选择已经准备就绪的通道 （这些通道包含你感兴趣的的事件）。比如你对读就绪的通道感兴趣，那么select（）方法就会返回读事件已经就绪的那些通道。下面是Selector几个重载的select()方法：
+</p>
+<ul>
+<li class="level1"><div class="li"> int select()：阻塞到至少有一个通道在你注册的事件上就绪了。</div>
+</li>
+<li class="level1"><div class="li"> int select(long timeout)：和select()一样，但最长阻塞时间为timeout毫秒。</div>
+</li>
+<li class="level1"><div class="li"> int selectNow()：非阻塞，只要有通道就绪就立刻返回。</div>
+</li>
+</ul>
+
+<p>
+<strong>select()方法返回的int值表示有多少通道已经就绪,是自上次调用select()方法后有多少通道变成就绪状态。之前在select（）调用时进入就绪的通道不会在本次调用中被记入，而在前一次select（）调用进入就绪但现在已经不在处于就绪的通道也不会被记入</strong>。例如：首次调用select()方法，如果有一个通道变成就绪状态，返回了1，若再次调用select()方法，如果另一个通道就绪了，它会再次返回1。如果对第一个就绪的channel没有做任何操作，现在就有两个就绪的通道，但在每次select()方法调用之间，只有一个通道就绪了。
+</p>
+
+<p>
+<strong>一旦调用select()方法，并且返回值不为0时，则 可以通过调用Selector的selectedKeys()方法来访问已选择键集合</strong>
+</p>
+
+</div>
+
+<h4 id="停止选择的方法">4.2.3 停止选择的方法</h4>
+<div class="level4">
+
+<p>
+选择器执行选择的过程，系统底层会依次询问每个通道是否已经就绪，这个过程可能会造成调用线程进入阻塞状态,那么我们有以下三种方式可以唤醒在select（）方法中阻塞的线程。
+</p>
+<ul>
+<li class="level1"><div class="li"> wakeup()方法 ：通过调用Selector对象的wakeup（）方法让处在阻塞状态的select()方法立刻返回 该方法使得选择器上的第一个还没有返回的选择操作立即返回。如果当前没有进行中的选择操作，那么下一次对select()方法的一次调用将立即返回。</div>
+</li>
+<li class="level1"><div class="li"> close()方法 ：通过close（）方法关闭Selector， 该方法使得任何一个在选择操作中阻塞的线程都被唤醒（类似wakeup（）），同时使得注册到该Selector的所有Channel被注销，所有的键将被取消，但是Channel本身并不会关闭。</div>
+</li>
+</ul>
+
+<p>
+For code example, please visit my gitup Lesson01_Section05_Exploring_NIO   ChannelBasedIOExample.exp9();
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 \u4eceSelector\u4e2d\u9009\u62e9channel(Selecting Channels via a Selector)&quot;,&quot;hid&quot;:&quot;\u4eceselector\u4e2d\u9009\u62e9channel_selecting_channels_via_a_selector&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:21,&quot;range&quot;:&quot;14426-18932&quot;} -->
+<h2 class="sectionedit22" id="java_nio之path和files">5. Java NIO之Path和Files</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Java NIO\u4e4bPath\u548cFiles&quot;,&quot;hid&quot;:&quot;java_nio\u4e4bpath\u548cfiles&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:22,&quot;range&quot;:&quot;18933-18972&quot;} -->
+<h3 class="sectionedit23" id="文件i_o基石_path">5.1 文件I/O基石：Path：</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> 创建一个Path</div>
+</li>
+<li class="level1"><div class="li"> File和Path之间的转换，File和URI之间的转换</div>
+</li>
+<li class="level1"><div class="li"> 获取Path的相关信息</div>
+</li>
+<li class="level1"><div class="li"> 移除Path中的冗余项</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1 \u6587\u4ef6I\/O\u57fa\u77f3\uff1aPath\uff1a&quot;,&quot;hid&quot;:&quot;\u6587\u4ef6i_o\u57fa\u77f3_path&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:23,&quot;range&quot;:&quot;18973-19154&quot;} -->
+<h3 class="sectionedit24" id="拥抱files类">5.2 拥抱Files类：</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Files.exists() 检测文件路径是否存在</div>
+</li>
+<li class="level1"><div class="li"> Files.createFile() 创建文件</div>
+</li>
+<li class="level1"><div class="li"> Files.createDirectories()和Files.createDirectory()创建文件夹</div>
+</li>
+<li class="level1"><div class="li"> Files.delete()方法 可以删除一个文件或目录</div>
+</li>
+<li class="level1"><div class="li"> Files.copy()方法可以吧一个文件从一个地址复制到另一个位置</div>
+</li>
+<li class="level1"><div class="li"> 获取文件属性</div>
+</li>
+<li class="level1"><div class="li"> 遍历一个文件夹</div>
+</li>
+<li class="level1"><div class="li"> Files.walkFileTree()遍历整个目录</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2 \u62e5\u62b1Files\u7c7b\uff1a&quot;,&quot;hid&quot;:&quot;\u62e5\u62b1files\u7c7b&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:24,&quot;range&quot;:&quot;19155-&quot;} -->

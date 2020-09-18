@@ -1,0 +1,261 @@
+
+<h1 class="sectionedit1" id="anaconda_tutorial_01introduction">Anaconda tutorial 01: Introduction</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Anaconda tutorial 01: Introduction&quot;,&quot;hid&quot;:&quot;anaconda_tutorial_01introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-50&quot;} -->
+<h2 class="sectionedit2" id="concepts_of_conda">1 Concepts of Conda</h2>
+<div class="level2">
+
+<p>
+Before we start, let’s ensure that you have conda installed either via Miniconda or Anaconda.
+</p>
+<pre class="code"># Check conda version to make sure it&#039;s installed.
+conda info
+
+# To see the full documentation for any command, type the command followed by --help. For example, to learn about the conda update command:
+conda update --help</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1 Concepts of Conda&quot;,&quot;hid&quot;:&quot;concepts_of_conda&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;51-419&quot;} -->
+<h3 class="sectionedit3" id="conda_environment">1.1 Conda environment</h3>
+<div class="level3">
+
+<p>
+What is a conda environment?
+</p>
+<ul>
+<li class="level1"><div class="li"> Similar to python virtual environments (venv)</div>
+</li>
+<li class="level1"><div class="li"> A set of isolated packages in a directory</div>
+</li>
+<li class="level1"><div class="li"> Able to be shared via environment files</div>
+</li>
+</ul>
+<pre class="code"># List out available environments
+conda env list # The starred * environment is the current activate environment
+
+# Create conda environment from command line (Not Best Practice)
+conda create --name myenv --channel conda-forge python=3.6
+
+# Activate conda environment
+conda activate myenv
+
+# Deactivate conda environment
+conda deactivate
+
+# Create conda environment from environment file (Recommended Best Practice)
+conda env create --file environment.yml
+
+# Removing conda environments
+conda env remove --yes --name myenv
+</pre>
+
+<p>
+Best practice for creating conda environment
+</p>
+<ol>
+<li class="level1"><div class="li"> When starting a new environment, always generate it from an environment file rather than the command line.</div>
+</li>
+<li class="level1"><div class="li"> As you add packages to the environment, be sure to update the environment file.</div>
+</li>
+<li class="level1"><div class="li"> Unless you have to (i.e. Production Environments), try to avoid specifying the version of each package. This will ensure you have the most up to date version that will work across the platform.</div>
+</li>
+</ol>
+
+<p>
+If you follow these guidelines, you should be able to give your environment file to anyone, and they will be able to install your packages with no problem.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 Conda environment&quot;,&quot;hid&quot;:&quot;conda_environment&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;420-1760&quot;} -->
+<h3 class="sectionedit4" id="conda_channels">1.2 Conda channels</h3>
+<div class="level3">
+
+<p>
+What is the conda channel?
+</p>
+<ul>
+<li class="level1"><div class="li"> Similar to linux repository (or app store)</div>
+</li>
+<li class="level1"><div class="li"> The service is hosted for free at Anaconda Cloud</div>
+</li>
+</ul>
+<pre class="code"># List out your channels and priorities
+conda config --get channels
+
+# If you have a few trusted channels that you prefer to use, you can pre-configure these so that every time you are creating an environment, you won’t need to explicitly declare the channel.
+conda config --add channels conda-forge</pre>
+
+<p>
+NOTE: The highest priority channel is where your packages will be installed from no matter if another channel has a higher version!
+</p>
+
+<p>
+Conda Forge (<a href="https://anaconda.org/conda-forge" class="urlextern" title="https://anaconda.org/conda-forge" rel="nofollow">https://anaconda.org/conda-forge</a>) is a community-led collection of recipes, build infrastructure and distributions for the conda package manager.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 Conda channels&quot;,&quot;hid&quot;:&quot;conda_channels&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1761-2530&quot;} -->
+<h3 class="sectionedit5" id="conda_packages">1.3 Conda packages</h3>
+<div class="level3">
+
+<p>
+What is a conda package?
+</p>
+<ul>
+<li class="level1"><div class="li"> A compiled software package, but when installed also include all of its dependencies even the lower level ones</div>
+</li>
+<li class="level1"><div class="li"> Cross-platform</div>
+</li>
+<li class="level1"><div class="li"> Made from recipes</div>
+</li>
+</ul>
+
+<p>
+You can search for conda packages at <a href="https://anaconda.org/" class="urlextern" title="https://anaconda.org/" rel="nofollow">https://anaconda.org/</a> or the terminal shown below.
+</p>
+<pre class="code"># Look at the packages you have installed
+conda list
+
+# Let&#039;s search for gdal conda
+conda search gdal
+
+# Install a single conda package, here -c conda-forge indicates which channel you will use to download the package
+conda install -c conda-forge gdal
+
+# Or install multiple packages
+conda install -c conda-forge gdal fiona
+
+# Removing a conda package, here -n myenv indicates the name of the enironment, without this, the base env
+will be the target env to remove package.
+conda remove -n myenv gdal</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.3 Conda packages&quot;,&quot;hid&quot;:&quot;conda_packages&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;2531-3349&quot;} -->
+<h3 class="sectionedit6" id="recipes">1.4 Recipes</h3>
+<div class="level3">
+
+<p>
+Instruction on how to compile the conda package and its metadata
+</p>
+<pre class="code yaml"><span class="co4">package</span>:<span class="co3">
+  name</span><span class="sy2">: </span>pandas<span class="co3">
+  version</span><span class="sy2">: </span><span class="co4">
+source</span>:<span class="co3">
+  url</span><span class="sy2">: </span>https://github.com/pydata/pandas/archive/v.tar.gz<span class="co3">
+  sha256</span><span class="sy2">: </span>d9f67bb17f334ad395e01b2339c3756f3e0d0240cb94c094ef711bbfc5c56c80<span class="co4">
+build</span>:<span class="co3">
+  number</span><span class="sy2">: </span>0<span class="co3">
+  script</span><span class="sy2">: </span>python setup.py install --single-version-externally-managed --record=record.txt<span class="co4">
+about</span>:<span class="co3">
+  home</span><span class="sy2">: </span>http://pandas.pydata.org<span class="co3">
+  license</span><span class="sy2">: </span>BSD 3-clause<span class="co3">
+  summary</span><span class="sy2">: </span>'High-performance, easy-to-use data structures and data analysis tools.'<span class="co4">
+extra</span>:<span class="co4">
+  recipe-maintainers</span><span class="sy2">:
+</span>    - jreback
+    - jorisvandenbossche
+    - TomAugspurger</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.4 Recipes&quot;,&quot;hid&quot;:&quot;recipes&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;3350-3980&quot;} -->
+<h3 class="sectionedit7" id="build_a_project_developement_environment_via_a_envyml">1.5 Build a project developement environment via a env.yml</h3>
+<div class="level3">
+
+<p>
+As we explained before, the best way to build a project development environment is to use an env.yml file. This allows you to share your development environment with other developers.
+</p>
+
+<p>
+Suppose we want to build a deep learning project based on tensorflow. We will write a env.yml file 
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:python:conda:conda_tutorial_01&amp;codeblock=5" title="Download Snippet" class="mediafile mf_yml">env.yml</a></dt>
+<dd><pre class="code yaml"><span class="co1"># name of your virtural environment</span><span class="co3">
+name</span><span class="sy2">: </span>ml-env
+&nbsp;
+<span class="co1"># List of repos which conda will use to download dependenices</span><span class="co3">
+channels</span><span class="sy2">: </span>
+  - defaults
+&nbsp;
+<span class="co1"># List of dependencies which your environment will install</span><span class="co4">
+dependencies</span><span class="sy2">:
+</span>  - python=3.6
+  - numpy
+<span class="co1"># A set of utility functions for iterators, functions, and dictionaries.</span>
+  - toolz
+<span class="co1"># Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments</span>
+  - matplotlib
+<span class="co1"># dill extends python's pickle module for serializing and de-serializing python objects to the majority of the built-in python type</span>
+  - dill
+  - pandas
+  - tensorflow
+<span class="co1"># PyTables is a package for managing hierarchical datasets and designed to efficiently and easily cope with extremely large amounts of data</span>
+  - pytables
+<span class="co1"># Pyhical location where your environment will be located</span><span class="co3">
+prefix</span><span class="sy2">: </span>/tmp/pliu/envs/ml-env</pre>
+</dd></dl>
+
+<p>
+Based on this file, we could now build the environment
+</p>
+<pre class="code"># create the env
+conda env create -f env.yml 
+
+# list all envs
+conda env list
+conda info --envs
+
+# activate an env
+conda activate ml-env
+
+# list all packages in the virtual env
+conda list
+
+# deactive an env
+conda deactive
+
+# you can also create a copy of an environment
+conda create --name ml-env-copy --clone ml-env</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.5 Build a project developement environment via a env.yml&quot;,&quot;hid&quot;:&quot;build_a_project_developement_environment_via_a_envyml&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;3981-5646&quot;} -->
+<h3 class="sectionedit8" id="export_and_import_environment_dependencies">1.6 Export and import environment dependencies</h3>
+<div class="level3">
+
+<p>
+This is a possible way to build identical environments. But I do not recommend this way. Because Conda does not check architecture or dependencies when installing from a <abbr title="specification">spec</abbr> file. The best way is still to share the env.yml file.
+</p>
+<pre class="code"># export all dependencies into a file
+conda list --explicit &gt; spec-file.txt
+
+# The spec-file.txt content looks like below lines
+# This file may be used to create an environment using:
+# $ conda create --name &lt;env&gt; --file &lt;this file&gt;
+# platform: linux-64
+@EXPLICIT
+https://repo.anaconda.com/pkgs/main/linux-64/_tflow_select-2.3.0-mkl.tar.bz2
+https://repo.anaconda.com/pkgs/main/linux-64/blas-1.0-mkl.tar.bz2
+https://repo.anaconda.com/pkgs/main/linux-64/ca-certificates-2019.1.23-0.tar.bz2
+
+
+# import all dependencies and create a new environment
+conda create --name ml-env-tmp --file spec-file.txt
+
+# import all dependencies into an existing environment
+conda install --name ml-env-import --file spec-file.txt
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.6 Export and import environment dependencies&quot;,&quot;hid&quot;:&quot;export_and_import_environment_dependencies&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:8,&quot;range&quot;:&quot;5647-6661&quot;} -->
+<h3 class="sectionedit9" id="update_delete_environment">1.6 Update/delete environment</h3>
+<div class="level3">
+<pre class="code bash"><span class="co0"># The -f specify which updates you want to do, and -n specify which environment you want to update.</span>
+conda <span class="kw2">env</span> update –f environment.yml –n your_env_name
+&nbsp;
+<span class="co0"># You can also delete your environment, the --all means remove all packages from the environment and is necessary to completely clean the environment.</span>
+conda remove <span class="re5">--name</span> your_env_name <span class="re5">--all</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.6 Update\/delete environment&quot;,&quot;hid&quot;:&quot;update_delete_environment&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;6662-&quot;} -->

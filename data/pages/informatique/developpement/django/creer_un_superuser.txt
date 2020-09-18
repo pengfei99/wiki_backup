@@ -1,0 +1,19 @@
+====== Création d'un super user/ administrateur du projet ======
+Il est parfois nécessaire d'avoir un superuser dans un projet.
+C'est relativement facile d'un créer un dans un projet Django.
+Il suffit d'éxécuter cette commande : <Code>
+python manage.py createsuperuser
+</Code>
+et de suivre les instructions qui apparaissent dans la console : <Code>
+Username (leave blank to use 'ymouscaz'): Michel
+Email address: michel@michel.com
+Password: 
+Password (again): 
+The password is too similar to the email address.
+This password is too short. It must contain at least 8 characters.
+Password: 
+Password (again): 
+Superuser created successfully.
+</Code>
+
+Vous pourrez alors découvrir la partie /admin de votre application en vous rendant sur la page suivante si vous etes en environnement de développement : http://localhost:8000/admin

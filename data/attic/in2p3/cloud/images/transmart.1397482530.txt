@@ -1,0 +1,29 @@
+====== TranSMART ======
+
+"[[http://www.transmartfoundation.org/site/scientistsclinicians|tranSMART]] is a Web-based knowledge management platform that enables scientists to develop and refine research hypotheses by investigating correlations between genetic and phenotypic data, and assessing their analytical results in the context of published literature and other work."
+
+Une version de TranSMART est installé à BIOASTER dans le cadre d'une collaboration avec Danone.
+
+===== Installation =====
+
+Installation à partir de l'[[http://go.transmart.etriks.org/agreement|image disponible au téléchargement]].
+Avant d'être importé, elle doit être démarrée (dans VirtualBox par exemple) une première fois pour accepter le contrat de licence de manière interactive.
+
+Elle peut ensuite être importée dans //glance// :
+
+<code text>
+glance add name=TranSMART_1.1 is_public=true container_format=bare disk_format=qcow2 \
+       < tranSMART_1.1_Virtual_Appliance.x86_64-1.0.0.vmdk
+</code>
+
+Une fois importée la VM peut être démarrée :
+
+<code text>
+nova boot --key-name=cloudkey --security-groups=web_server --image=TranSMART_1.1 --flavor=m1.small TranSMART
+</code>
+
+**__Problème__** : une fois démarrée (avec le bon security_group) la VM ne semble pas accessible ! La "console" dans [[https://cchorizon.in2p3.fr/|Horizon]] ne fonctionnant pas il est difficile de déboguer !
+
+===== Log =====
+
+  * **2014.04.14 (tlc)** Déploiement de la version 1.1

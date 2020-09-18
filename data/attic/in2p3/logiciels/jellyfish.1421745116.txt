@@ -1,0 +1,55 @@
+====== JELLYFISH ======
+
+===== Informations =====
+
+  * **Version** : 2.0.0
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://www.genome.umd.edu/jellyfish.html]]
+  * **Description** : Jellyfish is a tool for fast, memory-efficient counting of k-mers in DNA. A k-mer is a substring of length k, and counting the occurrences of all such substrings is a central step in many analyses of DNA sequence. JELLYFISH can count k-mers quickly by using an efficient encoding of a hash table and by exploiting the "compare-and-swap" CPU instruction to increase parallelism.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APPS="$SOFTWARE/apps/gcc-RedHat_4.4.7-3"
+mkdir -p $APPS/jellyfish/2.0.0
+cd $SOFTWARE/src
+wget ftp://ftp.genome.umd.edu/pub/jellyfish/jellyfish-2.0.0.tar.gz
+tar xvzf jellyfish-2.0.0.tar.gz
+cd jellyfish-2.0.0
+./configure --prefix $APPS/jellyfish/2.0.0
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Fast, Parallel k-mer Counting for DNA .\n"
+}
+
+conflict "masurca"
+
+set version "2.0.0"
+
+set root  "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3"
+set bin_dir "${root}/jellyfish/${version}/bin"
+set lib_dir "${root}/jellyfish/${version}/lib"
+set include_dir "${root}/jellyfish/${version}/include"
+set man_dir "${root}/jellyfish/${version}/share/man"
+set pkgcfg_dir "${lib_dir}/pkgconfig"
+
+prepend-path PATH $bin_dir
+prepend-path LIBRARY_PATH $lib_dir
+prepend-path LD_LIBRARY_PATH $lib_dir
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+prepend-path MANPATH $man_dir
+prepend-path PKG_CONFIG_PATH $pkgcfg_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 2.0.0 installée

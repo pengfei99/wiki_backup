@@ -1,0 +1,304 @@
+
+<h1 class="sectionedit1" id="greps_and_regular_expressions">Greps and Regular Expressions</h1>
+<div class="level1">
+
+<p>
+A regular expression is a sequence of characters that define a search pattern. Usually, such patterns are used by string searching algorithms for “find” or “find and replace” operations on strings, or for input validation.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Greps and Regular Expressions&quot;,&quot;hid&quot;:&quot;greps_and_regular_expressions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-269&quot;} -->
+<h2 class="sectionedit2" id="regular_expression_overview">1. Regular Expression Overview</h2>
+<div class="level2">
+
+<p>
+In this section, I will first outline the basic building blocks of the regular expression, then I will use examples to demonstrate their usage.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>. (dot)</strong> - a single character.</div>
+</li>
+<li class="level1"><div class="li"> <strong>?</strong> - the preceding character matches 0 or 1 times only.</div>
+</li>
+<li class="level1"><div class="li"> <strong></strong>* - the preceding character matches 0 or more times.</div>
+</li>
+<li class="level1"><div class="li"> <strong>+</strong> - the preceding character matches 1 or more times.</div>
+</li>
+<li class="level1"><div class="li"> <strong>{n}</strong> - the preceding character matches exactly n times.</div>
+</li>
+<li class="level1"><div class="li"> <strong>{n,m}</strong> - the preceding character matches at least n times and not more than m times.</div>
+</li>
+<li class="level1"><div class="li"> <strong>[agd]</strong> - the character is one of those included within the square brackets</div>
+</li>
+<li class="level1"><div class="li"> <strong>[^agd]</strong> - the character is not one of those included within the square brackets.</div>
+</li>
+<li class="level1"><div class="li"> <strong>[c-f]</strong> - the dash within the square brackets operates as a range. In this case it means either the letters c, d, e or f.</div>
+</li>
+<li class="level1"><div class="li"> <strong>()</strong> - allows us to group several characters to behave like one.</div>
+</li>
+<li class="level1"><div class="li"> <strong>|</strong> (pipe symbol) - the logical OR operation.</div>
+</li>
+<li class="level1"><div class="li"> <strong>^</strong> - matches the beginning of the line.</div>
+</li>
+<li class="level1"><div class="li"> <strong>$</strong> - matches the end of the line.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Regular Expression Overview&quot;,&quot;hid&quot;:&quot;regular_expression_overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;270-1346&quot;} -->
+<h3 class="sectionedit3" id="examples">Examples</h3>
+<div class="level3">
+
+<p>
+To illustrate the regular expression, we will use the following document as our data source
+</p>
+<pre class="code">Fred apples 20
+Susy oranges 5
+Mark watermellons 12
+Robert pears 4
+Terry oranges 9
+Lisa peaches 7
+Susy oranges 12
+Mark grapes 39
+Anne mangoes 7
+Greg pineapples 3
+Oliver rockmellons 2
+Betty limes 14</pre>
+
+</div>
+
+<h4 id="ex1">EX1.</h4>
+<div class="level4">
+
+<p>
+Q: We want to identify any line with two or more vowels in a row. 
+A: To express this pattern, first we need to identify all vowels which is [aeiou], then we want these character to repeat at least two times. {2} means exactly two times, {2,4} means at least 2 times but not more than 4 times, {2,} means at least 2 times but not more than infinity times.
+</p>
+
+<p>
+We can test it with the following command
+</p>
+<pre class="code"># here we need to use egrep instead of grep, because the pattern is complex.
+[pliu@localhost grep_example]$ egrep &#039;[aeiou]{2,}&#039; test.txt
+Robert pears 4
+Lisa peaches 7
+Anne mangoes 7
+Greg pineapples 3</pre>
+
+</div>
+
+<h4 id="ex2">Ex2</h4>
+<div class="level4">
+
+<p>
+Q: Find all lines with a 2 on it which is not the end of line.
+A: We can reinterpret the question, we want to find 2 followed by at least something. “.*” is not good, because it could be nothing, “.+” is our answer.
+</p>
+<pre class="code">[pliu@localhost grep_example]$ egrep &#039;2.+&#039; test.txt
+Fred apples 20</pre>
+
+</div>
+
+<h4 id="ex3">EX3</h4>
+<div class="level4">
+
+<p>
+Q: Find all lines with 2 as the last character
+A: We use $ to indicate the precedent character is the last in the line.
+</p>
+<pre class="code">[pliu@localhost grep_example]$ grep &#039;2$&#039; test.txt
+Mark watermellons 12
+Susy oranges 12
+Oliver rockmellons 2</pre>
+
+</div>
+
+<h4 id="ex4">EX4</h4>
+<div class="level4">
+
+<p>
+Q: Find all lines which contain o followed by a character, is, or g followed by at least four characters
+A: We need to use | to express logical or, for o followed by a character, we can use o[a-z], g followed by at least four characters can be expressed as g[a-z]{4,}
+</p>
+<pre class="code">[pliu@localhost grep_example]$ egrep &#039;(o[a-z])|is|(g[a-z]{4,})&#039; test.txt
+Susy oranges 5
+Mark watermellons 12
+Robert pears 4
+Terry oranges 9
+Lisa peaches 7
+Susy oranges 12
+Mark grapes 39
+Anne mangoes 7
+Oliver rockmellons 2</pre>
+
+</div>
+
+<h4 id="ex5">EX5</h4>
+<div class="level4">
+
+<p>
+Q: Find all lines starts with A-K
+A: We use ^ to indicates the beginning of the line
+</p>
+<pre class="code">[pliu@localhost grep_example]$ egrep &#039;^[A-K]&#039; test.txt
+Fred apples 20
+Anne mangoes 7
+Greg pineapples 3
+Betty limes 14</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1347-3626&quot;} -->
+<h2 class="sectionedit4" id="grep_egrep_fgrep">2. Grep/EGREP/FGrep</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Grep\/EGREP\/FGrep&quot;,&quot;hid&quot;:&quot;grep_egrep_fgrep&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:4,&quot;range&quot;:&quot;3627-3659&quot;} -->
+<h3 class="sectionedit5" id="grep">Grep</h3>
+<div class="level3">
+
+<p>
+The name grep means “general regular expression parser”, but you can think of the grep command as a “search” command for Unix and Linux systems. It will search a given set of data and print every line which contains a given pattern.
+</p>
+<pre class="code"># all grep command follow the below pattern
+grep [command-line-options] &lt;pattern&gt; [search-path]
+
+# some useful options
+-r or -R: is recursive
+-n: show line number
+-w: stands for match the whole word
+-c: show the total number of the matched lines
+-i: case insensitive
+-v: reverse the meaning </pre>
+
+<p>
+The following commands are the grep command examples.
+</p>
+<pre class="code">search for a string in one or more files
+----------------------------------------
+grep &#039;fred&#039; /etc/passwd              # search for lines containing &#039;fred&#039; in /etc/passwd
+grep fred /etc/passwd                # quotes usually not when you don&#039;t use regex patterns
+grep null *.scala                    # search multiple files
+
+
+case-insensitive
+----------------
+grep -i joe users.txt                # find joe, Joe, JOe, JOE, etc.
+
+
+regular expressions
+-------------------
+grep &#039;^fred&#039; /etc/passwd             # find &#039;fred&#039;, but only at the start of a line
+grep &#039;[FG]oo&#039; *                      # find Foo or Goo in all files in the current dir
+grep &#039;[0-9][0-9][0-9]&#039; *             # find all lines in all files in the current dir with three numbers in a row
+
+
+display matching filenames, not lines
+-------------------------------------
+grep -l StartInterval *.plist        # show all filenames containing the string &#039;StartInterval&#039;
+grep -il StartInterval *.plist       # same thing, case-insensitive
+
+
+show matching line numbers
+--------------------------
+grep -n we gettysburg-address.txt    # show line numbers as well as the matching lines
+
+
+lines before and after grep match
+---------------------------------
+grep -B5 &quot;the living&quot; gettysburg-address.txt        # show all matches, and five lines before each match
+grep -A10 &quot;the living&quot; gettysburg-address.txt       # show all matches, and ten lines after each match
+grep -B5 -A5 &quot;the living&quot; gettysburg-address.txt    # five lines before and ten lines after
+
+
+reverse the meaning
+-------------------
+grep -v fred /etc/passwd             # find any line *not* containing &#039;fred&#039;
+grep -vi fred /etc/passwd            # same thing, case-insensitive
+
+grep in a pipeline
+------------------
+ps auxwww | grep httpd               # all processes containing &#039;httpd&#039;
+ps auxwww | grep -i java             # all processes containing &#039;java&#039;, ignoring case
+ls -al | grep &#039;^d&#039;                   # list all dirs in the current dir
+
+
+search for multiple patterns
+----------------------------
+egrep &#039;apple|banana|orange&#039; *                                                         # search for multiple patterns, all files in current dir
+egrep -i &#039;apple|banana|orange&#039; *                                                      # same thing, case-insensitive
+egrep &#039;score|nation|liberty|equal&#039; gettysburg-address.txt                             # all lines matching multiple patterns
+locate -i calendar | grep Users | egrep -vi &#039;twiki|gif|shtml|drupal-7|java|PNG&#039;       # oh yeah
+       (see http://alvinalexander.com/linux-unix/linux-egrep-multiple-regular-expressions-regex)
+
+
+multiple search strings, multiple filename patterns
+---------------------------------------------------
+grep -li &quot;jtable&quot; $(find . -name &quot;*.java,v&quot; -exec grep -li &quot;prevayl&quot; {} \;)           # find all files named &quot;*.java,v&quot; containing both
+                                                                                      # &#039;prevayl&#039; and &#039;jtable&#039;
+
+grep + find
+-----------
+find . -type f -exec grep -il &#039;foo&#039; {} \;     # print all filenames of files under current dir containing &#039;foo&#039;, case-insensitive
+
+
+recursive grep search
+---------------------
+grep -rl &#039;null&#039; .                             # similar to the previous find command; does a recursive search
+grep -ril &#039;null&#039; /home/al/sarah /var/www      # search multiple dirs
+egrep -ril &#039;aja|alvin&#039; .                      # multiple patterns, recursive
+      (see http://alvinalexander.com/linux-unix/recursive-grep-r-searching-egrep-find)
+
+
+grep gzip files
+---------------
+zgrep foo myfile.gz                           # all lines containing the pattern &#039;foo&#039;
+zgrep &#039;GET /blog&#039; access_log.gz               # all lines containing &#039;GET /blog&#039;
+zgrep &#039;GET /blog&#039; access_log.gz | more        # same thing, case-insensitive</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Grep&quot;,&quot;hid&quot;:&quot;grep&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:5,&quot;range&quot;:&quot;3660-8068&quot;} -->
+<h3 class="sectionedit6" id="egrep_fgrep">Egrep, Fgrep</h3>
+<div class="level3">
+
+<p>
+Historically egrep and fgrep were provided in separate binaries. On some really old Unix systems you will find that you need to call the separate binaries. But on all modern systems <strong>egrep is 100% equivalent to grep -E</strong>, <strong>fgrep is 100% equivalent to grep -F</strong>. The man page for grep has details about this.
+</p>
+
+</div>
+
+<h4 id="egrep">Egrep</h4>
+<div class="level4">
+
+<p>
+-E switches grep into a special mode so that the expression is evaluated as an ERE (Extended Regular Expression) as opposed to its normal pattern matching. Details of this syntax are on the man page.
+</p>
+
+<p>
+-E, –extended-regexp : Interpret PATTERN as an extended regular expression
+</p>
+<pre class="code"># You want to search using a fancy expression. For example parenthesis () can be used to indicate groups with | used as an OR operator. You could run this search using -E:
+
+grep -E &#039;^no(fork|group)&#039; /etc/group
+#It return lines that start with either &quot;nofork&quot; or &quot;nogroup&quot;. Without the -E switch you would have to escape the special characters involved because with normal pattern matching they would just search for that exact pattern;
+
+grep &#039;^no\(fork\|group\)&#039; /etc/group</pre>
+
+</div>
+
+<h4 id="fgrep">Fgrep</h4>
+<div class="level4">
+
+<p>
+The -F switch switches grep into a different mode where it accepts a pattern to match, but then splits that pattern up into one search string per line and does an OR search on any of the strings without doing any special pattern matching.
+</p>
+
+<p>
+-F, –fixed-strings: Interpret PATTERN as a list of fixed strings, separated by newlines, any of which is to be matched.
+</p>
+<pre class="code"># You have a file with a list of say ten Unix usernames in plain text. You want to search the group file on your machine to see if any of the ten users listed are in any special groups:
+
+grep -F -f user_list.txt /etc/group
+The reason the -F switch helps here is that the usernames in your pattern file are interpreted as plain text strings. Dots, for example, would be interpreted as dots rather than wild-cards.
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Egrep, Fgrep&quot;,&quot;hid&quot;:&quot;egrep_fgrep&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:6,&quot;range&quot;:&quot;8069-&quot;} -->

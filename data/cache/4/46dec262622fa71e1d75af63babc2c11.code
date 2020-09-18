@@ -1,0 +1,7 @@
+ServerName redmine.paris.bioaster.org
+DocumentRoot /usr/share/redmine/public
+&lt;Directory /usr/share/redmine/public&gt;
+    RailsBaseURI /
+    PassengerResolveSymlinksInDocumentRoot on
+    AllowOverride None
+&lt;/Directory&gt;

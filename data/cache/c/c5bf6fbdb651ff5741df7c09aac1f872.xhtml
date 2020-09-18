@@ -1,0 +1,77 @@
+
+<h1 class="sectionedit1" id="mise_a_jour_825_a_911">Mise à jour 8.2.5 à 9.1.1</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Snaptshot de la VM ccbioappl03.in2p3.</div>
+</li>
+<li class="level1"><div class="li"> Dump de la base de données : /home/biodata/owncloud_8.2.5.sql.gzip</div>
+</li>
+<li class="level1"><div class="li"> Mise en mode maintenance de la version 8.2.5 php occ maintenance:mode –on</div>
+</li>
+<li class="level1"><div class="li"> Downcloud et decompresser dans /var/www/html : owncloud-9.0.5 et owncloud-9.1.1</div>
+</li>
+<li class="level1"><div class="li"> Copier de owncloud-8.2.5/config/config.php dans owncloud-9.0.5/config/</div>
+</li>
+<li class="level1"><div class="li"> Copier de owncloud-8.2.5/themes/bioaster dans owncloud-9.0.5/themes/</div>
+</li>
+<li class="level1"><div class="li"> user bioaster : sudo yum update</div>
+</li>
+<li class="level1"><div class="li"> sudo yum upgrade</div>
+</li>
+<li class="level1"><div class="li"> Installation du repo pour PHP 5.5 : sudo yum install centos-release-scl</div>
+</li>
+<li class="level1"><div class="li"> Installation les libs PHP : sudo yum install php55 php55-php php55-php-gd php55-php-mbstring</div>
+</li>
+<li class="level1"><div class="li"> Installation le lib PHP pour mySQL : sudo yum install php55-php-mysqlnd</div>
+</li>
+<li class="level1"><div class="li"> Desactiver les anciens PHP : <pre class="code">mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php54.off
+mv /etc/httpd/conf.modules.d/10-php.conf /etc/httpd/conf.modules.d/10-php54.off</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Ajout des configurations et modules PHP 5.5 : <pre class="code">cp /opt/rh/httpd24/root/etc/httpd/conf.d/php55-php.conf /etc/httpd/conf.d/
+cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-php55-php.conf /etc/httpd/conf.modules.d/
+cp /opt/rh/httpd24/root/etc/httpd/modules/libphp55-php5.so /etc/httpd/modules/</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Installation du module apcu et configuration : sudo yum install sclo-php55-php-pecl-apcu</div>
+</li>
+</ul>
+<dl class="code">
+<dt><a href="/_export/code/informatique/owncloud/update_9.1.1?codeblock=2" title="Télécharger un extrait" class="mediafile mf_ini">/opt/rh/php55/root/etc/php.d/apcu.ini</a></dt>
+<dd><pre class="code text">    apc.enabled=1
+    apc.enable_cli=1</pre>
+</dd></dl>
+<ul>
+<li class="level1"><div class="li"> User biodata : dans /var/www/html/owncloud-9.0.5 : php occ upgrade</div>
+</li>
+<li class="level1"><div class="li"> sudo rm /var/www/html/owncloud</div>
+</li>
+<li class="level1"><div class="li"> sudo ln -s /var/www/html/owncloud-9.0.5 owncloud</div>
+</li>
+<li class="level1"><div class="li"> On enleve le mode maintenance de la 9.0.5</div>
+</li>
+<li class="level1"><div class="li"> On fait une nouveau snapshot de la VM</div>
+</li>
+<li class="level1"><div class="li"> cp owncloud/config/config.php owncloud-9.1.1/config/</div>
+</li>
+<li class="level1"><div class="li"> cp -r owncloud/themes/bioaster owncloud-9.1.1/themes/</div>
+</li>
+<li class="level1"><div class="li"> dans /var/www/html/owncloud-9.1.1 : php occ upgrade</div>
+</li>
+<li class="level1"><div class="li"> sudo rm /var/www/html/owncloud</div>
+</li>
+<li class="level1"><div class="li"> sudo ln -s /var/www/html/owncloud-9.1.1 owncloud</div>
+</li>
+<li class="level1"><div class="li"> On enleve le mode maintenance de la 9.1.1</div>
+</li>
+<li class="level1"><div class="li"> On fait un snapshot de la VM</div>
+</li>
+<li class="level1"><div class="li"> On supprime les anciens snapshots</div>
+</li>
+<li class="level1"><div class="li"> Installer à la main les Apps Documents et noremeberslogin</div>
+</li>
+<li class="level1"><div class="li"> cp owncloud-8.2.5/legal_notice.php owncloud-9.1.1/</div>
+</li>
+</ul>
+
+</div>

@@ -1,0 +1,139 @@
+====== Hive Internal and External tables ======
+
+Hive has two types of tables which are as follows:
+
+  * Managed Table (Internal Table)
+  * External Table
+
+
+
+
+
+
+=====  Featured Difference between Hive Internal Tables vs External Tables =====
+
+Let’s now discuss the Hive Internal tables vs External tables comparison.
+
+==== Hive Managed Tables ====
+
+
+It is also know an internal table. When we create a table in Hive, it by default manages the data. This means that Hive moves the data into its warehouse directory.
+
+Managed Tables  When we load data into a Managed table, then Hive moves data into Hive warehouse directory.
+
+For example:
+
+<code>
+CREATE TABLE managed_table (dummy STRING);
+LOAD DATA INPATH '/user/tom/data.txt' INTO table managed_table;
+</code>
+
+This moves the file hdfs://user/tom/data.txt into Hive’s warehouse directory for the managed_table table, which is hdfs://user/hive/warehouse/managed_table.
+
+Further, if we drop the table using: 
+<code>
+DROP TABLE managed_table
+</code>
+
+Then this will delete the table metadata including its data. The data no longer exists anywhere. This is what it means for HIVE to manage the data.
+
+
+=== Example ===
+
+For example, we want to insert the above csv file into the Hive 
+
+<file csv rabbit_demo.csv>
+id,sex,age,infected
+1001,Male,1,Yes
+1002,Female,2,No
+1003,Male,3,Yes
+1004,Female,4,Yes
+1005,Male,5,No
+</file>
+
+
+Note hive command is case sensitive unlike sql
+
+<code>
+# mosaic is the database name in which you want to insert rabbits table
+# If the database does not exit, create the database first
+CREATE DATABASE IF NOT EXISTS mosaic;
+
+# You can delete a database with tables in it.
+DROP DATABASE database_name CASCADE;
+
+# Without skip header line, you will see hive will load also the header as data. Note that, we define the header 
+# is the first line, if you want to remove the first two or three lines. It's possible too.
+CREATE TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT 'rabbit t virus infection' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' STORED AS TEXTFILE tblproperties ("skip.header.line.count"="1");
+
+# load data to table, if your data is no your local file system.
+# Beware if you run this in Beeline, make sure the user in beeline has the right to read rabbit_demo.csv
+# This command takes the input path as a local file system path
+LOAD DATA LOCAL INPATH '/tmp/rabbit.csv' OVERWRITE INTO TABLE rabbits;
+
+# This command takes the input path as a hdfs file system path
+LOAD DATA INPATH '/tmp/demo_data/rabbit.csv' OVERWRITE INTO TABLE mosaic.rabbits;
+
+# If your data is on GPFS
+$ hdfs dfs -put /tmp/rabbit_demo.csv /usr/hadoop/. 
+# make sure hive has the right to read the data, otherwise you will see empty table
+$ hdfs dfs -chown hive:hdfs /usr/hadoop/rabbit_demo.csv
+
+LOAD DATA INPATH '/usr/hadoop/rabbit_demo.csv' OVERWRITE INTO TABLE rabbits;
+# Note that, after this command the csv will be moved to the hive warehouse, so you won't find it in /usr/hadoop/ anymore.
+
+# You can also include data location in one line
+CREATE TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT 'rabbit t virus infection' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' STORED AS TEXTFILE LOCATION '/tmp/rabbit_demo.csv' tblproperties ("skip.header.line.count"="1");
+</code>
+
+
+
+====  Hive External Tables ====
+
+We can also create an external table. It tells Hive to refer to the data that is at an existing location outside the warehouse directory.
+
+we can control the creation and deletion of the data. The location of the external data is specified at the table creation time:
+
+<code>
+CREATE EXTERNAL TABLE external_table(dummy STRING)
+LOCATION '/user/tom/external_table';
+LOAD DATA INPATH '/user/tom/data.txt' INTO TABLE external_table;
+</code>
+
+Now, with the EXTERNAL keyword, Apache Hive knows that it is not managing the data. So it doesn’t move data to its warehouse directory. It does not even check whether the external location exists at the time it is defined. This very useful feature because it means we create the data lazily after creating the table.
+
+The important thing to notice is that when we drop an external table, Hive will leave the data untouched and only delete the metadata.
+
+=== Example ===
+
+We can retake the example of the internal hive table, just add keyword external
+
+<code>
+CREATE EXTERNAL TABLE IF NOT EXISTS mosaic.rabbits ( rid int, sex String,age int, infected String) COMMENT 'rabbit t virus infection' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' STORED AS TEXTFILE tblproperties ("skip.header.line.count"="1");
+</code>
+
+
+
+===== Security =====
+
+  * **Managed Tables**  Hive solely controls the Managed table security. Within Hive, security needs to be managed; probably at the schema level (depends on organization).
+  * **External Tables**  These tables’ files are accessible to anyone who has access to HDFS file structure. So, it needs to manage security at the HDFS file/folder level.
+
+===== When to use Managed and external table =====
+
+==== Use Managed table when ====
+ 
+  * We want Hive to completely manage the lifecycle of the data and table.
+  * Data is temporary
+
+==== Use External table when ====
+ 
+
+  * Data is used outside of Hive. For example, the data files are read and processed by an existing program that does not lock the files.
+  * We are not creating a table based on the existing table.
+  * We need data to remain in the underlying location even after a DROP TABLE. This may apply if we are pointing multiple schemas at a single data set.
+  * The hive shouldn’t own data and control settings, directories etc., we may have another program or process that will do these things.
+
+===== Conclusion =====
+
+In conclusion, Managed tables are like normal database table in which we can store data and query on. On dropping Managed tables, the data stored in them is also deleted and data is lost forever. While dropping External tables will delete metadata but not the data.

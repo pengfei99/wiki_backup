@@ -1,0 +1,486 @@
+======= FTP data transfer protocol =======
+
+There are many possibilities to set up an FTP server on Linux. The most popular one is to use VSFTPD. In this tutorial, I will show you how to set up a VSFTPD server.
+
+**What is FTP?**
+FTP is an acronym for File Transfer Protocol. As the name suggests, FTP is used to transfer files between computers on a network. You can use FTP to exchange files between computer accounts, transfer files between an account and a desktop computer, or access online software archives. Keep in mind, however, that many FTP sites are heavily used and require several attempts before connecting.
+
+
+<code>
+An FTP address looks a lot like an HTTP or website address except it uses the prefix ftp:// instead of http://.
+
+</code>
+
+
+The FTP server is responsable for receiving FTP connections and data. The FTP client is installed on the user pc, which can send data to the FTP server.
+
+VSFTPD is an FTP server software which claims to be the most secure FTP software. In fact, the first two letters in VSFTPD, stand for “very secure”(But, It runs on FTPS protocol). The software was built around the vulnerabilities of the FTP protocol.
+
+If you want more security, you can use SFTP (ssh emulated FTP). But sftp only emulates the ftp synatx, but it's not actually ftp at all, just running through ssh instead. you can ftp (with or without ssl) to a vsftpd server, but you can't ftp to an sftp server, you only sftp / scp to it, so your client needs very different capabilities.
+
+**SPEED**
+
+SFTP will almost always be significantly slower than FTP or FTPS (usually by several orders of magnitude). The reason for the difference is that there is a lot of additional packet, encryption and handshaking overhead inherent in the SSH2 protocol that FTP doesn't have to worry about. FTP is a very lean and comparatively simple protocol with almost no data transfer overhead, and the protocol was specifically designed for transferring files quickly. Encryption will slow FTP down, but not nearly to the level of SFTP.
+
+
+===== Install VsFTPd =====
+
+For more information on VsFTPd, you can go to https://fr.wikipedia.org/wiki/VsFTPd
+
+<code>
+# VSFTPD Install 
+$ yum install vsftpd -y
+
+# start/stop/statusSystemd 
+$ systemctl start/stop/status vsftpd
+
+# enable vsftpd on reboot
+$ systemctl enable vsftpd
+
+</code>
+
+==== Configure vsftpd ====
+
+By default, in centos7, the configuration file of vsftpd is located at **/etc/vsftpd**, you should see the following files
+
+<code>
+-rw------- 1 root root  125 Oct 30  2018 ftpusers
+-rw------- 1 root root  361 Oct 30  2018 user_list
+-rw------- 1 root root 5116 Oct 30  2018 vsftpd.conf
+-rwxr--r-- 1 root root  338 Oct 30  2018 vsftpd_conf_migrate.sh
+</code>
+
+The main configuration is in file vsftpd.conf. So before you change anything, you'd better make a backup file.
+
+<code>
+$ cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.orig
+</code>
+
+Below are some essential configurations you need to change in your vsftpd.conf
+
+<code>
+anonymous_enable=NO             # disable  anonymous login
+local_enable=YES		# permit local logins
+write_enable=YES		# enable FTP commands which change the filesystem
+local_umask=022		        # value of umask for file creation for local users
+dirmessage_enable=YES	        # enable showing of messages when users first enter a new directory
+xferlog_enable=YES		# a log file will be maintained detailing uploads and downloads
+connect_from_port_20=YES        # use port 20 (ftp-data) on the server machine for PORT style connections
+xferlog_std_format=YES          # keep standard log file format
+listen=NO   			# prevent vsftpd from running in standalone mode
+listen_ipv6=YES		        # vsftpd will listen on an IPv6 socket instead of an IPv4 one
+pam_service_name=vsftpd         # name of the PAM service vsftpd will use
+userlist_enable=YES  	        # enable vsftpd to load a list of usernames
+tcp_wrappers=YES  		# turn on tcp wrappers
+</code>
+
+
+==== Network setup ====
+
+To enable FTP, you need to open your firewall
+
+<code>
+# firewall-cmd --zone=public --permanent --add-port=21/tcp
+# firewall-cmd --zone=public --permanent --add-service=ftp
+# firewall-cmd --reload
+</code>
+
+
+==== Authentication and Authorisation ====
+
+VSFTPD can use ldap for remote authentication via pam. We will talk about it later. Here we use the builtin authentication system (i.e. user_list).
+
+In the main configuration(i.e. vsftpd.conf), you need to add three lines
+<code>
+# enable the user_list authentication system
+$ userlist_enable=YES
+# Specify where is the file path
+$ userlist_file=/etc/vsftpd/user_list
+# If userlist_deny=NO, only allow users in this file, 
+# If userlist_deny=YES (default), never allow users in this file, and do not even prompt for a password.
+# Note that the default vsftpd pam config also checks /etc/vsftpd/ftpusers for users that are denied
+$ userlist_deny=NO
+
+</code>
+
+=== Setup Chroot jail ===
+
+To limit the access of the VSFTPD users on the server, we need to set up chroot jails for the VSFTPD user sessions. A program or user session that is run in a chroot jail environment cannot name (and therefore normally cannot access) files outside the designated directory tree.
+
+Add the two following lines:
+
+<code>
+# add chroot jail for users which restricts FTP users to their Home directories
+chroot_local_user=YES
+
+# by default, vsftpd does not allow the chroot jail directory to be writable for security reasons, # however, we can use the option allow_writeable_chroot=YES to override this setting.
+allow_writeable_chroot=YES
+</code>
+
+
+=== Securing FTP Server with SELinux ===
+
+Now, let’s set the SELinux boolean below to allow FTP to read files in a user’s home directory. Note that this was initially done using the the command:
+
+<code>
+$ setsebool -P ftp_home_dir on
+</code>
+
+However, the ftp_home_dir directive has been disabled by default as explained in this bug report: https://bugzilla.redhat.com/show_bug.cgi?id=1097775.
+
+Now we will use semanage command to set SELinux rule to allow FTP to read/write user’s home directory.
+
+<code>
+$ semanage boolean -m ftpd_full_access --on
+</code>
+
+At this point, we have to restart vsftpd to effect all the changes we made so far above:
+
+<code>
+$ systemctl restart vsftpd
+</code>
+
+==== Test the vsftpd via ftp ====
+
+<code>
+# create a linux user
+$ useradd -m -c "pengfei test for vsftpd" -s /bin/bash ftptest
+# set up password
+$ passwd ftptest
+
+# add the username to the user_list
+# note reads the standard input and writes it to both the standard output and one or more files
+$ echo "ftptest" | tee -a /etc/vsftpd/user_list
+
+# install lftp client
+$ yum -y install lftp
+
+# connect to the ftp server
+lftp -u ftptest 10.70.3.166
+
+# then enter the password, note that lftp does not check immediately the password. It does that
+only when it connects to the server.
+# For example, the following command will
+
+lftp ftptest@10.70.3.166:/> pwd  
+ftp://ftptest@10.70.3.166/
+lftp ftptest@10.70.3.166:/> mkdir test
+mkdir ok, `test' created
+lftp ftptest@10.70.3.166:/> ls
+drwxr-xr-x    2 1002     1002            6 Aug 05 11:26 test
+lftp ftptest@10.70.3.166:/> 
+
+# You can use put, mput to upload files
+# uploads many files
+$ mput -a test.txt test2.txt
+
+# upload one file
+put -a test.txt
+
+# get one file
+get -a test.txt
+
+# get more files
+mget -a test.txt test1.txt
+
+# delete a file
+rm test2.txt
+
+# delete many files
+mrm test.txt test1.txt
+
+# delete a directory
+rmdir testDir
+
+# to quit the lftp consol
+quit
+</code>
+
+==== Change the default landing path ====
+
+If you are not happy with the default file path, you can set a new one. For example, we want to use 
+/home/$USER/ftp instead of the /home/$USER as the default landing path
+
+<code>
+# Create a dir ftp for user ftptest
+mkdir -p /home/ftptest/ftp
+
+# give ftp with the right owner and acl
+chown and chmod
+
+# Now, add the two following lines to the /etc/vsftpd/vsftpd.conf
+# modify the default user root dir path
+user_sub_token=$USER
+local_root=/home/$USER/ftp
+
+# restart the vsftpd daemon
+</code>
+ 
+
+
+
+==== Secure FTP with SSL ====
+
+To use ssl, you need to have a key pair(A certificate signing request (CSR) which contains the public key and information of your organization, private key). The CA will sign your CSR and give back a certificate. 
+
+Note: Never send your private key to anyone, and always set the ACL as 0600. 
+
+For more details on how to generate CSR or certificate, see [[employes:pengfei.liu:security:ssl_certificate|Working with SSL certificates, private keys and CSRs]]  
+
+In this tutorial, we will only use a self-signed certificate. 
+
+
+<code>
+# generate the private key and certificate sign request
+openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -out domain.csr
+
+# The certificate sign request should look like this
+
+-----BEGIN CERTIFICATE REQUEST-----
+MIIC1TCCAb0CAQAwgY8xCzAJBgNVBAYTAkZSMQ4wDAYDVQQIDAVSaG9uZTENMAsG
+A1UEBwwETFlPTjEMMAoGA1UECgwDVUJMMRQwEgYDVQQLDAtwZW5nZmVpLm9yZzEU
+MBIGA1UEAwwLcGVuZ2ZlaS5vcmcxJzAlBgkqhkiG9w0BCQEWGHBlbmdmZWkubGl1
+QGJpb2FzdGVyLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALwB
+sAiiQgkHxv8bz9PEQkDqD/8kZOhdyPK6MZVSMnwMaOZ02qN7UCUbc03JCHIUZ+Cp
+dtalBqv++IAa0DoLypxst/4DtdyIXFc2CwA83tqRXY5FpHe4p2/YofEyYEI7uWlm
+guA09mNFIFzKechSGYRp08Lt39uzbQyJYaGWU9wriEHDCjcismZ23raxmsxSDdi2
+2OvPmj/MQ7MzvDnDmOt7ZId7US/+b92ssBZwW6tmRNzgs2wFTHJJunwbPPEp7BF6
+soQANCKG8m0uZFsscAoD9n2fJ836nsMtRIrK8DwJULwgjWmTNPHDZhQGlvG0rdYX
+PBSSorKoh37aLgP0Ub0CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQCxgDArBD9t
+FzXXEw9V2NTXEIr61qm9765ZaPnc1GoIcM26Iqf1uaUSWKFoebikV5g4Oqw1m64P
+OYGAv7EhkP95TOWHNSvn5hbnZ75amis/hmxU4N5P5M+eZOk1TT1fwff191pPQ5dC
+jsEP8JPnehhsMEg/iSNFP4PIaoHlFbBSierUR3l8InQzr6Pc+trXUN71UhAP3nE5
+Q1etAStd2QoyPLpfOVvS+0UMG00xz88BrvHivNbR4ql5+xmR8YKZUiN+7RjmPivv
+tLIAyFb52ZvIDViHrzWe+7i0x36IogOeNZdhtjYM1ED5G6QrRW0OO7mYI0wJFIjo
+5YRWP8XyKSZ9
+-----END CERTIFICATE REQUEST-----
+# create a auto signed certificate based on the generated csr and private key
+openssl x509 \
+       -signkey domain.key \
+       -in domain.csr \
+       -req -days 365 -out domain.crt
+
+# It's recommended to put the certificate and private key in /etc/pki/tls/
+$ mv domain.key ftp.key
+$ mv domain.crt ftp.crt
+
+$ chmod 0600 ftp.key
+$ mv ftp.key /etc/pki/tls/private
+$ mv ftp.crt /etc/pki/tls/certs/
+
+</code>
+
+=== Configuration of the vsftpd ===
+
+To use the certificate and private key, we need to add the following configuration in  /etc/vsftpd/vsftpd.conf
+ 
+<code ini /etc/vsftpd/vsftpd.conf>
+# This option enables our SSL support for vsftpd.
+ssl_enable=YES
+
+#Prevent anonymous SSL/TLS encrypted login, in essence, the guest user.
+allow_anon_ssl=NO
+
+# We’re going to force SSL/TLS encryption of both your username/password and your data to keep it safe.
+force_local_data_ssl=YES
+force_local_logins_ssl=YES
+
+# Use the stronger, better, encryption offered by TLS 1.1 and 1.2.
+ssl_tlsv1_1=YES
+ssl_tlsv1_2=YES
+
+# TLS 1.0 is getting a little more insecure than we would like, so we are going to disable it. Please note that some older FTP clients are not compatible with newer TLS versions and may require this option to be set to “YES”.
+ssl_tlsv1=NO
+
+# To keep the FTP connections safe against the BEAST and POODLE vulnerabilities we are going to disable SSLv2 and SSLv3.
+ssl_sslv2=NO
+ssl_sslv3=NO
+
+# Continuing our security improvements we are going to add some additional protection against Man In The Middle (MITM) attacks by enabling the following. This may not be compatible with some older FTP clients. If you experience connection loss try setting this option to “NO”.
+require_ssl_reuse=YES
+
+# This will require the server to use stronger cipher suites.
+ssl_ciphers=HIGH
+
+# Lastly, our crt and key file.
+rsa_cert_file=/etc/pki/tls/certs/ftp.crt
+rsa_private_key_file=/etc/pki/tls/private/ftp.key
+</code>
+
+Restart the vsftpd daemon to take account of the new configuration.
+
+
+
+
+===== Authentication via a local db ====
+
+We have seen how to use system user to login and access ftp server. It's better if we have a database to store user login and pwd.
+
+
+<code>
+# we create a dir for store the local db
+sudo mkdir -p /etc/vsftpd/vsftpd-virtual-user
+</code>
+
+
+
+
+<code ini /etc/vsftpd/vstpd.conf>
+# To use the database as the only authentication possible, we need to commet the three lines 
+# of the userlist config
+userlist_enable=YES
+userlist_file=/etc/vsftpd/user_list
+userlist_deny=NO
+
+
+#########################################
+# add the following line for virtual_user 
+local_enable=YES
+chroot_local_user=YES
+user_config_dir=/etc/vsftpd/vsftpd-virtual-user/
+virtual_use_local_privs=YES
+pam_service_name=vsftpd
+guest_enable=YES
+anon_other_write_enable=NO
+nopriv_user=bioaster
+guest_username=bioaster
+</code>
+
+Modify the pam config for vsftpd, check if the three following lines in the config or not
+
+<code inin /etc/pam.d/vsftpd>
+#%PAM-1.0
+auth       required     pam_userdb.so db=/etc/vsftpd/vsftpd-virtual-user
+account    required     pam_userdb.so db=/etc/vsftpd/vsftpd-virtual-user
+session    required     pam_loginuid.so
+</code>
+
+
+=== Set up user login and password ===
+
+It's recommended that we write the user login and password in the file **/etc/vsftpd/vusers.txt**, and set ACL as 0600. The file should have the following form
+
+<code txt /etc/vsftpd/vusers.txt>
+test
+MDP1
+titi
+MDP2
+toto
+MDP3
+
+</code>
+
+We need to transform the file to a local db which can be read by the pam
+<code>
+$ cd /etc/vsftpd
+$ db_load -T -t hash -f vusers.txt vsftpd-virtual-user.db
+</code>
+**Remember, you need to regenerate the DB for adding new users**
+
+Then you need to create a conf file in **/etc/vsftpd/vsftpd-virtual-user** with their login as file name. For example, the following file is for user ftptest1
+
+<code txt /etc/vsftpd/vsftpd-virtual-user/ftptest1>
+local_root=/tmp/
+write_enable=NO
+</code>
+
+
+
+
+
+===== Change default port =====
+For security rasions, we may don't want to use the port 21. To use another port, we need to add the following line in the /etc/vsftpd/vsftpd.conf.
+ 
+<code>
+listen_port=201
+</code>
+
+===== Other usefull configuration =====
+
+<code>
+# set the login welcome string 
+ftpd_banner="Welcome to BIOASTER FTP service !"
+
+# Useful to not write over hidden files:
+force_dot_files=YES
+
+# Hide the info about the owner (user and group) of the files.
+hide_ids=YES
+
+# Connection limit for each IP:
+max_per_ip=100000
+
+# Maximum number of clients:
+max_clients=100
+
+</code>
+
+===== Configurer un client FTP =====
+
+**Hostname:** realism-data.bioaster.org
+
+**Port:** 201
+
+**Protocol**: FTP
+
+**Encryption:** Require explicit FTP over TLS
+
+and a user + password ...
+
+===== Logs files  =====
+
+Below are the 2 options, that come in picture while configuring the logging in vsftpd.
+
+  * xferlog_std_format — When enabled in conjunction with xferlog_enable, the log is written to the file specified in the xferlog_file directive (/var/log/xferlog by default)
+  * log_ftp_protocol — When enabled in conjunction with xferlog_enable and with xferlog_std_format set to NO, all FTP commands and responses are logged in /var/log/vsftpd.log.
+
+
+1. By default, the logging is enabled through the below entry.
+
+<code>
+# vi /etc/vsftpd/vsftpd.conf
+xferlog_std_format=YES
+</code>
+
+2. However this will show only file activity. If you require more verbose logging, including connections and commands you will need to add the line below
+
+<code>
+# vi /etc/vsftpd/vsftpd.conf
+log_ftp_protocol=YES
+</code>
+
+3. set the parameter xferlog_std_format as NO, to disable normal logging.
+<code>
+
+xferlog_file=/var/log/vsftpd/xferlog
+xferlog_std_format=YES
+xferlog_enable=YES
+dual_log_enable=YES
+
+</code>
+
+All the log are written in **/var/log/vsftpd.log**. You need to set up a log rotate script to avoid
+big log files
+
+<code log /var/log/vsftpd.log>
+Thu Nov 15 23:50:46 2018 [pid 7716] CONNECT: Client "::ffff:10.70.41.43"
+Thu Nov 15 23:50:46 2018 [pid 7715] [nsapay] OK LOGIN: Client "::ffff:10.70.41.43"
+Thu Nov 15 23:51:14 2018 [pid 9378] CONNECT: Client "::ffff:10.70.41.43"
+Thu Nov 15 23:51:14 2018 [pid 9379] CONNECT: Client "::ffff:10.70.41.43", "Connection refused: too many sessions for this address."
+Thu Nov 15 23:51:14 2018 [pid 9376] [nsapay] OK LOGIN: Client "::ffff:10.70.41.43"
+Thu Nov 15 23:51:14 2018 [pid 9381] [nsapay] OK DOWNLOAD: Client "::ffff:10.70.41.43", "/SANOFI/README", 0.00Kbyte/sec
+Thu Nov 15 23:51:19 2018 [pid 9629] CONNECT: Client "::ffff:10.70.41.43", "Connection refused: too many sessions for this address."
+Thu Nov 15 23:51:19 2018 [pid 9381] [nsapay] OK DOWNLOAD: Client "::ffff:10.70.41.43", "/SANOFI/test-file", 11 bytes, 0.13Kbyte/sec
+Thu Nov 15 23:52:19 2018 [pid 9378] [nsapay] DEBUG: Client "::ffff:10.70.41.43", "Connection terminated without SSL shutdown - buggy client?"
+Thu Nov 15 23:56:21 2018 [pid 7716] [nsapay] DEBUG: Client "::ffff:10.70.41.43", "Connection terminated without SSL shutdown - buggy client?"
+</code>
+
+===== Documentations et tutoriaux =====
+
+https://security.appspot.com/vsftpd.html
+
+https://help.ubuntu.com/community/vsftpd ***
+
+http://crunchtools.com/vsftpd-ssl/

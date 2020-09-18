@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="creation_des_utilisateurs">Création des utilisateurs</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Création des utilisateurs" [1-42] -->
+<h2 class="sectionedit2" id="que_recuperer_de_shibboleth_quels_attributs_ad_ad_ne_retourne_que_des_groupes">Que récupérer de Shibboleth (quels attributs AD…) ? ad ne retourne que des groupes ?</h2>
+<div class="level2">
+
+<p>
+Description de l&#039;utilisateur : login, email, Id spécifique à l&#039;AD ( à vérifier s&#039;il existe), institution, labo, site. 
+<span class="wrap_info "> les utilisateur non-BIOASTER sont dans l&#039;OU externe</span>
+</p>
+
+<p>
+Il faut discuter avec le service informatique pour créer les bons attributs dans l&#039;AD et les remplir de façon normalisée.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Que récupérer de Shibboleth (quels attributs AD…) ? ad ne retourne que des groupes ?" [43-464] -->
+<h2 class="sectionedit3" id="comment_obtenir_les_permissions_de_l_utilisateurs_et_des_labo">Comment obtenir les permissions de l&#039;utilisateurs et des labo ?</h2>
+<div class="level2">
+
+<p>
+Les permissions utilisateurs sont obtenues depuis Sciforma. les WP sont associés à une liste d&#039;utilisateurs. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Comment obtenir les permissions de l'utilisateurs et des labo ?" [465-653] -->
+<h2 class="sectionedit4" id="fichier_en_acces_qui_remplit_la_table_permission_table_permission_remplie_par_un_script_a_la_mano_de_temps_en_temps">fichier en accès qui remplit la table Permission ? Table Permission remplie par un script à la mano de temps en temps ?</h2>
+<div class="level2">
+
+<p>
+A la connexion, &#039;getRoles()&#039; interroge la DB de l&#039;application. Si la permission n&#039;existe pas, il faut interroger Shibboleth pour récupérer les informations dans &#039;USER_PERMISSION&#039;. On laisse une table une table USER_PERMISSION pour rentrer à la main les rôles d&#039;admin de l&#039;application, qui ne figurent dans aucune source externe. 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "fichier en accès qui remplit la table Permission ? Table Permission remplie par un script à la mano de temps en temps ?" [654-1122] -->
+<h2 class="sectionedit5" id="le_module_security_n_interroge_que_getroles_de_l_utilisateur">le module security n&#039;interroge que getRoles() de l&#039;utilisateur</h2>
+<div class="level2">
+
+<p>
+Les roles qui serviront au module security seront uniquement les roles USER et ADMIN(s).
+</p>
+
+<p>
+La création/le check de l&#039;User, son Labo, son site, ses Wp et donc ses Permissions devra s&#039;effectuer dans la méthode getUser() de AuthBundle/Security/ShibbolethAuthenticator.php
+</p>
+
+</div>
+<!-- EDIT5 SECTION "le module security n'interroge que getRoles() de l'utilisateur" [1123-1467] -->
+<h2 class="sectionedit6" id="faut-il_svg_l_utilisateur_recupere_dans_la_base_locale">Faut-il svg l&#039;utilisateur récupéré dans la base locale ?</h2>
+<div class="level2">
+
+<p>
+Oui, pour faciliter le développement, favoriser l&#039;indépendance vis-à-vis de Shibboleth, et avoir de meilleur performance. 
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Faut-il svg l'utilisateur récupéré dans la base locale ?" [1468-] -->

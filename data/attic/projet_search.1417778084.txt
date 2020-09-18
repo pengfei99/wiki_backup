@@ -1,0 +1,18 @@
+====== Projet SEARCH ======
+
+**Objectif de la revue de code du mercredi 10 décembre 10h chez Novius :**
+
+  * Aborder la qualité du code (PSR1, PSR2)
+  * Vérifier que le schéma de la base est en 3ème forme normale et demander la méthode d'analyse (MERISE ?)
+  * Récupérer les URLs et code d'accès des environnements PROD/PRE-PROD/TEST
+  * Aborder la sécurité de l'application (protection des formulaires, injection SQL, attaques XSS et CSRF)
+  * Propriété et renouvellement du nom de domaine
+  * Demander une copie "officielle" du code source
+  * Tests unitaires ?
+  * Tests fonctionnels ?
+  * 
+
+**Après la revue de code et une fois avoir eu une copie du code source, faire une passe plus approfondie pour :**
+
+  * Audit performance et sécurité du code
+  * 

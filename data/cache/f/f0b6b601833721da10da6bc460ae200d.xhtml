@@ -1,0 +1,285 @@
+
+<h1 class="sectionedit1" id="fosuserbundle">FOSUserBundle</h1>
+<div class="level1">
+
+<p>
+Bundle pour la gestion des utilisateurs et de leurs droits.<br/>
+
+Sécurité également assurée.<br/>
+
+</p>
+
+<p>
+Documentation disponible <a href="http://symfony.com/doc/current/bundles/FOSUserBundle/index.html" class="urlextern" title="http://symfony.com/doc/current/bundles/FOSUserBundle/index.html"  rel="nofollow">ici</a>.<br/>
+
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention :</strong> Ne pas oublier de télécharger le jms/security-extra-bundle et jms/di-extra-bundle.<br/>
+Aller dans la section Bonus pour plus de détail.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "FOSUserBundle" [1-412] -->
+<h3 class="sectionedit4" id="etape_1">Étape 1</h3>
+<div class="level3">
+
+<p>
+Téléchargement de FOSUserBundle avec le composer
+</p>
+<pre class="code">  $ composer require friendsofsymfony/user-bundle &quot;~2.0@dev&quot;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Étape 1" [413-546] -->
+<h3 class="sectionedit5" id="etape_2">Etape 2</h3>
+<div class="level3">
+
+<p>
+Déclaration de FOSUserBundle dans le kernel.
+</p>
+<pre class="code">  &lt;?php
+  // app/AppKernel.php
+  
+  public function registerBundles()
+  {
+      $bundles = array(
+          // ...
+          new FOS\UserBundle\FOSUserBundle(),
+          // ...
+      );
+  }</pre>
+
+</div>
+<!-- EDIT5 SECTION "Etape 2" [547-824] -->
+<h3 class="sectionedit6" id="etape_3">Étape 3</h3>
+<div class="level3">
+
+<p>
+Création d&#039;un <a href="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle?&amp;#recettes_pour" class="urlextern" title="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle?&amp;#recettes_pour"  rel="nofollow">bundle</a> et de l&#039;entité User.
+</p>
+
+<p>
+Classe User.php 
+</p>
+<pre class="code">  &lt;?php
+  // src/AppBundle/Entity/User.php
+  
+  namespace AppBundle\Entity;
+  
+  use FOS\UserBundle\Model\User as BaseUser;
+  use Doctrine\ORM\Mapping as ORM;
+  
+  /**
+   * @ORM\Entity
+   * @ORM\Table(name=&quot;fos_user&quot;)
+   */
+   class User extends BaseUser
+  {
+      /**
+       * @ORM\Id
+       * @ORM\Column(type=&quot;integer&quot;)
+       * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)
+       */
+      protected $id;
+  
+      public function __construct()
+      {
+          parent::__construct();
+      }
+  }</pre>
+
+</div>
+<!-- EDIT6 SECTION "Étape 3" [825-1548] -->
+<h3 class="sectionedit7" id="etape_4">Étape 4</h3>
+<div class="level3">
+
+<p>
+Configuration de l&#039;application dans le fichier security.yml
+</p>
+<pre class="code">  #app/config/security.ym
+  
+  security:
+      encoders:
+          Symfony\Component\Security\Core\User\User: plaintext
+          MyProject\MyBundle\Entity\User: sha512
+          
+      role_hierarchy:
+          ROLE_ADMIN: ROLE_USER
+          ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+      
+      providers:
+          in_memory:
+              memory:
+                  users:
+                      user: {password: userpass, roles: [&#039;ROLE_USER&#039;] }
+                      admin: {password: adminpass, roles: [&#039;ROLE_ADMIN&#039;] }
+          main:
+              id: fos_user.user_provider.username
+  
+      firewalls:
+          # disables authentication for assets and the profiler, adapt it according to your needs
+          dev:
+              pattern: ^/(_(profiler|wdt)|css|images|js)/
+              security: false
+  
+          main_login:
+              pattern: ^/login$
+              anonymous: true
+          main:
+              pattern: ^/
+              anonymous: true
+              provider: main
+              form_login:
+                  login_path: fos_user_security_login
+                  check_path: fos_user_security_check
+                  use_referer: true
+                  always_use_default_target_path: false
+                  default_target_path: myproject_homepage
+              logout:
+                  path: /logout
+                  target: /homepage
+                  invalidate_session : false
+              remember_me:
+                  key: %secret%
+      access_control:
+       #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }</pre>
+
+</div>
+<!-- EDIT7 SECTION "Étape 4" [1549-3335] -->
+<h3 class="sectionedit8" id="etape_5">Etape 5</h3>
+<div class="level3">
+
+<p>
+Configuration de FOSUserBundle dans le fichier config.yml
+</p>
+<pre class="code">  #app/config/config.yml
+  
+  fos_user:
+    db_driver: orm
+    user_class : Sdz\SdzUserBundle\Entity\User
+    firewall_name : main
+  </pre>
+
+</div>
+<!-- EDIT8 SECTION "Etape 5" [3336-3559] -->
+<h3 class="sectionedit9" id="etape_6">Étape 6</h3>
+<div class="level3">
+
+<p>
+Importation des routes.
+</p>
+<pre class="code">    
+  #app/config/routing.yml
+    
+  fos_user_security:
+      resource: &quot;@FOSUserBundle/Resources/config/routing/security.xml&quot;
+  
+  fos_user_profile:
+      resource: &quot;@FOSUserBundle/Resources/config/routing/profile.xml&quot;
+      prefix: /profile
+  
+  fos_user_register:
+      resource: &quot;@FOSUserBundle/Resources/config/routing/registration.xml&quot;
+      prefix: /register
+  
+  fos_user_resetting:
+      resource: &quot;@FOSUserBundle/Resources/config/routing/resetting.xml&quot;
+      prefix: /resetting
+  
+  fos_user_change_password:
+      resource: &quot;@FOSUserBundle/Resources/config/routing/change_password.xml&quot;
+      prefix: /profile</pre>
+
+</div>
+<!-- EDIT9 SECTION "Étape 6" [3560-4265] -->
+<h3 class="sectionedit10" id="etape_7">Étape 7</h3>
+<div class="level3">
+
+<p>
+Mise à jours de la base de données.
+</p>
+<pre class="code">  $php app/console doctrine:schema:update --dump-sql
+  $php app/console doctrine:schema:update --force </pre>
+
+</div>
+<!-- EDIT10 SECTION "Étape 7" [4266-4430] -->
+<h1 class="sectionedit11" id="bonus">Bonus</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT11 SECTION "Bonus" [4431-4451] -->
+<h3 class="sectionedit12" id="bundle_complementaire">Bundle complémentaire</h3>
+<div class="level3">
+
+<p>
+Depuis la version 2.8 de Symfony, il faut installer les bundles suivants pour que FOSUserBundle fonctionne.
+</p>
+
+</div>
+
+<h5 id="procedure_d_installation">Procédure d&#039;installation</h5>
+<div class="level5">
+
+</div>
+
+<h5 id="telechargement_via_le_composer">Téléchargement via le composer</h5>
+<div class="level5">
+<pre class="code">  #composer.json
+  
+  // ...
+  
+  &quot;require&quot;:{
+      // ...
+      &quot;jms/security-extra-bundle&quot;: &quot;1.6.*&quot;,
+      &quot;jms/di-extra-bundle&quot;: &quot;1.4.*&quot;,
+      //..
+  },
+      </pre>
+
+</div>
+
+<h5 id="declaration_dans_le_kernel">Déclaration dans le kernel</h5>
+<div class="level5">
+<pre class="code">  &lt;?php
+  // app/AppKernel.php
+  
+  public function registerBundles()
+  {
+      $bundles = array(
+         // ...
+         new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+         new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+      );
+  }
+  </pre>
+
+</div>
+
+<h5 id="configuration">Configuration</h5>
+<div class="level5">
+<pre class="code">  #app/config/security.yml
+  
+  jms_security_extra:
+      secure_all_services: false
+      expressions: true</pre>
+
+</div>
+<!-- EDIT12 SECTION "Bundle complémentaire" [4452-5300] -->
+<h3 class="sectionedit13" id="un_exemple_d_utilisation">Un exemple d&#039;utilisation ?</h3>
+<div class="level3">
+
+<p>
+Vous trouverez sur cet <a href="https://zestedesavoir.com/tutoriels/620/developpez-votre-site-web-avec-le-framework-symfony2/396_allons-plus-loin-avec-symfony2/2004_securite-et-gestion-des-utilisateurs/" class="urlextern" title="https://zestedesavoir.com/tutoriels/620/developpez-votre-site-web-avec-le-framework-symfony2/396_allons-plus-loin-avec-symfony2/2004_securite-et-gestion-des-utilisateurs/"  rel="nofollow">page</a> un exemple d&#039;utilisation du FOSUserBundle. 
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Un exemple d'utilisation ?" [5301-5584] -->
+<h3 class="sectionedit14" id="utilisation_avec_le_foscommentbundle">Utilisation avec le FOSCommentBundle</h3>
+<div class="level3">
+
+<p>
+Suivre le <a href="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/foscommentbundle/" class="urlextern" title="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/foscommentbundle/"  rel="nofollow">lien</a>.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Utilisation avec le FOSCommentBundle" [5585-] -->

@@ -1,0 +1,59 @@
+
+<h1 class="sectionedit1" id="bowtie2">Bowtie2</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Bowtie2" [1-23] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2.1.0</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml" class="urlextern" title="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml"  rel="nofollow">http://bowtie-bio.sourceforge.net/bowtie2/index.shtml</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : Bowtie 2 is an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences. It is particularly good at aligning reads of about 50 up to 100s or 1,000s of characters, and particularly good at aligning to relatively long (e.g. mammalian) genomes. Bowtie 2 indexes the genome with an FM Index to keep its memory footprint small: for the human genome, its memory footprint is typically around 3.2 <abbr title="Gigabyte">GB</abbr>. Bowtie 2 supports gapped, local, and paired-end alignment modes.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [24-698] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export APPS=&quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3&quot;
+wget http://sourceforge.net/projects/bowtie-bio/files/latest/download?source=files
+unzip bowtie2-2.1.0-source.zip
+cd bowtie2-2.1.0
+make
+mkdir -p $APPS/bowtie2/2.1.0/bin
+mv bowtie2* $APPS/bowtie2/2.1.0/bin</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [699-1013] -->
+<h2 class="sectionedit4" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;Fast and sensitive read alignment\n&quot;
+}
+
+set version &quot;2.1.0&quot;
+
+set gcc_version &quot;RedHat_4.4.7-3&quot;
+set bin_dir &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-${gcc_version}/bowtie2/${version}/bin&quot;
+
+prepend-path PATH $bin_dir</pre>
+
+</div>
+<!-- EDIT4 SECTION "Intégration" [1014-1326] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.04 (tlc)</strong> Version 2.1.0 installée
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Log" [1327-] -->

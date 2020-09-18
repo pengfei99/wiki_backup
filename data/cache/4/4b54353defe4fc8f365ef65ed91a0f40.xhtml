@@ -1,0 +1,594 @@
+
+<h1 class="sectionedit1" id="lesson03_sql_basics">Lesson03 SQL basics</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson03 SQL basics&quot;,&quot;hid&quot;:&quot;lesson03_sql_basics&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-35&quot;} -->
+<h2 class="sectionedit2" id="sql_types">3.1 SQL Types</h2>
+<div class="level2">
+
+<p>
+Each column in a database table is required to have a name and a data type. The complete types docs of postgresql can be found <a href="https://www.postgresql.org/docs/11/datatype.html" class="urlextern" title="https://www.postgresql.org/docs/11/datatype.html" rel="nofollow">https://www.postgresql.org/docs/11/datatype.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 SQL Types&quot;,&quot;hid&quot;:&quot;sql_types&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;36-239&quot;} -->
+<h3 class="sectionedit3" id="sql_general_data_types">3.1.1 SQL General Data Types</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Boolean</div>
+</li>
+<li class="level1"><div class="li"> Character types such as char, varchar, and text.</div>
+</li>
+<li class="level1"><div class="li"> Numeric types such as integer and floating-point number.</div>
+</li>
+<li class="level1"><div class="li"> Temporal types such as date, time, timestamp, and interval</div>
+</li>
+<li class="level1"><div class="li"> Enumerated Types</div>
+</li>
+<li class="level1"><div class="li"> Binary Objects (BLOB)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="boolean">Boolean</h4>
+<div class="level4">
+
+<p>
+A column of boolean type can have three states: TRUE, FALSE and NULL. In RDBMs, the value of type boolean is quite flexible, TRUE ⇒ &#039;t&#039;, &#039;true&#039;, &#039;y&#039;, &#039;yes&#039;,&#039;1&#039; ; FALSE ⇒ &#039;f&#039;,&#039;false&#039;,&#039;n&#039;,&#039;no&#039;,&#039;0&#039;; We can use logical operator on them: =,&lt;&gt;(not equal),not,and,or.
+</p>
+
+</div>
+
+<h4 id="character_types">Character types</h4>
+<div class="level4">
+
+<p>
+We have three primary character types:
+</p>
+<ul>
+<li class="level1"><div class="li"> character(n) or char(n): fixed-length, blank padded</div>
+</li>
+<li class="level1"><div class="li"> character varying(n) or varchar(n): variable-length with limit</div>
+</li>
+<li class="level1"><div class="li"> text(varchar): variable unlimited length</div>
+</li>
+</ul>
+
+<p>
+Both char(n) and varchar(n) can store up to n characters in length(n is a positive integer), if you try to store a longer string in the column, it will issue an error.
+</p>
+
+<p>
+In postgresql server, there is no performance difference among three character types. In most situation, you should use text or varchar. If you want postgresql help you to check the length limit, then use varchar(n).
+</p>
+
+</div>
+
+<h4 id="numeric_types">Numeric Types</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Integers: SQL only specifies the integer types integer (or int), smallint, and bigint. The type names int2, int4, and int8 are extensions, which are also used by some RDBMS.</div>
+</li>
+<li class="level1"><div class="li"> Arbitrary-Precision Numbers: The types decimal and numeric are equivalent. Both types are part of the SQL standard. Calculations with numeric values yield exact results whenever possible.</div>
+</li>
+<li class="level1"><div class="li"> Floating-Points Types: These types are usually implementations of IEEE Standard 754 for Binary Floating-Point Arithmetic (single and double precision, respectively). The data types real and double precision are inexact.</div>
+</li>
+<li class="level1"><div class="li"> Serial Types: The data types smallserial, serial and bigserial are not true types, but merely a notational convenience for creating unique identifier columns. They’re similar to the AUTO_INCREMENT property supported by some other RDBMS.</div>
+</li>
+</ul>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">NAME</th><th class="col1"> STORAGE SIZE</th><th class="col2"> DESCRIPTION</th><th class="col3"> RANGE</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Smallint </td><td class="col1">2 bytes </td><td class="col2">small-range integer</td><td class="col3"> -32768 to +32767</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Integer  </td><td class="col1">4 bytes </td><td class="col2">typical choice for integer</td><td class="col3"> -2147483648 to +2147483647</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Bigint   </td><td class="col1">8 bytes </td><td class="col2">large-range integer </td><td class="col3">-9223372036854775808 to +9223372036854775807</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">decimal  </td><td class="col1">variable</td><td class="col2"> user-specified precision,exact </td><td class="col3"> up to 131072 digits before the decimal point; up to 16383 digits after the decimal point</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">numeric </td><td class="col1"> variable</td><td class="col2"> user-specified precision,exact </td><td class="col3"> up to 131072 digits before the decimal point;up to 16383 digits after the decimal point</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">real  </td><td class="col1"> 4 bytes </td><td class="col2"> variable-precision,inexact </td><td class="col3"> 6 decimal digits precision</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">double precision</td><td class="col1"> 8 bytes </td><td class="col2"> variable-precision,inexact </td><td class="col3"> 15 decimal digits precision</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">smallserial </td><td class="col1"> 2 bytes </td><td class="col2"> small autoincrementing integer </td><td class="col3"> 1 to 32767</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">serial </td><td class="col1"> 4 bytes </td><td class="col2"> autoincrementing integer </td><td class="col3"> 1 to 2147483647</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">bigserial </td><td class="col1"> 8 bytes </td><td class="col2"> large autoincrementing integer </td><td class="col3">1 to 9223372036854775807</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;2279-3206&quot;} -->
+</div>
+
+<h4 id="temporal_types">Temporal types</h4>
+<div class="level4">
+
+<p>
+Cover SQL date and time type full set.  Dates are counted according to the Gregorian calendar, even in years before
+that calendar was introduced.
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">NAME</th><th class="col1">STORAGE SIZE</th><th class="col2">DESCRIPTION</th><th class="col3">LOW VALUE</th><th class="col4">HIGH VALUE</th><td class="col5"></td>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">timestamp [ (p) ][ without time zone ]</td><td class="col1">8 bytes </td><td class="col2"> both date and time (no time zone)</td><td class="col3">4713 BC</td><td class="col4"> 294276 AD </td><td class="col5"> 1 microsecond</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">timestamp [ (p) ] with time zone </td><td class="col1">8 bytes</td><td class="col2"> both date and time, with time zone </td><td class="col3"> 4713 BC</td><td class="col4"> 294276 AD </td><td class="col5"> 1 microsecond</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">date </td><td class="col1"> 4 bytes</td><td class="col2"> date (no time of day) </td><td class="col3"> 4713 BC </td><td class="col4"> 5874897 AD </td><td class="col5"> 1 day</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">time [ (p) ][ without time zone ] </td><td class="col1"> 8 bytes </td><td class="col2"> time of day (no date)</td><td class="col3"> 00:00:00</td><td class="col4"> 24:00:00 </td><td class="col5"> 1 microsecond</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">time [ (p) ] with time zone </td><td class="col1"> 12 bytes </td><td class="col2"> time of day (no date), with time zone</td><td class="col3"> 00:00:00+1459 </td><td class="col4"> 24:00:00-1459 </td><td class="col5"> 1 microsecond</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">interval [ fields ] [ (p) ] </td><td class="col1"> 16 bytes </td><td class="col2"> time interval </td><td class="col3"> -178000000 years </td><td class="col4"> 178000000 years </td><td class="col5"> 1 microsecond </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;3379-4094&quot;} -->
+<p>
+Value p specifies the number of fractional digits retained in the seconds&#039; field. Any date or time literal input needs to be enclosed in single quotes, like text strings.
+</p>
+
+</div>
+
+<h4 id="enumerated_types">Enumerated Types</h4>
+<div class="level4">
+
+<p>
+Enumerated (enum) types are data types that comprise a static, ordered set of values. For example: (&#039;sad&#039;, &#039;ok&#039;, &#039;happy&#039;)
+</p>
+
+</div>
+
+<h4 id="blob">BLOB</h4>
+<div class="level4">
+
+<p>
+The SQL standard defines a different binary string type, called BLOB or BINARY LARGE OBJECT. MySQL and ORACLE give the same name. PostgreSQL has type bytea. The input format is different but the provided functions and operators are mostly the same
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1.1 SQL General Data Types&quot;,&quot;hid&quot;:&quot;sql_general_data_types&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;240-4678&quot;} -->
+<h3 class="sectionedit6" id="other_types">3.1.2 Other Types</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Monetary Type</div>
+</li>
+<li class="level1"><div class="li"> Geometric Types</div>
+</li>
+<li class="level1"><div class="li"> Network address</div>
+</li>
+<li class="level1"><div class="li"> UUID for storing Universally Unique Identifiers</div>
+</li>
+<li class="level1"><div class="li"> XML Type</div>
+</li>
+<li class="level1"><div class="li"> JSON Type</div>
+</li>
+<li class="level1"><div class="li"> Array for storing array strings, numbers, etc.</div>
+</li>
+<li class="level1"><div class="li"> Composite Types</div>
+</li>
+<li class="level1"><div class="li"> Range Types</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1.2 Other Types&quot;,&quot;hid&quot;:&quot;other_types&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;4679-4932&quot;} -->
+<h3 class="sectionedit7" id="the_null_value">3.1.3 The Null Value</h3>
+<div class="level3">
+
+<p>
+NULL is not a value, it is a special marker to indicate that a data value does not exist in the database. It is used to signify missing or unknown values. The SQL keyword NULL is used to indicate these values. NULL really isn’t a specific value as much as it is an indicator. Don’t think of NULL as similar to zero or blank or false, it isn’t the same.
+</p>
+
+<p>
+You must use the IS NULL or IS NOT NULL operators to check for a NULL value. It is not possible to test for NULL values with comparison operators, such as =, &lt;, or &lt;&gt;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1.3 The Null Value&quot;,&quot;hid&quot;:&quot;the_null_value&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;4933-5493&quot;} -->
+<h2 class="sectionedit8" id="sql_coding_convention">3.2 SQL coding convention</h2>
+<div class="level2">
+
+<p>
+The below list is the general sql coding convention
+</p>
+<ul>
+<li class="level1"><div class="li"> Use comments to describe what SQL does</div>
+</li>
+<li class="level1"><div class="li"> Put each major SQL statement on a new line</div>
+</li>
+<li class="level1"><div class="li"> Put SQL keywords, built-in function and data types in the uppercase. Use CamelCase capitalization and do not separate name parts with underscores or use lower case and underscores to separate name parts.</div>
+</li>
+<li class="level1"><div class="li"> Set standard abbreviations for frequently used objects, such as tbl for tables or idx for indexes</div>
+</li>
+<li class="level1"><div class="li"> Use single quotation for characters, strings, binary and Unicode</div>
+</li>
+<li class="level1"><div class="li"> Set a rule for naming aliases</div>
+</li>
+<li class="level1"><div class="li"> Use indenting to align wrapped long lines</div>
+</li>
+<li class="level1"><div class="li"> Use parentheses in complex mathematical expressions</div>
+</li>
+<li class="level1"><div class="li"> Be consistent with indentation – use either tab or space</div>
+</li>
+<li class="level1"><div class="li"> Don’t avoid using line breaks to improve readability</div>
+</li>
+<li class="level1"><div class="li"> Code grouping – keep the lines that execute a certain task in separate code blocks</div>
+</li>
+</ul>
+
+<p>
+<strong>IMPORTANT NOTE</strong>: SQL language is case insensitive (for the keywords).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 SQL coding convention&quot;,&quot;hid&quot;:&quot;sql_coding_convention&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;5494-6476&quot;} -->
+<h2 class="sectionedit9" id="data_manipulation_language">3.3 Data manipulation language</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> SELECT : Retrieve certain records (get data) from a database</div>
+</li>
+<li class="level1"><div class="li"> INSERT : Creates a record (insert data) into a table</div>
+</li>
+<li class="level1"><div class="li"> UPDATE : Modifies records (update data) within a table</div>
+</li>
+<li class="level1"><div class="li"> DELETE : Delete records (remove data) from a database table</div>
+</li>
+<li class="level1"><div class="li"> MERGE  : (UPSERT) Update a record if it already exists, otherwise, inserts a new row in a table.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Data manipulation language&quot;,&quot;hid&quot;:&quot;data_manipulation_language&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;6477-6867&quot;} -->
+<h2 class="sectionedit10" id="data_definition_language">3.4 Data definition language</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CREATE: Create the database or its objects (like table, index, function, views, store procedure and triggers)</div>
+</li>
+<li class="level1"><div class="li"> DROP: Deletes objects (like an entire table, a view of a table or other objects)</div>
+</li>
+<li class="level1"><div class="li"> ALTER: Modifies an existing database object, such as a table</div>
+</li>
+<li class="level1"><div class="li"> RENAME: Rename an object existing in the database</div>
+</li>
+<li class="level1"><div class="li"> TRUNCATE: Remove all records from a table. All corresponded spaces allocated for them are released</div>
+</li>
+<li class="level1"><div class="li"> COMMENT: Define or change the comment of an object</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 Data definition language&quot;,&quot;hid&quot;:&quot;data_definition_language&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;6868-7387&quot;} -->
+<h3 class="sectionedit11" id="create">Create</h3>
+<div class="level3">
+
+<p>
+Create is one of the most used command in sql. In postgresql, you can create 42 different objects with create command.
+</p>
+<pre class="code"># create database
+CREATE DATABASE database_name [parameters]
+# create table
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] table_name [parameters]
+# create view
+CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] view_name [parameters]
+# create index
+CREATE [ CONCURRENTLY ] [ [ IF NOT EXISTS ] INDEX index_name [parameters]
+
+CREATE CAST — define a new cast
+CREATE EVENT TRIGGER — define a new event trigger
+CREATE EXTENSION — install an extension
+CREATE FUNCTION — define a new function
+CREATE GROUP — define a new database role
+CREATE SEQUENCE — define a new sequence generator
+CREATE STATISTICS — define extended statistics
+CREATE TRIGGER — define a new trigger
+CREATE TYPE — define a new data type
+CREATE USER — define a new database role
+CREATE VIEW — define a new view</pre>
+
+</div>
+
+<h4 id="create_table">Create table</h4>
+<div class="level4">
+
+<p>
+The most used CREATE statement in SQL is for tables:
+</p>
+<pre class="code">CREATE [TEMPORARY] TABLE [IF NOT EXISTS] table_name (
+column_name TYPE column_constraint,
+table_constraint table_constraint,
+);</pre>
+
+<p>
+List the column names, their data types, and constraints. A table may have multiple columns separated by a comma (,).
+</p>
+
+<p>
+We have two types of constraints in create command. Table constraints, that defines rules for the data in the table. Column constraints defines rules for the data in the column. 
+</p>
+
+<p>
+The following are the commonly used column constraints in SQL:
+</p>
+<ul>
+<li class="level1"><div class="li"> NOT NULL – the value of the column cannot be NULL.</div>
+</li>
+<li class="level1"><div class="li"> UNIQUE – the value of the column must be unique across the whole table. SQL standard only allows one NULL value in the column that has the UNIQUE constraint (PostgreSQL treats each NULL value to be unique so such column can have many NULL values)</div>
+</li>
+<li class="level1"><div class="li"> PRIMARY KEY – this constraint is the combination of NOT NULL and UNIQUE constraints. You can define one column as PRIMARY KEY by using column level constraint. In case the primary key contains multiple columns, you must use the table-level constraint.</div>
+</li>
+<li class="level1"><div class="li"> CHECK – enables to check a condition when you insert or update data. For example, the values in the price column of the product table must be positive values.</div>
+</li>
+<li class="level1"><div class="li"> REFERENCES – constrains the value of the column that exists in a column in another table. You use REFERENCES to define the foreign key constraint.</div>
+</li>
+</ul>
+
+<p>
+The table constraints are similar to column constraints except that they are applied to the entire table rather than to an individual column.
+</p>
+
+<p>
+The following are the table constraints:
+</p>
+<ul>
+<li class="level1"><div class="li"> UNIQUE (column_list) – to force the value stored in the columns listed inside the parentheses to be unique.</div>
+</li>
+<li class="level1"><div class="li"> PRIMARY KEY(column_list) – to define the primary key that consists of multiple columns.</div>
+</li>
+<li class="level1"><div class="li"> CHECK (condition) – to check a condition when inserting or updating data.</div>
+</li>
+<li class="level1"><div class="li"> REFERENCES – to constrain the value stored in the column that must exist in a column in another table.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="example_of_create_table">Example of create table</h4>
+<div class="level4">
+
+<p>
+Suppose we have a system to manage user account and role. So we need to create three tables:
+</p>
+<ul>
+<li class="level1"><div class="li"> account</div>
+</li>
+<li class="level1"><div class="li"> role</div>
+</li>
+<li class="level1"><div class="li"> account_role</div>
+</li>
+</ul>
+
+<p>
+The account table has the following columns with the corresponding constraints:
+</p>
+<ul>
+<li class="level1"><div class="li"> user_id – primary key</div>
+</li>
+<li class="level1"><div class="li"> username – unique and not null</div>
+</li>
+<li class="level1"><div class="li"> password – not null</div>
+</li>
+<li class="level1"><div class="li"> email – unique and not null</div>
+</li>
+<li class="level1"><div class="li"> created_on – not null</div>
+</li>
+<li class="level1"><div class="li"> last_login – null</div>
+</li>
+</ul>
+
+<p>
+The role table has the following columns with the corresponding constraints:
+</p>
+<ul>
+<li class="level1"><div class="li"> role_id - primary key</div>
+</li>
+<li class="level1"><div class="li"> role_name - unique and not null</div>
+</li>
+</ul>
+
+<p>
+The account_role table is an association table which links an account to 0 or n roles, it has the following columns with the corresponding constraints:
+</p>
+<ul>
+<li class="level1"><div class="li"> user_id - the foreign key reference to column user_id of account table</div>
+</li>
+<li class="level1"><div class="li"> role_id - the foreign key reference to column role_id of role table</div>
+</li>
+<li class="level1"><div class="li"> grant_date - timestamp without time zone</div>
+</li>
+<li class="level1"><div class="li"> (user_id,role_id) - primary key</div>
+</li>
+</ul>
+<pre class="code">CREATE TABLE account (
+user_id serial PRIMARY KEY,
+username VARCHAR (50) UNIQUE NOT NULL,
+password VARCHAR (50) NOT NULL,
+email VARCHAR (355) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL,
+last_login TIMESTAMP
+);
+
+CREATE TABLE role(
+role_id serial PRIMARY KEY,
+role_name VARCHAR (255)
+UNIQUE NOT NULL
+);
+
+CREATE TABLE account_role (
+user_id integer NOT NULL,
+role_id integer NOT NULL,
+grant_date timestamp without time zone,
+PRIMARY KEY (user_id, role_id),
+CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+REFERENCES role (role_id) MATCH SIMPLE
+ON UPDATE NO ACTION ON DELETE NO ACTION,
+CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+REFERENCES account (user_id) MATCH SIMPLE
+ON UPDATE NO ACTION ON DELETE NO ACTION
+);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create&quot;,&quot;hid&quot;:&quot;create&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;7388-12084&quot;} -->
+<h3 class="sectionedit12" id="drop">Drop</h3>
+<div class="level3">
+
+<p>
+The drop statement in SQL is used to delete created database objects. You can use the drop statement in SQL to delete databases, tables, indexes, etc. In PostgreSQL, we have 43 commands to delete existing objects. The Below list contains some of the most common used drop commands: 
+</p>
+<pre class="code"># delete database
+DROP DATABASE [ IF EXISTS ] database_name
+# delete table, add cascade if 
+DROP TABLE [ IF EXISTS ] table_name [ CASCADE ]
+# delete view
+DROP VIEW [ IF EXISTS ] table_name [ CASCADE ]
+# delete index
+DROP INDEX [ IF EXISTS ] index_name [ CASCADE ]
+DROP CAST — remove a cast
+DROP EXTENSION — remove an extension
+DROP FOREIGN TABLE — remove a foreign table
+DROP FUNCTION — remove a function
+DROP LANGUAGE — remove a procedural language
+DROP OPERATOR — remove an operator
+DROP OWNED — remove database objects owned by a database role
+DROP SCHEMA — remove a schema
+DROP SEQUENCE — remove a sequence
+DROP TRIGGER — remove a trigger
+DROP TYPE — remove a data type</pre>
+
+</div>
+
+<h4 id="drop_table">drop table</h4>
+<div class="level4">
+
+<p>
+The most used drop statement in sql is for tables. If you drop a table, all the rows in the table are deleted and the table structure is removed from the database. We can also use the drop statement in alter table statement to remove columns from tables.
+</p>
+
+<p>
+According to the sql standard, specifying either RESTRICT or <strong>CASCADE</strong> is required in a drop command.
+When cascade is specified in a drop command, it will automatically drop objects that depend on the table (e.g. views, constraints or any other objects)
+</p>
+
+<p>
+In a complex database, many tables have foreign key constraints, or views, triggers, functions, etc. When you do drop table toto, you will often receive errors such as “unique/primary keys in table referenced by foreign keys”. So we have to use <strong>CASCADE</strong> to remove the table. But keep in mind when you do “drop table toto cascad;”, all the dependent objects will be removed, as will any objects that depend on them, recursively.
+</p>
+
+</div>
+
+<h4 id="drop_example">Drop example</h4>
+<div class="level4">
+
+<p>
+We retake the example of create table, suppose the table of account, role, account_role are already created. Now we want to drop table account
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Drop&quot;,&quot;hid&quot;:&quot;drop&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:12,&quot;range&quot;:&quot;12085-14227&quot;} -->
+<h3 class="sectionedit13" id="alter">Alter</h3>
+<div class="level3">
+
+<p>
+Modifies the definition of an existing database object, such as a table. There are 42 different ALTER commands in PostgreSQL. ALTER TABLE changes the definition of an existing table. There are several subforms. Note that the lock level required may differ for each subform.
+</p>
+
+<p>
+Examples of alter table columns
+</p>
+<pre class="code">ALTER TABLE table_name ADD COLUMN column_name data_type;
+ALTER TABLE table_name DROP COLUMN [IF EXISTS] column_name [RESTRICT | CASCADE];</pre>
+
+<p>
+We can also modify table constraints with alter
+</p>
+<pre class="code"># Create a new constraint
+ALTER TABLE table_name ADD table_constraint [ NOT VALID ]
+
+# Apply the newly created constraints on the table which was previously created as NOT VALID, by scanning the table to ensure there are no rows for which the constraint is not satisfied.
+ALTER TABLE table_name VALIDATE CONSTRAINT constraint_name
+
+# drop constraint 
+ALTER TABLE table_name DROP CONSTRAINT [IF EXISTS] constraint_name [RESTRICT | CASCADE]</pre>
+
+<p>
+Note: ALTER TABLE that acts on a single table can be combined into a list of multiple alterations to be applied together. For example, it is possible to add several columns and/or alter the type of
+several columns in a single command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Alter&quot;,&quot;hid&quot;:&quot;alter&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:13,&quot;range&quot;:&quot;14228-15445&quot;} -->
+<h3 class="sectionedit14" id="rename">Rename</h3>
+<div class="level3">
+
+<p>
+Only three rename commands in postgresql 
+</p>
+<pre class="code"># Rename a column
+ALTER TABLE [ IF EXISTS ] [ ONLY ] table_name RENAME [ COLUMN ] column_name TO new_column_name
+# Rename a constraint
+ALTER TABLE [ IF EXISTS ] [ ONLY ] table_name RENAME CONSTRAINT constraint_name TO new_constraint_name
+# Rename a table
+ALTER TABLE [ IF EXISTS ] name RENAME TO new_name</pre>
+
+<p>
+Note: When renaming a constraint that has an underlying index, the index is renamed as well
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Rename&quot;,&quot;hid&quot;:&quot;rename&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;15446-15920&quot;} -->
+<h3 class="sectionedit15" id="truncate">TRUNCATE</h3>
+<div class="level3">
+
+<p>
+You can use SQL TRUNCATE TABLE statement to remove all data from large tables quickly. To remove all data from a table, you use the DELETE statement. However, for a large table, it is more efficient to use the TRUNCATE TABLE statement. The TRUNCATE TABLE statement removes all rows from a table without scanning it.
+</p>
+<pre class="code">TRUNCATE TABLE table_name1, table_name2,</pre>
+
+<p>
+The advantage of truncate compare to drop table:
+</p>
+<ul>
+<li class="level1"><div class="li"> Reclaim Space immediately</div>
+</li>
+<li class="level1"><div class="li"> No impact on transaction logs</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;TRUNCATE&quot;,&quot;hid&quot;:&quot;truncate&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:15,&quot;range&quot;:&quot;15921-16428&quot;} -->
+<h3 class="sectionedit16" id="comment">Comment</h3>
+<div class="level3">
+
+<p>
+There is no COMMENT command in the SQL standard. You can use a SQL COMMENT statement to store a comment about a database object. Only one comment string is stored for each object, so to modify a comment, issue a new COMMENT command for the same object. To remove a comment, write NULL in place of the text string.
+</p>
+<pre class="code">COMMENT ON object_name IS &#039;text&#039;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Comment&quot;,&quot;hid&quot;:&quot;comment&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:16,&quot;range&quot;:&quot;16429-&quot;} -->

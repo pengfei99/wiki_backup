@@ -1,0 +1,95 @@
+
+<h1 class="sectionedit1" id="use_apache_commun_lang3_to_do_string_and_file_templating">Use apache commun lang3 to do string and file templating</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Use apache commun lang3 to do string and file templating" [1-72] -->
+<h2 class="sectionedit2" id="import_dependencies_via_maven_or_gradle">Import dependencies via maven or gradle</h2>
+<div class="level2">
+
+<p>
+Maven dependencies
+</p>
+<pre class="prettyprint">
+&lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+    &lt;version&gt;3.6&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+<p>
+Gradle dependencies
+</p>
+<pre class="prettyprint">
+// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+compile group: &#039;org.apache.commons&#039;, name: &#039;commons-lang3&#039;, version: &#039;3.6&#039;
+</pre>
+</div>
+<!-- EDIT2 SECTION "Import dependencies via maven or gradle" [73-560] -->
+<h2 class="sectionedit3" id="string_template_code_example">String template code example</h2>
+<div class="level2">
+<pre class="prettyprint">
+# The method in a class called MailMessage which returns the text after replace the variable
+public String getMessageFromStringTemplate(String template, Map&lt;String,String&gt; valuesMap){
+       StrSubstitutor sub = new StrSubstitutor(valuesMap);
+       return sub.replace(template);
+   }
+   
+# The code in main for test
+MailMessage mailMess=MailMessage.getInstance();
+Map&lt;String, String&gt; valuesMap = new HashMap&lt;String, String&gt;();
+valuesMap.put(&quot;userName&quot;, &quot;pengfei&quot;);
+valuesMap.put(&quot;userMail&quot;, &quot;haha@pengfei.org&quot;);
+String template=&quot; The user name is ${userName},\n The user mail is ${userMail}.&quot;;
+String text = mailMess.getMessageFromStringTemplate(template,valuesMap);
+System.out.println(text);
+</pre>
+</div>
+<!-- EDIT3 SECTION "String template code example" [561-1312] -->
+<h2 class="sectionedit4" id="file_template_code_example">File template code example</h2>
+<div class="level2">
+<pre class="prettyprint">
+# The method in a class called MailMessage which returns the text after replace the variable.
+public String getMessageFromTemplate(String fileName, Map&lt;String,String&gt; valuesMap){
+       String filePath=templatePath+fileName;
+       String content = &quot;&quot;;
+       try
+       {
+           content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+       }
+       catch (IOException e)
+       {
+           log.error(&quot;Email template file is missing. Java exception: &quot;+e.toString());
+       }
+
+       StrSubstitutor sub = new StrSubstitutor(valuesMap);
+       return sub.replace(content);
+   }
+   
+#The code in main for test
+#Suppose we have a file called helloWorld.stemp and it contains the template
+
+MailMessage mailMess=MailMessage.getInstance();
+Map&lt;String, String&gt; valuesMap = new HashMap&lt;String, String&gt;();
+valuesMap.put(&quot;userName&quot;, &quot;pengfei&quot;);
+valuesMap.put(&quot;userMail&quot;, &quot;haha@pengfei.org&quot;);
+String text = mailMess.getMessageFromTemplate(&quot;helloWorld.stemp&quot;,valuesMap);
+System.out.println(text);
+</pre><pre class="prettyprint">
+#The content of the helloWorld.stemp
+
+Dear ${userName},
+
+  This is your registration email : ${userMail}
+  
+BR
+
+Pengfei.org
+</pre>
+<p>
+PS, the file template method only works in java 8. If you are using java 7, you need to change Files.readAllBytes( Paths.get(filePath) ) with outputStream and bufferReader for file reading. 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "File template code example" [1313-] -->

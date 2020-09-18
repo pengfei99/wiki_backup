@@ -1,0 +1,52 @@
+====== Configure spark interpreter to use pyspark ======
+
+The spark interpreter is pre-installed on zeppelin (My Zeppelin version is 0.8.0). So you should also have the default configuration for pyspark, sparkR. 
+
+The default configuration in spark interpreter for pyspark uses the system(the server which runs zeppelin) default python. In my case, it's python 2.7.5(centos7).
+
+In this tutorial, I will first install anaconda3, and reconfigure the spark interpreter pyspark parameter.
+
+
+===== Step1. Install anaconda3 =====
+
+Follow this tutorial to install latest anaconda3 : [[employes:pengfei.liu:python:env_installation:install_anaconda|Install anaconda]] 
+
+Two important points:
+1. The default installation path of anaconda is /root. We recommend you to use /opt/anaconda3 as the installation path.
+2. You should install anaconda on the server which runs Zeppelin and all worker nodes
+
+===== Step2. Configure the path in Zeppelin =====
+
+Click on Interpreter->spark2->Edit, you should see the following line, 
+
+<code>
+//old config
+zeppelin.pyspark.python	python
+
+//New config, /opt/anaconda3/bin/python3 is my anaconda python path
+// This line will tell zeppelin which python to use when pyspark run pure python package
+zeppelin.pyspark.python	/opt/anaconda3/bin/python3
+
+// You also need to add two new lines in spark interpreter
+// This line tells spark worker where is the python bin
+PYSPARK_DRIVER_PYTHON	/opt/anaconda3/bin/python3
+// This line tells spark mater where is the python bin. It's redundant with zeppelin.pyspark.python. So if you have one, it's enough
+PYSPARK_PYTHON	/opt/anaconda3/bin/python3 
+</code>
+
+Save and update your interpreter
+
+===== Step3. Check your new pyspark environment =====
+
+
+<code python>
+# check your spark context version
+print(sc.version)
+
+# check your python env version
+import sys
+
+print(sys.version)
+print(sys.path)
+
+</code>

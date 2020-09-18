@@ -1,0 +1,97 @@
+====== Read write data via jdbc ======
+
+Suppose we have a database called northwind in a postgresql server
+
+username is spark and password is spark for connecting.
+
+
+===== Read data from data base =====
+
+<code>
+[pliu@localhost tmp]$ psql -h 127.0.0.1 -p 5432 -U spark northwind
+Password for user spark: 
+psql (9.5.10)
+Type "help" for help.
+
+northwind=> 
+
+</code>
+
+You need to download the jdbc connector for postgresql https://jdbc.postgresql.org/download.html
+
+We download the current stable version (postgresql-42.1.4.jar) 
+Suppose we put it under /tmp
+
+<code>
+#run spark-shell with the jdbc driver
+
+[hadoop@localhost tmp]$ spark-shell --jars /tmp/postgresql-42.1.4.jar --driver-class-path /tmp/postgresql-42.1.4.jar
+
+
+# create a dataframe
+
+val productsDF = spark.read.format("jdbc").option("url", "jdbc:postgresql://localhost:5432/northwind").option("driver","org.postgresql.Driver").option("dbtable", "products").option("user", "spark").option("password", "spark").load()
+
+#As tables are structure data, after import, our dataframe has the same schema
+scala> productsDF.printSchema
+root
+ |-- productid: short (nullable = false)
+ |-- productname: string (nullable = false)
+ |-- supplierid: short (nullable = true)
+ |-- categoryid: short (nullable = true)
+ |-- quantityperunit: string (nullable = true)
+ |-- unitprice: float (nullable = true)
+ |-- unitsinstock: short (nullable = true)
+ |-- unitsonorder: short (nullable = true)
+ |-- reorderlevel: short (nullable = true)
+ |-- discontinued: integer (nullable = false)
+
+</code>
+
+===== Write dataframe to database =====
+
+We take the example data of [[employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction|Happy customers]]
+
+suppose we have the following data frame
+
+<code>
+scala> val df=spark.read.parquet("file:///tmp/happyClient.parquet")
+df: org.apache.spark.sql.DataFrame = [manager_name: string, client_name: string ... 4 more fields]
+
+scala> df.show
++---------------+-------------+-------------+----------+-------------+------------------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|
++---------------+-------------+-------------+----------+-------------+------------------+
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|
+|    Arjun Kumar|    Sam Mehta|         male|        27|          3.0|               0.7|
+|    Arjun Kumar|    Ira Pawan|       female|        40|          2.5|               0.6|
+|Rohit Srivastav| Vihaan Sahni|         male|        38|          6.0|               0.5|
+|     Kabir Vish|Daivik Saxena|         male|        45|         16.0|               0.2|
+|Rohit Srivastav|   Lera Uddin|       female|        20|          8.0|               0.4|
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|
+|     Kabir Vish|   Rudra Mati|         male|        50|         20.0|               0.1|
++---------------+-------------+-------------+----------+-------------+------------------+
+
+
+//create properties object
+val prop = new java.util.Properties
+prop.setProperty("driver", "org.postgresql.Driver")
+prop.setProperty("user", "spark")
+prop.setProperty("password", "spark") 
+ 
+//jdbc mysql url - destination database is named "data"
+val url = "jdbc:postgresql://localhost:5432/northwind"
+ 
+//destination database table 
+val table = "happy_client"
+ 
+# write data from spark dataframe to database
+# this create a new table (happy_client) in data base 
+df.write.jdbc(url, table, prop)
+
+#if you want to insert a dataframe to an existing table, you have to add .mode("append")
+df.write.mode("append").jdbc(url,table,prop)
+</code>
+
+The mode() method specifies how to handle the database insert when then destination table already exists. The default behavior is for Spark to create and insert data into the destination table. If the table already exists, you will get a TableAlreadyExists Exception. In order to write to an existing table you must use mode("append") as in the example above.

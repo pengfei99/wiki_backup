@@ -1,0 +1,36 @@
+====== Utiliser un gestionnaire de paramètres ======
+
+<WRAP round info>
+Déjà présent dans certaines distribution de Symfony.
+</WRAP>
+
+Il suffit d'utiliser [[https://github.com/Incenteev/ParameterHandler|ParameterHandler]].
+
+<code json composer.json>
+{
+    "require": {
+        […]
+        "incenteev/composer-parameter-handler": "~2.0"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            […]
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "post-update-cmd": [
+            […]
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "extra": {
+        […]
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        }
+    }
+}
+</code>
+
+    $ composer update
+    […]
+    $ bzr ci -m "Mise en place de Incenteev/ParameterHandler"

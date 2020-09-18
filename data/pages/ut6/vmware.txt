@@ -1,0 +1,52 @@
+====== VMware ======
+
+[[https://www.vmware.com/products/vsphere/|vSphere]] est une suite logiciel fournissant une solution de virtualisation complète.
+
+===== Hyperviseur ESXi sur PowerEdge T110 II =====
+
+
+===== Les VMs disponibles =====
+
+
+La liste complète peut être consultée directement depuis l'interface de contrôle. Certaines d'entre elles ont une [[/vms|page dédiée]] du wiki.
+
+==== Installation ====
+
+L'installation de l'hyperviseur se fait facilement avec le fichier ''VMware-VMvisor-Installer-5.5.0.update01-1623387.x86_64.iso'' installé sur une clé USB grâce à [[http://unetbootin.sourceforge.net/|UNetbootin]].
+
+==== Application de correctifs ====
+
+Même la version la plus récente doit être patchée avec les correctifs les plus récents comme décrit dans [[http://www.itadmintools.com/2012/02/howto-patch-vmware-vsphere-esxi-50-free.html|cet article]].
+
+==== Attribution d'une licence ====
+
+L'attribution de la clé de licence (gratuite pour l'hyperviseur seul) se fait comme suit : cliquer sur l'hôte, allez à l'onglet ''configuration'', cliquer ''Fonctions autorisées'' puis ''Modifier...''.
+
+{{ut6:pt6:vmware:attribution_de_licence_vmware.png?nolink&800 |}}
+
+===== Instanciation d'une VM Centos 7 =====
+
+  * Choisir un nom qui respecte [[/groupe/regles_de_nommages_des_serveurs|la convention de nommage]]
+  * Choisir une adresse IP disponible dans [[http://racktables.bioaster.local/racktables/index.php?page=ipv4space|le racktable]]
+  * Dans ''Home > Inventory > VMs and Templates'', dans l'arborescence ''Bioaster > Villeurbanne > Templates'' faire un clic droit sur ''Template Centos 7'' et choisir ''Deploy virtual machine from this template''
+  * Dans le wizard, choisir : un nom et un localisation, un cluster, un stockage et ne pas activer la customization
+  * Une fois la machine construite et démarrée, faire clic droit "Edit Settings", cliquer sur la carte réseau et dans le cadre "Network Connection" du périphérique "Network adapter" mettre ''dvPortServer-Scientific'' (ou le réseau correspondant à l'IP choisie).
+  * On peut s'y loguer via la console du vCenter avec le l'utilisateur ''bioaster''
+  * On utilise l'outil ''nmtui'' pour définir une adresse IP, une passerelle par défaut, des DNS et un nom de machine
+  * On utilise [[https://gitlab.in2p3.fr/bioaster/ansible|ansible]] pour continuer la configuration de la machine…
+
+===== Sauvegarde des disques des VMs =====
+
+L'option de sauvegarde automatique n'est disponible que depuis le client web de vSphere : https://vc2.bioaster.local:9443/vsphere-client/
+
+  * **Login** : bioaster.local\<login_windows>
+  * **Mdp** : <mdp_windows>
+
+<code>
+- Vsphere Data Protection
+- Apliance Vsphere data protection 5.8 > Connect
+- Sauvegarde / Backup
+- Selectionner Sytem Only
+- Actions de la procédure de sauvegarde
+- Modifier et ajouter les disques à sauvegarder à la liste existante
+</code>

@@ -1,0 +1,37 @@
+====== Flume Features and limitations ======
+
+===== Features =====
+
+Flume is an opensource project and well documented. Below is a list of the flume features
+
+  * **Latency** Apache Flume offers high throughput with lower latency.
+  * **Configuration** Flume has a very declarative configuration for declaring data flow.
+  * **Data Flow** In Hadoop environments, Flume works with streaming data sources which are generated continuously. Such as log files.
+  * **Routing** Generally, Flume looks at the payload such as stream data or event. Also, construct a routing which is apt.
+  * **Inexpensive** While it comes to maintain Flume, we can say less costly to install, operate and maintain.
+  * **Fault Tolerance and Scalable** Apache Flume is highly extensible, reliable, available, horizontally scalable as well as customizable for different sources and sinks. However, that helps in collecting, aggregating and moving a large number of datasets. For example Facebook, Twitter and e-commerce websites.
+  * **Distributed** It is inherently distributed in nature.
+  * **Reliable Message Delivery** It offers reliable message delivery. Basically, in Flume the transactions are channel-based where two transactions (one sender & one receiver) are maintained for each message.
+  * **Streaming** It gives us a solution which is reliable and distributed and helps us to ingest online streaming data from various sources (network traffic, social media, email messages, log files etc) in HDFS.
+  * **Steady Flow** Flume offers a steady flow of data if the read the write rate, between reading and write operations.
+
+===== Limitations =====
+
+As we know if there are advantages, there are also disadvantages. So let’s discuss disadvantages of Apache Flume which are pulling it down on certain aspects. Such as:
+  * **Weak Ordering Guarantee**: While it comes to ordering guarantee, Apache flume is very weak in it.
+  * **Duplicacy**: In many scenarios, Flume does not guarantee that message reaching is unique. However, it is a possibility that duplicate messages might pop in at times.
+  * **Low Scalability** There is a slight possibility that for an enterprise, sizing the hardware of a typical Flume can be tricky, and in most cases, it’s trial and error. Hence, its scalability aspect is often low.
+  * **Reliability issues** When the choice of backing store is not chosen wisely considering all factors, scalability and reliability are under question.
+
+
+===== Flume known issues =====
+ 
+==== Handling Agent Failures ====
+Basically, all the flows hosted on that agent are aborted, if the Flume agent goes down. However, as soon as the agent is restarted, then the flow will resume. By using file channel or other stable channels, the flow will resume processing events where it left off. Also, we have an option to migrate the database to another hardware and set up a new Flume agent that can resume processing the events saved in the DB, if the agent can’t be restarted on the same hardware. In addition, to move the Flume agent to another host database HA futures can be leveraged.
+
+==== Flume Compatibility ====
+
+===== Flume use case =====
+https://data-flair.training/blogs/flume-use-cases/
+
+

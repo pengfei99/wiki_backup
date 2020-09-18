@@ -1,0 +1,26 @@
+ <span class="coMULTI">/* If we want to replace the 20% by space in the request, we can use the regexp_replace*/</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> betterView <span class="sy0">=</span> mostViewedPage.<span class="me1">select</span><span class="br0">&#40;</span>regexp<span class="sy0">_</span>replace<span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span>, <span class="st0">&quot;%20&quot;</span>, <span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>.<span class="me1">alias</span><span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>, $<span class="st0">&quot;count&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+     <span class="coMULTI">/* refine data frame, only keep product name, and rename column name*/</span>
+&nbsp;
+    <span class="coMULTI">/*Here we use a interesting spark sql function substring_index to get the product name
+    * substring_index(str, delim, count) : Returns the substring from str before count occurrences of the delimiter
+    *          delim. If count is positive, everything to the left of the final delimiter (counting from the left) is
+    *          returned. If count is negative, everything to the right of the final delimiter (counting from the right)
+    *          is returned.
+    *
+    * For example, if we want to keep the head of the string(www), then we do the following
+    * SELECT substring_index('www.apache.org', '.', 1);
+    * If we want to keep the tail of the string(org), then we do the following
+    * SELECT substring_index('www.apache.org', '.', -1);
+    * */</span>
+   <span class="coMULTI">/* After analysis, we found we have false data in access log, so we want to remove all lines which has &quot;add_to_cart&quot;
+    * as product_name, we use filter() which takes boolean expression as argument, notice we can't use ! for negation
+    * here, we need to use not()
+    * */</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> productVisitNumber <span class="sy0">=</span> betterView
+        .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;product_name&quot;</span>,substring<span class="sy0">_</span>index<span class="br0">&#40;</span>col<span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>,<span class="st0">&quot;/&quot;</span>,-<span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        .<span class="me1">withColumnRenamed</span><span class="br0">&#40;</span><span class="st0">&quot;count&quot;</span>,<span class="st0">&quot;view_number&quot;</span><span class="br0">&#41;</span>
+        .<span class="me1">drop</span><span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>
+        .<span class="me1">filter</span><span class="br0">&#40;</span>not<span class="br0">&#40;</span>$<span class="st0">&quot;product_name&quot;</span>.<span class="me1">contains</span><span class="br0">&#40;</span><span class="st0">&quot;add_to_cart&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        .<span class="me1">select</span><span class="br0">&#40;</span><span class="st0">&quot;product_name&quot;</span>,<span class="st0">&quot;view_number&quot;</span><span class="br0">&#41;</span>

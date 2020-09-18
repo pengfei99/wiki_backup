@@ -1,0 +1,107 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm04">BIOA-2014-VM04</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BIOA-2014-VM04" [1-30] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Machine qui héberge un serveur <a href="/in2p3/logiciels/wwwblast" class="wikilink1" title="in2p3:logiciels:wwwblast">wwwblast</a> mis en place pour Samuel BELLAIS.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/vms/vmware/bioa-2014-vm04?do=backlink" class="wikilink1" title="vms:vmware:bioa-2014-vm04">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [31-268] -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Contacts" [269-340] -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : Debian 7 </div>
+</li>
+<li class="level1"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1024Mo</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 8Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:56:91:AA</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : 192.168.0.5</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations Techniques" [341-568] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Installation" [569-594] -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text"># Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail &quot;root&quot;;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Système de base" [595-1023] -->
+<h3 class="sectionedit7" id="wwwblast">wwwBlast</h3>
+<div class="level3">
+<pre class="code text">cd /var/www
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/wwwblast-2.2.26-x64-linux.tar.gz
+tar xvzf wwwblast-2.2.26-x64-linux.tar.gz
+mv blast wwwblast</pre>
+<pre class="code text">$ aptitude install tcsh
+$ aptitude install apache2
+$ vim /etc/apache2/sites-available/wwwblast
+  &lt;VirtualHost *:80&gt;
+      ServerName wwwblast.paris.bioaster.org
+      DocumentRoot /var/www/wwwblast
+&nbsp;
+      SetEnv BLASTDB /var/www/wwwblast/db
+&nbsp;
+      # Paths to resources are hardcoded to &quot;../blast/&quot;
+      Alias /blast /var/www/wwwblast 
+&nbsp;
+      &lt;Directory /var/www/wwwblast&gt;
+          Options FollowSymLinks ExecCGI
+          DirectoryIndex index.html index.cgi
+          AddHandler cgi-script .cgi .pl
+      &lt;/Directory&gt;
+  &lt;/VirtualHost&gt;</pre>
+
+</div>
+<!-- EDIT7 SECTION "wwwBlast" [1024-1807] -->
+<h2 class="sectionedit8" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.08.07 (tlc)</strong> Installation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Journal" [1808-] -->

@@ -1,0 +1,20 @@
+=== Principes ===
+Tentakel est un outil d'administration de cluster du type sans agent.\\
+Il s'appuie sur le package tentakel installé sur le serveur d'administration et sur les clés ssh distribuées sur les machines à administrer.\\
+L'outil permet de passer, en parallèle la même commande sur un groupe de serveurs.\\
+Le fichier de configuration est /etc/tentakel.conf\\
+
+=== Exemples ===
+
+# donne le uptime de tous les serveurs configurés\\
+tentakel uptime\\
+
+# liste les vulnérabilités sur les serveurs BSD avec la derniere liste connue\\
+tentakel -g FreeBSD pkg audit -F\\
+
+# liste les sessions ouvertes sur les linux de PT\\
+tentakel -g LinuxPT who\\
+
+# vérifie la version de perl installée sur l'ensemble des linux\\
+tentakel -g Linux "perl -v | grep built"\\
+

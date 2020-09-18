@@ -1,0 +1,42 @@
+====== SOAPdenovo2 ======
+
+===== Informations =====
+
+  * **Version** : r240
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://soap.genomics.org.cn/soapdenovo.html]]
+  * **Description** : SOAPdenovo is a novel short-read assembly method that can build a de novo draft assembly for the human-sized genomes. The program is specially designed to assemble Illumina GA short reads. It creates new opportunities for building reference sequences and carrying out accurate analyses of unexplored genomes in a cost effective way. Now the new version is available. SOAPdenovo2, which has the advantage of a new algorithm design that reduces memory consumption in graph construction, resolves more repeat regions in contig assembly, increases coverage and length in scaffold construction, improves gap closing, and optimizes for large genome. 
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export BIN_DIR="${SOFTWARE}/apps/gcc-RedHat_4.4.7-3/soapdenovo2/r240/bin"
+mkdir -p $BIN_DIR
+cd $SOFTWARE/src
+wget "http://downloads.sourceforge.net/project/soapdenovo2/SOAPdenovo2/src/r240/SOAPdenovo2-src-r240.tgz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fsoapdenovo2%2Ffiles%2FSOAPdenovo2%2Fsrc%2Fr240%2F&ts=1390901240&use_mirror=netcologne" -O SOAPdenovo2-src-r240.tgz
+tar xvzf SOAPdenovo2-src-r240.tgz
+cd SOAPdenovo2-src-r240
+make
+mv SOAPdenovo-* $BIN_DIR
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Short Oligonucleotide Analysis Package.\n"
+}
+
+set version "r240"
+
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/soapdenovo2/${version}/bin"
+
+prepend-path PATH $bin_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version r240 installée

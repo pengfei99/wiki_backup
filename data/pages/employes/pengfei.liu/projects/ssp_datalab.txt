@@ -1,0 +1,24 @@
+====== SSP DataLab ======
+
+service statistique public (SSP) datalab is realized inside INSEE. Its objective is to provide a platform for data scientist.   
+
+The challenge is to create a cloud based platform which provides tools and techniques for data storage, cleaning, analysis, and so on. 
+
+
+===== Tech choice =====
+
+We have choose **containers** instead of **Virtual Machines**.
+
+Containers are often compared to Virtual Machines (VMs), since both of them allow multiple types of software to be run in contained environments.
+
+Containers are an abstraction of the application layer (meaning that each container simulates a different software application). Though each container runs isolated processes, multiple containers share a common Operating System.
+
+VMs are an abstraction of the hardware layer (meaning that each VM simulates a physical machine that can run software). VM technology can use one physical server to run the equivalent of many servers (each of which is called a VM). So, while multiple VMs run on one physical machine, each VM has its own copy of an Operating System, applications and their related files, libraries and dependencies.
+
+Running software in containerized environments generally uses less space and memory than running software within different VMs, since the latter requires a separate copy of the Operating System to run on each VM.
+
+
+===== SSP datalab(cloud) architecture =====
+
+The core of SSP datalab is a web application called **ONYXIA**. It has an api backend which can connect to a k8s or mesos cluster and a UI which allows users to deploy services on the backend container cluster.
+

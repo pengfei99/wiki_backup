@@ -1,0 +1,8 @@
+# Pour changer le clavier en azerty
+$ yast2
+# Hardware &gt; System Keyboard Layout
+&nbsp;
+# Supression des message d'erreur &quot;martiens&quot;
+$ vim /etc/sysctl.conf
+  # net.ipv4.conf.eth0.log_martians = 0
+  # net.ipv4.conf.wlan0.log_martians = 0

@@ -1,0 +1,135 @@
+
+<h1 class="sectionedit1" id="reset_root_password_for_mysql_or_mariadb">Reset root password for MySql or MariaDB</h1>
+<div class="level1">
+
+<p>
+Forgetting passwords happens to the best of us. If you forget or lose the root password to your MySQL or MariaDB database, you can still gain access and reset the password if you have access to the server and a sudo-enabled user account.
+</p>
+
+<p>
+This tutorial will cover how to reset the root password for older and newer versions of MySQL and MariaDB.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Reset root password for MySql or MariaDB" [1-402] -->
+<h2 class="sectionedit2" id="prerequisites">Prerequisites</h2>
+<div class="level2">
+
+<p>
+Access to the Linux server running MySQL or MariaDB with a sudo user.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Prerequisites" [403-501] -->
+<h2 class="sectionedit3" id="step_1_check_version">Step 1. check version</h2>
+<div class="level2">
+
+<p>
+Based on different version, you will need different commands to reset the password. So you need to know which version of your server is
+</p>
+<pre class="code">mysql --version</pre>
+
+</div>
+<!-- EDIT3 SECTION "Step 1. check version" [502-705] -->
+<h2 class="sectionedit4" id="step2_stop_the_server">Step2. Stop the server</h2>
+<div class="level2">
+<pre class="code">#for mysql
+sudo systemctl stop mysql
+
+#for mariadb
+sudo systemctl stop mariadb</pre>
+
+</div>
+<!-- EDIT4 SECTION "Step2. Stop the server" [706-836] -->
+<h2 class="sectionedit5" id="step3_restarting_the_server_without_permission_checking">Step3. Restarting the server without permission checking</h2>
+<div class="level2">
+
+<p>
+If you run MySQL and MariaDB without loading information about user privileges, it will allow you to access the database command line with root privileges without providing a password. This will allow you to gain access to the database without knowing it.
+</p>
+
+<p>
+To do this, you need to stop the database from loading the grant tables, which store user privilege information. Because this is a bit of a security risk, you should also skip networking as well to prevent other clients from connecting.
+</p>
+
+<p>
+Start the database without loading the grant tables or enabling networking:
+</p>
+<pre class="code"># start server
+sudo mysqld_safe --skip-grant-tables --skip-networking &amp;
+
+# connect to the server
+mysql -u root</pre>
+
+</div>
+<!-- EDIT5 SECTION "Step3. Restarting the server without permission checking" [837-1605] -->
+<h2 class="sectionedit6" id="step4_change_the_password">Step4. change the password</h2>
+<div class="level2">
+
+<p>
+One simple way to change the root password for modern versions of MySQL is using the ALTER USER command. However, this command won&#039;t work right now because the grant tables aren&#039;t loaded.
+</p>
+
+<p>
+Let&#039;s tell the database server to reload the grant tables by issuing the FLUSH PRIVILEGES command.
+</p>
+<pre class="code">mysql &gt; FLUSH PRIVILEGES;</pre>
+
+<p>
+For MySQL 5.7.6 and newer as well as MariaDB 10.1.20 and newer, use the following command.
+</p>
+<pre class="code">mysql &gt; ALTER USER &#039;root&#039;@&#039;localhost&#039; IDENTIFIED BY &#039;new_password&#039;;</pre>
+
+<p>
+For MySQL 5.7.5 and older as well as MariaDB 10.1.20 and older, use:
+</p>
+<pre class="code">mysql &gt; SET PASSWORD FOR &#039;root&#039;@&#039;localhost&#039; = PASSWORD(&#039;new_password&#039;);</pre>
+
+<p>
+<strong>Make sure to replace new_password with your new password of choice.</strong>
+</p>
+
+<p>
+Note: If the ALTER USER command doesn&#039;t work, it&#039;s usually indicative of a bigger problem. However, you can try UPDATE … SET to reset the root password instead
+</p>
+<pre class="code">UPDATE mysql.user SET authentication_string = PASSWORD(&#039;new_password&#039;) WHERE User = &#039;root&#039; AND Host = &#039;localhost&#039;;</pre>
+
+<p>
+Remember to reload the grant tables after this.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Step4. change the password" [1606-2726] -->
+<h2 class="sectionedit7" id="step_5_stop_the_server_and_restart_it_normally">Step 5. stop the server and restart it normally</h2>
+<div class="level2">
+
+<p>
+First, identify the mysqld_safe process id
+</p>
+<pre class="code">&gt; ps aux | grep mysqld_safe
+root     20550  0.0  0.0 113260  1600 pts/0    T    09:40   0:00 /bin/sh /bin/mysqld_safe --skip-grant-tables --skip-networking
+root     20877  0.0  0.0 112660   980 pts/0    S+   09:50   0:00 grep --color=auto mysqld_safe</pre>
+
+<p>
+The process id is 20550
+</p>
+<pre class="code">kill -9 20550</pre>
+
+<p>
+To bring the background process to foreground use <strong>fg</strong>
+</p>
+
+<p>
+Restart the server
+</p>
+<pre class="code">#for mysql
+sudo systemctl start mysql
+
+#for mariadb
+sudo systemctl start mariadb
+
+# connect to the server as root
+mysql -u root -p</pre>
+
+</div>
+<!-- EDIT7 SECTION "Step 5. stop the server and restart it normally" [2727-] -->

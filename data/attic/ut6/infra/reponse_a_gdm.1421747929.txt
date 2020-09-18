@@ -1,0 +1,109 @@
+====== Annexe Technique ======
+
+<WRAP round todo>
+TLC : reprendre en « mots » le schéma produit par GDM.
+
+Décrire ce qui est fourni par Pasteur, pas ce que nous mettrons en place derrière.
+</WRAP>
+
+===== Hébergement =====
+
+L’IP fournit des **emplacements** (en U) pour installer du matériel informatique actif dans un ou plusieurs rack de son/ses datacenter(s).\\
+L’IP fournit de l’**électricité** ondulé et redondé, assure le refroidssement des équipements.\\
+L’institut pasteur assurera le **câblage** entre les équipements de bordure BIOASTER et le réseaux de l’IP.\\
+Le cablage à l’intrieur de « l’enclave » Bioaster sera assuré par BIOASTER.\\
+L'IP met à disposition X adresses **IP publiques** qui sont routées vers les pare-feu de BIOASTER.
+
+<WRAP round todo>
+MR : Comment on intervient en salle pour installer nos équipements, en rajouter…\\
+En cas de panne sur un équipement BIOASTER, qui intervient ? comment ? qui fait la levé de doute ? (Ex : Il y a une alim en vrac sur un serveur et Tanguy est en vacances ! C’est qqlchose qui arrive souvent, pas assez critique pour secouer toute l’équipe de l’IP mais assez pour devoir intervenir en salle et faire qql test de bracner /débrancher.)\\
+<color red>**[ Nicolas ]**</color> Pour rappel, l'IP n'est pas partant pour donner à BIOASTER un accès à la salle machine. A priori, toute intervention se fera en présence d'un membre de la DSI de l'IP avec un déclaration préalable. Les conditions sont à préciser dans le document.
+</WRAP>
+
+
+Les conditions de facturation sont décrites en annexe.\\
+<WRAP round todo>
+<color red>**[ Nicolas ]**</color> Les conditions de facturation sont plutôt décrite dans le corps de la convention sur la base de l'annexe technique. A voir avec Loïc.
+</WRAP>
+===== VLANs =====
+
+Les équipes de l'IP propagent les VLANs BIOASTER sur leurs switchs.
+
+<WRAP round todo>
+MR : Un point à peut-être clarifier est l’affectation des VLANs sur les ports. Est-ce que c’est fait en manuel ou en automatique sur MAC address via des solutions basées sur du NAC ou 802.1X ?
+</WRAP>
+
+Les premiers VLANs à créer sont :
+
+  * **Bureautique :** pour tous les PCs de bureau ;
+  * **Invités :** Le VLAN accessibles par les invités qui se connectent au réseau Wi-Fi.
+  * **Laboratoire :** pour tous les PCs de laboratoire et les instruments devant être reliés directement à internet.
+
+<WRAP round todo>
+TLC : À mettre en place au plus vite, car les instruments sont pour l'instant hors ligne.
+</WRAP>
+
+Tous les services de niveau 3 (passerelle par défaut, DNS, DHCP, ACL pour le filtrage…)  sont gérés par BIOASTER.
+
+===== Connexion RENATER =====
+
+<WRAP round info>
+GDM : A court/moyen terme l'IP ne prévoit pas d'acquérir un lien RENATER dédié pour les flux réseau entre Pasteur et d'autres sites de la communauté enseignement/recherche eux-mêmes raccordés à RENATER. 
+</WRAP>
+
+L'IP continuera utilise son unique lien RENATER pour absorber tout le trafic réseau :
+  * entre le campus Pasteur (y compris les machines BIOASTER) et les sites de la communauté (IN2P3 par exemple) ;
+  * entre le campus Pasteur (y compris les machines BIOASTER) et “le reste d'Internet”.
+
+<WRAP round todo>
+MR : C’est un peu l’inconnu : l’infra et le routage vers le CC. Comment d’un subnet privé Pasteur, on arrive au CC sur notre infra BIOASTER et les  services hébergés au CC ?
+
+Je vois deux choses à mettre en place :
+
+  * Un VPN entre le FW BIOASTER Paris et FW BIOATER CC pour l’infra SOCLE ;
+  * Du Routage + NAT avec une IP publique Pasteur sur les services hébergés au CC.
+ 
+Par contre, j’imagine que le flux transite en clair sur RENATER. donc nécessite l’utilisation de services chiffrés.
+
+Autre option, on passe tout dans le VPN, on dés-encapsule sur le VPN coté CC et on route + NAT en local avec une IP publique fournie par le CC ?
+</WRAP>
+
+
+===== Bande passante =====
+
+Comme mentionné plus haut, tout le trafic entre les machines BIOASTER présentes sur le campus Pasteur et le monde extérieur passera par notre unique lien RENATER.
+
+<WRAP round info>
+GDM : Nous n'aurons pas de lien dédié haut débit vers l'IN2P3. Donc vos flux de réplication pour la tolérance de panne transiteront via notre accès Internet, et donc oui il faudra mettre en place une limitation de bande passante pour que les flux réseau BIOASTER n'écrasent pas le lien au détriment du reste du trafic réseau entre Pasteur et l'extérieur.
+</WRAP>
+
+La limitation de bande passante pour BIOASTER se situe à 50Mb/s. Celle-ci est configurée sur les équipements IP, au niveau du pare-feu.
+
+La limite peut être modifiée avec un préavis de X jours.
+
+Les détails de facturation sont en annexe.
+
+===== Transfert de données entre les instituts =====
+
+Transfert de données entre les instruments de l'Institut Pasteur et les serveurs sur le réseau BIOASTER.
+
+<WRAP round todo>
+GDM : Dans l'architecture logique, les différents VLANs BIOASTER seront dans une zone de sécurité ne permettant pas de dialoguer directement avec le réseau interne Pasteur. Donc ce type d'échanges de données devra transiter via un service “public” exposé par Pasteur. Par exemple “dl.pasteur.fr” qui est un service de partage de fichiers qui sera accessible à la fois depuis les postes BIOASTER et les postes Pasteur.
+</WRAP>
+
+<WRAP round todo>
+NS : mise en place d'une DMZ privée entre les 2 réseaux.
+
+MR : Les subnets privés doivent être fournis par l’IP pour éviter tout risque d’overlaping. Ainsi, on se laisse la possibilité technique de router de chez eux vers chez nous.\\
+//Q?// : Comment on (à l’informatique) formalise les demandes vers les équipes de l’IP. (Ex : il faut transporter un vlan, changer un vlan sur un port…)
+</WRAP>
+ 
+===== Wi-Fi =====
+
+Les trois routeurs Wi-Fi installés dans les locaux de BIOASTER sont administrés par l'IP. Le serveur Wi-Fi central délègue l'authentification au //Radius// de BIOASTER.
+
+<WRAP round important>
+GDM : Attention néanmoins, cela veut dire que votre serveur Radius doit être visible depuis notre infra, donc vraisemblablement qu'il faudra lui réserver une des IP publiques parmi le pool que nous vous attribuerons.
+</WRAP>
+
+BIOASTER (via les logins Pasteur) a accès à l'interface de création de « tickets d'accès pour les invités » permettant de créer des codes d'identification temporaires à usage unique.

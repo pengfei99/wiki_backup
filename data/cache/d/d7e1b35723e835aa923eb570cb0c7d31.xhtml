@@ -1,0 +1,66 @@
+
+<h1 class="sectionedit1" id="irods">iRODS</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "iRODS" [1-21] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 4.0.3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : <em>Open Source</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://irods.org" class="urlextern" title="http://irods.org"  rel="nofollow">http://irods.org</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : The Integrated Rule-Oriented Data System (iRODS) is an open-source data management software in use at research organizations and government agencies worldwide.  iRODS is a production-level distribution aimed at deployment in mission critical environments.  It functions independently of storage resources and abstracts data control away from storage devices and device location allowing users to take control of their data.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [22-592] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+Instructions sur : <a href="https://github.com/irods/irods/blob/master/manual.rst#icat-server" class="urlextern" title="https://github.com/irods/irods/blob/master/manual.rst#icat-server"  rel="nofollow">https://github.com/irods/irods/blob/master/manual.rst#icat-server</a>
+</p>
+
+<p>
+Le script qui teste la base de données vérifie la présence d&#039;un texte en anglais, il faut donc faire attention aux <code>locales</code>.
+</p>
+<pre class="code">#Installer les dépendances manuellement avant ou automatiquement après
+#aptitude install postgresql openssl python super postgresql-client odbc-postgresql unixodbc libcurl3-gnutls
+dpkg -i irods-icat-4.0.3-64bit.deb
+dpkg -i irods-database-plugin-postgres-1.3.deb
+#apt-get -f install
+
+dpkg-reconfigure locales
+/var/lib/irods/packaging/setup_irods.sh</pre>
+
+<p>
+Installation de iDrop : <a href="http://irods.org/post/idrop-web-demo/#.VB_Lmvl_uCk" class="urlextern" title="http://irods.org/post/idrop-web-demo/#.VB_Lmvl_uCk"  rel="nofollow">http://irods.org/post/idrop-web-demo/#.VB_Lmvl_uCk</a>
+</p>
+<pre class="code">sudo apt-get install openjdk-6-jdk tomcat6
+sudo mkdir /etc/idrop-web
+sudo wget -P /etc/idrop-web https://code.renci.org/gf/download/frsrelease/217/2372/idrop-web-config2.groovy</pre>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/irods?codeblock=2" title="Download Snippet" class="mediafile mf_groovy">/etc/idrop-web/idrop-web-config2.groovy</a></dt>
+<dd><pre class="code text">idrop.config.preset.host=&quot;host.domain.tld&quot;
+idrop.config.preset.port=&quot;1247&quot;
+idrop.config.preset.zone=&quot;BIOUSTER&quot;
+//idrop.config.preset.resource=&quot;demoResc&quot;
+idrop.config.preset.authScheme=&quot;Standard&quot;</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [593-1734] -->
+<h2 class="sectionedit4" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.09.22 (tlc)</strong> Version 4.0.3 en test sur une VM</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Log" [1735-] -->

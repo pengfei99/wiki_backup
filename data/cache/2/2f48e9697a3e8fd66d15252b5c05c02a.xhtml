@@ -1,0 +1,90 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm01">BIOA-2014-VM01</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BIOA-2014-VM01&quot;,&quot;hid&quot;:&quot;bioa-2014-vm01&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Cette machine sert de point d&#039;accès au réseau virtuel de Paris.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/doku.php?id=vms:vmware:bioa-2014-vm01&amp;do=backlink" class="wikilink1" title="vms:vmware:bioa-2014-vm01">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-229&quot;} -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Contacts&quot;,&quot;hid&quot;:&quot;contacts&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;230-301&quot;} -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : <a href="https://www.pfsense.org/" class="urlextern" title="https://www.pfsense.org/" rel="nofollow">pfSense</a></div>
+</li>
+<li class="level1 node"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 2Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:6C:37:BC / 00:0C:29:6C:37:C6</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : 157.99.42.13</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Informations Techniques&quot;,&quot;hid&quot;:&quot;informations_techniques&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;302-574&quot;} -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+Le système s&#039;installe seul en suivant le <em>wizard</em>. Il faut ensuite un client (navigateur web) sur le réseau local (192.168.0.1) pour accéder à l&#039;interface de configuration web.
+</p>
+
+<p>
+Le module supplémentaire <code>Open-VM-tools</code> doit être installé depuis le menu <code>System &gt; Packages</code>. 
+</p>
+
+<p>
+Le configuration peut-être chargée depuis le menu <code>Diagnostics &gt; Backup/Restore</code> en utilisant le <a href="/lib/exe/fetch.php?media=ut6:machines_virtuelles:config-pfsense.paris.bioaster.org-20140618160903.xml.zip" class="media mediafile mf_zip" title="ut6:machines_virtuelles:config-pfsense.paris.bioaster.org-20140618160903.xml.zip (7.3 KB)">fichier de sauvegarde</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Installation&quot;,&quot;hid&quot;:&quot;installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;575-1099&quot;} -->
+<h2 class="sectionedit6" id="interface_web_d_administration">Interface web d&#039;administration</h2>
+<div class="level2">
+
+<p>
+Celle-ci n&#039;est disponible que depuis le réseau interne. Depuis l&#039;ESXi, on lance la VM <code>Client</code> et on se connecte en tant que <code>bioaster/bioaster</code>. L&#039;IP pour accéder au service est 192.168.0.1. C&#039;est la page d&#039;accueil du client web <code>iceweasel</code>. Le mot de passe pour le compte <code>admin</code> est dans le KeePass sous <code>Hôtes ESXi &gt; MiniServeur &gt; pfsense</code>.
+</p>
+
+<p>
+Depuis l&#039;interface, on peut procéder à la configuration du réseau et appliquer les mises à jour.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Interface web d&#039;administration&quot;,&quot;hid&quot;:&quot;interface_web_d_administration&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1100-1604&quot;} -->
+<h2 class="sectionedit7" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.06.17 (tlc)</strong> Installation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Journal&quot;,&quot;hid&quot;:&quot;journal&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1605-&quot;} -->

@@ -1,0 +1,84 @@
+====== Instancier une nouvelle app dans un projet Django existant ======
+
+===== Creation de l'application =====
+
+Pour créer une application, il suffit d'executer la commande suivante :
+<Code>
+$ python manage.py startapp monapplication
+</Code>
+Vous aurez alors dans le dossier monapplication/ sous vos yeux ébahis quelque chose ressemblant fortement à cela :
+<Code>
+monapplication/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+</Code>
+
+Il faudra ensuite ajouter dans le dossier de l'application un fichier urls.py avec ce contenu :
+<Code>
+from django.conf.urls import url
+
+from . import views
+
+
+app_name = 'monapplication'
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+]
+</Code> 
+
+Si vous utilisez le moteur de template Jinja 2 il faudra également rajouter dans votre dossier d'app un fichier index.html à ce path :
+<Code>
+/templates/jinja2/monapplication/index.html
+</Code>
+
+Il vous reste maintenant à renseigner le fichier models.py pour que cela colle avec votre base de données.
+
+
+===== Déclaration de l'application =====
+
+Votre application est maintenant prête à être connue de votre projet global.
+
+Pour cela il va falloir vous rendre dans le fichier /monprojet/monprojet/urls.py et y ajouter la déclaration de votre route principale concernant votre app :
+<Code>
+...
+
+urlpatterns = [
+    ...
+    url(r'^monapplication/', include('core.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+
+...
+</Code>
+
+Et n'oublions pas le fichier /monprojet/monprojet/settings.py où il faudra déclarer l'existance de votre nouvelle app de cette manière :
+<Code>
+...
+
+INSTALLED_APPS = [
+    'monapplication.apps.MonapplicationConfig',
+    ...
+    ...
+    ...
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'debug_toolbar',
+]
+
+...
+</Code>
+
+
+===== Migration de la db =====
+
+Suivre les étapes [[/informatique/developpement/django/creer_un_projet?&#migration_de_la_base_de_donnees_du_projet|décrites ici]].

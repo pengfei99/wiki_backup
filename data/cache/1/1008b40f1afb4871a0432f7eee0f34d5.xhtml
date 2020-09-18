@@ -1,0 +1,215 @@
+
+<h1 class="sectionedit1" id="vm_assemblage_de_novo_utec2">VM ASSEMBLAGE DE NOVO UTEC2</h1>
+<div class="level1">
+
+<p>
+<strong>Demande initiale via <a href="https://helpdesk.bioaster.org/front/ticket.form.php?id=249" class="urlextern" title="https://helpdesk.bioaster.org/front/ticket.form.php?id=249"  rel="nofollow">ce ticket GLPI</a></strong>
+</p>
+
+<p>
+<strong>Adresses IP :</strong>172.17.6.5  <strong>IP Publique :</strong>
+</p>
+
+<p>
+<strong>Infrastructure :</strong> OpenStack CC
+</p>
+
+<p>
+<strong>Image de base :</strong> CentOS7
+</p>
+
+<p>
+<strong>Rôle de déployement Ansible :</strong> server
+</p>
+
+<p>
+<strong>Tenant Open Stack :</strong> htc-bioaster
+</p>
+
+<p>
+<strong>Point de montage GPFS :</strong> /mnt/gpfs
+</p>
+
+<p>
+<strong>Serveur NFS :</strong> ccdtli95
+</p>
+
+<p>
+<strong>Flavor :</strong> htc.bioaster.3 (8 VCPUs, Root Disk 40 <abbr title="Gigabyte">GB</abbr>, Ephemeral Disk 50 <abbr title="Gigabyte">GB</abbr>, RAM 128 <abbr title="Gigabyte">GB</abbr>)
+</p>
+
+<p>
+<strong>Ephemeral :</strong> Monté sur /scratch
+</p>
+
+<p>
+<strong>Logiciels installés :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> A5-pipeline sur GPFS : /sps/bioaster/pt2/Apps/CentOS7/a5_miseq_linux_20150522/</div>
+</li>
+<li class="level1"><div class="li"> <strong>22-07-2016 :</strong> Suite à <a href="https://helpdesk.bioaster.org/front/ticket.form.php?id=1061" class="urlextern" title="https://helpdesk.bioaster.org/front/ticket.form.php?id=1061"  rel="nofollow"> demande de Céline Elie d&#039;une VM application 16S </a></div>
+<ul>
+<li class="level2"><div class="li"> Installation de Xfce et X2go cf <a href="https://wiki.bioaster.org/informatique/centos_xfce_x2go" class="urlextern" title="https://wiki.bioaster.org/informatique/centos_xfce_x2go"  rel="nofollow"> procédure install</a></div>
+</li>
+<li class="level2"><div class="li"> Installation de qiime-deploy dans /opt/ (<a href="https://github.com/qiime/qiime-deploy" class="urlextern" title="https://github.com/qiime/qiime-deploy"  rel="nofollow">https://github.com/qiime/qiime-deploy</a>)</div>
+</li>
+<li class="level2"><div class="li"> qiime full install ⇒ <a href="http://qiime.org/install/install.html" class="urlextern" title="http://qiime.org/install/install.html"  rel="nofollow">http://qiime.org/install/install.html</a></div>
+</li>
+<li class="level2"><div class="li"> RStudio</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Modification des .bashrc de CE, LB, TT et PV pour faire fonctionner la suite logicielle correctement
+</p>
+
+<p>
+Pour tester l&#039;installation complète : 
+</p>
+<pre class="prettyprint lang-class">
+pveyre@denovo-assembly:/opt$ print_qiime_config.py -tf
+
+System information
+==================
+         Platform:	linux2
+   Python version:	2.7.5 (default, Nov 20 2015, 02:00:19)  [GCC 4.8.5 20150623 (Red Hat 4.8.5-4)]
+Python executable:	/usr/bin/python
+
+QIIME default reference information
+===================================
+For details on what files are used as QIIME&#039;s default references, see here:
+ https://github.com/biocore/qiime-default-reference/releases/tag/0.1.3
+
+Dependency versions
+===================
+                QIIME library version:	1.9.1
+                 QIIME script version:	1.9.1
+      qiime-default-reference version:	0.1.3
+                        NumPy version:	1.11.1
+                        SciPy version:	0.17.1
+                       pandas version:	0.18.1
+                   matplotlib version:	1.2.0
+                  biom-format version:	2.1.5
+                         h5py version:	2.3.1 (HDF5 version: 1.8.12)
+                         qcli version:	0.1.1
+                         pyqi version:	0.3.2
+                   scikit-bio version:	0.2.3
+                       PyNAST version:	1.2.2
+                      Emperor version:	0.9.51
+                      burrito version:	0.9.1
+             burrito-fillings version:	0.1.1
+                    sortmerna version:	SortMeRNA version 2.0, 29/11/2014
+                    sumaclust version:	SUMACLUST Version 1.0.00
+                        swarm version:	Swarm 1.2.19 [Jul 22 2016 10:23:22]
+                                gdata:	Installed.
+RDP Classifier version (if installed):	rdp_classifier-2.2.jar
+          Java version (if installed):	Not installed.
+
+QIIME config values
+===================
+For definitions of these settings and to learn how to configure QIIME, see here:
+ http://qiime.org/install/qiime_config.html
+ http://qiime.org/tutorials/parallel_qiime.html
+
+                     blastmat_dir:	/opt/qiime_software/blast-2.2.22-release/data
+      pick_otus_reference_seqs_fp:	/usr/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+                         sc_queue:	all.q
+      topiaryexplorer_project_dir:	None
+     pynast_template_alignment_fp:	/usr/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set_aligned/85_otus.pynast.fasta
+                  cluster_jobs_fp:	start_parallel_jobs.py
+pynast_template_alignment_blastdb:	None
+assign_taxonomy_reference_seqs_fp:	/usr/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+                     torque_queue:	friendlyq
+                    jobs_to_start:	1
+                       slurm_time:	None
+            denoiser_min_per_core:	50
+assign_taxonomy_id_to_taxonomy_fp:	/usr/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
+                         temp_dir:	/tmp/
+                     slurm_memory:	None
+                      slurm_queue:	None
+                      blastall_fp:	/opt/qiime_software/blast-2.2.22-release/bin/blastall
+                 seconds_to_sleep:	1
+
+QIIME full install test results
+===============================
+...........................
+----------------------------------------------------------------------
+Ran 27 tests in 0.100s
+
+OK
+
+</pre>
+<p>
+<strong>ASTUCES</strong>
+</p>
+
+<p>
+Voici les lignes à rajouter dans le .bashrc d&#039;un user pour qu&#039;il puisse faire tourner la suite logicielle QIIME :
+</p>
+<pre class="prettyprint lang-class">
+# EXPORTS NEEDED FOR QIIME
+source /opt/qiime_software/activate.sh
+export PATH=$PATH:/root/AmpliconNoiseV1.27/Scripts:/root/AmpliconNoiseV1.27/bin:/opt/qiime_software/chimeraslayer-4.29.2010-release/ChimeraSlayer:/opt/qiime_software/chimeraslayer-4.29.2010-release/NAST-iEr:/opt/qiime_software/blast-2.2.22-release/bin:/opt/qiime_software/infernal-1.0.2-release/bin:/opt/qiime_software/vienna-1.8.4-release/.:/opt/qiime_software/cdhit-3.1-release/.:/opt/qiime_software/SeqPrep-v1.1-release/.:/opt/qiime_software/rdpclassifier-2.2-release/.:/opt/qiime_software/muscle-3.8.31-release/.:/opt/qiime_software/cytoscape-2.7.0-release/.:/opt/qiime_software/ea-utils-1.1.2-537-release/.:/opt/qiime_software/bwa-0.6.2-release/.:/opt/qiime_software/qiime-galaxy-0.0.1-repository-de3646d3/scripts:/opt/qiime_software/mothur-1.25.0-release/.:/opt/qiime_software/raxml-7.3.0-release/.:/opt/qiime_software/drisee-1.2-release/.:/opt/qiime_software/clearcut-1.0.9-release/.:/opt/qiime_software/cdbtools-10.11.2010-release/.:/opt/qiime_software/sourcetracker-1.0.0-release/.:/opt/qiime_software/blat-34-release/.:/opt/qiime_software/rtax-0.984-release/.:/opt/qiime_software/pprospector-1.0.1-release/bin:/opt/qiime_software/tax2tree-1.0-release/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/AmpliconNoiseV1.27/Scripts:/opt/AmpliconNoiseV1.27/bin
+export PYRO_LOOKUP_FILE=/opt/AmpliconNoiseV1.27/Data/LookUp_E123.dat
+export SEQ_LOOKUP_FILE=/opt/AmpliconNoiseV1.27/Data/Tran.dat
+</pre>
+<p>
+<strong>28-07-2016 Installtion de BEAR et de ses dépendances</strong>
+</p>
+
+<p>
+<a href="https://github.com/sej917/BEAR" class="urlextern" title="https://github.com/sej917/BEAR"  rel="nofollow">https://github.com/sej917/BEAR</a>
+</p>
+
+<p>
+<a href="https://github.com/MG-RAST/DRISEE" class="urlextern" title="https://github.com/MG-RAST/DRISEE"  rel="nofollow">https://github.com/MG-RAST/DRISEE</a>
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_important plugin_wrap" style="width: 100%;">
+<p>
+Deux versions de DRISDEE sont installées :
+</p>
+
+<p>
+1.2 ⇒ /opt/drisee-1.2-release/
+</p>
+
+<p>
+1.5 ⇒ /opt/DRISEE/opt/DRISEE/
+</p>
+
+<p>
+En fonction de la suite logicielle qu&#039;on veut utiliser (QIIME ou BEAR) il faut jouer avec la variable PATH dans votre .bashrc
+</p>
+
+<p>
+ex pour avoir la version 1.5 :
+export PATH=$PATH:/opt/DRISEE
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+<strong>Tester DRISDEE 1.5</strong>
+</p>
+<pre class="prettyprint lang-class">
+pveyre@denovo-assembly:/opt/DRISEE$ ./drisee.py -p 10 -g adapterDB.fna -l example_log -v example_fasta example_fasta.drisee_results &gt; verbose_text
+
+</pre>
+</div>
+<!-- EDIT1 SECTION "VM ASSEMBLAGE DE NOVO UTEC2" [1-6804] -->
+<h2 class="sectionedit4" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.10.31 (pv)</strong> Snapshot réalisé (Nom : denovo_assembly_31-10-2016)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.25 (pv)</strong> Installation de BEAR en local : <a href="https://github.com/sej917/BEAR" class="urlextern" title="https://github.com/sej917/BEAR"  rel="nofollow">https://github.com/sej917/BEAR</a> </div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.25 (pv)</strong> Installation en local de la suite logicielle QIIME complète </div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.04.01 (pv)</strong> Instanciation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Journal" [6805-] -->

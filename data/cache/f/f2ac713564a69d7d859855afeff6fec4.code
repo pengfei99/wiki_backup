@@ -1,0 +1,17 @@
+<span class="re0">dn</span>:<span class="re1"> dc=pengfei,dc=org</span>
+<span class="re0">dc</span>:<span class="re1"> pengfei</span>
+<span class="re0">objectClass</span>:<span class="re1"> top</span>
+<span class="re0">objectClass</span>:<span class="re1"> domain</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> cn=admin ,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalRole</span>
+<span class="re0">cn</span>:<span class="re1"> admin</span>
+<span class="re0">description</span>:<span class="re1"> LDAP Manager</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> ou=Users,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalUnit</span>
+<span class="re0">ou</span>:<span class="re1"> People</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> ou=Groups,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalUnit</span>
+<span class="re0">ou</span>:<span class="re1"> Group</span>

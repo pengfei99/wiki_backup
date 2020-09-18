@@ -1,0 +1,82 @@
+====== Configure mariadb to allow remote access ======
+
+Mariadb by default listen to the loopback network interface (localhost, 127.0.0.1) not the real network interface.
+
+====== Step 1. change the mariadb config file to bind to the real network interface ======
+
+<code>
+# Under centos 7, the config file is at /etc/my.cnf
+
+vim /etc/my.cnf
+
+# comment the line skip-networking, this line will ignor the tcp/ip request from the real network interface
+# add two lines
+
+bind-address = 0.0.0.0
+port =3306
+
+# save the file and restart server
+sudo systemctl restart mariadb.service
+
+# check the network status of mariadb server
+sudo netstat -anp | grep 3306
+
+# you should see something like this
+
+tcp       0      0 0.0.0.0:3306          0.0.0.0:*        LISTEN         3213/mysqld
+</code>
+
+
+
+====== Step 2. Add access rights to clients in mariadb server======
+
+To enable a client to connect to a database, you must grant access to the remote server.
+
+For example, if you wish for a client computer with IP address 10.70.3.18 to connect to a database called test_db as user pliu, then run the commands below after logging onto the database server.
+
+<code>
+# To view all existing authorizations
+
+MariaDB [(none)]> SELECT User, Host FROM mysql.user;
+
++--------------+-------------------------------+
+| User         | Host                          |
++--------------+-------------------------------+
+| root         | 127.0.0.1                     |
+| root         | ::1                           |
+|              | cclinowncloudp01.bioaster.org |
+| root         | cclinowncloudp01.bioaster.org |
+|              | localhost                     |
+| root         | localhost                     |
++--------------+-------------------------------+
+
+# add new authorization rules
+GRANT ALL ON test_db.* TO 'pliu@10.70.3.%' IDENTIFIED BY 'password';
+
+# The above command we don't use the ip 10.70.3.18, we use a wildcard. It means user pliu can connect from 
+# anywhere on the 10.70.3.0/24 lan.
+# if you replace test_db.* by *.*, it means pliu has right on all dbs in this server
+
+</code>
+
+====== Step 3. Configure firewall to allow port 3306 ======
+
+
+<code>
+# add port 3306 permanently
+firewall-cmd --permanent --add-port=3306/tcp
+
+# reload rules to make it effective
+firewall-cmd --reload
+</code>
+
+====== Step 4. connect to server via a remote client ======
+
+<code>
+mysql -h server-ip -u pliu -P 3306 -p test_db
+</code>
+
+ 
+
+
+ 

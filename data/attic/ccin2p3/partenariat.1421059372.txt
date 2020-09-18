@@ -1,0 +1,42 @@
+====== Partenariat avec le CCIN2P3 ======
+
+Cette page regroupe les infos sur la mise en oeuvre technique du partenariat avec le Centre de Calcul de l'IN2P3. L'hébergement de matériel BIOASTER est inclus dans cette mise en oeuvre, bien qu'il fasse l'objet d'un contrat spécifique et indépendant de la convention. 
+
+===== Ressources demandées et ressources disponibles =====
+Demande actuelle : {{pt6:pt6:ccin2p3:bioaster_-_demandes_de_ressources_q4_2014_-_q2_2015.docx|2014/Q4 -> 2015/Q2}}
+
+^Infrastructure                ^      Volume^ Statut ^Remarque^
+|Stockage de fichier sous GPFS |      100 To|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Stockage de fichier sous AFS  |       50 Go|  OK    |Sauvegarde selon les conditions par défaut du CC |
+|Base de données PostgreSQL    |      200 Go|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Base de données MySQL         |      200 Go|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Serveurs de calcul OpenStack  | 2x16 coeurs|  OK    |2 serveurs Dell de 16 coeurs physiques + 768 Go de RAM + 9 To de disque local |
+|Ferme de caclul               | 4x10<sup>6</sup> HS06|  OK    |Workers connectés à AFS et GPFS |
+
+
+===== Vue générale de l'architecture =====
+==== Configuration d'OpenStack ====
+=== Idée directrice ===
+
+Le cloud OpenStack doit être le coeur du système et permettant de déployer à la demande des VM de calculs ou de service. 
+
+=== Configuration actuelle ===
+
+Il existe 2 Tenants associés à BIOASTER :
+  * ''bioaster'' : Tenant de service routé vers l'extérieur. Il peut accéder à Internet et au second Tenant de BIOASTER. Les ressource du Tenant ''bioaster'' sont mutualisées avec les autres Tenants CCIN2P3. le nombre de VM sur ''bioaster'' est limité à 3. 
+  * ''htc_bioaster'' : Tenant dédié au calcul. Il n'est pas routé vers l'extérieur et est uniquement accessible depuis les frontales SSH du CCIN2P3 ou les VM du tenant ''bioaster''. Les ressources du Tenant ''htc_bioaster'' ont été mise à disposition exclusive de de BIOASTER par le CCIN2P3 (cf. demande ci-dessus).  Les limites d'utilisation sont celles des machines physiques hébergeant les VM.
+
+L'accès au Tenant ''htc_bioasetr'' est facilité par l'utilisation du wrapper OpenStack développé par SysFera pour BIOASTER. 
+
+=== Proposition de services à mettre en place ===
+
+BIOASTER prévoit de mettre en place les services suivants :
+
+^Nom ^Fonction ^Infrastructure ^Configuration
+|Wrapper OpenStack |Utilisation du cloud à la façon des lignes de commande Grid Engine | Accessible depuis l'espace commun de BIOASTER sur GPFS | Utilisable depuis les frontales SSH du CCIN2P3 et le Tenant ''bioaster'' |
+|[[http://pegasus.isi.edu/|Pegasus]] |Gestion des flux d'analyse de données | VM déployée sur le tenant ''bioaster'' | Nécessite le déploiement d'[[http://research.cs.wisc.edu/htcondor/|HTcondor]] |
+
+===== Plan de déploiement des services =====
+
+{{tag>à_compléter}}
+{{tag>travail_en_cours}}

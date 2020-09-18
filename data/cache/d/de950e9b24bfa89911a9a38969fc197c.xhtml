@@ -1,0 +1,71 @@
+
+<h1 class="sectionedit1" id="gnu_c_library">GNU C Library</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "GNU C Library" [1-29] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2.19</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="https://www.gnu.org/software/libc/" class="urlextern" title="https://www.gnu.org/software/libc/"  rel="nofollow">https://www.gnu.org/software/libc/</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : The GNU C Library is primarily designed to be a portable and high performance C library. It follows all relevant standards including ISO C11 and POSIX.1-2008. It is also internationalized and has one of the most complete internationalization interfaces known. </div>
+</li>
+</ul>
+<!-- EDIT3 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention</strong> :<br/>
+
+Utiliser une version différente de glibc rend tous les logiciels liés dynamiquement à la version disponible sur le système instables !!
+</p>
+</div><!-- EDIT4 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT2 SECTION "Informations" [30-639] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster&quot;
+export APP=&quot;$SOFTWARE/apps/gcc-RedHat_4.4.7-4/glibc/2.19&quot;
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.gz
+tar xvzf glibc-2.19.tar.gz
+mkdir glibc-2.19-build
+cd glibc-2.19-build
+CFLAGS=&quot;-02&quot; ../glibc-2.19/configure --prefix=&quot;$APP&quot;
+make &amp;&amp; make install</pre>
+
+</div>
+<!-- EDIT5 SECTION "Installation" [640-1014] -->
+<h2 class="sectionedit6" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;The GNU C Library.\n&quot;
+}
+
+set version &quot;2.19&quot;
+
+set app &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-4/glibc/${version}&quot;
+
+prepend-path PATH &quot;${app}/bin&quot;
+prepend-path LIBRARY_PATH &quot;${app}/lib&quot;
+prepend-path LD_LIBRARY_PATH &quot;${app}/lib&quot;
+prepend-path C_INCLUDE_PATH &quot;${app}/include&quot;
+prepend-path CPLUS_INCLUDE_PATH &quot;${app}/include&quot;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Intégration" [1015-1446] -->
+<h2 class="sectionedit7" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.008/22 (tlc)</strong> Version 2.19 installée</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Log" [1447-] -->

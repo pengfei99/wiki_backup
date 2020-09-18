@@ -1,0 +1,10 @@
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> fromFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;fromFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      fromChannel <span class="sy0">=</span> fromFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a> toFile <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+randomaccessfile"><span class="kw3">RandomAccessFile</span></a><span class="br0">&#40;</span><span class="st0">&quot;toFile.txt&quot;</span>, <span class="st0">&quot;rw&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FileChannel      toChannel <span class="sy0">=</span> toFile.<span class="me1">getChannel</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+<span class="kw4">long</span> position <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>  
+<span class="kw4">long</span> count <span class="sy0">=</span> fromChannel.<span class="me1">size</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+toChannel.<span class="me1">transferFrom</span><span class="br0">&#40;</span>position, count, fromChannel<span class="br0">&#41;</span><span class="sy0">;</span>  

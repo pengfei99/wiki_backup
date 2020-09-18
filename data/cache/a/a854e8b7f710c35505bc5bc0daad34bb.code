@@ -1,0 +1,10 @@
+<span class="re0">dn</span>:<span class="re1"> cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">add</span>:<span class="re1"> olcTLSCACertificateFile</span>
+<span class="re0">olcTLSCACertificateFile</span>:<span class="re1"> /etc/openldap/certs/ca-bundle.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateFile</span>
+<span class="re0">olcTLSCertificateFile</span>:<span class="re1"> /etc/openldap/certs/cert.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateKeyFile</span>
+<span class="re0">olcTLSCertificateKeyFile</span>:<span class="re1"> /etc/openldap/certs/privateKey.pem</span>

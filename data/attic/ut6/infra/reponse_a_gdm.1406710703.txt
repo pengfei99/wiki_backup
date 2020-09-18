@@ -1,0 +1,76 @@
+
+Le 24/07/2014 09:32, DE MIRANDA Gabriel a écrit :
+>Le 13/06/2014 09:32, LE CARROUR Tanguy a écrit :
+>> Bonjour,
+>>
+>> Désolé pour l'attente ! Voici notre proposition de schéma, ainsi que quelques commentaires.
+>
+>Bonjour,
+>
+>Voici des réponses concernant le sujet de la future infrastructure Bioaster
+>
+>> Tout d'abord les modifications :
+>>
+>> 1) Multiples VLANs
+>>     Comme nous l'avions évoqué dans une précédente réunion, nous aurions dès à présent besoin d'un second VLAN pour les instruments de laboratoire.
+>>     Nous aurons besoin de plusieurs autres VLANs à l'avenir. Faut-il essayer de les prévoir dès maintenant ?
+
+<color green>[TLC] Et pour le wifi ? Il ne faudrait pas un VLAN "invités" ?</color>
+
+>Sur le principe nous n'avons pas de problème à maintenir un 2ème vlan pour les équipements de labo, et d'autres vlans supplémentaires à l'avenir.
+>Par contre il faut distinguer deux aspects :
+>	- créer simplement le vlan et le propager sur les switchs est assez simple et léger pour nous
+>	- gérer tous les services "niveau 3" associés au vlan (passerelle par défaut, DNS, DHCP, ACL pour le filtrage...) est plus contraignant. Donc si les vlans sont amenés à se multiplier, nous préférerions attendre que vous ayez mis en place votre infra (routeur, firewall) afin de vous laisser gérer toute la partie Niveau 3. La seule chose que nous aurons à faire côté Pasteur serait alors de propager le bon vlan ID sur nos switchs (et encore, c'est seulement dans le cas où le vlan devra sortir de la salle machine)
+>
+>Pour le vlan de labo, si vous en avez vraiment besoin avant que votre infrastructure réseau soit en place, on pourra s'en occuper. On peut voir ensemble les détail (taille du sous-réseau associé etc...)
+
+<color red>[NS] Est-ce qu'on veut dupliquer l'archi réseau de Lyon à Paris? Est-ce qu'on est assez avancé pour savoir exactement ce que l'on veut ?</color>
+
+>> 2) Connexion RENATER
+>>     Nous nous sommes permis de modifier le schéma de raccordement à RENATER, car nous doutions que RENATER arrive directement sur notre firewall, mais peut-être est-ce le cas ?
+>
+>A court/moyen terme nous ne prévoyons pas d'acquérir ce fameux lien Renater dédié pour les flux réseau entre Pasteur et d'autres sites de la communauté enseignement/recherche eux-même raccordés à Renater. Nous continuerons d'utiliser notre unique lien Renater pour absorber tout le trafic réseau :
+>	- entre le campus Pasteur (y compris les machines Bioaster) et les sites de la communauté (IN2P3 par exemple)
+>	- entre le campus Pasteur (y compris les machines Bioaster) et "le reste d'Internet"
+>
+>Du coup, cela à des conséquences sur la partie "limitation de bande passante" ci-dessous
+>
+>Il y a aussi un autre impact potentiel : étant donné qu'il n'y aura pas de lien "privé" dédié entre Pasteur et IN2P3, peut-être voudrez-vous mettre en place un 2ème tunnel IPSec, entre Pasteur et IN2P3, selon le même principe qu'entre Pasteur et Lyon Biopole ? J'ai représenté cette hypothèse dans la dernière version du fichier Visio en P.J.
+
+<color red>[NS] Je laisse les experts réseaux parler.</color>
+
+>> Pour les commentaires :
+>>
+>> 1) La bande passante
+>>     Comme convenu, tout notre flux réseau passera par vos infrastructures et sortira par votre connexion internet (sauf trafic sur RENATER ?).
+>>     Pour le moment l'utilisation de la bande passante devrait être limitée, mais nous envisageons à terme d'héberger des services critiques sur Paris, notamment des services avec tolérance de panne.
+>>     La consommation de bande passante pourrait être dans ce cas assez importante. Devons-nous dès à présent convenir (contractuellement si nécessaire) d'une limite ?
+>>     Si oui, devons-nous l'imposer au niveau de notre firewall, ou l'imposerez-vous au niveau du vôtre ?
+>
+>Comme mentionné plus haut, tout le trafic entre les machines Bioaster présentes sur le campus Pasteur et le monde extérieur, passera par notre unique lien Renater. Nous n'aurons pas de lien dédié haut débit vers l'IN2P3. Donc vos flux de réplication pour la tolérance de panne transiteront via notre accès Internet, et donc oui il faudra mettre en place une limitation de bande passante pour que les flux réseau Bioaster n'écrasent pas le lien au détriment du reste du trafic réseau entre Pasteur et l'extérieur.
+>Notre accès Renater est à 1Gb/s aujourd'hui. Je ne sais pas vraiment où nous pourrions fixer la limite de bande passante accordée à Bioaster. 
+>50Mb/s ? 100Mb/s ? Si vous avez un avis n'hésitez pas !
+>Au niveau technique nous pourrons configurer cette limitation sur nos équipements réseau (sur le lien entre votre firewall et le notre par
+>exemple)
+>En ce qui concerne la partie contractuelle, je ne sais pas dire si cela sera nécessaire. Il faudra voir directement avec Stéphane pour cela.
+
+<color red>[NS] Je propose de commencer à 50 Mb/s ou 100 mb/s, mais en laissant la possibilité de monter au-delà. Il faudrait du coup faire figurer dans le contrat combien de temps ça prend pour changer de débit. De plus, ça serait mieux pour tout le monde si on avait un tarif en fonction du débit. Ca mettrait les choses au claire et nous forcerait à bien réfléchir sur le transit d'information.</color>
+
+>> 2) Firewall BIOASTER sur le réseau Pasteur
+>>     Nous n'avions pas prévu l'achat d'un équipement dédié pour faire office de firewall et nous envisageons d'utiliser dans un premier temps une VM dédiée (OS : pfSense).
+>>     Cela vous pose-t-il à priori un problème ?
+>
+>Pas de problème pour nous
+>
+>> 3) Il faut envisager la possibilité de transférer des données entre un équipement de l'Institut Pasteur et le LAN BIOASTER.
+>
+>Çà c'est plus problématique. Dans notre architecture logique, les différents vlans Bioaster seront dans une zone de sécurité ne permettant pas de dialoguer directement avec le réseau interne Pasteur. Donc ce type de d'échanges de données devra transiter via un service "public" 
+>exposé par Pasteur. Par exemple "dl.pasteur.fr" qui est un service de partage de fichiers qui sera accessible à la fois depuis les postes Bioaster et les postes Pasteur.
+>A part çà nous n'avons pas de solution plus pratique à proposer
+
+<color red>[NS] Peut-on créer un DMZ "privée" entre Pasteur et BIOASTER, mais non exposée à l'extérieur?</color>
+
+>Si quelque chose n'est pas clair, ou si vous avez d'autres questions/suggestions, n'hésitez pas
+>
+>Cordialement,
+>Gabriel

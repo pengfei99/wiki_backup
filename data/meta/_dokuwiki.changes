@@ -1,0 +1,45 @@
+1599809376	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu			1336
+1599812265	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[1. Data Serialization] 		3484
+1599813056	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Configure Spark job to use Kryo as serialization] 		165
+1599813074	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Configure Spark job to use Kryo as serialization] 		4
+1599813544	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[1.1 Configure Spark job to use Kryo as serialization] 		418
+1599813948	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[1.1 Configure Spark job to use Kryo as serialization] 		160
+1599816562	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu			862
+1599831946	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Input data partitions] 		362
+1599832384	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Input data partitions] 		383
+1600069117	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2. Memory management inside spark application] 		1661
+1600072298	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.2 Determining Memory Consumption] 		318
+1600073066	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.2 Determining Memory Consumption] 		705
+1600073688	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.3 Reduce memory consumption by choosing right data structures] 		1071
+1600088597	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.3 Reduce memory consumption by choosing right data structures] 		642
+1600088737	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.4 Reduce object overhead by changing JVM config] 		1090
+1600089231	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.4 Reduce object overhead by changing JVM config] 		-123
+1600089355	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.3 Reduce memory consumption by choosing right data structures] 		122
+1600090455	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.4 Reduce object overhead by changing JVM config] 		1840
+1600092139	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.5 Reduce memory consumption by caching data(RDD) in serialize form] 		374
+1600092182	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.5 Reduce memory consumption by caching data(RDD) in serialize form] 		6
+1600092263	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[2.5 Reduce memory consumption by caching data(RDD) in serialize form] 		130
+1600092422	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Spark partitions] 		3
+1600092443	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Input data partitions] 		4
+1600092466	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Shuffle data partitions] 		10
+1600092477	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[Output data partitions] 		4
+1600093966	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[3.3 Output data partitions] 		800
+1600094162	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4. JVM Garbage Collection Tuning] 		682
+1600094328	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.1 Measuring the Impact of GC for all your spark jobs] 		534
+1600094406	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.1 Measuring the Impact of GC for all your spark jobs] 		383
+1600094948	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.1 Measuring the Impact of GC for all your spark jobs] 		393
+1600095034	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.2 JVM GC tunning tips] 		76
+1600095509	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.2 JVM GC tunning tips] 		1204
+1600096200	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.2 JVM GC tunning tips] 		857
+1600096640	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.4 GC tuning Summery] 		655
+1600178641	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_usecase:sf_fire_call	pliu	[Q-3) How many years of Fire Service Calls is in the data file?] 		346
+1600241482	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:hardware_setup	pliu	[Change the default JVM GC to support large memory] 		103
+1600241500	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:hardware_setup	pliu	[Change the default JVM GC to support large memory] 		1
+1600241595	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[4.4 GC tuning Summery] 		8
+1600412778	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu			1334
+1600412986	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[5. Increase Parallelism on reading input paths] 		2139
+1600414312	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[6. Data locality] 		-113
+1600414428	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[5. Increase Parallelism on reading input paths] 		402
+1600414501	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[5. Increase Parallelism on reading input paths] 		190
+1600417165	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[6. Data locality] 		551
+1600419614	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:job_config	pliu	[6. Data locality] 		1675

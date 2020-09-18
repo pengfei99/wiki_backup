@@ -1,0 +1,168 @@
+====== Install and configure Hortonworks sandbox ======
+
+Full official tutorial can be found https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hdp-sandbox.html
+===== 1.Deploy Hortonworks sandbox =====
+
+Hortonworks sandbox provides three ways to deploy it:
+  * vmware image
+  * virtual box image
+  * docker file
+
+To deploy the vmware and virtual box image, it's quite easy, just create a vm based on the image. Then follow the configuration instruction which we will show in the next section.
+
+Run docker file in a docker container, you will need more works
+
+==== 1.1 Deploy Hortonworks in a docker container ====
+
+  - Install and run docker (See [[employes:pengfei.liu:admin_system:container:docker:1setup|Part1 : Orientation and setup]] for docker installation)
+  - Downlaod the docker file for HDP (https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial)
+  - Unzip the file, it should contain one file **docker-deploy-hdp30.sh** and a directory **assets**.
+  - Run sh docker-deploy-hdp30.sh
+  - Check the docker process docker ps
+  - Manage the HDP docker process
+
+ <code>
+# When you want to stop/shutdown your HDP sandbox, run the following commands:
+docker stop sandbox-hdp
+docker stop sandbox-proxy
+
+# When you want to re-start your sandbox, run the following commands:
+docker start sandbox-hdp
+docker start sandbox-proxy
+
+# If you want to remove sandbox containers. A container is an instance of the Sandbox image. You must stop 
+# container dependencies before removing it. Issue the following commands:
+docker stop sandbox-hdp
+docker stop sandbox-proxy
+docker rm sandbox-hdp
+docker rm sandbox-proxy
+
+# If you want to remove the HDP Sandbox image, issue the following command after stopping and removing the containers:
+docker rmi hortonworks/sandbox-hdp:{release}
+
+</code>
+
+===== 2. Configure sandbox VM/Container =====
+
+==== 2.1 Set up IP hostname mapping in your host machine ====
+
+When you open your sandbox services in your host machine browsers, based on your installation, the IP address could be different.
+
+  * Docker: IP Address = 127.0.0.1
+  * VirtualBox: IP Address = 127.0.0.1
+  * VMWare: IP Address = 192.168.x.x
+
+<code>
+# In linux
+# You need to modify the IP address accordingly
+echo '<IP> sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com' | sudo tee -a /etc/hosts
+
+# In mac
+echo '{IP-Address} sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com' | sudo tee -a /private/etc/hosts
+
+# In windows
+# 1. Run Notepad as administrator.
+# 2. Open hosts file located in: c:\Windows\System32\drivers\etc\hosts
+# 3. Add {IP-Address} localhost sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
+# 4. Save the file
+</code>
+
+==== 2.2 Connect to your VM  ====
+
+<code>
+# The sandbox does not use the port 22 for ssh, it uses 2222 instead
+ssh root@sandbox-hdp.hortonworks.com -p 2222
+
+# If you did not do the IP hostname mapping step, you need to replace the hostname by the IP address
+# For the first connection, the password: **hadoop**, you need to modify it.
+</code>
+
+==== 2.3 File transfer between sandbox and host machine ====
+
+<code>
+# Send file from host to sandbox
+scp -P 2222 /tmp/toto.txt root@sandbox-hdp.hortonworks.com:/home/pliu/.
+
+# Send file from sandbox to host
+scp -P 2222 root@sandbox-hdp.hortonworks.com:<sandbox_directory_file> <local_directory_file>
+</code>
+
+
+==== 2.4 Reset ambari admin password ====
+
+Ambari Dashboard runs on port: 8080. For example, http://sandbox-hdp.hortonworks.com:8080. Or Replace url by the real ip address. (e.g. http://192.168.184.129:8080/#/main/dashboard ). You can use the following login to access the page:
+
+^login^ pwd^ role ^Tool access^ 
+|maria_dev| maria_dev | Spark and SQL Developer | Hive, Zeppelin, MapReduce/Tez/Spark, Pig, Solr, HBase/Phoenix, Sqoop, NiFi, Storm, Kafka, Flume |
+|raj_ops| raj_ops | Hadoop Warehouse Operator | Hive/Tez, Ranger, Falcon, Knox, Sqoop, Oozie, Flume, Zookeeper| 
+|holger_gov| holger_gov | Data Steward | Atlas|
+|amy_ds| amy_ds| Data Scientist | Spark, Hive, R, Python, Scala |
+
+
+If you want to login as admin, you need to initiate the admin password
+
+<code>
+# You need to ssh into the sandbox vm and type the following command
+$ ambari-admin-password-reset 
+</code>
+
+
+==== 2.5 Change Atlas password ====
+
+<code>
+# Change admin password
+# 1. Open config GUI of atlas via ambari. 
+# 2. In clause advanced atlas-env, you can change the admin password. 
+
+# If you want to add a new user, you need to go to your sandbox vm 
+# 1. Generate the hash of your password
+$ echo -n "Password" | sha256sum
+# 2. Open file /etc/atlas/conf/users-credentials.properties with vim
+$ vim /etc/atlas/conf/users-credentials.properties
+# 3. add a line like this: pliu=ROLE_ADMIN::b012da22fa1439aacbe02971d7321e56a82ad75da84bc6e27358f3593e5b9b24 
+in the file.
+# 4. Restart the atlas service to make it available.
+</code>
+
+==== 2.6 change mysql server root password ====
+
+Hortonworks sandbox uses a mysql server to store the configuration infomation, hive metastore, etc. In some version the password for root is **hadoop**. In some version, the password is empty. 
+
+But if you can't login with mysql -u root -p, you need to follow the following instructions ([[employes:pengfei.liu:admin_system:database:mariadb:change_root_password|Reset root password for MySql or MariaDB]]) to reset the root password.
+
+===== 3. Common problems =====
+
+==== 3.1 Docker container sandbox-proxy can't start  ====
+
+Command: Docker start sandbox-proxy
+Error: Error response from daemon: driver failed programming external connectivity on endpoint sandbox-proxy (8f1dc79b789604e45f88cb15045d8dfc6d8f11f9d195ccd2765a03758759ea94):  (iptables failed: iptables --wait -t nat -A DOCKER -p tcp -d 0/0 --dport 61888 -j DNAT --to-destination 172.18.0.3:61888 ! -i br-7e3d72e7f4ac: iptables: No chain/target/match by that name.
+
+Solution: To correct this, you need to restart docker daemon **Systemctl restart docker**
+
+==== 3.2 Ambari can't start the hdp services ====
+
+Command: Ambari start all services
+Error: Mysqld daemon can't start, raise error
+2019-09-20T14:09:43.429317Z 0 [ERROR] InnoDB: Ignoring the redo log due to missing MLOG_CHECKPOINT between the checkpoint 19668090 and the end 19669084.
+2019-09-20T14:09:43.429326Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
+2019-09-20T14:09:44.029878Z 0 [ERROR] Plugin 'InnoDB' init function returned error.
+2019-09-20T14:09:44.029892Z 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+
+Solution: To correct this, you need to clean the InnoDB log file **rm -rf /var/lib/mysql/ib_logfile**
+
+
+==== 3.3 Atlas add classification permission denied ====
+
+Command: Add classification/term, etc.
+Error: Permission denied
+
+Solution: Atlas needs to write in HBASE, In a cluster managed by ambari, we use Knox (Provides a single point of authentication and access for Apache Hadoop services in a cluster) to make the authentication and access control possible. So before running Atlas, **start Knox, HBase, Solr first**. 
+
+
+
+==== 3.4 Load hdfs data into hive table pemission deny ====
+
+Command: hive load data to hive table
+Error: Permission denied
+
+Solution: When load data into hive table, hive will move the data from the hdfs source location to hive data warehouse (also a hdfs path). The user who launch this command must make sure he has the **right to write in both locations**. 

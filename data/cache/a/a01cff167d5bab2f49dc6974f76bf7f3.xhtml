@@ -1,0 +1,756 @@
+
+<h1 class="sectionedit1" id="install_hbase">Install Hbase</h1>
+<div class="level1">
+
+<p>
+Apache HBase is the Hadoop database, a distributed, scalable, big data store. 
+</p>
+
+<p>
+HBase is a column-oriented database management system that runs on top of HDFS and Hadoop. It is well suited for sparse data sets, which are common in many big data use cases. Unlike relational database systems, HBase does not support a structured query language like SQL; in fact, HBase isn’t a relational data store at all. HBase applications are written in Java much like a typical MapReduce application. HBase does support writing applications in Avro, REST, and Thrift.
+</p>
+
+<p>
+Just as HDFS(Hadoop distributed File System) has a NameNode and slave nodes, HBase is built on similar concepts. In HBase a master node manages the cluster and region servers store portions of the tables and perform the work on the data. In the same way HDFS has some enterprise concerns due to the availability of the NameNode , HBase is also sensitive to the loss of its master node.
+</p>
+
+<p>
+<strong>Features</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Linear and modular scalability.</div>
+</li>
+<li class="level3"><div class="li"> Strictly consistent reads and writes.</div>
+</li>
+<li class="level3"><div class="li"> Automatic and configurable sharding of tables</div>
+</li>
+<li class="level3"><div class="li"> Automatic failover support between RegionServers.</div>
+</li>
+<li class="level3"><div class="li"> Convenient base classes for backing Hadoop MapReduce jobs with Apache HBase tables.</div>
+</li>
+<li class="level3"><div class="li"> Easy to use Java <abbr title="Application Programming Interface">API</abbr> for client access.</div>
+</li>
+<li class="level3"><div class="li"> Block cache and Bloom Filters for real-time queries.</div>
+</li>
+<li class="level3"><div class="li"> Query predicate push down via server side Filters</div>
+</li>
+<li class="level3"><div class="li"> Thrift gateway and a REST-ful Web service that supports XML, Protobuf, and binary data encoding options</div>
+</li>
+<li class="level3"><div class="li"> Extensible jruby-based (JIRB) shell</div>
+</li>
+<li class="level3"><div class="li"> Support for exporting metrics via the Hadoop metrics subsystem to files or Ganglia; or via JMX</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Install Hbase" [1-1707] -->
+<h2 class="sectionedit2" id="install_and_configure_hbase">Install and configure HBASE</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Install and configure HBASE" [1708-1748] -->
+<h3 class="sectionedit3" id="pre-requise">Pre-requise</h3>
+<div class="level3">
+
+<p>
+HBase requires JAVA and hadoop.
+</p>
+
+<p>
+To install them go see <a href="/doku.php?id=employes:pengfei.liu:big_data:hadoop:install_config_hadoop" class="wikilink1" title="employes:pengfei.liu:big_data:hadoop:install_config_hadoop">Install hdfs on multi node cluster</a> and <a href="/doku.php?id=employes:pengfei.liu:java:install_jdk" class="wikilink1" title="employes:pengfei.liu:java:install_jdk">Install oracle jdk on ubuntu 16.04</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pre-requise" [1749-2007] -->
+<h3 class="sectionedit4" id="download_the_current_stabe_hbase">Download  the current stabe HBase</h3>
+<div class="level3">
+
+<p>
+The HBase official site <a href="https://hbase.apache.org/" class="urlextern" title="https://hbase.apache.org/" rel="nofollow">https://hbase.apache.org/</a>. The current stable version is 1.2.6
+</p>
+
+<p>
+Download it and place it under /opt/hbase
+</p>
+<pre class="code">mkdir -p /opt/hbase
+
+cd /opt/hbase
+
+cp ~/Download/hbase-1.2.6-bin.tar.gz .
+
+tar -xzvf hbase-1.2.6-bin.tar.gz
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "Download  the current stabe HBase" [2008-2308] -->
+<h3 class="sectionedit5" id="add_hbase_home_to_path">Add hbase home to path</h3>
+<div class="level3">
+<pre class="code">sudo vim /etc/profile.d/hbase.sh
+
+#add the following two line
+export HBASE_HOME=/opt/hbase/hbase-1.2.6
+export PATH=$PATH:$HBASE_HOME/bin
+</pre>
+
+<p>
+Check you hbase installation
+</p>
+<pre class="code">[root@localhost profile.d]# hbase version
+HBase 1.2.6
+Source code repository file:///home/busbey/projects/hbase/hbase-assembly/target/hbase-1.2.6 revision=Unknown
+Compiled by busbey on Mon May 29 02:25:32 CDT 2017
+From source with checksum 7e8ce83a648e252758e9dae1fbe779c9</pre>
+
+</div>
+<!-- EDIT5 SECTION "Add hbase home to path" [2309-2816] -->
+<h2 class="sectionedit6" id="configure_hbase_on_stand_along_mode">Configure HBase on stand along mode</h2>
+<div class="level2">
+
+<p>
+1. Edit the hbase-env.sh
+</p>
+
+<p>
+A distributed Apache HBase (TM) installation depends on a running ZooKeeper cluster. All participating nodes and clients need to be able to access the running ZooKeeper ensemble. Apache HBase by default manages a ZooKeeper “cluster” for you. It will start and stop the ZooKeeper ensemble as part of the HBase start/stop process. You can also manage the ZooKeeper ensemble independent of HBase and just point HBase at the cluster it should use. To toggle HBase management of ZooKeeper, use the HBASE_MANAGES_ZK variable in conf/hbase-env.sh. This variable, which defaults to true, tells HBase whether to start/stop the ZooKeeper ensemble servers as part of HBase start/stop.
+</p>
+<pre class="code">vim hbase-env.sh
+
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_144
+
+# This line means the hbase use his own zookeeper &quot;cluster&quot;
+export HBASE_MANAGES_ZK=true </pre>
+
+<p>
+2. Edit the hbase-site.xml
+</p>
+
+<p>
+To store the data of hbase, we need to specify a hbase.rootdir, if you specify nothing, the default value will be /tmp/hbase-${user.name}. after restart, you will lose all the data
+</p>
+<pre class="code">vim hbase-site.xml
+
+#add the following xml
+
+&lt;configuration&gt;
+        &lt;property&gt;
+                &lt;name&gt;hbase.rootdir&lt;/name&gt;
+                &lt;value&gt;file:///opt/hbase/hbase-tmp&lt;/value&gt;
+        &lt;/property&gt;
+&lt;/configuration&gt;
+</pre>
+
+<p>
+3. Start and check hbase daemon
+If you enconter error messages during the running of the daemon, you can check the log file for more information. Hbase logs is stored ${HBASE_HOME}/logs by default.
+</p>
+<pre class="code">#start the daemon
+[hadoop@localhost hbase-1.2.6]$ sh bin/start-hbase.sh 
+starting master, logging to /opt/hbase/hbase-1.2.6/bin/../logs/hbase-hadoop-master-localhost.localdomain.out
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0
+
+
+#start the hbase shell
+[hadoop@localhost hbase-1.2.6]$ hbase shell
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hbase/hbase-1.2.6/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hadoop/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+HBase Shell; enter &#039;help&lt;RETURN&gt;&#039; for list of supported commands.
+Type &quot;exit&lt;RETURN&gt;&quot; to leave the HBase Shell
+Version 1.2.6, rUnknown, Mon May 29 02:25:32 CDT 2017
+
+hbase(main):001:0&gt; 
+hbase(main):002:0&gt; exit</pre>
+
+</div>
+<!-- EDIT6 SECTION "Configure HBase on stand along mode" [2817-5530] -->
+<h2 class="sectionedit7" id="configure_hbase_on_top_of_hadoop">Configure HBase on top of Hadoop</h2>
+<div class="level2">
+
+<p>
+In this mode, we run HBASE on top of Hadoop
+</p>
+
+<p>
+1. edit hbase-env.sh
+</p>
+<pre class="code">vim hbase-env.sh
+
+#
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_144
+#You need to give the hadoop conf path in this server
+export HBASE_CLASSPATH=${HADOOP_HOME}/etc/hadoop
+export HBASE_MANAGES_ZK=true</pre>
+
+<p>
+2. Edit hbase-site.xml
+</p>
+<pre class="code">&lt;configuration&gt;
+        &lt;property&gt;
+                &lt;name&gt;hbase.rootdir&lt;/name&gt;
+                &lt;value&gt;hdfs://localhost:9000/hbase&lt;/value&gt;
+        &lt;/property&gt;
+
+        &lt;property&gt;
+                &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;
+                &lt;value&gt;true&lt;/value&gt;
+        &lt;/property&gt;
+&lt;/configuration&gt;
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Configure HBase on top of Hadoop" [5531-6197] -->
+<h2 class="sectionedit8" id="hbase_basic_shell_command">HBase basic shell command</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "HBase basic shell command" [6198-6236] -->
+<h3 class="sectionedit9" id="list_all_tables_in_database">List all tables in database</h3>
+<div class="level3">
+<pre class="code">hbase(main):001:0&gt; list
+TABLE                                                                                                                                                                                                              
+Score                                                                                                                                                                                                              
+student                                                                                                                                                                                                            
+teacher                                                                                                                                                                                                            
+3 row(s) in 0.4140 seconds
+
+=&gt; [&quot;Score&quot;, &quot;student&quot;, &quot;teacher&quot;]
+</pre>
+
+</div>
+<!-- EDIT9 SECTION "List all tables in database" [6237-7226] -->
+<h3 class="sectionedit10" id="create_table">Create table</h3>
+<div class="level3">
+
+<p>
+Create a table called student, with params Sname,Ssex,Sage,Sdept,course.
+</p>
+<pre class="code">hbase(main):001:0&gt; create &#039;student&#039;,&#039;Sname&#039;,&#039;Ssex&#039;,&#039;Sage&#039;,&#039;Sdept&#039;,&#039;course&#039;
+0 row(s) in 2.8300 seconds
+
+=&gt; Hbase::Table - student
+
+hbase(main):002:0&gt; describe &#039;student&#039;
+Table student is ENABLED                                                                               
+student                                                                                                
+COLUMN FAMILIES DESCRIPTION                                                                            
+{NAME =&gt; &#039;Sage&#039;, BLOOMFILTER =&gt; &#039;ROW&#039;, VERSIONS =&gt; &#039;1&#039;, IN_MEMORY =&gt; &#039;false&#039;, KEEP_DELETED_CELLS =&gt; &#039;FA
+LSE&#039;, DATA_BLOCK_ENCODING =&gt; &#039;NONE&#039;, TTL =&gt; &#039;FOREVER&#039;, COMPRESSION =&gt; &#039;NONE&#039;, MIN_VERSIONS =&gt; &#039;0&#039;, BLOC
+KCACHE =&gt; &#039;true&#039;, BLOCKSIZE =&gt; &#039;65536&#039;, REPLICATION_SCOPE =&gt; &#039;0&#039;}                                      
+{NAME =&gt; &#039;Sdept&#039;, BLOOMFILTER =&gt; &#039;ROW&#039;, VERSIONS =&gt; &#039;1&#039;, IN_MEMORY =&gt; &#039;false&#039;, KEEP_DELETED_CELLS =&gt; &#039;F
+ALSE&#039;, DATA_BLOCK_ENCODING =&gt; &#039;NONE&#039;, TTL =&gt; &#039;FOREVER&#039;, COMPRESSION =&gt; &#039;NONE&#039;, MIN_VERSIONS =&gt; &#039;0&#039;, BLO
+CKCACHE =&gt; &#039;true&#039;, BLOCKSIZE =&gt; &#039;65536&#039;, REPLICATION_SCOPE =&gt; &#039;0&#039;}                                     
+{NAME =&gt; &#039;Sname&#039;, BLOOMFILTER =&gt; &#039;ROW&#039;, VERSIONS =&gt; &#039;1&#039;, IN_MEMORY =&gt; &#039;false&#039;, KEEP_DELETED_CELLS =&gt; &#039;F
+ALSE&#039;, DATA_BLOCK_ENCODING =&gt; &#039;NONE&#039;, TTL =&gt; &#039;FOREVER&#039;, COMPRESSION =&gt; &#039;NONE&#039;, MIN_VERSIONS =&gt; &#039;0&#039;, BLO
+CKCACHE =&gt; &#039;true&#039;, BLOCKSIZE =&gt; &#039;65536&#039;, REPLICATION_SCOPE =&gt; &#039;0&#039;}                                     
+{NAME =&gt; &#039;Ssex&#039;, BLOOMFILTER =&gt; &#039;ROW&#039;, VERSIONS =&gt; &#039;1&#039;, IN_MEMORY =&gt; &#039;false&#039;, KEEP_DELETED_CELLS =&gt; &#039;FA
+LSE&#039;, DATA_BLOCK_ENCODING =&gt; &#039;NONE&#039;, TTL =&gt; &#039;FOREVER&#039;, COMPRESSION =&gt; &#039;NONE&#039;, MIN_VERSIONS =&gt; &#039;0&#039;, BLOC
+KCACHE =&gt; &#039;true&#039;, BLOCKSIZE =&gt; &#039;65536&#039;, REPLICATION_SCOPE =&gt; &#039;0&#039;}                                      
+{NAME =&gt; &#039;course&#039;, BLOOMFILTER =&gt; &#039;ROW&#039;, VERSIONS =&gt; &#039;1&#039;, IN_MEMORY =&gt; &#039;false&#039;, KEEP_DELETED_CELLS =&gt; &#039;
+FALSE&#039;, DATA_BLOCK_ENCODING =&gt; &#039;NONE&#039;, TTL =&gt; &#039;FOREVER&#039;, COMPRESSION =&gt; &#039;NONE&#039;, MIN_VERSIONS =&gt; &#039;0&#039;, BL
+OCKCACHE =&gt; &#039;true&#039;, BLOCKSIZE =&gt; &#039;65536&#039;, REPLICATION_SCOPE =&gt; &#039;0&#039;}                                    
+5 row(s) in 0.2530 seconds
+</pre>
+
+</div>
+<!-- EDIT10 SECTION "Create table" [7227-9408] -->
+<h3 class="sectionedit11" id="insert_a_new_record_into_table">Insert a new record into table</h3>
+<div class="level3">
+
+<p>
+Now we have our table student, we want to insert a new student pengfei in the table
+</p>
+
+<p>
+Add a student with id 88888, and name pengfei
+</p>
+<pre class="code">hbase(main):003:0&gt; put &#039;student&#039;,&#039;88888&#039;,&#039;Sname&#039;,&#039;Pengfei&#039;
+0 row(s) in 0.2400 seconds
+
+hbase(main):004:0&gt; get &#039;student&#039;,&#039;88888&#039;
+COLUMN                     CELL                                                                        
+ Sname:                    timestamp=1515158173790, value=Pengfei                                      
+1 row(s) in 0.1360 seconds
+</pre>
+
+<p>
+add a note 80 to course math
+</p>
+<pre class="code">hbase(main):005:0&gt; put &#039;student&#039;,&#039;88888&#039;,&#039;course:math&#039;,&#039;80&#039;
+0 row(s) in 0.0730 seconds
+
+hbase(main):006:0&gt; get &#039;student&#039;,&#039;88888&#039;
+COLUMN                     CELL                                                                        
+ Sname:                    timestamp=1515158173790, value=Pengfei                                      
+ course:math               timestamp=1515158494491, value=80                                           
+2 row(s) in 0.0720 seconds</pre>
+
+<p>
+Add sex and department
+</p>
+<pre class="code">hbase(main):009:0&gt; put &#039;student&#039;,&#039;88888&#039;,&#039;Sage&#039;,&#039;28&#039;
+0 row(s) in 0.0500 seconds
+
+hbase(main):010:0&gt; put &#039;student&#039;,&#039;88888&#039;,&#039;Sdept&#039;,&#039;Lyon&#039;
+0 row(s) in 0.0100 seconds
+
+hbase(main):011:0&gt; get &#039;student&#039;,&#039;88888&#039;
+COLUMN                     CELL                                                                        
+ Sage:                     timestamp=1515159007446, value=28                                           
+ Sdept:                    timestamp=1515159016684, value=Lyon                                         
+ Sname:                    timestamp=1515158173790, value=Pengfei                                      
+ Ssex:                     timestamp=1515158943452, value=M                                            
+ course:math               timestamp=1515158494491, value=80                                           
+5 row(s) in 0.0480 seconds
+</pre>
+
+</div>
+<!-- EDIT11 SECTION "Insert a new record into table" [9409-11374] -->
+<h3 class="sectionedit12" id="delete_a_parameter_of_a_record">delete a parameter of a record</h3>
+<div class="level3">
+
+<p>
+In no sql data base ,we can delete one parameter of a record without delete the record.
+</p>
+<pre class="code">hbase(main):012:0&gt; delete &#039;student&#039;,&#039;88888&#039;,&#039;Ssex&#039;
+0 row(s) in 0.0680 seconds
+
+hbase(main):013:0&gt; get &#039;student&#039;,&#039;88888&#039;
+COLUMN                     CELL                                                                        
+ Sage:                     timestamp=1515159007446, value=28                                           
+ Sdept:                    timestamp=1515159016684, value=Lyon                                         
+ Sname:                    timestamp=1515158173790, value=Pengfei                                      
+ course:math               timestamp=1515158494491, value=80                                           
+4 row(s) in 0.0450 seconds
+</pre>
+
+<p>
+If you want to delete the record, you need to use the deleteall command
+</p>
+<pre class="code">hbase(main):014:0&gt; deleteall &#039;student&#039;,&#039;88888&#039;
+0 row(s) in 0.0370 seconds
+
+hbase(main):015:0&gt; scan &#039;student&#039;
+ROW                        COLUMN+CELL                                                                 
+0 row(s) in 0.0940 seconds
+</pre>
+
+</div>
+<!-- EDIT12 SECTION "delete a parameter of a record" [11375-12519] -->
+<h3 class="sectionedit13" id="data_visulization">Data Visulization</h3>
+<div class="level3">
+<pre class="code">#view all data in table student
+hbase(main):006:0&gt; scan &#039;student&#039;
+ROW                        COLUMN+CELL                                                                 
+ 88888                     column=Sage:, timestamp=1515161801042, value=28                             
+ 88888                     column=Sdept:, timestamp=1515161812185, value=Lyon                          
+ 88888                     column=Sname:, timestamp=1515161773546, value=Pengfei                       
+ 88888                     column=course:math, timestamp=1515161789105, value=80                       
+1 row(s) in 0.1150 seconds
+
+# view data with specific row key
+hbase(main):007:0&gt; get &#039;student&#039;, &#039;88888&#039;
+COLUMN                     CELL                                                                        
+ Sage:                     timestamp=1515161801042, value=28                                           
+ Sdept:                    timestamp=1515161812185, value=Lyon                                         
+ Sname:                    timestamp=1515161773546, value=Pengfei                                      
+ course:math               timestamp=1515161789105, value=80                                           
+4 row(s) in 0.0830 seconds
+</pre>
+
+</div>
+<!-- EDIT13 SECTION "Data Visulization" [12520-13803] -->
+<h3 class="sectionedit14" id="drop_table">Drop table</h3>
+<div class="level3">
+
+<p>
+To drop a table, you need to do two step
+</p>
+<ol>
+<li class="level1"><div class="li"> disable table</div>
+</li>
+<li class="level1"><div class="li"> drop table</div>
+</li>
+</ol>
+
+<p>
+A table can be disabled and enabled. It&#039;s revers-able.
+</p>
+<pre class="code">hbase(main):011:0&gt; disable &#039;student&#039;
+0 row(s) in 2.3430 seconds
+
+hbase(main):012:0&gt; scan &#039;student&#039;
+ROW                        COLUMN+CELL                                                                 
+
+ERROR: student is disabled.
+
+
+hbase(main):009:0&gt; enable &#039;student&#039;
+0 row(s) in 1.3950 seconds
+
+hbase(main):010:0&gt; scan &#039;student&#039;
+ROW                        COLUMN+CELL                                                                 
+ 88888                     column=Sage:, timestamp=1515161801042, value=28                             
+ 88888                     column=Sdept:, timestamp=1515161812185, value=Lyon                          
+ 88888                     column=Sname:, timestamp=1515161773546, value=Pengfei                       
+ 88888                     column=course:math, timestamp=1515161789105, value=80                       
+1 row(s) in 0.1190 seconds
+</pre>
+
+<p>
+The drop table command is persistent, which means you lose data forever
+</p>
+<pre class="code">hbase(main):013:0&gt; drop &#039;student&#039;
+0 row(s) in 1.3630 seconds
+
+hbase(main):014:0&gt; scan &#039;student&#039;
+ROW                        COLUMN+CELL                                                                 
+
+ERROR: Unknown table student!
+</pre>
+
+</div>
+<!-- EDIT14 SECTION "Drop table" [13804-15171] -->
+<h3 class="sectionedit15" id="create_table_with_version_control">Create table with version control</h3>
+<div class="level3">
+
+<p>
+When you create a table, you can specify how many version you want to persist in you database
+For example, if you put version=5, it will save 5 values for the same key, if you put 6th value in the same key, the first valut will be eraced by the 6th
+</p>
+<pre class="code"> hbase(main):015:0&gt; create &#039;teacher&#039;,{NAME=&gt;&#039;username&#039;,VERSIONS=&gt;5}
+0 row(s) in 2.3150 seconds
+
+=&gt; Hbase::Table - teacher
+hbase(main):016:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;pengfei&#039;
+0 row(s) in 0.1080 seconds
+
+hbase(main):017:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;1&#039;
+0 row(s) in 0.0350 seconds
+
+hbase(main):018:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;2&#039;
+0 row(s) in 0.0640 seconds
+
+hbase(main):019:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;3&#039;
+0 row(s) in 0.0180 seconds
+
+hbase(main):020:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;4&#039;
+0 row(s) in 0.0220 seconds
+
+hbase(main):021:0&gt; put &#039;teacher&#039;,&#039;91001&#039;,&#039;username&#039;,&#039;5&#039;
+0 row(s) in 0.0170 seconds
+
+hbase(main):022:0&gt; get &#039;teacher&#039;,&#039;91001&#039;,{COLUMN=&gt;&#039;username&#039;,VERSIONS=&gt;5}
+COLUMN                     CELL                                                                        
+ username:                 timestamp=1515162517842, value=5                                            
+ username:                 timestamp=1515162514178, value=4                                            
+ username:                 timestamp=1515162511459, value=3                                            
+ username:                 timestamp=1515162507599, value=2                                            
+ username:                 timestamp=1515162505028, value=1                                            
+5 row(s) in 0.0550 seconds
+</pre>
+
+<p>
+You could notice that the first username is pengfei, it&#039;s been erased by 6th username value 5
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Create table with version control" [15172-16934] -->
+<h3 class="sectionedit16" id="exit_shell">exit shell</h3>
+<div class="level3">
+<pre class="code">hbase(main):023:0&gt; exit
+[hadoop@localhost hbase-1.2.6]$ 
+</pre>
+
+</div>
+<!-- EDIT16 SECTION "exit shell" [16935-17030] -->
+<h2 class="sectionedit17" id="java_api">JAVA API</h2>
+<div class="level2">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hbase:install_hbase&amp;codeblock=20" title="Download Snippet" class="mediafile mf_xml">pom.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;UTF-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;project</span> <span class="re0">xmlns</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span>
+<span class="sc3">         <span class="re0">xmlns:xsi</span>=<span class="st0">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span class="sc3">         <span class="re0">xsi:schemaLocation</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;modelVersion<span class="re2">&gt;</span></span></span>4.0.0<span class="sc3"><span class="re1">&lt;/modelVersion<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.pengfei<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>hbase<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.0-SNAPSHOT<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;project.build.sourceEncoding<span class="re2">&gt;</span></span></span>UTF-8<span class="sc3"><span class="re1">&lt;/project.build.sourceEncoding<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+&nbsp;
+&nbsp;
+        <span class="sc-1">&lt;!-- hbase client dependencies --&gt;</span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.hbase<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>hbase-client<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.2.4<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;build<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;plugins<span class="re2">&gt;</span></span></span>
+        <span class="sc-1">&lt;!-- jar plugin defines the manifest properties of the resultant jar. </span>
+<span class="sc-1">        For example, in our example org.pengfei.hbase.ExampleForHbase is mentioned as the </span>
+<span class="sc-1">        class containing main() method of the java project which need to be executed </span>
+<span class="sc-1">        when the jar is executed. Following is the plugin which defines the jar manifest properties: --&gt;</span>
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.maven.plugins<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-jar-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;archive<span class="re2">&gt;</span></span></span>
+                 <span class="sc3"><span class="re1">&lt;manifest<span class="re2">&gt;</span></span></span>
+                 <span class="sc3"><span class="re1">&lt;addClasspath<span class="re2">&gt;</span></span></span>true<span class="sc3"><span class="re1">&lt;/addClasspath<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;classpathPrefix<span class="re2">&gt;</span></span></span>lib/<span class="sc3"><span class="re1">&lt;/classpathPrefix<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;mainClass<span class="re2">&gt;</span></span></span>org.pengfei.hbase.ExampleForHbase<span class="sc3"><span class="re1">&lt;/mainClass<span class="re2">&gt;</span></span></span>
+                 <span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/archive<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-compiler-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>3.6.0<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;source<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/source<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;target<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/target<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+<span class="sc-1">&lt;!--</span>
+<span class="sc-1">The depenency plugin defines what to do with the dependencies during the different types of maven executions.</span>
+<span class="sc-1">For example, the following properties make sure that all the dependies are copied to the lib folder in the jar while executing the install maven command.</span>
+<span class="sc-1">--&gt;</span>
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.maven.plugins<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-dependency-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;executions<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;execution<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;id<span class="re2">&gt;</span></span></span>copy<span class="sc3"><span class="re1">&lt;/id<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;phase<span class="re2">&gt;</span></span></span>install<span class="sc3"><span class="re1">&lt;/phase<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;goals<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>copy-dependencies<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;/goals<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;outputDirectory<span class="re2">&gt;</span></span></span>${project.build.directory}/lib<span class="sc3"><span class="re1">&lt;/outputDirectory<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;/execution<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/executions<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc3"><span class="re1">&lt;/plugins<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/build<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/project<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hbase:install_hbase&amp;codeblock=21" title="Download Snippet" class="mediafile mf_java">ExampleForHbase.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">package</span> <span class="co2">org.pengfei.hbase</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.conf.Configuration</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.client.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> ExampleForHbase <span class="br0">&#123;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Configuration configuration<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+connection"><span class="kw3">Connection</span></a> connect<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Admin admin<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        <span class="co1">//equivalent shell command: create 'Score','sname','course'</span>
+        <span class="co1">//createTable(&quot;Score&quot;,new String[]{&quot;sname&quot;,&quot;course&quot;});</span>
+        <span class="co1">//Insert a row into table Score with row key value 95001, the column family is sname, the value is Mary</span>
+        <span class="co1">//Because sname column family does not have any child, so col parameter is empty</span>
+        <span class="co1">// equivalent shell command put 'Score','95001','sname','Mary'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;sname&quot;</span>, <span class="st0">&quot;&quot;</span>, <span class="st0">&quot;Mary&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Insert a row with row key 95001, column Math of column family course (course:Math), the row value is 88</span>
+        <span class="co1">//equivalent shell command put 'Score','95001','score:Math','88'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;Math&quot;</span>, <span class="st0">&quot;88&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//Insert another row as put 'Score','95001','score:English','85'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;English&quot;</span>, <span class="st0">&quot;85&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//1 delete row of column score:Math with rowkey 95001</span>
+        <span class="co1">//equivalent shell command delete 'Score','95001','score:Math'</span>
+        deleteRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95002&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;Math&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//2 delete row of column family course, the column(e.g. math, english) under column family course will be all deleted</span>
+        <span class="co1">//equivalent shell command delete 'Score','95001','course'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//3 delete row with row key 95001 (all column family data will be removed)</span>
+        <span class="co1">//eqivalent command in shell deleteall 'Score','95001'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//get data of row with row key 95001 of the column course:Math</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;Math&quot;);</span>
+        <span class="co1">//get data of row with row key 95001 of column family sname</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;sname&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//delete table</span>
+        <span class="co1">//deleteTable(&quot;Score&quot;);</span>
+&nbsp;
+&nbsp;
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+* Create a table in the HBase server
+* @param tableName is the name of the table you are creating
+* @param colFamily is a list of column families names
+* @throws IOException
+* */</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> createTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> colFamily<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tabName <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tabName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Table name already exists&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span><span class="kw1">else</span><span class="br0">&#123;</span>
+            <span class="co1">//The constructor with String as table name is deprecated</span>
+            HTableDescriptor hTableDescriptor <span class="sy0">=</span> <span class="kw1">new</span> HTableDescriptor<span class="br0">&#40;</span>tabName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> str<span class="sy0">:</span>colFamily<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            HColumnDescriptor hColumnDescriptor<span class="sy0">=</span><span class="kw1">new</span> HColumnDescriptor<span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+            hTableDescriptor.<span class="me1">addFamily</span><span class="br0">&#40;</span>hColumnDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        admin.<span class="me1">createTable</span><span class="br0">&#40;</span>hTableDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Create table success&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//This method set up a connection to Hbase server</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        configuration <span class="sy0">=</span> HBaseConfiguration.<span class="me1">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        configuration.<span class="me1">set</span><span class="br0">&#40;</span><span class="st0">&quot;hbase.rootdir&quot;</span>,<span class="st0">&quot;hdfs://localhost:9000/hbase&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+            connect<span class="sy0">=</span>ConnectionFactory.<span class="me1">createConnection</span><span class="br0">&#40;</span>configuration<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin <span class="sy0">=</span> connect.<span class="me1">getAdmin</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//This method close the connection to Hbase server</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="kw1">try</span><span class="br0">&#123;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span>admin <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                admin.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw2">null</span> <span class="sy0">!=</span> connect<span class="br0">&#41;</span><span class="br0">&#123;</span>
+                connect.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span><span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * This method deletes a table with the given name
+     * @param tableName
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tn <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            admin.<span class="me1">disableTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin.<span class="me1">deleteTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * show existing table
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> listTables<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        HTableDescriptor hTableDescriptors<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> admin.<span class="me1">listTables</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>HTableDescriptor hTableDescriptor <span class="sy0">:</span>hTableDescriptors<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>hTableDescriptor.<span class="me1">getNameAsString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * insert a row into a column of a columnFamily with given table name
+     * @param tableName specify which table you want to insert the row
+     * @param rowKey specify the key id of a row
+     * @param colFamily column family name
+     * @param col column name, it can be empty if the colFamily doesn't have any column
+     * @param val row value which we want to insert.
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> insertRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> val<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Put put <span class="sy0">=</span> <span class="kw1">new</span> Put<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        put.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, val.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">put</span><span class="br0">&#40;</span>put<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * delete a row value of a column in a column family
+     * @param tableName
+     * @param rowKey
+     * @param colFamily
+     * @param col
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Delete delete <span class="sy0">=</span> <span class="kw1">new</span> Delete<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//delete all data in one column family</span>
+        delete.<span class="me1">addFamily</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//delete all data in one column of one column family</span>
+        delete.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        table.<span class="me1">delete</span><span class="br0">&#40;</span>delete<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * get value of one row based on its row key
+     * @param tableName
+     * @param rowKey
+     * @param colFamily
+     * @param col
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> getData<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span><span class="kw1">throws</span>  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Get get <span class="sy0">=</span> <span class="kw1">new</span> Get<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        get.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Result result <span class="sy0">=</span> table.<span class="me1">get</span><span class="br0">&#40;</span>get<span class="br0">&#41;</span><span class="sy0">;</span>
+        showCell<span class="br0">&#40;</span>result<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     *
+     * @param result
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> showCell<span class="br0">&#40;</span>Result result<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        Cell<span class="br0">&#91;</span><span class="br0">&#93;</span> cells <span class="sy0">=</span> result.<span class="me1">rawCells</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>Cell cell<span class="sy0">:</span>cells<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;RowName:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneRow</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Timetamp:&quot;</span><span class="sy0">+</span>cell.<span class="me1">getTimestamp</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;column Family:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneFamily</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;column Name:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneQualifier</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;value:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneValue</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT17 SECTION "JAVA API" [17031-] -->

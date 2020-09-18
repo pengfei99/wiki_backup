@@ -1,0 +1,10 @@
+<span class="kw1">from</span> django.<span class="me1">conf</span>.<span class="me1">urls</span> <span class="kw1">import</span> patterns<span class="sy0">,</span> url
+&nbsp;
+<span class="kw1">from</span> polls <span class="kw1">import</span> views
+&nbsp;
+urlpatterns <span class="sy0">=</span> patterns<span class="br0">&#40;</span><span class="st0">''</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^$'</span><span class="sy0">,</span> views.<span class="me1">IndexView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'index'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;pk&gt;<span class="es0">\d</span>+)/$'</span><span class="sy0">,</span> views.<span class="me1">DetailView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'detail'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;pk&gt;<span class="es0">\d</span>+)/results/$'</span><span class="sy0">,</span> views.<span class="me1">ResultsView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'results'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;question_id&gt;<span class="es0">\d</span>+)/vote/$'</span><span class="sy0">,</span> views.<span class="me1">vote</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'vote'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span>

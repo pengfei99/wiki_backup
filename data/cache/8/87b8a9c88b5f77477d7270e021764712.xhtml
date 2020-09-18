@@ -1,0 +1,41 @@
+
+<h1 class="sectionedit1" id="travailler_sur_une_nouvelle_fonctionnalite">Travailler sur une nouvelle fonctionnalité</h1>
+<div class="level1">
+
+<p>
+Avant de commencer à travailler, assurez-vous d&#039;avoir assimilé <a href="/informatique/developpement/developpement_de_projet" class="wikilink1" title="informatique:developpement:developpement_de_projet">les bonnes pratiques de développement</a>.
+</p>
+<ul>
+<li class="level1"><div class="li"> Créer une branche de développement <pre class="code">$ git clone git@gitlab.in2p3.fr:bioaster/&lt;PROJECT&gt;.git
+$ cd &lt;PROJECT&gt;
+$ git checkout -b feature-XYZ develop</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Préparer la branche <pre class="code">$ composer install
+  # si de nouveaux paramètres sont à saisir (connexion à la base de données de test), ils seront demandés ici
+  
+$ php app/console doctrine:database:drop --force
+$ php app/console doctrine:database:create
+$ php app/console doctrine:migrations:status
+$ php app/console doctrine:migrations:migrate
+$ php app/console doctrine:fixtures:load @AppBundle
+
+$ # php app/console faker:populate
+
+$ php app/console cache:clear --env=dev
+$ php app/console cache:warmup --env=dev
+
+$ php app/console server:run</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Développer (par ex. : <a href="/informatique/developpement/symfony/ajouter_un_objet" class="wikilink1" title="informatique:developpement:symfony:ajouter_un_objet">ajouter un objet</a>)<br/>
+On peut laisser le serveur de test tourner et travailler dans un autre terminal.</div>
+</li>
+<li class="level1"><div class="li"> Enregistrer et soumettre pour validation  <pre class="code">$ git add file1 file2 …
+$ git commit -m &quot;Implémente une fonctionnalité (Fix #YXZ)&quot;
+$ git push</pre>
+</div>
+</li>
+</ul>
+
+</div>

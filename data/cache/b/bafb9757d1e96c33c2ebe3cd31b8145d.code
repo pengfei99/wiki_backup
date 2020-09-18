@@ -1,0 +1,4 @@
+$ bzr branch bzr+ssh:<span class="sy0">//</span>redmine.bioaster.org<span class="sy0">/</span>code<span class="sy0">/&lt;</span>PROJECT<span class="sy0">&gt;/</span>develop \
+           bzr+ssh:<span class="sy0">//</span>redmine.bioaster.org<span class="sy0">/</span>code<span class="sy0">/&lt;</span>PROJECT<span class="sy0">&gt;/&lt;</span>LOGIN<span class="sy0">&gt;/</span>feature-<span class="nu0">123</span>
+$ bzr branch bzr+ssh:<span class="sy0">//</span>redmine.bioaster.org<span class="sy0">/</span>code<span class="sy0">/&lt;</span>PROJECT<span class="sy0">&gt;/&lt;</span>LOGIN<span class="sy0">&gt;/</span>feature-<span class="nu0">123</span>
+$ <span class="kw3">cd</span> feature-<span class="nu0">123</span>

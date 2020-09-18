@@ -1,0 +1,68 @@
+====== VM Ware vm list ======
+
+############################
+# VM for UTEC 6
+#############################
+
+
+  - vm-name: ccbioappl03, service-description: owncloud prod, Ip-address: 134.158.36.23
+  - vm-name: CCLinOwncloudP01, service-description: owncloud dev, Ip-address: 134.158.36.23 
+  - vm-name: CCLinSSOP01, service-description: shibboleth idp 2.4.4, Ip-address: 10.70.3.11
+  - vm-name: CCLinDevToolsP01, service-description: Dev tools for utec6 (e.g. redmin, shibboleth sp, etc.), Ip-address: 10.70.3.13
+  - vm-name: CCLinDevToolsP02, service-description: Dev tools, Ip-address: 10.70.3.14 
+  - vm-name: CCLinBiospecP01, service-description: Biospecimens dev demo, Ip-address:10.70.3.12
+  - vm-name: CCLinNoeP01, service-description: Noe dev demo, Ip-address:10.70.3.21 
+  - vm-name: DataManageBC, service-description: Machine de data management and transfer, Ip-address: 10.69.20.16
+  - vm-name: ccbiodmcc, service-description: Gestion de GPFS et transfert vers DataManageBC, Ip-address: 134.158.36.7
+  - vm-name: ccbioappl05, service-description: Serveur certificats & tentake FreeBSD, Ip-address: 134.158.36.25
+  - vm-name: CCLinWikiP01, service-description: WIKI prod, Ip-address: 10.70.3.16
+  - vm-name: CCLinShibP01, service-description: shibboleth idp 3.3.0, Ip-address: 10.70.3.18 
+  
+
+
+############################
+# VM for Bio-info
+#############################
+
+  - vm-name: CCLinCodiraP02, service-description: Codira , Ip-address: 10.70.3.24 (CPU : 8 core, Mem: 16 Go, disk: 540 Go)
+  - vm-name: gentran2, service-description: utec 2, Ip-address:10.69.20.15 (CPU : 16 core, Mem: 20 Go, disk: 4.1 To)
+  - vm-name: drtpt201, service-description: utec2, Ip-address: 10.69.20.12 (CPU : 16 core, Mem: 45 Go, disk: 1.6 To)
+  - vm-name: drtpt202, service-description: utec2, Ip-address: 192.168.122.1 (CPU : 16 core, Mem: 4 Go, disk: 2 To)
+  - vm-name: biospecimen, service-description: biospecimen prod, Ip-address:10.69.40.11 (CPU : 2 core, Mem: 4 Go, disk: 60 Go)
+  - vm-name: biospecimen-dev, service-description: biospecimen dev Ip-address: 10.69.40.12 (CPU : 2 core, Mem: 4 Go, disk: 60 Go)
+  - vm-name: CCWinAnalyseP01, service-description: VM for analyze UTEC7, Ip-address: 10.70.3.20 (CPU : 8 core, Mem: 32 Go, disk: 580 Go)
+  - vm-name: CCWinImageP01, service-description: VM for image treatement UTEC7, Ip-address: 10.70.3.23 (CPU : 8 core, Mem: 32 Go, disk: 580 Go)
+  - vm-name: CCWinCodiraP01, service-description: VM for matlab projet Codira, Ip-address: 10.70.3.22 (CPU : 8 core, Mem: 16 Go, disk: 1 To)
+  - vm-name: CCWinCodiraP03, service-description: VM for matlab projet Codira, Ip-address: 10.70.3.25 (CPU : 8 core, Mem: 16 Go, disk: 580 Go)
+  - vm-name: B1WinProteoP01, service-description: VM for UTEC7, Ip-address: 10.69.20.18 (CPU : 8 core, Mem: 32 Go, disk: 80 Go)
+  - vm-name: CCWinUtec03P01, service-description: Matlab for utec03, Ip-address: 10.70.3.26 (CPU : 4 core, Mem: 8 Go, disk: 80 Go)
+
+
+====== OpenStack vm list ======
+
+############################
+# VM for UTEC 6
+#############################
+
+  - vm-name: CCLinDjango_pengfei, service: django apache webserver, Ip-address: 134.158.37.13 
+  - vm-name: sandbox-yoann, service:VM dev pour Yoann, Ip-address: 134.158.37.15
+  - vm-name: forge, service: old forge, Ip-address: 134.158.37.8 
+  - vm-name: SONARQUBE, service: sonar qube, Ip-address: 134.158.37.7
+  - vm-name: ELK_BIOASTER, service: Instance Elastic search - Logstash - Kibana, Ip-address: 134.158.37.9 
+  - vm-name: bioaster_ssh_gateway, service: ssh gateway for tenant htc-bioaster, Ip-address: 134.158.37.11
+  - vm-name: sandbox-pdu, service: VM dev pour Pierre Dupuis, Ip-address: 134.158.37.12
+  - vm-name: sandbox-peter-green, service: VM dev pour Pierre Veyre, Ip-address: 134.158.37.14
+  - vm-name: FOREMAN, service: Foreman, Ip-address: 134.158.37.5
+  
+
+############################
+# VM for Bio-info
+#############################
+
+  - vm-name: shiny, service: Evaluer phyloseq, Seed et MetaMapR, Ip-address: 134.158.37.10 (CPU : 3 core, Mem: 4 Go, disk: 10 Go)
+  - vm-name: cclinfluxutec07, service: Machine d'analyse pour UTEC07, Ip-address: 134.158.37.3 (CPU : 4 core, Mem: 4 Go, disk: 40 Go)
+  - vm-name: resequencing, service: resequencing, Ip-address: 172.17.6.6 (CPU : 16 core, Mem: 12Go, disk: 40 Go)
+  - vm-name: denovo_assembly, service: denovo_assembly, Ip-address:172.17.6.5 (CPU : 16 core, Mem: 12Go, disk: 40 Go)
+  - vm-name: MULTI-OMICS, service: MULTI-OMICS, Ip-address: 172.17.6.3 (CPU : 16 core, Mem: 12Go, disk: 40 Go)
+  - vm-name: UTEC2_RNASEQ, service: UTEC2_RNASEQ, Ip-address: 172.17.6.4 (CPU : 16 core, Mem: 12Go, disk: 40 Go)
+  - vm-name: MachineLearning, service: Machine Learing, Ip-address: 172.17.6.7 (CPU : 4 core, Mem: 8 Go, Disk: 20 Go )

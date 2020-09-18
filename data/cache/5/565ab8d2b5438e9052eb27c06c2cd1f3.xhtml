@@ -1,0 +1,299 @@
+
+<h2 class="sectionedit1" id="htcondor">HTCondor</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT1 SECTION "HTCondor" [1-22] -->
+<h3 class="sectionedit2" id="introduction">Introduction</h3>
+<div class="level3">
+
+<p>
+HTCondor is a specialized workload management system for compute-intensive jobs. Like other full-featured batch systems, HTCondor provides a job queueing mechanism, scheduling policy, priority scheme, resource monitoring, and resource management. Users submit their serial or parallel jobs to HTCondor, HTCondor places them into a queue, chooses when and where to run the jobs based upon a policy, carefully monitors their progress, and ultimately informs the user upon completion. 
+</p>
+
+<p>
+<a href="https://research.cs.wisc.edu/htcondor/description.html" class="urlextern" title="https://research.cs.wisc.edu/htcondor/description.html"  rel="nofollow"> See complete description</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [23-617] -->
+<h3 class="sectionedit3" id="htcondor_daemons_configuration">HTCondor daemons configuration</h3>
+<div class="level3">
+
+<p>
+On a central manager machine that can submit jobs as well as execute them, there will be processes for:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_master</div>
+</li>
+<li class="level1"><div class="li"> condor_collector</div>
+</li>
+<li class="level1"><div class="li"> condor_negotiator</div>
+</li>
+<li class="level1"><div class="li"> condor_startd</div>
+</li>
+<li class="level1"><div class="li"> condor_schedd</div>
+</li>
+</ul>
+
+<p>
+On a central manager machine that does not submit jobs nor execute them, there will be processes for:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_master</div>
+</li>
+<li class="level1"><div class="li"> condor_collector</div>
+</li>
+<li class="level1"><div class="li"> condor_negotiator</div>
+</li>
+</ul>
+
+<p>
+For a machine that only submits jobs, there will be processes for:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_master</div>
+</li>
+<li class="level1"><div class="li"> condor_schedd</div>
+</li>
+</ul>
+
+<p>
+For a machine that only executes jobs, there will be processes for:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_master</div>
+</li>
+<li class="level1"><div class="li"> condor_startd</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "HTCondor daemons configuration" [618-1238] -->
+<h3 class="sectionedit4" id="deployment">Deployment</h3>
+<div class="level3">
+
+<p>
+An Ansible playbook is available on <a href="https://gitlab.in2p3.fr/bioaster/htcondor-ansible-deployment" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/htcondor-ansible-deployment"  rel="nofollow"> Gitlab</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Deployment" [1239-1371] -->
+<h3 class="sectionedit5" id="our_platform_architecture">Our platform architecture</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT5 SECTION "Our platform architecture" [1372-1408] -->
+<h3 class="sectionedit6" id="universe_used_bioaster">Universe used @ BIOASTER</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT6 SECTION "Universe used @ BIOASTER" [1409-1444] -->
+<h3 class="sectionedit7" id="operate_it">Operate it</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="checking_pool_status">Checking pool status</h4>
+<div class="level4">
+
+<p>
+<strong>condor_status: </strong> List slots in HTCondor pool and their status: Owner (used by owner), Claimed (used by HTCondor), Unclaimed (available to be used by HTCondor), etc. 
+</p>
+
+<p>
+Useful options:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_status -avail: List those slots that are not busy and could run HTCondor jobs at this moment</div>
+</li>
+<li class="level1"><div class="li"> condor_status -submitters: Show information about the current general status, like number of running, idle and held jobs (and submitters)</div>
+</li>
+<li class="level1"><div class="li"> condor_status -run: List slots that are currently running jobs and show related information (owner of each job, machine where it was submitted from, etc.)</div>
+</li>
+<li class="level1"><div class="li"> condor_status -state -total: List a summary according to the state of each slot</div>
+</li>
+<li class="level1"><div class="li"> condor_status -master: List machines, but only names (status and slots are not shown)</div>
+</li>
+<li class="level1"><div class="li"> condor_status -server: List attributes of slots, like memory, disk, load, flops, etc.</div>
+</li>
+<li class="level1"><div class="li"> condor_status -sort Memory: Sort slots by Memory, you can try also with other attributes</div>
+</li>
+<li class="level1"><div class="li"> condor_status -format &lt;fmt&gt; &lt;attr&gt;: List attributes using the specified format. For instance, next command will show the name of each slot and the disk space: condor_status -format “%s\t ” Name -format “%d KB\n” Disk</div>
+</li>
+<li class="level1"><div class="li"> condor_status &lt;machine&gt;: Show the status of a specific machine</div>
+</li>
+<li class="level1"><div class="li"> condor_status &lt;machine&gt; -long: Show the complete ClassAd of a machine (its specifications). We can use these specifications to add restrictions in the submit file so we can control which machines we want to use.</div>
+</li>
+<li class="level1"><div class="li"> condor_status -constraint &lt;constraint&gt;: Only Show slots that satisfy the constraint. I.e: condor_status -constraint &#039;Memory &gt; 1536&#039; will only show slots with more than 1.5GB of RAM per slot. </div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="submitting_jobs">Submitting jobs</h4>
+<div class="level4">
+
+<p>
+<strong>condor_submit &lt;submit_file&gt;: </strong> Submit jobs to HTCondor queue according to the information specified in submit_file. Visit the submit file page to see some examples of these files. There are also some FAQs related to the submit file. 
+</p>
+
+<p>
+Useful options:
+</p>
+<ul>
+<li class="level1"><div class="li"> condor_submit &lt;submit_file&gt; -dry-run &lt;dest_file&gt; : this option parses the submit file and saves all the related info (name and locations of input and output files after expanding all variables, value of requirements, etc.) to &lt;dest_file&gt;, but real jobs are not submitted. Using this option is highly recommended when debugging or before the real submission if you have made some modifications in your submit file and you are not sure whether they will work.</div>
+</li>
+<li class="level1"><div class="li"> condor_submit &lt;submit_file&gt; &#039;var=value&#039;: add or modify variable(s) at submission time, without changing the submit file. For instance, if you are using queue $(N) in your submit file, then condor_submit &lt;submit_file&gt; &#039;N = 10&#039; will submit 10 jobs. You can specify several pairs of var=value.</div>
+</li>
+<li class="level1"><div class="li"> condor_submit &lt;submit_file&gt; -append &lt;command&gt;: add submit commands at submission time, without changing the submit file. You can add more than one command using several times -append. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Operate it" [1445-4374] -->
+<h3 class="sectionedit8" id="drmaa_api_and_python_lib">DRMAA API and python lib</h3>
+<div class="level3">
+
+<p>
+To use the DRMAA Python library, you need to install it via pip:
+</p>
+<pre class="prettyprint lang-class">
+$ pip install drmaa
+</pre>
+<p>
+We need access to the libdrmaa.so C library. To do so, we install the HTCondor one and set the DRMAA_LIBRARY_PATH environement variable:
+</p>
+<pre class="prettyprint lang-class">
+$ sudo cp ($CONDOR_DIR)/lib/libdrmaa.so /usr/lib64
+$ echo &quot;export DRMAA_LIBRARY_PATH=/usr/lib64/libdrmaa.so&quot; &gt;&gt; ~/.bashrc
+</pre>
+<p>
+To make test here a simple script that launch a bash job (job.sh) via drmaa:
+</p>
+<pre class="prettyprint lang-class">
+#!/usr/bin/env python
+
+import drmaa
+import os
+
+def main():
+   &quot;&quot;&quot;
+   Submit a job.
+   &quot;&quot;&quot;
+   with drmaa.Session() as s:
+       print(&#039;Creating job template&#039;)
+       jt = s.createJobTemplate()
+       jt.remoteCommand = os.path.join(os.getcwd(), &#039;job.sh&#039;)
+       jt.joinFiles=True
+
+       jobid = s.runJob(jt)
+       print(&#039;Your job has been submitted with ID %s&#039; % jobid)
+
+       print(&#039;Cleaning up&#039;)
+       s.deleteJobTemplate(jt)
+
+if __name__==&#039;__main__&#039;:
+   main()
+
+</pre>
+<p>
+Launch the script and validate its execution:
+</p>
+<pre class="prettyprint lang-class">
+$ python job.py 
+Creating job template
+DEBUG: Join_files is set
+DEBUG: drmaa_join_files: y
+DEBUG: drmaa_remote_command: /home/pveyre/condor_test/job.sh
+Your job has been submitted with ID htcondor-test.in2p3.fr.19.0
+Cleaning up
+
+$ condor_q
+
+-- Schedd: htcondor-test.in2p3.fr : &lt;134.158.37.4:43895?...
+ ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD               
+  19.0   pveyre          1/25 09:32   0+00:00:01 R  0   0.0  job.sh
+
+1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
+
+</pre>
+</div>
+<!-- EDIT8 SECTION "DRMAA API and python lib" [4375-6015] -->
+<h3 class="sectionedit9" id="bioaster_projects_using_it">BIOASTER projects using it</h3>
+<div class="level3">
+
+<p>
+<strong>Metaseq: </strong> <a href="https://gitlab.in2p3.fr/bioaster/metaseq" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/metaseq"  rel="nofollow"> see its Gitlab project</a>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "BIOASTER projects using it" [6016-6139] -->
+<h3 class="sectionedit10" id="s_pipeline_tools_forbashrc">16S pipeline tools (for ~/.bashrc)</h3>
+<div class="level3">
+<pre class="prettyprint">
+#######################################
+# NEEDED for 16S pipeline execution
+export PATH=$PATH:\
+/mnt/gpfs/pt2/Apps/CentOS7/PEAR/bin:\
+/mnt/gpfs/pt2/Apps/CentOS7/Trimmomatic-0.36:\
+/mnt/gpfs/pt2/Apps/CentOS7/a5_miseq_linux_20150522/bin:\
+/mnt/gpfs/pt2/Apps/CentOS7:\
+/mnt/gpfs/pt2/Apps/CentOS7/seqtk
+
+export RDP_JAR_PATH=/mnt/gpfs/pt2/Apps/rdpclassifier-2.2-release/rdp_classifier-2.2.jar
+
+#######################################
+</pre>
+</div>
+<!-- EDIT10 SECTION "16S pipeline tools (for ~/.bashrc)" [6140-6631] -->
+<h3 class="sectionedit11" id="snakemake_drmaa_hack_by_pv_snakemakeexecutorspy">Snakemake DRMAA Hack by PV (snakemake/executors.py)</h3>
+<div class="level3">
+<pre class="prettyprint">
+def _wait_for_jobs(self):
+        import drmaa
+        while True:
+            with self.lock:
+                if not self.wait:
+                    return
+                active_jobs = self.active_jobs
+                self.active_jobs = list()
+                for active_job in active_jobs:
+                    try:
+                        
+                        print(active_job)
+                        print(drmaa.Session.TIMEOUT_NO_WAIT)
+                        retval = self.session.synchronize([active_job.jobid],
+                                                   drmaa.Session.TIMEOUT_NO_WAIT)
+
+                    except drmaa.ExitTimeoutException as e:
+                        # job still active
+                        self.active_jobs.append(active_job)
+                        continue
+                    except (drmaa.InternalException, Exception) as e:
+                        print_exception(WorkflowError(&quot;DRMAA Error: {}&quot;.format(e)),
+                                        self.workflow.linemaps)
+                        os.remove(active_job.jobscript)
+                        active_job.error_callback(active_job.job)
+                        continue
+                    # job exited
+                    os.remove(active_job.jobscript)
+
+                    print(self.session.jobStatus(active_job.jobid))
+
+                    #if retval.hasExited and retval.exitStatus == 0:
+                    if self.session.jobStatus(active_job.jobid) == drmaa.JobState.DONE:
+                        self.finish_job(active_job.job)
+                        active_job.callback(active_job.job)
+                    else:
+                        self.print_job_error(active_job.job)
+                        print_exception(
+                            ClusterJobException(active_job.job, self.dag.jobid(active_job.job), active_job.jobscript),
+                            self.workflow.linemaps)
+                        active_job.error_callback(active_job.job)
+            time.sleep(1)
+
+
+</pre>
+</div>
+<!-- EDIT11 SECTION "Snakemake DRMAA Hack by PV (snakemake/executors.py)" [6632-] -->

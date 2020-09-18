@@ -1,0 +1,15 @@
+====== VM administration ======
+
+===== Disk space management =====
+
+1. [[employes:pengfei.liu:admin_system:vm_administration:create_lvm_storage|Setup Flexible Disk Storage with Logical Volume Management (LVM) in Linux]]
+
+2. [[employes:pengfei.liu:admin_system:vm_administration:vm_extend_disk|Extend disk space of a vm in centos7]]
+
+3. [[employes:pengfei.liu:admin_system:vm_administration:vm_reduce_disk|Reduce disk volum of a LV in Centos7]]
+
+===== Creating VM in vmware/vsphere =====
+
+[[employes:pengfei.liu:admin_system:vm_administration:create_vm|Standard operation Procedure for creating centos 7 vm in VM ware]]
+
+[[employes:pengfei.liu:admin_system:vm_administration:vmware_player_tools|Install vmware tools on a centos7 guest via vmware player]]

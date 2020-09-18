@@ -1,0 +1,350 @@
+
+<h1 class="sectionedit1" id="lesson02_data_model">Lesson02 Data Model</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson02 Data Model&quot;,&quot;hid&quot;:&quot;lesson02_data_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-35&quot;} -->
+<h2 class="sectionedit2" id="steps_for_designing_a_relational_database_model_building_entities_association_model">1. Steps for designing a relational database model (building entities association model)</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Exam business logic</div>
+</li>
+<li class="level1"><div class="li"> identify entities and relationships between entities</div>
+</li>
+<li class="level1"><div class="li"> draw the entities relation schema</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Steps for designing a relational database model (building entities association model)&quot;,&quot;hid&quot;:&quot;steps_for_designing_a_relational_database_model_building_entities_association_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;36-257&quot;} -->
+<h2 class="sectionedit3" id="entity-association_model">2. Entity-association model</h2>
+<div class="level2">
+
+<p>
+The principle is based on a modelization based on entities and associations between them.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Entity-association model&quot;,&quot;hid&quot;:&quot;entity-association_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;258-388&quot;} -->
+<h3 class="sectionedit4" id="what_is_an_entity">2.1 What is an entity?</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> An entity is an existing element or an unambiguously distinguishable identifiable concept.</div>
+</li>
+<li class="level1"><div class="li"> An entity is an object, an event, a place, a person, …</div>
+</li>
+<li class="level1"><div class="li"> A set / an entity class contains similar but distinguishable two by two. examples: people, cars in a parking lot, a library of books …</div>
+</li>
+<li class="level1"><div class="li"> Entities have properties (to distinguish them) called attributes.</div>
+</li>
+<li class="level1"><div class="li"> Entities in one set have the same kinds of attributes (with different values).</div>
+</li>
+<li class="level1"><div class="li"> Each attribute associates an entity with a value and a type (integers, reals, strings …).</div>
+</li>
+<li class="level1"><div class="li"> Each Entity must be represented in a unique and unambiguous manner, to be distinguished from all others via an identifier.</div>
+</li>
+</ul>
+
+<p>
+Example 1:
+</p>
+
+<p>
+The set of entities “person” has the attributes: name, surname, age, address …
+</p>
+<ul>
+<li class="level1"><div class="li"> name associates a string of characters with the entity person.</div>
+</li>
+<li class="level1"><div class="li"> age associates a short integer</div>
+</li>
+</ul>
+
+<p>
+The entity book has the attributes:
+</p>
+<ul>
+<li class="level1"><div class="li"> book number (4-digit integer) </div>
+</li>
+<li class="level1"><div class="li"> author (20-character string) </div>
+</li>
+<li class="level1"><div class="li"> title (50-character string) </div>
+</li>
+<li class="level1"><div class="li"> publisher (25-character strings)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 What is an entity?&quot;,&quot;hid&quot;:&quot;what_is_an_entity&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;389-1469&quot;} -->
+<h3 class="sectionedit5" id="what_is_association">2.2 What is association?</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> An association class is a link between 2 or more entities classes.</div>
+</li>
+<li class="level1 node"><div class="li"> Associations :</div>
+<ul>
+<li class="level2"><div class="li">  From 0,1: an entity of A can be connected to none or only one entity of B</div>
+</li>
+<li class="level2"><div class="li">  From 1,1: an entity of A is connected to a single entity of B</div>
+</li>
+<li class="level2"><div class="li">  From 0 to several (0, N): an entity of A can be connected to none or several entities of B …</div>
+</li>
+<li class="level2"><div class="li">  From 1 to several (1, N): an entity of A may be connected to one or more entities of B</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+When we determined a pair of entities (e1, e2) and we want to associate certain values with this pair, we associate an attribute to this association (as for an entity). By default, an association contains the entities identifiers that participate in the association. But in some cases, we need to add more attributes to an association. For example, when a person borrows a book we want to keep track of the loan date. This date would be meaningless in the Person entity, or in the Book entity, since there may be different loan dates for the same person, just as the book may be borrowed on different dates.
+</p>
+
+<p>
+The below figure is an example of the entity association model. It&#039;s in French, but you get the idea, right?
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Adata_base%3Atheory%3A02_data_model&amp;media=employes:pengfei.liu:data_science:data_base:theory:entityassociationmodel.png" class="media" title="employes:pengfei.liu:data_science:data_base:theory:entityassociationmodel.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=489b20&amp;media=employes:pengfei.liu:data_science:data_base:theory:entityassociationmodel.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 What is association?&quot;,&quot;hid&quot;:&quot;what_is_association&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1470-2751&quot;} -->
+<h3 class="sectionedit6" id="key_steps_for_designing_a_entity_association_model">2.3 Key steps for designing a entity association model</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Identify entities</div>
+</li>
+<li class="level1"><div class="li"> Associate an identifier to each entity.</div>
+</li>
+<li class="level1"><div class="li"> Associate the attributes with each entity.</div>
+</li>
+<li class="level1"><div class="li"> Define associations with cardinalities</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 Key steps for designing a entity association model&quot;,&quot;hid&quot;:&quot;key_steps_for_designing_a_entity_association_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2752-2975&quot;} -->
+<h2 class="sectionedit7" id="transform_entity_association_ea_model_to_the_relational_model">3. Transform entity association (EA) model to the relational model</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Transform entity association (EA) model to the relational model&quot;,&quot;hid&quot;:&quot;transform_entity_association_ea_model_to_the_relational_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2976-3056&quot;} -->
+<h3 class="sectionedit8" id="three_steps_of_the_transformation">3.1 Three Steps of the transformation</h3>
+<div class="level3">
+
+<p>
+Step1: Entity transformation
+</p>
+<ul>
+<li class="level1"><div class="li"> Each entity of the EA model is transformed into a table</div>
+</li>
+<li class="level1"><div class="li"> Entity properties become attributes of the table</div>
+</li>
+<li class="level1"><div class="li"> Entity identifier becomes the primary key</div>
+</li>
+</ul>
+
+<p>
+Step2: Associations 1,1→x,y transformation
+</p>
+<ul>
+<li class="level1"><div class="li"> When we find a cardinality 1,1, we add the target identifier to the source relation (it becomes a foreign key)</div>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> 1,1-1,n example, suppose an author can write many books (1,n) and a book can only have one author(1,1), so we have author(1,n)→write←(1,1)book, after transformation, we will have the following two tables:</div>
+<ul>
+<li class="level3"><div class="li"> author(author_id,author_name,author_birthdate), author_id in table author is the primary key</div>
+</li>
+<li class="level3"><div class="li"> book(book_id,book_title,author_id), author_id in table book is the foreign key.</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> 1,1-0,1 example, suppose a laptop may have one or zero cd_room, a cd_room must be equipped on a laptop, so we have laptop(0,1)→equipe←(1,1)cd_room, after transformation, we will have the following two tables:</div>
+<ul>
+<li class="level3"><div class="li"> laptop(laptop_id,laptop_brand), laptop_id is the primary key of the table laptop</div>
+</li>
+<li class="level3"><div class="li"> cd_room(cd_id,cd_brand,laptop_id), laptop_id is the foreign key of the table cd_room.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Step3: All other associations
+</p>
+<ul>
+<li class="level1"><div class="li"> The association becomes a table in its own right whose key is the concatenation of the two entities identifiers, including the possible association attributes.</div>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> 0,1-0,1 example, suppose a laptop may have one or zero cd_room, a cd_room may or may not be equipped on a laptop, so we have laptop(0,1)→equipe←(0,1)cd_room, after transformation, we will have three tables, </div>
+<ul>
+<li class="level3"><div class="li"> laptop(laptop_id,laptop_brand)</div>
+</li>
+<li class="level3"><div class="li"> cd_room(cd_id,cd_brand)</div>
+</li>
+<li class="level3"><div class="li"> equipe(laptop_id,cd_id), laptop_id and cd_id are the foregin keys</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> 0,n-0,1 example, suppose we have a laptop may have zero or more removable devices, a removable device may or may not be equipped on a laptop, and when we equipe a device, we need to add equipe_date so we have laptop(0,n)→equipe(equipe_date)←(0,1)device, after transformation, we will have three tables:</div>
+<ul>
+<li class="level3"><div class="li"> laptop(laptop_id, laptop_brand)</div>
+</li>
+<li class="level3"><div class="li"> device(device_id, device_type)</div>
+</li>
+<li class="level3"><div class="li"> equipe(laptop_id,device_id,equipe_date) </div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Three Steps of the transformation&quot;,&quot;hid&quot;:&quot;three_steps_of_the_transformation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;3057-5256&quot;} -->
+<h3 class="sectionedit9" id="fonctional_dependencies">3.2 Fonctional dependencies</h3>
+<div class="level3">
+
+<p>
+The conceptual model is a good approach to design your relation model. It is the building foundation of your business model. But, how to make sure our relation model is relevant? A poor design can lead to redundancy and related anomalies. How to come up with a better design by decomposing a relational schema? Dr. Ed. CODD introduced the concept of functional dependencies. A functional dependency (FD) is a relationship between two attributes (generally between primary key and other non-primaries keys)
+</p>
+
+<p>
+For Example: Suppose we have an entity Author with three attributes, id is the primary key.
+</p>
+
+<p>
+Author(id, lastName, firstName)
+</p>
+
+<p>
+We could conclude the following fonctional dependencies : id → lastName, id → firstName
+</p>
+
+</div>
+
+<h4 id="fonctional_dependencies_properties">Fonctional dependencies properties</h4>
+<div class="level4">
+<ul>
+<li class="level1 node"><div class="li"> Reflexivity X → X ou ( X,Y) → X</div>
+<ul>
+<li class="level2"><div class="li"> cityname → cityname</div>
+</li>
+<li class="level2"><div class="li"> (cityname, department) → cityname</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Augmentation : If X → Y then (X,Z) → (Y,Z)</div>
+<ul>
+<li class="level2"><div class="li"> codezip → cityname</div>
+</li>
+<li class="level2"><div class="li"> (codezip, region) → (cityname, region)</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Transitivity : If X → Y &amp; if Y→ Z then X → Z</div>
+<ul>
+<li class="level2"><div class="li"> codezip → department &amp; department → region</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Pseudo-transitivity : If X → Y &amp; if (T,Y) → Z then (T,X) → Z</div>
+<ul>
+<li class="level2"><div class="li"> codezip → cityname &amp; (department, cityname) → region</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Union : If X → Y &amp; If X → Z then X → (Y,Z)</div>
+<ul>
+<li class="level2"><div class="li"> codezip → cityname &amp; codezip → department : codezip → (cityname, department)</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Decomposition : If X → Y &amp; If Z is included into Y then X → Z</div>
+<ul>
+<li class="level2"><div class="li"> codezip → (cityname, department) so codezip → department &amp; codezip → cityname</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Fonctional dependencies&quot;,&quot;hid&quot;:&quot;fonctional_dependencies&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;5257-6814&quot;} -->
+<h3 class="sectionedit10" id="what_is_a_primary_key">3.3 What is a primary key?</h3>
+<div class="level3">
+
+<p>
+Let K be a set of attributes (possibly a singleton) in a relation R,
+</p>
+<ul>
+<li class="level1"><div class="li"> K is a superkey for relation R if K functionally determines all attributes of R.</div>
+</li>
+<li class="level1"><div class="li"> K is a key for R if K is a superkey, but no proper subset of K is a superkey, called candidate key.</div>
+</li>
+<li class="level1"><div class="li"> A primary key is a candidate key that has been selected as the means of identifying tuples in a relation.</div>
+</li>
+</ul>
+
+<p>
+For example, we have an entity CUSTOMER(fisrtName, lastName, codezip, region, department)
+</p>
+<ul>
+<li class="level1"><div class="li"> (fisrtname,lastname,codezip, region, department) is a superkey</div>
+</li>
+<li class="level1"><div class="li"> (fisrtname,lastname,codezip) is a superkey</div>
+</li>
+<li class="level1"><div class="li"> (fisrtname,lastname) is a superkey and a candidate key</div>
+</li>
+</ul>
+
+<p>
+Thanks to the functional dependencies, Dr CODD developed the concept of Normalization.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 What is a primary key?&quot;,&quot;hid&quot;:&quot;what_is_a_primary_key&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;6815-7574&quot;} -->
+<h3 class="sectionedit11" id="data_model_normalization">data model normalization</h3>
+<div class="level3">
+
+<p>
+Data normalization is a method for :
+</p>
+<ul>
+<li class="level1"><div class="li"> Avoiding duplicate data</div>
+</li>
+<li class="level1"><div class="li"> Running updates/deletes/inserts without inconsistency</div>
+</li>
+<li class="level1"><div class="li"> Optimizing the storage space</div>
+</li>
+<li class="level1"><div class="li"> Decomposing your relation/table without losing any data</div>
+</li>
+</ul>
+
+<p>
+We have the following normalization form:
+</p>
+<ol>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:data_science:data_base:theory:data_model:1st_normal_from" class="wikilink1" title="employes:pengfei.liu:data_science:data_base:theory:data_model:1st_normal_from">First normal form</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:data_science:data_base:theory:data_model:2nd_normal_form" class="wikilink1" title="employes:pengfei.liu:data_science:data_base:theory:data_model:2nd_normal_form">Second normal form</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:data_science:data_base:theory:data_model:3rd_normal_form" class="wikilink1" title="employes:pengfei.liu:data_science:data_base:theory:data_model:3rd_normal_form">Third normal form</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:data_science:data_base:theory:data_model:bc_normal_form" class="wikilink1" title="employes:pengfei.liu:data_science:data_base:theory:data_model:bc_normal_form">Boyce-Codd normal form</a></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;data model normalization&quot;,&quot;hid&quot;:&quot;data_model_normalization&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;7575-8294&quot;} -->
+<h2 class="sectionedit12" id="data_base_optimisation">data base optimisation</h2>
+<div class="level2">
+
+<p>
+always index foreign key.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;data base optimisation&quot;,&quot;hid&quot;:&quot;data_base_optimisation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;8295-&quot;} -->

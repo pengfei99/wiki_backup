@@ -1,0 +1,7 @@
+<span class="re0">olcSuffix</span>:<span class="re1"> dc=pengfei,dc=org</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,dc=bioaster,dc=org</span>
+&nbsp;
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>bHSiwuPJEypHS6zHSE2Uy7M69sQjmkPL</span>
+<span class="co1"># The certification is optional, add them if you need ldaps</span>
+<span class="co1">#olcTLSCertificateFile: /etc/pki/tls/certs/ldap_cert.pem</span>
+<span class="co1">#olcTLSCertificateKeyFile: /etc/pki/tls/private/ldap_key.pem</span>

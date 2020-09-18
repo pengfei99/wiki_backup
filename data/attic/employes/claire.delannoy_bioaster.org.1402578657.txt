@@ -1,0 +1,48 @@
+//Cette page sert de prise en main de la façon d'écrire dans le wiki.//
+
+
+====== Page de prise en main du wiki ======
+//ceci est le titre principal (on a 5 niveaux de titres)//
+
+
+===== Titre de niveau -1 =====
+
+On peut mettre des accents (toujours très présents en français!),écrire en //italique//, en __souligné__ ou en **gras**\\
+On peut ajouter des commentaires pour les collaborateurs du wiki : FIXME ou DELETEME \\
+On peut passer à la ligne en mettant ''\\'' à la fin de la ligne\\ ou 
+sauter 1 ligne en mettant une ligne vide
+
+On peut inclure une ligne verticale 
+----
+
+On a deux façons de faire des listes possibles : avec des tirets simples ou avec des numéros :\\
+Les items qu'on pourrait aborder :
+  * les outils bioinformatiques à disposition
+  * les méthodes d'analyses de données multiparamétriques
+  * ... \\
+En choisissant un ordre :
+  - état de l'art des méthodes d'analyses utilisées
+  - celles que l'on pourrait utiliser au PT03
+  - d'autres en dvp ? 
+
+On peut ajouter une image en la mettant au préalable dans Media manager avec upload. On choisit taille et emplacement lors du choix de l'image ou on met un espace dans le code et selon cet espace, l'image sera à gauche, à droite ou centrée.\\
+{{ :pt3:spade_bendall.png?nolink&500 |La représentation Spade des données de Bendall }} 
+La représentation Spade des données de Bendall //et al// ,2011.
+On voit le titre associé à l'image quand on passe lentement le curseur de la souris sur l'image.
+
+On peut faire un lien vers une nouvelle page du wiki : [[pt3:essai_claire:explications_Spade|Spade]], vers un site web :[[http://www.sciencemag.org/content/332/6030/687.full|Article de Bendall]] ou vers un répertoire : [[\\srvfic\DRT\03 - PLATEAUX TECHNIQUES\PT 03 IMMUNOMONITORING|PT03]] 
+\\
+
+NB : pour un répertoire, l'accès peut poser problème à ceux qui ne se trouvent pas sur le même réseau. 
+
+La fonction Code Text sert à indiquer une ligne de code , par exemple : ''print "bonjour"''\\
+Pour écrire du texte brut (ou des symboles sans entrainer un effet syntaxique), écrire entre doubles % : par exemple %% \\ / _ _  %%
+
+On trouve toutes ces explications et d'autres sur la syntaxe du wiki sur ce [[https://www.dokuwiki.org/wiki:syntax|lien]]
+
+On peut mettre une étiquette (tag) à la page, cela permet un classement thématique des pages. Quand on clique sur le tag, on voit toutes les autres pages qui ont été marquées avec la même étiquette. 
+On peut signer la page, et le lien permet d'envoyer un mail à l'auteur\\
+ --- [[claire.delannoy@bioaster.org|Claire]] 2014/06/05 16:23//
+
+{{tag>essai}}
+

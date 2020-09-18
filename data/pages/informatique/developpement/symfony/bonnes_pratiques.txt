@@ -1,0 +1,56 @@
+====== Bonnes pratiques ======
+
+Cette liste de bonnes pratiques est tirée de [[http://symfony.com/doc/current/best_practices/index.html|la page "best practices" de Symfony]].
+
+  * [[http://symfony.com/doc/current/best_practices/introduction.html|Introduction]]
+    * you should not refactor your existing applications to comply with these best practices.
+
+  * [[http://symfony.com/doc/current/best_practices/creating-the-project.html|Creating the project]]
+    * Create only one bundle called AppBundle for your application logic
+    * There is no need to prefix the AppBundle with your own vendor (e.g. AcmeAppBundle), because this application bundle is never going to be shared.
+    * ''$ php app/console generate:bundle --namespace=AppBundle --dir=src --format=annotation --no-interaction''
+    * app/Resources/, stores all the templates and the translation files
+
+  * [[http://symfony.com/doc/current/best_practices/configuration.html|Configuration]]
+    * Define the infrastructure-related configuration options in the app/config/parameters.yml file.
+    * Define all your application's parameters in the app/config/parameters.yml.dist file.
+    * Define the application behavior related configuration options in the app/config/config.yml file.
+    * Use constants to define configuration options that rarely change.
+    * Moving Sensitive Options Outside of Symfony Entirely
+
+  * [[http://symfony.com/doc/current/best_practices/business-logic.html|Business Logic]]
+    * "Services: Naming and Format"
+
+  * [[http://symfony.com/doc/current/best_practices/controllers.html|Controllers]]
+    * Symfony follows the philosophy of "thin controllers and fat models"
+    * Use the ParamConverter trick to automatically query for Doctrine|Propel entities when it's simple and convenient.
+    * Pre and Post Hooks
+
+  * [[http://symfony.com/doc/current/best_practices/templates.html|Templates]]
+    * Store all your application's templates in app/Resources/views/ directory.
+    * Define your Twig extensions in the AppBundle/Twig/ directory and configure them using the app/config/services.yml file.
+    * ex: a custom md2html Twig filter
+
+  * [[http://symfony.com/doc/current/best_practices/forms.html|Forms]]
+    * Define your forms as PHP classes… EntityType and createForm()
+    * http://propelorm.org/Propel/cookbook/symfony2/mastering-symfony2-forms-with-propel.html
+    * Add buttons in the templates, not in the form classes or the controllers.
+    * Handling Form Submits […] we recommend using $form->isSubmitted() in the if statement for clarity.
+    * (Always redirect after post!)
+
+  * [[http://symfony.com/doc/current/best_practices/i18n.html|I18n]]
+    * Use the XLIFF format for your translation files.
+    * Always use keys for translations instead of content strings.
+
+  * [[http://symfony.com/doc/current/best_practices/security.html|Security]]
+    * Use the bcrypt encoder for encoding your users' passwords.
+    * Whenever possible, use the @Security annotation
+    * If your security logic is complex and can't be centralized into a method like isAuthor(), you should leverage custom voters.
+    * with Propel http://propelorm.org/documentation/cookbook/symfony2/the-symfony2-security-component-and-propel.html
+
+  * [[http://symfony.com/doc/current/best_practices/web-assets.html|Web-assets]]
+    * Store your assets in the web/ directory.
+    * Use Assetic to compile, combine and minimize web assets
+
+  * [[http://symfony.com/doc/current/best_practices/tests.html|Tests]]
+    * Define a functional test that at least checks if your application pages are successfully loading.

@@ -1,0 +1,168 @@
+
+<h1 class="sectionedit1" id="install_and_configure_r_interpreter_in_zeppelin">Install and configure R interpreter in Zeppelin</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install and configure R interpreter in Zeppelin&quot;,&quot;hid&quot;:&quot;install_and_configure_r_interpreter_in_zeppelin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-62&quot;} -->
+<h2 class="sectionedit2" id="step1_install_r">Step1. Install R</h2>
+<div class="level2">
+<pre class="code"># For Centos: 
+&gt; yum install R R-devel libcurl-devel openssl-devel
+# For Ubuntu: 
+&gt; apt-get install r-base
+
+# Validate your installation
+R -e &quot;print(1+1)&quot;
+
+# Install additional package, you need root right to the following install
+# Install devtools
+&gt; R -e &quot;install.packages(&#039;devtools&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+
+# Install knitr 
+&gt; R -e &quot;install.packages(&#039;knitr&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+
+# Install ggplot2 
+&gt; R -e &quot;install.packages(&#039;ggplot2&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+
+# Install Other vizualisation librairies: 
+&gt; R -e &quot;install.packages(c(&#039;devtools&#039;,&#039;mplot&#039;, &#039;googleVis&#039;), repos = &#039;http://cran.us.r-project.org&#039;); require(devtools); install_github(&#039;ramnathv/rCharts&#039;)&quot;
+
+# We recommend you to also install the following optional R libraries for happy data analytics:
+
+R -e &quot;install.packages(&#039;glmnet&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+R -e &quot;install.packages(&#039;pROC&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+R -e &quot;install.packages(&#039;data.table&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+R -e &quot;install.packages(&#039;caret&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+R -e &quot;install.packages(&#039;sqldf&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+R -e &quot;install.packages(&#039;wordcloud&#039;, repos = &#039;http://cran.us.r-project.org&#039;)&quot;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step1. Install R&quot;,&quot;hid&quot;:&quot;step1_install_r&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;63-1373&quot;} -->
+<h2 class="sectionedit3" id="configure_zeppelin_to_link_r">Configure Zeppelin to link R</h2>
+<div class="level2">
+
+<p>
+There are two files which need to be edited, conf/zeppelin-env.sh and zeppelin-site.xml. The SPARK_HOME environment variable must be set in zeppelin-env.sh.
+</p>
+
+<p>
+zeppelin-site.xml will ensure that Zeppelin sees the R Interpreter the first time it starts up.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure Zeppelin to link R&quot;,&quot;hid&quot;:&quot;configure_zeppelin_to_link_r&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1374-1671&quot;} -->
+<h2 class="sectionedit4" id="two_ways_to_use_r_in_zeppelin">Two ways to use R in zeppelin</h2>
+<div class="level2">
+
+<p>
+%r (%spark.r) will behave like an ordinary REPL. You can execute commands as in the CLI.
+</p>
+
+<p>
+%knitr interfaces directly against knitr, with chunk options on the first line
+</p>
+<pre class="code"># first run
+%spark.r 
+2+2
+
+# R base plotting is fully supported
+hist(ed)
+
+# if you return a data.frame, Zeppelin will attempt to display it using Zeppelin&#039;s built-in visualizations.
+
+data(mtcars)
+mtcars
+</pre>
+
+<p>
+Some examples of the %knitr
+</p>
+<pre class="code"># Example 1, show country in a map
+%knitr echo=F, results=&#039;asis&#039;, message=F, warning=F
+library(googleVis)
+op &lt;- options(gvis.plot.tag=&quot;chart&quot;)
+Geo=gvisGeoGhart(Exports,locationvar=&quot;country&quot;,colorvar=&quot;Profit&quot;,options=list(projection=&#039;kavrayskiy-vii&#039;))
+plot(Geo)
+
+# Example 2
+%knitr echo=F, results=&#039;asis&#039;, message=F, warning=F
+library(googleVis)
+data(Fruits)
+op &lt;- options(gvis.plot.tag=&quot;chart&quot;)
+Motion=gvisMotionChart(Fruits,idvar=&quot;Fruit&quot;,timevar=&quot;Year&quot;)
+plot(Motion)</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Two ways to use R in zeppelin&quot;,&quot;hid&quot;:&quot;two_ways_to_use_r_in_zeppelin&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1672-2616&quot;} -->
+<h2 class="sectionedit5" id="using_sparkr_and_moving_between_languages">Using SparkR and moving between languages</h2>
+<div class="level2">
+
+<p>
+If SPARK_HOME is set, the SparkR package will be loaded automatically:
+</p>
+
+<p>
+The Spark Context and SQL Context are created and injected into the local environment automatically as sc and sql.
+</p>
+
+<p>
+The same context are shared with the %spark, %sql and %pyspark interpreters.
+</p>
+<pre class="code">%spark.r
+data(faithful)
+faith &lt;- createDataFrame(sqlContext,faithful)
+registerTempTable(faith,&quot;faithful&quot;)
+ed &lt;- sql(sqlContext, &quot;Select * from faithful&quot;)
+SparkR:::head(ed)
+
+%spark
+val faithful=sqlContext.sql(&quot;Select * from faithful&quot;)
+faithful.printSchema()
+
+#you can also make an ordinary R variable accessible in scala and Python:
+%spark.r
+
+.z.put(&quot;anRVariable&quot;,&quot;Hello from R!&quot;)
+
+%spark
+z.get(&quot;anRVariable&quot;)
+
+# And vice versa
+
+%spark
+x.put(&quot;aScalaVar&quot;,&quot;Hello from Scala!&quot;)
+
+%spark.knitr echo=F
+ascala &lt;- .x.get(&quot;aScalaVar&quot;)
+print(ascala)</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using SparkR and moving between languages&quot;,&quot;hid&quot;:&quot;using_sparkr_and_moving_between_languages&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;2617-3492&quot;} -->
+<h2 class="sectionedit6" id="caveats_and_troubleshooting">Caveats and Troubleshooting</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Almost all issues with the R interpreter turned out to be caused by an incorrectly set SPARK_HOME. The R interpreter must load a version of the SparkR package that matches the running version of Spark, and it does this by searching SPARK_HOME. If Zeppelin isn&#039;t configured to interface with Spark in SPARK_HOME, the R interpreter will not be able to connect to Spark.</div>
+</li>
+<li class="level1"><div class="li"> The knitr environment is persistent. If you run a chunk from Zeppelin that changes a variable, then run the same chunk again, the variable has already been changed. Use immutable variables.</div>
+</li>
+<li class="level1"><div class="li"> (Note that %spark.r and %r are two different ways of calling the same interpreter, as are %spark.knitr and %knitr. By default, Zeppelin puts the R interpreters in the %spark. Interpreter Group.</div>
+</li>
+<li class="level1"><div class="li"> Using the %r interpreter, if you return a data.frame, <abbr title="HyperText Markup Language">HTML</abbr>, or an image, it will dominate the result. So if you execute three commands, and one is hist(), all you will see is the histogram, not the results of the other commands. This is a Zeppelin limitation.</div>
+</li>
+<li class="level1"><div class="li"> If you return a data.frame (for instance, from calling head()) from the %spark.r interpreter, it will be parsed by Zeppelin&#039;s built-in data visualization system.</div>
+</li>
+<li class="level1"><div class="li"> Why knitr Instead of rmarkdown? Why no htmlwidgets? In order to support htmlwidgets, which has indirect dependencies, rmarkdown uses pandoc, which requires writing to and reading from disc. This makes it many times slower than knitr, which can operate entirely in RAM.</div>
+</li>
+<li class="level1"><div class="li"> Why no ggvis or shiny? Supporting shiny would require integrating a reverse-proxy into Zeppelin, which is a task.</div>
+</li>
+<li class="level1"><div class="li"> Max <abbr title="Operating System">OS</abbr> X &amp; case-insensitive filesystem. If you try to install on a case-insensitive filesystem, which is the Mac <abbr title="Operating System">OS</abbr> X default, maven can unintentionally delete the install directory because r and R become the same subdirectory.</div>
+</li>
+<li class="level1"><div class="li"> Error unable to start device X11 with the repl interpreter. Check your shell login scripts to see if they are adjusting the DISPLAY environment variable. This is common on some operating systems as a workaround for ssh issues, but can interfere with R plotting.</div>
+</li>
+<li class="level1"><div class="li"> akka Library Version or TTransport errors. This can happen if you try to run Zeppelin with a SPARK_HOME that has a version of Spark other than the one specified with -Pspark-1.x when Zeppelin was compiled.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Caveats and Troubleshooting&quot;,&quot;hid&quot;:&quot;caveats_and_troubleshooting&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;3493-&quot;} -->

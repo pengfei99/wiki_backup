@@ -1,0 +1,189 @@
+
+<h1 class="sectionedit1" id="installation_de_nouveaux_logiciels">Installation de nouveaux logiciels</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Installation de nouveaux logiciels" [1-50] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+La mise en place de logiciels doit tenir compte de plusieurs <strong>contraintes</strong> :
+</p>
+<ul>
+<li class="level1"><div class="li"> Les mêmes logiciels doivent être disponibles depuis différents environnements (<a href="/ccin2p3/scheduler" class="wikilink1" title="ccin2p3:scheduler">UGS</a>, <a href="/ccin2p3/cloud" class="wikilink1" title="ccin2p3:cloud">OpenStack</a>, <a href="/in2p3/logiciels/galaxy" class="wikilink1" title="in2p3:logiciels:galaxy">Galaxy</a>…) ;</div>
+</li>
+<li class="level1"><div class="li"> Différentes versions du même logiciel peuvent être installées en même temps ;</div>
+</li>
+<li class="level1"><div class="li"> Chaque logiciel peut-être compilé et optimisé pour différentes architectures ;</div>
+</li>
+<li class="level1"><div class="li"> Le CC met à jour les images <a href="https://en.wikipedia.org/wiki/Scientific_Linux" class="urlextern" title="https://en.wikipedia.org/wiki/Scientific_Linux"  rel="nofollow">Scientific Linux</a> quotidiennement, celle-ci ne peuvent donc pas être personnalisées pour nous.</div>
+</li>
+</ul>
+
+<p>
+Les <strong>choix</strong> suivants ont donc été faits :
+</p>
+<ul>
+<li class="level1"><div class="li"> Les logiciels sont installés sur un disque partagé ;</div>
+</li>
+<li class="level1"><div class="li"> <del>Tout packager pour la distro et installer automatiquement à chaque mise à jour ;</del></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://modules.sourceforge.net/" class="urlextern" title="http://modules.sourceforge.net/"  rel="nofollow">Modules</a> est utilisé pour définir les environnements de travail ;</div>
+</li>
+<li class="level1"><div class="li"> <del><a href="https://www.gnu.org/software/guix/" class="urlextern" title="https://www.gnu.org/software/guix/"  rel="nofollow">Guix</a> pour configurer les environnements.</del></div>
+</li>
+</ul>
+<!-- EDIT3 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention</strong>, pour le moment les logiciels ne sont disponibles que pour la ferme, le disque partagé n&#039;étant pas encore disponible pour le nuage.<br/>
+
+Reportez vous pour le moment aux pages <a href="/in2p3/logiciels" class="wikilink1" title="in2p3:logiciels">des différents logiciels</a> pour avoir des exemples d&#039;installation.
+</p>
+</div><!-- EDIT4 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT2 SECTION "Introduction" [51-1408] -->
+<h2 class="sectionedit5" id="creer_ou_lancer_une_vm_pour_la_compilation">Créer ou lancer une VM pour la compilation</h2>
+<div class="level2">
+
+<p>
+Les compilations se font à partir d&#039;une VM dédiée. Celle-ci peut-être créée comme décrit ci-dessous.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Créer ou lancer une VM pour la compilation" [1409-1574] -->
+<h3 class="sectionedit6" id="creation_d_une_cle_ssh">Création d&#039;une clé SSH</h3>
+<div class="level3">
+<pre class="code">  ssh-keygen -t rsa -f ~/.novacreds/&lt;KEY_NAME&gt;
+  nova keypair-add --pub-key=$HOME/.novacreds/&lt;KEY_NAME&gt;.pub &lt;KEY_NAME&gt;
+  nova keypair-list</pre>
+
+</div>
+<!-- EDIT6 SECTION "Création d'une clé SSH" [1575-1756] -->
+<h3 class="sectionedit7" id="creation_du_serveur">Création du serveur</h3>
+<div class="level3">
+<pre class="code">  nova flavor-list
+  nova image-list
+  nova boot --key-name=&lt;KEY_NAME&gt; --image=official-SL-6x-x86_64 \
+            --flavor=m1.small &lt;VM_NAME&gt;
+  nova floating-ip-list
+  nova floating-ip-create # si besoin
+  nova add-floating-ip &lt;VM_NAME&gt; &lt;AVAILABLE_FLOATING_IP&gt;
+  nova secgroup-list
+  nova secgroup-list-rules default</pre>
+
+</div>
+<!-- EDIT7 SECTION "Création du serveur" [1757-2125] -->
+<h3 class="sectionedit8" id="creation_d_un_volume_virtuel">Création d&#039;un volume virtuel</h3>
+<div class="level3">
+<pre class="code">  cinder create --display-name &lt;VOLUME_NAME&gt; 10 # Pour 10Go
+  cinder list
+  cinder show software
+  nova volume-attach &lt;VM_NAME&gt; &lt;VOLUME_ID&gt; /dev/vdc # vdc, vdd...</pre>
+
+</div>
+<!-- EDIT8 SECTION "Création d'un volume virtuel" [2126-2338] -->
+<h3 class="sectionedit9" id="se_logguer_au_serveur_virtuel">Se logguer au serveur virtuel</h3>
+<div class="level3">
+<pre class="code">  ssh -i  ~/.novacreds/&lt;KEY_NAME&gt; root@&lt;AVAILABLE_FLOATING_IP&gt;</pre>
+
+</div>
+<!-- EDIT9 SECTION "Se logguer au serveur virtuel" [2339-2445] -->
+<h3 class="sectionedit10" id="creer_un_utilisateur_dedie">Créer un utilisateur dédié</h3>
+<div class="level3">
+<pre class="code">  groupadd software
+  useradd -d /home/softmaster -g software -s /bin/bash softmaster
+  mkpasswd softmaster
+  vim ~/.bashrc
+  # umask 0027</pre>
+
+</div>
+<!-- EDIT10 SECTION "Créer un utilisateur dédié" [2446-2636] -->
+<h3 class="sectionedit11" id="monter_et_formatter_le_volume">Monter (et formatter) le volume</h3>
+<div class="level3">
+<pre class="code">  more /proc/partitions
+  mkfs.xfs /dev/vdc # xfs, ext4...
+  mkdir /opt
+  echo -e &quot;/dev/vdc\t/opt\txfs\tdefaults,owner,users\t\t1\t2&quot; &gt;&gt; /etc/fstab
+  mount /opt
+  chown -R softmaster:software /opt
+  chmod -R 770 /opt</pre>
+
+</div>
+<!-- EDIT11 SECTION "Monter (et formatter) le volume" [2637-2911] -->
+<h2 class="sectionedit12" id="preparer_la_structure_pour_module">Préparer la structure pour Module</h2>
+<div class="level2">
+
+<p>
+Dans <code>/opt</code> se trouvent 3 sous-dossiers : <code>mods</code>, <code>src</code> et <code>apps</code>.
+</p>
+
+<p>
+Le dossier <code>apps</code> est lui-même sous divisé en fonction des <a href="https://www.tacc.utexas.edu/tacc-projects/lmod/system-administrator-guide/module-hierarchy" class="urlextern" title="https://www.tacc.utexas.edu/tacc-projects/lmod/system-administrator-guide/module-hierarchy"  rel="nofollow">recommandations du site de lmod</a> :
+</p>
+<blockquote><div class="no">
+ We store packages as follows:<br/>
+  - Core packages: /opt/apps/pkgName/version<br/>
+  - Compiler dependent packages: /opt/apps/compilerName-version/pkgName/version<br/>
+  - MPI-Compiler dependent packages: /opt/apps/compilerName-version/mpiName-version/pkgName/version</div></blockquote>
+
+</div>
+<!-- EDIT12 SECTION "Préparer la structure pour Module" [2912-3489] -->
+<h2 class="sectionedit13" id="configurer_l_usage_de_module">Configurer l&#039;usage de module</h2>
+<div class="level2">
+
+<p>
+Pour chaque utilisateur, éditer <code>~/.bashrc</code> :
+</p>
+<pre class="code">export SOFTWARE_ROOT=&quot;/opt/apps&quot;
+
+module use &quot;/opt/mods&quot;
+module load gcc # ... other modules to load in the default environment</pre>
+
+</div>
+<!-- EDIT13 SECTION "Configurer l'usage de module" [3490-3724] -->
+<h2 class="sectionedit14" id="installer_les_pre-requis">Installer les pré-requis</h2>
+<div class="level2">
+
+<p>
+Ils sont listés en haut de la page de chaque logiciel… est-ce bien pratique ?!
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Installer les pré-requis" [3725-3847] -->
+<h2 class="sectionedit15" id="installation_du_logiciel">Installation du Logiciel</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>./configure &amp;&amp; make &amp;&amp; install</code></div>
+</li>
+<li class="level1"><div class="li"> Renseigner le <a href="/in2p3/logiciels" class="wikilink1" title="in2p3:logiciels">tableau récapitulatif</a></div>
+</li>
+<li class="level1"><div class="li"> Créer la page dédiée qui héritera automatiquement du <a href="/in2p3/logiciels/i_template" class="wikilink1" title="in2p3:logiciels:i_template">modèle de page par défaut</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT15 SECTION "Installation du Logiciel" [3848-4106] -->
+<h2 class="sectionedit16" id="creation_du_fichier_module">Création du fichier Module</h2>
+<div class="level2">
+
+<p>
+S&#039;inspirer de la doc officielle : <a href="http://modules.sourceforge.net/man/modulefile.html" class="urlextern" title="http://modules.sourceforge.net/man/modulefile.html"  rel="nofollow">http://modules.sourceforge.net/man/modulefile.html</a> et de <a href="https://www.tacc.utexas.edu/tacc-projects/lmod/advanced-user-guide/#usercreated" class="urlextern" title="https://www.tacc.utexas.edu/tacc-projects/lmod/advanced-user-guide/#usercreated"  rel="nofollow">https://www.tacc.utexas.edu/tacc-projects/lmod/advanced-user-guide/#usercreated</a> (principalement pour Lmod en LUA)
+</p>
+
+<p>
+La fichiers modules sont à organiser en sous-dossier dans <code>/opt/mods</code> :
+</p>
+<pre class="code">/opt/mods
+|_ bowtie
+.  \_ 1.0.0
+.
+\_ samtools
+   \_ 0.1.19</pre>
+
+<p>
+Cette organisation permet de charger la dernière version sans avoir à préciser son numéro. Si la version <code>default</code> existe (un lien vers une version précise) c&#039;est elle qui sera chargée. Ceci est uniquement dû au tri alphanumérique, et marche aussi avec un lien nommé <code>truc</code>.
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Création du fichier Module" [4107-] -->

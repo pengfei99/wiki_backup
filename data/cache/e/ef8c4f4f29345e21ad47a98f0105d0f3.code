@@ -1,0 +1,67 @@
+<span class="coMULTI">/*
+ * @(#)ZKConnection.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.util.concurrent.CountDownLatch</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.WatchedEvent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher.Event.KeeperState</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.ZooKeeper</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKConnection Class. Class that initialize connection to Ensemble
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0
+ * http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKConnection <span class="br0">&#123;</span>
+&nbsp;
+	<span class="co1">// Local Zookeeper object to access ZooKeeper ensemble</span>
+	<span class="kw1">private</span> ZooKeeper zoo<span class="sy0">;</span>
+	<span class="kw1">final</span> CountDownLatch connectionLatch <span class="sy0">=</span> <span class="kw1">new</span> CountDownLatch<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * 
+	 */</span>
+	<span class="kw1">public</span> ZKConnection<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// TODO Auto-generated constructor stub</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Initialize the Zookeeper connection
+	 * @param host
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> ZooKeeper connect<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> host<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a>,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+&nbsp;
+		zoo <span class="sy0">=</span> <span class="kw1">new</span> ZooKeeper<span class="br0">&#40;</span>host, <span class="nu0">2000</span>, <span class="kw1">new</span> Watcher<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+			<span class="kw1">public</span> <span class="kw4">void</span> process<span class="br0">&#40;</span>WatchedEvent we<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+				<span class="kw1">if</span> <span class="br0">&#40;</span>we.<span class="me1">getState</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">==</span> KeeperState.<span class="me1">SyncConnected</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+					connectionLatch.<span class="me1">countDown</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+				<span class="br0">&#125;</span>
+			<span class="br0">&#125;</span>
+		<span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+		connectionLatch.<span class="me1">await</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">return</span> zoo<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Method to disconnect from zookeeper server</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> close<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zoo.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

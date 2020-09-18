@@ -1,0 +1,3 @@
+$ su - postgres
+$ pg_dumpall &gt; dump.sql
+$ scp dump.sql bioaster@192.168.0.12:/tmp

@@ -1,0 +1,197 @@
+====== Spark RDD ======
+
+This doc is a copy of https://data-flair.training/blogs/apache-spark-rdd-tutorial/. 
+
+====== What is Apache Spark RDD? ======
+
+RDD stands for “Resilient Distributed Dataset”. RDD represents a collection of partitioned data elements that can be operated on in parallel. It is defined as an abstract class in the Spark library. Conceptually, RDD is similar to a Scala collection, except that it represents a distributed dataset and it supports lazy operations.
+===== Decomposing the name RDD: =====
+
+
+  * **Resilient**, i.e. fault-tolerant with the help of RDD lineage graph(DAG) and so able to recompute missing or damaged partitions due to node failures.
+  * **Distributed**, since Data resides on multiple nodes.
+  * **Dataset** represents records of the data you work with. The user can load the data set externally which can be either JSON file, CSV file, text file or database via JDBC with no specific data structure.
+
+
+RDD has the following key characteristics:
+
+  * Immutable
+  * Partitioned
+  * Fault Tolerant
+  * Interface
+  * Strongly Typed
+  * In memory
+
+==== Immutable ====
+
+An RDD is an immutable data structure. Once created, it cannot be modified in-place. Basically, an
+operation that modifies an RDD returns a new RDD.
+
+==== Partitioned ====
+
+Data represented by an RDD is split into partitions. These partitions are generally distributed across a cluster
+of nodes. However, when Spark is running on a single machine, all the partitions are on that machine
+
+Note that there is a mapping from RDD partitions to physical partitions of a dataset. RDD provides
+an abstraction for data stored in distributed data sources, which generally partition data and distribute it
+across a cluster of nodes. For example, HDFS stores data in partitions or blocks, which are distributed across
+a cluster of computers. By default, there is one-to-one mapping between an RDD partition and a HDFS
+file partition. Other distributed data sources, such as Cassandra, also partition and distribute data across a
+cluster of nodes. However, multiple Cassandra partitions are mapped to a single RDD partition.
+
+==== Fault Tolerant ====
+
+RDD is designed to be fault tolerant. An RDD represents data distributed across a cluster of nodes and a
+node can fail. As previously discussed, the probability of a node failing is proportional to the number of
+nodes in a cluster. The larger a cluster, the higher the probability that some node will fail on any given day.
+RDD automatically handles node failures. When a node fails, and partitions stored on that node
+become inaccessible, Spark reconstructs the lost RDD partitions on another node. Spark stores lineage
+information for each RDD. Using this lineage information, it can recover parts of an RDD or even an entire
+RDD in the event of node failures.
+
+==== Interface ====
+
+It is important to remember that RDD is an interface for processing data. It is defined as an abstract class
+in the Spark library. RDD provides a uniform interface for processing data from a variety of data sources,
+such as HDFS, HBase, Cassandra, and others. The same interface can also be used to process data stored in
+memory across a cluster of nodes.
+Spark provides concrete implementation classes for representing different data sources. Examples
+of concrete RDD implementation classes include HadoopRDD, ParallelCollectionRDD, JdbcRDD, and
+CassandraRDD. They all support the base RDD interface.
+
+==== Strongly Typed ====
+
+The RDD class definition has a type parameter. This allows an RDD to represent data of different types. It is
+a distributed collection of homogenous elements, which can be of type Integer, Long, Float, String, or a
+custom type defined by an application developer. Thus, an application always works with an RDD of some
+type. It can be an RDD of Integer, Long, Float, Double, String, or a custom type.
+
+==== In memory ====
+
+Spark’s in-memory cluster computing capabilities was covered earlier in this chapter. The RDD class
+provides the API for enabling in-memory cluster computing. Spark allows RDDs to be cached or persisted in
+memory. As mentioned, operations on an RDD cached in memory are orders of magnitude faster than those
+operating on a non-cached RDD.
+
+===== Creating an RDD =====
+
+Since RDD is an abstract class, you cannot create an instance of the RDD class directly. The SparkContext
+class provides factory methods to create instances of concrete implementation classes. An RDD can also be
+created from another RDD by applying a transformation to it. As discussed earlier, RDDs are immutable. Any
+operation that modifies an RDD returns a new RDD with the modified data.
+
+==== Creating RDD with parallelize method ====
+
+This method creates an RDD from a local Scala collection. It partitions and distributes the elements of a
+Scala collection and returns an RDD representing those elements. This method is generally not used in a
+production application, but useful for learning Spark.
+
+<code>
+# create a scala collection
+val xs = (1 to 10000).toList
+
+# use sparkcontext to call parallelize method
+val rdd = sc.parallelize(xs)
+
+# In spark 2.0 or higher, sparkContext is packaged in sparkSession. Suppose you have a sparkSession called spark, you can get the sparkContext
+val sc= spark.sparkContext
+</code>
+
+==== textFile method ====
+
+The textFile method creates an RDD from a text file. It can read a file or multiple files in a directory stored
+on a local file system, HDFS, Amazon S3, or any other Hadoop-supported storage system. It returns an RDD
+of Strings, where each element represents a line in the input file.
+
+<code>
+val rdd = sc.textFile("hdfs://namenode:9000/path/to/file-or-directory")
+
+# it also read compressed files, and supports wildcards as an argument for reading multiple files from a directory.
+
+val rdd = sc.textFile("hdfs://namenode:9000/path/to/directory/*.gz")
+
+# The textFile method takes an optional second argument, which can be used to specify the number of
+partitions. By default, Spark creates one RDD partition for each file block. You can specify a higher number
+of partitions for increasing parallelism; however, a fewer number of partitions than file blocks is not allowed.
+
+val rdd = sc.textFile("hdfs://namenode:9000/path/to/directory/*.gz",
+ 100)
+
+# The above example create an RDD of 100 partitions
+
+val textFile=sc.textFile("file:///tmp/people.txt")
+
+</code>
+
+
+==== wholeTextFiles ====
+
+This method reads all text files in a directory and returns an RDD of key-value pairs. Each key-value pair in
+the returned RDD corresponds to a single file. The key part stores the path of a file and the value part stores
+the content of a file. This method can also read files stored on a local file system, HDFS, Amazon S3, or any
+other Hadoop-supported storage system.
+
+<code>
+val rdd = sc.wholeTextFiles("path/to/my-data/*.txt")
+</code>
+
+
+==== SequenceFile ====
+
+The sequenceFile method reads key-value pairs from a sequence file stored on a local file system, HDFS, or
+any other Hadoop-supported storage system. It returns an RDD of key-value pairs. In addition to providing
+the name of an input file, you have to specify the data types for the keys and values as type parameters when
+you call this method.
+
+**SequenceFile** is a flat file consisting of binary key/value pairs. It is extensively used in MapReduce as input/output formats. It is also worth noting that, internally, the temporary outputs of maps are stored using SequenceFile.
+
+<code>
+val rdd = sc.sequenceFile(inFile, classOf[Text], classOf[IntWritable]).map{case (x, y) =>
+        (x.toString, y.get())}
+</code>
+
+===== RDD Operations =====
+Spark applications process data using the methods defined in the RDD class or classes derived from it. These
+methods are also referred to as operations. Since Scala allows a method to be used with operator notation,
+the RDD methods are also sometimes referred to as operators.
+
+The beauty of Spark is that the same RDD methods can be used to process data ranging in size from a
+few bytes to several petabytes. In addition, a Spark application can use the same methods to process datasets
+stored on either a distributed storage system or a local file system. This flexibility allows a developer to
+develop, debug and test a Spark application on a single machine and deploy it on a large cluster without
+making any code change.
+
+RDD operations can be categorized into two types: transformation and action. A transformation creates
+a new RDD. An action returns a value to a driver program.
+
+==== Transformations ====
+
+RDD transformations are conceptually similar to Scala collection methods. The key difference is that
+the Scala collection methods operate on data that can fit in the memory of a single machine, whereas RDD
+methods can operate on data distributed across a cluster of nodes. Another important difference is that RDD
+transformations are lazy, whereas Scala collection methods are strict. This topic is discussed in more detail
+later in this chapter.
+
+=== Map ===
+
+The map method is a higher-order method that takes a function as input and applies it to each element in
+the source RDD to create a new RDD. The input function to map must take a single input parameter and
+return a value
+
+<code>
+val lines = sc.textFile("...")
+val lengths = lines.map { l => l.length}
+</code>
+=== flatMap ===
+
+=== filter ===
+
+The filter method is a higher-order method that takes a Boolean function as input and applies it to each
+element in the source RDD to create a new RDD. A Boolean function takes an input and returns true or
+false. The filter method returns a new RDD formed by selecting only those elements for which the input
+Boolean function returned true. Thus, the new RDD contains a subset of the elements in the original RDD.
+
+<code>
+val longLines = lines.filter{line=> line.length>80}
+</code>
+

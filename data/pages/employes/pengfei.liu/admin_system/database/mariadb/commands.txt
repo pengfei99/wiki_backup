@@ -1,0 +1,21 @@
+====== Mysql useful command ======
+
+<code>
+# 1. connect to a database, -u root login as user root, -p prompt passwrod, retail_db is the db name
+$ mysql -u root -p retail_db
+
+# 2. Export database in a sql file
+$ mysql --user=root --password==hadoop --databases retail_db > DBdump.sql
+$ mysql -u root -p retail_db > DBdump.sql
+
+# 3. Import a database from a sql file, make sure mysql has right to read the file. Do the proper chmod
+$ mysql -u root -p retail_db < DBdump.sql
+
+# 4. Find all tables which contain one specific column name.
+select column_name, table_name, table_schema from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME like '%colomun_name%'
+
+
+# 5. Check mysql server running on which port
+show global variables like 'PORT';
+
+</code>

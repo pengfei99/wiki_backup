@@ -1,0 +1,423 @@
+
+<h1 class="sectionedit1" id="bonnes_pratiques_de_codage">Bonnes pratiques de codage</h1>
+<div class="level1">
+
+<p>
+Il n&#039;y a pas de consensus mondial sur les <strong>“bonnes pratiques”</strong> à appliquer quand on écrit un programme. Cependant, de nombreuses réflexions ont été menées par de brillants informaticiens ayant passé de nombreuses années à travailler à l&#039;amélioration de leur <strong><em>art</em></strong>.
+</p>
+
+<p>
+Ici sont mentionnés quelques éléments sur lesquels nous nous sommes mis d&#039;accord et que nous devrions appliquer au sein de BIOASTER.
+</p>
+
+<p>
+&lt;WRAP round todo&gt;
+Nous ne nous sommes <strong>pas encore</strong> mis d&#039;accord… mais le but est de mettre sur cette page toutes les bonnes pratiques que nous nous engageons à appliquer, surtout parce que nous avons réalisé qu&#039;elles nous apportaient beaucoup.
+&lt;/WRAP&gt;
+</p>
+
+<p>
+La plupart de ces pratiques sont étudiées plus en détail dans le livre “<a href="/lib/exe/fetch.php?media=ut6:bioinformatique:books:cleancodeahandbookofagilesoftwarecraftsmanship.pdf" class="media mediafile mf_pdf" title="ut6:bioinformatique:books:cleancodeahandbookofagilesoftwarecraftsmanship.pdf (2.9 MB)">Clean code handbook</a>”. Les références au livre sur cette page sont notées, par exemple, <code>[cch:p64]</code> pour la page 64 et <code>[cch:c8]</code> pour la chapitre 8.
+</p>
+
+<p>
+Les conseils donnés ici ne sont pas des vérités absolues ; il peuvent donc être amenés à changer si nous en trouvons des meilleurs.
+</p>
+
+<p>
+&lt;WRAP round todo&gt;
+Je mettrais bien ici les 2-3 règles d&#039;or à respecter… histoire de ne pas avoir à lire toute la page.
+&lt;/WRAP&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bonnes pratiques de codage&quot;,&quot;hid&quot;:&quot;bonnes_pratiques_de_codage&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1309&quot;} -->
+<h2 class="sectionedit2" id="documenter">Documenter</h2>
+<div class="level2">
+
+<p>
+Commençons par une citation :
+</p>
+
+<p>
+&lt;WRAP round box&gt;
+<strong>Le code est la documentation !</strong><br/>
+
+<em>– Socrate, c. 440 avant notre ère</em>
+&lt;/WRAP&gt;
+</p>
+
+<p>
+… tout ça pour dire que la documentation est souvent redondante avec le code et la maintenir à jour est un effort supplémentaire. Un code clair et bien écrit devrait être suffisant pour pouvoir comprendre <strong>en première lecture</strong> le fonctionnement du programme. La plupart des pratiques décrites sur cette page visent d&#039;ailleurs à rendre le code plus clair et plus facile à comprendre.
+</p>
+
+<p>
+Cependant, de nombreuses choses doivent tout de même être expliquées dans programme : but du programme, justification technique de l&#039;emploi d&#039;un algorithme plutôt que d&#039;un autre…
+</p>
+
+<p>
+Ces commentaires s&#039;ils sont écrits en respectant certains standards peuvent facilement être lu par des générateurs de documentation (ex : <a href="/doku.php?id=bioinformatique_doxygen" class="wikilink2" title="bioinformatique_doxygen" rel="nofollow">Doxygen</a>) afin de produire des documentations plus lisibles (coloration syntaxique, suppression du code au profit des <em>signatures</em>…) et plus facilement navigables (liens hypertextes entre les éléments ayant une relation) dans différents formats : <abbr title="HyperText Markup Language">HTML</abbr>, LaTeX, pdf, docx…
+</p>
+
+<p>
+Des exemples sur la manière de documenter le code seront donnés à chaque section de cette page.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Documenter&quot;,&quot;hid&quot;:&quot;documenter&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1310-2603&quot;} -->
+<h2 class="sectionedit3" id="bien_commencer_un_programme">Bien commencer un programme</h2>
+<div class="level2">
+
+<p>
+La première chose lue est souvent, pour ne pas dire toujours, la première ligne ! Autant donc, être clair dès le début sur la fonction première du programme.
+</p>
+<pre class="code">$ less `which bzr`
+#!/usr/bin/python
+
+# Copyright (C) 2005, 2006, 2007, 2008, 2009 Canonical Ltd
+#
+# [...longue notice de droit d&#039;auteur...]
+# 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+&quot;&quot;&quot;Bazaar -- a free distributed version-control tool&quot;&quot;&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bien commencer un programme&quot;,&quot;hid&quot;:&quot;bien_commencer_un_programme&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;2604-3105&quot;} -->
+<h2 class="sectionedit4" id="obtenir_de_l_aide">Obtenir de l&#039;aide</h2>
+<div class="level2">
+
+<p>
+Confronté à un nouveau programme (en ligne de commande), le premier réflexe est souvent d&#039;invoquer le programme avec l&#039;option d&#039;aide : <code>-h</code>, <code>–help</code>, voir même <code>man commande</code>.<br/>
+
+Il est donc important de fournir un message d&#039;aide permettant à l&#039;utilisateur de pouvoir utiliser le programme convenablement sans avoir à trouver et à lire la documentation ou même le code.
+</p>
+
+<p>
+De nombreuses bibliothèques logicielles ont été écrites afin de faciliter cette tâche. Celles-ci dépendent du langage utilisé. En voici <a href="/doku.php?id=bioinformatique_python_help" class="wikilink2" title="bioinformatique_python_help" rel="nofollow">un exemple en Python</a>.
+</p>
+<pre class="code">$ bzr --help
+Bazaar 2.1.1 -- a free distributed version-control tool
+http://bazaar-vcs.org/
+
+Basic commands:
+  bzr init           makes this directory a versioned branch
+  bzr branch         make a copy of another branch
+  [...]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Obtenir de l&#039;aide&quot;,&quot;hid&quot;:&quot;obtenir_de_l_aide&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;3106-3965&quot;} -->
+<h2 class="sectionedit5" id="conventions_de_nommage">Conventions de nommage</h2>
+<div class="level2">
+
+<p>
+<strong>Use Intention-Revealing Names</strong> [cch:p18]<br/>
+
+La règle d&#039;or est que les noms des objets (variables, fonctions, classes) doivent toujours <strong>décrire leur rôle précis</strong> dans l&#039;algorithme.<br/>
+
+Une bonne pratique de nommage est donc celle qui nécessite <strong>le moins de commentaires</strong> dans le code.
+</p>
+
+<p>
+&lt;color red&gt;Mauvaise pratique :&lt;/color&gt;
+</p>
+<pre class="code">  int d; //elapsed time in days</pre>
+
+<p>
+&lt;color green&gt;Bonne pratique :&lt;/color&gt;
+</p>
+<pre class="code">  int elapsedTimeInDays;
+  int daysSinceModification;</pre>
+
+<p>
+&lt;WRAP round help&gt;
+Personnellement je ne suis pas trop <a href="https://en.wikipedia.org/wiki/Camelcase" class="urlextern" title="https://en.wikipedia.org/wiki/Camelcase" rel="nofollow">CamelCase</a>.<br/>
+
+Je pencherais plutôt pour un bon vieil <strong>under_score</strong>. Surtout que les noms de constantes en <strong>CamelCase</strong> contiennent des underscores ! Autant donc les utiliser dès le début.<br/>
+
+&lt;color red&gt;<strong>[ Nicolas ]</strong>  &lt;/color&gt; personnellement, j&#039;utilise les underscore; je trouve que ça rend le code plus lisible.<br/>
+
+Si on pouvait aussi éviter la <a href="https://en.wikipedia.org/wiki/Hungarian_notation" class="urlextern" title="https://en.wikipedia.org/wiki/Hungarian_notation" rel="nofollow">notation hongroise</a> qui prefix le nom avec le type…<br/>
+
+&lt;color red&gt;<strong>[ Nicolas ]</strong>&lt;/color&gt; j&#039;ai trouvé utile ce genre de notation pour du C ou du Fortran, parfois du C++. Je n&#039;en fera pas forcément une règle. Il me semble que dans ce cas, là, ça vient assez naturellement avec la complexité du code.<br/>
+
+&lt;/WRAP&gt;
+</p>
+
+<p>
+&lt;color green&gt;Bonne pratique (?) :&lt;/color&gt;
+</p>
+<pre class="code">  int elapsed_time_in_days;
+  int days_since_modification;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conventions de nommage&quot;,&quot;hid&quot;:&quot;conventions_de_nommage&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;3966-5395&quot;} -->
+<h2 class="sectionedit6" id="indentation">Indentation</h2>
+<div class="level2">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Indent_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style" rel="nofollow">Le style d&#039;indentation</a>, bien que n&#039;étant pas fondamentalement très important, peut aider à la lisibilité du code.
+</p>
+
+<p>
+Le choix des <strong>caractères d&#039;indentation</strong> (espaces ou tabulations) peut aussi paraitre trivial, mais se révèle en fait <strong>vital</strong> quand on travaille avec un langage (stupide) comme <em>Python</em> dont les blocs sont délimités par les niveaux d&#039;indentation.<br/>
+
+Dans la plupart des éditeurs de texte, on peut choisir de faire apparaitre les caractères invisibles, ce qui peut s&#039;avérer très pratique.
+</p>
+
+<p>
+&lt;WRAP round help&gt;
+Pour ma part, je j&#039;utilise <a href="https://en.wikipedia.org/wiki/Indent_style#Allman_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style#Allman_style" rel="nofollow">le style Allman</a> - j&#039;ai tout de même une légère tendance à la compression de temps en temps -, et <strong>uniquement des espaces</strong>.<br/>
+
+Tant qu&#039;on évite les horreurs du genre <a href="https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style" class="urlextern" title="https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style" rel="nofollow">BSD KNF</a> et les mélanges tab/space, ça me va !<br/>
+
+&lt;color red&gt;<strong>[ Nicolas ] :</strong>&lt;/color&gt; Personnellement, j&#039;utilise les tabulations car je trouve que c&#039;est plus rapide à parcourir et que la taille des tabulations est modifiable dans la plupart des éditeurs. Du coup, chacun visualise comme il le souhaite.<br/>
+
+&lt;/WRAP&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Indentation&quot;,&quot;hid&quot;:&quot;indentation&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;5396-6646&quot;} -->
+<h2 class="sectionedit7" id="structures_et_classes">Structures et classes</h2>
+<div class="level2">
+
+<p>
+<strong>The Law of Demeter</strong> [cch:p97] (voir <a href="/lib/exe/fetch.php?media=ut6:bioinformatique:books:demeter.pdf" class="media mediafile mf_pdf" title="ut6:bioinformatique:books:demeter.pdf (64.2 KB)">ce papier</a>)<br/>
+
+Une structure expose des variables (publiques), un objet expose des fonctions…
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=bonnes_pratiques_de_codage&amp;media=ut6:bioinformatique:images:law_of_demeter.png" class="media" title="ut6:bioinformatique:images:law_of_demeter.png"><img src="/lib/exe/fetch.php?media=ut6:bioinformatique:images:law_of_demeter.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Structures et classes&quot;,&quot;hid&quot;:&quot;structures_et_classes&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;6647-6911&quot;} -->
+<h2 class="sectionedit8" id="fonctions_classes_et_methodes_factorisation_de_code">Fonctions, classes et méthodes (factorisation de code)</h2>
+<div class="level2">
+
+<p>
+Les fonctions et les méthodes (fonctions appartenant à une classe), sont de <strong>petits bouts de code</strong> (le plus petit possible) qui font <strong>une seule chose</strong> et qui le font bien !
+</p>
+
+<p>
+Leur nom doit décrire précisément ce qu&#039;elles font, et contiennent souvent <strong>un verbe ou un mot clé</strong>. Le nom devant permettre de savoir exactement ce que la fonction fait (dans les grandes lignes) il est important de <strong>ne pas avoir d&#039;effet de bord</strong> (<em>side effects</em>), à moins de le préciser dans le nom de la fonction ; mais ceci est souvent maladroit.
+</p>
+
+<p>
+Une fonction devrait avoir besoin d&#039;un <strong>minimum d&#039;arguments</strong> pour travailler : 0, 1, 2, voir 3 mais pas plus ! <br/>
+
+Le nombre d&#039;arguments conditionne l’intelligibilité du code et aussi la complexité des tests unitaires à écrire pour tester tous les cas possibles. <br/>
+
+Un trop grand nombre d&#039;arguments est souvent un appel à refactorisation du code. Certains arguments fonctionnellement proches peuvent être regroupés dans une même structure/classe avant d&#039;être passés à la fonction.
+</p>
+
+<p>
+&lt;color red&gt;Mauvaise pratique :&lt;/color&gt;
+</p>
+<pre class="code text">Circle makeCircle(double x, double y, double radius);</pre>
+
+<p>
+&lt;color green&gt;Bonne pratique :&lt;/color&gt;
+</p>
+<pre class="code text">Circle makeCircle(Point center, double radius);</pre>
+
+<p>
+&lt;WRAP round todo&gt;
+</p>
+<ul>
+<li class="level1"><div class="li"> [cch:46] Prefer Exceptions to Returning Error Codes</div>
+</li>
+<li class="level1"><div class="li"> [cch:114] Bondaries: isolate from external library interfaces</div>
+</li>
+<li class="level1"><div class="li"> &lt;color red&gt;<strong>[ Nicolas ]</strong>&lt;/color&gt; Peut-être faut-il faire un point sur les exceptions et l&#039;interception d&#039;erreurs ? Ou bien c&#039;est trop spécifique à chaque langage? </div>
+</li>
+</ul>
+
+<p>
+&lt;/WRAP&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Fonctions, classes et m\u00e9thodes (factorisation de code)&quot;,&quot;hid&quot;:&quot;fonctions_classes_et_methodes_factorisation_de_code&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;6912-8562&quot;} -->
+<h3 class="sectionedit9" id="factorisation_de_code">Factorisation de code</h3>
+<div class="level3">
+
+<p>
+Le découpage du code en fonctions contenant de <strong>petits bouts de codes</strong> prends vraiment son sens dans la factorisation de code. En voici un exemple
+</p>
+
+<p>
+&lt;color red&gt;Mauvaise pratique :&lt;/color&gt;
+</p>
+<pre class="code text">function buildCar(){
+  //bluild wheels
+  ...
+  //build glasses
+  ...
+  //mount the different pieces of the car
+  ...
+  return car;
+}  </pre>
+
+<p>
+Ici <code>buildCar()</code> fait plusieurs choses au delà de la construction de la voiture même: contruction de roues, vitres, …
+</p>
+
+<p>
+&lt;color green&gt;Bonne pratique :&lt;/color&gt;
+</p>
+<pre class="code text">function buildCar(){
+  wheels = buildWheels();
+  glasses = buildGlasses();
+  ...
+  car = mountCarPieces(wheels, glasses, ...)
+  return car
+}</pre>
+
+<p>
+On aurait aussi pu passer les pièces en paramètres à <code>buildCar</code>, mais ici l&#039;idée est que <code>buildCar</code> ne se charge plus de construire les pièces mais ces tâches sont déléguées à d&#039;autres fonctions.<br/>
+
+Il en résulte un code plus clair (avec moins commentaires) dont les <code>petits bouts de code</code> (i.e. les fonctions) sont réutilisables, d&#039;où la factorisation !
+</p>
+
+<p>
+&lt;color green&gt;Meilleure pratique :&lt;/color&gt;<br/>
+
+</p>
+
+<p>
+Plutôt qu&#039;un approche procédurale, il est souvent plus intéressant d&#039;opter pour une approche orientée objet. Ici on peut créer une classe <code>Car</code> et lui déléguer la charge de création de voitures via son constructeur. A titre d&#039;exemple :<br/>
+
+</p>
+<pre class="code text">car = new Car();
+&nbsp;
+Class Car{
+   public:
+     method Car(){
+       this-&gt;_buildWheels()
+       this-&gt;_buildGlasses()
+       this-&gt;_mountPieces();
+     }
+&nbsp;
+     method run(){}
+&nbsp;
+   private:
+     method _mountPieces{ 
+       //...
+     }
+&nbsp;
+     method _buildWheels{
+       this-&gt;_wheels[1] = new Wheel();
+       ...
+       this-&gt;_wheels[4] = new Wheel();
+     }
+&nbsp;
+     method _buildGlasses{
+       this-&gt;_front_glass = new Glass('front');
+       this-&gt;_rear_glass = new Glass('rear');
+     }
+&nbsp;
+   private:
+     list&lt;Wheels&gt; _wheels;
+     Glass _front_glass;
+     Glass _rear_glass;
+     ...  
+}</pre>
+
+<p>
+La classe <code>Car</code> est donc un object complètement autonome (voir Loi de Demeter), réutilisable à souhaite !<br/>
+
+On pourra aussi remarquer que toute l&#039;ingéniérie de création de la voiture est privée… pour des raisons de confidentialité en cas d&#039;exposition de code dans une <abbr title="Application Programming Interface">API</abbr>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Factorisation de code&quot;,&quot;hid&quot;:&quot;factorisation_de_code&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;8563-10850&quot;} -->
+<h2 class="sectionedit10" id="tester_son_code">Tester son code</h2>
+<div class="level2">
+
+<p>
+Il est important de tester <strong>toutes les fonctionnalités</strong> de son code afin de voir si des modifications introduites sur une section ont un impact négatif sur une autre section du code. Ceci est particulièrement vrai quand le code est correctement factorisé, on peut alors <strong>tester indépendamment</strong> chaque fonction, classe et méthode. 
+Cette pratique est connue sous le nom de <a href="https://fr.wikipedia.org/wiki/Test_unitaire" class="urlextern" title="https://fr.wikipedia.org/wiki/Test_unitaire" rel="nofollow">tests unitaires</a>.
+</p>
+
+<p>
+Les tests sont en général regroupés dans une partie différente de l&#039;arborescence de fichiers (dossier <code>test</code>) et sont <strong>lancés après chaque modification</strong>, avant même d&#039;enregistrer les modifications dans le système de gestion de versions.
+</p>
+
+<p>
+<em class="u">Exemple</em> : dans un projet géré par <code>make</code>, les tests sont lancés avec la commande <code>make check</code>.
+</p>
+
+<p>
+De nombreux <a href="https://fr.wikipedia.org/wiki/Test_unitaire#Environnements_de_test" class="urlextern" title="https://fr.wikipedia.org/wiki/Test_unitaire#Environnements_de_test" rel="nofollow">environnements de tests</a> existent pour chaque langage et peuvent être facilement intégrés à n&#039;importe quel projet.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tester son code&quot;,&quot;hid&quot;:&quot;tester_son_code&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;10851-11887&quot;} -->
+<h2 class="sectionedit11" id="utilisation_des_index_dans_les_listes">Utilisation des index dans les listes</h2>
+<div class="level2">
+
+<p>
+Voici un exemple [cch:p9] utilisant une constante bien nommée pour accéder aux éléments d&#039;une liste. Notons aussi le renommage de la fonction pour obtenir les <em>flaggedCells</em>.
+</p>
+
+<p>
+&lt;color red&gt;Mauvaise pratique :&lt;/color&gt;
+</p>
+<pre class="code">public List&lt;int[]&gt; getThem() {
+    List&lt;int[]&gt; list1 = new ArrayList&lt;int[]&gt;();
+    for (int[] x : theList)
+        if (x[0] == 4)
+            list1.add(x);
+    return list1;
+}</pre>
+
+<p>
+&lt;color green&gt;Bonne pratique :&lt;/color&gt;
+</p>
+<pre class="code">public List&lt;int[]&gt; getFlaggedCells() {
+    List&lt;int[]&gt; flaggedCells = new ArrayList&lt;int[]&gt;();
+    for (int[] cell : gameBoard)
+        if (cell[STATUS_VALUE] == FLAGGED)
+            flaggedCells.add(cell);
+    return flaggedCells;
+}</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Utilisation des index dans les listes&quot;,&quot;hid&quot;:&quot;utilisation_des_index_dans_les_listes&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:11,&quot;range&quot;:&quot;11888-12638&quot;} -->
+<h2 class="sectionedit12" id="comparaison_de_valeurs">Comparaison de valeurs</h2>
+<div class="level2">
+
+<p>
+Plutôt que de comparer des valeurs comme ci-dessus (<code>cell[STATUS_VALUE] == FLAGGED</code>), utiliser des méthodes (<code>.isFlagged</code>) sur un objet :
+</p>
+<pre class="code">public List&lt;Cell&gt; getFlaggedCells() {
+    List&lt;Cell&gt; flaggedCells = new ArrayList&lt;Cell&gt;();
+    for (Cell cell : gameBoard) {
+        if (cell.isFlagged()) {
+            flaggedCells.add(cell);
+        }
+    }
+    return flaggedCells;
+}</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Comparaison de valeurs&quot;,&quot;hid&quot;:&quot;comparaison_de_valeurs&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;12639-13071&quot;} -->
+<h2 class="sectionedit13" id="standards_specifiques_a_certains_langages">Standards spécifiques à certains langages</h2>
+<div class="level2">
+
+<p>
+Certains langages et frameworks définissent des règles qui leurs sont spécifiques. Celle-ci recoupe souvent les conventions données ci-dessus.
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.php-fig.org/psr" class="urlextern" title="http://www.php-fig.org/psr" rel="nofollow">PHP Standard Recommendations</a> : Basic Coding Standard (<a href="http://www.php-fig.org/psr/psr-1/" class="urlextern" title="http://www.php-fig.org/psr/psr-1/" rel="nofollow">PSR-1</a>), Coding Style Guide (<a href="http://www.php-fig.org/psr/psr-2/" class="urlextern" title="http://www.php-fig.org/psr/psr-2/" rel="nofollow">PSR-2</a>)…</div>
+</li>
+</ul>
+
+<p>
+<a href="/lib/exe/fetch.php?tok=417e06&amp;media=https%3A%2F%2Fwww.google.com%2Fsearch%3Fq%3DToDo%26amp%3BbtnI%3Dlucky" class="media mediafile mf_com_search_q_todo_amp_btni_lucky" title="https://www.google.com/search?q=ToDo&amp;btnI=lucky">search?q=ToDo&amp;amp;btnI=lucky</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Standards sp\u00e9cifiques \u00e0 certains langages&quot;,&quot;hid&quot;:&quot;standards_specifiques_a_certains_langages&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:13,&quot;range&quot;:&quot;13072-&quot;} -->

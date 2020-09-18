@@ -1,0 +1,19 @@
+&lt;?php
+  // general DokuWiki options
+  $conf['useacl']         = 1;
+  $conf['authtype']       = 'plain';
+&nbsp;
+  // configure your Active Directory data here
+  $conf['auth']['ad']['account_suffix']     = '@bioaster.local';
+  $conf['auth']['ad']['base_dn']            = 'DC=bioaster,DC=local';
+  $conf['auth']['ad']['domain_controllers'] = 'srvadmin.bioaster.local, srvfic.bioaster.local';
+  $conf['plugin']['authad']['sso'] = 1;
+  $conf['plugin']['authad']['admin_username'] = 'dokuwiki';
+  $conf['plugin']['authad']['admin_password'] = 'XXXXXXXX';
+&nbsp;
+  // optional parameters
+  $conf['plugin']['authad']['recursive_groups']   = 1;
+  $conf['plugin']['authad']['sso']                = 1;
+  $conf['plugin']['authad']['real_primarygroup']  = 1;
+  $conf['manager']   = '@DokuwikiAdmin';
+  $conf['superuser'] = '@DokuwikiAdmin';

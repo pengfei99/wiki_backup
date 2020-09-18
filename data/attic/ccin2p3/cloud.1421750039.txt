@@ -1,0 +1,96 @@
+====== Le nuage OpenStack ======
+
+La procédure BIOASTER est basée sur le [[https://ccwiki.in2p3.fr/infrastructure:cloud:start|guide OpenStack du CCIN2P3]].
+Ce dernier sert de document de base pour toutes les bonnes pratiques concernant OpenStack.
+
+Cette page donne les explications pour déployer des machines virtuelles sur le nuage. La [[ccin2p3:cloud:machines_virtuelles|liste des machines virtuelles]] ainsi que la [[ccin2p3:cloud:images|liste des images disponibles]] se trouvent sur des pages dédiées.
+
+===== Obtenir un compte =====
+
+Un type de compte spécial est nécessaire afin de pouvoir utiliser les fonctionnalités d'OpenStack.
+Une demande doit être faite lors de la création du compte au CC.
+
+Si la demande n'a pas été faite lors de l'ouverture du compte il est tout de même possible d'obtenir un accès en passant par le [[https://cc-usersupport.in2p3.fr/|système de ticket]] de l'IN2P3. Dans le nouveau ticket il faut préciser le //laboratoire// auquel on appartient (BIOASTER) et le //service// auquel on veut accéder (plateforme de cloud IAAS).
+
+===== Se connecter au nuage =====
+
+La connexion se fait via //SSH// en utilisant l'identifiant et le mot de passe du compte IN2P3.
+
+<code text>
+$ ssh <LOGIN>@ccage.in2p3.fr
+</code>
+
+Il n'est pas pour le moment possible d'utiliser un mécanisme de [[http://presentations.bioaster.org/presentations/PKI/#2|clé]] pour se connecter.
+
+===== Créer une machine virtuelle =====
+
+Avant de créer une machine virtuelle (VM) il est nécessaire de répondre à plusieurs questions :
+
+  * quelle quantité de ressources (CPU, RAM, disque) lui sera attribuée ?
+  * quelle image servira de modèle à la machine ?
+  * quel utilisateur sera autorisé à s'y connecter ?
+
+Pour faciliter l'allocation de ressources, des **flavors** (tiny, small...) sont prédéfinies.
+Chacune correspond à une quantité différente de CPU, de RAM et d'espace de stockage.
+Il suffit de connaitre l'usage que l'on veut faire de la VM afin de déterminer celle à utiliser.
+La commande pour lister les flavors est ''nova flavor-list''.
+
+L'**image** de base utilisée correspond au système d'exploitation (OS) qui sera installé sur la VM.
+Une [[ccin2p3:cloud:images|liste complète des images disponibles]] se trouve dans le wiki.
+Pour l'obtenir depuis la ligne de commande il suffit de faire ''nova image-list''.
+
+Le choix de l'**utilisateur** se fait par le choix de la clé SSH qui est passée lors de la création de la VM. D'autres pourront être rajoutées au système plus tard. La procédure dépendra de l'OS disponible sur la VM.
+Pour créer une nouvelle clé, il suffit de faire ''ssh-keygen'' et de suivre les instructions.
+La clé peut ensuite être ajoutée à la base de données d'OpenStack avec la commande suivante :
+
+<code>
+$ nova keypair-add --pub-key=<FICHIER_CLE>.pub <NOM_DE_LA_CLE>
+</code>
+
+Une fois les choix faits, on crée et démarre l'image comme ceci :
+
+<code>
+$ nova boot --key-name=<NOM_DE_LA_CLE> --image=<NOM_DE_L_IMAGE> --flavor=<NOM_DE_LA_FLAVOR> <NOM_DE_LA_VM>
+</code>
+
+Après quelques minutes (le temps que la VM démarre) elle peut être utilisée. Ces minutes peuvent être mises à profit pour ajouter la VM nouvellement créée à la [[ccin2p3:cloud:machines_virtuelles|liste des machines virtuelles]] en production.
+
+===== Se connecter à une machine virtuelle =====
+
+Les VM une fois crées se retrouvent sur un réseau indépendant non routé.
+Il est donc nécessaire de passer pour une passerelle pour pouvoir les atteindre.
+Le serveur faisant office de passerelle doit avoir une IP publique.
+La procédure pour créer un tel serveur est [[ccin2p3:cloud:administration#ajouter_une_ip_publique|décrite sur une autre page]].
+
+Afin de faciliter la connexion, et de rendre le rebond transparent, il est nécessaire de configurer le client SSH.
+
+<code SSH ~/.ssh/config>
+Host proxy
+  HostName <PUBLIC_PROXY_IP>
+  User root
+
+Host private_server
+  HostName <PRIVATE_SERVER_IP>
+  ProxyCommand  ssh proxy nc -w 120 %h %p
+  User root
+</code>
+
+Il faut ensuite activer l'agent SSH puis lui confier la clé à utiliser pour la connexion. 
+
+<code text>
+$ exec ssh-agent bash
+$ ssh-add <FICHIER_CLE>
+</code>
+
+**__Remarque__ :** La commande ''exec ssh-agent bash'' peut être placée dans le fichier ''~/.profile'' afin d'être exécutée à chaque connexion.
+La commande ''ssh-add'' quant à elle doit être exécutée manuellement, car la phrase de passe sera demandée pour déverrouiller la clé.
+
+La connexion peut maintenant se faire simplement, comme suit :
+
+<code text>
+$ ssh private_server
+</code>
+
+===== Pour aller aller plus loin... =====
+
+Pour en savoir plus, consultez la page dédiée à [[ccin2p3:cloud:administration|l'administration des machines virtuelles]].

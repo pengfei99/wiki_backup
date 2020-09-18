@@ -1,0 +1,51 @@
+
+<p>
+<em class="u">Compte rendu de la réunion du 13/02/2017 avec C.Moret <abbr title="Yoann Mouscaz">YM</abbr> et <abbr title="Clément Delestre">CD</abbr> :</em>
+</p>
+
+<p>
+Une demande d&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr> possède un numéro. Une demande référence un couple bactérie + plasmide ainsi qu&#039;au moins une personne (pas forcément du même UTEC). La demande d&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr> est une déclaration la plupart du temps ou un “agrément” lorsque l&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr> est dangereux.
+</p>
+
+<p>
+Pour résumer :
+</p>
+
+<p>
+Une demande (avec son numéro) ← est liée à → bactérie (donc sample ?) + vecteur + utilisateur
+</p>
+
+<p>
+<strong>Question non résolue</strong> : Peut-on mettre à jour une demande ?!
+</p>
+
+<p>
+<em class="u">Compte rendu de la réunion du 15/02/2017 avec <abbr title="Yoann Mouscaz">YM</abbr> et <abbr title="Clément Delestre">CD</abbr> :</em>
+Prochaine migration à faire :
+</p>
+
+<p>
+Table <em>mapping_gmo</em> contenant :
+</p>
+<ul>
+<li class="level1"><div class="li"> bacteria_id (qui pointe vers classification)</div>
+</li>
+<li class="level1"><div class="li"> plasmid_id (qui pointe vers classification)</div>
+</li>
+<li class="level1"><div class="li"> demand_id (integer) → le numéro de l&#039;ID qui pourra être répété</div>
+</li>
+<li class="level1"><div class="li"> isDeclaration (boolean) → un <abbr title="Genetically Modified Organism">GMO</abbr> peut être “trés” dangereux ou non, si oui alors c&#039;est un agrément et non une déclaration</div>
+</li>
+</ul>
+
+<p>
+Table de relation avec Users et Sample.
+</p>
+
+<p>
+<em class="u">Au niveau du front-end :</em>
+</p>
+
+<p>
+Ajout dynamique d&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr> en fonction des droits de l&#039;utilisateur (<code>select distinct demand_id from mapping_gmo</code>) afficher la ou les bactéries ainsi que les plasmides (si il y a trop de plasmides, on peut imaginer qu&#039;en cliquant sur un <abbr title="Organisme Génétiquement Modifié">OGM</abbr> tous les plasmides sont listés à côté ou en dehors de la liste du moins pour ne pas avoir des &lt;option&gt; trop larges).
+</p>

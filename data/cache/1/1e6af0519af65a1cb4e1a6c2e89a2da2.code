@@ -1,0 +1,8 @@
+# démarrage du service
+$ service shiny-server start
+&nbsp;
+# arrêt du service
+$ service shiny-server stop
+&nbsp;
+# état du service
+$ service shiny-server status

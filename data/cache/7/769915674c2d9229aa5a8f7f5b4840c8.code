@@ -1,0 +1,2 @@
+php app<span class="sy0">/</span>console scheduler:execute
+<span class="kw2">less</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>biospecimens<span class="sy0">/</span>cronDemand.log <span class="co0"># à modifier selon votre dossier</span>

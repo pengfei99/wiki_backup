@@ -1,0 +1,5 @@
+# Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove

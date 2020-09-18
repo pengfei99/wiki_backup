@@ -1,0 +1,41 @@
+====== PERL Modules======
+
+===== Informations =====
+
+  * **Version** : //N.A.//
+  * **Licence** : //N.A.//
+  * **Page Web** : [[http://search.cpan.org/]]
+  * **Description** : Divers paquets pour PERL qui ne sont pas disponible par défaut sur les images SL6 du CC.
+
+===== Installation =====
+
+L'installation est à peu près toujours la même. En voici un exemple pour **Archive::Tar** :
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster/"
+export LIB_DIR="$SOFTWARE/apps/perl_modules/no_version"
+mkdir -p $LIB_DIR
+cd $SOFTWARE/src
+wget http://search.cpan.org/CPAN/authors/id/B/BI/BINGOS/Archive-Tar-1.96.tar.gz
+tar xvzf Archive-Tar-1.96.tar.gz
+mv Archive-Tar-1.96/lib/* $LIB_DIR/
+</code>
+
+Les modules à installer sont : [[http://search.cpan.org/~bingos/Archive-Tar-1.96/lib/Archive/Tar.pm|Archive::Tar]], [[http://search.cpan.org/~tomhughes/IO-Zlib-1.10/Zlib.pm|IO::Zlib]]
+
+===== Intégration =====
+
+<code>#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Additional modules for PERL.\n"
+}
+
+set version "no_version"
+
+prepend-path PERL5LIB "/afs/in2p3.fr/throng/bioaster/apps/perl_modules/${version}/"
+</code>
+
+===== Log =====
+
+* **2014.02.05 (tlc)** //Archive::Tar// et //IO::Zlib// installés

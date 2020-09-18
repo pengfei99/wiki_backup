@@ -1,0 +1,8 @@
+===== Fixed Bug Eclipse (Kepler) après MàJ SL6 =====
+<code>sudo vi /opt/eclipse/eclipse.ini
+Add "-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false"
+</code>
+
+===== Buil des genome pour Bowtie =====
+<code>/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build hg19.fa hg19.fa
+</code>

@@ -1,0 +1,35 @@
+====== Configuration d'un client de messagerie ======
+
+Pour pouvoir configurer votre logiciel de messagerie il faut avoir en votre possession un certificat (ainsi que la clé privée associée) au format **PKSC12**.
+
+===== Microsoft® Outlook® =====
+
+La gestion des certificats et la configuration du compte sont réunis.
+
+Cliquer ''Fichier'' puis ''Outils''. Dans le menu de la fenêtre d'options cliquer ''Centre de gestion de la confidentialité'' puis ''Paramètres du centre de gestion de la confidentialité''.
+
+Dans la nouvelle fenêtre sélectionner ''Sécurité de messagerie électronique''. Dans le champ ''Identifications numériques (Certificats)'' cliquer sur ''Importer/Exporter'' pour ajouter votre certificat. Dans le champs ''Courrier électronique chiffré'' sélectionner votre certificat dans le menu déroulant.
+
+{{:securite:outlook_certif-2.png?direct&400|}}
+
+===== Mozilla Thunderbird =====
+
+==== Ajout du certificat ====
+
+Aller dans ''Account Settings'' (Clic droit sur un compte puis ''Settings...'') puis dans l'onglet ''Security''.
+
+{{:securite:thunderbird_certif-1.png?direct&400|}}
+
+Cliquer ensuite sur ''View Certificates'' puis dans l'onglet ''Your ceritifcates'' cliquer sur ''Import''.
+
+{{:securite:thunderbird_certif-2.png?direct&400|}}
+
+Saisir la phrase de passe puis passer à la configuration du compte.
+
+==== Configuration du compte ====
+
+Aller dans ''Account Settings'' (Clic droit sur un compte puis ''Settings...'') puis dans l'onglet ''Security''.
+
+{{:securite:thunderbird_certif-1.png?direct&400|}}
+
+Dans le champ ''Digital Signing'' cliquer sur ''Select...'' et sélectionner le certificat à utiliser. Faire de même dans le champ ''Encryption''.

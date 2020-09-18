@@ -1,0 +1,254 @@
+
+<h1 class="sectionedit1" id="snake_system_design_principles">Snake System Design Principles</h1>
+<div class="level1">
+
+<p>
+In this article, we will use the snake System Design Principles to design a video streaming system like Netflix.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Snake System Design Principles&quot;,&quot;hid&quot;:&quot;snake_system_design_principles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-162&quot;} -->
+<h2 class="sectionedit2" id="what_is_the_system_design">What is the system design?</h2>
+<div class="level2">
+
+<p>
+The system design is the process of defining the architecture, components, modules, interfaces, and data model for the system to satisfy the specified requirements.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is the system design?&quot;,&quot;hid&quot;:&quot;what_is_the_system_design&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;163-369&quot;} -->
+<h2 class="sectionedit3" id="scenariocase_interface">1. Scenario: case/interface</h2>
+<div class="level2">
+
+<p>
+The first letter S stands for Scenarios, in this step, we will find all scenarios which can happen in the system. 
+In other word, we need to find out what are the typical use cases? What kind of abstraction do you provide?
+What do the APIs look like?
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Scenario: case\/interface&quot;,&quot;hid&quot;:&quot;scenariocase_interface&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;370-662&quot;} -->
+<h3 class="sectionedit4" id="example">Example</h3>
+<div class="level3">
+
+<p>
+In our simple Netflix example, We will have the following scenarios:
+</p>
+<ul>
+<li class="level1"><div class="li"> User management (registration, login/logout, reset/recover password)</div>
+</li>
+<li class="level1"><div class="li"> Play a video</div>
+</li>
+<li class="level1"><div class="li"> Video recommendation for a User</div>
+</li>
+</ul>
+
+<p>
+Of course, you can have more than these three above scenarios in your system. You need to list them one by one.
+</p>
+
+<p>
+For each scenario, we need to list all detail actions. For example, to play a video, you may :
+</p>
+<ul>
+<li class="level1"><div class="li"> get the channel list</div>
+</li>
+<li class="level1"><div class="li"> get into the channel</div>
+</li>
+<li class="level1"><div class="li"> get video list of a channel</div>
+</li>
+<li class="level1"><div class="li"> play a video</div>
+</li>
+</ul>
+
+<p>
+You can consider this step as the functional requirements gathering.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;663-1256&quot;} -->
+<h2 class="sectionedit5" id="necessaryconstrain_hypothesis">2. Necessary: constrain/hypothesis</h2>
+<div class="level2">
+
+<p>
+In this step, we need to find out the non-functional requirements such as:
+</p>
+<ul>
+<li class="level1"><div class="li"> How many total users and daily active users do you have?</div>
+</li>
+<li class="level1"><div class="li"> How many transactions do you have?</div>
+</li>
+<li class="level1"><div class="li"> How many concurrencies or parallel executions does it require?</div>
+</li>
+<li class="level1"><div class="li"> How much is the peak load?</div>
+</li>
+<li class="level1"><div class="li"> How fast does it have to be? Or how much latency can it endure</div>
+</li>
+</ul>
+
+<p>
+Based on these requirements, we need to design the system with enough cpu, memory, storage, database connections.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Necessary: constrain\/hypothesis&quot;,&quot;hid&quot;:&quot;necessaryconstrain_hypothesis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1257-1760&quot;} -->
+<h3 class="sectionedit6" id="example1">Example</h3>
+<div class="level3">
+
+<p>
+Let&#039;s reuse the netflix example, the PM told us we will have the following user load:
+</p>
+
+<p>
+Total User connection per day : 5,000,000
+</p>
+
+<p>
+The Average connection duration is: 30 mins
+</p>
+
+<p>
+The average concurrent user connection(= Total user connection per day/ 24h (in seconds) * connection duration (in seconds)): 5000000/(24*60*60)*(30*60) = 104167
+</p>
+
+<p>
+Max concurrent user connection(The average * 6) = 625000
+</p>
+
+<p>
+We estimate, six months later, we will double this number = 1,250,000
+</p>
+
+<p>
+<strong>Band width</strong> : 
+per user = 3 mbps
+</p>
+
+<p>
+max = 3 * 1,250,000 (max concurrent user connection)
+</p>
+
+<p>
+<strong>Memory</strong> :
+</p>
+
+<p>
+per user = 10 kb
+</p>
+
+<p>
+now max= total user number * 10kb = 
+</p>
+
+<p>
+6 month later max = total user number * 2 * 10kb
+</p>
+
+<p>
+<strong> Hard drive </strong>
+</p>
+
+<p>
+Movie number = 1000
+</p>
+
+<p>
+Each movie takes 50 <abbr title="Gigabyte">GB</abbr>
+</p>
+
+<p>
+Total: 1000* 50 = 50 TB
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1761-2546&quot;} -->
+<h2 class="sectionedit7" id="applicationservice_algorithm">3. Application: service/algorithm</h2>
+<div class="level2">
+
+<p>
+Design the architecture of each service in the application, and evaluate the Complexity(Big O analysis) of each service.
+</p>
+
+<p>
+Simulate use cases step by step by using the given service (find out all possible service chaining combination)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Application: service\/algorithm&quot;,&quot;hid&quot;:&quot;applicationservice_algorithm&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2547-2828&quot;} -->
+<h3 class="sectionedit8" id="example2">Example</h3>
+<div class="level3">
+
+<p>
+In our Netflix example, we can think of three basic services:
+</p>
+<ul>
+<li class="level1"><div class="li"> user service</div>
+</li>
+<li class="level1"><div class="li"> channel service</div>
+</li>
+<li class="level1"><div class="li"> movie service</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example2&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;2829-2967&quot;} -->
+<h2 class="sectionedit9" id="kilobitdata">4. Kilobit: data</h2>
+<div class="level2">
+
+<p>
+In this step, we need to identify all services which need to persist data and evaluate the following questions:
+</p>
+<ul>
+<li class="level1"><div class="li"> How much is the generated data?</div>
+</li>
+<li class="level1"><div class="li"> How much space does it need to persist?</div>
+</li>
+<li class="level1"><div class="li"> Where to store the data. File system? SQL database? NoSQL database?</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Kilobit: data&quot;,&quot;hid&quot;:&quot;kilobitdata&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;2968-3262&quot;} -->
+<h3 class="sectionedit10" id="example3">Example</h3>
+<div class="level3">
+
+<p>
+<strong>User service</strong>
+</p>
+
+<p>
+The user service will persist user data, such as user name, age, and role, etc. With a SQL database, we can reduce the storage, because of the user role table will be reused by all users.
+</p>
+
+<p>
+<strong>Channel service</strong>
+It depends on how we design a channel, if a movie can be in multiple channels, SQL database is better, otherwise, 
+NoSql is better
+</p>
+
+<p>
+<strong>Movie service</strong>
+It requires both sql database and file storage.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example3&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;3263-3707&quot;} -->
+<h2 class="sectionedit11" id="evolve">5. Evolve:</h2>
+<div class="level2">
+
+<p>
+In this step, we need to analyze the architecture and answer the following question:
+</p>
+<ul>
+<li class="level1"><div class="li"> Is there still Optimization possible</div>
+</li>
+<li class="level1"><div class="li"> Is it Extensibable(adding new features)</div>
+</li>
+<li class="level1"><div class="li"> Is it Scalabable(support more user)</div>
+</li>
+<li class="level1"><div class="li"> Does it support high Availability</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Evolve:&quot;,&quot;hid&quot;:&quot;evolve&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;3708-&quot;} -->

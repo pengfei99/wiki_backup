@@ -1,0 +1,147 @@
+
+<h1 class="sectionedit1" id="globus_gridftp_installation">Globus gridftp installation</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Globus gridftp installation&quot;,&quot;hid&quot;:&quot;globus_gridftp_installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-43&quot;} -->
+<h2 class="sectionedit2" id="install_globus_data_management_server">Install globus data management server</h2>
+<div class="level2">
+<pre class="code">#set lange en encording
+export LANG=en_US.UTF-8
+
+#download the repo rpm
+cd /tmp/
+wget http://www.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo-latest.noarch.rpm
+
+#install repo
+rpm -hUv globus-toolkit-repo-latest.noarch.rpm
+
+#install globus data management server
+yum install globus-data-management-server
+
+#if you encounter errors because of missing packages, you need to install them
+#In my case, I don&#039;t have udt for udp data transfering
+# add epel repo and instll udp packages
+yum install epel-release
+yum install udt
+
+#redo the installation
+yum install globus-data-management-server</pre>
+
+<p>
+If you complete the installation, you should see the following packages are installed
+</p>
+<pre class="code">Installed:
+  globus-data-management-server.x86_64 0:6.0-1.el7+gt6                                                 
+
+Dependency Installed:
+  globus-authz.x86_64 0:3.15-1.el7+gt6                                                                 
+  globus-authz-callout-error.x86_64 0:3.6-3.el7+gt6                                                    
+  globus-callout.x86_64 0:3.15-3.el7+gt6                                                               
+  globus-common.x86_64 0:17.2-1.el7+gt6                                                                
+  globus-common-progs.x86_64 0:17.2-1.el7+gt6                                                          
+  globus-ftp-control.x86_64 0:8.2-1.el7+gt6                                                            
+  globus-gfork.x86_64 0:4.9-4.el7+gt6                                                                  
+  globus-gfork-progs.x86_64 0:4.9-4.el7+gt6                                                            
+  globus-gridftp-server.x86_64 0:12.4-1.el7+gt6                                                        
+  globus-gridftp-server-control.x86_64 0:6.0-3.el7                                                     
+  globus-gridftp-server-progs.x86_64 0:12.4-1.el7+gt6                                                  
+  globus-gsi-callback.x86_64 0:5.13-1.el7+gt6                                                          
+  globus-gsi-cert-utils.x86_64 0:9.16-1.el7+gt6                                                        
+  globus-gsi-cert-utils-progs.x86_64 0:9.16-1.el7+gt6                                                  
+  globus-gsi-credential.x86_64 0:7.14-1.el7+gt6                                                        
+  globus-gsi-openssl-error.x86_64 0:3.8-1.el7+gt6                                                      
+  globus-gsi-proxy-core.x86_64 0:8.6-1.el7+gt6                                                         
+  globus-gsi-proxy-ssl.x86_64 0:5.10-1.el7+gt6                                                         
+  globus-gsi-sysconfig.x86_64 0:8.0-1.el7+gt6                                                          
+  globus-gss-assist.x86_64 0:11.1-1.el7+gt6                                                            
+  globus-gss-assist-progs.x86_64 0:11.1-1.el7+gt6                                                      
+  globus-gssapi-error.x86_64 0:5.5-3.el7+gt6                                                           
+  globus-gssapi-gsi.x86_64 0:13.4-1.el7+gt6                                                            
+  globus-io.x86_64 0:11.9-1.el7+gt6                                                                    
+  globus-openssl-module.x86_64 0:4.8-1.el7+gt6                                                         
+  globus-usage.x86_64 0:4.5-3.el7+gt6                                                                  
+  globus-xio.x86_64 0:5.16-1.el7+gt6                                                                   
+  globus-xio-gsi-driver.x86_64 0:4.1-1.el7+gt6                                                         
+  globus-xio-pipe-driver.x86_64 0:3.10-1.el7+gt6                                                       
+  globus-xio-udt-driver.x86_64 0:1.28-1.el7+gt6                                                        
+  globus-xioperf.x86_64 0:4.5-3.el7+gt6                </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install globus data management server&quot;,&quot;hid&quot;:&quot;install_globus_data_management_server&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;44-4126&quot;} -->
+<h3 class="sectionedit3" id="grid_ftp_server_configure_and_start">Grid ftp server configure and start</h3>
+<div class="level3">
+
+<p>
+The main config file of grid ftp is 
+</p>
+<pre class="code">#conf file path, if you installed it by using yum
+/etc/gridftp.conf
+#if you installed it by using tar ball
+&lt;GLOBUS_LOCATION&gt;/etc/gridftp.conf
+
+#start/stop/status service
+service globus-gridftp-server start
+service globus-gridftp-server status</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Grid ftp server configure and start&quot;,&quot;hid&quot;:&quot;grid_ftp_server_configure_and_start&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;4127-4469&quot;} -->
+<h3 class="sectionedit4" id="install_globus_grid_ftp_client">Install globus grid ftp client</h3>
+<div class="level3">
+<pre class="code">#set lange en encording
+export LANG=en_US.UTF-8
+
+#download the repo rpm
+cd /tmp/
+wget http://www.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo-latest.noarch.rpm
+
+#install repo
+rpm -hUv globus-toolkit-repo-latest.noarch.rpm
+
+#install globus data management server
+yum install globus-data-management-server
+
+#if you encounter errors because of missing packages, you need to install them
+#In my case, I don&#039;t have udt for udp data transfering
+# add epel repo and instll udp packages
+yum install epel-release
+yum install udt
+
+# install gridftp client
+yum install globus-data-management-client</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install globus grid ftp client&quot;,&quot;hid&quot;:&quot;install_globus_grid_ftp_client&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:4,&quot;range&quot;:&quot;4470-5128&quot;} -->
+<h3 class="sectionedit5" id="use_client_to_transfer_data">Use client to transfer data</h3>
+<div class="level3">
+
+<p>
+Make sure you have a gridftp server running
+</p>
+<pre class="code"># before you start, you need to make sure the server is running
+[root@CCLinGridFfpD01 grid-security]# service globus-gridftp-server status
+GridFTP server is running (pid=16057)
+
+# create a grid ftp server instance
+# control interface means the server listens to which device,
+# -aa means anonymous no need for authentication
+# the server listens to port 5000
+globus-gridftp-server --control-interface 127.0.0.1 -aa --p 5000</pre>
+
+<p>
+Now the server is ready, on the client side, use globus-url-copy command to copy a file
+</p>
+<pre class="code">[bioaster@CCLinGridFfpD01 tmp]$ globus-url-copy -v file:///tmp/input/test.txt ftp://localhost:5000/tmp/output/toto.txt
+Source: file:///tmp/input/
+Dest:   ftp://localhost:5000/tmp/output/
+  test.txt  -&gt;  toto.txt
+[bioaster@CCLinGridFfpD01 tmp]$ cat output/toto.txt 
+hsihahdfhasdf
+ahdsdfsadf
+sdfsdfksdkf
+sdfsfasdfsa
+sdfsdfsdf
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use client to transfer data&quot;,&quot;hid&quot;:&quot;use_client_to_transfer_data&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;5129-&quot;} -->

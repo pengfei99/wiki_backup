@@ -1,0 +1,33 @@
+====== Agenda ======
+
+  * Présentation de la PLS par Adama
+  * Présentation du Random Forest par Trang
+  * Discussions autour des présentations
+
+===== PLS =====
+
+PPT de la présentation : {{:bioinformatique:slides:2014-12-18_pls_-_adama.pptx|}}
+
+===== Random Forest =====
+
+PPT de la présentation : 
+
+===== Idées scientifiques et de travail =====
+
+Il serait intéressant de fixer les idées qui on pu naître suite à la présentation. J'y ai mis quelques idées de chaucun notées durant et après la réunion. Merci d'y apporter plus détails.
+
+  * **Pierre/Trang** Faire un Benchmark de plusieurs méthodes du random forest sur le centre de calcul
+  * **Lilia** Combiner le Random Forest à PLS en tirant partie des avantages de chacun. E.g. PLS pour factoriser et simplifier l'espace des varaibles, RF pour la construction du modèle final en vue de la simulation et la prédiction.
+  * **Adama** Un point intéressant du Random Forest dans le cadre des algorithmes d'apprentissage est sa simplicitité de construction. La construction itérative des arbres de décisions en séparant de manière **naturelle** l'espace des variables des plus informatives aux moins informatives, chaque neud de séparation étant associé à une **règle de décision** (e.g. IF X > k THEN [ IF B > m THEN [...] ], ELSE [...]). Il serait donc intéressant d'explorer la possibilité du RF (ou même des algortihmes basés sur ces arbres de décision) pour l'apprentissge naturelle et la construction de nos propres modèles de prédiction pour l'analyse fonctionnelle. En analyse fonctionnelle des pathways, le **rule-based et agent-based modelling** [[http://en.wikipedia.org/wiki/Rule-based_modeling]], [[http://en.wikipedia.org/wiki/Agent-based_model_in_biology]] sont à cet effet des outils qui permettent de modéliser un ensemble d'interactions moléculaires à partir de règles. On peut donc imaginer le RF comme un outil qui permettrait de classer l'information à partir des données biologiques (conditionnées sur un endpoint biologique à prédire) afin de construire en base de données une série de modèles qui seront utilisées pour faire de la prédiction. Par expérience, la possibilité de représenter les modèles RF sous forme d'arbre de décision les rend aussi **biologically human-readable**, ce qui est un atout majeur quand on doit presenter un modèles mathématiques à des biologistes. E.g. Savoir que IF <Gene_A_actif> THEN <Phenotype_B> est bien plus naturel comme représentation que <Phenotype_B> = K * <Level_Gene_A> ou <Phentype_B> = f(<Level_Gene_A>), f étant une fonction non linéaire comme c'est le cas avec les méthodes de régression linéaires/non-linéaires (e.g. K-PLS). <color blue>**Questions pour Trang**: Suposons qu'on a un modèle A1 construit sur une jeu de données D1. Suppsons qu'une nouvelle données D2 arrive. Est-il possible de mettre à jour A1 en intégrant simplement la nouvelle données D2 sans avoir à recalculer tout le modèle avec [D1, D2] ?</color>
+  * <color red>Lilia, j'ai noté "dans ma tête" il y a quelques semaines, qu'à une conférence tu avais vu des gens parler du rule-based modelling (je ne sais si tu t'en souviens ?). Penses-tu que tu pourais les inviter ou d'avoir accès à leurs travaux ? Si tu veux, il serait intéressant que tu mette aussi les idées que tu en avais tirées en fonction de leurs travaux... si tu a un CR cette conf il serait le bienvenu</color> [Adama]. 
+===== Points à améliorer/supprimer/conserver pour les prochaines présentation =====
+
+Au vu du large spectre de compétences bioinfo, il serait intéressant les points sur lesquels chacun souhaite plus d'approndissement pour les prochaine présentations par exemple. Par exemple, Pierre avait souhaité plus de graphiques sur la PLS pour rendre la méthode plus concrète. 
+
+===== ToDo =====
+
+  * **Adama** : Prévoir une présentation avec le logiciel SIMCA avec illustration de la PLS et l'O-PLS
+  * **Pierre** : Voir avec l'utec6 de la possibilité de mettre en place le benchmark Random Forest
+  * **Lilia/Trang/Adama +  autres ?** Réfléchir à pipeline d'analyse où on pourrait combiner PSL, O-PLS (filtrage, analyse de la strucutre des données : étape mi-manuelle/mi-automatique) + RF (construction de modèles finaux à base d'arbres de décision)
+  * **Adama/Lilia ?** : Inviter des personnes (chercheurs) extérieurs pour nous faire par de leur expérimences sur le Rule-Based et Agent-Based modelling. Adama a qq adresses pour ça, notamment une doctorante de l'INRIA Rocquencourt et un post-doc de L'ENS Cachan qu'on pourrait faire venir. <color red>Lilia, j'ai noté il y a quelques semaines, qu'à une conférence tu avais vu des gens parler du rule-based modelling (je ne sais si tu t'en souviens ?). Penses-tu que tu pourais les inviter ou d'avoir accès à leurs travaux ?</color>//
+<color green>Gardez en tête que les thèmes du rule-based et de l'agent based modelling sont des thèmes développés chez des partenaires potentiels et qui pourraient avoir un intérêt dans le diagnostic</color>

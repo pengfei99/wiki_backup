@@ -1,0 +1,34 @@
+====== Thèmes et questions à aborder / TLC ======
+
+===== Écriture de code =====
+
+<WRAP round important >
+\\ Je réponds "non" à "j'ai besoin" car pour le moment je n'écris pas de code à BIOASTER !
+</WRAP>
+
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**............................................................................... |
+| Utiliser un IDE | non | oui | vim !? |
+| Mutualiser des bouts de codes : oui, mais comment ?\\ (//libraries// et autres modules) | non | oui | modules python |
+| "-h" c'est bien, mais c'est galère, non ? | non | oui | python argparse et un module "maison" |
+| Y'a un "coding style" à BIOASTER ? | non | oui | javadoc et tatillon sur les space/tab |
+| Documenter à part ou dans le code ? Quid des générateurs de doc ? | non | oui | doxygen |
+| pair programming, code review... //Qu'es aco// ? | non | un peu | (reviewboard) |
+
+===== Sauvegarde de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| Et si mon Laptop (où je développe) se crashe ? | oui | oui | adBackup |
+| Comment faire pour revenir à une version antérieure ? | oui | oui | GNU/Bazaar |
+
+===== Déploiement de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| mettre mon code (la dernière version) sur la ferme ? | non | oui | rsync, GNU/Bazaar |
+| donner mon code à d'autres : oui, mais sous quelles conditions ? (licences) | non | oui | GPLv3 |
+
+===== Se tenir au courant =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| nouveaux algorithmes | non | oui | Flux RSS de différents journaux avec TT-RSS |
+| nouvelles versions de logiciels | oui | non | ?! |

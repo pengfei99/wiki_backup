@@ -1,0 +1,206 @@
+====== Screen ======
+
+Linux Screen allows you to:
+
+  * Use multiple shell windows from a single SSH session.
+  * Keep a shell active even through network disruptions.
+  * Disconnect and re-connect to a shell sessions from multiple locations.
+  * Run a long running process without maintaining an active shell session.
+
+===== Install screen =====
+
+There is great chance your linux already have screen installed
+
+<code>
+#check if you have screen or not
+[hadoop@CCLinDataWHD01 pliu]$ which screen
+#if you see this, it's installed
+/bin/screen
+
+#otherwise
+sudo yum install screen
+
+
+</code>
+
+===== Use screen =====
+
+<code>
+#open a screen
+> screen
+</code>
+
+Once you are inside a screen you can type any command as you are in a normal shell, to give command to screen. You need to use<color #ed1c24> Ctrl-a</color> then options. Screen works like vim, it has a mode command. By typing ctrl-a you enter to command mode.
+
+==== Creating a new window ====
+
+''Ctrl-a c''
+
+This will create a new window for you with your default prompt.  Your old window is still active.
+
+==== Switching Between windows ====
+
+''Ctrl-a n''
+
+Screen allows you to move forward and back. In the example above, you could use “Ctrl-a “n” to get back to top. This command switches you to the next window.
+
+The windows work like a carousel and will loop back around to your first window.
+
+You can create several windows and toggle through them with “Ctrl-a” “n” for the next window or “Ctrl-a” “p” for the previous window.
+
+Each process will keep running until you kill that window.
+
+==== Detaching from screen ====
+
+''Ctrl-a d''
+
+Detaching is the most powerful part of screen.  Screen allows you to detach from a window and reattach later.
+
+If your network connection fails, screen will automatically detach your session!
+
+You can detach from the window using “Ctrl-a” “d”.
+
+This will drop you into your shell.
+
+All screen windows are still there and you can re-attach to them later.
+
+This is great when you are using rsync for server migration.
+
+==== Reattach to screen ====
+
+<code>
+[hadoop@CCLinDataWHD01 pliu]$ screen -r
+</code>
+
+This will re-attach to your screen.
+
+However, if you have multiple screens you may get this:
+
+<code>
+$ screen -r
+There are several suitable screens on:
+31917.pts-5.office      (Detached)
+31844.pts-0.office      (Detached)
+Type "screen [-d] -r [pid.]tty.host" to resume one of them.
+If you get this, just specify the screen you want.
+
+$ screen -r  31844.pts-0.office
+</code>
+
+Beware, ctrl-a c create a new window inside one screen. One screen can have multiple windows.
+
+==== List all screen session ====
+
+The screen -list depends on user session, see the following example
+
+<code>
+[root@CCLinDataWHD01 bin]# screen -list
+No Sockets found in /var/run/screen/S-root.
+
+[root@CCLinDataWHD01 bin]# su hadoop
+[hadoop@CCLinDataWHD01 bin]$ screen -list
+There is a screen on:
+	16558.$name	(Attached)
+1 Socket in /var/run/screen/S-hadoop.
+</code>
+
+==== Attaching an attached screen ====
+
+<code>
+screen -x 16558.$name
+
+</code>
+
+==== Scoll up and down to your screen  ====
+
+Use ctrl+a then [ to enter to copy mode.
+
+Once you are in copy mode, you can scoll up and down.
+==== Logging your screen output ====
+
+It's important to keep track of what I do on a server. Fortunately, screen makes this easy.
+
+Using “Ctrl-a” “H”, creates a running log of the session.
+
+Screen will keep appending data to the file through multiple sessions. Using the log function is very useful for capturing what you have done, especially if you are making a lot of changes. If something goes awry, you can look back through your logs.
+
+With "Ctrl-a H" the screen will write the output into the default log file which is defined in the default screen conf file
+
+To write the output in your own way
+
+<code>
+cd /tmp
+vim /tmp/screen.conf
+
+#put the following lines
+logfile screen_test.log
+logfile flush 1
+log on
+logtstamp after 1
+logtstamp string "[ %t: %Y-%m-%d %c:%s ]\012"
+logtstamp on
+
+#run the screen with your custom conf
+screen -c ./tmp/screen.conf -dmSL 'screen_test' /tmp/helloworld.sh
+
+# -dm means creates a new session with mode "detached"
+# -S means specify the session name
+# -L tells screen to turn on automatic output logging for the windows
+
+# so the above script run screen with a conf file screen.conf, with session name 'screen_test' and runs 
+# the shell helloworld.sh in the screen session.
+ 
+</code>
+
+To make it easier, we can build a script to run the above automatically.
+
+<file bash >
+#!/bin/bash
+# name of the screen session can't be empty
+if [[ $1 == "" ]]; then
+    echo "Usage: $0 name";
+    exit 1;
+fi
+# get the screen session name
+name=$1
+# define screen output log path
+# make sure the runner of the script has the right to write in it
+path="/tmp/log";
+# define the screen log config
+config="logfile ${path}/${name}.log
+logfile flush 1
+log on
+logtstamp after 1
+logtstamp string \"[ %t: %Y-%m-%d %c:%s ]\012\"
+logtstamp on";
+# write the log config to a temporal file
+echo "$config" > /tmp/log.conf
+# run screen with log config 
+screen -c /tmp/log.conf -dmSL $name 
+# remove the temporal config file
+#rm /tmp/log.conf
+
+
+</file>
+
+The above script takes an argument as session name, and creates a detached screen session. 
+
+===== Sharing a screen session with another user =====
+
+  - Open a screen with user1
+  - Enable mutli-user mode ([user1@ tmp]$ Ctrl-a :multiuser on)
+  - Add the desired user(s) ([user1@ tmp]$ Ctrl-a :acladd user2)
+  - User2 connect to screen of user1 ([user2@ ~]$ screen -x user1/shared)
+  - If you receive a error message ( Must run suid root for multiuser support.) you need to log out and do the following commands 
+
+<code>
+[user1@ ~]$ su -
+Password: 
+[root@ ~]# chmod u+s $(which screen)
+[root@ ~]# chmod 755 /var/run/screen
+[root@ ~]# rm -fr /var/run/screen/*
+[root@ ~]# exit
+logout
+</code>
+
+Ps: making the screen command suid root is a security issue (otherwise, wouldn't it already have been set this way). So, you may be better off making a third shared account which both users can log into to share a screen session with. 

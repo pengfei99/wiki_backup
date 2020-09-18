@@ -1,0 +1,138 @@
+**Datatables** est une bibliothèque //javascript// permettant d'afficher un tableau, de pouvoir le trier selon une colonne, rechercher du texte dedans, paginer etc.
+
+Tout d'abord sachez que la doc est [[https://datatables.net/|ici]].
+
+====== Guide d'utilisation ======
+{{ :ut6:bioinformatique:images:1j2ptj.jpg?200 |}}
+===== Premiers pas =====
+
+Téléchargez la dernière version sur le site et importez les fichiers javascript et CSS sur votre page web.
+Ensuite appelez la bibliothèque ainsi
+<code>
+$(document).ready( function () {
+    $('#maTable').DataTable();
+  });
+</code>  
+//Et voilà !//  datatable est opérationnel seulement, il fonctionnera 100% côté client c'est à dire qu'il chargera d'un coup les n lignes de votre tableau. Si n commence à être grand (1.000,10.000... plus) votre page sera ralentie. 
+La solution à ce problème est de gérer datatable côté serveur.
+
+{{ :ut6:bioinformatique:images:1j2ptm.jpg?200 |}}
+
+===== Configuration du server side =====
+Il y a différentes options à définir dans votre code côté javascript (client) :
+<code javascript>
+$('#myTable').DataTable({
+      "serverSide": true, //indique que l'on utilise le serveur 
+      "processing": true, //affiche processing quand ça charge
+      "ajax": {
+        url: "{{path('dataTableSearch')}}", // l'url que datatable va appeler, ici on utilise la fonction path de twig pour le générer
+        "data": function ( d ) { //par défaut l'url ci-dessus va être appelée avec un certain nombre de variables (cf ci-dessous) mais grâce à cette fonction on peut en spécifier d'autres
+          d.field = $('#monChamp').val(); // en Symfony il suffira de faire $request->get('field); pour obtenir la valeur de ce champ
+        }
+      },
+      "columns":[ // le nom de chacune des colonnes de votre tableau
+        {"data": "id"},
+        {"data": "info"},
+        {"data": "supplier"},
+        {"data":"icon"}
+      ],
+      "pageLength": 10,
+      "lengthMenu": [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"]], // la taille des pages : à gauche les valeurs et à droite les options visibles par l'utilisateur
+      "searchDelay": 1500 // ne rien chercher avec 1.5 seconde
+    });
+</code>
+
+[[https://datatables.net/manual/server-side|La doc]] de datatables nous indique le nom des variables envoyées par défaut.
+==== Configuration du serveur avec Symfony ====
+On commence les choses sérieuses :)
+<code php>
+public function maFonction(Request $request)
+{
+  // ici on a mit le nombre de résultats dans une variable en session pour tout le temps avoir le nombre de résultats sans refaire la requête SQL
+  $querySize = $session->get('querysize');
+  // laRequeteSQL est une méthode qui va retourner qu'une partie des résultats selon la page sélectionnée. Typiquement ça peut être que les 10 premiers si l'utilisateur est sur la première page et choisi d'afficher 10 lignes.
+  $data = $this->laRequeteSQL($request);
+  // si $request->get('search')['value'] n'est pas null alors l'utilisateur a rentré une valeur. Le nombre de "recordFiltered" est donc différent du nombre de record total (parce qu'on applique un filtre).
+  if($request->get('search')['value'] != null ){
+     $jsonArray = array(
+          'data' => array(),
+          'recordsFiltered' =>sizeof($data), 
+          'recordsTotal' => $querySize, //le nombre de résultats total
+      );
+  }
+  else{
+    $jsonArray = array(
+         'data' => array(),
+         'recordsFiltered' =>$querySize, 
+         'recordsTotal' => $querySize, //le nombre de résultats total
+      );
+  }
+}
+// on fabrique le JSON pour retourner les données à notre datatable
+foreach ($data as $entity) {
+     $jsonArray['data'][] = [
+           'DT_RowClass' => "selectedtochart_light", //la class CSS de la ligne
+           'DT_RowId'=>strval($entity->getId()), //l'ID de la ligne
+           //ici ça doit correspondre au nom des colonnes définies en javascript
+           'id' => strval($entity->getId()), 
+           'info' => strval( $entity->getInfo() ),
+           'supplier' => strval( $entity->getSuppliersInfo() ),
+           'icon' => $this->renderButtonLinkRB($entity,$type,$idDemand,$idstrain)
+         ];
+    }
+return new Response(json_encode($jsonArray), 200, ['Content-Type' => 'application/json']);
+}    
+</code>
+Dans votre fonction nommée "laRequeteSQL" il faut récupérer les paramètres envoyés par dataTable et les traiter. Vous pouvez utiliser la debug bag de Symfony + la doc de DataTable pour vous aider. Voici un exemple de fonction :
+<code php>
+public function laRequeteSQL(Request $request)
+{
+  $qb = $em->getRepository('MyBundle:MyEntity')->createQueryBuilder('q');
+  // start vaut le numéro de la première valeur a afficher (taille de page * nombre de la page) et length le nombre de résultats à afficher
+  if ( $request->get('start') != ""  and $request->get('length') != "" )
+    {
+        $qb->setFirstResult($request->get('start'));
+        if( $request->get('length') != -1 ){ // si length vaut -1 cela veut dire que l'utilisateur veut tout afficher, cf la configuration de datatable en javasript
+          $qb->setMaxResults($request->get('length'));
+        }
+
+    }
+    else{
+      // on stock le nombre total de résultat dans la session
+      $session->set('querysize', sizeof($qb->getQuery()->getResult()));
+      // ici on choisi par défaut d'afficher que les 10 premiers résultats
+      $qb->setFirstResult(0);
+      $qb->setMaxResults(10);
+    }
+    // ici l'utilisateur a cliqué sur une colonne pour la trier
+    if ( $request->get('order') != ""   )
+    {
+        $orderBy="";
+        $order = $request->get('order');
+        // le chiffre est le numéro de la colonne, en commençant à 0
+        if ($order[0]['column'] == 0){
+          $orderBy="s.id";
+        }
+        elseif 
+          #etc...#
+        if ($order[0]['dir'] == 'desc'){
+          $qb->orderBy($orderBy, 'DESC');
+        }
+        elseif ($order[0]['dir'] == 'asc'){
+          $qb->orderBy($orderBy, 'ASC');
+        }
+    }
+     // ici l'utilisateur a entré une valeur, a vous faire votre requête SQL en fonction de ça !
+      if ( $request->get('search')['value'] != ""   )
+      {
+        if(strlen($request->get('search')['value']) > 2){
+          $word = $request->get('search')['value'];
+          $qb->andWhere($qb->expr()->orX(
+           $qb->expr()->like('s.fieldOne', $qb->expr()->literal('%'.$word.'%')),
+           $qb->expr()->like('s.fieldTwo', $qb->expr()->literal('%'.$word.'%')),
+          #etc...#
+          ));
+        }
+      }
+}      
+</code>

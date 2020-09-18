@@ -1,0 +1,5 @@
+<span class="kw1">def</span> define_options<span class="br0">&#40;</span><span class="kw2">self</span><span class="br0">&#41;</span>:
+    <span class="st0">&quot;&quot;&quot;Define options for the script.&quot;&quot;&quot;</span>
+    <span class="kw2">self</span>.<span class="kw3">parser</span>.<span class="me1">add_option</span><span class="br0">&#40;</span><span class="st0">&quot;-t&quot;</span><span class="sy0">,</span> <span class="st0">&quot;--test&quot;</span><span class="sy0">,</span>
+                           action<span class="sy0">=</span><span class="st0">&quot;store_true&quot;</span><span class="sy0">,</span> default<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>
+                           <span class="kw2">help</span><span class="sy0">=</span><span class="st0">&quot;This is a test.&quot;</span><span class="br0">&#41;</span>

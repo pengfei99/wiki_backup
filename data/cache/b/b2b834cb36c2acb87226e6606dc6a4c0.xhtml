@@ -1,0 +1,80 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm00">BIOA-2014-VM00</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BIOA-2014-VM00" [1-30] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Description et <em>bla bla bla</em>.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/machines_virtuelles/i_template?do=backlink" class="wikilink1" title="machines_virtuelles:i_template">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [31-195] -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : -</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Contacts" [196-262] -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : - </div>
+</li>
+<li class="level1"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: -</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: -</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : -</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations Techniques" [263-450] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Installation" [451-476] -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text"># Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail &quot;root&quot;;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Système de base" [477-905] -->
+<h2 class="sectionedit7" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.06.18 (<em>initiales_du_responsable</em>)</strong> Installation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Journal" [906-] -->

@@ -1,0 +1,4 @@
+$ bzr branch bzr+ssh://redmine.bioaster.org/code/&lt;PROJECT&gt;/develop \
+           bzr+ssh://redmine.bioaster.org/code/&lt;PROJECT&gt;/&lt;LOGIN&gt;/feature-123
+$ bzr branch bzr+ssh://redmine.bioaster.org/code/&lt;PROJECT&gt;/&lt;LOGIN&gt;/feature-123
+$ cd feature-123

@@ -1,0 +1,173 @@
+====== Standard operation Procedure for creating centos 7 vm in VM ware ======
+
+**1 Gather information:**
+  * VM stats (e.g. cpu, memory, disk)
+  * network stats (i.e. Ip address)
+  * user stats (i.e. who will be allowed to connect to this vm with what rights)
+
+**2 Register ip address in racktables** 
+
+To avoid conflict, you must go to the following site(http://racktables.bioaster.local/racktables/index.php?page=ipv4space). You will need a login and pwd to connect, You can find it in keypass
+
+**3 Create vm**
+  * Use existing template to deployer the vm (If no template, go ask vm ware admin)
+  * Deactivate the network connection before power on your vm (vm may keep the old ip of the template, possible network conflict)
+  * Open a terminal in vsphere of your vm, configure your network with right IP and dns (two dns 10.69.1.31, 10.70.2.21, two search domains in2p3.fr, bioaster.org, bioaster.local ).
+  * Restart your vm
+  * Test ssh connection with the default user (e.g. bioaster)   
+  * Create custom user account and group which can access this vm 
+  * Test ssh connection with the custom user account.
+  * edit /etc/sudoers to give the appropriate right to the custom user through a group (Give right direct to a user is not recommended).
+
+**4 Create GUI and make it available via ssh**
+
+<code>
+ #Install EPEL and X window
+ shell> sudo yum install epel-release
+        sudo yum groupinstall "X Window system"
+# Install xfce 
+ shell> sudo yum groupinstall xfce
+
+#hange target graphique : 
+ shell> sudo systemctl isolate graphical.target
+
+#Launch the xfce gui at the start of the vm. 
+shell > sudo systemctl set-default graphical.target
+        sudo rm '/etc/systemd/system/default.target'
+        sudo ln -s '/usr/lib/systemd/system/graphical.target' '/etc/systemd/system/default.target'
+
+#Install x2go on the server side: 
+shell> sudo yum -y install x2goserver-xsession
+
+</code>
+  
+
+Ps: x2go use nx protocol which wrapped ssh. So make sure the ssh access is open on the server-side.
+
+**4bis, install x2go on ubuntu 16.04**
+  * Install x2go server package and gui xfce4
+code>
+sudo apt-get -y install software-properties-common
+sudo add-apt-repository ppa:x2go/stable -y 
+sudo apt-get update
+sudo apt-get -y install x2goserver x2goserver-xsession
+
+sudo apt-get install xfce4 
+</code>
+
+**5 Install x2go client**
+X2go client is available for Windows, Mac and Linux. You can download these clients from http://wiki.x2go.org/doku.php/download:start
+
+For windows you can go here directly: http://code.x2go.org/releases/binary-win32/x2goclient/releases/4.0.5.0-2015.07.31/x2goclient-4.0.5.0-2015.07.31-setup.exe
+
+When you start your client, you need to give Ip address, user login and password. For gui, you must choose xfce
+
+6 Mount extra hard drive to vm
+  * Add disk to vm (In Vsphere, right click on target vm, then choose modifier les parameter, click on ajoute, then choose disk ) 
+  * Creating Linux Partitions. First find the new disk ''fdisk -l''
+<code>
+Disk /dev/sda: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00003ac8
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     1026047      512000   83  Linux
+/dev/sda2         1026048    41943039    20458496   8e  Linux LVM
+</code>
+The above info is an example of existing partition
+
+<code>
+Disk /dev/sdb: 10.7 GB, 10737418240 bytes, 20971520 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+</code>
+The above info ia an example of disk without parttion
+
+Now we know, we need to create patition for /dev/sdb, type ''fdisk /dev/sdb''
+
+You will have following info
+<code>
+The device contains neither a valid DOS partition table nor Sun, SGI or OSF disklabel
+Building a new DOS disklabel. Changes will remain in memory only,
+until you decide to write them. After that, of course, the previous
+content won't be recoverable.
+
+The number of cylinders for this disk is set to 47536.
+There is nothing wrong with that, but this is larger than 1024,
+and could in certain setups cause problems with:
+1) software that runs at boot time (e.g., old versions of LILO)
+2) booting and partitioning software from other OSs
+   (e.g., DOS FDISK, OS/2 FDISK)
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help):
+</code>
+
+Enter **p** for viewing current partition, if none exist. 
+
+Enter **n** for creating a new partition.
+
+Enter **p** for primary partition.
+
+Enter **1** for partition number
+
+Enter **w** for writing the partition on disk
+
+Now do ''ls /dev/sd*'', You should see ''...  /dev/sdb  **/dev/sdb1**''  
+
+  * Creating a File System on Disk Partition, Enter ''mkfs.ext4 /dev/sdb1''
+  * Mount the partition as /userdata ''mkdir /userdata'' ''mount /dev/sdb1 /userdata''
+  
+====== Standard operation Procedure for creating windows vm in VM ware ======
+
+**1 Gather information:**
+  * VM stats (e.g. cpu, memory, disk)
+  * network stats (i.e. Ip address)
+  * user stats (i.e. who will be allowed to connect to this vm with what rights)
+
+**2 Register ip address in racktables** 
+
+To avoid conflict, you must go to the following site(http://racktables.bioaster.local/racktables/index.php?page=ipv4space). You will need a login and pwd to connect, You can find it in keypass
+
+**3 Create vm**
+  * Use existing template to deployer the vm (If no template, go ask vm ware admin)
+  * Deactive the network connection before power on your vm (vm may keep the old ip of the template, possible network conflict)
+  * Open a terminal in vsphere of your vm, configure your network with right IP and dns (two dns 10.69.1.31 (vpn b1), 10.70.2.21 (vpn cc), two search domains in2p3.fr, bioaster.org, bioaster.local ).
+
+
+**4 Put windows vm into bioaster domain**
+  In this step we need IT/IS master key (must ask Antoney or Mathieu to add windows vm to domain)
+  
+**5 Add user to vm**
+  * click on ce pc -> propiete -> Page d'acceuil du panneau de configuration -> comptes d'utilisateurs, In this page, you have two tabs: utilisateur and options avancee
+  * To add user, stay in tab utilisateur click on -> ajouter. After this, you will find a popup window which ask you nom and domain. In nom, you need to put the uid of the user in the AD(Active directory)of Bioaster. In domain, you need to put bioaster. Then click on ok, If the uid exists, it will be added to the vm, otherwise, it will say no such user find.
+  * Now we need to add this user to admin group(admin of the vm locally), otherwise use can't install anything. To do this, go to tab options avance. Click on -> gestion avancee des utilisateur -> groups -> Admininstrateurs -> Ajouter, then you enter the AD uid of user (e.g. pliu, sdixneuf)
+
+**6 Add user to remote desktop access list**
+ To allow user to connect to server with rdp (windows ssh -x), we need to add user to the remote desktop access list. Click on ce Pc -> properties -> parametres system avances, there is a window with 4 tab, click on tab Utilisation a distance -> selectionez des utilisateurs. Click on Ajouter, enter the bioaster AD uid of the user.  
+
+**7 Configuer client to connect to the server with rdp**
+Click on start, in the search bar, tap mstsc, then open the mstsc.exe.
+The host name is //pc_name.bioaster.local//, for example if I have a vm called CCWinCodiraP03, then you should put CCWinCodiraP03.bioaster.local as host name.
+the username, you should put BIOASTER\Ad_uid (e.g. BIOASTER\pliuadm). And this uid must be added to the server side rdp list (see section 6)
+
+
+**8 Add extra hard drive**
+    * Add disk to vm (In Vsphere, right click on target vm, then choose modifier les parameter, click on ajoute, then choose disk ) 
+    * Mount disk to windows as volume. Go to Gestionnaire de serveur -> outils -> Gestion de l'ordinateur -> stockage -> gestion des disques
+    * If the disk is not connected, right click on the left side of the disk, then choose connect. 
+    * If disk is connected, right click on the right side of the disk, then chose new simple volume, 
+
+
+
+
+
+
+
+
+
+

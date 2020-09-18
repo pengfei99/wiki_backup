@@ -1,0 +1,104 @@
+
+<h1 class="sectionedit1" id="reunion_du_11_mai_2017">Réunion du 11 Mai 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 11 Mai 2017" [1-40] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Dupuis">PDU</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Veyre">PV</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [41-113] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Présentation <abbr title="Julie Hardy">JHA</abbr> : Retour sur les récoltes d&#039;échantillons @ BIOASTER</div>
+</li>
+<li class="level1"><div class="li"> Revue du BSL</div>
+</li>
+<li class="level1"><div class="li"> Point design</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [114-251] -->
+<h3 class="sectionedit4" id="presentation">Présentation</h3>
+<div class="level3">
+
+<p>
+Présentation <abbr title="Julie Hardy">JHA</abbr> dispo sur M : 02_DST/04_UTEC/06_UTEC/Projets/En cours/<abbr title="Network Of Experiments">NoE</abbr>/2017_Stage_Julie/presentations/P_template_final_bacterie_plasmide.pdf
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Présentation" [252-423] -->
+<h3 class="sectionedit5" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Présentation <abbr title="Julie Hardy">JHA</abbr></em>
+</p>
+
+<p>
+Template sur quelques types d échantillons (plasmides et bactéries)
+</p>
+
+<p>
+<em class="u">Point sur PatternFly</em>
+</p>
+
+<p>
+<a href="http://www.patternfly.org/" class="urlextern" title="http://www.patternfly.org/"  rel="nofollow">PatternFly</a> est un framework <abbr title="Cascading Style Sheets">CSS</abbr>/js proposé par l&#039;equipe RedHat. Il s&#039;agit en réalité d&#039;une extension de Bootstrap. Après étude, il s&#039;avère que la version actuelle de PatternFly est encore en version alpha. NOus envisageons d&#039;utiliser PatternFly dès qu&#039;une version stable sortira.
+</p>
+
+<p>
+<em class="u">Point sur les BSL</em>
+</p>
+
+<p>
+Ça semble plus compliqué que prévu ! <br/>
+
+Le code “1” “2” “3” et “4” est uniquement valable pour les agents biologiques. Pour les échantillons animaux c&#039;est “A” ou “B”. D&#039;après <abbr title="Karen Louis">KL</abbr>, il faudrait déplacer le champs BSL au niveau de l&#039;échantillon plutot que de l&#039;avoir au niveau de chaque agent biologique. La personne ajoutant l&#039;échantillon dans le LIMS doit être au courant du BSL de l&#039;échantillon. <br/>
+
+<code>TODO :</code> Une réunion pour déterminer une liste précise de BSL pour tous les types d&#039;échantillons connus est à prévoir avec <abbr title="Karen Louis">KL</abbr>.
+</p>
+
+<p>
+<em class="u">Point design</em>
+</p>
+
+<p>
+À l&#039;unanimité <abbr title="Julie Hardy">JHA</abbr> et <abbr title="Pierre Dupuis">PDU</abbr> ont rejeté la police <a href="http://www.policedecriture.com/fonts/709/celestial.html" class="urlextern" title="http://www.policedecriture.com/fonts/709/celestial.html"  rel="nofollow">Celestial</a>. C&#039;est donc <a href="http://www.policedecriture.com/fonts/9266/an_creon.html" class="urlextern" title="http://www.policedecriture.com/fonts/9266/an_creon.html"  rel="nofollow">an_creon</a> qui sera utilisée pour faire un logo qui sera présent sur la page d&#039;accueil. À priori il sera aux couleurs de BIOASTER. La palette de couleur de BIOASTER est disponible sur M 01_Partage/09_Communication/01_Outils_et_Modeles_COM/Charte graphique BIOASTER/BIOASTER_mini-charte_janvier2016finale.pdf
+</p>
+
+<p>
+Au niveau des boutons il a été prévu d&#039;ajouter un bouton arrondi avec une roue dentée dedans qui au click affiche plusieurs boutons arrondis correspondant à plusieurs actions (éditer, dupliquer etc.). Chaque échantillon devra être listé dans un <a href="/datatables" class="wikilink1" title="datatables">datatable</a>.
+</p>
+
+<p>
+Enfin, il est prévu d&#039;implémenter 2 navbars : une en haut, horizontal et une à gauche, verticale. La première serait commune à chaque utilisateur et la 2éme pouvant être dynamique selon les utilisateurs (création d&#039;<abbr title="Organisme Génétiquement Modifié">OGM</abbr> si autorisé par exemple).
+</p>
+
+<p>
+<em class="u">Point code</em>
+</p>
+
+<p>
+Zoom rapide sur la construction du chemin complet d&#039;une classification à partir d&#039;un élément donné.<br/>
+
+But : faire le moins de requêtes possible en un minimum de temps + éviter d&#039;avoir des doublons si un noeud est répété dans le JSON (“commercial” typiquement).
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Résumé" [424-] -->

@@ -1,0 +1,15 @@
+$ python job.py 
+Creating job template
+DEBUG: Join_files is set
+DEBUG: drmaa_join_files: y
+DEBUG: drmaa_remote_command: /home/pveyre/condor_test/job.sh
+Your job has been submitted with ID htcondor-test.in2p3.fr.19.0
+Cleaning up
+&nbsp;
+$ condor_q
+&nbsp;
+-- Schedd: htcondor-test.in2p3.fr : &lt;134.158.37.4:43895?...
+ ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD               
+  19.0   pveyre          1/25 09:32   0+00:00:01 R  0   0.0  job.sh
+&nbsp;
+1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended

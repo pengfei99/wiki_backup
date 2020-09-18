@@ -1,0 +1,13 @@
+sciforma=&gt; \d+ sciforma.&quot;BA_shib_LaborAsgn&quot;
+                                    Table &quot;sciforma.BA_shib_LaborAsgn&quot;
+       Column       |          Type          |     Modifiers      | Storage  | Stats target | Description
+--------------------+------------------------+--------------------+----------+--------------+-------------
+ _Project_IID       | double precision       | not null default 0 | plain    |              |
+ _Res_IID           | double precision       | not null default 0 | plain    |              |
+ _Task_IID          | double precision       | not null default 0 | plain    |              |
+ Resource__FirstNam | character varying(255) |                    | extended |              |
+ Resource__ID       | character varying(255) |                    | extended |              |
+ Res_Name           | character varying(255) |                    | extended |              |
+ AD_ID              | character varying(255) |                    | extended |              |
+Indexes:
+    &quot;BA_shib_LaborAsgn_pkey&quot; PRIMARY KEY, btree (&quot;_Project_IID&quot;, &quot;_Res_IID&quot;, &quot;_Task_IID&quot;)

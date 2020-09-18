@@ -1,0 +1,16 @@
+====== Divers ======
+
+  * [[http://symfony.com/doc/current/book/routing.html|Routing]]
+    * @Route("/blog/{page}", defaults={"page": 1}, requirements={"page": "\d+"})
+    * @Method("POST")
+
+  * [[http://symfony.com/doc/current/cookbook/assetic/jpeg_optimize.html|JPEG optimize]]
+
+  * [[http://symfony.com/doc/current/book/testing.html|Testing]]
+
+  * [[https://github.com/fzaninotto/Faker|Faker]]
+    * Populating Entities Using an ORM
+
+  * Nettoyer le cache\\ <code>$ php app/console cache:clear --env=prod --no-debug</code>
+
+  * compiler les assets\\ <code>php app/console assetic:dump</code>\\ Si c'est de la generation de code… ne faudrait-il pas le versionner ?! Sinon qlq'un qui veut installer eSamples doit avoir tous les outils ?

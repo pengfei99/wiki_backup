@@ -1,0 +1,53 @@
+
+<h1 class="sectionedit1" id="java_io">Java IO</h1>
+<div class="level1">
+
+<p>
+The package java.io contains the classes that handle fundamental input and output operations in Java. The I/O classes can be grouped as follows:
+</p>
+
+<p>
+Classes for reading input from a stream of data.
+Classes for writing output to a stream of data.
+Classes that manipulate files on the local filesystem.
+Classes that handle object serialization.
+I/O in Java is based on streams. A stream represents a flow of data or a channel of communication. Java 1.0 supports only byte streams. The InputStream class is the superclass of all of the Java 1.0 byte input streams, while OutputStream is the superclass of all the byte output streams. The drawback to these byte streams is that they do not always handle Unicode characters correctly.
+</p>
+
+<p>
+As of Java 1.1, java.io contains classes that represent character streams. These character stream classes handle Unicode characters appropriately by using a character encoding to convert bytes to characters and vice versa. The Reader class is the superclass of all the Java 1.1 character input streams, while Writer is the superclass of all character output streams.
+</p>
+
+<p>
+The InputStreamReader and OutputStreamWriter classes provide a bridge between byte streams and character streams. If you wrap an InputStreamReader around an InputStream object, the bytes in the byte stream are read and converted to characters using the character encoding scheme specified by the InputStreamReader. Likewise, you can wrap an OutputStreamWriter around any OutputStream object so that you can write characters and have them converted to bytes.
+</p>
+
+<p>
+As of Java 1.1, java.io also contains classes to support object serialization. Object serialization is the ability to write the complete state of an object to an output stream, and then later recreate that object by reading in the serialized state from an input stream. The ObjectOutputStream and ObjectInputStream classes handle serializing and deserializing objects, respectively.
+</p>
+
+<p>
+The RandomAccessFile class is the only class that does not use a stream for reading or writing data. As its name implies, RandomAccessFile provides nonsequential access to a file for both reading and writing purposes.
+</p>
+
+<p>
+The File class represents a file on the local file system. The class provides methods to identify and retrieve information about a file.
+</p>
+
+<p>
+The following figure shows the class hierarchy for the java.io package. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Aio&amp;media=employes:pengfei.liu:java:jio_class_hierarchy.gif" class="media" title="employes:pengfei.liu:java:jio_class_hierarchy.gif"><img src="/lib/exe/fetch.php?w=600&amp;tok=aa3d3c&amp;media=employes:pengfei.liu:java:jio_class_hierarchy.gif" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+The java.io package defines a number of standard I/O exception classes. These exception classes are all subclasses of IOException, as shown in the following Figure.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Aio&amp;media=employes:pengfei.liu:java:jio_exception_class_hierarchy.gif" class="media" title="employes:pengfei.liu:java:jio_exception_class_hierarchy.gif"><img src="/lib/exe/fetch.php?w=400&amp;tok=f541f8&amp;media=employes:pengfei.liu:java:jio_exception_class_hierarchy.gif" class="media" alt="" width="400" /></a>
+</p>
+
+</div>

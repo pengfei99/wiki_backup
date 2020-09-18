@@ -1,0 +1,22 @@
+{
+    &quot;require&quot;: {
+        […]
+        &quot;incenteev/composer-parameter-handler&quot;: &quot;~2.0&quot;
+    },
+    &quot;scripts&quot;: {
+        &quot;post-install-cmd&quot;: [
+            […]
+            &quot;Incenteev\\ParameterHandler\\ScriptHandler::buildParameters&quot;
+        ],
+        &quot;post-update-cmd&quot;: [
+            […]
+            &quot;Incenteev\\ParameterHandler\\ScriptHandler::buildParameters&quot;
+        ]
+    },
+    &quot;extra&quot;: {
+        […]
+        &quot;incenteev-parameters&quot;: {
+            &quot;file&quot;: &quot;app/config/parameters.yml&quot;
+        }
+    }
+}

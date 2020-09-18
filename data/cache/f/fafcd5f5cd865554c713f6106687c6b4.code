@@ -1,0 +1,18 @@
+$ php app<span class="sy0">/</span>console doctrine:migrations:migrate <span class="re5">--no-interaction</span>
+&nbsp;
+                    Application Migrations                    
+&nbsp;
+&nbsp;
+Migrating up to <span class="nu0">20150929143419</span> from <span class="nu0">0</span>
+&nbsp;
+  ++ migrating <span class="nu0">20150929143419</span>
+&nbsp;
+     -<span class="sy0">&gt;</span> CREATE TABLE book <span class="br0">&#40;</span><span class="kw2">id</span> INT AUTO_INCREMENT NOT NULL, title VARCHAR<span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span> NOT NULL, author VARCHAR<span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span> NOT NULL, publish_date DATE NOT NULL, genre LONGTEXT NOT NULL, number_of_pages INT NOT NULL, description LONGTEXT NOT NULL, PRIMARY KEY<span class="br0">&#40;</span><span class="kw2">id</span><span class="br0">&#41;</span><span class="br0">&#41;</span> DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+&nbsp;
+  ++ migrated <span class="br0">&#40;</span>0.02s<span class="br0">&#41;</span>
+&nbsp;
+  <span class="re5">------------------------</span>
+&nbsp;
+  ++ finished <span class="kw1">in</span> <span class="nu0">0.02</span>
+  ++ <span class="nu0">1</span> migrations executed
+  ++ <span class="nu0">1</span> sql queries

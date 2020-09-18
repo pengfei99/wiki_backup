@@ -1,0 +1,49 @@
+
+<h1 class="sectionedit1" id="charger_des_donnees">Charger des données</h1>
+<div class="level1">
+
+<p>
+Pour des données “normales” à insérer dans la base après sa création on peut utiliser les <code>fixtures</code> de Propel :
+</p>
+<pre class="code">  $ mkdir src/AppBundle/Resources/fixtures/</pre>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/charger_des_donnees?codeblock=0" title="Télécharger un extrait" class="mediafile mf_yml">src/AppBundle/Resources/fixtures/001-users.yml</a></dt>
+<dd><pre class="code yml">AppBundle\Model\User:
+    u1:
+        first_name: Jean
+        last_name: Dupond
+    u2:
+        first_name: Marie
+        last_name: Dupont</pre>
+</dd></dl>
+<pre class="code">  $ php app/console propel:fixtures:load @AppBundle</pre>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+Faites attention en utilisant la méthode ci-dessus, car <strong>la table sera vidée</strong> avant d&#039;insérer les fixtures !<br/>
+
+Pour avoir <strong>des données de test</strong>, il vaut mieux utiliser la méthode ci-dessous.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+Pour ajouter automatiquement de fausses données, il vaut mieux utiliser <a href="https://github.com/willdurand/BazingaFakerBundle" class="urlextern" title="https://github.com/willdurand/BazingaFakerBundle"  rel="nofollow">le bundle approprié</a> :
+</p>
+<pre class="code">  $ composer require &quot;willdurand/faker-bundle&quot; &quot;@stable&quot;</pre>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/charger_des_donnees?codeblock=1" title="Télécharger un extrait" class="mediafile mf_php">app/AppKernel.php</a></dt>
+<dd><pre class="code php"><span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.php.net/in_array"><span class="kw3">in_array</span></a><span class="br0">&#40;</span><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">getEnvironment</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'dev'</span><span class="sy0">,</span> <span class="st_h">'test'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// …</span>
+    <span class="re0">$bundles</span><span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="kw2">new</span> Bazinga\Bundle\FakerBundle\BazingaFakerBundle<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/charger_des_donnees?codeblock=2" title="Télécharger un extrait" class="mediafile mf_yml">app/config/config_dev.yml</a></dt>
+<dd><pre class="code yml">bazinga_faker:
+    seed:       1234
+    locale:     fr_FR
+    entities:
+        AppBundle\Model\User:
+            number: 5</pre>
+</dd></dl>
+<pre class="code">  $ php app/console faker:populate</pre>
+
+</div>

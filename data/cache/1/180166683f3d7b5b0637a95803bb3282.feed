@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="FeedCreator 1.7.2-ppt DokuWiki" -->
+<?xml-stylesheet href="https://ccbiowiki1.in2p3.fr/lib/exe/css.php?s=feed" type="text/css"?>
+<rdf:RDF
+    xmlns="http://purl.org/rss/1.0/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel rdf:about="https://ccbiowiki1.in2p3.fr/feed.php">
+        <title>BIOASTER</title>
+        <description></description>
+        <link>https://ccbiowiki1.in2p3.fr/</link>
+        <image rdf:resource="https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico" />
+       <dc:date>2014-06-23T09:08:55+02:00</dc:date>
+        <items>
+            <rdf:Seq>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140429?rev=1403265268&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140520?rev=1403265224&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140610?rev=1403265139&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1403262273&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/pymol?rev=1403255764&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1403254691&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/i_template?rev=1403250442&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/bioinformatique_gestion_des_donnees_reunion?rev=1403104816&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/bioinformatique?rev=1403104007&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/galaxy?rev=1403102367&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/labkey?rev=1403102320&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/sidebar?rev=1403099400&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/employes/tanguy.lecarrour_bioaster.org?rev=1403099077&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm03?rev=1403096146&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm02?rev=1403094375&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm01?rev=1403094030&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/?image=machines_virtuelles%3Aconfig-pfsense.paris.bioaster.org-20140618160903.xml.zip&amp;ns=machines_virtuelles&amp;rev=1403093625&amp;tab_details=history&amp;mediado=diff&amp;do=media"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/machines_virtuelles/i_template?rev=1403093178&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/instruments/freedom_evo?rev=1403092421&amp;do=diff"/>
+                <rdf:li rdf:resource="https://ccbiowiki1.in2p3.fr/instruments/i_template?rev=1403092305&amp;do=diff"/>
+            </rdf:Seq>
+        </items>
+    </channel>
+    <image rdf:about="https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico">
+        <title>BIOASTER</title>
+        <link>https://ccbiowiki1.in2p3.fr/</link>
+        <url>https://ccbiowiki1.in2p3.fr/lib/tpl/vector/images/favicon.ico</url>
+    </image>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140429?rev=1403265268&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T13:54:28+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:20140429 - Ajout du secrétaire et du modérateur</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140429?rev=1403265268&amp;do=diff</link>
+        <description>*  Début : 9h30
+	*  Fin : 10h40
+	*  Participants : AG, AR, BB, BR, FP (retard), GC, GG, JT (retard), LCH, MLK, MRL, MZ, SB, TLC
+	*  Secrétaire : Tanguy
+	*  Modérateur : (Gilles)
+
+Secrétariat tournant / GC
+
+Un secrétaire en charge d'écrire les minutes de chaque réunion sera désigné à la fin de chaque réunion pour la réunion d'après. GC était ce lui de la première réunion, TLC sera celui de celle-ci, la seconde.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140520?rev=1403265224&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T13:53:44+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:20140520</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140520?rev=1403265224&amp;do=diff</link>
+        <description>*  Début : 9h30
+	*  Fin : 10h50
+	*  Participants : AR, BB, BR, FP, GC, GG, JT, LCH, MLK, MRL, TLC
+	*  Secrétaire : Abdessalemn
+	*  Modérateur : -
+
+Wiki Tanguy and softs de partage / TLC
+
+TLC annonce la mise en place d’un outil de partage des données (BIOASTER-Paris): mode opératoire, liste des instruments, vie du labo, ordre du jour, boite à idées. Un certificat numérique du serveur sera installé par TLC pour les utilisateurs.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140610?rev=1403265139&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T13:52:19+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:20140610 - Ajout du secrétaire et du modérateur et de l'annonce du prochain secrétaire</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/20140610?rev=1403265139&amp;do=diff</link>
+        <description>*  Début : 9h30
+	*  Fin : 10h15
+	*  Participants : AR, BB, BR, FP, GG, JT, LCH, MLK, MRL, TLC, MZ, CV
+	*  Secrétaire : Blandine
+	*  Modérateur : Abdessalem
+
+(Des)organisation des réunions / TLC
+
+Un modérateur (le secrétaire de la réunion précédente) aura la tâche d’encadrer les réunions : AR pour cette réunion.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1403262273&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T13:04:33+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo?rev=1403262273&amp;do=diff</link>
+        <description>Cette page comporte trois sections :
+
+	*  l'ordre du jour contient tous les sujets qui seront abordés lors de la prochaine réunion ;
+	*  les sujets à aborder sont des idées qu'il faudra discuter plus tard, c'est en quelque sorte la boite à idées ;
+	*  les archives contiennent les liens vers les minutes des réunions précédentes.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/pymol?rev=1403255764&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T11:16:04+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>in2p3:logiciels:pymol - created</title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels/pymol?rev=1403255764&amp;do=diff</link>
+        <description>Informations
+
+	*  Version : 1.7.1.4
+	*  Licence : Open Source
+	*  Page Web : &lt;http://www.pymol.org/&gt;
+	*  Description : A molecular visualization system on an open source foundation, maintained and distributed by Schrödinger.
+
+Installation
+
+Bien que les sources soient disponibles, la compilation sous Windows n'est pas officiellement supportée. La solution la plus simple est donc d'utiliser une version pré-compilée.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1403254691&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T10:58:11+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>in2p3:logiciels - Ajout de PyMOL</title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels?rev=1403254691&amp;do=diff</link>
+        <description>Si votre logiciel ne figure pas dans la liste, merci de vous référer à la procédure d'installation.
+
+Le responsable est la personne a contacté pour toute information relative à l'utilisation du logiciel. Pour tout problème technique, merci de vous adresser au personnel du PT6.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/i_template?rev=1403250442&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-20T09:47:22+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>paris:vie_du_labo:i_template - Ajout du secrétaire et du modérateur et de l'annonce du prochain secrétaire</title>
+        <link>https://ccbiowiki1.in2p3.fr/paris/vie_du_labo/i_template?rev=1403250442&amp;do=diff</link>
+        <description>*  Début : &lt;heure:minute&gt;
+	*  Fin : &lt;heure:minute&gt;
+	*  Participants : AG, AR, BB, BR, FP, GC, GG, JT, LCH, MLK, MRL, MZ, SB, TLC
+	*  Secrétaire : -
+	*  Modérateur : -
+
+Premier Sujet / AA
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/bioinformatique_gestion_des_donnees_reunion?rev=1403104816&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T17:20:16+02:00</dc:date>
+        <dc:creator>nicolas.sapay@bioaster.org</dc:creator>
+        <title>bioinformatique_gestion_des_donnees_reunion - created</title>
+        <link>https://ccbiowiki1.in2p3.fr/bioinformatique_gestion_des_donnees_reunion?rev=1403104816&amp;do=diff</link>
+        <description>Date :
+Participants : LB, AC, TLC, CD, TT, ADO, FB, NS, (JG)
+
+	*  Présentation des objectifs du groupe de travail
+	*  Présentation des sujets à traiter
+	*  Le versionnage du code : pourquoi ?
+	*  Le versionnage du code : comment ?
+	*  Tour de table / suggestions
+	*  Prochaine étape</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/bioinformatique?rev=1403104007&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T17:06:47+02:00</dc:date>
+        <dc:creator>nicolas.sapay@bioaster.org</dc:creator>
+        <title>bioinformatique</title>
+        <link>https://ccbiowiki1.in2p3.fr/bioinformatique?rev=1403104007&amp;do=diff</link>
+        <description>Mettre ici un schéma décrivant tous les “services” accessibles à BIOASTER, avec un lien vers les différentes pages du wiki :
+
+	*  la ferme
+	*  le nuage
+	*  les machines déportées
+	*  ...
+
+Celui-ci doit permettre d'identifier immédiatement quel service utiliser pour quel besoin.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/galaxy?rev=1403102367&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T16:39:27+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>in2p3:logiciels:galaxy - oups, suppression du tag todo</title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels/galaxy?rev=1403102367&amp;do=diff</link>
+        <description>Le logiciel avait été installé pour évaluation dans le cadre du projet LIMS et n'a pas été retenu.
+
+Informations
+
+	*  Version : 1.2.3
+	*  Licence : GPLv3 ou +
+	*  Page Web : &lt;https://wiki.galaxyproject.org/&gt;
+	*  Description : Galaxy is an open, web-based platform for accessible, reproducible, and transparent computational biomedical research.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/in2p3/logiciels/labkey?rev=1403102320&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T16:38:40+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>in2p3:logiciels:labkey - Abandonné</title>
+        <link>https://ccbiowiki1.in2p3.fr/in2p3/logiciels/labkey?rev=1403102320&amp;do=diff</link>
+        <description>Le logiciel avait été installé pour évaluation dans le cadre du projet LIMS et n'a pas été retenu.
+
+Informations
+
+	*  Version : 13.3
+	*  Licence : Apache Software License
+	*  Page Web : &lt;https://www.labkey.org&gt;
+	*  Description : LabKey Server is open source software that helps scientists organize, analyze, and share biomedical research data.</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/sidebar?rev=1403099400&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T15:50:00+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>sidebar</title>
+        <link>https://ccbiowiki1.in2p3.fr/sidebar?rev=1403099400&amp;do=diff</link>
+        <description>*  Accueil
+	*  Plateaux
+		*  PT1
+		*  PT2
+		*  PT3
+		*  PT6
+
+	*  Instruments
+	*  Employés
+	*  Bioinformatique</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/employes/tanguy.lecarrour_bioaster.org?rev=1403099077&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T15:44:37+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>employes:tanguy.lecarrour_bioaster.org - repo bzr porpro</title>
+        <link>https://ccbiowiki1.in2p3.fr/employes/tanguy.lecarrour_bioaster.org?rev=1403099077&amp;do=diff</link>
+        <description>Objectifs 2014
+
+	*  Convention Pasteur
+		*  rediger l'annexe technique
+
+	*  Infrastructure Informatique à Pasteur
+		*  Installation
+		*  Formation VMware
+
+	*  OpenStack au CC
+		*  Mise en place de l'environnement bioinformatique avec le PT2
+		*  Créer des images personnalisées
+		*  Faciliter/Automatiser le lancement
+		*  Continuous Improvement</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm03?rev=1403096146&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T14:55:46+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>machines_virtuelles:bioa-2014-vm03 - configuration lighttpd et porpro</title>
+        <link>https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm03?rev=1403096146&amp;do=diff</link>
+        <description>Introduction
+
+Machine servant de serveur web.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de liens inversés.
+
+Contacts
+
+	*  Responsable : Tanguy
+	*  Support : -
+
+Informations Techniques
+
+	*  Système d'Exploitation : Debian GNU/Linux 7.5 (wheezy)
+	*  Matériel : 
+		*  RAM: 1Go
+		*  Disques durs: 2Go
+		*  Adresse MAC : 00:0C:29:2E:77:C5</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm02?rev=1403094375&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T14:26:15+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>machines_virtuelles:bioa-2014-vm02 - ajout de la configuration de samba</title>
+        <link>https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm02?rev=1403094375&amp;do=diff</link>
+        <description>Introduction
+
+Machine servant de serveur de fichiers.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de liens inversés.
+
+Contacts
+
+	*  Responsable : Tanguy
+	*  Support : -
+
+Informations Techniques
+
+	*  Système d'Exploitation : Debian GNU/Linux 7.5 (wheezy)
+	*  Matériel : 
+		*  RAM: 1Go
+		*  Disques durs: 2Go + 10Go
+		*  Adresse MAC : 00:0C:29:3B:FC:7B</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm01?rev=1403094030&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T14:20:30+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>machines_virtuelles:bioa-2014-vm01 - Commentaires sur l'installation du système de base</title>
+        <link>https://ccbiowiki1.in2p3.fr/machines_virtuelles/bioa-2014-vm01?rev=1403094030&amp;do=diff</link>
+        <description>Introduction
+
+Cette machine sert de point d'accès au réseau virtuel de Paris.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de liens inversés.
+
+Contacts
+
+	*  Responsable : Tanguy
+	*  Support : -
+
+Informations Techniques
+
+	*  Système d'Exploitation : pfSense
+	*  Matériel : 
+		*  RAM: 1Go
+		*  Disques durs: 2Go
+		*  Adresse MAC : 00:0C:29:6C:37:BC / 00:0C:29:6C:37:C6</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/?image=machines_virtuelles%3Aconfig-pfsense.paris.bioaster.org-20140618160903.xml.zip&amp;ns=machines_virtuelles&amp;rev=1403093625&amp;tab_details=history&amp;mediado=diff&amp;do=media">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T14:13:45+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>machines_virtuelles:config-pfsense.paris.bioaster.org-20140618160903.xml.zip - created</title>
+        <link>https://ccbiowiki1.in2p3.fr/?image=machines_virtuelles%3Aconfig-pfsense.paris.bioaster.org-20140618160903.xml.zip&amp;ns=machines_virtuelles&amp;rev=1403093625&amp;tab_details=history&amp;mediado=diff&amp;do=media</link>
+        <description></description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/machines_virtuelles/i_template?rev=1403093178&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T14:06:18+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>machines_virtuelles:i_template - ajout d'une commande pour Debian</title>
+        <link>https://ccbiowiki1.in2p3.fr/machines_virtuelles/i_template?rev=1403093178&amp;do=diff</link>
+        <description>Introduction
+
+Description et bla bla bla.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de liens inversés.
+
+Contacts
+
+	*  Responsable : -
+	*  Support : -
+
+Informations Techniques
+
+	*  Système d'Exploitation : - 
+	*  Matériel : 
+		*  RAM: -
+		*  Disques durs: -
+		*  Adresse MAC : -</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/instruments/freedom_evo?rev=1403092421&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T13:53:41+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>instruments:freedom_evo - created</title>
+        <link>https://ccbiowiki1.in2p3.fr/instruments/freedom_evo?rev=1403092421&amp;do=diff</link>
+        <description>Introduction
+
+The Freedom EVO series offers four different worktable capacities (75, 100, 150 and 200 cm) each with building-block modularity that brings precision, reliable liquid handling and easy-to-use robotics. Each platform can be combined with a wide choice of robotic arms, liquid handling tools and application options powered by straightforward software to meet your individual needs. The upgradeable Freedom EVO platform can evolve with your changing application needs making your initial …</description>
+    </item>
+    <item rdf:about="https://ccbiowiki1.in2p3.fr/instruments/i_template?rev=1403092305&amp;do=diff">
+        <dc:format>text/html</dc:format>
+        <dc:date>2014-06-18T13:51:45+02:00</dc:date>
+        <dc:creator>tanguy.lecarrour@bioaster.org</dc:creator>
+        <title>instruments:i_template - Retour à la ligne avant le lien</title>
+        <link>https://ccbiowiki1.in2p3.fr/instruments/i_template?rev=1403092305&amp;do=diff</link>
+        <description>Introduction
+
+Description et bla bla bla.
+
+&lt;http://www.site_web.fr&gt;
+
+Contacts
+
+	*  Responsable : -
+	*  Support : -
+	*  Field Application Specialist : -
+	*  Field Service Engineer : -
+
+Informations
+
+	*  Salle : -
+	*  Nom : -
+	*  Numéro de Série :
+		*  Modèle : -
+		*  N/S : -
+		*  Job : -</description>
+    </item>
+</rdf:RDF>

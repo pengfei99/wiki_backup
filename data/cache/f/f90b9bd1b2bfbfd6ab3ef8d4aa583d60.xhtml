@@ -1,0 +1,57 @@
+<pre class="code python"><span class="kw1">import</span> <span class="kw3">webbrowser</span>
+<span class="kw1">import</span> <span class="kw3">sys</span>
+&nbsp;
+<span class="kw1">class</span> Foo:
+	<span class="kw1">def</span> <span class="kw4">__str__</span><span class="br0">&#40;</span><span class="kw2">self</span><span class="br0">&#41;</span>:
+		<span class="kw1">return</span> <span class="st0">&quot;foo class&quot;</span>
+&nbsp;
+<span class="kw1">def</span> printFunctionArgs<span class="br0">&#40;</span>function<span class="br0">&#41;</span>:
+	<span class="kw1">def</span> intern<span class="br0">&#40;</span>*args<span class="sy0">,</span>**kwargs<span class="br0">&#41;</span>:
+		<span class="kw1">print</span> <span class="br0">&#40;</span><span class="st0">'* {} function will be used with following parameters *'</span>.<span class="me1">format</span><span class="br0">&#40;</span>function.__name__<span class="br0">&#41;</span><span class="br0">&#41;</span>
+		<span class="kw1">for</span> arg <span class="kw1">in</span> args :
+			<span class="kw1">if</span> <span class="kw2">type</span><span class="br0">&#40;</span>arg<span class="br0">&#41;</span>.__name__<span class="sy0">==</span><span class="st0">&quot;instance&quot;</span>:
+				<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">'{} which is {}.'</span>.<span class="me1">format</span><span class="br0">&#40;</span>arg<span class="sy0">,</span>arg.__class__.__name__<span class="br0">&#41;</span><span class="br0">&#41;</span>
+			<span class="kw1">else</span> :
+				<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">'{} which is {}.'</span>.<span class="me1">format</span><span class="br0">&#40;</span>arg<span class="sy0">,</span><span class="kw2">type</span><span class="br0">&#40;</span>arg<span class="br0">&#41;</span>.__name__<span class="br0">&#41;</span><span class="br0">&#41;</span>
+		<span class="kw1">for</span> kwarg <span class="kw1">in</span> kwargs :
+			<span class="kw1">if</span> <span class="kw2">type</span><span class="br0">&#40;</span>kwargs<span class="br0">&#91;</span>kwarg<span class="br0">&#93;</span><span class="br0">&#41;</span>.__name__<span class="sy0">==</span><span class="st0">&quot;instance&quot;</span>:
+				<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">'{} variable has for value {} and is instance of {}.'</span>.<span class="me1">format</span><span class="br0">&#40;</span>kwarg<span class="sy0">,</span>kwargs<span class="br0">&#91;</span>kwarg<span class="br0">&#93;</span><span class="sy0">,</span>kwargs<span class="br0">&#91;</span>kwarg<span class="br0">&#93;</span>.__class__.__name__<span class="br0">&#41;</span><span class="br0">&#41;</span>
+			<span class="kw1">else</span> :
+				<span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">'{} variable has for value {} and is of type {}.'</span>.<span class="me1">format</span><span class="br0">&#40;</span>kwarg<span class="sy0">,</span>kwargs<span class="br0">&#91;</span>kwarg<span class="br0">&#93;</span><span class="sy0">,</span><span class="kw2">type</span><span class="br0">&#40;</span>kwargs<span class="br0">&#91;</span>kwarg<span class="br0">&#93;</span><span class="br0">&#41;</span>.__name__<span class="br0">&#41;</span><span class="br0">&#41;</span>
+		<span class="kw1">return</span> function<span class="br0">&#40;</span>*args<span class="sy0">,</span>**kwargs<span class="br0">&#41;</span>
+	<span class="kw1">return</span> intern
+&nbsp;
+&nbsp;
+<span class="kw1">def</span> getInternetHelp<span class="br0">&#40;</span>function<span class="br0">&#41;</span>:
+	separator<span class="sy0">=</span><span class="st0">&quot;+&quot;</span>
+	<span class="kw1">def</span> intern<span class="br0">&#40;</span>*args<span class="sy0">,</span>**kwargs<span class="br0">&#41;</span>:
+		<span class="kw1">try</span>:
+			<span class="kw1">return</span> function<span class="br0">&#40;</span>*args<span class="sy0">,</span> **kwargs<span class="br0">&#41;</span>
+		<span class="kw1">except</span> <span class="kw2">Exception</span> <span class="kw1">as</span> e:
+			error<span class="sy0">=</span><span class="kw2">None</span>
+			<span class="kw1">for</span> element <span class="kw1">in</span> e.<span class="kw4">__str__</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="br0">&#41;</span>:
+				<span class="kw1">if</span> error <span class="sy0">==</span> <span class="kw2">None</span>:
+					error<span class="sy0">=</span>element
+				<span class="kw1">else</span> :
+					error<span class="sy0">=</span>error+separator+element
+			error<span class="sy0">=</span>error+separator+<span class="st0">&quot;python&quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">version_info</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>+<span class="st0">&quot;.&quot;</span>+<span class="kw2">str</span><span class="br0">&#40;</span><span class="kw3">sys</span>.<span class="me1">version_info</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>	
+			<span class="kw3">webbrowser</span>.<span class="kw2">open</span><span class="br0">&#40;</span><span class="st0">'https://www.google.com/search?q='</span>+error<span class="br0">&#41;</span>
+			<span class="kw3">webbrowser</span>.<span class="kw2">open</span><span class="br0">&#40;</span><span class="st0">'http://stackoverflow.com/search?q='</span>+error<span class="br0">&#41;</span>
+			<span class="kw1">return</span> <span class="br0">&#40;</span><span class="st0">&quot;Found error on {} function : <span class="es0">\n</span>{}&quot;</span>.<span class="me1">format</span><span class="br0">&#40;</span>function.__name__<span class="sy0">,</span>e<span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">return</span> intern
+&nbsp;
+<span class="sy0">@</span>printFunctionArgs
+<span class="kw1">def</span> <span class="kw3">test</span><span class="br0">&#40;</span>obj<span class="sy0">,</span>number<span class="sy0">,</span><span class="kw3">string</span><span class="sy0">,</span>dic<span class="sy0">,</span>val3<span class="br0">&#41;</span>:
+	<span class="kw1">print</span> <span class="br0">&#40;</span><span class="st0">&quot;Just a test&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+f<span class="sy0">=</span>Foo<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="kw3">test</span><span class="br0">&#40;</span>f<span class="sy0">,</span><span class="nu0">1</span><span class="sy0">,</span><span class="st0">&quot;GLF&quot;</span><span class="sy0">,</span><span class="br0">&#123;</span><span class="st0">'a'</span><span class="sy0">,</span><span class="st0">'b'</span><span class="br0">&#125;</span><span class="sy0">,</span>val3<span class="sy0">=</span><span class="nu0">12</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="sy0">@</span>getInternetHelp
+<span class="kw1">def</span> example2<span class="br0">&#40;</span>a<span class="br0">&#41;</span>:
+    <span class="kw1">return</span> notFound<span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+a <span class="sy0">=</span> <span class="nu0">2</span>
+b <span class="sy0">=</span> example2<span class="br0">&#40;</span>a<span class="br0">&#41;</span>
+<span class="kw1">print</span> <span class="br0">&#40;</span>b<span class="br0">&#41;</span></pre>

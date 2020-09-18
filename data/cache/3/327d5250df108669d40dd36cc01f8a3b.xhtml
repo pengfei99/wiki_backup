@@ -1,0 +1,873 @@
+
+<h1 class="sectionedit1" id="lesson07_procedural_language_in_sql">Lesson07 Procedural Language in SQL</h1>
+<div class="level1">
+
+<p>
+In this lesson, we will cover:
+</p>
+<ul>
+<li class="level1"><div class="li"> About stored procedure</div>
+</li>
+<li class="level1"><div class="li"> Functions / Stored procedures</div>
+</li>
+<li class="level1"><div class="li"> Declaring variables</div>
+</li>
+<li class="level1"><div class="li"> Handling statements</div>
+</li>
+<li class="level1"><div class="li"> Control structures</div>
+</li>
+<li class="level1"><div class="li"> Using cursors</div>
+</li>
+<li class="level1"><div class="li"> Handling exceptions</div>
+</li>
+<li class="level1"><div class="li"> Triggers</div>
+</li>
+<li class="level1"><div class="li"> PLpython</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson07 Procedural Language in SQL&quot;,&quot;hid&quot;:&quot;lesson07_procedural_language_in_sql&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-283&quot;} -->
+<h2 class="sectionedit2" id="about_stored_procedure">7.1 About stored procedure</h2>
+<div class="level2">
+
+<p>
+Why we need the stored procedural? 
+Because SQL is a non-procedural language. Without the stored procedures, the application is forced to perform a number of SQL calls that will result in heavy network exchanges between the application and the database. With stored procedures, the application can execute business processing in a single database call. Each SQL query of the PL/SQL code will be executed directly on the database without exchange with the application. The data processing is closer to the data itself. Complex processing is sometimes difficult to solve without a procedural language. As procedural languages are known by many, it is often easier to express one&#039;s needs in this way. Be careful: procedures apply to complex and frequent treatments.
+</p>
+
+<p>
+SQL indicates to the database what to do and procedural language indicates how to do it in orders. By using a stored procedure, a part of the business code may be deported to the database and is therefore shared on the database side.  However, using a procedural language presents some limitations :
+</p>
+<ul>
+<li class="level1"><div class="li"> The portability is limited to the used RDBMS.</div>
+</li>
+<li class="level1"><div class="li"> Difficult to manage versions and hard to debug.</div>
+</li>
+<li class="level1"><div class="li"> Requires skills in stored procedure programming.</div>
+</li>
+</ul>
+
+<p>
+The most popular procedural language is PL/SQL, which stands for Procedural Language extension to SQL, it&#039;s developed by Oracle. Each RDBMS implements its own procedural language :
+</p>
+<ul>
+<li class="level1"><div class="li"> Postgres: PL/pgSQL – heavily influenced by PL/SQL</div>
+</li>
+<li class="level1"><div class="li"> Oracle: PL/SQL</div>
+</li>
+<li class="level1"><div class="li"> Mysql: Msql</div>
+</li>
+</ul>
+
+<p>
+Some RDBMS provide additional extensions:
+</p>
+<ul>
+<li class="level1"><div class="li"> Postgres: PL/Python, PL/Perl, PL/R …</div>
+</li>
+<li class="level1"><div class="li"> Oracle: PL/JAVA, PL/PRO C</div>
+</li>
+<li class="level1"><div class="li"> Mysql:?</div>
+</li>
+</ul>
+
+<p>
+Even though the default procedural language provides a set of features. If you need to run some complex text processing or to handle files, some procedural languages such as PL/Perl, PL/C, PL/Python, PL/Java will be likely more convenient.
+</p>
+
+<p>
+PL/SQL is supported only in certain database objects:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> Functions</div>
+<ul>
+<li class="level2"><div class="li"> Functions are named objects that contains SQL and/or PL/SQL statements and returns a value of a specified data type</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Procedures</div>
+<ul>
+<li class="level3"><div class="li"> Procedures are named objects that contain SQL and/or PL/SQL statements</div>
+</li>
+<li class="level3"><div class="li"> Theoretically, it’s a function returning void</div>
+</li>
+<li class="level3"><div class="li"> In practice, a procedure updates data contrary to a function which computes data from a table.</div>
+</li>
+<li class="level3"><div class="li"> For a long time, Postgres only implemented functions but since the last release stored procedure have been added.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Triggers are procedures fired when a certain event occurs.</div>
+</li>
+<li class="level1 node"><div class="li"> Anonymous blocks</div>
+<ul>
+<li class="level3"><div class="li"> Anonymous blocks are unnamed procedures</div>
+</li>
+<li class="level3"><div class="li"> They are not stored in the database and consequently cannot be replayed without retyping the procedure.</div>
+</li>
+<li class="level3"><div class="li"> They are passed to the PL/SQL engine for execution at run time</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.1 About stored procedure&quot;,&quot;hid&quot;:&quot;about_stored_procedure&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;284-3066&quot;} -->
+<h3 class="sectionedit3" id="pl_sql_engine">7.1.1 PL/SQL engine</h3>
+<div class="level3">
+
+<p>
+The PL/SQL engine resides in memory and processes the PL/SQL code instructions. When the PL/SQL engine encounters a SQL statement, a context switch is made to pass the SQL statement to the SQL engine. The PL/SQL engine waits for the SQL statement to complete and for the results to be returned before it continues to process subsequent statements in the PL/SQL block. For any other language PL/Python, JAVA, … the mechanism is identical.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.1.1 PL\/SQL engine&quot;,&quot;hid&quot;:&quot;pl_sql_engine&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;3067-3538&quot;} -->
+<h2 class="sectionedit4" id="functions_and_stored_procedure">7.2 Functions and stored procedure</h2>
+<div class="level2">
+
+<p>
+Functions and Procedures are named PL/SQL program. They are compiled and stored in the database in a compiled form. Any application can use them. They may have parameters. Functions or procedures must respect the following block structure.
+</p>
+<pre class="code">DECLARE (optional)
+# In declare block, we define all variables, constants, cursors, user-defined types
+
+BEGIN (mandatory)
+# In begin block, we implement the business logic. It must have at least one SQL, PL/SQL instruction.
+
+EXCEPTION (optional)
+# Specifies the actions to perform when exceptions occur.
+
+END;(mandatory)</pre>
+
+<p>
+Anonymous block
+</p>
+<pre class="code"># The DO (mandatory) indicates it&#039;s an anonymous block.
+DO $$
+&lt;&lt; label &gt;&gt;
+
+# DECLARE is an optional section for declaring variables
+DECLARE
+
+# BEGIN (mandatory) block implements business logic, has to contain at least one instruction
+
+# End of the block
+END $$</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.2 Functions and stored procedure&quot;,&quot;hid&quot;:&quot;functions_and_stored_procedure&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;3539-4458&quot;} -->
+<h3 class="sectionedit5" id="examples_of_function_and_procedure">7.2.1 Examples of function and procedure</h3>
+<div class="level3">
+
+<p>
+Declare a function:
+</p>
+<pre class="code"># function name is f_hello, it takes one argument v_myTxt of type text, and returns text as result
+CREATE or replace FUNCTION f_hello(v_myTxt text) RETURNS text
+# Start of the function body
+AS $BODY$
+# Declare variable v_hello of type text
+DECLARE
+v_hello text =&#039;Hello&#039;;
+# In begin statement, we have one statement return 
+BEGIN
+RETURN v_hello||&#039; &#039;||v_myTxt;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+# call the function f_hello with argument &#039;Guy&#039;
+select f_hello(&#039;Guy&#039;);</pre>
+
+<p>
+Declare a procedure:
+</p>
+<pre class="code"># create procedure p_hello with one argument v_myTxt of type varchar(50)
+CREATE PROCEDURE p_hello(v_myTxt varchar(50))
+LANGUAGE plpgsql
+# Start of the procedure 
+AS $BODY$
+# decalare one variable v_hello of type text
+DECLARE
+v_hello text =&#039;Hello&#039;;
+BEGIN
+Raise notice &#039;% : % &#039;, v_hello,
+v_myTxt;
+END
+$BODY$;
+
+# call the procedure p_hello with argument &#039;Guy&#039;
+call p_hello(&#039;Guy&#039;);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.2.1 Examples of function and procedure&quot;,&quot;hid&quot;:&quot;examples_of_function_and_procedure&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;4459-5423&quot;} -->
+<h2 class="sectionedit6" id="variables">7.3 Variables</h2>
+<div class="level2">
+
+<p>
+Variables in pl/sql are declared and (optionally) initialized in the declarative section, then used and modified in the BEGIN / EXCEPTION section. 
+</p>
+
+<p>
+PL/SQL variables:
+</p>
+<ul>
+<li class="level1"><div class="li"> Scalar: Scalar data types hold a single value.</div>
+</li>
+<li class="level1"><div class="li"> Composite: Composite data types are a collection of anything (user type, scalar, …)</div>
+</li>
+<li class="level1"><div class="li"> Cursor: is a pointer on a table</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3 Variables&quot;,&quot;hid&quot;:&quot;variables&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;5424-5795&quot;} -->
+<h3 class="sectionedit7" id="variables_examples">7.3.1 Variables examples</h3>
+<div class="level3">
+
+<p>
+You can find the variables example in function and procedure 7.2.1. The below code is an example of variables in the anonymous block.
+</p>
+<pre class="code">DO $BODY$
+DECLARE
+v_myTxt text =&#039;Hello&#039;;
+BEGIN
+Raise notice &#039;%&#039;,v_myTxt;
+END
+$BODY$
+LANGUAGE plpgsql;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.1 Variables examples&quot;,&quot;hid&quot;:&quot;variables_examples&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;5796-6083&quot;} -->
+<h3 class="sectionedit8" id="good_practice_for_naming_variables">7.3.2 Good practice for naming variables</h3>
+<div class="level3">
+
+<p>
+The standard naming convention:
+</p>
+<ul>
+<li class="level1"><div class="li"> Value Variable: v_myvar</div>
+</li>
+<li class="level1"><div class="li"> Constant variable: c_myvar</div>
+</li>
+<li class="level1"><div class="li"> Cursor: cur_mycursor</div>
+</li>
+<li class="level1"><div class="li"> Record: rec_myrec</div>
+</li>
+<li class="level1"><div class="li"> Type: type_mytype</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.2 Good practice for naming variables&quot;,&quot;hid&quot;:&quot;good_practice_for_naming_variables&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;6084-6297&quot;} -->
+<h3 class="sectionedit9" id="scalar_variables">7.3.3 Scalar variables</h3>
+<div class="level3">
+<pre class="code"># standar syntax for declaring variables
+identifier [CONSTANT] datatype [NOT NULL] [:= | DEFAULT expr];
+
+# Constant: constrains the variable so that its value can not be changed.
+# NOT NULL: the value can&#039;t be null for this variable.
+
+# we can define a variable by referencing a column type or an existing variable type. This kind of declaration is easy and can avoid type error.
+identifier table.column_name%TYPE;
+# The first identifier is the name of the variable which we are declaring, the second is the name of the existing variable which we will use its type
+identifier identifier%TYPE;</pre>
+
+</div>
+
+<h4 id="variable_initialization">Variable initialization</h4>
+<div class="level4">
+
+<p>
+Scalar variables may be initialized from different ways:
+</p>
+<pre class="code"># Manually
+V_galaxy varchar(50) := ‘nebula’;
+V_galaxy varchar(50) DEFAULT ‘nebula’;
+
+# SQL functions
+v_desc_size integer ;
+v_desc_size:= LENGTH(‘nebula’);
+v_desc_size:= to_number(‘100’)
+
+# From a query
+v_myVar varchar(50);  
+v_myVar otypedef.otype_descr%TYPE SELECT otype_descr into strict v_myVar FROM otypedef where otype_bin = -100663296;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.3 Scalar variables&quot;,&quot;hid&quot;:&quot;scalar_variables&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:9,&quot;range&quot;:&quot;6298-7406&quot;} -->
+<h3 class="sectionedit10" id="composite_variables">7.3.4 Composite variables</h3>
+<div class="level3">
+
+<p>
+Composite variables:
+</p>
+<ul>
+<li class="level1"><div class="li"> can hold multiple values (unlike scalar types) of anything.</div>
+</li>
+<li class="level1"><div class="li"> Are user-defined and can be a subset of a row in a table</div>
+</li>
+<li class="level1"><div class="li"> Are convenient for fetching a row of data from a table for processing</div>
+</li>
+</ul>
+<pre class="code">DO $$
+DECLARE
+# Decalre a variable rec_myrow of type record(generic composite type)
+rec_myrow RECORD;
+BEGIN
+SELECT * 1 into strict rec_myrow FROM categories where category=1;
+Raise info Id category : % - Category Name : % &#039;,rec_myrow.category,rec_myrow.categoryname;
+END
+$$</pre>
+
+<p>
+The above example, we used a generic composite type record, it will map automatically to the type of initialization value. In our case, it&#039;s the columns of table categories. 
+</p>
+
+<p>
+To be more clear, we can also define non generic composite type as followed, it will do exactly the same action as the code above.
+</p>
+<pre class="code"># declare a composite type t_myType which has two elements category and categoryname
+CREATE TYPE t_myType AS (category int, categoryname varchar(100));
+DO $$
+DECLARE
+myrow_type t_myType;
+BEGIN
+SELECT category, categoryname FROM categories where category=1 into strict myrow_type ;
+Raise info &#039;Id category : % - Category Name : % &#039;,myrow_type.category,myrow_type.categoryname;
+END
+$$</pre>
+
+</div>
+
+<h4 id="rowtype">Rowtype</h4>
+<div class="level4">
+
+<p>
+ROWTYPE can match the data type of a variable to the row structure of a database catalog object. The number and data types of the underlying database columns do not need to be known. It&#039;s very useful for handling data of a table as a dataframe(like in spark or pandas). It simplifies the code maintenance. For example, if the table structure changes your code does not need to be updated.
+</p>
+<pre class="code">DO $$
+DECLARE
+# declare the variable myrow_rowtype with rowtype of table categories
+myrow_rowtype categories%ROWTYPE;
+BEGIN
+  SELECT * FROM categories where category=1 into strict myrow_rowtype ;
+  Raise info &#039;Id category : % - Category Name : % &#039;,myrow_rowtype.category,myrow_rowtype.categoryname;
+  myrow_rowtype.categoryname = myrow_rowtype.categoryname || &#039; updated&#039;;
+# update categories SET category = myrow_rowtype.category, categoryname = myrow_rowtype.categoryname where category=myrow_rowtype.category;
+  update categories SET (category,categoryname)= ROW(myrow_rowtype.*) where category=myrow_rowtype.category;
+  SELECT * FROM categories where category= 1 into strict myrow_rowtype ;
+  Raise info &#039;Id category : % - Category Name : % &#039;,myrow_rowtype.category,myrow_rowtype.categoryname;
+END
+$$</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.4 Composite variables&quot;,&quot;hid&quot;:&quot;composite_variables&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;7407-9888&quot;} -->
+<h3 class="sectionedit11" id="variable_scope">7.3.5 Variable scope</h3>
+<div class="level3">
+
+<p>
+A procedure can include many blocks which may include some other blocks and so on. By default, variables in a parent block are visible to child blocks. Variables of a block always overload Parent block variables. Use labels for referencing a variable from parent block. The instruction set defined in a procedure is included in the same transaction.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.5 Variable scope&quot;,&quot;hid&quot;:&quot;variable_scope&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;9889-10271&quot;} -->
+<h3 class="sectionedit12" id="manipulating_data_with_pl_sql">7.3.6 Manipulating Data with PL/SQL</h3>
+<div class="level3">
+
+<p>
+When you use PL/SQL to manipulate data, always make changes to database tables by using DML commands(e.g. Select, insert, update, delete, merge). 
+</p>
+
+<p>
+By default, if a procedure succeeds then the whole transaction is committed, otherwise it will be rolled back.
+</p>
+
+</div>
+
+<h4 id="executing_dynamic_commands">Executing dynamic commands</h4>
+<div class="level4">
+
+<p>
+Oftentimes you want to generate dynamic commands inside your PL/pgSQL. But, a procedure is first compiled and then executed, so it is not possible to run dynamic SQL queries.
+</p>
+
+<p>
+RDBMS allows us to run dynamic SQL via the EXECUTE command. Your dynamic query is always planned each time the statement is run. You can run DDL, DCL, DML dynamically but take care with transactions. For example, Oracle considers DDL as an atomic operation and commit all DML preceding the DDL.
+</p>
+<pre class="code">EXECUTE &#039;SELECT count(*) FROM mytable WHERE inserted_by = $1 AND inserted &lt;= $2&#039; INTO c USING checked_user, checked_date;
+
+EXECUTE &#039;SELECT count(*) FROM &#039; || quote_ident(tabname) || &#039; WHERE inserted_by = $1 AND inserted &lt;= $2&#039; INTO c USING checked_user, checked_date;
+
+EXECUTE format(&#039;SELECT count(*) FROM %I &#039; &#039;WHERE inserted_by = $1 AND inserted &lt;= $2&#039;, tabname) INTO c USING checked_user, checked_date;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.3.6 Manipulating Data with PL\/SQL&quot;,&quot;hid&quot;:&quot;manipulating_data_with_pl_sql&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:12,&quot;range&quot;:&quot;10272-11508&quot;} -->
+<h2 class="sectionedit13" id="cursors">7.4 Cursors</h2>
+<div class="level2">
+
+<p>
+As a developer, you may want to retrieve multiple rows from a table and apply to each row a business processing. To do this kind of operations, we must use the cursor. The cursor allows us to encapsulate a query result and process each individual row at a time. RDBMS allocates a private memory area for processing SQL statements. The SQL statement is parsed and processed in this area. You don’t have any control over this area.
+</p>
+
+<p>
+The cursor has a set of attributes associated with it that allows the program to test the state of the cursor
+</p>
+<ul>
+<li class="level1"><div class="li"> ISOPEN: attribute is used to test whether or not a cursor is open.</div>
+</li>
+<li class="level1"><div class="li"> FOUND: attribute is used to test whether or not a row is retrieved from the result set of the specified cursor after a FETCH on the cursor.</div>
+</li>
+<li class="level1"><div class="li"> NOTFOUND: attribute is the logical opposite of %FOUND.</div>
+</li>
+<li class="level1"><div class="li"> ROWCOUNT: attribute returns an integer showing the number of rows FETCHed so far from the specified cursor</div>
+</li>
+</ul>
+
+<p>
+A cursor can be parameterized. For example, 
+</p>
+<pre class="code">CURSOR c1 (v_category NUMBER) IS SELECT * FROM categories WHERE category &lt; v_category ;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.4 Cursors&quot;,&quot;hid&quot;:&quot;cursors&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:13,&quot;range&quot;:&quot;11509-12611&quot;} -->
+<h3 class="sectionedit14" id="cursor_operations">7.4.1 Cursor operations</h3>
+<div class="level3">
+
+<p>
+The cursor supports the following operations:
+</p>
+<ul>
+<li class="level1"><div class="li"> Declaration: All access to cursors goes through cursor variables</div>
+</li>
+<li class="level1"><div class="li"> Open: Before a cursor variable can be used to retrieve rows, it must be opened.</div>
+</li>
+<li class="level1"><div class="li"> FETCH: retrieves the next row from the cursor into a target, which might be a row variable, a record variable, or a comma-separated list of simple variables</div>
+</li>
+<li class="level1"><div class="li"> UPDATE/DELETE: When a cursor is positioned on a table row, that row can be updated or deleted using the cursor to identify the row.</div>
+</li>
+<li class="level1"><div class="li"> CLOSE: release resources</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.4.1 Cursor operations&quot;,&quot;hid&quot;:&quot;cursor_operations&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:14,&quot;range&quot;:&quot;12612-13172&quot;} -->
+<h3 class="sectionedit15" id="cursor_example_in_postgresql">7.4.2 Cursor example in Postgresql</h3>
+<div class="level3">
+
+<p>
+Suppose we have a table named employee which has columns such as emp_id, emp_age, emp_sex, we want to write a pl/sql code block which can print all emp_id. The following code shows how to do it:
+</p>
+<pre class="code">DO $$
+DECLARE
+# declare a cursor with name toto
+toto refcursor;
+# decalre a variable row with type Record
+row RECORD;
+BEGIN
+# open the cursor toto to the result of the select statement
+OPEN toto FOR SELECT * FROM employee;
+LOOP
+# fetch a row to the variable row
+FETCH toto INTO row;
+EXIT WHEN NOT FOUND;
+raise info &#039;row %&#039;, row.emp_id;
+END LOOP;
+CLOSE toto;
+END;
+$$</pre>
+
+<p>
+If we don&#039;t want to loop through all elements of the cursor, we can use move command to move the cursor without fetch the row value. The followind code shows how we do it.
+</p>
+<pre class="code">DO $$
+DECLARE
+titi refcursor;
+rec_row RECORD;
+BEGIN
+OPEN titi FOR SELECT * FROM categories order by category;
+# fetch first row
+FETCH FIRST FROM titi into rec_row;
+IF FOUND THEN
+raise info &#039;First row %&#039;, rec_row.category;
+END IF;
+# fetch second row
+FETCH titi into rec_row;
+raise info &#039;Second row %&#039;, rec_row.category;
+# jump to the fourth row, we can move the cursor without fetch the row value.
+MOVE NEXT FROM titi;
+FETCH titi INTO rec_row;
+raise info &#039;Fourth row %&#039;, rec_row.category;
+FETCH titi INTO rec_row;
+raise info &#039;Fifth row %&#039;, rec_row.category;
+# jump two more rows
+MOVE FORWARD 2 FROM titi;
+FETCH titi INTO rec_row;
+raise info &#039;heighth row %&#039;, rec_row.category;
+# jump to the last element of the cursor
+MOVE LAST FROM titi;
+raise info &#039;Cursor over result&#039;;
+IF NOT FOUND THEN
+raise info &#039;Last row %&#039;, rec_row.category;
+MOVE RELATIVE -1 from titi;
+END IF;
+raise info &#039;Last row %&#039;, rec_row.category;
+CLOSE titi;
+END;
+$$
+;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.4.2 Cursor example in Postgresql&quot;,&quot;hid&quot;:&quot;cursor_example_in_postgresql&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:15,&quot;range&quot;:&quot;13173-14916&quot;} -->
+<h2 class="sectionedit16" id="pl_sql_control_statement">7.5 PL/SQL control statement</h2>
+<div class="level2">
+
+<p>
+As any procedural language, we need control statement such as if, when, etc. to control which code block we want to execute in a particular case.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5 PL\/SQL control statement&quot;,&quot;hid&quot;:&quot;pl_sql_control_statement&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:16,&quot;range&quot;:&quot;14917-15105&quot;} -->
+<h3 class="sectionedit17" id="control_statementif">7.5.1 Control statement: If</h3>
+<div class="level3">
+
+<p>
+The standard syntax looks like:
+</p>
+<pre class="code">IF condition THEN instructions
+[ELSEIF condition THEN instructions]*
+[ELSE instruction]
+END IF;</pre>
+
+</div>
+
+<h4 id="examples">Examples</h4>
+<div class="level4">
+<pre class="code">DO $$
+DECLARE
+cur_ref refcursor;
+rec_row RECORD;
+v_catname categories.categoryname%TYPE;
+BEGIN
+OPEN cur_ref FOR SELECT * FROM categories where category=15 order by category;
+FETCH FIRST FROM cur_ref into rec_row;
+v_catname = rec_row.categoryname;
+IF NOT FOUND THEN
+raise info &#039;There is no row %&#039;, rec_row.category;
+ELSEIF v_catname = &#039;New&#039; then
+raise info &#039;There is a great category %&#039;, rec_row.category;
+ELSEIF v_catname = &#039;Sports&#039; then
+raise info &#039;There is a great great category %&#039;, rec_row.category;
+ELSE
+raise info &#039;There is a category %&#039;, ec_row.category;
+END IF;
+CLOSE cur_ref;
+END;
+$$
+LANGUAGE &#039;plpgsql&#039;;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5.1 Control statement: If&quot;,&quot;hid&quot;:&quot;control_statementif&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:17,&quot;range&quot;:&quot;15106-15935&quot;} -->
+<h3 class="sectionedit18" id="control_statementcase">7.5.2 Control statement: CASE</h3>
+<div class="level3">
+
+<p>
+The standard syntax looks like:
+</p>
+<pre class="code">CASE variable
+WHEN condition THEN instructions
+ELSE instructions
+END CASE</pre>
+
+</div>
+
+<h4 id="examples1">Examples</h4>
+<div class="level4">
+<pre class="code">DO $$
+DECLARE
+ref refcursor;
+row RECORD;
+catname categories.categoryname%TYPE;
+BEGIN
+OPEN ref FOR SELECT * FROM categories where category=15 order
+by category;
+FETCH FIRST FROM ref into row;
+catname = row.categoryname;
+CASE catname
+WHEN &#039;Sports&#039; then
+raise info &#039;There is a great category %&#039;, catname;
+WHEN&#039;Games&#039; then
+raise info &#039;There is a great great category %&#039;, catname;
+ELSE
+raise info &#039;It&#039;&#039;s not an important category %&#039;, catname;
+END CASE;
+CLOSE ref;
+END;
+$$
+LANGUAGE &#039;plpgsql&#039;;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5.2 Control statement: CASE&quot;,&quot;hid&quot;:&quot;control_statementcase&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:18,&quot;range&quot;:&quot;15936-16619&quot;} -->
+<h3 class="sectionedit19" id="control_statementloop">7.5.3 Control statement: LOOP</h3>
+<div class="level3">
+
+<p>
+The standard syntax looks like:
+</p>
+<pre class="code">[&lt;&lt;label&gt;&gt;]
+LOOP
+instructions
+EXIT [&lt;&lt;label&gt;&gt;] WHEN condition;
+CONTINUE WHEN condition;
+instructions
+END LOOP;</pre>
+
+</div>
+
+<h4 id="examples2">Examples</h4>
+<div class="level4">
+<pre class="code">DO $$
+DECLARE
+v_resultat int = 0;
+BEGIN
+# define a label with name myloop of the loop
+&lt;&lt; myloop &gt;&gt;
+LOOP
+raise info &#039;Resultat %&#039;, v_resultat;
+v_resultat := v_resultat + 1;
+# end myloop when a condition is meet
+EXIT myloop WHEN v_resultat &gt; 10;
+CONTINUE WHEN v_resultat &lt; 5;
+v_resultat := v_resultat + 1;
+END LOOP;
+END;
+$$
+LANGUAGE &#039;plpgsql&#039;;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5.3 Control statement: LOOP&quot;,&quot;hid&quot;:&quot;control_statementloop&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:19,&quot;range&quot;:&quot;16620-17196&quot;} -->
+<h3 class="sectionedit20" id="control_statementwhile">7.5.4 Control statement: While</h3>
+<div class="level3">
+
+<p>
+The standard syntax looks like:
+</p>
+<pre class="code">[&lt;&lt;label&gt;&gt;]
+WHILE condition LOOP
+statements;
+END LOOP;</pre>
+
+</div>
+
+<h4 id="examples3">Examples</h4>
+<div class="level4">
+<pre class="code">DO $$
+DECLARE
+v_counter int = 0;
+v_nb int = 10;
+BEGIN
+&lt;&lt; exitloop &gt;&gt;
+WHILE v_counter &lt;= v_nb
+LOOP
+raise info &#039;Resultat %&#039;, v_counter;
+v_counter := v_counter + 1 ;
+if v_counter &gt; 9 then
+# we can exit loop by using command EXIT
+EXIT exitloop;
+end if;
+END LOOP ;
+raise info &#039;I go out&#039;;
+END;
+$$
+LANGUAGE &#039;plpgsql&#039;;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5.4 Control statement: While&quot;,&quot;hid&quot;:&quot;control_statementwhile&quot;,&quot;codeblockOffset&quot;:20,&quot;secid&quot;:20,&quot;range&quot;:&quot;17197-17687&quot;} -->
+<h3 class="sectionedit21" id="control_statementfor">7.5.5 Control statement: FOR</h3>
+<div class="level3">
+
+<p>
+The standard syntax looks like:
+</p>
+<pre class="code">[&lt;&lt;label&gt;&gt;]
+FOR loop_counter IN [ REVERSE ] from.. to [ BY expression ] LOOP
+statements
+END LOOP [ label ];</pre>
+
+</div>
+
+<h4 id="examples4">Examples</h4>
+<div class="level4">
+<pre class="code">DO $$
+DECLARE
+v_counter int = 0;
+BEGIN
+FOR v_counter IN REVERSE 5..1 BY 2 LOOP
+RAISE NOTICE &#039;Counter: %&#039;, v_counter;
+END LOOP;
+END;
+$$</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.5.5 Control statement: FOR&quot;,&quot;hid&quot;:&quot;control_statementfor&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:21,&quot;range&quot;:&quot;17688-18054&quot;} -->
+<h2 class="sectionedit22" id="handling_exceptions">7.6 Handling Exceptions</h2>
+<div class="level2">
+
+<p>
+Run-time errors arise from design faults, coding mistakes, hardware failures, and many other sources. Although you cannot anticipate all possible errors, you can plan to handle certain kinds of errors meaningful to your PL/SQL program. In PL/SQL, a warning or error condition is called an exception. Exceptions can be internally defined (by the run-time system) or user-defined. Examples of internally defined exceptions include division by zero and out of memory. Some common internal exceptions have predefined names, such as ZERO_DIVIDE and STORAGE_ERROR. The other internal exceptions can be given names. 
+</p>
+
+<p>
+You can define exceptions of your own in the declarative part of any PL/SQL block, subprogram, or package. For example, you might define an exception named insufficient_funds to flag overdrawn bank accounts. Unlike internal exceptions, user-defined exceptions must be given names.
+</p>
+
+<p>
+When an error occurs, an exception is raised, normal execution stops and control transfers to the exception-handling part of your PL/SQL block or subprogram. Internal exceptions are raised implicitly (automatically) by the run-time system. User-defined exceptions must be raised explicitly by RAISE statements, which can also raise predefined exceptions.
+</p>
+
+<p>
+To handle raised exceptions, you write separate routines called exception handlers. If there are no exception handlers defined, the exceptions will be propagated to the calling environment. After an exception handler runs, the current block stops executing and the enclosing block resumes with the next statement. If there is no enclosing block, control returns to the host environment.
+</p>
+
+<p>
+The following code shows an example of exception handling. The variable myrow_rowtype can only handle one row if the sql query which myrow_rowtype is assigned to returns multiple rows, a system runtime exception too_many_rows will be thrown. We catch the exception with the EXCEPTION block.
+</p>
+<pre class="code">DO $$
+DECLARE
+myrow_rowtype categories%ROWTYPE;
+BEGIN
+SELECT * FROM categories into strict myrow_rowtype ;
+Raise info &#039;Id category : % &#039;,myrow_rowtype.category;
+EXCEPTION
+WHEN too_many_rows then
+Raise warning &#039;Catch an error %&#039;, SQLSTATE;
+Raise warning &#039;Description : %&#039;,SQLERRM;
+WHEN others then
+Raise warning &#039;Catch an other error %&#039;, SQLSTATE;
+Raise warning &#039;Description : %&#039;,SQLERRM;
+END
+$$</pre>
+
+<p>
+When an exception is raised in a code block, all modifications run in the block are rolled back and variables keep their status.
+</p>
+
+<p>
+PL/SQL has a list of internal exceptions which are raised by the run time system. For different implementation, the name may be different. In PostgreSQL, we often encounter with “unique_violation, check_violation, no_data_found, too_many_rows”. The full list can be found <a href="https://docs.postgresql.fr/current/errcodes-appendix.html" class="urlextern" title="https://docs.postgresql.fr/current/errcodes-appendix.html" rel="nofollow">https://docs.postgresql.fr/current/errcodes-appendix.html</a>. We can use the following command to get exception details
+</p>
+<pre class="code">SQLSTATE: Returns the numeric value for the error code
+SQLERRM: Returns the message associated with the error number</pre>
+
+<p>
+Users can define their own exceptions 
+</p>
+<pre class="code">raise exception ‘myexception’;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.6 Handling Exceptions&quot;,&quot;hid&quot;:&quot;handling_exceptions&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:22,&quot;range&quot;:&quot;18055-21173&quot;} -->
+<h2 class="sectionedit23" id="triggers">7.7 Triggers</h2>
+<div class="level2">
+
+<p>
+In Lesson 6.4, we have seen how to define Triggers in SQL. In PL/SQL, we can also define Triggers. The full doc of postgresql trigger can be found <a href="https://www.postgresql.org/docs/11/plpgsql-trigger.html" class="urlextern" title="https://www.postgresql.org/docs/11/plpgsql-trigger.html" rel="nofollow">https://www.postgresql.org/docs/11/plpgsql-trigger.html</a>. A trigger in PL/SQL is a procedure activated when a certain event occurs. Triggers can be defined in the following events:
+</p>
+<ul>
+<li class="level1"><div class="li"> BEFORE insert/delete/update: it is fired BEFORE each affected row is changed.</div>
+</li>
+<li class="level1"><div class="li"> AFTER insert/delete/update: it is fired AFTER each affected row is changed.</div>
+</li>
+<li class="level1"><div class="li"> INSTEAD OF: RDBMS fires the trigger instead of executing the triggering event. Specific to complex view.</div>
+</li>
+</ul>
+
+<p>
+A trigger is associated with one and only one table/view(materialized), but you can create many triggers on the same object. A trigger may be fired in two ways:
+</p>
+<ul>
+<li class="level1"><div class="li"> FOR EACH ROW: it is fired for each updated row.</div>
+</li>
+<li class="level1"><div class="li"> FOR EACH STATEMENT: it is fired only once for any given operation. Regardless of how many rows it modifies.</div>
+</li>
+</ul>
+
+<p>
+When you use a trigger, special variables are created automatically in the top-level block :
+</p>
+<ul>
+<li class="level1"><div class="li"> NEW: variable holding the new database row for INSERT/UPDATE operations in row-level triggers</div>
+</li>
+<li class="level1"><div class="li"> OLD: variable holding the old database row for UPDATE/DELETE operations in row-level triggers</div>
+</li>
+<li class="level1"><div class="li"> TG_OP: the operation/event name (UPDATE/DELETE/ INSERT) firing the trigger</div>
+</li>
+</ul>
+
+<p>
+Be careful: If a trigger produces compilation errors, then it is still created, but it fails on execution. This means it effectively blocks all triggering DML statements until it is dropped or disabled.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.7 Triggers&quot;,&quot;hid&quot;:&quot;triggers&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:23,&quot;range&quot;:&quot;21174-22697&quot;} -->
+<h3 class="sectionedit24" id="pl_sql_trigger_execution_hierarchy">7.7.1 PL/SQL Trigger Execution Hierarchy</h3>
+<div class="level3">
+
+<p>
+The following hierarchy is followed when a trigger is fired.
+</p>
+<ol>
+<li class="level1"><div class="li"> BEFORE statement trigger fires first.</div>
+</li>
+<li class="level1"><div class="li"> Next BEFORE row level trigger fires, once for each row affected. </div>
+</li>
+<li class="level1"><div class="li"> Then AFTER row level trigger fires once for each affected row. This event will alternate between BEFORE and AFTER row level triggers.</div>
+</li>
+<li class="level1"><div class="li"> Finally the AFTER statement level trigger fires.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.7.1 PL\/SQL Trigger Execution Hierarchy&quot;,&quot;hid&quot;:&quot;pl_sql_trigger_execution_hierarchy&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:24,&quot;range&quot;:&quot;22698-23114&quot;} -->
+<h3 class="sectionedit25" id="trigger_examples">7.7.2 Trigger examples</h3>
+<div class="level3">
+
+<p>
+In the following example, we want to develop a trigger which can monitor the last change on employee&#039;s salary, we will log who did the change and when.
+</p>
+
+<p>
+First, we need to create a trigger procedure.
+</p>
+<pre class="code">-- Create a trigger named emp_stamp
+CREATE FUNCTION emp_stamp() RETURNS trigger
+AS $emp_stamp$
+BEGIN
+-- Check that empname and salary are given
+IF NEW.empname IS NULL
+THEN
+RAISE EXCEPTION &#039;empname cannot be null’;
+END IF;
+IF NEW.salary &lt; 0 THEN
+RAISE EXCEPTION &#039;% cannot have a negative salary&#039;,NEW.empname;
+END IF;
+-- Remember who changed the payroll and when
+NEW.last_date := current_timestamp;
+NEW.last_user := current_user;
+RETURN NEW;
+END;
+$emp_stamp$
+LANGUAGE plpgsql;</pre>
+
+<p>
+Second, we need to assign the trigger on an event.
+</p>
+<pre class="code">CREATE TRIGGER emp_stamp
+-- defines the trigger will be activated before event insert and update 
+BEFORE INSERT OR UPDATE ON emp
+-- trigger on row, not on the statement
+FOR EACH ROW
+EXECUTE FUNCTION emp_stamp();</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7.7.2 Trigger examples&quot;,&quot;hid&quot;:&quot;trigger_examples&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:25,&quot;range&quot;:&quot;23115-&quot;} -->

@@ -1,0 +1,1 @@
+$ nova boot --key-name=cloudkey --image=official-ubuntu-14.04-x86_64  --flavor=m1.small IDM

@@ -1,0 +1,5 @@
+<span class="kw2">git filter-branch</span> <span class="re5">--force</span> <span class="re5">--index-filter</span> <span class="st_h">'git rm --cached --ignore-unmatch dataFromV1/* '</span> <span class="re5">--prune-empty</span> <span class="re5">--tag-name-filter</span> <span class="kw2">cat</span> <span class="re5">--</span> <span class="re5">--all</span>
+<span class="kw2">git push</span> origin <span class="re5">--force</span> <span class="re5">--all</span>
+<span class="kw2">git push</span> origin <span class="re5">--force</span> <span class="re5">--tags</span>
+<span class="kw2">git reflog</span> expire <span class="re5">--expire</span>=now <span class="re5">--all</span>
+<span class="kw2">git gc</span> <span class="re5">--prune</span>=now

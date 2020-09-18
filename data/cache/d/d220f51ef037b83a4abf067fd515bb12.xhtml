@@ -1,0 +1,122 @@
+
+<h1 class="sectionedit1" id="install_ldap_authentication_on_owncloud">Install ldap authentication on owncloud</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Install ldap authentication on owncloud" [1-55] -->
+<h2 class="sectionedit2" id="diable_selinux">Diable selinux</h2>
+<div class="level2">
+
+<p>
+A non-blocking or correctly configured SELinux setup is needed for the LDAP backend to work. Please refer to the SELinux Configuration.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Diable selinux" [56-219] -->
+<h2 class="sectionedit3" id="install_php_ldap_depencies">Install php ldap depencies</h2>
+<div class="level2">
+
+<p>
+In our case, we need to install php7.1-ldap
+</p>
+
+<p>
+To check if php7.1-ldap is installed or not
+</p>
+<pre class="code">&gt; php -m | grep ldap
+ldap</pre>
+
+<p>
+If not installed, install it
+</p>
+<pre class="code">yum install php71w-ldap</pre>
+
+</div>
+<!-- EDIT3 SECTION "Install php ldap depencies" [220-459] -->
+<h2 class="sectionedit4" id="install_ldap_user_and_group_backend">Install ldap user and group backend</h2>
+<div class="level2">
+
+<p>
+Parameters → applications → ldap user and group backend.
+</p>
+
+<p>
+In our case, the version is 0.9.1
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Install ldap user and group backend" [460-602] -->
+<h2 class="sectionedit5" id="connect_to_owncloud_admin_dashboard">Connect to owncloud admin dashboard</h2>
+<div class="level2">
+
+<p>
+Parameters→User Authentication
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Connect to owncloud admin dashboard" [603-685] -->
+<h3 class="sectionedit6" id="standard_config">Standard config</h3>
+<div class="level3">
+
+<p>
+1. Server
+</p>
+<pre class="code">ldap://auth-ldap.bioaster.org
+cn=bump,ou=admin_accounts,dc=bioaster,dc=org
+changeMe
+dc=bioaster,dc=org</pre>
+
+<p>
+2. Utilisateurs
+</p>
+<pre class="code">seulement ces classes d&#039;objets: InetOrgPerson</pre>
+
+<p>
+3. Attributes de login
+</p>
+<pre class="code">choose option nom d&#039;utilisateur Ldap/AD
+filtre Ldap : (&amp;(|(objectclass=inetOrgPerson))(uid=%uid))</pre>
+
+<p>
+4. Groupes
+</p>
+<pre class="code">Filtre LDAP : (&amp;(|(objectclass=inetOrgPerson)))</pre>
+
+</div>
+<!-- EDIT6 SECTION "Standard config" [686-1138] -->
+<h3 class="sectionedit7" id="avance_config">Avance config</h3>
+<div class="level3">
+
+<p>
+To set the user folder name in server file system
+</p>
+
+<p>
+By default, it will use uuid of owncloud database. 
+</p>
+
+<p>
+To use the user uid as folder name, you need to configure 
+</p>
+<pre class="code">Règle de nommage du répertoire utilisateur : uid </pre>
+
+</div>
+<!-- EDIT7 SECTION "Avance config" [1139-1394] -->
+<h3 class="sectionedit8" id="expert_config">Expert config</h3>
+<div class="level3">
+
+<p>
+To set the user internal name.
+</p>
+
+<p>
+By default, it will use uuid of owncloud database. 
+</p>
+
+<p>
+o use the user uid as user internal name, you need to configure 
+</p>
+<pre class="code">Nom d&#039;utilisateur interne : uid </pre>
+
+</div>
+<!-- EDIT8 SECTION "Expert config" [1395-] -->

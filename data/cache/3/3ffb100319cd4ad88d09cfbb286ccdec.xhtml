@@ -1,0 +1,103 @@
+
+<h1 class="sectionedit1" id="gitlab_git">Gitlab/git</h1>
+<div class="level1">
+
+<p>
+Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. Git is easy to learn and has a tiny footprint with lightning fast performance. It outclasses SCM tools like Subversion, CVS, Perforce, and ClearCase with features like cheap local branching, convenient staging areas, and multiple workflows. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Gitlab/git" [1-425] -->
+<h2 class="sectionedit2" id="install_git">Install git</h2>
+<div class="level2">
+
+<p>
+Install on centos 7 
+</p>
+<pre class="code">yum install git</pre>
+
+</div>
+<!-- EDIT2 SECTION "Install git" [426-504] -->
+<h2 class="sectionedit3" id="configure_git">Configure git</h2>
+<div class="level2">
+<pre class="code">git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;you@example.com&quot;
+
+#check your config
+git config --list</pre>
+
+</div>
+<!-- EDIT3 SECTION "Configure git" [505-676] -->
+<h2 class="sectionedit4" id="create_a_git_dir_for_hosting_git_repo">Create a git dir for hosting git repo</h2>
+<div class="level2">
+<pre class="code"></pre>
+
+</div>
+<!-- EDIT4 SECTION "Create a git dir for hosting git repo" [677-744] -->
+<h2 class="sectionedit5" id="clone_a_remote_repo_to_locale_repo">Clone a remote repo to locale repo</h2>
+<div class="level2">
+<pre class="code">&gt; git clone &lt;url of your remote git repo&gt;
+#example
+&gt; git clone git@gitlab.in2p3.fr:pengfei/JavaDPTutor.git
+Cloning into &#039;JavaDPTutor&#039;...
+remote: Counting objects: 161, done.
+remote: Compressing objects: 100% (124/124), done.
+remote: Total 161 (delta 26), reused 161 (delta 26)
+Receiving objects: 100% (161/161), 43.14 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (26/26), done.
+Checking connectivity... done</pre>
+
+</div>
+<!-- EDIT5 SECTION "Clone a remote repo to locale repo" [745-1217] -->
+<h2 class="sectionedit6" id="commit_changes_to_local_then_to_remote">Commit changes to local then to remote</h2>
+<div class="level2">
+<pre class="code"># Create a file README
+# add file to git, -A means all if is a folder
+git add -A README 
+# commit file to local git repo
+&gt;git commit -m &quot;Add readme&quot;
+[test_git 3921e8a] Add readme
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README
+
+# push local git repo to remote repo
+&gt;git push -u origin test_git
+Counting objects: 4, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 344 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: 
+remote: To create a merge request for test_git, visit:
+remote:   https://gitlab.in2p3.fr/pengfei/JavaDPTutor/merge_requests/new?merge_request%5Bsource_branch%5D=test_git
+remote: 
+To git@gitlab.in2p3.fr:pengfei/JavaDPTutor.git
+ * [new branch]      test_git -&gt; test_git
+Branch test_git set up to track remote branch test_git from origin.
+
+</pre>
+
+</div>
+<!-- EDIT6 SECTION "Commit changes to local then to remote" [1218-2142] -->
+<h2 class="sectionedit7" id="commit_changes_to_a_new_branch">Commit changes to a new branch</h2>
+<div class="level2">
+<pre class="code"># check branch status
+/afs/in2p3.fr/home/p/pliu/git/JavaDPTutor(0)&gt;git branch
+* master
+
+# create a new branch
+&gt;git checkout -b test_git
+
+# recheck branch status
+&gt; git branch
+  master
+* test_git
+
+# change branch
+&gt; git checkout master
+Switched to branch &#039;master&#039;
+
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Commit changes to a new branch" [2143-] -->

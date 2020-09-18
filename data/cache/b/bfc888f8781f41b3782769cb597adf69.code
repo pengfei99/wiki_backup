@@ -1,0 +1,5 @@
+<span class="co1">//1.通过DatagramChannel的open()方法创建一个DatagramChannel对象</span>
+DatagramChannel datagramChannel <span class="sy0">=</span> DatagramChannel.<span class="me1">open</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//绑定一个port（端口）</span>
+datagramChannel.<span class="me1">bind</span><span class="br0">&#40;</span><span class="kw1">new</span> InetSocketAddress<span class="br0">&#40;</span><span class="nu0">1234</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>

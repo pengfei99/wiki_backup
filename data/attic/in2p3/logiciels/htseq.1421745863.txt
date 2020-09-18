@@ -1,0 +1,44 @@
+====== HTSeq ======
+
+===== Informations =====
+
+  * **Version** : 0.5.4p5
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://www-huber.embl.de/users/anders/HTSeq/doc/overview.html]]
+  * **Description** : HTSeq is a Python package that provides infrastructure to process data from high-throughput sequencing assays.
+
+===== Installation =====
+
+**Pré-requis** : numpy, matplotlib... qui font partie de l'installation de base au CC.
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/htseq/0.5.4p5"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget --no-check-certificate -O HTSeq-0.5.4p5.tar.gz "https://pypi.python.org/packages/source/H/HTSeq/HTSeq-0.5.4p5.tar.gz#md5=b6d7d5c412bf067e6c33ee1550d99a52"
+tar xvzf HTSeq-0.5.4p5.tar.gz
+cd HTSeq-0.5.4p5
+PYTHONPATH="$APP/lib/python2.7/site-packages/" python setup.py install --prefix $APP
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Analysing high-throughput sequencing data with Python.\n"
+}
+
+set version "0.5.4p5"
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/htseq/${version}"
+
+prepend-path PATH "${app}/bin"
+prepend-path PYTHONPATH "${app}/lib/python2.7/site-packages/"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 0.5.4p5 installée

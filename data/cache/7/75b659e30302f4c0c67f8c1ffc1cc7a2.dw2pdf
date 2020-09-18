@@ -1,0 +1,78 @@
+<a name="ut6liste_des_comptes__"></a>
+<h1><bookmark content="Liste des comptes à fermer pour un collaborateur quittant BIOASTER" level="0" /><a name="ut6liste_des_comptes__liste_des_comptes_a_fermer_pour_un_collaborateur_quittant_bioaster">Liste des comptes à fermer pour un collaborateur quittant BIOASTER</a></h1>
+<div class="level1">
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<td class="col0">Outils/ User </td><th class="col1"> JG (Jacques Garnier) </th><th class="col2"> TLC (Tanguy Le Carrour) </th><th class="col3"> BD (Benjamin Depardon) </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0"> Forge IN2P3</th><td class="col1">✔ </td><td class="col2">✔ </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row2">
+		<th class="col0"> GitLab IN2P3</th><td class="col1">NA </td><td class="col2">✔ </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row3">
+		<th class="col0"> Jenkins IN2P3</th><td class="col1"> NA</td><td class="col2"> ✔ </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row4">
+		<th class="col0"> Compte AFS CC (sauvegarde des fichiers )</th><td class="col1">✔ </td><td class="col2"> ✔</td><td class="col3">✔</td>
+	</tr>
+	<tr class="row5">
+		<th class="col0"> Compte OTRS</th><td class="col1"> ✔</td><td class="col2"> Compte désactivé <a href="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2016030911000053" class="urlextern" title="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2016030911000053"  rel="nofollow"> Demande via OTRS</a></td><td class="col3">NA</td>
+	</tr>
+	<tr class="row6">
+		<th class="col0"> Fichier sur GPFS </th><td class="col1">✔ </td><td class="col2"> ✔</td><td class="col3"> ✔</td>
+	</tr>
+	<tr class="row7">
+		<th class="col0"> CompteS Devtools (Redmine …)</th><td class="col1">NA </td><td class="col2">✔ </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row8">
+		<th class="col0"> Forge <a href="http://forge.bioaster.org/" class="urlextern" title="http://forge.bioaster.org/"  rel="nofollow">http://forge.bioaster.org/</a></th><td class="col1"> ✔</td><td class="col2"> Compte vérouillé</td><td class="col3">NA</td>
+	</tr>
+	<tr class="row9">
+		<th class="col0"> Compte Owncloud</th><td class="col1"> NA</td><td class="col2"> Mot de passe changé</td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row10">
+		<th class="col0"> Clé ssh sur vms OS tenant bioaster</th><td class="col1">NA </td><td class="col2">✔ </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row11">
+		<th class="col0"> Clé ssh sur vms OS tenant htc</th><td class="col1">NA </td><td class="col2 leftalign">✔  </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row12">
+		<th class="col0"> Clé ssh sur vms VMWARE </th><td class="col1">NA </td><td class="col2"> ✔</td><td class="col3">NA</td>
+	</tr>
+	<tr class="row13">
+		<th class="col0"> Compte Vsphere </th><td class="col1">✔ </td><td class="col2">✔ </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row14">
+		<th class="col0"> Compte Unix sur vms Open Stack </th><td class="col1">NA </td><td class="col2"> ✔ </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row15">
+		<th class="col0"> Compte wiki Bioaster</th><td class="col1"> ✔ (lié à l&#039;AD)</td><td class="col2"> ✔ (lié à l&#039;AD) </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row16">
+		<th class="col0"> ETRIKS </th><td class="col1">NA </td><td class="col2"> ✔ </td><td class="col3">NA</td>
+	</tr>
+	<tr class="row17">
+		<th class="col0"> Certificat CNRS </th><td class="col1">✔ </td><td class="col2">NA </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row18">
+		<th class="col0"> Certificat StarCom</th><td class="col1"> va expirer</td><td class="col2">✔ impossible a réaliser avec la version gratuite de startssl : <a href="https://helpdesk.bioaster.org/front/ticket.form.php?id=440" class="urlextern" title="https://helpdesk.bioaster.org/front/ticket.form.php?id=440"  rel="nofollow"> Ticket GLPI</a></td><td class="col3">NA</td>
+	</tr>
+	<tr class="row19">
+		<th class="col0"> Ansible (rôle server)</th><td class="col1">NA </td><td class="col2">✔ </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row20">
+		<th class="col0"> Biospecimens</th><td class="col1">✔ </td><td class="col2">✔ </td><td class="col3"> NA</td>
+	</tr>
+	<tr class="row21">
+		<th class="col0"> Compte Open Stack</th><td class="col1">NA </td><td class="col2"> ✔ </td><td class="col3"> ✔</td>
+	</tr>
+	<tr class="row22">
+		<th class="col0"> Compte AD BIOASTER</th><td class="col1"> ✔</td><td class="col2"> Pour l&#039;IT</td><td class="col3"> NA</td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [84-1356] -->
+</div>

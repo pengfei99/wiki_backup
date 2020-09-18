@@ -1,0 +1,162 @@
+====== Choix d'un e-CRF pour la gestion des études cliniques ======
+
+Voir la présentation de Karen : {{:pt1:e-crf_02_10_2014_vf.pptx|}}
+
+Voir le document de la FDA "Guidance for Industry, Electronic Source Data in Clinical Investigations" : {{:pt1:ecrf-fda.pdf|}}
+
+
+<WRAP info>
+**Pondération :** exprimée de 1 à 4 en fonction de l'importance \\
+**Solutions :** pour chaque fonctionnalité, 0 = absente, 1 = présente
+</WRAP>
+
+^Critères^^Solutions^^^^|
+^Fonctionnalité ^Pondération ^Clean Web (Karen)\\ http://cleanweb.tentelemed.com^Clin File (Karen)\\ http://www.clinfile.com^Voozanoo (Pierre)\\ https://portal.voozanoo.net/^MedSharing (Karen)\\ http://www.medsharing.fr^Clininfo (Pierre)\\ http://www.clininfo.fr|
+^Obligatoire pour le PT1^^^^^^|
+|Connexion sécurisée|4|?|?|1|?|1|
+|Gestion des droits et **profils** utilisateurs|4|?|?|1|?|1|
+|Logiciel installable sur n'importe quel poste|4|?|?|1|?|1|
+|Paramétrage simple à loisir de formulaires/Multi-études|4|?|?|1|?|?|
+|Licences multi-sites et illimitées|4|?|?|1|?|?|
+|Compatible Windows, Mac, Linux|4|?|?|1|?|1|
+|Paramétrage par interfaces graphiques/assistants|4|?|?|1|?|?|
+|Paramétrage par fichier de configuration (csv, xml, ...)|4|?|?|1|?|?|
+|Mise en place de contrôle de saisie et de cohérence|4|?|?|1|?|1|
+|Gestion des pièces jointes|4|?|?|?|?|1|
+|Existe t-il des dvpts spécifiques pour des prélèvements biologiques|4|?|?|?|?|?|
+|Gestion par code-barres|4|?|?|?|?|?|
+|Monitoring (dashboard) de l'étude => suivi des visites|3|?|?|?|?|1|
+|Monitoring (dashboard) de l'étude => listing des queries en cours|4|?|?|?|?|1|
+|Monitoring : Mise en évidence et gestion des erreurs|4|?|?|?|?|?|
+|Trame de compte-rendu|3|?|?|?|?|?|
+|Gestion des queries (corrections, données manquantes, ...)|4|?|?|?|?|1|
+|Gestion des signatures électroniques|4|?|?|?|?|1|
+|Internationalisation (multi-langues Français/Anglais)|4|?|?|1|?|1|
+|Gel de données|4|?|?|?|?|?|
+|Audit-trial et traçabilité de toutes les actions|4|?|?|?|?|1|
+|Archivage, obligation réglementaire au format PDF+certificat|4|?|?|?|?|1|
+|Module d'impression papier de l'e-CRF|4|?|?|1|?|1|
+|Format compatible avec les principaux logiciels d'analyse (SAS, SPSS, Oracle)Voir avec la bioinfo !!|4|?|?|1|?|1|
+|Responsive écrans tactiles|2|?|?|?|?|0|
+|Gestion administrative: mise en ligne des documents de l'étude (SOP, guidelines) - Annuaire|1|?|?|?|?|1|
+|Mode hors connexion|1|?|?|?|?|0|
+|Module de randomisation|1|?|?|?|?|1|
+|Module de gestion des unités thérapeutiques |1|?|?|?|?|?|
+|Import de données (Excel, Access)|1|?|?|?|?|?|
+|Plateforme d'échanges en ligne entre acteurs et utilisateurs |1|?|?|?|?|?|
+^Obligatoire pour le PT6^^^^^^|
+|Hébergement chez nous (CC)|4|?|?|?|?|0|
+|Base de données MySQL, PostgreSQL ou Oracle|?|?|?|1|?|1|
+|Export txt ou csv|?|?|?|1|?|1|
+|Export XML|?|?|?|1|?|0|
+|Export SQL|?|?|?|?|?|0|
+|Possibilités d'établir des passerelles automatisées avec d'autres systèmes d'info|4|?|?|?|?|0|
+|API REST|2| ?|? |? |? |0|
+^Optionnel pour le PT6^^^^^^|
+|Connexion à l'Active Directory de BIOASTER|4|?|?|0|?|0|
+
+
+
+===== CleanWEB =====
+
+**Nationalité**:  
+
+**Site web:** http://cleanweb.tentelemed.com/
+
+**Adresse :** 	
+
+TELEMEDICINE TECHNOLOGIES S.A. Clinical Trials Department - 88, rue du Dôme - 92 100 Boulogne-Billancourt
+
+**Tél :** 01 55 20 08 00
+
+**Email :** [[ClinicalTrials@tentelemed.com]]
+
+===== Clinfile =====
+
+**Nationalité**:  Française
+
+**Site web:** http://www.clinfile.com/
+
+**Adresse:**
+1, Avenue de la Cristallerie
+92310 Sèvres
+
+**Tel:** 01 41 14 05 82
+
+**Fax:** 01 41 14 00 93
+
+**Email :** [[contact@clinfile.com]]
+
+**Références:** [[http://www.clinfile.com/pages/4294-references]]
+ 
+===== Voozanoo =====
+
+**Nationalité**:  Française
+
+
+**Site web:** https://portal.voozanoo.net
+
+**Adresse:**
+
+Epiconcept, 47 rue de Charenton 75012 Paris France 
+
+**Tel :** 33 (0)1 53 02 40 60
+
+**Mode d'emploi:** [[https://portal.voozanoo.net/files/FR_Feuilles_de_references_Voozanoo_v2.3.pdf]]
+
+**Code source:** [[https://portal.voozanoo.net/voo3/download]]
+
+**Références:** [[http://epiconcept.fr/fr/page/references]]
+
+
+
+===== MedSharing =====
+
+**Nationalité**:  Française
+
+**Site web:** 
+
+**Adresse:**
+MEDSHARING
+
+77 Rue des Trois Territoires
+
+94120 Fontenay Sous Bois
+
+France
+
+**Tél:** +33 (0)1 48 75 39 14
+===== ClinInfo =====
+
+**Nationalité**:  Française
+
+**Site web:** http://www.clininfo.fr/
+
+**Adresse:**
+99 Rue de Gerland entrée 7 - 69007 Lyon
+
+**Tel :** 04 78 61 44 20
+
+**Fax.** 04 78 58 31 67
+
+**E-Mail :** [[info@clininfo.fr]]
+
+**Références:**
+
+Alcon SA • APHP • Aremis Consultants • Astra France • Bayer Pharma • Beecham • Boehringer • Bristol Myers Squibb • Brocades Pharma • Brothier SA • Byk France SA • Cassenne • Centre Anti-Cancéreux Régional Léon Bérard • CHU de Grenoble • CHU de la Pitié-Salpétrière • CHU de Saint-Etienne • CHU H. Mondor • Ciba • CIC Grenoble • CIC Lyon • CIC St Etienne • Cordis • Duphar • EA3736 • EZUS-Lyon 1 • Ferring • Flamel • Fournier • Genentech • Guidant Asie • Guidant Europe • Guidant France • Hoechst • Hôpital Robert Debré • ICTA • Imedex • Institut Henri Beaufour • Institut Mutualiste Montsouris • Ipsen • Léderlé • Léo • Lilly • Lipha Santé • LNCC • Mapi • Merck Clevenot SA • Novartis • Novo Nordisk • Parke Davis SA • Pasteur Mérieux • Pfizer • Pharmacia SA • Proclinica • Produits Roche • Ratiopharm • RCT’s • Rhone Poulenc Rorer • Roche • Sandoz • Sanofi • Sepracor Inc • Servier • Solvay Pharma • Sterling • Synthélabo • URC A.Paré • URC Cochin • URC Necker • Wellcome • Yamanouchi Pharma • Zénéca Pharma
+
+<WRAP left round info 60%>
+A l’issue de la saisie, voire du contrôle de données, les données saisies sont disponibles en format colonné (CSV, Excel, MS-Access) ou sous la forme de tables SAS (incluant libellé et format). Pour les études incluant émission et prise en compte des demandes de correction, la piste d’audit peut être extraite au format CSV.
+
+Ces extractions sont conçues pour retranscrire le plus fidèlement possible les données recueillies dans le cadre de l’étude clinique et de transposer le maximum d’informations contenues dans le dictionnaire de données (nom des variables, libellés et contrôle) vers le logiciel cible afin de pouvoir par la suite effectuer leur analyse. D’autres formats peuvent être étudiés sur demande
+</WRAP>
+
+<WRAP left round info 60%>
+Nous consacrons une partie de notre activité au développement de systèmes spécifiques dans le cadre d'un appel d'offres ou de la mise en place d'un système particulier.
+
+Nous avons ainsi réalisé des systèmes de registres de recueil de données sur PC, de randomisation décentralisée et autonome, de veille sanitaire, de gestion de correspondants, de gestion d'honoraires, de gestion de bibliographies.
+
+Nous restons à votre disposition pour étudier toute situation où une solution informatique spécifique serait à développer.
+</WRAP>
+
+----

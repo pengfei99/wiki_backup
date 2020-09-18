@@ -1,0 +1,206 @@
+
+<h1 class="sectionedit1" id="django">Django</h1>
+<div class="level1">
+
+<p>
+<a href="https://www.djangoproject.com/" class="urlextern" title="https://www.djangoproject.com/"  rel="nofollow">Django</a> est un web framework basé sur le langage python (2 et 3).
+<a href="https://docs.djangoproject.com/" class="urlextern" title="https://docs.djangoproject.com/"  rel="nofollow">La documentation officielle</a> est très complète.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Django" [1-209] -->
+<h2 class="sectionedit2" id="installer_l_environnement_de_travail">Installer l&#039;environnement de travail</h2>
+<div class="level2">
+
+<p>
+A compléter/édulcorer.
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/ut6/projets_internes/bp_python" class="wikilink1" title="ut6:projets_internes:bp_python"> pyenv et virtualenv/virtualenv-wrapper</a></div>
+</li>
+<li class="level1"><div class="li"> Une fois que pyenv et le virtualenv du projet sont créés : <pre class="prettyprint">pip install -e django/</pre></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Installer l'environnement de travail" [210-468] -->
+<h3 class="sectionedit3" id="recettes_pour">Recettes pour…</h3>
+<div class="level3">
+
+<p>
+Pages en vrac pour faire différentes choses en 1.10 :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/django/creer_un_projet" class="wikilink1" title="informatique:developpement:django:creer_un_projet">Créer un projet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/django/creer_un_projet?&amp;#migration_de_la_base_de_donnees_du_projet" class="wikilink1" title="informatique:developpement:django:creer_un_projet"> Faire une migration</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/django/creer_un_superuser" class="wikilink1" title="informatique:developpement:django:creer_un_superuser"> Créer un superuser/admin</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/informatique/developpement/django/debug_toolbar" class="wikilink1" title="informatique:developpement:django:debug_toolbar">Installer la debug toolbar</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Recettes pour…" [469-928] -->
+<h3 class="sectionedit4" id="memo_commandes_managepy">Mémo commandes manage.py</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Pour lancer le serveur de dev : <pre class="prettyprint"> ./manage.py runserver </pre></div>
+</li>
+<li class="level1"><div class="li"> Pour supprimer toutes les données dans une db : <pre class="prettyprint"> ./manage.py flush </pre></div>
+</li>
+<li class="level1"><div class="li"> Pour lancer le shell django : <pre class="prettyprint"> ./manage.py shell </pre></div>
+</li>
+<li class="level1"><div class="li"> Rajouter <a href="https://gitlab.in2p3.fr/bioaster/NoE/commit/b254833a634930ae67a531540dfcf908bcc563b9" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/commit/b254833a634930ae67a531540dfcf908bcc563b9"  rel="nofollow">ce bout de code</a> au bon endroit et ensuite pouvoir afficher toutes les routes du projet en console avec <pre class="prettyprint"> ./manage.py showurls </pre></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Mémo commandes manage.py" [929-1432] -->
+<h3 class="sectionedit5" id="app_utiles">App utiles</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.djangopackages.com/" class="urlextern" title="https://www.djangopackages.com/"  rel="nofollow">repository de packages/apps Django</a></div>
+</li>
+<li class="level2"><div class="li"> Auth</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.8/howto/auth-remote-user/" class="urlextern" title="https://docs.djangoproject.com/fr/1.8/howto/auth-remote-user/"  rel="nofollow">S&#039;authentifier avec un service tiers</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="http://django.readthedocs.org/en/latest/topics/auth/customizing.html" class="urlextern" title="http://django.readthedocs.org/en/latest/topics/auth/customizing.html"  rel="nofollow">Customiser l&#039;auth native</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="http://stackoverflow.com/questions/7850207/django-and-shibboleth" class="urlextern" title="http://stackoverflow.com/questions/7850207/django-and-shibboleth"  rel="nofollow"> Fil Stackoverflow sur Django - Shibboleth</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://5chub3r7.wordpress.com/2014/12/05/how-to-not-use-shibboleth-with-the-django-web-framework/" class="urlextern" title="https://5chub3r7.wordpress.com/2014/12/05/how-to-not-use-shibboleth-with-the-django-web-framework/"  rel="nofollow">How to use Shibboleth with Django</a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Permission</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://github.com/django-guardian/django-guardian" class="urlextern" title="https://github.com/django-guardian/django-guardian"  rel="nofollow">Django-guardian</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/dfunckt/django-rules" class="urlextern" title="https://github.com/dfunckt/django-rules"  rel="nofollow">Django Rules</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/lambdalisue/django-permission" class="urlextern" title="https://github.com/lambdalisue/django-permission"  rel="nofollow">Django Permission</a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> grid/table</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://django-tables2.readthedocs.org/en/latest/" class="urlextern" title="https://django-tables2.readthedocs.org/en/latest/"  rel="nofollow">django-tables2</a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Gestion de jobs</div>
+<ul>
+<li class="level3"><div class="li"> <a href="http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html" class="urlextern" title="http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html"  rel="nofollow">Utiliser Celery avec Django</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://wiki.openstack.org/wiki/Celery" class="urlextern" title="https://wiki.openstack.org/wiki/Celery"  rel="nofollow"> Setup Celery </a> and <a href="https://wiki.openstack.org/wiki/DistributedTaskManagement" class="urlextern" title="https://wiki.openstack.org/wiki/DistributedTaskManagement"  rel="nofollow"> Distributed Task Management</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="http://dispy.sourceforge.net/" class="urlextern" title="http://dispy.sourceforge.net/"  rel="nofollow"> dispy: Distributed and Parallel Computing with/for Python</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="http://python-rq.org/" class="urlextern" title="http://python-rq.org/"  rel="nofollow"> Redis Queue </a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Envoi de mails</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://github.com/pinax/django-mailer" class="urlextern" title="https://github.com/pinax/django-mailer"  rel="nofollow">Django Mailer</a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> File Manager</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://github.com/divio/django-filer" class="urlextern" title="https://github.com/divio/django-filer"  rel="nofollow"> Django Filer</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/sehmaschine/django-filebrowser" class="urlextern" title="https://github.com/sehmaschine/django-filebrowser"  rel="nofollow"> Django File Browser</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/garmoncheg/django_multiuploader" class="urlextern" title="https://github.com/garmoncheg/django_multiuploader"  rel="nofollow"> Django Multiuploader</a></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Search engine</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://github.com/etianen/django-watson" class="urlextern" title="https://github.com/etianen/django-watson"  rel="nofollow">Django Watson (FTS)</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/django-haystack/django-haystack" class="urlextern" title="https://github.com/django-haystack/django-haystack"  rel="nofollow"> Django Haystack</a> peut être couplé avec Solr, ElasticSearch, Xapian, …</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Intégration continue et tests</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://github.com/kmmbvnr/django-jenkins" class="urlextern" title="https://github.com/kmmbvnr/django-jenkins"  rel="nofollow">Django Jenkins</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="https://github.com/rbarrois/factory_boy" class="urlextern" title="https://github.com/rbarrois/factory_boy"  rel="nofollow"> Factory boy</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "App utiles" [1433-3551] -->
+<h3 class="sectionedit6" id="liens_utiles">Liens utiles</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Tutoriels/docs</div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/intro/tutorial01/" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/intro/tutorial01/"  rel="nofollow">Tuto officiel</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.youtube.com/watch?v=3DccH9AMwFQ&amp;list=PLEsfXFp6DpzRgedo9IzmcpXYoSeDg29Tx" class="urlextern" title="https://www.youtube.com/watch?v=3DccH9AMwFQ&amp;list=PLEsfXFp6DpzRgedo9IzmcpXYoSeDg29Tx"  rel="nofollow">Tuto vidéo découpé en étapes</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://sametmax.com/ce-quil-faut-savoir-en-django/" class="urlextern" title="http://sametmax.com/ce-quil-faut-savoir-en-django/"  rel="nofollow">Tutos Sam&amp;Max</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://gettingstartedwithdjango.com/" class="urlextern" title="http://gettingstartedwithdjango.com/"  rel="nofollow">MOOC Django</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://django-story.readthedocs.org/en/latest/" class="urlextern" title="http://django-story.readthedocs.org/en/latest/"  rel="nofollow">Django raconté à un ami</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://larlet.fr/david/biologeek/archives/20080211-astuces-et-bonnes-pratiques-django/" class="urlextern" title="https://larlet.fr/david/biologeek/archives/20080211-astuces-et-bonnes-pratiques-django/"  rel="nofollow">Astuces et bonnes pratiques</a> /!\ date de 2008 /!\</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html" class="urlextern" title="http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html"  rel="nofollow">ORM Django, astuces à connaitre</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/topics/templates/" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/topics/templates/"  rel="nofollow">Moteur de template Django</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://indexerror.net/" class="urlextern" title="http://indexerror.net/"  rel="nofollow">Forum francophone d&#039;aide Django/Python du style stackoverflow</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/ref/forms/validation/" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/ref/forms/validation/"  rel="nofollow">Validateurs Django (django.core.validators)</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/ref/forms/fields/#error-messages" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/ref/forms/fields/#error-messages"  rel="nofollow">Validateurs de champs</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.djangorocks.com/snippets/indexing-your-django-models.html" class="urlextern" title="https://www.djangorocks.com/snippets/indexing-your-django-models.html"  rel="nofollow">Indexation des Models Django</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/topics/email/" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/topics/email/"  rel="nofollow">Envoi de mail de base</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.9/topics/logging/" class="urlextern" title="https://docs.djangoproject.com/fr/1.9/topics/logging/"  rel="nofollow">Gestion des logs</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://mathieu.agopian.info/blog/gunicorn-un-server-wsgi-ultra-simple-a-utiliser-et-configurer.html" class="urlextern" title="http://mathieu.agopian.info/blog/gunicorn-un-server-wsgi-ultra-simple-a-utiliser-et-configurer.html"  rel="nofollow">Installation de gunicorn</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Aide au dev :</div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://www.djangopackages.com/" class="urlextern" title="https://www.djangopackages.com/"  rel="nofollow">repository de packages/apps Django</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://github.com/django-debug-toolbar/django-debug-toolbar" class="urlextern" title="https://github.com/django-debug-toolbar/django-debug-toolbar"  rel="nofollow">Django Debug Toolbar</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.djangorocks.com/snippets/mail-staff.html" class="urlextern" title="https://www.djangorocks.com/snippets/mail-staff.html"  rel="nofollow">Snippet pour envoi de mail en masse</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://www.labri.fr/perso/fleury/posts/tools/setting-a-full-testing-framework-for-django-and-more.html" class="urlextern" title="http://www.labri.fr/perso/fleury/posts/tools/setting-a-full-testing-framework-for-django-and-more.html"  rel="nofollow">Mettre en place ses tests pour son appli Django</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Nice to read :</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://blog.sendwithus.com/python-templating-performance-showdown-django-vs-jinja/" class="urlextern" title="http://blog.sendwithus.com/python-templating-performance-showdown-django-vs-jinja/"  rel="nofollow">Benchmarking Django template vs Jinja</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://sametmax.com/cookies-sessions-et-redirections-dans-un-middleware-django/" class="urlextern" title="http://sametmax.com/cookies-sessions-et-redirections-dans-un-middleware-django/"  rel="nofollow">Cookies, sessions et redirections dans un middleware Django</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps" class="urlextern" title="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps"  rel="nofollow">How to Run Django with mod_wsgi and Apache with a virtualenv Python environment</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://micropyramid.com/blog/django-generic-many-to-many-field/" class="urlextern" title="https://micropyramid.com/blog/django-generic-many-to-many-field/"  rel="nofollow">Gestion de champs Many to Many</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Liens utiles" [3552-] -->

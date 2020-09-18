@@ -1,0 +1,279 @@
+
+<h1 class="sectionedit1" id="project_management">Project management</h1>
+<div class="level1">
+
+<p>
+In this article, we will talk about how to manage software development projects and projects life cycle. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Project management&quot;,&quot;hid&quot;:&quot;project_management&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-141&quot;} -->
+<h2 class="sectionedit2" id="tools">Tools</h2>
+<div class="level2">
+
+<p>
+We normally use two types of tools to manage a project.
+</p>
+<ol>
+<li class="level1"><div class="li"> Project management tools (e.g. Redmine, Jira, etc.)</div>
+</li>
+<li class="level1"><div class="li"> Source code version control (e.g. Git, svn, bazzar, etc.)</div>
+</li>
+</ol>
+
+<p>
+I recommend Redmine and Git as tools for beginners. Redmine is Open source and have a strong community. It has not only issues tracking features, but also has general project management features such as the Gantt charts, time tracking, wikis, blogs and agile Kanban board.
+</p>
+
+<p>
+Git is designed to manage the content of the source code (i.e. compare source code line by line). Bazzar has fewer features compared to Git.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tools&quot;,&quot;hid&quot;:&quot;tools&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;142-751&quot;} -->
+<h2 class="sectionedit3" id="players">Players</h2>
+<div class="level2">
+
+<p>
+In every project, we will have three types of players:
+</p>
+<ul>
+<li class="level1"><div class="li"> Project Manager</div>
+</li>
+<li class="level1"><div class="li"> Developers</div>
+</li>
+<li class="level1"><div class="li"> Clients</div>
+</li>
+</ul>
+
+<p>
+In a larger team, you may have testers, architects, database admins, etc. You can find a complete list of their roles and duties in this page <a href="https://medium.com/@SherrieRose/software-project-team-roles-and-responsibilities-152a7d575759" class="urlextern" title="https://medium.com/@SherrieRose/software-project-team-roles-and-responsibilities-152a7d575759" rel="nofollow">https://medium.com/@SherrieRose/software-project-team-roles-and-responsibilities-152a7d575759</a>. For the simplicity of this tutorial. We assume that we have only three roles.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Players&quot;,&quot;hid&quot;:&quot;players&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;752-1191&quot;} -->
+<h2 class="sectionedit4" id="software_development_life_cycles">Software development life cycles</h2>
+<div class="level2">
+
+<p>
+There are many software development life cycle models, such as:
+</p>
+<ul>
+<li class="level1"><div class="li"> Code-and-fix (aka ad-hoc): creating software without any formal guidelines or process</div>
+</li>
+<li class="level1"><div class="li"> Waterfall: standard phases (req., design, code, test) in order</div>
+</li>
+<li class="level1"><div class="li"> Spiral: assess risks at each step; do most critical action first</div>
+</li>
+<li class="level1"><div class="li"> Evolutionary prototyping: build an initial small requirement <abbr title="specification">spec</abbr>, code it, then “evolve” the <abbr title="specification">spec</abbr> and code as needed. </div>
+</li>
+<li class="level1"><div class="li"> Staged delivery:  build initial requirement specs for several releases, then design-and code each in sequence</div>
+</li>
+<li class="level1"><div class="li"> Agile (XP, scrum, …)</div>
+</li>
+<li class="level1"><div class="li"> many others</div>
+</li>
+</ul>
+
+<p>
+The above lifecycles all share the below steps/stages/phases:
+</p>
+<ul>
+<li class="level1"><div class="li"> Requirements</div>
+</li>
+<li class="level1"><div class="li"> Design</div>
+</li>
+<li class="level1"><div class="li"> Implementation</div>
+</li>
+<li class="level1"><div class="li"> Testing</div>
+</li>
+<li class="level1"><div class="li"> Maintenance</div>
+</li>
+</ul>
+
+<p>
+Note: The lifecycle models will add overhead cost in your development. But without them, you have no way to assess progress, quality or risks. Remember the later a problem is found in software, the more costly it is to fix. So you need to find the best fitting models for your projects. 
+</p>
+
+<p>
+Rate each model 1-5 in each of the categories
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Model Name</th><th class="col1"> Risk management </th><th class="col2"> Quality/cost ctrl </th><th class="col3"> Predictability</th><th class="col4"> Visibility of progress </th><th class="col5"> Customer involvement</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">code-and-fix </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 3 </td><td class="col5"> 2 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">waterfall </td><td class="col1"> 2 </td><td class="col2"> 4 </td><td class="col3"> 3 </td><td class="col4"> 1 </td><td class="col5"> 2 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">spiral </td><td class="col1"> 5 </td><td class="col2"> 5 </td><td class="col3"> 3 </td><td class="col4"> 3 </td><td class="col5"> 3 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">evolutionary prototyping </td><td class="col1"> 3 </td><td class="col2"> 3 </td><td class="col3"> 2 </td><td class="col4"> 5 </td><td class="col5"> 5 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">staged delivery </td><td class="col1"> 3 </td><td class="col2"> 5 </td><td class="col3"> 3 </td><td class="col4"> 3 </td><td class="col5"> 4 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">design-to schedule </td><td class="col1"> 4 </td><td class="col2"> 3 </td><td class="col3"> 5 </td><td class="col4"> 3 </td><td class="col5"> 2 </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;2283-2624&quot;} -->
+<p>
+As you can see, all models have his advantage and disadvantage. Based on your project requirements, aim for good, fast, and cheap solutions. But you can&#039;t have all three at the same time.
+</p>
+
+<p>
+I will site the two most popular models for their advantage and disadvantage.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Software development life cycles&quot;,&quot;hid&quot;:&quot;software_development_life_cycles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1192-2893&quot;} -->
+<h3 class="sectionedit6" id="staged_delivery_model">Staged delivery model</h3>
+<div class="level3">
+
+<p>
+In a staged delivery model, after the requirements analysis, we design the global software architecture, then we divide the development into small stages. And in each small stages, we plan, design, execute, test and release
+</p>
+<ol>
+<li class="level1"><div class="li"> Requirements analysis</div>
+</li>
+<li class="level1 node"><div class="li"> design architect</div>
+<ol>
+<li class="level2"><div class="li"> stage 1: detailed design, code, debug, test and delivery</div>
+</li>
+<li class="level2"><div class="li"> stage 2: detailed design, code, …</div>
+</li>
+<li class="level2"><div class="li"> …</div>
+</li>
+<li class="level2"><div class="li"> stage n: … </div>
+</li>
+</ol>
+</li>
+</ol>
+
+<p>
+staged delivery model is very practical, widely used and successful.
+</p>
+
+</div>
+
+<h4 id="advantage">Advantage</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Can ship at the end of any release cycle. Looks like success to customers, even if it&#039;s not the original goal.</div>
+</li>
+<li class="level1"><div class="li"> Intermediate deliveries show progress, satisfy customers, and lead to feedback.</div>
+</li>
+<li class="level1"><div class="li"> Problems are visible early (e.g., integration).</div>
+</li>
+<li class="level1"><div class="li"> Facilitates shorter, more predictable release cycles.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="disadvantage">Disadvantage</h4>
+<div class="level4">
+<ol>
+<li class="level1"><div class="li"> Requires tight coordination with documentation, management, marketing</div>
+</li>
+<li class="level1"><div class="li"> Product must be decomposable</div>
+</li>
+<li class="level1"><div class="li"> Extra releases cause overhead</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Staged delivery model&quot;,&quot;hid&quot;:&quot;staged_delivery_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2894-3897&quot;} -->
+<h3 class="sectionedit7" id="evolutionary_prototyping_model">Evolutionary prototyping model</h3>
+<div class="level3">
+
+<p>
+Evolutionary prototyping model is another popular and successful model, especially for custom products. We first need to develop a skeleton system and evolve it for delivery.
+</p>
+
+<p>
+Staged delivery ≠ evolutionary prototyping. Because in a staged delivery model, all requirements are known ahead of time. But in an evolutionary model, we discovered the requirements by customer feedback on each release.
+</p>
+
+</div>
+
+<h4 id="advantages">Advantages</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Addresses risks early</div>
+</li>
+<li class="level1"><div class="li"> Produces steady signs of progress, builds customer confidence</div>
+</li>
+<li class="level1"><div class="li"> Useful when requirements are unknown or changing</div>
+</li>
+<li class="level1"><div class="li"> Customer involvement (“What do you think of this version?”)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="limitations">Limitations</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Requires close customer involvement</div>
+</li>
+<li class="level1"><div class="li"> Assumes user&#039;s initial <abbr title="specification">spec</abbr> is flexible</div>
+</li>
+<li class="level1 node"><div class="li"> Problems with planning</div>
+<ul>
+<li class="level2"><div class="li"> Especially if the developers are inexperienced</div>
+</li>
+<li class="level2"><div class="li"> Feature creep, major design decisions, use of time, etc.</div>
+</li>
+<li class="level2"><div class="li"> Hard to estimate completion schedule or feature set</div>
+</li>
+<li class="level2"><div class="li"> Unclear how many iterations will be needed to finish</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Integration problems</div>
+<ul>
+<li class="level2"><div class="li"> fails for separate pieces that must then be integrated</div>
+</li>
+<li class="level2"><div class="li"> bridging; new software trying to gradually replace old</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Temporary fixes become permanent constraints</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Evolutionary prototyping model&quot;,&quot;hid&quot;:&quot;evolutionary_prototyping_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3898-5131&quot;} -->
+<h2 class="sectionedit8" id="real_world_scenarios">Real world scenarios</h2>
+<div class="level2">
+
+<p>
+Suppose you already have a project repository in the github or gitlab server. You are a developer who is joining the project for the first time. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Real world scenarios&quot;,&quot;hid&quot;:&quot;real_world_scenarios&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;5132-5312&quot;} -->
+<h3 class="sectionedit9" id="clone_the_project_to_your_local_repository_and_build_the_development_environment">Clone the project to your local repository and build the development environment</h3>
+<div class="level3">
+<pre class="code"># clone the project
+git clone git@github.com:pengfei99/Data_Science.git</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Clone the project to your local repository and build the development environment&quot;,&quot;hid&quot;:&quot;clone_the_project_to_your_local_repository_and_build_the_development_environment&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;5313-5492&quot;} -->
+<h3 class="sectionedit10" id="define_the_feature_which_you_wants_to_develop_with_your_product_manager">Define the feature which you wants to develop with your product manager</h3>
+<div class="level3">
+
+<p>
+PM will meet the clients first, gathering all requirements of this feature.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Define the feature which you wants to develop with your product manager&quot;,&quot;hid&quot;:&quot;define_the_feature_which_you_wants_to_develop_with_your_product_manager&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;5493-&quot;} -->

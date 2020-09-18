@@ -1,0 +1,32 @@
+====== Data Structure ======
+
+===== Introduction =====
+
+A data structure is a specialized format for organizing and storing data. General data structure types include the array, the file, the record, the table, the tree, and so on. Any data structure is designed to organize data to suit a specific purpose so that it can be accessed and worked with in appropriate ways. In computer programming, a data structure may be selected or designed to store data for the purpose of working on it with various algorithms.
+
+A data structure is more than just the specification of the data type(Int, String, etc.), it also defines the relations between data which are in the same structure. For example, in a Tree[String] structure, all items must be a string, but some string has children, some does not.
+
+==== Terminologies ====
+
+  * Data: Data is information that has been translated into a form that is efficient for movement or processing. Relative to today's computers and transmission media, data is information converted into binary digital form. It is acceptable for data to be used as a singular subject or a plural subject. Raw data is a term used to describe data in its most basic digital format.
+  * Data type: is a classification that specifies which type of value a variable has and what type of mathematical, relational or logical operations can be applied to it without causing an error. A string, for example, is a data type that is used to classify text and an integer is a data type used to classify whole numbers.
+
+==== Logic structure vs Physic structure ====
+
+Short answer, logical data structure simply denotes the content, context, and meaning of the data in question. While the physical data structure shows us the actual location and format of the data stored in memory(hardware point of view). 
+
+Depending on which language and the compiler or interpreter you use, the physic structure changes from the same Logic structure. For example, you can directly manipulate memory as in C. It gives you pointer access and memory use without respect to type, contrary to strongly typed languages like Java. Data is modeled and stored on a contiguous indexed array, some of which is for the temporary memory on the stack or persistent memory on the heap. Heap memory persists until you explicitly tell the memory allocator to forget that memory. In the array of memory, there are the standard type declarations, which to a computer is an interpretation of bits, 0's and/or 1's.
+
+
+===== Basic Data Structures =====
+
+To illustrate these basic data structures with real code examples, we choose Java as our programming language. The below data structures hierarchy shows the Java collections lib.
+==== Java Collection framework====
+
+{{:employes:pengfei.liu:java:java-collection-hierarchy.jpeg?400|}}
+
+{{:employes:pengfei.liu:java:java-collection-hierarchy.png?400|}}
+
+===== FAQ =====
+
+1. Collection VS Collections [[employes:pengfei.liu:java:data_structure:faq:collections|Collections Vs Collection]]

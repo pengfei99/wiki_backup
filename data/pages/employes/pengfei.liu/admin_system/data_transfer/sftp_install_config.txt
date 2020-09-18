@@ -1,0 +1,146 @@
+====== Set up an sftp server on centos 7 ======
+
+This tutorial is tested on centos7 64bits, it should also works on centos6. 
+
+===== SFTP VS FTPS =====
+
+FTPS (FTP/SSL) is a name used to provide a number of ways that FTP software can perform secure file transfers. Each way involves the use of a SSL/TLS layer below the standard FTP protocol to encrypt the control and/or data channels.
+
+Pros : 
+  * Widely known and used
+  * The communication can be read and understood by a human
+  * Provides services for server-to-server file transfer
+  * SSL/TLS has good authentication mechanisms (X.509 certificate features)
+  * FTP and SSL/TLS support is built into many internet communications frameworks
+Cons :
+  * Does not have a uniform directory listing format
+  * Requires a secondary DATA channel, which makes it hard to use behind firewalls
+  * Does not define a standard for file name character sets (encodings)
+  * Not all FTP servers support SSL/TLS
+  * Does not have a standard way to get and change file or directory attributes
+
+SFTP (SSH File Transfer Protocol) is a network protocol that provides file transfer and manipulation functionality over any reliable data stream. It is typically used with the SSH-2 protocol (TCP port 22) to provide secure file transfer, but is intended to be usable with other protocols as well.
+
+Pros :
+  * Has a good standards background which strictly defines most (if not all) aspects of operations
+  * Has only one connection (no need for a DATA connection)
+  * The connection is always secured
+  * The directory listing is uniform and machine-readable
+  * The protocol includes operations for permission and attribute manipulation, file locking, and more functionality
+
+Cons : 
+  * The communication is binary and can not be logged “as is” for human reading
+  * SSH keys are harder to manage and validate
+  * The standards define certain things as optional or recommended, which leads to certain compatibility problems between different software titles from different vendors.
+  * No server-to-server copy and recursive directory removal operations
+  * No built-in SSH/SFTP support in VCL and .NET frameworks
+
+===== Install sftp server dependencies =====
+
+Unlike normal ftp, there's no need to install additional packages in order to use SFTP. We just require the prebuild SSHd package that got already installed during installation on the server. So  we only need to check that they are all there.
+
+<code>
+rpm -qa | grep ssh
+# you should see the following package
+openssh-7.4p1-16.el7.x86_64
+openssh-server-7.4p1-16.el7.x86_64
+libssh2-1.4.3-10.el7_2.1.x86_64
+openssh-clients-7.4p1-16.el7.x86_64
+</code> 
+
+if you see all four package, it means we are good to go.
+
+===== Sftp Configuration =====
+
+There are two parts in the sftp configuration
+  - User account and access to server (with/without ssh access)
+  - Directory for file transfers
+
+==== User account and access to server ====
+All users which have an account on the server and have ssh access can use the sftp server. if you want to use ldap on your sever, please followe this [[employes:pengfei.liu:admin_system:security:authentication:open_ldap:ssh_centos7|Use ldap for ssh authentication on centos 7]]. If not, the easiest way is to create local account on the server
+
+<code>
+#create a local account
+sudo adduser pliu
+# set password of pliu
+sudo passwd pliu
+</code>
+
+==== Creating a Directory for File transfer ====
+
+In order to restrict SFTP access to one directory, we first have to make sure the directory complies with the SSH server's permissions requirements, which are very particular.
+
+Specifically, the directory itself and all directories above it in the filesystem tree must be owned by root and not writable by anyone else. Consequently, it's not possible to simply give restricted access to a user's home directory because home directories are owned by the user, not root.
+
+There are a number of ways to work around this ownership issue. In this tutorial, we'll create and use /var/sftp/users/ as the target upload directory. /var/sftp/users will be owned by root and will be unwritable by other users; the subdirectory /var/sftp/users/pliu will be owned by pliu, so that user will be able to upload files to it.
+
+<code>
+# create the root sftp directory
+sudo mkdir -p /var/sftp/users/pliu
+
+# set the owner of /var/sftp/users to root
+sudo chown root:root /var/sftp/users
+
+# give root write permissions and others only read and execute rights to /var/sftp/users,
+sudo chmod 755 /var/sftp/users
+ 
+# change the ownership on the uploads directory to pliu
+sudo chown pliu:pliu /var/sftp/users/pliu
+
+# if you have multiple user which can use the sftp server, you can repeat above step and create /var/sftp/users/toto
+
+</code>
+
+==== Restricting Access to sftp and/or ssh ====
+
+In this step, we'll modify the SSH server configuration to allow/disallow terminal access for users but allow file transfer access. By default all user which have ssh access will have sftp access.
+
+
+<code>
+# edit the /etc/ssh/sshd_config file, scroll to the very buttom of the file and append the following code
+# Match User tells the ssh server to apply the following config only to specified user, in this tutorial, it's pliu
+# You can also use Match Group <group-name>
+Match User pliu
+# ForceCommand internal-sftp forces the SSH server to run the SFTP server upon login, disallowing shell access.
+ForceCommand internal-sftp
+# allows password authentication for this user.
+PasswordAuthentication yes
+#  ensures that the user will not be allowed access to anything beyond the /var/sftp/users directory.
+ChrootDirectory /var/sftp/users
+#  disables port forwarding, tunneling and X11 forwarding for this user.
+PermitTunnel no
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+
+# The match can be copied and repeated many times, which means we can have different rules for different users/groups 
+
+# to make configue effective, restart sshd service
+sudo sytemctl restart sshd
+</code>
+
+===== Verify the sftp access =====
+
+<code>
+# with the above config, pliu can only have sftp access, but not ssh access
+# So try ssh first
+ssh pliu@localhost
+# You should see something like this
+Error message
+This service allows sftp connections only.
+Connection to localhost closed.
+
+# Now try sftp access
+sftp pliu@localhost
+# you should see 
+SFTP prompt
+Connected to localhost.
+sftp>
+</code>
+
+You can also use sftp desktop client(e.g. fileZila, winscp, cyperduck, etc.) to do the test 
+===== Conclusion =====
+
+You've restricted a user to SFTP-only access to a single directory on a server without full shell access. While this tutorial uses only one directory and one user for brevity, you can extend this example to multiple users and multiple directories.
+
+The SSH server allows more complex configuration schemes, including limiting access to groups or multiple users at once or limited access to certain IP addresses. You can find examples of additional configuration options and explanation of possible directives in the OpenSSH Cookbook (https://en.wikibooks.org/wiki/OpenSSH/Cookbook/File_Transfer_with_SFTP). If you run into any issues with SSH, you can debug and fix them with this troubleshooting SSH series (https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-ssh).

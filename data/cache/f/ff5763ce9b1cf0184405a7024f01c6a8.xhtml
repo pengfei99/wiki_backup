@@ -1,0 +1,95 @@
+
+<h1 class="sectionedit1" id="bases_de_donnees">Bases de Données</h1>
+<div class="level1">
+
+<p>
+Les bases de données sont séparées en deux catégories : dans un fichier à plat ou dans un SGBD.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Bases de Données" [1-135] -->
+<h2 class="sectionedit2" id="fichiers_a_plat">Fichiers à plat</h2>
+<div class="level2">
+
+<p>
+Les fichiers à plats sont stockés dans le dossier <code>/sps/inter/bioaster/db/</code>. Ce dossier est accessible de tous les nœuds de calcul et de toutes les machines virtuelles.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Fichiers à plat" [136-340] -->
+<h3 class="sectionedit3" id="blast">BLAST</h3>
+<div class="level3">
+
+<p>
+Tous les outils de <strong>Blast</strong> sont disponible <em>via</em> <strong>module</strong>.
+</p>
+<pre class="code">module load blast</pre>
+
+<p>
+Pour installer de nouvelles bases des données ou mettre les anciennes à jours :
+</p>
+<pre class="code">cd /sps/inter/bioaster/db/blast
+update_blastdb.pl nr nt env_nr env_nt 16SMicrobial</pre>
+
+<p>
+La variable d&#039;environnement <code>BLASTDB</code> est définie par <strong>module</strong>, les bases peuvent immédiatement être utilisées.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "BLAST" [341-758] -->
+<h3 class="sectionedit4" id="ucsc">UCSC</h3>
+<div class="level3">
+<pre class="code">cd /sps/inter/bioaster/db/ucsc
+rsync -avzP rsync://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/ hg38
+rsync -avzP rsync://hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/ mm10</pre>
+
+<p>
+Lire le fichier <code>README.txt</code> pour une description de tous les fichiers disponibles, ainsi que les instructions pour les mettre à jours.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "UCSC" [759-1108] -->
+<h3 class="sectionedit5" id="hmp">HMP</h3>
+<div class="level3">
+
+<p>
+<a href="http://www.hmpdacc.org/HMRGD/" class="urlextern" title="http://www.hmpdacc.org/HMRGD/"  rel="nofollow">HMP Reference Genome sequence data</a> : récupération des différents fichiers de la section <em>All Body Sites</em>.
+</p>
+<pre class="code">cd /sps/inter/bioaster/db/hmrgd
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_nuc.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_cds.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_pep.tar.gz
+wget http://downloads.hmpdacc.org/data/reference_genomes/all_gbk.tar.gz</pre>
+
+<p>
+Les archives contiennent des fichiers de la forme <code>local/db/repository/ncbi/dacc_reference_genomes/20130402/all_gbk_20130402/18203.DS483479-DS483503.nuc.gbk</code> et sont pour le moment laissées en l&#039;état.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "HMP" [1109-1810] -->
+<h3 class="sectionedit6" id="md5">MD5</h3>
+<div class="level3">
+
+<p>
+Récupération des fichiers du projet <a href="http://tools.metagenomics.anl.gov/m5nr/" class="urlextern" title="http://tools.metagenomics.anl.gov/m5nr/"  rel="nofollow">M5nr</a>. 
+</p>
+<pre class="code">cd /sps/inter/bioaster/db/md5/
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5nr.gz
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5nr_blast.tar.gz
+wget ftp://ftp.metagenomics.anl.gov/data/M5nr/current/md5rna.gz</pre>
+
+<p>
+Les fichiers pour <strong>blast</strong> sont extraits et liés dans le dossier <code>/sps/inter/bioaster/db/blast/</code> pour être utilisables sans modification de l&#039;environnement.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "MD5" [1811-2325] -->
+<h2 class="sectionedit7" id="sgbd">SGBD</h2>
+<div class="level2">
+
+<p>
+Service fourni par le <a href="/in2p3" class="wikilink1" title="in2p3">CC-IN2P3</a>.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "SGBD" [2326-] -->

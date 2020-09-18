@@ -1,0 +1,69 @@
+====== Mise en place d'une pipeline d'analyse Métagénomique======
+
+===== Simulation des jeux de données test=====
+
+==== Grinder ====
+
+
+Téléchargement:[[http://sourceforge.net/projects/biogrinder/|Grinder]]
+
+Avantages:  
+ * Librairies de shotgun ou amplicons reads
+ * Distribution arbitraire du nombre de reads et de leurs longueurs
+  * Simulations des erreurs de séquencage et de PCR (chimères, mutations ponctuelles et homopolyméres)
+  * Soutien de jeux de données paired-end et mate paire
+  * Paramètres de l'abondance du rang spécifique ou de l'abondance donnée manuellement pour chaque génome, gène ou protéine.
+  * Création d'ensemble de données avec une richesse donnée (alpha diversity)
+  * Jeux de données indépendants peuvent partager une nombre variable de génome (beta diversity)
+  * Modélisation du biais crée par des longueurs variables de génome ou nombre de copies de génes
+
+Désavantage:
+  * Ne donne pas de score de qualitée.
+
+Dépendances:
+  * Perl
+  * Make
+
+Lancement:
+  - perl Makefile.PL
+  - make
+  - make install
+
+==== GemSim ====
+
+Téléchargement:[[http://sourceforge.net/projects/gemsim/|GemSim]]
+
+Avantages:  
+ * Meme que Grinder
+
+Désavantage:
+
+Dépendances:
+  * Python
+  * Numpy:[[http://numpy.scipy.org/|Numpy]]
+
+Lancement:
+  - Les executables sont deja compilés
+
+GemErr.py Prend un fichier SAM et catalogue tous les inadéquations, les insertions et les suppressions
+pour créer un modèle d'erreur pour un run particulier de séquencage. Les vrai SNP
+positions connus peuvent être exclus.
+
+==== Simulation ====
+
+Simulation en cours.
+
+Génération modèle d'erreur:
+
+  * Utilisation des reads produient par MiSeq pour le WP4 et correspondant aux espèces :Escherichia Coli, Pseudomonas et Staphyloccocus
+  * Nettoyage et trimmage des reads par cutadapt et par prinseq:   
+''cutadapt -O 7 -a=AGGCAGAA --times=3 $fic > $fic3''
+
+''prinseq-lite.pl -fastq $fic3 -trim_qual_right 10 -trim_qual_left 10 -trim_qual_type mean -out_format 3 -out_good $fic3 -no_qual_header -out_bad null -ns_max_n 0 -min_len 30 -trim_qual_window 10''
+  * Alignement sur les gènomes de référence:
+
+''
+
+DATABASE utilisé:
+
+  * genomes de la mock HMP (22 espèces : 21 bactèries + 1 eukaryote)

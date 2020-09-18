@@ -1,0 +1,497 @@
+====== AirFlow instllation guide ======
+
+Prerequis, AirFlow runs on python 2.7.* or 3*. In this tutorial, we use python 2.7.5 which is default python distrib on centos 7.
+
+We still need to install pip and some dependecies to install airflow correctly. 
+
+As a result, first step we install pip.
+
+===== Install dependencies and pip =====
+
+Install dependencies:
+
+<code>
+yum groupinstall "Development tools"
+ 
+yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel python-devel wget cyrus-sasl-devel.x86_64
+</code>
+
+Install pip :
+
+<code>
+cd /tmp/
+
+wget https://bootstrap.pypa.io/ez_setup.py
+
+python ez_setup.py
+
+unzip setuptools-X.X.zip
+cd setuptools-X.X
+
+easy_install pip
+</code>
+
+If you see <color #ed1c24>ImportError: No module named extern while Installing PIP with easy_install</color>,
+
+<code>
+yum reinstall python-setuptools
+easy_install pip
+</code>
+
+check pip install location with ''which pip''
+
+ 
+===== Install airflow server =====
+
+The first step is install and test native airflow server with sqlite db and sequentialExecutor.
+
+==== Basic install ====
+
+<code>
+export AIRFLOW_HOME=~/airflow
+#Current latest airflow version is 1.8.0
+pip install airflow=1.8.0
+
+# Install necessary sub-packages
+# For connection credentials protection
+pip install airflow[crypto] 
+# For PostgreSQL DBs
+pip install airflow[postgres] 
+# For distributed mode: celery executor
+pip install airflow[celery] 
+# For message queuing and passing
+# between airflow server and workers
+pip install airflow[rabbitmq]  
+# Anything more you need, for example, if you want apache hive plugin
+pip install airflow[hive]
+</code>
+
+This is enough for running a basic airflow (with sqlite db and sequential executor)
+
+For test purpose, you can run 
+
+<code>
+#init db base on db config in ~/airflow/airflow.cfg
+#in our case, it will be sqlite db
+airflow initdb
+airflow webserver -p 8080
+</code>
+
+Now you can visit the airflow webserver at http://hostname:8080/admin
+
+==== Creat your dags and test it ====
+Your dags should be located at ~/airflow/dags
+I use this tutorial(https://pythonhosted.org/airflow/tutorial.html) to test my first dags. 
+
+Copy the follwoing tutorial.py in ~/airflow/dags/.
+<code>
+"""
+Code that goes along with the Airflow tutorial located at:
+https://github.com/airbnb/airflow/blob/master/airflow/example_dags/tutorial.py
+"""
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime, timedelta
+
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2015, 6, 1),
+    'email': ['airflow@airflow.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+    # 'queue': 'bash_queue',
+    # 'pool': 'backfill',
+    # 'priority_weight': 10,
+    # 'end_date': datetime(2016, 1, 1),
+}
+
+dag = DAG('tutorial', default_args=default_args)
+
+# t1, t2 and t3 are examples of tasks created by instantiating operators
+t1 = BashOperator(
+    task_id='print_date',
+    bash_command='date',
+    dag=dag)
+
+t2 = BashOperator(
+    task_id='sleep',
+    bash_command='sleep 5',
+    retries=3,
+    dag=dag)
+
+templated_command = """
+    {% for i in range(5) %}
+        echo "{{ ds }}"
+        echo "{{ macros.ds_add(ds, 7)}}"
+        echo "{{ params.my_param }}"
+    {% endfor %}
+"""
+
+t3 = BashOperator(
+    task_id='templated',
+    bash_command=templated_command,
+    params={'my_param': 'Parameter I passed in'},
+    dag=dag)
+
+t2.set_upstream(t1)
+t3.set_upstream(t1)
+</code>
+
+Now you can view the dags with airflow cli
+
+<code>
+# Check syntax errors for your dag
+python ~/airflow/dags/tutorial.py
+
+# Print the list of active DAGs
+airflow list_dags
+
+# Print the list of tasks the "tutorial" dag_id
+airflow list_tasks tutorial
+
+# Print the hierarchy of tasks in the tutorial DAG
+airflow list_tasks tutorial --tree
+
+# Test your tasks in your dag
+airflow test [DAG_ID] [TASK_ID] [EXECUTION_DATE]
+airflow test tutorial sleep 2015-06-01
+
+# Backfill: execute jobs that are not done in the past
+airflow backfill tutorial -s 2015-06-01 -e 2015-06-07
+</code>
+
+==== airflow scheduler ====
+
+airflow scheduler is responsable for managing all tags execution.
+
+''airflow scheduler''
+
+===== Configure airflow to use remote db =====
+
+In this tutorial we use postgresql as db server, you can use other db which are supported by airflow
+
+Install postgresql server: see this doc -> https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95
+
+after the installation and configuration of the postgresql, you need to edit the ~/airflow/airflow.cfg to ask airflow to use this db.
+
+comment the default db config and add the following line.
+
+<code>
+sql_alchemy_conn = postgresql+psycopg2://db_user_name:pwd@db_host_name/db_name
+</code>
+
+====== Config airflow to use distributed Celery executor ======
+
+First you need to change your airflow sechduler executor mode to 
+
+Celery executor
+
+===== Install rabbitmq server =====
+U need to get the latest rpm from this site: https://www.rabbitmq.com/install-rpm.html
+
+for example :
+
+<code>
+cd /tmp
+
+wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
+</code>
+
+before install it, you need to install Erlang (a programming language for running rabbit)
+
+<code>
+yum install epel-release
+yum install erlang
+cd /tmp
+yum install rabbitmq-server-3.6.10
+</code>
+
+
+Rabbitmq server default config in centos 7 is located at ''/etc/rabbitmq/rabbitmq-env.conf''
+
+
+<code>
+# ##############################
+# RABBITMQ SERVER CONFIGURATION
+# ##############################
+#
+# All of the parameters below can also
+#   be set as environment variables
+#   using the prefix "RABBIT_"
+#   i.e.  export RABBITMQ_NODE_PORT=5672
+#
+# Mac Homebrew installed RabbitMQ directories
+# Logs: /usr/local/var/log/rabbitmq
+# Config: /usr/local/etc/rabbitmq
+# Mnesia Database: /usr/local/var/lib/rabbitmq/mnesia
+# Erlang cookies: <homedir>/.erlang.cookie
+#
+# ##############################
+
+# ##########################
+# Defaults to the empty string - meaning bind to all network interfaces
+# Change to bind to one network interface only
+# ##########################
+# NODE_IP_ADDRESS=
+# NODE_PORT=5672
+
+# ##########################
+# Unix, Linux: `env hostname`
+# MacOSX: `env hostname -s`
+# The name of the current machine
+# ##########################
+# HOSTNAME=
+
+# ##########################
+# The name of the current machine
+# ##########################
+# COMPUTERNAME=
+
+# ##########################
+# This base directory contains sub-directories for the RabbitMQ server's database and log files
+# Alternatively, set MNESIA_BASE and LOG_BASE individually
+# ##########################
+# BASE=
+
+# ##########################
+# Unix: rabbit@$HOSTNAME
+# The node name should be unique per erlang-node-and-machine combination
+# To run multiple nodes, see the clustering guide
+# ##########################
+# NODENAME=
+
+# ##########################
+# Unix: /etc/rabbitmq/rabbitmq
+# Mac: /usr/local/etc/rabbitmq/rabbitmq
+# If the configuration file is present it is used by the server to configure RabbitMQ components
+# The .config extension is automatically appended by the Erlang runtime
+# This file is also used to auto-configure RabbitMQ clusters
+# Example:
+#   Config file location and new filename bunnies.config
+#   CONFIG_FILE=/usr/local/etc/rabbitmq/bunnies
+# ##########################
+CONFIG_FILE=/usr/local/etc/rabbitmq/rabbitmq
+
+# ##########################
+# Unix*: /var/lib/rabbitmq/mnesia
+# Mac: /usr/local/var/lib/rabbitmq/mnesia
+# The directory where Mnesia database files should be placed.
+#
+# MNESIA_DIR will be assembled as MNESIA_BASE/NODENAME
+# ##########################
+# MNESIA_BASE=
+# MNESIA_DIR=
+
+# ##########################
+# Unix*: /var/log/rabbitmq
+# Mac: /usr/local/var/log/rabbitmq
+# Log files generated by the server will be placed in this directory.
+# ##########################
+# LOG_BASE=/usr/local/var/log/rabbitmq
+
+# ##########################
+# The plugins will be found in this directory
+# ##########################
+PLUGINS_DIR=/usr/local/Cellar/rabbitmq/2.7.0/lib/rabbitmq/erlang/lib/rabbitmq-2.7.0/plugins
+
+# ##########################
+# Mac: /usr/local/etc/rabbitmq/enabled_plugins
+# Unix*: /etc/rabbitmq/enabled_plugins
+# This file records explicitly enabled plugins
+# ##########################
+ENABLED_PLUGINS_FILE=/usr/local/etc/rabbitmq/enabled_plugins
+
+# ##########################
+# Windows Only
+# This path is the location of the Erlang service wrapper erlsrv.exe
+# ##########################
+# ERLANG_SERVICE_MANAGER_PATH=
+
+# ##########################
+# Windows Only
+# Name of the installed service in services.msc
+# ##########################
+# SERVICENAME=
+
+# ##########################
+# Windows Only
+# Set this variable to "new" or "reuse" to redirect console output
+#   from the server to a file named %SERVICENAME%.debug in the default BASE directory
+# If not set, console output from the server will be discarded (default)
+# new - A new file will be created each time the service starts
+# reuse - The file will be overwritten each time the service starts
+# ##########################
+# CONSOLE_LOG=new
+
+
+# ##########################
+# FROM THE rabbitmq-server script
+# ##########################
+# SERVER_ERL_ARGS="+K true +A30 +P 1048576 -kernel inet_default_connect_options [{nodelay,true}]"
+# CONFIG_FILE=/usr/local/etc/rabbitmq/rabbitmq
+# LOG_BASE=/usr/local/var/log/rabbitmq
+# MNESIA_BASE=/usr/local/var/lib/rabbitmq/mnesia
+# SERVER_START_ARGS=
+# ENABLED_PLUGINS_FILE=/usr/local/etc/rabbitmq/enabled_plugins
+# DEFAULT_NODE_IP_ADDRESS=auto
+# DEFAULT_NODE_PORT=5672
+</code>
+
+Setup rabbitMQ user
+
+<code>
+$ sudo rabbitmqctl add_user myuser mypassword
+$ sudo rabbitmqctl add_vhost myvhost
+$ sudo rabbitmqctl set_user_tags myuser mytag
+$ sudo rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*
+</code>
+
+RabbitMQ start/stop/status
+
+<code>
+$ sudo rabbitmq-server -detached
+$ sudo rabbitmqctl status
+$ sudo rabbitmqctl stop
+</code>
+
+To have a web interface you can add a management plugin
+
+<code>
+rabbitmq-plugins enable rabbitmq_management
+
+# There is a bug in older version of tornado can lead to rabbitmq crash, so update it
+pip install --upgrade tornado
+</code>
+
+Now you can visite the site http://hostname:15672/
+
+The default user is Login: guest pwd: guest
+
+if it doesnot work, you can try to add a new user or change the guest password
+
+<code>
+#create user pliu with password changeMe
+rabbitmqctl add_user pliu chageMe
+# add user pliu in user_tags administrator
+rabbitmqctl set_user_tags pliu administrator
+# grant access to pliu to all virtual host
+rabbitmqctl set_permissions -p / pliu ".*" ".*" ".*"
+
+# change password for existing user
+rabbitmqctl  change_password guest changeMe
+</code>
+
+rabbitmq official doc : https://www.rabbitmq.com/management.html
+====== Install flower to monitor celery worker on rabbitmq ======
+
+<code>
+pip install flower
+
+#if it's not executed on the rabbitmq server you need to change 127.0.0.1 to ip address of the rabbitmq server
+flower --broker=amqp://airflow:bioaster@127.0.0.1:5672/metaseq --broker_api=http://pliu:bioaster@127.0.0.1:15672/api
+
+</code>
+
+Now you can view your flow web interface at http://10.70.3.31:5555/, if shows nothing you need to check if your rabbitmq server is alive or not
+
+For test purpose, you can test if your rabbitmq server api is alive or not
+
+<code>
+# for all RabbitMQ server version > 3, it starts to use port 15672, not 55672  
+curl -i http://guest:guest@localhost:15672/api/aliveness-test/%2F
+</code>
+
+You should see something like this, if your rabbitmq server is alive
+
+<code>
+HTTP/1.1 200 OK
+server: Cowboy
+date: Thu, 27 Jul 2017 09:53:58 GMT
+content-length: 15
+content-type: application/json
+vary: accept, accept-encoding, origin
+Cache-Control: no-cache
+
+{"status":"ok"}
+</code>
+
+
+Start a celery worker to see if the worker is registered on the rabbitmq or not
+
+<code>
+sudo su - biodata
+
+celery worker --broker=amqp://airflow:bioaster@10.70.3.31:5672/metaseq
+
+</code>
+
+Now you should see a worker on your flower.
+
+====== airflow worker ======
+airflow worker is a celery worker, when you run command airflow worker. airflow will read your ~/airflow/airflow.cfg.
+
+airflow will get the broker url for example amqp://airflow:bioaster@10.70.3.31:5672/metaseq
+
+in the backend, it will run 
+celery worker --broker=amqp://airflow:bioaster@10.70.3.31:5672/metaseq
+
+So two things need to be checked before you run airflow worker
+
+First, celery version, becasue celery v>4 is not supported by airflow 1.7.* and 1.8.*.
+
+As a result, if you have celery > 4 installed, you need to down grade your celery
+
+<code>
+pip install celery==3.1.17
+</code>
+
+Second, airflow.cfg needs to be configured correctly in your ~/airflow. Following config is a minimum example to run a worker
+
+<code>
+executor = CeleryExecutor
+
+sql_alchemy_conn = postgresql+psycopg2://airflow:bioaster@10.70.3.31/airflow
+
+broker_url = amqp://airflow:bioaster@10.70.3.31:5672/metaseq
+celery_result_backend = amqp://airflow:bioaster@10.70.3.31:5672/metaseq
+default_queue = metaseq
+</code>
+
+When you stop airflow worker, sometimes it does not stop at all, you need to do the following command to kill the process.
+
+<code>
+#start airflow worker
+airflow worker 
+
+#if ctrl-c can't kill it
+ps -eaf | grep airflow
+root      2710     1  0 17:09 pts/0    00:00:01 /usr/bin/python /bin/airflow serve_logs
+
+kill -9 2710
+
+</code>
+
+====== Other important Note ======
+
+When u run a dag, the task won't start, in the task details you see the following line
+
+"Execution date 2017-08-31T10:10:36.355968 is in the future (the current date is 2017-08-31T08:26:40.640242)."
+
+It means your server time zone is not UTC. 
+
+You need to set your server time zone to UTC
+
+<code>
+timedatectl set-timezone UTC
+</code>
+
+You need to set nfs
+
+<code>
+mount -t nfs -o nosuid,nodev,tcp,nfsvers=3,hard,intr,mountport=664 ccdtli94.in2p3.fr:/sps/bioaster /mnt/gpfs
+mount -t nfs -o nosuid,nodev,tcp,nfsvers=3,hard,intr,mountport=664 ccdtli95.in2p3.fr:/sps/bioaster /mnt/gpfs
+</code>

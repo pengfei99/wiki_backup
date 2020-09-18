@@ -1,0 +1,12 @@
+&lt;<span class="kw3">VirtualHost</span> *:<span class="nu0">80</span>&gt;
+    <span class="kw1">ServerName</span> wwwblast.bioaster.org
+    <span class="kw1">DocumentRoot</span> /usr/local/wwwblast
+&nbsp;
+    <span class="kw1">SetEnv</span> BLASTDB /sps/inter/bioaster/db/blast/
+&nbsp;
+    &lt;<span class="kw3">Directory</span> /usr/local/wwwblast&gt;
+        <span class="kw1">Options</span> <span class="kw2">FollowSymLinks</span> ExecCGI
+        <span class="kw1">DirectoryIndex</span> index.html index.cgi
+        <span class="kw1">AddHandler</span> cgi-<span class="kw1">script</span> .cgi .pl
+    &lt;/<span class="kw3">Directory</span>&gt;
+&lt;/<span class="kw3">VirtualHost</span>&gt;

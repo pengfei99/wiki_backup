@@ -1,0 +1,7 @@
+ByteBuffer header <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">128</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer body <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">1024</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer<span class="br0">&#91;</span><span class="br0">&#93;</span> bufferArray <span class="sy0">=</span><span class="br0">&#123;</span>header,body<span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="co1">//write()方法内部会负责把数据按顺序写入到channel中。</span>
+<span class="co1">//并不是所有数据都写入到通道，写入的数据要根据position和limit的值来判断，只有position和limit之间的数据才会被写入；</span>
+<span class="co1">// 举个例子，假如以上header缓冲区中有128个字节数据，但此时position=0，limit=58；那么只有下标索引为0-57的数据才会被写入到通道中。</span>
+channel.<span class="me1">write</span><span class="br0">&#40;</span>bufferArray<span class="br0">&#41;</span><span class="sy0">;</span>

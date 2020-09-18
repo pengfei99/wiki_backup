@@ -1,0 +1,10 @@
+Thu Nov 15 23:50:46 2018 [pid 7716] CONNECT: Client &quot;::ffff:10.70.41.43&quot;
+Thu Nov 15 23:50:46 2018 [pid 7715] [nsapay] OK LOGIN: Client &quot;::ffff:10.70.41.43&quot;
+Thu Nov 15 23:51:14 2018 [pid 9378] CONNECT: Client &quot;::ffff:10.70.41.43&quot;
+Thu Nov 15 23:51:14 2018 [pid 9379] CONNECT: Client &quot;::ffff:10.70.41.43&quot;, &quot;Connection refused: too many sessions for this address.&quot;
+Thu Nov 15 23:51:14 2018 [pid 9376] [nsapay] OK LOGIN: Client &quot;::ffff:10.70.41.43&quot;
+Thu Nov 15 23:51:14 2018 [pid 9381] [nsapay] OK DOWNLOAD: Client &quot;::ffff:10.70.41.43&quot;, &quot;/SANOFI/README&quot;, 0.00Kbyte/sec
+Thu Nov 15 23:51:19 2018 [pid 9629] CONNECT: Client &quot;::ffff:10.70.41.43&quot;, &quot;Connection refused: too many sessions for this address.&quot;
+Thu Nov 15 23:51:19 2018 [pid 9381] [nsapay] OK DOWNLOAD: Client &quot;::ffff:10.70.41.43&quot;, &quot;/SANOFI/test-file&quot;, 11 bytes, 0.13Kbyte/sec
+Thu Nov 15 23:52:19 2018 [pid 9378] [nsapay] DEBUG: Client &quot;::ffff:10.70.41.43&quot;, &quot;Connection terminated without SSL shutdown - buggy client?&quot;
+Thu Nov 15 23:56:21 2018 [pid 7716] [nsapay] DEBUG: Client &quot;::ffff:10.70.41.43&quot;, &quot;Connection terminated without SSL shutdown - buggy client?&quot;

@@ -1,0 +1,4 @@
+bioaster_test:
+    resource: &quot;@BioasterTestBundle/Controller/&quot;
+    type:     annotation
+    prefix:   /

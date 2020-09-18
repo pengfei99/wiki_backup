@@ -1,0 +1,3 @@
+broker.id=2
+listeners = PLAINTEXT://your.host.name:9094
+log.dir=/tmp/kafka-logs-2

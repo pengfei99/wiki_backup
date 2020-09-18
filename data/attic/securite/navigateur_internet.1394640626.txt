@@ -1,0 +1,23 @@
+====== Configuration d'un navigateur internet ======
+
+Pour pouvoir configurer votre navigateur internet il faut avoir en votre possession un [[securite/obtenir_un_certificat|certificat]] (ainsi que la clé privée associée) au format **PKSC12**. 
+
+===== Microsoft® Internet Explorer® =====
+
+Les magasins de certificats étant communs aux produits Microsoft®, les certificats sont déjà disponibles si ils ont été [[securite/client_courriel|installés dans Microsoft® Outook®]].
+
+Dans le cas contraire, après avoir ouvert la fenêtre de paramètre d'Internet Explorer®, aller dans l'onglet ''Contenu'' et cliquer sur le bouton ''Certificats''. Dans l'onglet ''Personnel'' de la nouvelle fenêtre, cliquer sur ''Importer...'' et suivre les instructions de l'assistant.
+
+{{securite/internet_explorer_certif-1.png?direct&400|}}
+
+===== Mozilla Firefox =====
+
+Dans le menu ''Firefox'' sélectionner ''Options''. Dans la nouvelle fenêtre cliquer sur ''Avancé'' puis dans l'onglet ''Certificats'' cliquer sur ''Afficher les certificats''.
+
+Une fois le ''Gestionnaire de certificat'' ouvert, aller dans l'onglet ''Vos certificats'' et cliquer sur ''Importer''.
+
+{{securite/firefox_certif-1.png?direct&400|}}
+
+Saisir la phrase de passe. Le certificat est prêt à être utilisé.
+
+**Attention :** Il y a un bug dans la gestion des certificats (Firefox 27.0.1/Windows) qui apparaissent si plusieurs certificats personnels sont installés en même temps.

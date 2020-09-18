@@ -1,0 +1,6 @@
+bazinga_faker:
+    seed:       1234
+    locale:     fr_FR
+    entities:
+        AppBundle\Model\User:
+            number: 5

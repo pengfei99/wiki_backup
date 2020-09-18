@@ -1,0 +1,65 @@
+====== Flume agent with netcat source, logger sink ======
+
+In this tutorial, we explain how you can generate events via a network port and subsequently log them into the console. For this, we are using the NetCat source and the logger sink.
+
+===== Source =====
+
+NetCat Source listens to the given port and receives each line we entered in that port as an individual event and transfers it to the sink through the specified channel.
+
+While configuring this source, you have to provide values to the following properties −
+
+  * **channels**
+  * **Source type**: netcat
+  * **bind**: Hostname or IP address to bind.
+  * **port**: Port number to which we want the source to listen.
+
+===== Sink =====
+
+Logger Sink logs all the events passed to it. Generally, it is used for testing or debugging purpose. To configure this sink, you must provide the following details:
+
+  * **Channel**
+  * **type**: logger
+
+===== Flume agent conf =====
+
+<code>
+############ agent ######################
+NetcatAgent.sources = Netcat
+NetcatAgent.channels = MemChannel
+NetcatAgent.sinks = LoggerSink
+
+###################### source ######################## 
+NetcatAgent.sources.Netcat.type = netcat
+NetcatAgent.sources.Netcat.bind = localhost
+NetcatAgent.sources.Netcat.port = 56565
+
+#################### sink ######################### 
+NetcatAgent.sinks.LoggerSink.type = logger
+
+################### channel ######################## 
+NetcatAgent.channels.MemChannel.type = memory
+NetcatAgent.channels.MemChannel.capacity = 1000
+NetcatAgent.channels.MemChannel.transactionCapacity = 100
+
+### Bind the source and sink to the channel ###
+NetcatAgent.sources.Netcat.channels = MemChannel
+NetcatAgent.sinks.LoggerSink.channel = MemChannel
+
+</code>
+
+===== Execution =====
+
+==== Run the flume agent ====
+
+<code>
+flume-ng agent -f netcat-log-agent.conf -n NetcatAgent -Dflume.root.logger=INFO,console
+</code>
+
+==== Passing Data to the source ====
+
+The following command will open a connexion to localhost on port 8888. After the connexion is established, type anything then enter, the text which you entered will be received by the flume netcat source. You should also see them in the flume logger console
+<code>
+curl telnet://localhost:8888
+</code>
+
+

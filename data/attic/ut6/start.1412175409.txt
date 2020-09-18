@@ -1,0 +1,101 @@
+====== Plateau Technique no 6 ======
+
+  * Les [[in2p3/logiciels|logiciels disponibles]] sur la [[in2p3/scheduler|ferme]] et le [[in2p3/cloud|nuage]] du [[in2p3|Centre de Calcul de l'IN2P3]] ;
+  * Le réseaux et les machines virtuelles disponibles sur le //[[/ordinateurs/mini_serveur|mini serveur]]// de Paris, sur les [[/pt6/vmware|VMware]] du CC et sur l'[[/pt6/openstack|OpenStack]] du CC ;
+  * Le [[wiki|wiki]] des équipes système.
+  * Les [[/pt6/reunions/|réunions d'équipe]]
+
+{{tag>todo}}
+
+====== Répartition des activités au PT6 ======
+
+<WRAP info>
+**Note 1 :** Ces tables reflètent les activités du PT6 à l'instant présent et va évoluer au cours du temps.\\		
+**Note 2 :** La colonne "qui s'en charge" désigne les personnes s'occupant de la tâche au quotidien et de façon opérationnelle.\\		
+**Note 3 :** La colonne "avec qui d'autres" désigne les personnes assistant les personnes en charge de façon opérationnelle ou les organisateurs.\\		
+**Note 4 :** Les priorités sont codées de 1 (hautement prioritaire) à 5 (faiblement prioritaire)\\
+**Note 5 :** Si vous êtes du PT6 ou assimilé, vous avez le droit de modifier cette page\\
+</WRAP>
+===== Administration et accès aux ressources =====
+
+^OpenStack et ressources à la demande                  ^Site          ^Qui s'en charge?        ^Avec qui d'autres?  ^Priorité (1 - 5)    ^Avancement    ^
+| Accounting par tenant et utilisateur (Ceil-o-metter) | CCIN2P3      | PV                      | CCIN2P3           |1                   |Attente du retour de Mattieu Puel              |
+| Implémentation des groupes d'utilisateur             | CCIN2P3      | PV+CCIN2P3              | JG                |2                   |L'actuelle config du CC ne le permet pas, peut être au prochain update de la plateforme ...              |
+| Configuration réseau d'OpenStack                     | CCIN2P3      | CCIN2P3                 | PV+JG             |1                   |Attente du retour de J Bernier du CC              |
+| Wrapper Sysfera + Espace de test OpenStack           | CCIN2P3      | NS                      | PV+JG             |3                   |              |
+| Création d'image sous OpenStack                      | CCIN2P3      | PV+TLC                  | JG+CCIN2P3        |4                   |              |
+| Procédure de demande de ressource                    | BIOASTER     | PV+TLC+JG               | NS                |3                   |              |
+| Déploiement d'appliance/service                      | CCIN2P3      | TLC                     | PV                |3                   |              |
+| Support utilisateur + Doc                            | CCIN2P3      | NS+TLC+PV               | JG                |2                   |              | 
+| Opération d'OpenStack                                | CCIN2P3      | CCIN2P3                 | PV+JG             |2                   |              |
+| Montage d'AFS et de GPFS sur les VM                  | CCIN2P3      | JC+PV+CCIN2P3           | -                 |1                   |              |
+| Compilation d'applications                           | CCIN2P3      | TLC                     | NS                |3                   | Pas de demande. Organisation des binaires satisfaisantes ?|
+| Implémentation de workflow sur la ferme              | CCIN2P3      | TLC (?)                 | -                 |3                   | Pas de demande|
+===== Bonnes pratiques =====
+
+^Méthode et bonne pratique de développement            ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Déploiement d'une forge                              | CCIN2P3      | PV                      | AC+TLC+CD         |1                   |Demande par mail envoyée au CC le 24/09. Ok => https://forge.in2p3.fr/projects/bioaster |
+| Versionnage du code (bzr ou Github)                  | BIOASTER     | TLC+PV                  | Tous les bio-info |1                   |Utilisation de l'espace afs bioaster au cc pour stocker les repositories               |
+| Documentation et catalogue des développements         | BIOASTER     | TLC+PV                  | Tous les bio-info |3                   |              |
+| Coding style et bonne pratique de codage             | BIOASTER     | TLC+PV                  | Tous les bio-info |4                   |              |
+| Outils de connexions à distance                      | BIOASTER     | ???                     | Tous les bio-info |5                   |              |
+
+===== Suivi des échantillons et collection des données expérimentales =====
+
+^Suivie d'échantillon, LIMS et eCRF                    ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Suivi  d'échantillon avec miniLIMSPT2+PT3            | BIOASTER     | AC+CD             | NS+CG+ME+PV          |1                   | Lab meeting 17/09             |
+| eCRF                                                 | BIOASTER     | PV+KL+BR                | NS+CG             |1                   |Réunion à Paris le 2/10              |
+| LIMS                                                 | BIOASTER     | AC+BR+PV                | NS+CG+ME          |3                   |              |
+| Cahier de labo électronique                          | BIOASTER     | ME                      | NS+CG             |3                   |              |
+
+===== Intégration et analyse des données =====
+
+^Workflows d'analyse et data warehouse                 ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Compilation et suivi des logiciels de bio-info       | CCINP23      | TLC                     | NS                |2                   |              |
+| Suivi, intégration et gestion des workflows          | BIOASTER     | PV                      | NS+AC             |2                   |              |
+| Use case iRODS/PT2                                   | CCIN2P3      | PV+TLC                  | NS+AC             |1                   |Réunion avec Lilia le 6/10              |
+| Use case Midas/PT2                                   | CCIN2P3      | NS                      | PV+TLC+AC         |1                   |Réunion avec Lilia le 6/10              |
+
+^Services d'analyse et de visualisation                ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Use case tranSMART                                   | CCIN2P3      | NS+TLC                  | AC+CCIN2P3        |1                   |              |
+| wwwblast                                             | CCIN2P3      | TLC                     | NS+PV+JG          |3                   |              |
+| bioMaJ                                               | CCIN2P3      | TLC+AC                  | NS+PV+JG          |4                   |              |
+| Galaxy                                               | CCIN2P3      | TLC                     | ???               |5                   |              |
+| Mobyle                                               | CCIN2P3      | TLC                     | Pasteur           |4                   |              |
+====== Socle informatique ======
+
+===== Déploiement et configuration de machines =====
+
+^Activité                                           ^site          ^Qui s'en charge?         ^avec qui d'autres? ^Priorité (1 - 5)   ^Avancement ^
+| Suivi et intégration des stations d'acquisition   |Paris+Lyon    | JG (Lyon) + TLC (Paris) | MR                | 3 (à débattre)    |           |
+| Configuration de l'infrastructure VMware          |Paris+Lyon+CC | JG                      | MR+TLC            | 1                 |           |
+| Création d'image sous VMware                      |Paris+Lyon+CC | JG                      | MR+TLC            | 3                 |           |
+| Création de VM sous VMware                        |Paris+Lyon+CC | JG+TLC                  | MR                | 1                 |           |
+| Mise en place des certificats                     |BIOASTER      | JG+MR                   | Deuzzi (?)        | 2                 |           |
+| Configuration et opération du réseau              |Paris+Lyon    | MR                      | TLC+JG            | 1                 |           |
+| Configuration et opération du réseau              |CC            | CCIN2P3                 | JG                | 1                 |           |
+
+===== Déploiement et configuration de services =====
+
+^Activité                                           ^site          ^Qui s'en charge?         ^avec qui d'autres? ^Priorité (1 - 5)   ^Avancement ^
+| Déploiement de Jabber                             |Lyon          | JG+MR                   | LC                | 2                 |           |
+| Déploiement du Wiki                               |Lyon          | JG+MR+TLC               | NS                | 4                 |           |
+| Opération des espaces de stockage                 |Lyon+CC       | JG                      | MR                | 1                 |           |
+
+
+
+===== Support aux utilisateurs =====
+
+^Activité                                           ^site          ^Qui s'en charge?         ^avec qui d'autres? ^Priorité (1 - 5)   ^Avancement ^
+| Support utilisateur sous Windows                  |Paris+Lyon    | Deuzzi                  | MR                | 4                 |           |
+| Support utilisateur sous Windows                  |CC            | JG                      | -                 | 4                 |           |
+| Support utilisateur sous GNU/Linux                |Paris+Lyon    | TLC+JG                  | -                 | 4                 |           |
+| Support utilisateur sous GNU/Linux                |CC            | JG                      | -                 | 4                 |           |
+
+===== Coordination et organisation =====
+^Activité                                           ^site          ^Qui s'en charge?         ^avec qui d'autres? ^Priorité (1 - 5)   ^Avancement ^
+| Convention d'hébergement au CC-IN2P3              |CC            | JG                      | NS                | 1                |En attente d'une réponse officielle de BD|
+| Convention d'hébergement à l'Institut Pasteur     |Paris         | TLC                     | MR+JG+NS          | 1                |En attente d'une réponse officielle de MP|
+| Coordination avec le CC                           |CC            | NS+JG+PV                | -                 | 1                |Relancer le CC pour l'achat des serveurs OpenStack|
+| Définition des besoins des projets                |BIOASTER      | NS                      | -                 | 4                |PT2 autonome sur la définition de ses besoins... Nouvelle fiche tarifaire en prépration|
+| Gestion des demandes de ressources                |BIOASTER      | OTRS (?)                | NS+JG+TLC         | 2                |File BIOASTER créée dans OTRS. Il faut expliquer le fonctionnement aux utilisateurs|

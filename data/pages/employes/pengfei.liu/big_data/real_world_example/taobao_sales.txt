@@ -1,0 +1,413 @@
+======Use Big data techs to analyze taobao sales  ======
+
+The data set that I use can be downloaded from here https://pan.baidu.com/s/1cs02Nc .
+
+In the data_format.zip, we have 3 files:
+  * user_log.csv -> it logs the actions of users.
+  * train.csv -> fidel client (client use taobao many times) training data set
+  * test.csv -> fidel client (client use taobao many times) testing data set
+
+===== Data set description =====
+
+<file csv user_log.csv>
+user_id,item_id,cat_id,merchant_id,brand_id,month,day,action,age_range,gender,province
+328862,323294,833,2882,2661,08,29,0,0,1,GuangDong
+328862,844400,1271,2882,2661,08,29,0,1,1,Xian
+328862,575153,1271,2882,2661,08,29,0,2,1,JiangSu
+328862,996875,1271,2882,2661,08,29,0,1,1,LiaoNing
+328862,1086186,1271,1253,1049,08,29,0,0,2,Taiwan
+</file>
+
+<file csv train.csv>
+user_id,age_range,gender,merchant_id,label
+34176,6,0,944,-1
+34176,6,0,412,-1
+34176,6,0,1945,-1
+34176,6,0,4752,-1
+34176,6,0,643,-1
+34176,6,0,2828,-1
+
+</file>
+==== User_log.csv ====
+
+^user_id^item_id^cat_id^merchant_id^brand_id^month^day^action^age_range^gender^province^
+|Id of buyer|Id of product|Id of product categories|Id of seller |Id of brand|transaction date in month|transaction date in day|Behavior of buyer, 0 means click on link, 1 means add to shopping chart, 2 means buy product, 3 means keep an eye on product|Age range: 1-> [0,18], 2-> [18,24], 3-> [25,29], 4->[30,34], 5->[35,39], 6->[40,49], 7->[50,200], 8->[Null]|Gender of the buyer 0->femal, 1->male, 2->NULL|Province Name of the buyer |
+==== train.csv and test.csv ====
+^user_id^age_range^gender^merchant_id^label^
+|Id of buyer|Age range: 1-> [0,18], 2-> [18,24], 3-> [25,29], 4->[30,34], 5->[35,39], 6->[40,49], 7->[50,200], 8->[Null]|Gender of the buyer 0->femal, 1->male, 2->NULL|Id of seller | This label means will this client use taobao again. 1->yes, 0->No, -1->not considered, Null->only exists in test.csv|  
+
+
+===== Import data to hive =====
+
+To make this tutorial, we will only load the small_user_log.csv into hive.
+
+Follow this link if you don't have hive installed. [[employes:pengfei.liu:big_data:hive:install_config|Install and configure Hive]]
+
+
+First tload the data into hdfs
+
+<code>
+#load from local file system to hdfs 
+hdfs dfs -put small_user_log.csv /test_data/
+#check the file
+[hadoop@localhost taobao_data_set]$ hdfs dfs -ls /test_data
+-rw-r--r--   1 hadoop supergroup     473395 2018-02-14 14:14 /test_data/small_user_log.csv
+</code>
+
+In hive, we create a external table. Please see this, the difference between internal and external hive table.[[employes:pengfei.liu:big_data:hive:internal_external_table|Hive Internal and External tables]]
+
+<code>
+hive>  CREATE EXTERNAL TABLE dbtaobao.user_log(user_id INT,item_id INT,cat_id INT,merchant_id INT,brand_id INT,month STRING,day STRING,action INT,age_range INT,gender INT,province STRING) COMMENT 'store taobao user action log in table dbtaobao.user_log!' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/dbtaobao/dataset/user_log';
+</code>
+
+Test the table content 
+
+<code>
+hive> select * from user_log limit 10;
+OK
+328862	406349	1280	2700	5476	11	11	0	0	1	ShiChuan
+328862	406349	1280	2700	5476	11	11	0	7	1	ChongQing
+328862	807126	1181	1963	6109	11	11	0	1	0	ShangHai
+328862	406349	1280	2700	5476	11	11	2	6	0	Taiwan
+328862	406349	1280	2700	5476	11	11	0	6	2	GanShu
+
+</code>
+
+Get column name and type list
+<code>
+hive> desc user_log;
+OK
+user_id             	int                 	                    
+item_id             	int                 	                    
+cat_id              	int                 	                    
+merchant_id         	int                 	                    
+brand_id            	int                 	                    
+month               	string              	                    
+day                 	string              	                    
+action              	int                 	                    
+age_range           	int                 	                    
+gender              	int                 	                    
+province            	string              	                    
+Time taken: 0.142 seconds, Fetched: 11 row(s)
+</code>
+
+Check table information with details;
+
+<code>
+hive> show create table user_log;
+OK
+CREATE EXTERNAL TABLE `user_log`(
+  `user_id` int, 
+  `item_id` int, 
+  `cat_id` int, 
+  `merchant_id` int, 
+  `brand_id` int, 
+  `month` string, 
+  `day` string, 
+  `action` int, 
+  `age_range` int, 
+  `gender` int, 
+  `province` string)
+COMMENT 'store taobao user action log in table dbtaobao.user_log!'
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+WITH SERDEPROPERTIES ( 
+  'field.delim'=',', 
+  'serialization.format'=',') 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://localhost:9000/dbtaobao/dataset/user_log'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1518623485')
+Time taken: 0.242 seconds, Fetched: 26 row(s)
+
+</code>
+
+As hive runs on top of map reduce, all the sql job will be transform to mapreduce job
+
+
+<code>
+# count all the lines in table user_log
+hive> select count(*) from user_log;
+
+# count distinct user 
+hive> select count(distinct user_id) from user_log;
+
+# get the province which has most users
+hive> select count(user_id) as num, province from user_log group by province order by num desc limit 10;
+
+
+# eliminate duplicate user orders
+# we could say two user orders are the same, if the following attributes (user_id, item_id, cat_id, merchant_id, brand_id, month, day, action) of two orders are the same
+# the following sql query distinc orders
+hive> select count(*) from (select user_id,item_id,cat_id,merchant_id,brand_id,month,day,action from user_log group by user_id,item_id,cat_id,merchant_id,brand_id,month,day,action having count(*)=1)a;
+
+#check how many people buy an item at 11/11.
+hive> select count(distinct user_id) from user_log where action='2';
+
+# get the female buyer numbers
+hive> select count(distinct user_id) from user_log where action='2' and gender=0;
+
+# get the product numbers which male buyer bought
+hive> select count(*) from user_log where gender=1 and action='2';
+
+# get user id of users which have bought more than 5 products
+hive> select user_id from user_log where action='2' group by user_id having count(action='2')>5;
+
+# get the top 5 buyer
+hive> select user_id, count(action='2') as buy_num from user_log where action='2' group by user_id order by buy_num desc limit 5;
+
+
+
+</code>
+
+WE can also create new table based on the existing table
+
+<code>
+# create a table with 2 columns
+hive> create table scan(brand_id INT,scan INT) COMMENT 'This is the search of bigdatataobao' ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+OK
+Time taken: 0.272 seconds
+
+# load data of brand visite number
+hive> insert overwrite table scan select brand_id,count(action) from user_log where action='2' group by brand_id;
+
+# check new table
+hive> select * from scan limit 5;
+OK
+NULL	8
+60	3
+69	1
+82	11
+99	3
+
+</code>
+
+===== Export data from hive to sql database =====
+
+In this tutorial, we will export a hive table into a postgreql database. We will use login pliu to connect to the postgresql server.
+
+==== Prepare postgreql ====
+
+<code>
+#run the postgresql server and login as postgres (root)
+
+postgres=# create database dbtaobao;
+CREATE DATABASE
+postgres=# grant all privileges on database dbtaobao to pliu;
+GRANT
+
+[pliu@localhost tmp]$ psql -h 127.0.0.1 -p 5432 -U pliu -d dbtaobao
+Password for user pliu: 
+psql (9.5.11)
+Type "help" for help.
+
+dbtaobao=> CREATE TABLE user_log (user_id varchar(20),item_id varchar(20),cat_id varchar(20),merchant_id varchar(20),brand_id varchar(20), month varchar(6),day varchar(6),action varchar(6),age_range varchar(6),gender varchar(6),province varchar(10));
+
+dbtaobao=> \dt
+         List of relations
+ Schema |   Name   | Type  | Owner 
+--------+----------+-------+-------
+ public | user_log | table | pliu
+(1 row)
+
+</code>
+
+==== Prepare hive table for export ====
+
+Sqoop does not support import export of hive external tables. So we need to create an interal hive table to make sqoop export works.
+
+<code>
+# create a hive internal table
+hive> create table dbtaobao.inner_user_log(user_id INT,item_id INT,cat_id INT,merchant_id INT,brand_id INT,month STRING,day STRING,action INT,age_range INT,gender INT,province STRING) COMMENT 'Now create inner table inner_user_log' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+# Use sqoop to export hive to 
+cd /opt/sqoop/sqoop-1.4.6/bin
+./sqoop export --connect jdbc:postgresql://127.0.0.1:5432/dbtaobao --username pliu --password changeMe --table user_log --export-dir '/user/hive/warehouse/dbtaobao.db/inner_user_log' --fields-terminated-by ',';
+
+# last two lines of the output, we export 10000 records to postgreql
+18/02/19 11:44:26 INFO mapreduce.ExportJobBase: Transferred 479.0508 KB in 52.9949 seconds (9.0396 KB/sec)
+18/02/19 11:44:26 INFO mapreduce.ExportJobBase: Exported 10000 records.
+</code>
+
+Sqoop command explained :
+
+
+<code>
+# postgresql part: 
+# connect to database dbtaobao table user_log with user name pliu and password
+--connect jdbc:postgresql://127.0.0.1:5432/dbtaobao --username pliu --password changeMe --table user_log 
+
+# hive part:
+# give the path of hive table file
+--export-dir '/user/hive/warehouse/dbtaobao.db/inner_user_log' 
+
+# hive table file separator
+--fields-terminated-by ','
+</code>
+
+===== Use spark to analyze this data set  =====
+
+We will redo the data analytics which we do in hive, but this time we do it in spark.
+
+==== Import data to spark ====
+
+As we export the data into postgresql server, in the following example. we will import data from the csv file and postgresql server.
+
+
+
+<file xml pom.xml>
+<properties>
+        <spark.version>2.2.0</spark.version>
+        <scala.version>2.11</scala.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+</properties>
+
+<dependencies>
+<dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.version}</artifactId>
+            <version>${spark.version}</version>
+</dependency>
+
+<dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.version}</artifactId>
+            <version>${spark.version}</version>
+</dependency>
+
+<dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4-1200-jdbc41</version>
+</dependency>
+</dependencies>
+</file>
+
+The following scala script read data from csv or postgresql db and transform it into a dataframe, then write dataframe in a parquet file.   
+
+
+<file scala TaobaoSales.scala>
+package org.pengfei.spark.application.example
+
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+object TaobaoSales {
+
+def main(args:Array[String]): Unit ={
+  Logger.getLogger("org").setLevel(Level.OFF)
+  Logger.getLogger("akka").setLevel(Level.OFF)
+
+  val spark = SparkSession.builder().
+    master("local").
+    appName("TaobaoSales").
+    getOrCreate()
+
+  val userLogDF=getDFFromDB(spark)
+  /*val filePath="file:///DATA/data_set/spark/taobao_data_set/small_user_log.csv"
+  val userLogDF=getDFFromCSV(spark,filePath)*/
+  //userLogDF.show(5)
+  userLogDF.write.format("parquet").save("file:///tmp/taobao.parquet")
+  
+}
+
+  def getDFFromDB(spark : SparkSession): DataFrame ={
+    val userLogDF=spark.read.format("jdbc").option("url", "jdbc:postgresql://127.0.0.1:5432/dbtaobao").option("driver","org.postgresql.Driver").option("dbtable", "user_log").option("user", "pliu").option("password", "Liua1983").load()
+    return userLogDF
+  }
+
+  def getDFFromCSV(spark:SparkSession,filePath:String):DataFrame ={
+    val userLogSchema = StructType(Array(
+      StructField("user_id",IntegerType,true),
+      StructField("item_id",IntegerType,true),
+      StructField("cat_id",IntegerType,true),
+      StructField("merchant_id",IntegerType,true),
+      StructField("brand_id",IntegerType,true),
+      StructField("month",StringType,true),
+      StructField("day",StringType,true),
+      StructField("action",IntegerType,true),
+      StructField("age_range",IntegerType,true),
+      StructField("gender",IntegerType,true),
+      StructField("province",StringType,true)
+    ))
+    val userLogDF= spark.read.format("csv").option("header","false").schema(userLogSchema).load(filePath)
+    return userLogDF
+  }
+
+}
+
+</file>
+
+For analytic, we use spark shell to read the parquet file
+
+<code>
+scala> val df=spark.read.parquet("file:///tmp/taobao.parquet")
+df: org.apache.spark.sql.DataFrame = [user_id: string, item_id: string ... 9 more fields]
+
+scala> df.show(5)
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+
+|user_id|item_id|cat_id|merchant_id|brand_id|month|day|action|age_range|gender|province|
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+
+| 188983| 678722|     4|        231|    6065|   11| 11|     0|        6|     0|      四川|
+| 188983| 980237|  1023|       1595|    5800|   11| 11|     0|        0|     0|      河南|
+| 188983|1024557|   868|        184|    1360|   11| 11|     0|        2|     2|      江苏|
+| 188983|   3195|   868|       2786|    1360|   11| 11|     0|        7|     0|      四川|
+| 188983| 280132|   407|       1595|    5800|   11| 11|     0|        3|     2|      澳门|
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+
+</code> 
+
+In the following script, we redo all the analytic which 
+
+<code>
+# count the number of all records 
+df.count
+
+# count distinct user 
+scala> df.select($"user_id").distinct.count
+res5: Long = 358
+
+# get the province which has most users
+scala> df.groupBy($"province").count().sort(desc("count"))show(5)
+
+
+# eliminate duplicate user orders
+# we could say two user orders are the same, if the following attributes (user_id, item_id, cat_id, 
+# merchant_id, brand_id, month, day, action) of two orders are the same
+# the following sql query distinc orders
+
+hive> select count(*) from (select user_id,item_id,cat_id,merchant_id,brand_id,month,day,action from user_log group by user_id,item_id,cat_id,merchant_id,brand_id,month,day,action having count(*)=1)a;
+
+#check how many people buy an item at 11/11.
+scala> df.filter($"action"==="2").select($"user_id").distinct().count
+res11: Long = 358   
+
+# get the female buyer numbers
+scala> df.filter($"action"==="2"&& $"gender"===2).select($"user_id").distinct().count
+res12: Long = 228 
+
+# get the product numbers which male buyer bought
+scala> df.filter($"action"==="2"&& $"gender"===1).select($"item_id").count
+res13: Long = 401
+
+# get user id of users which have bought more than 5 products
+scala> df.filter($"action"==="2").groupBy($"user_id").agg(count($"action") as "num").where($"num" > 5).sort(desc("num"))
++-------+---+                                                                   
+|user_id|num|
++-------+---+
+| 409280| 20|
+| 366342| 17|
+|  70816| 16|
+| 370679| 16|
+| 310632| 15|
++-------+---+
+
+
+# get the top 5 buyer, this request is similar to the privious one, we just remove the where and add show top 5
+scala> df.filter($"action"==="2").groupBy($"user_id").agg(count($"action") as "num").sort(desc("num")).show(5)
+</code>

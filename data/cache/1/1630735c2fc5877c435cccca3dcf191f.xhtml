@@ -1,0 +1,246 @@
+
+<h1 class="sectionedit1" id="infos_utiles_concernant_les_reseaux">Infos utiles concernant les réseaux</h1>
+<div class="level1">
+
+<p>
+&lt;WRAP left round todo 40%&gt;
+TODO : PV ⇒ remplir au mieux et faire valider/compléter par AC AB MR
+&lt;/WRAP&gt;
+&lt;WRAP clear&gt;&lt;/WRAP&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Infos utiles concernant les r\u00e9seaux&quot;,&quot;hid&quot;:&quot;infos_utiles_concernant_les_reseaux&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-180&quot;} -->
+<h2 class="sectionedit2" id="les_vlans_et_les_plages_d_ips">LES VLANS et les plages d&#039;IPs</h2>
+<div class="level2">
+
+<p>
+N° 1 à 9 ⇒ Serveur (scientifique &amp; bureautique)
+</p>
+
+<p>
+N° 10 à 19 ⇒ Bureautique
+</p>
+
+<p>
+N° 20 à 29 ⇒ Scientifique (étendu à 200 …)
+</p>
+
+<p>
+N° 30 à 39 ⇒ Partenaire
+</p>
+
+<p>
+N° 40 à 49 ⇒ DMZ (ouvert extérieur)
+</p>
+
+<p>
+N° 50 à 59 ⇒ Interconnexion
+</p>
+
+<p>
+Les vlans métiers sont notamment découpés par UTECs :
+</p>
+<ul>
+<li class="level1"><div class="li"> 10.69.21.0/26 VLAN 211 B1-Scientific-UTEC01	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.22.0/26 VLAN 221 B1-Scientific-UTEC02	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.23.0/26 VLAN 231 B1-Scientific-UTEC03	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.24.0/26 VLAN 241 B1-Scientific-UTEC04	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.25.0/26 VLAN 251 B1-Scientific-UTEC05	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.26.0/26 VLAN 261 B1-Scientific-UTEC06	64 ips</div>
+</li>
+<li class="level1"><div class="li"> 10.69.27.0/26 VLAN 271 B1-Scientific-UTEC07 64 ips</div>
+</li>
+</ul>
+
+<p>
+Les vlans sont déclarés dans Racktables (<a href="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" class="urlextern" title="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" rel="nofollow">http://racktables.bioaster.local/racktables/index.php?page=ipv4space</a> le login/mdp sont dans le keepass).
+</p>
+
+<p>
+Le système de numérotation des VLANs@B1 est dupliqué au VLANs@CC.
+</p>
+
+<p>
+Les plages IPs@B1 sont en 10.69.n°vlan…
+</p>
+
+<p>
+Les plages IPs@CC sont en 10.70.n°vlan…
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LES VLANS et les plages d&#039;IPs&quot;,&quot;hid&quot;:&quot;les_vlans_et_les_plages_d_ips&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;181-1212&quot;} -->
+<h3 class="sectionedit3" id="les_passerelles">Les passerelles</h3>
+<div class="level3">
+
+<p>
+Pour chaque VLAN, la passerelle à utiliser est 10.69.N°vlan.<strong>1</strong> (VLANs B1) et 10.70.N°vlan.<strong>1</strong> (VLANs CC).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les passerelles&quot;,&quot;hid&quot;:&quot;les_passerelles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1213-1356&quot;} -->
+<h3 class="sectionedit4" id="les_serveurs_dns_a_b1">Les serveurs DNS à B1</h3>
+<div class="level3">
+
+<p>
+<strong>Acuels : </strong>
+</p>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> 1 : 10.69.1.31
+</p>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> 1 : 10.69.1.32
+</p>
+
+<p>
+<strong>Futurs : </strong>
+</p>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> 1 : 10.69.2.21
+</p>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> 1 : 10.69.2.22
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les serveurs DNS \u00e0 B1&quot;,&quot;hid&quot;:&quot;les_serveurs_dns_a_b1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1357-1501&quot;} -->
+<h3 class="sectionedit5" id="les_serveurs_dns_cc">Les serveurs DNS @CC</h3>
+<div class="level3">
+
+<p>
+<strong>Acuels : </strong>
+</p>
+
+<p>
+Primaire : 10.70.2.21
+</p>
+
+<p>
+Secondaire : 10.69.2.22
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les serveurs DNS @CC&quot;,&quot;hid&quot;:&quot;les_serveurs_dns_cc&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1502-1597&quot;} -->
+<h3 class="sectionedit6" id="serveur_smtp">Serveur SMTP</h3>
+<div class="level3">
+
+<p>
+Le serveur permet à nos machines d&#039;envoyer des e-mails. Il peut être utilisé comme relais depuis les lan 10.69.0.0/16 , 10.70.0.0/16, 134.158.36.0/24 ainsi que le 134.158.37.0/24.
+</p>
+
+<p>
+<strong>Nom d&#039;hôte : </strong> smtp.bioaster.org<br/>
+<strong>Adresse IP : </strong> 10.69.2.250<br/>
+<strong>Port : </strong> 25<br/>
+<strong>Authentification : </strong> Aucune
+</p>
+
+<p>
+Les mails à destination de @bioaster sont redirigés vers srvmail.bioaster.local. Le relais externe est configuré sur smtp.completel.fr.
+</p>
+
+<p>
+<strong>Actuellement</strong>, pour résoudre smtp.bioaster.org, il faut que les <abbr title="Domain Name System">DNS</abbr> des VM soient sur 10.69.1.31 et 10.69.1.32 mais ces <abbr title="Domain Name System">DNS</abbr> vont bientôt changer (voir ci-dessus)
+</p>
+
+<p>
+<strong>Réseaux autorisés à envoyer des mails sur ce serveur</strong> : 10.70.0.0/16 10.69.0.0/16 134.158.36.0/24 134.158.37.0/24
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Serveur SMTP&quot;,&quot;hid&quot;:&quot;serveur_smtp&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1598-2354&quot;} -->
+<h3 class="sectionedit7" id="le_filtrage">Le filtrage</h3>
+<div class="level3">
+
+<p>
+Filtrage vers l&#039;extérieur : un seul point de filtrage ⇒ le firewall
+</p>
+
+<p>
+Ports ouverts par défaut http(s), ssh, ftp, icmp (minimum vital)
+</p>
+
+<p>
+Le paramétrage du filtrage se fait via le logiciel <a href="http://www.cisco.com/c/en/us/products/security/adaptive-security-device-manager/index.html?referring_site=smartnavRD" class="urlextern" title="http://www.cisco.com/c/en/us/products/security/adaptive-security-device-manager/index.html?referring_site=smartnavRD" rel="nofollow"> ASDM Cisco</a> depuis la machine wadmin.bioaster.local. L&#039;adresse d&#039;accès au firewall est 10.69.50.2:4443, le compte à utiliser est admin.
+</p>
+
+<p>
+<strong>Versions utilisées : </strong>
+</p>
+
+<p>
+ASDM Launcher 1.7
+</p>
+
+<p>
+Modèle ASA : 5515
+</p>
+
+<p>
+ASA v9.4 et ADSM 7.6 : documentation ⇒ <a href="http://www.cisco.com/c/en/us/td/docs/security/asa/roadmap/asaroadmap.html#pgfId-126642" class="urlextern" title="http://www.cisco.com/c/en/us/td/docs/security/asa/roadmap/asaroadmap.html#pgfId-126642" rel="nofollow">http://www.cisco.com/c/en/us/td/docs/security/asa/roadmap/asaroadmap.html#pgfId-126642</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Le filtrage&quot;,&quot;hid&quot;:&quot;le_filtrage&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2355-3026&quot;} -->
+<h3 class="sectionedit8" id="le_monitoring">Le monitoring</h3>
+<div class="level3">
+
+<p>
+??
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Le monitoring&quot;,&quot;hid&quot;:&quot;le_monitoring&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;3027-3058&quot;} -->
+<h2 class="sectionedit9" id="openstack">OPENSTACK</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OPENSTACK&quot;,&quot;hid&quot;:&quot;openstack&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;3059-3080&quot;} -->
+<h3 class="sectionedit10" id="les_plages_d_ips">Les plages d&#039;IPs</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les plages d&#039;IPs&quot;,&quot;hid&quot;:&quot;les_plages_d_ips&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;3081-3109&quot;} -->
+<h3 class="sectionedit11" id="les_passerelles1">Les passerelles</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les passerelles&quot;,&quot;hid&quot;:&quot;les_passerelles1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;3110-3138&quot;} -->
+<h3 class="sectionedit12" id="les_serveurs_dns">Les serveurs DNS</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les serveurs DNS&quot;,&quot;hid&quot;:&quot;les_serveurs_dns&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;3139-3168&quot;} -->
+<h3 class="sectionedit13" id="serveur_smtp1">Serveur SMTP</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Serveur SMTP&quot;,&quot;hid&quot;:&quot;serveur_smtp1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;3169-3194&quot;} -->
+<h3 class="sectionedit14" id="le_filtrage1">Le filtrage</h3>
+<div class="level3">
+
+<p>
+Le filtrage réseau est géré par le service telecom du CC. Pour une ouverture/fermeture de port il faut soit ouvrir un ticket OTRS soit envoyer un mail à <a href="mailto:&#x74;&#x65;&#x6c;&#x65;&#x63;&#x6f;&#x6d;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;" class="mail" title="&#x74;&#x65;&#x6c;&#x65;&#x63;&#x6f;&#x6d;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;">&#x74;&#x65;&#x6c;&#x65;&#x63;&#x6f;&#x6d;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;</a>
+</p>
+
+<p>
+Interface web pour consulter les ACLs réseau d&#039;une machine : <a href="https://cctools.in2p3.fr/netacls" class="urlextern" title="https://cctools.in2p3.fr/netacls" rel="nofollow">https://cctools.in2p3.fr/netacls</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Le filtrage&quot;,&quot;hid&quot;:&quot;le_filtrage1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:14,&quot;range&quot;:&quot;3195-3497&quot;} -->
+<h3 class="sectionedit15" id="le_monitoring1">Le monitoring</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Le monitoring&quot;,&quot;hid&quot;:&quot;le_monitoring1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:15,&quot;range&quot;:&quot;3498-&quot;} -->

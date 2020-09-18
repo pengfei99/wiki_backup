@@ -1,0 +1,106 @@
+====== Install WSO2_IS server ======
+
+===== 1. Pre-requis =====
+
+**1. Install oracle open jdk**
+
+To run WSO2_IS server, Jdk 1.7 or 1.8 is required. And the default openjdk is not recommended. So we need to install the oracle jdk 1.8 first.
+
+You can find how to install jdk here : https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_jdk
+
+**2. Run wso2-is as a linux daemon** 
+
+In /etc/init.d/, you need create a file wso2d
+
+''touch /etc/init.d/wso2d''
+
+''vim /etc/init.d/wso2d''
+
+And put the following code in it.
+
+<Code>
+#! /bin/sh
+
+export JAVA_HOME="/opt/jdk1.8.0_121"
+ 
+startcmd='/opt/wso2is-5.3.0/bin/wso2server.sh start > /var/log/wso2_is/server_status.log &'
+restartcmd='/opt/wso2is-5.3.0/bin/wso2server.sh restart > /var/log/wso2_is/server_status.log &'
+stopcmd='/opt/wso2is-5.3.0/bin/wso2server.sh stop > /var/log/wso2_is/server_status.log &'
+ 
+case "$1" in
+start)
+   echo "Starting WSO2 Application Server ..."
+   su -c "${startcmd}" 
+;;
+restart)
+   echo "Re-starting WSO2 Application Server ..."
+   su -c "${restartcmd}"
+;;
+stop)
+   echo "Stopping WSO2 Application Server ..."
+   su -c "${stopcmd}" 
+;;
+*)
+   echo "Usage: $0 {start|stop|restart}"
+exit 1
+esac
+
+</Code>
+
+''chmod 710 wso2d''
+
+Now you need to update the initd to load the wso2d
+
+''sudo update-rc.d wso2d defaults''
+
+The defaults option in the above command makes the service to start in runlevels 2,3,4 and 5 and to stop in runlevels 0,1 and 6.
+=====2. Deploye WSO2-IS en production =====
+
+1. Change default key store
+
+Please go here to see more details
+ https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/wso2_change_https_cert?&#copy_the_new_keystore_and_configure_wso2-is_to_use_the_new_keystore
+
+2. Change host name
+
+  - Open <IS_HOME>/repository/conf/carbon.xml file.
+  - The private key is used for the HTTPS channel and for the token issuer to sign the issued tokens. 
+
+The following section of the carbon.xml should be updated to match your private key information.
+
+<Code>
+<!--
+       Host name or IP address of the machine hosting this server
+       e.g. www.wso2.org, 192.168.1.10
+       This is will become part of the End Point Reference of the
+       services deployed on this server instance.
+    -->
+    <HostName>localhost</HostName>
+    <!--
+    Host name to be used for the Carbon management console
+    -->
+    <MgtHostName>localhost</MgtHostName>
+    <!--
+        The URL of the back end server. This is where the admin services are hosted and
+        will be used by the clients in the front end server.
+        This is required only for the Front-end server. This is used when seperating BE server from FE server
+       -->
+    <ServerURL>local:/${carbon.context}/services/</ServerURL>
+</Code>
+
+3. change http and https port
+
+Open <IS_HOME>/repository/conf/tomcat/catalina-server.xml file and change the HTTP and HTTPS ports in the <connector> elements. For example,
+
+<Code>
+<Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
+               port="9763"
+               ...
+/>
+ 
+<Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
+               port="9443
+               scheme="https"
+               ...
+/>
+</Code>

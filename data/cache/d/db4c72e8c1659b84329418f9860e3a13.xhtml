@@ -1,0 +1,1026 @@
+
+<h1 class="sectionedit1" id="hypertheasu_data_lake_basic_tutorial">Hypertheasu Data lake basic tutorial</h1>
+<div class="level1">
+
+<p>
+This tutorial is for new comer who wants to understand the basic features of <strong>Hypertheasu Data lake</strong>.
+</p>
+
+<p>
+It has the following contents:
+</p>
+<ul>
+<li class="level1"><div class="li"> 1. Architecture and key components</div>
+</li>
+<li class="level1 node"><div class="li"> 2. Ingest data</div>
+<ul>
+<li class="level2"><div class="li"> 2.1 Ingest data via ambari-webGui</div>
+</li>
+<li class="level2"><div class="li"> 2.2 Ingest data via hdfs-cli</div>
+</li>
+<li class="level2"><div class="li"> 2.3 Ingest data via sqoop</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> 3. Data storage</div>
+<ul>
+<li class="level2"><div class="li"> 3.1 Name node</div>
+</li>
+<li class="level2"><div class="li"> 3.2 Data node</div>
+</li>
+<li class="level2"><div class="li"> 3.3 Hypertheasu Data lake hdfs implementation</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> 4. Data processing and analytics</div>
+<ul>
+<li class="level2"><div class="li"> 4.1 Hive cli</div>
+</li>
+<li class="level2"><div class="li"> 4.2 Spark cli</div>
+</li>
+<li class="level2"><div class="li"> 4.3 Hive/Spark via Zeppelin</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> 5. Data management</div>
+<ul>
+<li class="level2"><div class="li"> 5.1 Create metadata entities for data</div>
+</li>
+<li class="level2"><div class="li"> 5.2 Search data by using metadata</div>
+</li>
+<li class="level2"><div class="li"> 5.3 metadata properities and lineage</div>
+</li>
+<li class="level2"><div class="li"> 5.4 Thesaurus</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hypertheasu Data lake basic tutorial&quot;,&quot;hid&quot;:&quot;hypertheasu_data_lake_basic_tutorial&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-746&quot;} -->
+<h2 class="sectionedit2" id="architecture_and_key_components">1. Architecture and key components</h2>
+<div class="level2">
+
+<p>
+Below shows the HyperTheasu data lake deployment architecture in Eric Vsphere Cloud
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:hypertheasu_datalake_deployement_architecture_in_eric_vsphere_cloud.png" class="media" title="employes:pengfei.liu:big_data:hdp:hypertheasu_datalake_deployement_architecture_in_eric_vsphere_cloud.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=9cf049&amp;media=employes:pengfei.liu:big_data:hdp:hypertheasu_datalake_deployement_architecture_in_eric_vsphere_cloud.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+Below are the key service in the data lake:
+</p>
+<ul>
+<li class="level1"><div class="li"> Ingestion: Sqoop, ambari-webGui, hdfs-cli</div>
+</li>
+<li class="level1"><div class="li"> Storage: HDFS(namenode, datanode)</div>
+</li>
+<li class="level1"><div class="li"> data process and analytics: Hive, spark (via zeppelin or cli)</div>
+</li>
+<li class="level1"><div class="li"> data management: Atlas(via HBase, Solr, Kafka)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Architecture and key components&quot;,&quot;hid&quot;:&quot;architecture_and_key_components&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;747-1246&quot;} -->
+<h2 class="sectionedit3" id="ingest_data">2. Ingest data</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Ingest data&quot;,&quot;hid&quot;:&quot;ingest_data&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1247-1274&quot;} -->
+<h3 class="sectionedit4" id="ingest_data_via_ambari-webgui">2.1 Ingest data via ambari-webGui</h3>
+<div class="level3">
+
+<p>
+Open the ambari web interface <a href="http://lin01.udl.org:8080/" class="urlextern" title="http://lin01.udl.org:8080/" rel="nofollow">http://lin01.udl.org:8080/</a>
+</p>
+
+<p>
+Click on the button on the top right, then click on the Files View
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:file-view.png" class="media" title="employes:pengfei.liu:big_data:hdp:file-view.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=27355d&amp;media=employes:pengfei.liu:big_data:hdp:file-view.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+In this interface, you can upload, download data, or change data acl.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:file-change.png" class="media" title="employes:pengfei.liu:big_data:hdp:file-change.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=fda45d&amp;media=employes:pengfei.liu:big_data:hdp:file-change.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Ingest data via ambari-webGui&quot;,&quot;hid&quot;:&quot;ingest_data_via_ambari-webgui&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1275-1636&quot;} -->
+<h3 class="sectionedit5" id="ingest_data_via_hdfs-cli">2.2 Ingest data via hdfs-cli</h3>
+<div class="level3">
+
+<p>
+To use hdfs-cli, you need to install it first on your pc. This tool has been installed on server lin02.udl.org
+Use ssh to connect to lin02.udl.org, then you can use hdfs-cli directly
+</p>
+<pre class="code"># list all data in the data lake
+[pliu@lin02 ~]$ hdfs dfs -ls /
+Found 13 items
+drwxrwxrwx   - hdfs   hdfs            0 2019-11-28 15:55 /HyperThesau
+drwxrwxrwt   - yarn   hadoop          0 2019-10-08 09:46 /app-logs
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-03 10:08 /apps
+drwxr-xr-x   - yarn   hadoop          0 2019-10-02 16:56 /ats
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-02 16:56 /atsv2
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-02 16:56 /hdp
+drwxr-xr-x   - mapred hdfs            0 2019-10-02 16:56 /mapred
+drwxrwxrwx   - mapred hadoop          0 2019-10-02 16:56 /mr-history
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-02 16:56 /ranger
+drwxrwxrwx   - spark  hadoop          0 2020-07-29 10:44 /spark2-history
+drwxrwxrwx   - hdfs   hdfs            0 2020-07-15 14:17 /tmp
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-07 10:31 /user
+drwxr-xr-x   - hdfs   hdfs            0 2019-10-02 16:58 /warehouse
+
+# upload data 
+[pliu@lin02 tmp]$ hdfs dfs -put test.txt /tmp/
+
+# download data
+[pliu@lin02 tmp]$ hdfs dfs -get /tmp/test.txt .
+
+# change data owner 
+[pliu@lin02 tmp]$ hdfs dfs -chown pliu:pliu /tmp/test.txt
+
+# change data acl
+[pliu@lin02 tmp]$ hdfs dfs -chmod 0777 /tmp/test.txt
+
+# delete data 
+[pliu@lin02 tmp]$ hdfs dfs -rm -skipTrash /tmp/test.txt
+Deleted /tmp/test.txt
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Ingest data via hdfs-cli&quot;,&quot;hid&quot;:&quot;ingest_data_via_hdfs-cli&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1637-3182&quot;} -->
+<h3 class="sectionedit6" id="ingest_data_via_sqoop">2.3 Ingest data via sqoop</h3>
+<div class="level3">
+
+<p>
+Sqoop reads the database and write to hdfs/hive. It must have the right to do so. So first we need to check if Sqoop can read the database.
+</p>
+
+<p>
+Note: you need to have the appropriate JDBC drivers to run the commands.
+</p>
+<pre class="code">#for mysql server
+$ sqoop list-tables --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop
+
+#for postgresql server
+sqoop list-tables --connect jdbc:postgresql://127.0.0.1:5432/northwind --username pliu -P
+</pre>
+
+</div>
+
+<h4 id="import_a_table_into_hdfs">2.3.1 Import a table into hdfs</h4>
+<div class="level4">
+
+<p>
+Sqoop supports four formats:
+</p>
+<ul>
+<li class="level1"><div class="li"> Text file format - Using command argument <strong>as-textfile</strong> (default)</div>
+</li>
+<li class="level1"><div class="li"> Sequence file format - Using command argument <strong>as-sequencefile</strong> (mapreduce default)</div>
+</li>
+<li class="level1"><div class="li"> Avro file format - Using command argument <strong>as-avrofile</strong> (row oriented)</div>
+</li>
+<li class="level1"><div class="li"> Parquet file format Using command argument <strong>as-parquetfile</strong> (column oriented)</div>
+</li>
+</ul>
+
+<p>
+<strong>To import a mysql table into hdfs [database name is retail_db, table name is categories] with default file format</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --target-dir /tmp/sqoop_test/categories
+
+# check the imported data
+$ hdfs dfs -cat /tmp/sqoop_test/categories/part-m-*
+
+# The default file format of sqoop import is textfile(csv), that&#039;s why we can use cat to show it.
+
+# If we don&#039;t specify --target-dir, sqoop will create a dir with the name of table (e.g. categories in the root dir of hdfs)
+</pre>
+
+</div>
+
+<h4 id="import_a_table_into_hive">2.3.2 Import a table into hive</h4>
+<div class="level4">
+
+<p>
+<strong> To import a mysql table into hive</strong>
+</p>
+<pre class="code"># By default, if nothing is specified, sqoop will use the mysql table name as the hive table name, and the 
+# table will be stored in the hive default database(db with name default)
+$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --hive-import
+
+# If you want to change the hive table-name, you can use option --hive-table. If you want to also give a 
+# database name, you can use &lt;db_name&gt;.&lt;table_name&gt; (But this works only for hive 2)
+$ sqoop import --connect jdbc:mysql://lin03.udl.org:3306/retail_db --username hive -P --table categories --hive-import --hive-table retail_db.categories
+
+
+# In hive 3.*, we can&#039;t use the expression database.table anymore. We have to use --hive-database to express database name , and --hive-table to express table name. As a result, the above query should be like this:
+$ sqoop import --connect jdbc:mysql://lin03.udl.org:3306/retail_db --username hive -P --table categories --hive-import --hive-table categories --hive-database retail_db 
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 Ingest data via sqoop&quot;,&quot;hid&quot;:&quot;ingest_data_via_sqoop&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;3183-5819&quot;} -->
+<h2 class="sectionedit7" id="data_storage">3. Data storage</h2>
+<div class="level2">
+
+<p>
+Hypertheasu Data lake uses hdfs as data storage service. Hdfs is a distributed file-system that stores data on commodity machines, providing very high aggregate bandwidth across the cluster. It has two types of node:
+</p>
+<ul>
+<li class="level1"><div class="li"> name node</div>
+</li>
+<li class="level1"><div class="li"> data node</div>
+</li>
+</ul>
+
+<p>
+Hdfs cuts data into blocks, these blocks are stored across a cluster of one or several machines. HDFS Architecture follows a Master/Slave Architecture, where a cluster comprises of a single NameNode (Master node) and all the other nodes are DataNodes (Slave nodes). 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:hdfs-architecture.png" class="media" title="employes:pengfei.liu:big_data:hdp:hdfs-architecture.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=2563bd&amp;media=employes:pengfei.liu:big_data:hdp:hdfs-architecture.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Data storage&quot;,&quot;hid&quot;:&quot;data_storage&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;5820-6429&quot;} -->
+<h3 class="sectionedit8" id="name_node">3.1 Name node</h3>
+<div class="level3">
+
+<p>
+NameNode is the master node in the Apache Hadoop HDFS Architecture that maintains and manages the blocks present on the DataNodes (slave nodes). NameNode is a very highly available server that manages the File System Namespace and controls access to files by clients. The HDFS architecture is built in such a way that the user data never resides on the NameNode. The data resides on DataNodes only.  
+</p>
+
+<p>
+Functions of NameNode:
+</p>
+<ul>
+<li class="level1"><div class="li"> It is the master daemon that maintains and manages the DataNodes (slave nodes)</div>
+</li>
+<li class="level1 node"><div class="li"> It records the metadata of all the files stored in the cluster, e.g. The location of blocks stored, the size of the files, permissions, hierarchy, etc. There are two files associated with the metadata:</div>
+<ul>
+<li class="level2"><div class="li"> FsImage: It contains the complete state of the file system namespace since the start of the NameNode.</div>
+</li>
+<li class="level2"><div class="li"> EditLogs: It contains all the recent modifications made to the file system with respect to the most recent FsImage.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> It records each change that takes place to the file system metadata. For example, if a file is deleted in HDFS, the NameNode will immediately record this in the EditLog.</div>
+</li>
+<li class="level1"><div class="li"> It regularly receives a Heartbeat and a block report from all the DataNodes in the cluster to ensure that the DataNodes are live.</div>
+</li>
+<li class="level1"><div class="li"> It keeps a record of all the blocks in HDFS and in which nodes these blocks are located.</div>
+</li>
+<li class="level1"><div class="li"> The NameNode is also responsible to take care of the replication factor of all the blocks which we will discuss in detail later in this HDFS tutorial blog.</div>
+</li>
+<li class="level1"><div class="li"> In case of the DataNode failure, the NameNode chooses new DataNodes for new replicas, balance disk usage and manages the communication traffic to the DataNodes.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Name node&quot;,&quot;hid&quot;:&quot;name_node&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:8,&quot;range&quot;:&quot;6430-8127&quot;} -->
+<h3 class="sectionedit9" id="data_node">3.2 Data node</h3>
+<div class="level3">
+
+<p>
+DataNodes are the slave nodes in HDFS. The DataNode is a block server that stores the data in the local file ext3 or ext4.
+</p>
+
+<p>
+Functions of DataNode:
+</p>
+<ul>
+<li class="level1"><div class="li"> These are slave daemons or process which runs on each slave machine.</div>
+</li>
+<li class="level1"><div class="li"> The actual data is stored on DataNodes.</div>
+</li>
+<li class="level1"><div class="li"> The DataNodes perform the low-level read and write requests from the file system’s clients.</div>
+</li>
+<li class="level1"><div class="li"> They send heartbeats to the NameNode periodically to report the overall health of HDFS, by default, this frequency is set to 3 seconds.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Data node&quot;,&quot;hid&quot;:&quot;data_node&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;8128-8655&quot;} -->
+<h3 class="sectionedit10" id="hypertheasu_data_lake_hdfs_implementation">3.3 Hypertheasu Data lake hdfs implementation</h3>
+<div class="level3">
+
+<p>
+In hypertheasu Data lake, we implement the hdfs as followed:
+</p>
+<ul>
+<li class="level1"><div class="li"> lin02.udl.org: primary name node</div>
+</li>
+<li class="level1"><div class="li"> lin03.udl.org: secondary name node (for HA)</div>
+</li>
+<li class="level1"><div class="li"> lin05.udl.org: data node</div>
+</li>
+<li class="level1"><div class="li"> lin06.udl.org: data node  </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Hypertheasu Data lake hdfs implementation&quot;,&quot;hid&quot;:&quot;hypertheasu_data_lake_hdfs_implementation&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:10,&quot;range&quot;:&quot;8656-8919&quot;} -->
+<h2 class="sectionedit11" id="data_processing_and_analytics">4. Data processing and analytics</h2>
+<div class="level2">
+
+<p>
+Hypertheasu Data lake uses two tools(i.e. Hive and Spark) to process and analyze data.
+</p>
+
+<p>
+We have a Command-line interface and web interface to use them. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Data processing and analytics&quot;,&quot;hid&quot;:&quot;data_processing_and_analytics&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:11,&quot;range&quot;:&quot;8920-9117&quot;} -->
+<h3 class="sectionedit12" id="hive_cli">4.1 Hive cli</h3>
+<div class="level3">
+
+<p>
+The recommended hive cli is called beeline. It&#039;s already installed on lin02.udl.org. Follow the below example to run beeline.
+</p>
+<pre class="code">[pliu@lin02 ~]$ beeline
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/hdp/3.1.4.0-315/hive/lib/log4j-slf4j-impl-2.10.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/hdp/3.1.4.0-315/hadoop/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+Connecting to jdbc:hive2://lin02.udl.org:2181,lin03.udl.org:2181,lin04.udl.org:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2
+Enter username for jdbc:hive2://lin02.udl.org:2181,lin03.udl.org:2181,lin04.udl.org:2181/default: hive
+Enter password for jdbc:hive2://lin02.udl.org:2181,lin03.udl.org:2181,lin04.udl.org:2181/default: ****
+20/07/29 12:34:21 [main]: INFO jdbc.HiveConnection: Connected to lin03:10000
+Connected to: Apache Hive (version 3.1.0.3.1.4.0-315)
+Driver: Hive JDBC (version 3.1.0.3.1.4.0-315)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+Beeline version 3.1.0.3.1.4.0-315 by Apache Hive
+0: jdbc:hive2://lin02.udl.org:2181,lin03.udl.&gt; show tables;
+INFO  : Compiling command(queryId=hive_20200729123426_7929676b-4c3a-49ee-be5f-b111e61ccf01): show tables
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:tab_name, type:string, comment:from deserializer)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20200729123426_7929676b-4c3a-49ee-be5f-b111e61ccf01); Time taken: 0.018 seconds
+INFO  : Executing command(queryId=hive_20200729123426_7929676b-4c3a-49ee-be5f-b111e61ccf01): show tables
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20200729123426_7929676b-4c3a-49ee-be5f-b111e61ccf01); Time taken: 0.016 seconds
+INFO  : OK
++-------------+
+|  tab_name   |
++-------------+
+| categories  |
++-------------+
+1 row selected (0.203 seconds)
+0: jdbc:hive2://lin02.udl.org:2181,lin03.udl.&gt; select * from catalog
+catalog        catalog_name   
+0: jdbc:hive2://lin02.udl.org:2181,lin03.udl.&gt; select * from categories;
+INFO  : Compiling command(queryId=hive_20200729123455_86238637-9e79-4a2f-8567-fcdf79871c01): select * from categories
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:categories.category_id, type:int, comment:null), FieldSchema(name:categories.category_department_id, type:int, comment:null), FieldSchema(name:categories.category_name, type:string, comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20200729123455_86238637-9e79-4a2f-8567-fcdf79871c01); Time taken: 0.1 seconds
+INFO  : Executing command(queryId=hive_20200729123455_86238637-9e79-4a2f-8567-fcdf79871c01): select * from categories
+INFO  : Completed executing command(queryId=hive_20200729123455_86238637-9e79-4a2f-8567-fcdf79871c01); Time taken: 0.01 seconds
+INFO  : OK
++-------------------------+------------------------------------+---------------------------+
+| categories.category_id  | categories.category_department_id  | categories.category_name  |
++-------------------------+------------------------------------+---------------------------+
+| 1                       | 2                                  | Football                  |
+| 2                       | 2                                  | Soccer                    |
+| 3                       | 2                                  | Baseball &amp; Softball       |
+| 4                       | 2                                  | Basketball                |
+| 5                       | 2                                  | Lacrosse                  |
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Hive cli&quot;,&quot;hid&quot;:&quot;hive_cli&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:12,&quot;range&quot;:&quot;9118-13072&quot;} -->
+<h3 class="sectionedit13" id="spark_cli">4.2 Spark cli</h3>
+<div class="level3">
+
+<p>
+The spark-shell client is already installed on lin02.udl.org. To use it, follow the below example
+</p>
+<pre class="code">[pliu@lin02 tmp]$ sudo -u hdfs spark-shell
+Setting default log level to &quot;WARN&quot;.
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://lin02:4040
+Spark context available as &#039;sc&#039; (master = yarn, app id = application_1594025881974_0010).
+Spark session available as &#039;spark&#039;.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  &#039;_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.3.2.3.1.4.0-315
+      /_/
+         
+Using Scala version 2.11.12 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_112)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; 
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 Spark cli&quot;,&quot;hid&quot;:&quot;spark_cli&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:13,&quot;range&quot;:&quot;13073-13901&quot;} -->
+<h3 class="sectionedit14" id="hive_spark_via_zeppelin">4.3 Hive/Spark via Zeppelin</h3>
+<div class="level3">
+
+<p>
+Zeppelin is a note which can connect to a Hive server or Spark server. It&#039;s already installed on lin02.udl.org. You can access it by using the following url: 
+</p>
+
+<p>
+<a href="http://lin02.udl.org:9995/#/" class="urlextern" title="http://lin02.udl.org:9995/#/" rel="nofollow">http://lin02.udl.org:9995/#/</a>
+</p>
+
+<p>
+To add a new user or change the user password. See my other documentations on zeppelin security.
+</p>
+
+<p>
+Inside zeppelin, you can add a new note, see the below example
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin.png" class="media" title="employes:pengfei.liu:big_data:hdp:zeppelin.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=e0389e&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+
+<h4 id="hive_via_zeppelin">4.3.1 Hive via Zeppelin</h4>
+<div class="level4">
+
+<p>
+To connect to a Hive server, you need to specify that you want to use hive interpreter in your notebook. Todo so, you need to add %jdbc(hive)
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-hive.png" class="media" title="employes:pengfei.liu:big_data:hdp:zeppelin-hive.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=73cadd&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-hive.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+
+<h4 id="spark_via_zeppelin">4.3.1 Spark via Zeppelin</h4>
+<div class="level4">
+
+<p>
+As spark provides three api, so zeppelin provides three interpreters for spark:
+</p>
+<ul>
+<li class="level1"><div class="li"> Spark Scala</div>
+</li>
+<li class="level1"><div class="li"> PySpark</div>
+</li>
+<li class="level1"><div class="li"> sparkR</div>
+</li>
+</ul>
+
+<p>
+<strong>Spark scala</strong>
+</p>
+
+<p>
+To use spark scala, just add %spark
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-sparkscala.png" class="media" title="employes:pengfei.liu:big_data:hdp:zeppelin-sparkscala.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=7870ee&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-sparkscala.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+<strong>PySpark</strong>
+</p>
+
+<p>
+To use pyspark, just add %pyspark
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-pyspark.png" class="media" title="employes:pengfei.liu:big_data:hdp:zeppelin-pyspark.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=cab635&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-pyspark.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+<strong>SparkR</strong>
+</p>
+
+<p>
+To use sparkR, just add %spark2.r(%spark.r for spark version 1, not default setup)
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-sparkr.png" class="media" title="employes:pengfei.liu:big_data:hdp:zeppelin-sparkr.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=0ce12e&amp;media=employes:pengfei.liu:big_data:hdp:zeppelin-sparkr.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3 Hive\/Spark via Zeppelin&quot;,&quot;hid&quot;:&quot;hive_spark_via_zeppelin&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;13902-15144&quot;} -->
+<h2 class="sectionedit15" id="data_management">5. Data management</h2>
+<div class="level2">
+
+<p>
+Hypertheasu Data lake uses atlas for data management. It uses Hbase to store the metadata, and solr to index and search the metadata 
+</p>
+
+<p>
+It&#039;s installed on lin03.udl.org. To access it, use <a href="http://lin03.udl.org:21000/" class="urlextern" title="http://lin03.udl.org:21000/" rel="nofollow">http://lin03.udl.org:21000/</a>
+</p>
+
+<p>
+To add a new user or change the user password. See my other documentations on Atlas security.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Data management&quot;,&quot;hid&quot;:&quot;data_management&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;15145-15488&quot;} -->
+<h3 class="sectionedit16" id="create_metadata_entities_for_data">5.1 Create metadata entities for data</h3>
+<div class="level3">
+
+<p>
+Before adding a metadata entity, we need to first create its type. Because all metadata entities in Atlas must have a type which defines the list of attributes of metadata
+</p>
+
+</div>
+
+<h4 id="create_metadata_types">5.1.1 Create metadata types</h4>
+<div class="level4">
+
+<p>
+To illustrate how to create a new type in atlas, we use the following example. Suppose we store all our data on a network storage which called gpfs.
+</p>
+
+<p>
+We write the following data type definiton 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hdp:beginer_tuto&amp;codeblock=6" title="Download Snippet" class="mediafile mf_json">typeDef_datafile.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;structDefs&quot;: [
+    {
+      &quot;category&quot;: &quot;STRUCT&quot;,
+      &quot;name&quot;: &quot;schema_col&quot;,
+      &quot;description&quot;: &quot;column definition for schema&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;col&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;data_type&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;required&quot;,
+          &quot;typeName&quot;: &quot;boolean&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ],
+  &quot;entityDefs&quot;: [
+    {
+      &quot;superTypes&quot;: [
+        &quot;DataSet&quot;
+      ],
+      &quot;category&quot;: &quot;ENTITY&quot;,
+      &quot;name&quot;: &quot;GPFSDataFile&quot;,
+      &quot;description&quot;: &quot;a type definition for a file in gpfs which contains data, this could a file that needs to be processed or it can be an output (ex: extracts)&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;file_name&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;parent_dir&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;user&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;group&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;permission&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;creation_time&quot;,
+          &quot;typeName&quot;: &quot;date&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;format&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;schema&quot;,
+          &quot;typeName&quot;: &quot;array&lt;schema_col&gt;&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ]
+}</pre>
+</dd></dl>
+
+<p>
+We could notice that the above type definition has two parts. The second part is the main type defnition, It starts with key word “entityDefs” and contains the following information:
+</p>
+<ul>
+<li class="level1"><div class="li"> SuperTypes: Every customer types in Atlas must have one</div>
+</li>
+<li class="level1"><div class="li"> Category: A meta data type definition has the Catefory “ENTITY”,</div>
+</li>
+<li class="level1"><div class="li"> name: Name of the meta data type</div>
+</li>
+<li class="level1"><div class="li"> description: </div>
+</li>
+<li class="level1"><div class="li"> typeVersion: </div>
+</li>
+<li class="level1 node"><div class="li"> attributeDefs: list of the attributes definition, every attributes must have a type. The predefined types almost cover every thing.</div>
+<ul>
+<li class="level2"><div class="li"> Primitive metatypes: boolean, byte, short, int, long, float, double, biginteger, bigdecimal, string, date</div>
+</li>
+<li class="level2"><div class="li"> Enum metatypes</div>
+</li>
+<li class="level2"><div class="li"> Collection metatypes: array, map</div>
+</li>
+<li class="level2"><div class="li"> Composite metatypes: Entity, Struct, Classification, Relationship</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+If you want something special, you can also add new types for attributes. In the above example, I add a new struct type with name schema_col.
+</p>
+
+<p>
+For more informaiton on how to define metadata types in Atlas, please visit 
+ <a href="https://atlas.apache.org/TypeSystem.html" class="urlextern" title="https://atlas.apache.org/TypeSystem.html" rel="nofollow">https://atlas.apache.org/TypeSystem.html</a>
+</p>
+
+<p>
+Now we can use the bulk add typedef api to add the above type definition into Atlas
+</p>
+<pre class="code"># add new type definition (entity)
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/types/typedefs&quot; -d &quot;@./typeDef_datafile.json&quot;
+
+# check the newly added type
+curl -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedef/name/GPFSDataFile</pre>
+
+</div>
+
+<h4 id="add_a_new_metadata_entity">5.1.2  Add a new metadata entity</h4>
+<div class="level4">
+
+<p>
+Now we can add a new metadata entity of type GPFSDataFile
+</p>
+<pre class="code file load_datajson">{
+  &quot;entities&quot;: [
+    {
+      &quot;typeName&quot;: &quot;GPFSDataFile&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;it's only a simple attribute&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;file_name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-18T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;csv&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    },
+{
+      &quot;typeName&quot;: &quot;GPFS_Path&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;rabbit tissu image&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;file_name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/rabbit&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-19T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;jpg&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    }
+&nbsp;
+]
+}</pre>
+<pre class="code"># The Below command load the above json file into the atlas
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/entity/bulk&quot; -d &quot;@./load_data.json&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1 Create metadata entities for data&quot;,&quot;hid&quot;:&quot;create_metadata_entities_for_data&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:16,&quot;range&quot;:&quot;15489-22702&quot;} -->
+<h3 class="sectionedit17" id="search_data_by_using_metadata">5.2 Search data by using metadata</h3>
+<div class="level3">
+
+<p>
+Atlas allows us to search for data via different properties. For example, we can search data by using its attributes, classifications, etc..
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:atlas_search.png" class="media" title="employes:pengfei.liu:big_data:hdp:atlas_search.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=cfaaaf&amp;media=employes:pengfei.liu:big_data:hdp:atlas_search.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2 Search data by using metadata&quot;,&quot;hid&quot;:&quot;search_data_by_using_metadata&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:17,&quot;range&quot;:&quot;22703-22952&quot;} -->
+<h3 class="sectionedit18" id="metadata_properities_and_lineage">5.3 metadata properities and lineage</h3>
+<div class="level3">
+
+<p>
+Once we find the metadata entity, we can view the list of the properties which describe the actual data. For example, the below image shows a table in a database. With the help of these properties, we know that this table is located at the database “retail_db” and has three columns.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:atlas_properties.png" class="media" title="employes:pengfei.liu:big_data:hdp:atlas_properties.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=340527&amp;media=employes:pengfei.liu:big_data:hdp:atlas_properties.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+The data lineage shows where these data came from. For example, the below image shows that this table is built by using three tables and one file.  
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:atlas_lineage.png" class="media" title="employes:pengfei.liu:big_data:hdp:atlas_lineage.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=eeedd7&amp;media=employes:pengfei.liu:big_data:hdp:atlas_lineage.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.3 metadata properities and lineage&quot;,&quot;hid&quot;:&quot;metadata_properities_and_lineage&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:18,&quot;range&quot;:&quot;22953-23565&quot;} -->
+<h3 class="sectionedit19" id="thesaurus">5.4 Thesaurus</h3>
+<div class="level3">
+
+<p>
+Atlas also allows us to use a thesaurus to index metadata. The below image shows a thesaurus imported from the artefact.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Ahdp%3Abeginer_tuto&amp;media=employes:pengfei.liu:big_data:hdp:atlas_thesaurus.png" class="media" title="employes:pengfei.liu:big_data:hdp:atlas_thesaurus.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=aaa2c6&amp;media=employes:pengfei.liu:big_data:hdp:atlas_thesaurus.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+
+<h4 id="load_a_theasurus_into_atlas">Load a theasurus into Atlas</h4>
+<div class="level4">
+
+<p>
+For example, we can load a simple term by using the following command.
+</p>
+<pre class="code file simple_termjson">{
+&quot;anchor&quot;:{
+&quot;displayText&quot; : &quot;Artefacts&quot;,
+&quot;glossaryGuid&quot;:&quot;ee3f05ba-2fe1-4806-a81e-660c777a3403&quot;,
+&quot;relationGuid&quot;:&quot;3be4d5d8-9a98-421c-a3f4-f8279604e50c&quot;},
+&quot;longDescription&quot;:&quot;Pièce ornementale ou de renfort fixée sur une autre (fr)&quot;,
+&quot;name&quot;:&quot;applique&quot;,
+&quot;qualifiedName&quot;:&quot;applique@Artefacts&quot;,
+&quot;shortDescription&quot;:&quot;applique&quot;
+}</pre>
+<pre class="code">curl -u admin:pwd -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/term&quot; -d &quot;@./simple_term.json&quot;</pre>
+
+<p>
+The full version of the json template for loading term can be found here <a href="http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST" class="urlextern" title="http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST" rel="nofollow">http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST</a>.
+</p>
+
+<p>
+The full_HyperThesaurus.json is the full template for hyperThesaurus project. He only needs “see also” and “synonyms” as term relation.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hdp:beginer_tuto&amp;codeblock=12" title="Download Snippet" class="mediafile mf_json">full_HyperThesaurus.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;abbreviation&quot; : &quot;...&quot;,
+  &quot;anchor&quot; : {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;glossaryGuid&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;
+  },
+  &quot;assignedEntities&quot; : [ {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;ACTIVE&quot;,
+    &quot;relationshipAttributes&quot; : {
+      &quot;attributes&quot; : {
+        &quot;property1&quot; : { },
+        &quot;property2&quot; : { }
+      },
+      &quot;typeName&quot; : &quot;...&quot;
+    },
+    &quot;relationshipGuid&quot; : &quot;...&quot;,
+    &quot;relationshipStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipType&quot; : &quot;...&quot;,
+    &quot;guid&quot; : &quot;...&quot;,
+    &quot;typeName&quot; : &quot;...&quot;,
+    &quot;uniqueAttributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    }
+  }, {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipAttributes&quot; : {
+      &quot;attributes&quot; : {
+        &quot;property1&quot; : { },
+        &quot;property2&quot; : { }
+      },
+      &quot;typeName&quot; : &quot;...&quot;
+    },
+    &quot;relationshipGuid&quot; : &quot;...&quot;,
+    &quot;relationshipStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipType&quot; : &quot;...&quot;,
+    &quot;guid&quot; : &quot;...&quot;,
+    &quot;typeName&quot; : &quot;...&quot;,
+    &quot;uniqueAttributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    }
+  } ],
+  &quot;categories&quot; : [ {
+    &quot;categoryGuid&quot; : &quot;...&quot;,
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DEPRECATED&quot;
+  }, {
+    &quot;categoryGuid&quot; : &quot;...&quot;,
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DEPRECATED&quot;
+  } ],
+&nbsp;
+  &quot;seeAlso&quot; : [ {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;ACTIVE&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  }, {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DRAFT&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  } ],
+  &quot;synonyms&quot; : [ {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;OTHER&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  }, {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;ACTIVE&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  } ],
+&nbsp;
+&nbsp;
+&nbsp;
+  &quot;classifications&quot; : [ {
+    &quot;entityGuid&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;DELETED&quot;,
+    &quot;propagate&quot; : true,
+    &quot;removePropagationsOnEntityDelete&quot; : true,
+    &quot;validityPeriods&quot; : [ {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    }, {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    } ],
+    &quot;attributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    },
+    &quot;typeName&quot; : &quot;...&quot;
+  }, {
+    &quot;entityGuid&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;ACTIVE&quot;,
+    &quot;propagate&quot; : true,
+    &quot;removePropagationsOnEntityDelete&quot; : true,
+    &quot;validityPeriods&quot; : [ {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    }, {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    } ],
+    &quot;attributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    },
+    &quot;typeName&quot; : &quot;...&quot;
+  } ],
+  &quot;longDescription&quot; : &quot;...&quot;,
+  &quot;name&quot; : &quot;...&quot;,
+  &quot;qualifiedName&quot; : &quot;...&quot;,
+  &quot;shortDescription&quot; : &quot;...&quot;,
+  &quot;guid&quot; : &quot;...&quot;
+}</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.4 Thesaurus&quot;,&quot;hid&quot;:&quot;thesaurus&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:19,&quot;range&quot;:&quot;23566-&quot;} -->

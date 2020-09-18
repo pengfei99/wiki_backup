@@ -1,0 +1,61 @@
+
+<h1 class="sectionedit1" id="lims_reunion_13082015">[LIMS] Réunion 13/08/2015</h1>
+<div class="level1">
+
+<p>
+<strong>AC, YM, NS, TLC</strong>
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<tr class="row0">
+		<th class="col0">NS </th><td class="col1"> Suite discussion avec Guillaume : il y aura un cahier des charges par module + un cahier des charges “global” qui traite des interactions. </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0">Discussion </th><td class="col1"> La question s&#039;est posée de savoir si la modélisation (SQL ou UML) se faisait en parallèle de la rédaction des cahiers des charges ou s&#039;il fallait finaliser le recueil des besoins en amont. </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0">⇒ </th><td class="col1"> Finalisation schéma SQL + rédaction cahiers des charges </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0">Discussion </th><td class="col1"> Dans un premier temps, il faut établir un plan commun aux cahiers des charges. </td>
+	</tr>
+	<tr class="row4">
+		<th class="col0">⇒ </th><td class="col1 leftalign"> Plan à concevoir à partir d&#039;une ébauche recueillie sur le Web + Exp.  </td>
+	</tr>
+	<tr class="row5">
+		<th class="col0">NS </th><td class="col1"> Contraintes à anticiper : Site Multilangues (i18n), contraintes CNRS,…</td>
+	</tr>
+	<tr class="row6">
+		<th class="col0">Discussion </th><td class="col1"> Schématisation d&#039;une expérience comme un “workflow biologique”. Une expérience comprendrait des étapes ou process. Chacun de ces élements fait référence à un protocole </td>
+	</tr>
+	<tr class="row7">
+		<th class="col0">⇒ </th><td class="col1"> Es-ce que un protocole peut être utilisé comme une unité de travail ? <strong>Question à poser aux UTECs</strong></td>
+	</tr>
+	<tr class="row8">
+		<th class="col0">Discussion </th><td class="col1"> Gestion des états des étapes et la validation/disponibilité des échantillons </td>
+	</tr>
+	<tr class="row9">
+		<th class="col0">⇒ </th><td class="col1 leftalign"> (A finaliser) 3 types d&#039;état seront définis : au niveau de (1) l&#039;échantillon, du (2) process et de (3) l&#039;interaction échantillon/process. Dans le cas où plusieurs échantillons interviennent dans un process, celui-ci ne pourra pas être validé (2) si tous les échantillons/process(3) ne sont pas également validés. Une action d&#039;exclusion sera proposé pour les échantillons/process (3) qui ont avortés afin de pouvoir finaliser le process (2) dans son ensemble. Une expérience est validée que si tous ses process le sont. Un échantillon pouvant intervenir dans plusieurs process, son état (1) reflète sa disponibilité propre.  </td>
+	</tr>
+	<tr class="row10">
+		<th class="col0">Discussion </th><td class="col1"> Gestion de l&#039;interaction échantillon/process </td>
+	</tr>
+	<tr class="row11">
+		<th class="col0">⇒ </th><td class="col1"> (A finaliser) Cette gestion peut se matérialiser en une table ou liaison de tables qui doit contenir l&#039;étape ou le process, des échantillons “input”, des échantillons “output” et un état. Les 3 types d&#039;interactions possibles seraient : (A) 1 échantillons “input” → X échantillons “output” (ex: aliquotage); (B) X échantillons “input” → 1 échantillon “output” (ex: pooling); (C) X échantillons “input” → X échantillons “output”, mais dont la filiation est spécifique (ex: robot de pipetage avec plaques 96 puits en simultanée mais l&#039;échantillon 1A crée uniquement l&#039;échantillon 1B) </td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [63-2466] -->
+<p>
+<em class="u">Ébauche de plan :</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> Intro / Etude de l’existant / Etat des lieux (BIOASTER + général)</div>
+</li>
+<li class="level1"><div class="li"> Analyse des besoins / Besoins BIOASTER / Définitions objectifs / (Contraintes BIOASTER)</div>
+</li>
+<li class="level1"><div class="li"> Description solution / Caractéristiques fonctionnels / Réponses opérationnels / (Contraintes fonctionnelles)</div>
+</li>
+<li class="level1"><div class="li"> Définition procédure / Equipe projet / Licence / Versionning / Roadmap</div>
+</li>
+</ul>
+
+</div>

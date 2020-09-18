@@ -1,0 +1,3 @@
+a:9:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:32:"Connect to an aws ec2 vm via ssh";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1;}i:4;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:110:"When you create your vm in ec2, you need to provide a key pair. And this is essential to allow ssh connection.";}i:2;i:49;}i:5;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:159;}i:6;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:74:"
+ssh -i aws_vm.pem centos@ec2-52-47-136-8.eu-west-3.compute.amazonaws.com
+";i:1;N;i:2;N;}i:2;i:166;}i:7;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:249;}i:8;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:249;}}

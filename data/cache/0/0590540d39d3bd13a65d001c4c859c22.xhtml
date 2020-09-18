@@ -1,0 +1,188 @@
+
+<h1 class="sectionedit1" id="dataframe_in_spark_vs_rdd">DataFrame in SPARK (vs RDD)</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "DataFrame in SPARK (vs RDD)" [1-43] -->
+<h2 class="sectionedit2" id="data_frame_introduction">Data frame introduction</h2>
+<div class="level2">
+
+<p>
+DataFrame appeared in Spark Release 1.3.0. We can term DataFrame as Dataset organized into named columns. DataFrames are similar to the table in a relational database or data frame in R /Python. It can be said as a relational table with good optimization technique.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Data frame introduction" [44-347] -->
+<h2 class="sectionedit3" id="difference_between_dataframe_and_rdd">Difference between dataframe and RDD</h2>
+<div class="level2">
+
+<p>
+RDD is a distributed storage of java object. As a result, RDD is not able to know the parameters inside person. Data frame is based on RDD, but it contains schema of the data, so you can have all information about object person. Since Spark 2.0, DataFrame is implemented as a special case of Dataset.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_dataframe&amp;media=employes:pengfei.liu:big_data:spark:dataframe-rdd.jpg" class="media" title="employes:pengfei.liu:big_data:spark:dataframe-rdd.jpg"><img src="/lib/exe/fetch.php?w=400&amp;tok=8c1533&amp;media=employes:pengfei.liu:big_data:spark:dataframe-rdd.jpg" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+DataFrame has two main advantages over RDD:
+</p>
+<ul>
+<li class="level1"><div class="li"> Optimized execution plans via Catalyst Optimizer.</div>
+</li>
+<li class="level1"><div class="li"> Custom Memory management via Project Tungsten.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Difference between dataframe and RDD" [348-914] -->
+<h2 class="sectionedit4" id="create_simple_dataframe_in_scala_spark_shell">create simple dataFrame in scala spark shell</h2>
+<div class="level2">
+
+<p>
+There are many ways to create data frame in spark  
+</p>
+<ul>
+<li class="level1"><div class="li"> Use spark sqlContext</div>
+</li>
+<li class="level1"><div class="li"> Use Spark sql session</div>
+</li>
+</ul>
+<pre class="code">#import dependencies of sql context
+scala&gt; import org.apache.spark.sql.SQLContext
+
+#create sql context
+scala&gt; val sqlContext = new SQLContext(sc)
+
+#create data frame
+scala&gt; val sentenceDataFrame = sqlContext.createDataFrame(Seq(
+     |       (0, &quot;Hi I heard about Spark&quot;),
+     |       (1, &quot;I wish Java could use case classes&quot;),
+     |       (2, &quot;Logistic,regression,models,are,neat&quot;)
+     |     )).toDF(&quot;label&quot;, &quot;sentence&quot;)
+sentenceDataFrame: org.apache.spark.sql.DataFrame = [label: int, sentence: string]
+
+#create tokenizer based on data frame
+scala&gt; val tokenizer = new Tokenizer().setInputCol(&quot;sentence&quot;).setOutputCol(&quot;words&quot;)
+
+#show the label and words of first 3 row in tokenizer
+scala&gt; tokenized.select(&quot;words&quot;, &quot;label&quot;).take(3).foreach(println)
+</pre>
+
+<p>
+Now, let&#039;s see how we create data frame with spark session
+</p>
+<pre class="code"># import dependencies
+scala&gt; import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.SparkSession
+
+scala&gt; val spark=SparkSession.builder().getOrCreate()
+spark: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@75d0cac6
+
+scala&gt; import spark.implicits._
+import spark.implicits._
+
+scala&gt; val df = spark.read.json(&quot;file:///tmp/people.json&quot;)
+df: org.apache.spark.sql.DataFrame = [age: bigint, name: string]
+
+scala&gt; df.collect
+res0: Array[org.apache.spark.sql.Row] = Array([29,Michael], [30,Andy], [19,Justin])
+
+scala&gt; df.show
++---+-------+
+|age|   name|
++---+-------+
+| 29|Michael|
+| 30|   Andy|
+| 19| Justin|
++---+-------+
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "create simple dataFrame in scala spark shell" [915-2576] -->
+<h2 class="sectionedit5" id="basic_dataframe_command">Basic dataframe command</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> select</div>
+</li>
+<li class="level1"><div class="li"> filter</div>
+</li>
+<li class="level1"><div class="li"> groupBy</div>
+</li>
+<li class="level1"><div class="li"> sort</div>
+</li>
+</ul>
+<pre class="code">scala&gt; df.printSchema()
+root
+ |-- age: long (nullable = true)
+ |-- name: string (nullable = true)
+ 
+// select and change column value
+scala&gt; df.select(df(&quot;name&quot;),df(&quot;age&quot;)+1).show()
++-------+---------+
+|   name|(age + 1)|
++-------+---------+
+|Michael|     null|
+|   Andy|       31|
+| Justin|       20|
++-------+---------+
+ 
+// filter with condition
+scala&gt; df.filter(df(&quot;age&quot;) &gt; 20 ).show()
++---+----+
+|age|name|
++---+----+
+| 30|Andy|
++---+----+
+ 
+// 
+scala&gt; df.groupBy(&quot;age&quot;).count().show()
++----+-----+
+| age|count|
++----+-----+
+|  19|    1|
+|null|    1|
+|  30|    1|
++----+-----+
+ 
+// sort one column
+scala&gt; df.sort(df(&quot;age&quot;).desc).show()
++----+-------+
+| age|   name|
++----+-------+
+|  30|   Andy|
+|  19| Justin|
+|null|Michael|
++----+-------+
+ 
+//sort mutli column
+scala&gt; df.sort(df(&quot;age&quot;).desc, df(&quot;name&quot;).asc).show()
++----+-------+
+| age|   name|
++----+-------+
+|  30|   Andy|
+|  19| Justin|
+|null|Michael|
++----+-------+
+ 
+//change column name
+scala&gt; df.select(df(&quot;name&quot;).as(&quot;username&quot;),df(&quot;age&quot;)).show()
++--------+----+
+|username| age|
++--------+----+
+| Michael|null|
+|    Andy|  30|
+|  Justin|  19|
++--------+----+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Basic dataframe command" [2577-3797] -->
+<h2 class="sectionedit6" id="data_frame_real_life_application">Data frame real life application</h2>
+<div class="level2">
+
+<p>
+<a href="/doku.php?id=employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction" class="wikilink1" title="employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction">Happy customers</a>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Data frame real life application" [3798-] -->

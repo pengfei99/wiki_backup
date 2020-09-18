@@ -1,0 +1,2 @@
+smbclient -L \\localhost -U tanguy -W BIOASTER
+smbclient //localhost/sequencing -U tanguy -W BIOASTER

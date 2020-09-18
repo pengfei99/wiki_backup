@@ -1,0 +1,19 @@
+a:2:{s:7:"current";a:10:{s:4:"date";a:2:{s:7:"created";i:1392825520;s:8:"modified";i:1422284469;}s:7:"creator";s:17:"Tanguy LE CARROUR";s:4:"user";s:29:"tanguy.lecarrour@bioaster.org";s:11:"last_change";a:7:{s:4:"date";i:1422284469;s:2:"ip";s:12:"157.99.42.25";s:4:"type";s:1:"E";s:2:"id";s:20:"securite:serveur_web";s:4:"user";s:29:"tanguy.lecarrour@bioaster.org";s:3:"sum";s:10:"[Apache2] ";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:29:"tanguy.lecarrour@bioaster.org";s:17:"Tanguy LE CARROUR";s:26:"nicolas.sapay@bioaster.org";N;}s:11:"plugin_move";a:1:{s:7:"old_ids";a:3:{s:20:"securite:serveur_web";i:1421745105;s:28:"ccin2p3:securite:serveur_web";i:1421051716;s:24:"ut6:securite:serveur_web";i:1421745852;}}s:5:"title";s:25:"Configurer un serveur web";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:25:"configurer_un_serveur_web";s:5:"title";s:25:"Configurer un serveur web";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:8:"lighttpd";s:5:"title";s:8:"Lighttpd";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:7:"apache2";s:5:"title";s:7:"Apache2";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:508:"Configurer un serveur web
+
+Lighttpd
+
+Lighttpd est utilisé pour servir du contenu sur le réseau. Il est configuré pour utilisé le protocole HTTPS avec les certificats émis par le CA de BIOASTER.
+
+
+ssl.engine = "enable"
+ssl.pemfile = "/path/to/certificate+key-combined.pem"
+
+
+
+$SERVEUR["socket"] == ":443" {
+   server.name = "serveur.tld"
+   server.document-root = "/var/www"
+   ssl.engine = "enable"
+   ssl.pemfile = "/path/to/certificate+key-combined.pem"
+        
+   ssl.verifyclient.exportcert = "e…";}s:8:"relation";a:2:{s:10:"references";a:2:{s:22:"securite:certification";b:1;s:33:"securite:certificats_de_confiance";b:1;}s:10:"firstimage";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}}s:10:"persistent";a:6:{s:4:"date";a:2:{s:7:"created";i:1392825520;s:8:"modified";i:1422284469;}s:7:"creator";s:17:"Tanguy LE CARROUR";s:4:"user";s:29:"tanguy.lecarrour@bioaster.org";s:11:"last_change";a:7:{s:4:"date";i:1422284469;s:2:"ip";s:12:"157.99.42.25";s:4:"type";s:1:"E";s:2:"id";s:20:"securite:serveur_web";s:4:"user";s:29:"tanguy.lecarrour@bioaster.org";s:3:"sum";s:10:"[Apache2] ";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:29:"tanguy.lecarrour@bioaster.org";s:17:"Tanguy LE CARROUR";s:26:"nicolas.sapay@bioaster.org";N;}s:11:"plugin_move";a:1:{s:7:"old_ids";a:3:{s:20:"securite:serveur_web";i:1421745105;s:28:"ccin2p3:securite:serveur_web";i:1421051716;s:24:"ut6:securite:serveur_web";i:1421745852;}}}}

@@ -1,0 +1,39 @@
+
+<h1 class="sectionedit1" id="user_wants_to_access_vm_via_ssh_key_authentication">User wants to access VM via ssh key authentication</h1>
+<div class="level1">
+
+<p>
+If a user want to access linux VM in openstack with ssh key.
+</p>
+
+<p>
+If this user is not from UTEC 6, he or she has to do two things, supply his ssh public key and notify the admin system(Pengfei, Pierre).
+</p>
+
+<p>
+If this user is from UTEC 6, he or she need to go to <a href="https://gitlab.in2p3.fr/bioaster/Bioaster_OS_SSH_KEY" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/Bioaster_OS_SSH_KEY" rel="nofollow">https://gitlab.in2p3.fr/bioaster/Bioaster_OS_SSH_KEY</a>, commit his <strong>public key</strong>, and notify the admin system (i.e. Pengfei, Pierre)
+</p>
+
+</div>
+<!-- EDIT1 SECTION "User wants to access VM via ssh key authentication" [1-453] -->
+<h1 class="sectionedit2" id="procedure_for_enable_the_ssh_key_authtication_in_vm">Procedure for enable the ssh key authtication in Vm</h1>
+<div class="level1">
+
+<p>
+1. Make sure the vm sshd config accept ssh key as authentication mode.
+</p>
+
+<p>
+2. Once the VM is created, add user bioaster and assign sudoers without password.
+</p>
+
+<p>
+3. Create user &lt;e.g. pliu&gt; (We use the login convention of AD. First Lettre of given name plus the full familly name). Then Add user public key into authorized key. (A playbook will be available shortly) 
+</p>
+
+<p>
+4. Contact user to test access
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Procedure for enable the ssh key authtication in Vm" [454-] -->

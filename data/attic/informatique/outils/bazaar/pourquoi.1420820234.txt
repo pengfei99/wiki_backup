@@ -1,0 +1,19 @@
+====== Pourquoi Bazaar ? ======
+
+[[bioinformatique:outils:bazaar|GNU/Bazaar]] est un outil de gestion de révisions (RCS). Il en existe [[https://en.wikipedia.org/wiki/Comparison_of_revision_control_software|beaucoup d'autres]], dont les plus connus sont Subversion, Git et Mercurial. 
+
+L'une des différences majeures entre les différentes solutions est le "modèle de dépôt". Historiquement toutes les solutions étaient **centralisées** et dépendaient donc de l'accès à un serveur central. Les solutions modernes sont **décentralisées**, ce qui permet, entre autres, le travail hors connexion.
+
+La gestion de révision est un concept simple, mais la prise en main de certaines solutions peut-être compliquée. De plus, certains concepts sont difficiles à appréhender. Pour ces raisons, il est important d'adopter une solution simple et facile d'accès afin d'en favoriser l'adoption. Adapter une solution déjà maitrisée par un membre de l'équipe permet d'avoir un référent vers qui se tourner en cas de problème.
+
+//"Pour ma part, j'utilise Bazaar depuis plusieurs années. J'ai eu l'occasion de gérer plusieurs projets professionnels avec Bazaar et je n'ai encore jamais rencontré de limitation qui m'aurait fait considérer une autre solution. J'ai en fait eu l'occasion de tester certains concurrents (Git, Hg), mais sans grande conviction. La prise en main de Bazaar est simple, et la syntaxe est proche de celle adoptée par les autres solutions. Ceci en fait donc un bon candidat pour un premier contact avec un RCS. Les échanges de données entre les différents participants d'un projet se font via SSH, ce qui évite d'avoir à déployer de nouveaux services ou d'avoir à gérer indépendamment de nouvelles permissions d'accès."// ** - Tanguy**
+
+De nombreux articles comparent les différents systèmes et les discussions s'élargissent souvent à tout l'écosystème entourant le RCS : 
+
+  * [[http://blog.experimentalworks.net/2014/05/mercurial-vs-git-vs-bazaar-the-aftermath/|Mercurial vs. Git vs. Bazaar: The aftermath]]
+  * [[http://duckrowing.com/2014/04/25/git-vs-mercurial-vs-bazaar-vs-etc/|Git vs Mercurial vs Bazaar vs Etc…]]
+  * [[http://doc.bazaar.canonical.com/migration/en/why-switch-to-bazaar.html|Why Switch to Bazaar?]]
+  * [[http://komar.bitcheese.net/en/git-sucks-or-why-do-I-use-darcs-instead|Git sucks, or why do I use darcs instead]]
+  * [[http://duckrowing.com/2013/12/26/bzr-init-a-bazaar-tutorial/|Bzr Init: A Bazaar Tutorial]]\\ //"Bazaar, by default, exactly matches the ideal model. Now, I know my more cynical readers will point that this is because I picked Bazaar’s model as the “ideal” model, but they would be incorrect. Bazaar is not the first DVCS I used, nor did my ideal model derive from Bazaar. The ideal model is what I think should happen when branching and merging. As I said earlier, I don’t think the model I laid out is controversial. I use Bazaar because it meets the model, not the other way around."//
+  * ...
+

@@ -1,0 +1,281 @@
+
+<h1 class="sectionedit1" id="datamanagement_-_recolte_des_donnees_utecs">Datamanagement - Recolte des données UTECs</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_todo plugin_wrap">
+<p>
+ <em>Page en cours de réalisation</em> 
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+<a href="/_detail/ut6/projets_internes/schema-infra3.png?id=ut6%3Aprojets_internes%3Adatamanagement" class="media" title="ut6:projets_internes:schema-infra3.png"><img src="/_media/ut6/projets_internes/schema-infra3.png?w=650&amp;tok=efdb4e" class="media" alt="" width="650" /></a>
+</p>
+<hr />
+
+</div>
+<!-- EDIT1 SECTION "Datamanagement - Recolte des données UTECs" [1-166] -->
+<h2 class="sectionedit4" id="vms_de_management">VMs de Management</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> ccbiodmcc.in2p3.fr (134.158.36.7) au CCin2p3</div>
+</li>
+</ul>
+
+<p>
+    Isilon2 - freeBSD 64bits 2 vCPU 4096MB
+</p>
+<ul>
+<li class="level1"><div class="li"> DataManageBC.bioaster.local (10.69.20.16) à Bioaster 1</div>
+</li>
+</ul>
+
+<p>
+    EMC - freeBSD 64bits 2vCPU 4096MB
+</p>
+<ul>
+<li class="level1"><div class="li"> Cas particulier parisien : Serveur T</div>
+</li>
+</ul>
+
+<p>
+    <a href="/ordinateurs/mini_serveur" class="wikilink1" title="ordinateurs:mini_serveur">Mini Serveur</a>
+</p>
+<hr />
+
+</div>
+<!-- EDIT4 SECTION "VMs de Management" [167-482] -->
+<h2 class="sectionedit5" id="luns_baie_emc">LUNs Baie EMC</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "LUNs Baie EMC" [483-509] -->
+<h3 class="sectionedit6" id="biodata_lun_9_-_38_tib">biodata (LUN 9 - 3.8 TiB)</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> UTEC02 (3.8 TiB)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "biodata (LUN 9 - 3.8 TiB)" [510-567] -->
+<h3 class="sectionedit7" id="biodata2_lun_10_-_24_tib">biodata2 (LUN 10 - 2.4 TiB)</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> UTEC01 (quota 500 GiB)</div>
+</li>
+<li class="level1"><div class="li"> UTEC03 (quota 500 GiB)</div>
+</li>
+<li class="level1"><div class="li"> UTEC04 (quota 500 GiB)</div>
+</li>
+<li class="level1"><div class="li"> UTEC05 (quota 500 GiB)</div>
+</li>
+<li class="level1"><div class="li"> UTEC07 (quota 500 GiB)</div>
+</li>
+</ul>
+<hr />
+
+</div>
+<!-- EDIT7 SECTION "biodata2 (LUN 10 - 2.4 TiB)" [568-748] -->
+<h2 class="sectionedit8" id="montages">Montages</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "Montages" [749-770] -->
+<h3 class="sectionedit9" id="montage_gpfs_freebsd">Montage GPFS FreeBSD</h3>
+<div class="level3">
+<pre class="code">sudo adduser -u [UID CCin2p3] -g 1072
+sudo mount -o nosuid,nfsv3,hard,intr ccdtli94.in2p3.fr:/sps/bioaster /gpfs
+sudo vi /etc/fstab</pre>
+<dl class="code">
+<dt><a href="/_export/code/ut6/projets_internes/datamanagement?codeblock=1" title="Télécharger un extrait" class="mediafile mf_">/etc/fstab</a></dt>
+<dd><pre class="code text"># Device                Mountpoint      FStype  Options         Dump    Pass#
+/dev/gpt/swap0          none    swap    sw              0       0
+fdesc   /dev/fd         fdescfs         rw      0       0
+ccdtli94.in2p3.fr:/sps/bioaster /gpfs   nfs     rw      u=42158,g=1072,nosuid,tcp,nfsv3,hard,intr,m=770,M=770   0       0</pre>
+</dd></dl>
+
+<p>
+Au besoin, il faut changer le UMASK directement dans le VM pour avoir les bons droits d&#039;écriture sur GPFS.
+Pour cela, il faut créer ou modifier dans le home directory du <em>user</em> un fichier .login_conf (modifier en fait).
+</p>
+<dl class="code">
+<dt><a href="/_export/code/ut6/projets_internes/datamanagement?codeblock=2" title="Télécharger un extrait" class="mediafile mf_login_conf">.login_conf</a></dt>
+<dd><pre class="code text"># $FreeBSD: releng/10.1/share/skel/dot.login_conf 77995 2001-06-10 17:08:53Z ache $
+#
+# see login.conf(5)
+#
+me:\
+        :umask=007:</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT9 SECTION "Montage GPFS FreeBSD" [771-1693] -->
+<h3 class="sectionedit10" id="montage_datastore">Montage Datastore</h3>
+<div class="level3">
+
+<p>
+Déclarer au préalable l&#039;adresse IP du serveur dans FreeNAS.
+</p>
+<pre class="code">sudo mount 10.69.2.12:/mnt/biodata/UTEC02 /mnt/UTEC02
+sudo vi /etc/fstab</pre>
+<dl class="code">
+<dt><a href="/_export/code/ut6/projets_internes/datamanagement?codeblock=4" title="Télécharger un extrait" class="mediafile mf_">/etc/fstab</a></dt>
+<dd><pre class="code text"># /etc/fstab
+# Created by anaconda on Tue Jul 30 18:12:24 2013
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/vg_bioa2013pc03-lv_root /                       ext4    defaults        1 1
+UUID=82607d5e-bcd2-467c-86d9-ca8b104fef58 /boot                   ext4    defaults        1 2
+/dev/mapper/vg_bioa2013pc03-lv_home /home                   ext4    defaults        1 2
+/dev/mapper/vg_bioa2013pc03-lv_swap swap                    swap    defaults        0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
+ccbioappl04.in2p3.fr    /home/cauchard/owncloud davfs   user,rw,noauto  0 0
+10.69.2.12:/mnt/biodata/UTEC02  /mnt/UTEC02     nfs     rw,hard,intr    0 0</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT10 SECTION "Montage Datastore" [1694-2932] -->
+<h2 class="sectionedit11" id="vms">VMs</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT11 SECTION "VMs" [2933-2949] -->
+<h3 class="sectionedit12" id="datamanagebc">DataManageBC</h3>
+<div class="level3">
+<dl class="code">
+<dt><a href="/_export/code/ut6/projets_internes/datamanagement?codeblock=5" title="Télécharger un extrait" class="mediafile mf_conf">/etc/rc.conf</a></dt>
+<dd><pre class="code text">hostname DataManageBC.bioaster.local
+IP 10.69.20.16
+Router 10.69.20.1</pre>
+</dd></dl>
+<!-- EDIT13 PLUGIN_WRAP_START [0-] --><div class="wrap_tip plugin_wrap">
+<p>
+<strong>Vi - FreeBSD</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> C+W (ChangeWord) - Modification d&#039;un mot spécifique</div>
+</li>
+<li class="level1"><div class="li"> CTRL+Z+Z - Quitte Vi en sauvegardant (éq. Echap+W+Q)</div>
+</li>
+</ul>
+</div><!-- EDIT14 PLUGIN_WRAP_END [0-] --><pre class="code">sudo rm /etc/ssh/ssh_host_*
+
+sudo pkg update (MàJ paquets)
+sudo pkg upgrade
+
+freebsd-update fretch install (MàJ OS)
+
+shutdown -p now (Éteint la machine)
+shutdown -r (Redemarre la machine)</pre>
+
+</div>
+<!-- EDIT12 SECTION "DataManageBC" [2950-3432] -->
+<h2 class="sectionedit15" id="maintenance_vms">Maintenance VMs</h2>
+<div class="level2">
+<!-- EDIT16 PLUGIN_WRAP_START [0-] --><div class="wrap_todo plugin_wrap">
+<p>
+ En cours 
+</p>
+</div><!-- EDIT17 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT15 SECTION "Maintenance VMs" [3433-3491] -->
+<h2 class="sectionedit18" id="transfert_des_donnees_vers_le_ccin2p3">Transfert des données vers le CCIN2P3</h2>
+<div class="level2">
+
+<p>
+Le transfert de données depuis les UTEC store vers GPFS permet de :
+</p>
+<ul>
+<li class="level1"><div class="li"> transférer de gros volume de fichier par la liaison <abbr title="Local Area Network">LAN</abbr>-to-<abbr title="Local Area Network">LAN</abbr>;</div>
+</li>
+<li class="level1"><div class="li"> stocker les fichier dans une infra sauvegardée (les UTEC store ne sont pas sauvegardé jusqu&#039;à présent).</div>
+</li>
+</ul>
+
+<p>
+L&#039;hypothèse de travail est la suivante :
+</p>
+<ol>
+<li class="level1"><div class="li"> les fichiers sont classées selon la norme AQ dans un répertoire <code>Projets/</code> (<span class="wrap_info ">suggestion de <abbr title="Nicolas Sapay">NS</abbr></span>) du datastore de l&#039;UTECx</div>
+</li>
+<li class="level1"><div class="li"> le répertoire <code>Projets/</code> est dupliqué avec <code>rsync</code> vers <code>/sps/bioaster/Projets</code> (avec le compte <code><a href="/ccin2p3/stockage" class="wikilink1" title="ccin2p3:stockage">biodata</a></code>)</div>
+</li>
+<li class="level1"><div class="li"> si le <code>rsync</code> se termine avec succès, les données de <code>Projets/</code> du data store  sont effacées</div>
+</li>
+<li class="level1"><div class="li"> les fichiers non classés sont stockés dans un répertoire <code>Travail/</code> (<span class="wrap_info ">suggestion de <abbr title="Nicolas Sapay">NS</abbr></span>) du data store de l&#039;UTECx</div>
+</li>
+<li class="level1"><div class="li"> le répertoire travail est dupliqué vec <code>rsync</code> vers <code>/sps/bioaster/UTECstore</code> (avec le compte <code><a href="/ccin2p3/stockage" class="wikilink1" title="ccin2p3:stockage">biodata</a></code>)</div>
+</li>
+<li class="level1"><div class="li"> Les données sont rendus accessibles au CC depuis des VM OpenStack ou VMware</div>
+</li>
+<li class="level1"><div class="li"> Les données sont rendus accessibles au CC depuis OwnCloud 2</div>
+</li>
+</ol>
+
+<p>
+Points bloquants identifiés :
+</p>
+<ol>
+<li class="level1"><div class="li"> Si tous les fichiers appartiennent à <code>biodata</code>, il faut que ce soit <code>biodata</code> qui exploite les fichiers depuis les VM et OwnCloud2, ou alors ouvrir les droits de lecture/écriture à tout le groupe <code>bioaster</code>.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT18 SECTION "Transfert des données vers le CCIN2P3" [3492-4904] -->
+<h2 class="sectionedit19" id="owncloud">OwnCloud</h2>
+<div class="level2">
+
+<p>
+Pour la procédure d&#039;installation, <a href="/informatique/owncloud" class="wikilink1" title="informatique:owncloud">lire la documentation dédiée</a>.
+</p>
+
+</div>
+<!-- EDIT19 SECTION "OwnCloud" [4905-5020] -->
+<h3 class="sectionedit20" id="actuellement">Actuellement</h3>
+<div class="level3">
+
+<p>
+OwnCloud est un service Web d&#039;échange et de partage de petits fichiers (&lt;500 Mo). Il est accessible depuis l&#039;<abbr title="Uniform Resource Locator">URL</abbr> <a href="https://ccbioappl04.in2p3.fr/owncloud/" class="urlextern" title="https://ccbioappl04.in2p3.fr/owncloud/"  rel="nofollow">https://ccbioappl04.in2p3.fr/owncloud/</a>. Pour l&#039;instant, OwnCloud possède sa propre base (SQLite) d&#039;utilisateurs et stocke les données sur la baire EMC du CCIN2P3. Les données doivent être sauvegardées/copiées à la mano sur GPFS. Les groupes d&#039;utilisateurs sont créés selon les directives de l&#039;AQ stockées dans un fichier Excel. Ces directives dépendent des projets et du P.M.O.
+</p>
+
+</div>
+<!-- EDIT20 SECTION "Actuellement" [5021-5548] -->
+<h3 class="sectionedit21" id="owncloud2">OwnCloud2</h3>
+<div class="level3">
+
+<p>
+Une migration vers OwnCloud2 se prépare afin que le service OwnCloud écrive directement les données sur GPFS. Depuis GPFS, les fichiers seront rendu accessible par des montages NFS sur les VM d&#039;OpenStack du de VMware au CCIN2P3. 
+</p>
+
+<p>
+La liste des choses à faire a été transférée sur la forge : <a href="http://forge.bioaster.org/projects/owncloud2/issues" class="urlextern" title="http://forge.bioaster.org/projects/owncloud2/issues"  rel="nofollow">http://forge.bioaster.org/projects/owncloud2/issues</a>
+</p>
+
+<p>
+Points bloquants identifiés :
+</p>
+<ol>
+<li class="level1"><div class="li"> Les données appartiendront à <code><a href="/ccin2p3/stockage" class="wikilink1" title="ccin2p3:stockage">biodata</a></code> du groupe <code>bioaster</code>, et plus à des personnes physiques.</div>
+</li>
+<li class="level1"><div class="li"> Lors du montage NFS sur les VM GNU/Linux, il faudra forcer le UID/GID dans la VM pour que l&#039;écriture se fasse au nom de <code>biodata</code>.</div>
+</li>
+<li class="level1"><div class="li"> Il n&#039;y a pas d&#039;interface SMB pour permettre le montage de GPFS sous Windows.</div>
+</li>
+</ol>
+
+<p>
+<strong>Point 1 <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* Il semble que l&#039;on puisse donner n&#039;importe quel UID/GID à GPFS, même si l&#039;utilisateur n&#039;a pas de compte CCIN2P3. Ca permettrait de garder le nom de l&#039;utilisateur et de gérer les droits avec des groupes propres au labo bioaster (tel que défini par le CCIN2P3). </strong>En revanche, il faut déterminer si OwnCloud peut écrire en utilisant plusieurs UID/GID<strong>.
+
+</strong>Point 2 <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* A priori, c&#039;est possible et ça a été testé par <abbr title="Anthony Berger">AB</abbr>. On peut forcer n&#039;importe quel UID/GID dans la VM.
+</p>
+
+<p>
+<strong>Point 3 <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* Il faut voir avec le CC s&#039;il peuvent nous fournir une interface SMB à GPFS (<abbr title="Anthony Berger">AB</abbr> s&#039;en charge?)
+</p>
+
+</div>
+<!-- EDIT21 SECTION "OwnCloud2" [5549-] -->

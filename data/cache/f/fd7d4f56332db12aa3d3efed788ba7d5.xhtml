@@ -1,0 +1,68 @@
+
+<p>
+Suite à la réunion du 17 Mars entre <abbr title="Yoann Mouscaz">YM</abbr> <abbr title="Guillaume Boissy">GB</abbr> et <abbr title="Clément Delestre">CD</abbr> il a été demandé à <abbr title="Yoann Mouscaz">YM</abbr> et <abbr title="Clément Delestre">CD</abbr> de dimensionner les scenarii possibles pour implémenter l&#039;import des données dans biospecimens
+</p>
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"># </th><th class="col1 leftalign">Description?                  </th><th class="col2 leftalign">Points forts          </th><th class="col3 leftalign">Points faibles  </th><th class="col4">Isofonctionnel </th><th class="col5">Temps </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0">1 </th><td class="col1"> Dumper la BDD Access de <abbr title="Karen Louis">KL</abbr> telle quelle et la relier à celle de biospecimens <a href="https://eggerapps.at/mdbviewer/docs/en/export-sql.html" class="urlextern" title="https://eggerapps.at/mdbviewer/docs/en/export-sql.html"  rel="nofollow">avec ce genre d&#039;outil</a> </td><td class="col2"> * <abbr title="Karen Louis">KL</abbr> garde 100% la main sur sa BDD  <br/>
+* Plus simple à exporter pour <abbr title="Karen Louis">KL</abbr> </td><td class="col3 leftalign"> * On doit modifier les requêtes du moteur de recherche + son affichage + liaison “panier” (ou échantillon retenu) <br/>
+* Que faire si on a une erreur SQL en cours d&#039;import ?  <br/>
+* On garde la BDD Access de <abbr title="Karen Louis">KL</abbr>   </td><td class="col4 leftalign"> Quasiment (devra exporter un fichier .sql qu&#039;elle donnera à l&#039;UTEC 06)  </td><td class="col5"> ~10 jours si tout se passe bien </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0">2 </th><td class="col1"> Middleware / pluggin pour access qui mappe les champs de la BDD Access avec une autre à distance sous MySQL <a href="https://dbconvert.com/access/" class="urlextern" title="https://dbconvert.com/access/"  rel="nofollow">avec un outil payant</a> </td><td class="col2 leftalign"> * <abbr title="Karen Louis">KL</abbr> garde 100% la main sur sa BDD  <br/>
+* Plus simple à exporter pour <abbr title="Karen Louis">KL</abbr>  </td><td class="col3"> * Outil payant (à choisir je préférerais mon IDE <img class="emojione" alt="&#x1f604;" src="//cdn.jsdelivr.net/emojione/assets/png/1F604.png?v=1.2.4"/> ) <br/>
+* On doit modifier les requêtes du moteur de recherche + son affichage + liaison “panier” (ou échantillon retenu)  <br/>
+* On garde la BDD Access de <abbr title="Karen Louis">KL</abbr> </td><td class="col4"> Non </td><td class="col5"> Difficile à évaluer, 10-15 jours je pense</td>
+	</tr>
+	<tr class="row3">
+		<th class="col0">3 </th><td class="col1"> Script sous access qui synchronise avec la BDD MariaDB à distance (en VB ?) </td><td class="col2"> * <abbr title="Karen Louis">KL</abbr> garde la main sur sa BDD <br/>
+* Permettrait de rajouter un bouton “synchroniser” dans les formulaires de <abbr title="Karen Louis">KL</abbr> <br/>
+* Ainsi elle n&#039;aurait pas tous ses soucis d&#039;export compliqués </td><td class="col3"> * En VB → doit être codé sous l&#039;ordi windows <br/>
+* On garde la BDD Access de <abbr title="Karen Louis">KL</abbr> <br/>
+* On doit modifier les requêtes du moteur de recherche + son affichage + liaison “panier” (ou échantillon retenu) </td><td class="col4"> Non, mais mieux pour <abbr title="Karen Louis">KL</abbr> </td><td class="col5"> Difficile à évaluer, 10-15 jours je pense</td>
+	</tr>
+	<tr class="row4">
+		<th class="col0">4 </th><td class="col1"> Parser le fichier .csv qu&#039;exporte <abbr title="Karen Louis">KL</abbr> </td><td class="col2"> * <abbr title="Karen Louis">KL</abbr> pourra remplir sa BDD à partir de catalogue déjà existants et ne pas s&#039;appuyer sur l&#039;UTEC06 <br/>
+*Pose les bases pour la solution ci-dessous → N&#039;empêche pas l&#039;évolutionnabilité du projet</td><td class="col3"> *Quelques migrations à faire : une table (collection) + des champs à ajouter <br/>
+*Faudra faire attention à ne pas supprimer les entrées déjà existantes </td><td class="col4"> Oui </td><td class="col5"> ~20 jours </td>
+	</tr>
+	<tr class="row5">
+		<th class="col0">5 </th><td class="col1"> Formulaires semblables à ceux de <abbr title="Karen Louis">KL</abbr> accessibles en backoffice pour remplir la BDD </td><td class="col2"> * On laisse tomber Accces </td><td class="col3 leftalign"> *Même migration que la solution ci-dessus <br/>
+* <abbr title="Karen Louis">KL</abbr> doit passer par l&#039;UTEC 06 pour parser un catalogue <br/>
+* <abbr title="Karen Louis">KL</abbr> doit passer par l&#039;UTEC 06 si elle veut faire évoluer des listes et/ou des validateurs  </td><td class="col4"> Non, au délà </td><td class="col5"> ~40 jours </td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [181-2664] -->
+<p>
+<em class="u">Investigation de la BDD de Novius :</em>
+</p>
+
+<p>
+[<abbr title="Clément Delestre">CD</abbr>] : Sur la version en prod de Novius les IDs des tables &#039;articles_fournisseurs_humains&#039; et &#039;articles_fournisseurs_souches&#039; commencent toutes les deux à 1. Donc je pense que l&#039;import de données implémentée par Novius ne fonctionne pas en supprimer/remplacer mais vérifie bien si une ligne donnée existe en BDD avant de l&#039;ajouter.
+</p>
+
+<p>
+<em class="u">Autres :</em>
+</p>
+
+<p>
+[<abbr title="Clément Delestre">CD</abbr>] : J&#039;ai eu du mal à trouver le fameux middleware magique. Est-ce que ce que j&#039;ai trouvé ça va ?
+</p>
+
+<p>
+Biblio :
+</p>
+
+<p>
+<a href="https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-programming.html" class="urlextern" title="https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-programming.html"  rel="nofollow">https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-programming.html</a>
+</p>
+
+<p>
+<a href="https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-tools-with-access-export.html" class="urlextern" title="https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-tools-with-access-export.html"  rel="nofollow">https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-examples-tools-with-access-export.html</a>
+</p>

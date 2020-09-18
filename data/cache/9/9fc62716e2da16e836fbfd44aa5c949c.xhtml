@@ -1,0 +1,288 @@
+
+<h1 class="sectionedit1" id="part_2containers">Part 2: Containers</h1>
+<div class="level1">
+
+<p>
+It’s time to begin building an app the Docker way. We start at the bottom of the hierarchy of such app, a container, which this page covers. Above this level is a service, which defines how containers behave in production, covered in Part 3. Finally, at the top level is the stack, defining the interactions of all the services, covered in Part 5.
+</p>
+
+<p>
+Stack
+Services
+Container (you are here)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Part 2: Containers&quot;,&quot;hid&quot;:&quot;part_2containers&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-426&quot;} -->
+<h2 class="sectionedit2" id="define_a_container_with_dockerfile">Define a container with Dockerfile</h2>
+<div class="level2">
+
+<p>
+Dockerfile defines what goes on in the environment inside your container. Access to resources like networking interfaces and disk drives is virtualized inside this environment, which is isolated from the rest of your system, so you need to map ports to the outside world, and be specific about what files you want to “copy in” to that environment. However, after doing that, you can expect that the build of your app defined in this Dockerfile behaves exactly the same wherever it runs.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Define a container with Dockerfile&quot;,&quot;hid&quot;:&quot;define_a_container_with_dockerfile&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;427-966&quot;} -->
+<h3 class="sectionedit3" id="dockerfile">Dockerfile</h3>
+<div class="level3">
+<pre class="code"># create a dir for storing the docker file go to the dir
+mkdir -p /tmp/docker
+cd /tmp/docker
+
+# create a file 
+vim Dockerfile
+
+# copy the below content into the Dockerfile
+# Use an official Python runtime as a parent image
+FROM python:2.7-slim
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
+CMD [&quot;python&quot;, &quot;app.py&quot;]</pre>
+
+<p>
+This Dockerfile refers to a couple of files we haven’t created yet, namely app.py and requirements.txt. Let’s create those next.
+</p>
+
+<p>
+Create two more files, requirements.txt and app.py, and put them in the same folder with the Dockerfile. 
+</p>
+<pre class="code">##################### requirements.txt ####################
+Flask
+Redis
+
+
+###################### app.py #############################
+# This python script connects to a redis db
+from flask import Flask
+from redis import Redis, RedisError
+import os
+import socket
+
+redis = Redis(host=&quot;redis&quot;, db=0, socket_connect_timeout=2, socket_timeout=2)
+
+app = Flask(__name__)
+
+@app.route(&quot;/&quot;)
+def hello():
+    try:
+        visits = redis.incr(&quot;counter&quot;)
+    except RedisError:
+        visits = &quot;&lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;&quot;
+
+    html = &quot;&lt;h3&gt;Hello {name}!&lt;/h3&gt;&quot; \
+           &quot;&lt;b&gt;Hostname:&lt;/b&gt; {hostname}&lt;br/&gt;&quot; \
+           &quot;&lt;b&gt;Visits:&lt;/b&gt; {visits}&quot;
+    return html.format(name=os.getenv(&quot;NAME&quot;, &quot;world&quot;), hostname=socket.gethostname(), visits=visits)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&#039;0.0.0.0&#039;, port=80)
+</pre>
+
+<p>
+Now we see that pip install -r requirements.txt installs the Flask and Redis libraries for Python, and the app prints the environment variable NAME, as well as the output of a call to socket.gethostname(). Finally, because Redis isn’t running (as we’ve only installed the Python library, and not Redis itself), we should expect that the attempt to use it here fails and produces the error message.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Dockerfile&quot;,&quot;hid&quot;:&quot;dockerfile&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;967-3174&quot;} -->
+<h3 class="sectionedit4" id="build_the_app">Build the app</h3>
+<div class="level3">
+
+<p>
+Now we need to use the docker file to generate a docker image, make sure you can see the 3 files when you do ls.
+</p>
+<pre class="code"># This creates a Docker image, which we’re going to name using the --tag option. Use -t if you want to use the shorter option.
+
+# the tag must be lowercase, the . means find docker file in current dir. The name of the docker file must be Dockerfile
+docker build --tag=pythondemo .
+
+# view the created image
+docker image ls</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Build the app&quot;,&quot;hid&quot;:&quot;build_the_app&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;3175-3654&quot;} -->
+<h3 class="sectionedit5" id="run_the_app">Run the app</h3>
+<div class="level3">
+
+<p>
+Run the app, mapping your machine’s port 4000 to the container’s published port 80 using -p:
+</p>
+<pre class="code">docker run -p 4000:80 pythondemo</pre>
+
+<p>
+You should see a message that Python is serving your app at <a href="http://0.0.0.0:80" class="urlextern" title="http://0.0.0.0:80" rel="ugc nofollow">http://0.0.0.0:80</a>. But that message is coming from inside the container, which doesn’t know you mapped port 80 of that container to 4000, making the correct <abbr title="Uniform Resource Locator">URL</abbr> <a href="http://localhost:4000" class="urlextern" title="http://localhost:4000" rel="ugc nofollow">http://localhost:4000</a>.
+</p>
+
+<p>
+You can use curl to verify it
+</p>
+<pre class="code">curl http://localhost:4000
+
+&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; 8fc990912a14&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; &lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;</pre>
+
+<p>
+Hit CTRL+C in your terminal to quit.
+</p>
+
+<p>
+Now let’s run the app in the background, in detached mode:
+</p>
+<pre class="code">docker run -d -p 4000:80 pythondemo</pre>
+
+<p>
+You get the long container ID for your app and then are kicked back to your terminal. Your container is running in the background. You can also see the abbreviated container ID with docker container ls (and both work interchangeably when running commands):
+</p>
+<pre class="code">$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                  NAMES
+2b8dbfb78d12        pythondemo          &quot;python app.py&quot;     57 seconds ago      Up 56 seconds       0.0.0.0:4000-&gt;80/tcp   modest_driscoll
+
+# to stop a container run in the background
+$ dock stop &lt;option&gt; &lt;container_id&gt;
+
+# you can add an option --time or -t, it defines seconds to wait for stop before killing it, the default value is 10, if nothing is specified
+
+#example
+dock stop -t 20 2b8dbfb78d12
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Run the app&quot;,&quot;hid&quot;:&quot;run_the_app&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;3655-5245&quot;} -->
+<h3 class="sectionedit6" id="share_your_image">Share your image</h3>
+<div class="level3">
+
+<p>
+To demonstrate the portability of what we just created, let’s upload our built image and run it somewhere else. After all, you need to know how to push to registries when you want to deploy containers to production.
+</p>
+
+<p>
+A registry is a collection of repositories, and a repository is a collection of images—sort of like a GitHub repository, except the code is already built. An account on a registry can create many repositories. The docker CLI uses Docker’s public registry by default.
+</p>
+
+<p>
+The notation for associating a local image with a repository on a registry is username/repository:tag. The tag is optional, but recommended, since it is the mechanism that registries use to give Docker images a version. Give the repository and tag meaningful names for the context, such as get-started:part2. This puts the image in the get-started repository and tag it as part2.
+</p>
+
+<p>
+Now, put it all together to tag the image. Run docker tag image with your username, repository, and tag names so that the image uploads to your desired destination. The syntax of the command is:
+</p>
+<pre class="code"># login to docker public registry
+docker login
+
+# tag the image
+docker tag &lt;image-name&gt; &lt;username&gt;/repository:tag
+
+# for example
+docker tag pythondemo pengfei99/test:v1
+
+# check the tagged image
+docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+pythondemo          latest              3ea6dc02e4a6        24 minutes ago      131MB
+liupengfei99/test   v1                  3ea6dc02e4a6        24 minutes ago      131MB
+python              2.7-slim            ca96bab3e2aa        2 weeks ago         120MB
+
+# upload the image
+docker push username/repository:tag
+
+# example
+docker push liupengfei99/test:v1
+
+# pull and run the image from the remote repository
+docker run -p 4000:80 liupengfei99/test:v1</pre>
+
+</div>
+
+<h4 id="upload_your_image_to_a_private_docker_repo">Upload your image to a private docker repo</h4>
+<div class="level4">
+<pre class="code">
+
+You need to tag your image correctly first with your registryhost:
+
+docker tag [OPTIONS] IMAGE[:TAG] [REGISTRYHOST/][USERNAME/]NAME[:TAG]
+
+Then docker push using that same tag.
+
+docker push NAME[:TAG]
+
+Example:
+
+# edc33d4e3d73 is your image id
+# docker-registry.beta.innovation.insee.eu is the private registryhost
+docker tag edc33d4e3d73 docker-registry.beta.innovation.insee.eu/pengfei/pythondemo
+docker push docker-registry.beta.innovation.insee.eu/pengfei/pythondemo
+
+</pre>
+
+</div>
+
+<h4 id="common_problems">common problems</h4>
+<div class="level4">
+
+<p>
+Private repo often uses self-singed certificate. When you upload your image, you will encounter <strong>certificate signed by unknown authority</strong> problem.
+</p>
+
+<p>
+You have two solutions to solve this problem
+</p>
+<ol>
+<li class="level1"><div class="li"> Add the private repo as insecure repo in docker settings</div>
+</li>
+<li class="level1"><div class="li"> Add root certificate of the self-singed certificate as trusted ca in your os</div>
+</li>
+</ol>
+
+</div>
+
+<h5 id="add_repo_as_insecure_repo">Add repo as insecure repo</h5>
+<div class="level5">
+<pre class="code"># go to your docker config dir
+cd /etc/docker
+
+# create daemon.json
+vim daemon.json
+
+# add following line, myregistrydomain.com is the url of the private repo
+{
+  &quot;insecure-registries&quot; : [&quot;myregistrydomain.com:5000&quot;]
+}</pre>
+
+</div>
+
+<h5 id="add_cert_as_trusted_ca">Add cert as trusted ca</h5>
+<div class="level5">
+<pre class="code">############## in centos/Red hat ###############################
+# copy the certificate into /etc/pki/ca-trust/source/anchors/
+cp certs/domain.crt /etc/pki/ca-trust/source/anchors/myregistrydomain.com.crt
+# refresh trust ca list
+update-ca-trust
+
+############# Ubuntu ######################################
+$ cp certs/domain.crt /usr/local/share/ca-certificates/myregistrydomain.com.crt
+update-ca-certificates
+
+################ ORacle linux #####################
+cp certs/domain.crt /etc/pki/ca-trust/source/anchors/myregistrydomain.com.crt
+update-ca-trust enable
+</pre>
+
+<p>
+You need to restart docker for the changes to take effect 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Share your image&quot;,&quot;hid&quot;:&quot;share_your_image&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;5246-&quot;} -->

@@ -1,0 +1,128 @@
+
+<h1 class="sectionedit1" id="shibboleth">Shibboleth</h1>
+<div class="level1">
+
+<p>
+L&#039;installation de Shibboleth est documenté dans le dépôt Ansible pour les rôles <a href="https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth"  rel="nofollow">shibboleth</a> et <a href="https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth-apache" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth-apache"  rel="nofollow">shibboleth-apache</a>.
+</p>
+
+<p>
+La documentation pour intégrer des données de la base de données SCIFORMA se trouve <a href="/informatique/authauth/shibboleth_sciforma" class="wikilink1" title="informatique:authauth:shibboleth_sciforma"> sur cette page dédiée</a>.
+</p>
+
+<p>
+Ci-dessous, en vert et jaune, les principaux fichiers de configuration pour l&#039;IDP et les SP.
+</p>
+
+<p>
+<a href="/_detail/informatique/authauth/passeport_shibboleth_config_files.png?id=informatique%3Aauthauth%3Ashibboleth" class="media" title="informatique:authauth:passeport_shibboleth_config_files.png"><img src="/_media/informatique/authauth/passeport_shibboleth_config_files.png?w=800&amp;tok=7f6ce9" class="media" alt="" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Shibboleth" [1-626] -->
+<h2 class="sectionedit2" id="integration_avec_symfony">Intégration avec Symfony</h2>
+<div class="level2">
+
+<p>
+Celle-ci se fait en utilisant le composant <code>Guard</code> disponible dans Symfony depuis la version 2.8. Le code pour l&#039;intégration est disponible ici : <a href="https://gitlab.in2p3.fr/tlecarro/LIMS/commit/39a7a67e4d7b6850ad1dc02fbf84ab459d5550b8" class="urlextern" title="https://gitlab.in2p3.fr/tlecarro/LIMS/commit/39a7a67e4d7b6850ad1dc02fbf84ab459d5550b8"  rel="nofollow">https://gitlab.in2p3.fr/tlecarro/LIMS/commit/39a7a67e4d7b6850ad1dc02fbf84ab459d5550b8</a>
+</p>
+
+<p>
+Celle-ci doit être un peu modifiée, car les attributs n&#039;étaient pas fixés au moment du commit. Pour voir une version qui marche : <a href="https://devtools.bioaster.org/secure" class="urlextern" title="https://devtools.bioaster.org/secure"  rel="nofollow">https://devtools.bioaster.org/secure</a>
+</p>
+
+<p>
+Cette version est juste une installe symfony de base avec qlq fichiers modifiés (voir <code>cclindevtoolsp01:~$ cat /var/www/html/symfony_and_shibboleth/MISE_EN_PLACE_DE_GUARD.txt</code>)
+</p>
+
+<p>
+Dans l&#039;environnement de dév., les variables d&#039;environnement ne peuvent pas être définies. Elles sont remplacées par des headers de requêtes qui sont accessible avec <code>$request→headers→get(&#039;xxxx&#039;)</code>. Le plugin FF modify headers permet de les définir.
+</p>
+
+<p>
+<code>Shibd</code>, le composant apache en charge de la communication avec Shibboleth définit les variables d&#039;environnement en fonction des informations récupérées. Celles-ci sont récupéré en utilisant <code>$request→server→get(&#039;xxxx&#039;)</code>.
+</p>
+
+<p>
+En dév., il est donc nécessaire de (au choix) :
+</p>
+<ol>
+<li class="level1"><div class="li"> modifier le code ;</div>
+</li>
+<li class="level1"><div class="li"> créer un second guard modifié et de l&#039;activer dans app/config/security.yml</div>
+</li>
+</ol>
+
+<p>
+En prod, on pourrait convertir les variables d&#039;env en header de requête… à voir…
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Intégration avec Symfony" [627-1994] -->
+<h2 class="sectionedit3" id="dictionnaire_des_attributs">Dictionnaire des attributs</h2>
+<div class="level2">
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_leftround wrap_todo plugin_wrap" style="width: 60%;">
+<p>
+PV : A TERMINER ET A FAIRE VALIDER PAR UTEC06 <br/>
+
+YM : Introduire les BA_ID dans SHIB-WPS
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] --><div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Nom de l&#039;attribut  </th><th class="col1 leftalign">Description  </th><th class="col2">Source </th><th class="col3">Nom de l&#039;attribut dans la source </th><th class="col4">Format/Exemple </th><th class="col5">Remarque </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">SHIB-USERNAME </td><td class="col1">Nom de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3"> sn </td><td class="col4">Boissy </td><td class="col5"></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">SHIB-FIRSTNAME</td><td class="col1">Prénom de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3 leftalign"> givenName  </td><td class="col4">Guillaume </td><td class="col5"></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">SHIB-EMAIL</td><td class="col1">Mail de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3"> mail </td><td class="col4">guillaume.boissy@bioaster.org </td><td class="col5"></td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">SHIB-LABS</td><td class="col1">Appartenances labos de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3"> departement &amp; ? </td><td class="col4">BIOASTER*DST*DUT*UTEC06 </td><td class="col5"></td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">SHIB-SITE</td><td class="col1">Site physique de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3 leftalign"> physicalDeliveryOfficeName  </td><td class="col4">BIOASTER1 </td><td class="col5"></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">SHIB-CITY</td><td class="col1">Ville de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3 leftalign">  </td><td class="col4">Lyon </td><td class="col5"></td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">SHIB-COUNTRY</td><td class="col1">Pays de l&#039;utilisateur </td><td class="col2 leftalign">AD   </td><td class="col3 leftalign">  </td><td class="col4">France </td><td class="col5"></td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">SHIB-WPS</td><td class="col1">Appartenance Workpackages/projets de l&#039;utilisateur </td><td class="col2 leftalign">SCIFORMA   </td><td class="col3"> wps </td><td class="col4">PROJECT1::WP1;PROJECT1::WP2;PROJECT2::WP0;PROJECT3::WP4;PROJECT3::WP1 </td><td class="col5"></td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [2162-2925] -->
+<p>
+<strong>NB : active directory adress ⇒ srvadmin.bioaster.local ; requête pour utilisateurs : (&amp;(objectClass=user)(objectCategory=user)) </strong>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Dictionnaire des attributs" [1995-3063] -->
+<h2 class="sectionedit7" id="instance_serveur_shibboleth">Instance serveur Shibboleth</h2>
+<div class="level2">
+
+<p>
+IP adress : 10.70.3.11
+</p>
+
+<p>
+Infra : Vmware@CC
+</p>
+
+<p>
+<abbr title="Operating System">OS</abbr> : CentOS Linux release 7.1.1503 (Core)
+</p>
+
+<p>
+Flavor : 2 vCPU, RAM 4GB
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Instance serveur Shibboleth" [3064-] -->

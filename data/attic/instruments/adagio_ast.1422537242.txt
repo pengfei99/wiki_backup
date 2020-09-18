@@ -1,0 +1,32 @@
+====== Adagio AST System ======
+
+===== Introduction =====
+
+Le système ADAGIO™ de lecture et d'interprétation automatiques des tests de sensibilité antimicrobienne sur disque est conçu autour d'un logiciel de gestion des données et d'un dispositif d'imagerie qui mesure la taille de la zone d'inhibition autour d'un disque antibiotique. ADAGIO™ bénéficie d'une technique intégrée permettant la détection des mécanismes de résistance antibiotique les plus fréquents, ainsi que des incohérences et des erreurs techniques. \\
+[[http://www.bio-rad.com/fr-fr/product/adagio-automated-system]]
+
+===== Contacts =====
+
+  * **Responsable** : Jennifer
+  * **Support** : Tanguy
+  * **Field Application Specialist** : -
+  * **Field Service Engineer** : -
+
+===== Informations =====
+
+  * **Salle** : -
+  * **Nom** : -
+  * **Numéro de Série** :
+    * Modèle : -
+    * N/S : -
+    * Job : - 
+  * **Adresse MAC** : 00:18:7D:33:FE:72
+  * **Adresse IP** : 10.6.2.51 (statique)
+  * **Ordinateur de contrôle** : aucun, car le contrôle se fait //via// une interface web ; il suffit donc d'utiliser un PC adjacent à l'instrument
+
+La sauvegarde automatique de la configuration et de la base de données se fait dans ''T:\instruments\Adagio''
+
+===== Journal =====
+
+  * **2015.01.29 (tlc)** Attribution de l'adresse IP, configuration de la sauvegarde et formation
+  * **2015.01.19 (tlc)** Déballage avec la personne de chez BIO RAD pour obtenir l'adresse MAC

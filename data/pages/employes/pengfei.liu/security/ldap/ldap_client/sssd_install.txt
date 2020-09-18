@@ -1,0 +1,279 @@
+====== Use sssd as ldap authentication client in centos7 ======
+
+In this tutorial, we use sssd, pam, ldapd to reconfigure ssh authentication on centos 7.
+====== Enviroment ======
+
+Suppose we have a openldap server runing with url ldap://auth-ldap.pengfei.org:389
+
+The base dn is dc=pengfei,dc=org
+
+
+===== Disable selinux =====
+ 
+<code>
+setenforce 0
+</code>
+
+===== Install sssd packages and configure=====
+The System Security Services Daemon (SSSD) provides a set of daemons to manage access to remote directories and authentication mechanisms. It provides Name Service Switch (NSS) and Pluggable Authentication Modules(PAM) interfaces toward the system and a pluggable back end system to connect to multiple different account sources.
+
+<code>
+sudo yum install sssd
+</code>
+
+Edit /etc/sssd/sssd.conf,
+
+<code>
+[domain/LDAP]
+##########Ldap basic connection config
+ldap_tls_reqcert = never
+enumerate = true
+auth_provider = ldap
+ldap_schema = rfc2307
+# root dn of the ldap server
+ldap_search_base = dc=pengfei,dc=org
+ldap_group_member = uniquemember
+id_provider = ldap
+ldap_id_use_start_tls = False
+chpass_provider = ldap
+# uri_ldap
+ldap_uri = ldap://auth-ldap.pengfei.org:389
+ldap_chpass_uri = ldap://auth-ldap.pengfei.org:389
+cache_credentials = true
+ldap_tls_cacertdir = /etc/openldap/cacerts
+entry_cache_timeout = 3
+
+############ ldap Group config ######
+ldap_group_object_class = posixGroup
+ldap_group_search_base = dc=pengfei,dc=org
+ldap_group_name = cn
+ldap_group_member = memberUid
+
+debug_level = 4
+
+[sssd]
+reconnection_retries=3
+config_file_version = 2
+services = nss, pam, sudo, ssh, autofs
+domains = LDAP
+
+[nss]
+filter_users = root,ldap,named,avahi,haldaemon,dbus,radiusd,news,nscd,slurm,munge
+[pam]
+reconnection_retries=3
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+
+</code>
+
+===== Edit ldap client =====
+
+<code>
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldap://auth-ldap.pengfei.org:389
+BASE dc=pengfei,dc=org
+TLS_REQUIRE never
+
+</code>
+
+If you want to enable ldaps on your client. You need to get the ldap server certificate. In my case, the certificate is in a file named ldap-prod.crt. It's under /etc/openldap/certs/. You need also modify the openldap.conf as followed. 
+
+<code>
+[root@CCLinPamD01 openldap]# cat ldap.conf
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldaps://auth-ldap.bioaster.org:636
+BASE dc=bioaster,dc=org
+TLS_CACERT /etc/openldap/certs/ldap-prod.crt
+TLS_REQCERT demand
+SSL ON
+
+</code>
+===== Edit pam.d module to use ldap authentication =====
+
+There are two conf file we need to edit in /etc/pam.d/
+  * system-auth-ac
+  * password-auth-ac
+
+Edit the system-auth-ac, add pam_sss support on 
+<file system-auth-ac>
+#%PAM-1.0
+## This file is auto-generated.
+## User changes will be destroyed the next time authconfig is run.
+auth        sufficient    pam_sss.so  forward_pass
+auth        required      pam_env.so
+auth        sufficient    pam_fprintd.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid >= 1000 quiet_success
+auth        required      pam_deny.so
+
+account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+account     required      pam_unix.so
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid < 1000 quiet
+account     required      pam_permit.so
+
+password    sufficient    pam_sss.so use_authtok
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+password    required      pam_deny.so
+
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     required      pam_oddjob_mkhomedir.so umask=0022 skel=/etc/skel
+session     optional      pam_sss.so
+
+</file>
+
+
+Edit the password-auth-ac
+
+<file>
+#%PAM-1.0
+## This file is auto-generated.
+## User changes will be destroyed the next time authconfig is run.
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid >= 1000 quiet_success
+auth        sufficient    pam_sss.so use_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid < 1000 quiet
+account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+account     required      pam_permit.so
+
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+password    sufficient    pam_sss.so use_authtok
+password    required      pam_deny.so
+
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     required      pam_oddjob_mkhomedir.so umask=0022 skel=/etc/skel
+session     optional      pam_sss.so
+
+</file>
+
+===== Edit the sshd_config =====
+Edit /etc/ssh/sshd_config
+<code>
+AllowTcpForwarding yes
+ChallengeResponseAuthentication no
+ClientAliveCountMax 3
+ClientAliveInterval 0
+Compression yes
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+HostbasedAuthentication no
+IgnoreUserKnownHosts no
+KeepAlive yes
+KerberosTicketCleanup yes
+MaxStartups 10
+PasswordAuthentication yes
+PermitEmptyPasswords no
+PermitRootLogin yes
+PermitUserEnvironment no
+PrintLastLog yes
+PrintMotd yes
+Protocol 2
+RSAAuthentication yes
+RhostsRSAAuthentication yes
+ServerKeyBits 768
+StrictModes yes
+Subsystem sftp /usr/libexec/openssh/sftp-server
+SyslogFacility AUTH
+TCPKeepAlive yes
+UseLogin no
+# allow ssh server to use pam
+UsePAM yes
+UsePrivilegeSeparation yes
+X11DisplayOffset 10
+X11Forwarding yes
+X11UseLocalhost yes
+XAuthLocation /usr/bin/xauth
+# add group name of user in ldap to allow access on the server ssh connextion
+AllowGroups root wheel pengfei_ssh_test
+
+</code>
+
+
+===== Restart sssd and sshd daemon to test ssh connextion =====
+
+<code>
+systemctl restart sssd
+systemctl restart sshd
+</code>
+
+===== Play book is in folder VM_Management =====
+
+the play book name is playbook-nss_pam_ldapd
+
+There are two roles, the role nslcd install nslcd to use ldap. But it's too old.
+So use the role sssd
+
+===== Eliminate sshd warings =====
+
+When you restart sshd, if you have errors messages
+
+<code>
+#"could not load host key: /etc/ssh/ssh_host_[rd]sa_key”
+
+#It means under /etc/ssh, you don't have generate all the host keys
+#To do so, in short you can do
+ssh-keygen -A
+
+# If you dont have the -A option which generates the host keys, you can generate them like so:
+# -N "" means no password for the secretkey
+ssh-keygen -t dsa -N "" -f /etc/ssh/ssh_host_dsa_key
+ssh-keygen -t rsa -N "" -f /etc/ssh/ssh_host_rsa_key
+ssh-keygen -t ecdsa -N "" -f /etc/ssh/ssh_host_ecdsa_key
+</code>

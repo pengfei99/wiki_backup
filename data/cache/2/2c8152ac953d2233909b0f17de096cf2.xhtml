@@ -1,0 +1,212 @@
+
+<h1 class="sectionedit1" id="enable_tls_ssl_for_openldap_server">Enable tls/ssl for openldap server</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Enable tls\/ssl for openldap server&quot;,&quot;hid&quot;:&quot;enable_tls_ssl_for_openldap_server&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-50&quot;} -->
+<h2 class="sectionedit2" id="why_not_starttls">Why not startTLS</h2>
+<div class="level2">
+
+<p>
+Why we don&#039;t use StarTLS?
+</p>
+
+<p>
+Because StarTLS for LDAP is slightly different from LDAPS, the main difference being, that first the client needs to establish an unencrypted connection with the directory server. At any point in time after establishing the connection (as long as there are no outstanding LDAP operations on the connection), the StartTLS extended operation shall be sent across to the server. Once a successful extended operation response has been received, the client can initiate the TLS handshake over the existing connection. Once the handshake is done, all future LDAP operations will be transmitted on the now secure, encrypted channel.
+Personally my concerns with StartTLS are:
+</p>
+
+<p>
+You must have a plain LDAP port open on the network.
+</p>
+
+<p>
+Even after a client connects to the directory there is absolutely nothing preventing the user from sending BIND or any other kind of requests on the unencrypted channel before actually performing the StartTLS extended operation.
+</p>
+
+<p>
+Conclusion: Use LDAPS if possible
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Why not startTLS&quot;,&quot;hid&quot;:&quot;why_not_starttls&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;51-1094&quot;} -->
+<h2 class="sectionedit3" id="open_access_on_firewall">Open access on firewall</h2>
+<div class="level2">
+
+<p>
+In our case, we use centos7 native firewall firewalld. If you use iptables, you need to follow other instructions.
+</p>
+<pre class="code"># check your firewall status
+[pliu@CCLinOpenLdapP01 ~]$ systemctl status firewalld
+● firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2017-01-19 15:37:00 CET; 1 years 5 months ago
+     Docs: man:firewalld(1)
+ Main PID: 6884 (firewalld)
+   CGroup: /system.slice/firewalld.service
+           └─6884 /usr/bin/python -Es /usr/sbin/firewalld --nofork --nopid
+
+# check your ldaps port open or not, in our case it&#039;s 636
+[pliu@CCLinOpenLdapP01 ~]$ netstat -antup | grep -i 636
+(No info could be read for &quot;-p&quot;: geteuid()=1001 but you should be root.)
+tcp        0      0 0.0.0.0:636             0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::636                  :::*                    LISTEN      -   
+
+# if not open, add following rules to firewall
+firewall-cmd --permanent --add-service=ldaps
+firewall-cmd --reload
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Open access on firewall&quot;,&quot;hid&quot;:&quot;open_access_on_firewall&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1095-2252&quot;} -->
+<h2 class="sectionedit4" id="generate_or_get_certificate_and_private_key">Generate or get certificate and private key</h2>
+<div class="level2">
+
+<p>
+If your certificate is signed by a real CA,
+</p>
+
+<p>
+You should have three file important:
+</p>
+<ul>
+<li class="level1"><div class="li"> ca-bundle.pem (ca certificate)</div>
+</li>
+<li class="level1"><div class="li"> privateKey.pem (private key of your PKI pair)</div>
+</li>
+<li class="level1"><div class="li"> cert.pem (signed public key of your PKI pair by CA)</div>
+</li>
+</ul>
+
+<p>
+If your certificate is autosigned,
+</p>
+
+<p>
+Your ca-bundle.pem is your cert.pem
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate or get certificate and private key&quot;,&quot;hid&quot;:&quot;generate_or_get_certificate_and_private_key&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2253-2607&quot;} -->
+<h2 class="sectionedit5" id="insert_your_certificate_into_cn_config_of_your_ldap_server">Insert your certificate into cn=config of your ldap server</h2>
+<div class="level2">
+
+<p>
+In the following example, we suppose you have a ca signed certificate
+</p>
+
+<p>
+First copy your certificates and private key into target dir, and allow slapd daemon to read them.
+In our case (centos 7) runs daemon with uid ldap.
+</p>
+<pre class="code">#copy certificate and private keys
+cp ca-bundle.pem /etc/openldap/certs/.
+cp cert.pem /etc/openldap/certs/.
+cp privateKey.pem /etc/openldap/certs/.
+
+#change owner to ldap for all
+chown ldap:ldap *.pem
+
+#change acl of private key
+chmod 0600 /etc/openldap/certs/privatekey.pem</pre>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:admin_system:security:authentication:open_ldap:ldap_over_ssl&amp;codeblock=2" title="Download Snippet" class="mediafile mf_ldif">certs.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">add</span>:<span class="re1"> olcTLSCACertificateFile</span>
+<span class="re0">olcTLSCACertificateFile</span>:<span class="re1"> /etc/openldap/certs/ca-bundle.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateFile</span>
+<span class="re0">olcTLSCertificateFile</span>:<span class="re1"> /etc/openldap/certs/cert.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateKeyFile</span>
+<span class="re0">olcTLSCertificateKeyFile</span>:<span class="re1"> /etc/openldap/certs/privateKey.pem</span></pre>
+</dd></dl>
+
+<p>
+Add certs.ldif
+</p>
+<pre class="code">ldapmodify -Y EXTERNAL -H ldapi:/// -f certs.ldif</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Insert your certificate into cn=config of your ldap server&quot;,&quot;hid&quot;:&quot;insert_your_certificate_into_cn_config_of_your_ldap_server&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2608-3608&quot;} -->
+<h2 class="sectionedit6" id="enable_ldaps_on_your_slapd_daemon">Enable ldaps on your slapd daemon</h2>
+<div class="level2">
+
+<p>
+Edit /etc/sysconfig/slapd
+</p>
+<pre class="code">SLAPD_URLS=&quot;ldapi:/// ldap:/// ldaps:///&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Enable ldaps on your slapd daemon&quot;,&quot;hid&quot;:&quot;enable_ldaps_on_your_slapd_daemon&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;3609-3740&quot;} -->
+<h2 class="sectionedit7" id="restart_slapd_and_test_the_ldaps">Restart slapd and test the ldaps</h2>
+<div class="level2">
+<pre class="code"># on the server side
+systemctl restart slapd
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Restart slapd and test the ldaps&quot;,&quot;hid&quot;:&quot;restart_slapd_and_test_the_ldaps&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;3741-3848&quot;} -->
+<h2 class="sectionedit8" id="configure_openldap_client">Configure openldap client</h2>
+<div class="level2">
+<pre class="code"># on the client side, install ldap-client
+sudo yum install openldap-clients
+#copy the ldap certificate in /etc/openldap/certs/cert.pem
+
+
+# edit the ldap.conf
+vim /etc/openldap/ldap.conf
+
+# Put the following lines
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldaps://10.70.3.118:636
+BASE dc=bioaster,dc=org
+
+TLS_CACERT /etc/openldap/certs/ldap.crt
+TLS_REQCERT allow
+</pre>
+<pre class="code">
+# on the client run the ldapsearch with ldaps protocol
+ldapsearch -x -LLL -H ldaps://10.70.3.66:636 -b dc=pengfei,dc=org dn
+dn: dc=pengfei,dc=org
+
+dn: cn=admin,dc=pengfei,dc=org
+
+dn: ou=Users,dc=pengfei,dc=org
+
+dn: ou=Groups,dc=pengfei,dc=org
+
+# in the /var/log/openldap/slapd.log, you could see the tls connextion is established.
+
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 ACCEPT from IP=10.70.3.66:54080 (IP=0.0.0.0:636)
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 TLS established tls_ssf=256 ssf=256
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 BIND dn=&quot;&quot; method=128
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 RESULT tag=97 err=0 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH base=&quot;dc=pengfei,dc=org&quot; scope=2 deref=0 filter=&quot;(objectClass=*)&quot;
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH attr=dn
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SEARCH RESULT tag=101 err=0 nentries=6 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=2 UNBIND
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 closed
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure openldap client&quot;,&quot;hid&quot;:&quot;configure_openldap_client&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;3849-&quot;} -->

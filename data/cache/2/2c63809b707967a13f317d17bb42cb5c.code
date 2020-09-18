@@ -1,0 +1,11 @@
+<span class="kw2">&lt;?php</span>
+<span class="re0">$CONFIG</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'trusted_domains'</span> <span class="sy0">=&gt;</span>
+  <a href="http://www.php.net/array"><span class="kw3">array</span></a> <span class="br0">&#40;</span>
+    <span class="nu0">0</span> <span class="sy0">=&gt;</span> <span class="st_h">'ccbioappl03.in2p3.fr'</span><span class="sy0">,</span>
+    <span class="nu0">1</span> <span class="sy0">=&gt;</span> <span class="st_h">'owncloud.bioaster.org'</span><span class="sy0">,</span>
+  <span class="br0">&#41;</span><span class="sy0">,</span>
+  <span class="st_h">'datadirectory'</span> <span class="sy0">=&gt;</span> <span class="st_h">'/var/www/html/owncloud/data'</span><span class="sy0">,</span>
+  <span class="st_h">'dbtype'</span> <span class="sy0">=&gt;</span> <span class="st_h">'sqlite3'</span><span class="sy0">,</span>
+  …
+&nbsp;

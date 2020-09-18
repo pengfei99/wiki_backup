@@ -1,0 +1,64 @@
+====== ZooKeeper 07: ZooKeeper best practice and optimisation ======
+
+Some of the best practices of running and managing a ZooKeeper ensemble are shown here:
+
+  - The ZooKeeper data directory contains the snapshot and transactional log files. It is a good practice to periodically clean up the directory if the autopurge option is not enabled. Also, an administrator might want to keep a backup of these files, depending on the application needs. However, since ZooKeeper is a replicated service, we need to back up the data of only one of the servers in the ensemble.
+  - ZooKeeper uses Apache log4j as its logging infrastructure. As the logfiles grow bigger in size, it is recommended that you set the auto-rollover of the logfiles using the in-built log4j feature for ZooKeeper logs.
+  - The list of ZooKeeper servers used by the clients in their connection strings must match the list of ZooKeeper servers that each ZooKeeper server has. Strange behaviors might occur if the lists don't match.
+  - The server lists in each Zookeeper server configuration file should be consistent with the other members of the ensemble.
+  - As already mentioned, the ZooKeeper transaction log must be configured in a dedicated device. This is very important to achieve the best performance from ZooKeeper.
+
+
+===== Check the status of zookeeper server from client side =====
+
+Zookeeper provides a list of four-letter commends for the client. These commands can be issued through **telnet or nc** at the client-side.
+
+  * **conf**: This print details about server configuration parameters such as clientPort, dataDir, tickTime, and so on.
+  * **cons**: This lists the full connection/session details for all clients connected to this server.
+  * **crst** : This resets connection/session statistics for all connections.
+  * **dump**: This lists the outstanding sessions and ephemeral nodes. This only works on the leader.
+  * **envi**: Lists the environment parameters
+  * **ruok**: This checks whether the server is running without any error. The server will respond with imok if it is running. If the server is in some error state, it will not respond to this command.
+  * **srst**: This resets the server statistics.
+  * **stat**: This provides information on the current status of the server and the list of connected clients.
+  * **srvr**: This provides the same information as the stat command, except the list of connected clients.
+  * **wchs**: This provides brief information on watches for the server.
+  * **wchc**: This provides detailed information on watches for the server, sorted by sessions (connections), showing a list of sessions with associated watches (paths).
+  * **wchp**: This provides detailed information on watches for the server, sorted by paths (znodes). This shows a list of paths with associated sessions.
+  * **mntr**: This outputs a list of variables that can be used to monitor the health of the cluster.
+
+**Important note: By default only srvr is in the white list(allow list). Others are not, if you want to expose them to client side, you need to add them to the white list.**
+
+<code>
+# not allowed
+[pliu@localhost ~]$ echo ruok | nc localhost 2181
+ruok is not executed because it is not in the whitelist.
+
+[pliu@localhost ~]$ echo srvr | nc localhost 2181
+Zookeeper version: 3.6.1--104dcb3e3fb464b30c5186d229e00af9f332524b, built on 04/21/2020 15:01 GMT
+Latency min/avg/max: 0/0.33/7
+Received: 696
+Sent: 695
+Connections: 1
+Outstanding: 0
+Zxid: 0x159
+Mode: standalone
+Node count: 14
+
+</code>
+
+===== Check status from the sever side =====
+
+ZooKeeper provides for extensive monitoring and management capabilities with **Java Management Extensions** (JMX). We will look at using **jconsole**, a simple management console available with JMX, to explore ZooKeeper management.
+
+==== Starting ZooKeeper with JMX enabled ====
+
+The class org.apache.zookeeper.server.quorum.QuorumPeerMain will start a JMX manageable ZooKeeper server. This class registers the proper MBeans during initalization to support JMX monitoring and management of the instance. See bin/zkServer.sh for one example of starting ZooKeeper using QuorumPeerMain.
+
+==== Jconsole ====
+
+jconsole can be find in $JAVA_HOME/bin. Run it on the same server same jvm, you should see the  org.apache.ZooKeeperService 
+
+The MBeans tab shows detailed information on ZooKeeper's internal state, such as details of the clients connected and the various attributes and details about operations done in the ZooKeeper namespace. Managed Beans (MBeans) is a very elegant and flexible way to expose internal information on the ZooKeeper server through JMX.
+
+More details on the various MBeans available for ZooKeeper management and monitoring can be found at https://zookeeper.apache.org/doc/trunk/zookeeperJMX.html 

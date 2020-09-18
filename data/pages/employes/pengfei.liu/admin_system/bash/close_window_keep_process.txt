@@ -1,0 +1,35 @@
+====== Close window without killing the process ======
+
+The best way to do it is using screen.
+
+The below script works too
+
+<code>
+nohup sh myexe.sh &
+</code>
+
+<code>
+sh myexe.sh &
+disown
+</code>
+
+====== Background/Forground process ======
+
+<code>
+# When you run a process with & at the end, the process will run at the background
+# fg will bring the last process back to foreground 
+fg
+# if you have more than one process running in the background, use jobs to list all your back ground process
+jobs
+[1]   Stopped                 vim
+[2]-  Stopped                 bash
+[3]+  Stopped                 vim 23
+# for example if you want to bring process 2 (bash) to forground
+fg %2
+
+# ctrl+z will suspend the process and send it to background
+# bg will resume the process in the background
+# if you have many process in background, you can use 
+bg %2
+
+</code>

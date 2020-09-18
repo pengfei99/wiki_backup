@@ -1,0 +1,10 @@
+<span class="kw4">int</span> interestSet <span class="sy0">=</span> selectionKey.<span class="me1">interestOps</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInAccept <span class="sy0">=</span><span class="br0">&#40;</span>interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_ACCEPT</span><span class="br0">&#41;</span> <span class="sy0">==</span> SelectionKey.<span class="me1">OP_ACCEPT</span>；
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInConnect <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_CONNECT</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInRead <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_READ</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">boolean</span> isInterestedInWrite <span class="sy0">=</span> interestSet <span class="sy0">&amp;</span> SelectionKey.<span class="me1">OP_WRITE</span><span class="sy0">;</span>

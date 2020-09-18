@@ -1,0 +1,22 @@
+<span class="co1"># Define the user we should use when spawning R Shiny processes</span>
+run_as shiny;
+&nbsp;
+<span class="co1"># Define a top-level server which will listen on a port</span>
+server <span class="br0">&#123;</span>
+  <span class="co1"># Instruct this server to listen on port 3838</span>
+  listen <span class="nu0">3838</span>;
+&nbsp;
+  <span class="co1"># Define the location available at the base URL</span>
+  location / <span class="br0">&#123;</span>
+    <span class="co1"># Run this location in 'site_dir' mode, which hosts the entire directory</span>
+    <span class="co1"># tree at '/srv/shiny-server'</span>
+    site_dir /srv/shiny-server;
+&nbsp;
+    <span class="co1"># Define where we should put the log files for this location</span>
+    log_dir /var/log/shiny-server;
+&nbsp;
+    <span class="co1"># Should we list the contents of a (non-Shiny-App) directory when the user </span>
+    <span class="co1"># visits the corresponding URL?</span>
+    directory_index off;
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

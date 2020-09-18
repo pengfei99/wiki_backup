@@ -1,0 +1,223 @@
+
+<h1 class="sectionedit1" id="certification">Certification</h1>
+<div class="level1">
+
+<p>
+Pour les chiffrements des courriels et la connexion par certificats.
+</p>
+
+<p>
+Les certificats du système x509 sont soumis à de nombreuses critiques (<a href="https://www.cs.auckland.ac.nz/~pgut001/pubs/pkitutorial.pdf" class="urlextern" title="https://www.cs.auckland.ac.nz/~pgut001/pubs/pkitutorial.pdf" rel="nofollow">1</a>, <a href="https://www.cs.auckland.ac.nz/~pgut001/pubs/notdead.pdf" class="urlextern" title="https://www.cs.auckland.ac.nz/~pgut001/pubs/notdead.pdf" rel="nofollow">2</a>, <a href="http://hackerproof.org/technotes/pki/pki_risks.pdf" class="urlextern" title="http://hackerproof.org/technotes/pki/pki_risks.pdf" rel="nofollow">3</a>).
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Certification" [1-362] -->
+<h2 class="sectionedit2" id="definir_le_distinguished_name">Définir le &#039;Distinguished Name&#039;</h2>
+<div class="level2">
+
+<p>
+Voici les informations à fournir lors de la création d&#039;un certificat :
+</p>
+<pre class="code">  Country Name           = FR
+  State or Province Name = Île-de-France
+  Locality Name          = Paris
+  Organization Name      = BIOASTER</pre>
+<pre class="code">  Country Name           = FR
+  State or Province Name = Rhône-Alpes
+  Locality Name          = Lyon
+  Organization Name      = BIOASTER</pre>
+
+</div>
+<!-- EDIT2 SECTION "Définir le 'Distinguished Name'" [363-779] -->
+<h2 class="sectionedit3" id="creer_un_ca">Créer un CA</h2>
+<div class="level2">
+
+<p>
+<em class="u"><strong>TODO</strong></em> : adapter pour multilevel CA
+</p>
+
+<p>
+Création d&#039;une <strong>clé RSA</strong> :
+</p>
+<pre class="code">  openssl genrsa -des3 -out root_CA.key 2048</pre>
+
+<p>
+Création d&#039;un <strong>certificat</strong> auto-signé :
+</p>
+<pre class="code">  openssl req -new -x509 -days 3650 -key root_CA.key -out root_CA.crt</pre>
+
+<p>
+Pour inspecter le <strong>certificat</strong> créé :
+</p>
+<pre class="code">  openssl x509 -noout -text -in root_CA.crt</pre>
+
+</div>
+<!-- EDIT3 SECTION "Créer un CA" [780-1136] -->
+<h2 class="sectionedit4" id="creer_un_certificat_serveur">Créer un certificat serveur</h2>
+<div class="level2">
+
+<p>
+Création d&#039;une <strong>clé RSA</strong> :
+</p>
+<pre class="code">  openssl genrsa -out server.tld.key 2048</pre>
+
+<p>
+Création d&#039;une <strong>demande de signature</strong> :
+</p>
+<pre class="code">  openssl req -new -key server.tld.key -out server.tld.csr</pre>
+
+<p>
+Assurez-vous de bien remplir le formulaire d&#039;information, en particulier le FQDN qui <strong>doit</strong> correspondre au nom du serveur utilisé. 
+</p>
+
+<p>
+Création d&#039;un <strong>certificat</strong> signé par le <strong>CA</strong> :
+</p>
+<pre class="code">  openssl x509 -req -in server.tld.csr -CA root_CA.crt -CAkey root_CA.key \
+               -CAcreateserial -days 365 -out server.tld.crt</pre>
+
+<p>
+Pour inspecter la <strong>demande de signature</strong> et le <strong>certificat</strong> créés :
+</p>
+<pre class="code">  openssl req -noout -text -in server.tld.csr
+  openssl x509 -noout -text -in server.tld.crt</pre>
+
+</div>
+<!-- EDIT4 SECTION "Créer un certificat serveur" [1137-1867] -->
+<h2 class="sectionedit5" id="tester_le_certificat_serveur">Tester le certificat serveur</h2>
+<div class="level2">
+
+<p>
+Utiliser le serveur intégré à <strong>OpenSSL</strong> pour tester les éléments :
+</p>
+<pre class="code">  openssl s_server -cert server.tld.crt -key server.tld.key -www</pre>
+
+<p>
+Un <strong>certificat combiné</strong> peut aussi être créé et testé :
+</p>
+<pre class="code">  cat server.tld.key server.tld.crt &gt; server.tld-combined.pem
+  openssl s_server -cert server.tld-combined.pem -www</pre>
+
+<p>
+La meilleure façon de le tester est de <a href="/doku.php?id=securite:securite_serveur_web" class="wikilink2" title="securite:securite_serveur_web" rel="nofollow">configurer un serveur web avec HTTPS</a>.
+</p>
+
+<p>
+Une fois validé il faudra penser à l&#039;<a href="/doku.php?id=securite:securite_certificats_de_confiance" class="wikilink2" title="securite:securite_certificats_de_confiance" rel="nofollow">ajouter à la liste des certificats de confiance du système</a>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Tester le certificat serveur" [1868-2481] -->
+<h2 class="sectionedit6" id="creer_un_certificat_client">Créer un certificat client</h2>
+<div class="level2">
+
+<p>
+Création d&#039;une <strong>clé RSA</strong> (protégée par un mot de passe) <em class="u">et</em> de la <strong>demande de signature</strong> en une commande :
+</p>
+<pre class="code">  openssl req -newkey rsa:2048 -keyout user.key -out user.csr</pre>
+
+<p>
+Création d&#039;un <strong>certificat</strong> signé par le <strong>CA</strong> :
+</p>
+<pre class="code">  openssl x509 -req -in user.csr -CA root_CA.crt -CAkey root_CA.key \
+               -CAcreateserial -sha512 -days 365 -out user.crt \
+               -extfile openssl.conf -extensions ext_client</pre>
+
+<p>
+Les extensions sont nécessaires pour conférer certains rôles au certificat. Ceci inspiré des paramètres de <strong>CAcert</strong>, toutes les extensions ne sont peut-être pas nécessaires.
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=securite:certification&amp;codeblock=0" title="Download Snippet" class="mediafile mf_conf">openssl.conf</a></dt>
+<dd><pre class="code text">[ext_client]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth
+subjectAltName = email:copy
+&nbsp;
+[ext_server]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = clientAuth,serverAuth,nsSGC,msSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:&lt;crlUri&gt; # where &lt;crlUri&gt; is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = &lt;see section 3.1.1&gt;
+&nbsp;
+[ext_code]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth,codeSigning,msCodeInd,msCodeCom,msEFS,msSGC,nsSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:&lt;crlUri&gt; # where &lt;crlUri&gt; is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = &lt;see section 3.1.1&gt;</pre>
+</dd></dl>
+
+<p>
+Pour inspecter la <strong>demande de signature</strong> et le <strong>certificat</strong> créés :
+</p>
+<pre class="code">  openssl req -noout -text -in user.csr
+  openssl x509 -noout -text -in user.crt</pre>
+
+<p>
+Pour convertir le <strong>certificat</strong> et la <strong>clé</strong> au format <strong>PKCS #12</strong> :
+</p>
+<pre class="code">  openssl pkcs12 -export -out user.pfx -inkey user.key -in user.crt -certfile root_CA.crt \
+                 -name &quot;Prénom NOM&quot;</pre>
+
+<p>
+Ce format est demandé pour les importations dans certains clients.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Créer un certificat client" [2482-4686] -->
+<h2 class="sectionedit7" id="tester_le_certificat_client">Tester le certificat client</h2>
+<div class="level2">
+
+<p>
+Le meilleur moyen de tester un <strong>certificat client</strong> est de l&#039;importer dans un <a href="/doku.php?id=securite:securite_client_courriel" class="wikilink2" title="securite:securite_client_courriel" rel="nofollow">client de messagerie</a> ou un <a href="/doku.php?id=securite:securite_navigateur_internet" class="wikilink2" title="securite:securite_navigateur_internet" rel="nofollow">navigateur internet</a>.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Tester le certificat client" [4687-4917] -->
+<h2 class="sectionedit8" id="revoquer_le_certificat_client">Révoquer le certificat client</h2>
+<div class="level2">
+
+<p>
+<em class="u"><strong>Remarque</strong></em> : Le système de révocation n&#039;étant pas le point fort des <strong>certificats x509</strong> mieux vaut confirmer l&#039;authentification par une autorisation, par exemple en vérifiant l&#039;adresse courriel donnée avec un annuaire (AD/LDAP).
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Révoquer le certificat client" [4918-5202] -->
+<h2 class="sectionedit9" id="tester_le_certificat_client_revoque">Tester le certificat client révoqué</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 SECTION "Tester le certificat client révoqué" [5203-5253] -->
+<h2 class="sectionedit10" id="liens">Liens</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://pages.cs.wisc.edu/~zmiller/ca-howto/" class="urlextern" title="http://pages.cs.wisc.edu/~zmiller/ca-howto/" rel="nofollow">http://pages.cs.wisc.edu/~zmiller/ca-howto/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat" class="urlextern" title="https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat" rel="nofollow">https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.ipsec-howto.org/x595.html" class="urlextern" title="http://www.ipsec-howto.org/x595.html" rel="nofollow">http://www.ipsec-howto.org/x595.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.madboa.com/geek/openssl/#cert-self" class="urlextern" title="http://www.madboa.com/geek/openssl/#cert-self" rel="nofollow">http://www.madboa.com/geek/openssl/#cert-self</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html" class="urlextern" title="http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html" rel="nofollow">http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.flatmtn.com/article/setting-openssl-create-certificates" class="urlextern" title="http://www.flatmtn.com/article/setting-openssl-create-certificates" rel="nofollow">http://www.flatmtn.com/article/setting-openssl-create-certificates</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php" class="urlextern" title="http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php" rel="nofollow">http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://advancedhomeserver.com/openssl-and-your-root-certificate/" class="urlextern" title="http://advancedhomeserver.com/openssl-and-your-root-certificate/" rel="nofollow">http://advancedhomeserver.com/openssl-and-your-root-certificate/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://cweiske.de/tagebuch/ssl-client-certificates.htm" class="urlextern" title="http://cweiske.de/tagebuch/ssl-client-certificates.htm" rel="nofollow">http://cweiske.de/tagebuch/ssl-client-certificates.htm</a></div>
+</li>
+</ul>
+
+<p>
+<a href="/lib/exe/fetch.php?tok=bfb17c&amp;media=https%3A%2F%2Fwww.google.com%2Fsearch%3Fq%3Dtodo%26amp%3BbtnI%3Dlucky" class="media mediafile mf_com_search_q_todo_amp_btni_lucky" title="https://www.google.com/search?q=todo&amp;btnI=lucky">search?q=todo&amp;amp;btnI=lucky</a>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Liens" [5254-] -->

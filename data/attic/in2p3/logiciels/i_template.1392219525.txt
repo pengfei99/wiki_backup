@@ -1,0 +1,52 @@
+====== Nom ======
+
+===== Informations =====
+
+  * **Version** : 1.2.3
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://exemple.org]]
+  * **Description** : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/[gcc-VERSION]/NAME/VERSION"
+mkdir -p $APP
+cd $SOFTWARE/src
+[...]
+./configure --prefix $APP
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Help message\n"
+}
+
+set version "1.2.3"
+conflict "bad_module"
+module load un_module
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/NAME/${version}"
+
+setenv ENV_VAR "value"
+
+prepend-path PATH "${app}/bin"
+prepend-path LIBRARY_PATH "${app}/lib"
+prepend-path LD_LIBRARY_PATH "${app}/lib"
+prepend-path C_INCLUDE_PATH "${app}/include"
+prepend-path CPLUS_INCLUDE_PATH "${app}/include"
+prepend-path PKG_CONFIG_PATH "${app}/lib/pkgconfig"
+prepend-path ACLOCAL_PATH "${app}/share/aclocal"
+prepend-path MANPATH "${app}/share/man"
+prepend-path CLASSPATH "${app}/lib/java"
+</code>
+
+===== Log =====
+
+* **2014.01.16 (tlc)** Version 1.2.3 installée

@@ -1,0 +1,449 @@
+====== Understanding Java Garbage Collection ======
+
+Java garbage collection is the process by which Java programs perform automatic memory management. Java programs compile to bytecode that can be run on a Java Virtual Machine(JVM). When Java programs run on the JVM, objects are created on the heap, which is a portion of memory dedicated to the program. Eventually, some objects will no longer be needed. The garbage collector finds these unused objects and deletes them to free up memory.
+
+To tune the performance of JVM. There are three key stages:
+  * Heap memory and perm gen optimization: Change the size of young, old and permanent generation(not in heap), to avoid memory overflow, and reduce the frequency of GC 
+  * JIT optimization: configure how JIT choose which code (often frequently called code) to compile because compiling and storing compiled code in the cache memory cost a lot.
+  * GC optimization:
+
+So, understanding how the GC works can help you to tune the performance of your java application.
+
+===== 1. How GC works =====
+
+Java Garbage Collector runs as a Daemon Thread (i.e. a low priority thread that runs in the background to provide services to user threads or perform JVM tasks). From time to time, it looks into all the objects in Heap memory and identifies objects that are no longer referenced by any part of your program (such unreferenced objects can no longer be reachable by the application code). Then all these unreferenced objects are destroyed and space will be reclaimed for newly-creating objects.
+
+==== 1.1 Reachabiility of an object ====
+
+Informally, an object is reachable if it is referenced by at least one variable in the program, either directly or through references from other reachable objects. More precisely, objects can be reachable in only two ways:
+
+  * A distinguished set of roots: objects that are assumed to be reachable. Typically, these include all the objects referenced from anywhere in the call stack (that is, all local variables and parameters in the functions currently being invoked) and any global variables.
+  * Anything referenced from a reachable object is itself reachable; more formally, reachability is a transitive closure.
+
+The reachability definition of "garbage" is not optimal, insofar as the last time a program uses an object could be long before that object falls out of the environment scope. A distinction is sometimes drawn between **syntactic garbage**, those objects the program cannot possibly reach, and **semantic garbage**, those objects the program will in fact never again use. For example:
+
+<code>
+Object x = new Foo();
+Object y = new Bar();
+x = new Quux();
+/* At this point, we know that the Foo object 
+ * originally assigned to x will never be
+ * accessed: it is syntactic garbage.
+ */
+
+if (x.check_something()) {
+    x.do_something(y);
+}
+System.exit(0);
+/* In the above block, y *could* be semantic garbage;
+ * but we won't know until x.check_something() returns
+ * some value -- if it returns at all. If x.check_something() 
+ * depends on user input, then we only know it at runtime.
+ */
+</code>
+
+With the above example, we can easily conclude that the problem of precisely identifying semantic garbage is partially decidable.
+
+An object can immediately become unreachable if one of the following cases occurs (no need to wait for generational aging in the Heap).
+
+  * Nullifying the reference variable
+  * Re-assigning the reference variable
+  * Object created inside method
+  * Anonymous object
+  * Objects with only internal references (Island of Isolation)
+
+=== 1.1.1 Nullifying the reference variable ===
+
+When a reference variable of an object are changed to NULL, the object becomes unreachable and eligible for GC.
+
+<code>
+//create an object, the constructor returns a reference of the object, and we assign it to obj
+Object obj=new Object();
+
+
+// after some work, we want to delete the object, because we don't need it anymore.
+
+// this makes obj eligible for gc
+obj=null
+
+// remember jvm doesn't guarantee garbage collection happens when you call System.gc() or Runtime.getRuntime().gc(). It's managed by the JVM. 
+System.gc() 
+</code>
+
+Another case is that the object has never been assigned to a reference after creation. We can call it **Anonymous object**
+
+<code>
+// new operator dynamically allocates memory for an object and returns a reference to it
+new Person("John Doe");
+ 
+// object cannot be used since no variable assignment, thus it becomes eligible for gc
+</code>
+
+=== 1.1.2 Re-assigning the reference variable ===
+
+When a reference id of one object is referenced to a reference id of some other object, then the previous object will have no reference to it any longer. The object becomes unreachable and eligible for GC.
+
+<code>
+//create an object, the constructor returns a reference of the object, and we assign it to obj
+Object obj1=new Object("obj1");
+Object obj2=new Object("obj2");
+
+// after some work, we want to delete the obj1, because we don't need it anymore.
+
+// this makes obj1 eligible for gc, because of no reference links to object obj1.
+
+obj1=obj2
+
+// remember jvm doesn't guarantee garbage collection happens when you call System.gc() or Runtime.getRuntime().gc(). It's managed by the JVM. 
+System.gc() 
+</code>
+
+=== 1.1.3 Object created inside method===
+
+In a thread, methods are stored inside a Stack in LIFO (Last In — First Out) order. When such a method is popped out from the Stack, all its members die and if some objects were created inside it, then these objects also become unreachable, thus eligible for GC.
+
+<code java>
+class PersonTest {    
+    static void createMale() {
+        //object p1 inside method becomes unreachable after createMale() completes
+        Person p1 = new Person("John Doe"); 
+        createFemale();
+        
+        // calling garbage collector
+        System.out.println("GC Call inside createMale()");
+        System.gc(); // p2 will be garbage-collected
+    }
+ 
+    static void createFemale() {
+        //object p2 inside method becomes unreachable after createFemale() completes
+        Person p2 = new Person("Jane Doe"); 
+    }
+     
+    public static void main(String args[]) {
+        createMale();
+         
+        // calling garbage collector
+        System.out.println("\nGC Call inside main()");
+        System.gc(); // p1 will be garbage-collected
+    }
+}
+</code>
+
+=== 1.1.4 Objects with only internal references (Island of isolation) ===
+
+Carefully observe how the following two objects lose their external references. Even the two objects are referenced to each other, but as they lose their external references, they become eligible for GC.
+
+{{:employes:pengfei.liu:java:isolation_island.png?400|}}
+
+==== 1.2 A simple approach to describe Java GC ====
+Each JVM implementation can have its own GC implementation, the only requirement is that the GC meets the JVM specification. And a JVM can propose many GC collectors. But, all its garbage collectors follow the same basic process
+
+
+  - Mark: Identifying objects that are currently in use and not in use
+  - Deletion: **Normal Deletion** which Removes the unused objects and reclaims the free space. **Deletion with Compacting** which moves all the survived objects to one survivor space, so remaining objects are in a contiguous block at the start of the heap. The compaction process makes it easier to allocate memory to new objects sequentially after the block of memory allocated to existing objects.
+
+However, this approach has the following issues:
+  * Not efficient because by nature most of the newly created objects will become unused
+  * Long-lived objects are most likely to be in use for future GC cycles too
+
+To solve the above issues, in reality, objects are stored in separate generational spaces of the Heap in a way that each generational space indicates the lifetime of objects stored in it. Then, the garbage collection happens in 2 major phases called **Minor GC** and **Major GC** and objects are scanned and moved among generational spaces before complete deletion. See Heap memory section in [[employes:pengfei.liu:java:java_memory_model|Java Memory Model]] for more details.
+
+==== 1.3 Mark and Sweep implementation strategy ====
+All garbage collectors in Oracle hotSpot JVM implements the "Mark and Sweep" implementation strategy. 
+  - **Mark**: It identifies and marks all object references (starting with the GC roots) that are still used and reachable (a.k.a. live objects), and the rest is considered garbage.
+  - **Sweep**: It removes not reachable objects identified by the "mark". It traverses Heap and finds unoccupied spaces between the live objects, these spaces are recorded in a free list and are made available for future object allocation.
+
+
+==== 1.4 Java Garbage Collection Roots ====
+
+For your application code to reach an object in Heap memory, there should be a root object which is connected to your object(inside the heap) and your code(outside the heap). Such root objects that are accessible from outside the Heap are called Garbage Collection (GC) roots. There are several types of GC roots such as Local variables, Active Java threads, Static variables, JNI References, etc.. (Just take the idea of GC roots here, if you do a quick google search, you may find many conflicting classifications of GC roots). What we need to learn here is that as long as our object is directly or indirectly referenced by one of these GC roots and the GC root remains alive, our object can be considered as a reachable object. The moment our object loses its reference to a GC root, it becomes unreachable, hence eligible for garbage collection.
+
+Below figure shows an example of GC roots
+
+{{:employes:pengfei.liu:java:gc_roots.png?400|}}
+
+
+
+===== 2 Advantage and disadvantages of GC =====
+
+==== 2.1 Advantages: ====
+
+
+  * No manual memory allocation/deallocation handling because unused memory space is automatically handled by GC
+  * No overhead of handling Dangling Pointer
+  * Automatic Memory Leak management (GC on its own can't guarantee the full proof solution to memory leaking, however, it takes care of a good portion of it)
+
+
+==== 2.2 Disadvantages: ====
+
+
+  * Since JVM has to keep track of object reference creation/deletion, this activity requires more CPU power besides the original application. It may affect the performance of requests which required large memory
+  * Programmers have no control over the scheduling of CPU time dedicated to freeing objects that are no longer needed
+  * Using some GC implementations might result in application stopping unpredictably(e.g. stop-the-world gc)
+  * Automatized memory management will not be as efficient as the proper manual memory allocation/deallocation
+
+===== 3.Java Garbage Collectors =====
+
+There are many garbage collectors implementation, they use different strategies and algorithms. Here, I only highlight some common used strategies. For more details, please go visit https://en.wikipedia.org/wiki/Tracing_garbage_collection
+
+==== 3.1 Implementation strategies in garbage collection ====
+  * Moving vs non-moving
+  * Copying vs. mark-and-sweep vs. mark-and-don't-sweep
+  * Generational GC (ephemeral GC)
+  * Precise vs. conservative and internal pointers
+  * Stop-the-world vs. incremental vs. concurrent
+
+Here, we only highlight Stop-the-world vs. incremental vs. concurrent
+
+=== Stop-the-world vs. incremental vs. concurrent ===
+
+Incremental and concurrent garbage collectors are designed to reduce this disruption by interleaving their work with activity from the main program.
+
+== stop-the-world ==
+
+**stop-the-world** garbage collectors completely halt the execution of the program to run a collection cycle, thus guaranteeing that new objects are not allocated and objects do not suddenly become unreachable while the collector is running.
+
+This has the obvious disadvantage that the program can perform no useful work while a collection cycle is running (sometimes called the "embarrassing pause"). Stop-the-world garbage collection is therefore mainly suitable for non-interactive programs. Its advantage is that it is both simpler to implement and faster than incremental garbage collection.
+
+== Incremental garbage collectors ==
+
+**Incremental** garbage collectors perform the garbage collection cycle in discrete phases, with program execution permitted between each phase (and sometimes during some phases). 
+
+== Concurrent garbage collectors ==
+
+**Concurrent** garbage collectors do not stop program execution at all, except perhaps briefly when the program's execution stack is scanned. However, the sum of the incremental phases takes longer to complete than one batch garbage collection pass, so these garbage collectors may yield lower total throughput.
+
+
+==== 3.2 Seven Types of JAVA Garbage Collectors ====
+
+Before Java 11, Oracle hotSpot provides are four types of Java garbage collector:
+  * Serial Garbage Collector
+  * Parallel Garbage Collector
+  * CMS Garbage Collector
+  * G1 Garbage Collector
+
+Java 11 has introduced two new garbage collectors:
+  * Epsilon Garbage Collector
+  * Z garbage collector
+
+Java 12 has introduced one new garbage collectors:
+  * Shenandoah Garbage Collector
+
+=== 3.2.1 Serial Garbage Collector===
+
+This is the simplest GC implementation. All garbage collection events are conducted serially in one thread. It implements the "mark-sweep-compact" strategy. Compaction is executed after each garbage collection. This GC implementation freezes all application threads when it runs.
+
+The Serial GC is the garbage collector of choice for most applications that do not have small pause time requirements and run on client-style machines. To enable Serial Garbage Collector, we can use the following argument:
+<code>
+java -XX:+UseSerialGC -jar Application.java
+</code> 
+
+However, if your application is a multi-threaded server which creates many objects. It's not a good idea to use this garbage collector.
+
+=== 3.2.2 Parallel Garbage Collector ===
+
+It's the default GC of the JVM and sometimes called Throughput Collectors. It uses the parallel version of "mark-sweep-compact" approach for **Minor GC** with multiple threads for managing young generation. **Major GC** still happens with a single thread in a serial manner. It also freezes other application threads while performing GC. To enable Serial Garbage Collector, we can use the following argument:
+
+<code>
+java -XX:+UseParallelGC -jar Application.java
+</code> 
+
+This garbage collector provide four options for further performance tuning:
+  * -XX:ParallelGCThreads=<N>: It defines  the number of parallel threads that need to be spawned to run Minor GC (normally n=number of CPU cores).
+  * -XX:MaxGCPauseMillis=<N>: It defines the maximum pause time goal (gap [in milliseconds] between two GC).
+  * -XX:GCTimeRatio=<N>: It defines the maximum throughput target (measured regarding the time spent doing garbage collection versus the time spent outside of garbage collection)
+  * -Xmx<N>: It defines a maximum heap footprint (the amount of heap memory that a program requires while running)
+
+
+There is another version of the parallel garbage collector called **Parallel Old GC**. It uses the parallel version of mark-sweep-compact approach for both Minor and Major GCs with multithreaded. Unlike standard parallel (multithreaded for the minor, single thread for the major.) To enable Old Serial Garbage Collector, we can use the following argument:
+
+<code>
+java -XX:+UseParallelOldGC -jar Application.java
+</code> 
+
+The parallel garbage collector(parallel old included) is suited best for those applications that can bear application pauses.
+
+=== 3.2.3 Concurrent Mark Sweep Collector===
+
+Concurrent Mark Sweep (CMS) garbage collector uses multiple garbage collector threads for garbage collection. It does most of the **Major GC** concurrently within the application threads, but **Minor GC** still follows the usual parallel algorithm without any concurrent progress with application threads. It’s designed for applications that prefer shorter garbage collection pauses, and that can afford to share processor resources with the garbage collector while the application is running.
+
+Simply put, applications using this type of GC respond slower (because GC uses more CPU ) on average but do not stop responding to perform garbage collection.  If we can allocate more CPU for better performance, then **CMS garbage collector** is the preferred choice over the **parallel collector**.
+
+A quick point to note here is that since this GC is concurrent, an invocation of explicit garbage collection such as using System.gc() while the concurrent process is working, will result in **Concurrent Mode Failure / Interruption**.
+
+If more than 98% of the total time is spent in CMS garbage collection and less than 2% of the heap is recovered, then an **OutOfMemoryError** is thrown by the CMS collector. If necessary, this feature can be disabled by adding the option **-XX:-UseGCOverheadLimit** to the command line.
+
+This collector also has a mode knows as an **incremental mode** which is being **deprecated in Java SE 8** and may be removed in a future major release.
+
+To enable the CMS Garbage Collector, we can use the following flag:
+<code>
+java -XX:+UseParNewGC -jar Application.java
+
+# This option can be used to define the number of parallel threads.
+–XX:ParallelCMSThreads=n 
+</code>
+
+Note, CMS garbage collector holds all the application threads in the following two scenarios only
+  * During marking the referenced objects in the old generation space.
+  * Any change in heap memory in parallel with doing the garbage collection
+
+=== 3.2.4 G1 Garbage Collector ===
+
+G1 (Garbage First) Garbage Collector is designed for applications running on multi-processor machines with large memory space. It's available since JDK7 Update 4 and in later releases.
+
+In general, the G1 collector will replace the CMS collector since it's more performance efficient.
+
+The older garbage collectors (serial, parallel, CMS) all structure the heap into three sections: young generation, old generation, and permanent generation of a fixed memory size.
+{{:employes:pengfei.liu:java:gc_old.png?400|}}
+
+G1 collector partitions the heap into **a set of equal-sized heap regions**, each a contiguous range of virtual memory. When performing garbage collections, G1 shows a concurrent global marking phase (i.e. phase 1 known as Marking) to determine the liveness of objects throughout the heap.
+
+{{:employes:pengfei.liu:java:gc_g1.png?400|}}
+
+After the mark phase is completed, G1 knows which regions are mostly empty. It collects in these areas first, which usually yields a significant amount of free space (i.e. phase 2 known as Sweeping). It is why this method of garbage collection is called Garbage-First.
+
+To enable G1 Garbage Collector, we can use the following argument:
+
+<code>
+java -XX:+UseG1GC -jar Application.java
+</code>
+
+For more info, https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html#:~:text=G1%20copies%20objects%20from%20one,pause%20times%20and%20increase%20throughput.
+=== 3.2.5 Epsilon Garbage Collector ===
+
+Epsilon is a non-operational or passive garbage collector(for testing purpose only). It allocates the memory for the application, but it doesn’t collect the unused objects. When the application exhausts the Java heap, the JVM shuts down. It means Epsilon garbage collector allows, applications to run out of memory and crash.
+
+The purpose of this garbage collector is to measure and managing application performance. Because it does not impact the performance of your application at all unlike other GC. There are no GC cycles or read or write barriers. When using the Epsilon GC, the code runs in isolation. Epsilon helps to visualize how garbage collection affects the app’s performance and what are the memory threshold is since it’ll show when it runs out. 
+
+To enable Epsilon Garbage Collector, we can use the following argument
+
+<code>
+java -XX:+UseEpsilonGC -jar Application.java
+
+# options for dumping heap memory when the application is crashing due to out of memory 
+-XX:HeapDumpOnOutOfMemoryError
+</code>
+
+If we need to squeeze every bit of performance out of our application, Epsilon might be your best option for a GC. But we need to have a complete understanding of how our code uses memory. If it creates almost no garbage or you know exactly how much memory it uses for the period it runs in, Epsilon is a viable option.
+
+Another use case is testing your application memory consumption. For example, if we think we only need one gigabyte of memory for our application, we can run it with -Xmx1g and see the behavior. If that memory allocation is not sufficient, rerun it with a heap dump to know why we need more memory.
+
+=== 3.2.6 Z garbage collector ===
+
+ZGC performs all expensive work concurrently, without stopping the execution of application threads for more than 10ms, which makes it suitable for applications that require low latency and/or use a very large heap. According to the Oracle documentation, it can handle multi-terabyte heaps. Oracle introduced ZGC in Java 11. The Z garbage collector performs its cycles in its threads. It pauses the application for an average of 1 ms. The G1 and Parallel collectors average roughly 200 ms.
+
+In Java 12, Oracle added performance fixes and class unloading even though Z is still in experimental status. It’s only available on 64-bit Linux. But, ZGC takes advantage of 64-bit pointers with a technique called pointer coloring. Colored pointers store extra information about objects on the heap. This is one of the reasons it’s limited to the 64-bit JVM. This article has been explained this scenario deeply (https://www.opsian.com/blog/javas-new-zgc-is-very-exciting/)
+
+ZGC does its marking in three phases:
+  - Short stop-the-world phase — It examines the GC roots, local variables that point to the rest of the heap. The total number of these roots is usually minimal and doesn’t scale with the size of the load, so ZGC’s pauses are very short and don’t increase as your heap grows.
+  - Concurrent phase — It walks the object graph and examines the colored pointers, marking accessible objects. The load barrier prevents contention between the GC phase and any application’s activity.
+  - Relocation phase — It moves live objects to free up large sections of the heap to make allocations faster. When the relocation phase begins, ZGC divides the heap into pages and works on one page at a time. Once ZGC finishes moving any roots, the rest of the relocation happens in a concurrent phase.
+
+ZGC will try to set the number of threads itself, and it’s usually right. But if ZGC has too many threads, it will starve your application. If it doesn’t have enough, you’ll create garbage faster than the GC can collect it. ZGC’s phases illustrate how it manages large heaps without impacting performance as application memory grows.
+
+To enable Z Garbage Collector, we can use the following argument:
+
+<code>
+java -XX:+UseZGC -jar Application.java
+</code>
+
+=== 3.2.7 Shenandoah ===
+
+Shenandoah is an ultra-low pause time garbage collector that reduces GC pause times by performing more garbage collection work concurrently with the running Java program. **CMS and G1 both perform concurrent marking of live objects. Shenandoah adds concurrent compaction.**
+
+Shenandoah uses memory regions to manage which objects are no longer in use and which are live and ready for compression. Shenandoah also adds a forwarding pointer to every heap object and uses it to control access to the object. Shenandoah’s design trades concurrent CPU cycles and space for pause time improvements. The forwarding pointer makes it easy to move objects, but the aggressive moves mean Shenandoah uses more memory and requires more parallel work than other GCs. But it does the extra work with very **brief stop-the-world pauses.**
+
+Shenandoah processes the heap in many small phases, most of which are concurrent with the application. This design makes it possible for the GC to manage a large heap efficiently.
+
+  - **First stop-the-world pause in the cycle. It prepares the heap for concurrent marking and scans the root set.** LikeZGC, the length of this pause corresponds to the size of the root set, not the heap.
+  - Next, a concurrent phase **walks the heap and identifies reachable and unreachable objects.**
+  - The third finishes the **process of marking by draining pending heap updates and re-scanning the root set.** This phase triggers the second stop-the-world pause in the cycle. The number of pending updates and the size of the root set determine how long the pause is.
+  - Then, another concurrent phase **copies the objects out of the regions identified in the final mark phase.** This process sets Shenandoah apart from other GCs since it aggressively compacts the heap in parallel with application threads.
+  - The next phase triggers the third (and shortest) pause in the cycle. It **ensures that all GC threads have finished evacuation.**
+  - When it finishes, **a concurrent phase walks the heap and updates references to objects moved earlier in the cycle.**
+  - The last stop-the-world pause in the **cycle finishes updating the references by updating the root set.** At the same time, it recycles the evacuated regions.
+  - Finally, the **last phase reclaims the evacuated regions**, which now have no references in them.
+
+We can configure Shenandoah with one of three heuristics. They govern when the GC starts its cycles and how it selects regions for evacuation.
+  - **Adaptive**: Observes GC cycles and starts the next cycle so it completes before the application exhausts the heap. This heuristic is the default mode.
+  - **Static**: Starts a GC cycle based on heap occupancy and allocation pressure.
+  - **Compact**: Runs GC cycles continuously. Shenandoah starts a new cycle as soon as the previous finishes or based on the amount of heap-allocated since the last cycle. This heuristic incurs throughput overhead but provides the best space reclamation.
+
+Shenandoah needs to collect heap faster than the application it’s serving allocates it. If the allocation pressure is too high and there’s not enough space for new allocations, there will be a failure. Shenandoah has configurable mechanisms for this situation.
+
+  * **Pacing**: If Shenandoah starts to fall behind the rate of allocation, it will stall allocation threads to catch up. The stalls are usually enough for mild allocation spikes. Shenandoah introduces delays of 10ms or less. If pacing fails, Shenandoah will move to the next step: degenerated GC.
+  * **Degenerated GC**: If an allocation failure occurs, Shenandoah starts a stop-the-world phase. It uses the phase to complete the current GC cycle. Since a stop-the-world doesn’t contend with the application for resources, the cycle should finish quickly and clear the allocation shortfall. Often, a degenerated cycle happens after most of the cycle’s work is already completed, so the stop-the-world is brief. The GC log will report it as a full pause, though.
+  * **Full GC**: If both pacing and a degenerated GC fail, Shenandoah falls back to a full GC cycle. This final GC guarantees the application won’t fail with an out-of-memory error unless there’s no heap left.
+
+Shenandoah offers the same advantages as ZGC with large heaps but more tuning options. Depending on the nature of your application, the different heuristics may be a good fit. Its pause times might not be as brief as ZGC’s, but they’re more predictable.
+
+To enable the Shenandoah Garbage Collector, we can use the following argument:
+
+<code>
+java -XX:+UseShenanodoahC -jar Application.java
+</code>
+
+===== 4. Memory leak =====
+
+In computer science, a **memory leak** is a type of resource leak that occurs when a computer program incorrectly manages memory allocations in such a way that memory which is no longer needed is not released. A memory leak may also happen when an object is stored in memory but cannot be accessed by the running code. A memory leak has symptoms similar to a number of other problems and generally can only be diagnosed by a programmer with access to the programs' source code.
+
+A **space leak** occurs when a computer program uses more memory than necessary. In contrast to memory leaks, where the leaked memory is never released, the memory consumed by a space leak is released, but later than expected. 
+
+The major purpose of learning how GC works is to prevent memory leaks. By its design, Java garbage collection is dedicated to track live objects, remove unused, and free up the Heap for future objects, which is the most important memory management mechanism in the JVM. However, programmers can screw up this automatic process by leaving a reference to an unused object, making it still reachable, hence not getting eligible for GC. **Accumulation of such unused-but-still-referenced objects consumes the Heap memory inefficiently and this situation is called a memory leak.**
+
+Detecting this type of logical memory leaks in a large-scale application can be the worst nightmare for a developer. There are sophisticated analysis tools and methods today, but they only can highlight suspicious objects. The detection and removal of memory leaks have been always an exhaustive process.** As a result, it is highly advised for developers to be very conscious when you play with object references in your code.**
+
+===== 5. the Life Cycle of an Object in Java (before and after GC)  =====
+
+==== 5.1 Class loading ====
+
+Before an object can be created from a class, the class must be loaded. To do that, the Java runtime locates the class on disk (in a .class file) and reads it into memory.
+
+Then Java looks for any static initializers that initialize static fields — fields that don’t belong to any particular instance of the class, but belong to the class itself and are shared by all objects created from the class.
+
+A class is loaded the first time you create an object from the class or the first time you access a static field or method of the class. When you run the main method of a class, for example, the class is initialized because the main method is static.
+
+==== 5.2 Object creation ====
+
+An object is created from a class when you use the new keyword. To initialize the class, Java allocates memory for the object and sets up a reference to the object so that the Java runtime can keep track of it.
+
+Then Java calls the **constructor** of the class, which is like a method but is called only once when the object is created. The constructor is responsible for doing any processing required to initialize the object — initializing variables, opening files or databases, and so on.
+
+==== 5.3 Object running ====
+
+The object lives its life, providing access to its public methods and fields to whoever wants and needs them.
+
+==== 5.4 Object deletion ====
+When an object does not have any external reference, the object is marked by GC and removed from memory after the sweep phase and JVM drops its internal reference to it. 
+
+Before destroying an object, Garbage Collector calls **finalize()** method at most one time on that object (**finalize() method never gets invoked more than once for any given object**). The default finalize() method has empty implementation. Once finalize() method completes, Garbage Collector destroys that object.
+
+By overriding the finalize() method, we can perform our cleanup activities like closing a database connection or verify the end of that object as I have written below.
+
+<code>
+class Person {   
+    // to store person (object) name
+    String name;
+     
+    public Person(String name) {
+        this.name = name;
+    }
+     
+    @Override
+    /* Overriding finalize method to check which object is garbage collected */
+    protected void finalize() throws Throwable {
+        // will print name of person (object)
+        System.out.println("Person object - " + this.name + " -> successfully garbage collected");
+    }
+}
+</code>
+
+===== 6. Other JVM memory tunning options =====
+
+==== 6.1 Removing duplicating string in heap memory====
+
+Java 8u20 has introduced one more JVM parameter for reducing the unnecessary use of memory by creating too many instances of same String. This optimizes the heap memory by removing duplicate String values to a global single char[] array.
+
+This parameter can be enabled by adding **-XX:+UseStringDeduplication** as JVM parameter.
+
+

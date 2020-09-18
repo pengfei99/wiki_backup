@@ -1,0 +1,10 @@
+<span class="kw2">use</span> AppBundle\Entity\Post<span class="sy0">;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="co4">/**
+ * @Route(&quot;/{id}&quot;, name=&quot;admin_post_show&quot;)
+ */</span>
+<span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span>Post <span class="re0">$post</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="co2">#…
+</span><span class="br0">&#125;</span>

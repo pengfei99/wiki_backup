@@ -1,0 +1,35 @@
+====== Implémenter '--help' en Python ======
+
+Ceci n'est pas //la// solution finale, mais est une approche qui fonctionne bien pour moi. Toutes les contrubutions sont les bienvenues. 
+
+Il faut d'abord récupérer le modèle de script Python et les bibliothèques :
+
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/templates/
+    $ cd /home/<LOGIN>/lib/python
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/python_libraries/common
+    $ export PYTHONPATH="$PYTHONPATH:/home/<LOGIN>/lib/python"
+
+La classe de base est ''Script''. Elle contient toutes les méthodes nécessaires. Il faut en redéfinir quelques unes :
+
+<code python usage()>
+def usage(self):
+    """Return the usage message."""
+    return """Usage:  %prog  ARG1
+</code>
+
+<code python define_options()>
+def define_options(self):
+    """Define options for the script."""
+    self.parser.add_option("-t", "--test",
+                           action="store_true", default=False,
+                           help="This is a test.")
+</code>
+
+<code python main()>
+def main(self, options, arguments):
+    """Main method called by run()."""
+    if len(arguments) != 1:
+        return self.usage_error()
+        
+    return self.do_something(arguments[0], options.test)
+</code>

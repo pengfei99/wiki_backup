@@ -1,0 +1,40 @@
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster 548M Aug 25 10:51 CRouiRNA.fq
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:47 CRouiRNA.fq.gz
+&nbsp;
+#COMPRESSION 
+&nbsp;
+$ time gzip CRouiRNA.fq -c &gt; CRouiRNA.fq-gzip.gz
+real    0m33.179s
+user    0m28.285s
+sys     0m0.855s
+&nbsp;
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:54 CRouiRNA.fq-gzip.gz
+&nbsp;
+$ time dsrc c CRouiRNA.fq CRouiRNA.fq-dsrc.gz
+real    0m4.021s
+user    0m8.818s
+sys     0m1.376s
+&nbsp;
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  63M Aug 25 10:57 CRouiRNA.fq-dsrc.gz
+&nbsp;
+#DECOMPRESSION
+&nbsp;
+$ time gunzip CRouiRNA.fq-gzip.gz -c &gt; CRouiRNA.fq-gzip
+real    0m11.717s
+user    0m3.677s
+sys     0m3.433s
+&nbsp;
+$ time ~/dsrc d CRouiRNA.fq-dsrc.gz CRouiRNA.fq-dsrc
+real    1m56.554s
+user    0m4.881s
+sys     0m3.526s
+&nbsp;
+&nbsp;
+$ wc -l CRouiRNA.fq-dsrc
+4425703 CRouiRNA.fq-dsrc
+&nbsp;
+$ wc -l CRouiRNA.fq
+15083152 CRouiRNA.fq

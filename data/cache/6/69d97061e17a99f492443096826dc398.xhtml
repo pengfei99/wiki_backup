@@ -1,0 +1,106 @@
+
+<h1 class="sectionedit1" id="dsrc_-_dna_sequence_reads_compression">DSRC - DNA Sequence Reads Compression</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "DSRC - DNA Sequence Reads Compression" [1-53] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 1.2.3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://exemple.org" class="urlextern" title="http://exemple.org"  rel="nofollow">http://exemple.org</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [54-396] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster&quot;
+export APP=&quot;$SOFTWARE/apps/gcc-RedHat_4.4.7-4/dsrc/2.0&quot;
+mkdir -p $APP
+cd $SOFTWARE/src
+wget https://github.com/lrog/dsrc/archive/master.zip
+unzip master.zip
+cd
+# WORK IN PROGRESS...
+# module load glibc boost
+# make</pre>
+
+<p>
+Les sources doivent être compilées avec <em>pthread</em> qui n&#039;est pas disponible (?!) au CC. L&#039;installation et l&#039;utilisation d&#039;une version alternative de la <em>glibc</em> avec module entraine de nombreux problèmes quad on essaye d&#039;utiliser des binaires liés dynamiquement à la version du système : <code>ls</code>, …
+</p>
+
+<p>
+Pour éviter ce problème on utilisera <a href="http://sun.aei.polsl.pl/dsrc/download/2.0rc/dsrc" class="urlextern" title="http://sun.aei.polsl.pl/dsrc/download/2.0rc/dsrc"  rel="nofollow">la version binaire</a> téléchargée directement depuis le site.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [397-1165] -->
+<h2 class="sectionedit4" id="tests">Tests</h2>
+<div class="level2">
+
+<p>
+Les tests s&#039;avèrent intéressants au début (compression rapide et efficace), mais des nombreux <em>crashs silencieux</em> sont constatés.<br/>
+
+La décompression est <em>“désastreuses”</em>. Elle est lente, et le fichier restitué n&#039;est pas le même que le fichier d&#039;entrée !<br/>
+
+Cela marque l&#039;arrêt des tests !
+</p>
+<pre class="code text">$ ls -lh
+-rw-rw---- 1 tlecarro bioaster 548M Aug 25 10:51 CRouiRNA.fq
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:47 CRouiRNA.fq.gz
+&nbsp;
+#COMPRESSION 
+&nbsp;
+$ time gzip CRouiRNA.fq -c &gt; CRouiRNA.fq-gzip.gz
+real    0m33.179s
+user    0m28.285s
+sys     0m0.855s
+&nbsp;
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  85M Aug 25 10:54 CRouiRNA.fq-gzip.gz
+&nbsp;
+$ time dsrc c CRouiRNA.fq CRouiRNA.fq-dsrc.gz
+real    0m4.021s
+user    0m8.818s
+sys     0m1.376s
+&nbsp;
+$ ls -lh
+-rw-rw---- 1 tlecarro bioaster  63M Aug 25 10:57 CRouiRNA.fq-dsrc.gz
+&nbsp;
+#DECOMPRESSION
+&nbsp;
+$ time gunzip CRouiRNA.fq-gzip.gz -c &gt; CRouiRNA.fq-gzip
+real    0m11.717s
+user    0m3.677s
+sys     0m3.433s
+&nbsp;
+$ time dsrc d CRouiRNA.fq-dsrc.gz CRouiRNA.fq-dsrc
+real    1m56.554s
+user    0m4.881s
+sys     0m3.526s
+&nbsp;
+&nbsp;
+$ wc -l CRouiRNA.fq-dsrc
+4425703 CRouiRNA.fq-dsrc
+&nbsp;
+$ wc -l CRouiRNA.fq
+15083152 CRouiRNA.fq</pre>
+
+</div>
+<!-- EDIT4 SECTION "Tests" [1166-2340] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.08.25 (tlc)</strong> Test de la version 2.0</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Log" [2341-] -->

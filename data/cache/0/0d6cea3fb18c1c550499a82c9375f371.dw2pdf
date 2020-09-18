@@ -1,0 +1,217 @@
+<a name="employespengfeiliubig_datadata_governanceatlasinstallation__"></a>
+<h1><bookmark content="Building, Installing and configuring Apache Atlas" level="0" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__building_installing_and_configuring_apache_atlas">Building, Installing and configuring Apache Atlas</a></h1>
+<div class="level1">
+
+<p>
+The Apache Atlas requires HBASE and Apache Solr
+</p>
+
+<p>
+The hook of atlas in Hive use Kafka to communicate. 
+</p>
+
+</div>
+
+<h2><bookmark content="1. Install atlas via ambari" level="1" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__install_atlas_via_ambari">1. Install atlas via ambari</a></h2>
+<div class="level2">
+
+<p>
+If you are using ambari to install atlas, the default installation path is 
+</p>
+<pre class="code">/usr/hdp/current/atlas-server
+/usr/hdp/current/atlas-client</pre>
+
+</div>
+
+<h2><bookmark content="2. Authentication" level="1" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__authentication">2. Authentication</a></h2>
+<div class="level2">
+
+<p>
+Atlas supports three different authentications by default:
+</p>
+<ul>
+<li class="level1"><div class="li"> File Authentication</div>
+</li>
+<li class="level1"><div class="li"> LDAP Authentication</div>
+</li>
+<li class="level1"><div class="li"> Kerberos</div>
+</li>
+</ul>
+
+<p>
+If you want to use one of the above authentication types, you need to configure <strong>atlas-application.properties</strong> file which is under <strong>/usr/hdp/current/atlas-server/conf</strong>
+</p>
+<pre class="code"># set true if you want to active one authentication method
+atlas.authentication.method.kerberos=true|false
+atlas.authentication.method.ldap=true|false
+atlas.authentication.method.file=true|false
+</pre>
+
+</div>
+
+<h3><bookmark content="2.1 File authentication" level="2" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__file_authentication">2.1 File authentication</a></h3>
+<div class="level3">
+
+<p>
+In the <strong>atlas-application.properties</strong> file, put the following lines
+</p>
+<pre class="code"># Specify that you want to use file authentication
+atlas.authentication.method.file=true
+
+# The default file for user login and pwd is under /usr/hdp/current/atlas-server/conf/users-credentials.properties. If you want to specify another file, change the file path of the following command
+atlas.authentication.method.file.filename=${sys:atlas.home}/conf/users-credentials.properties
+</pre>
+
+<p>
+# The users credentials file should have below format
+</p>
+<pre class="code">username=group::sha256-password
+
+# For example 
+admin=ADMIN::e7cf3ef4f17c3999a94f2c6f612e8a888e5b1026878e4e19398b23bd38ec221a
+</pre>
+
+<p>
+Users group can be either <strong>ROLE_ADMIN, ROLE_DATA_STEWARD OR ROLE_DATA_SCIENTIST</strong>
+</p>
+
+<p>
+You can use the following command to generate the password hash
+</p>
+<pre class="code">echo -n &quot;Password&quot; | sha256sum
+e7cf3ef4f17c3999a94f2c6f612e8a888e5b1026878e4e19398b23bd38ec221a  -</pre>
+
+</div>
+
+<h3><bookmark content="2.2 Kerberos authentication" level="2" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__kerberos_authentication">2.2 Kerberos authentication</a></h3>
+<div class="level3">
+
+<p>
+To enable the authentication in Kerberos mode in Atlas, set the property atlas.authentication.method.kerberos to true in atlas-application.properties
+</p>
+<pre class="code">atlas.authentication.method.kerberos = true
+
+# kerberos config
+atlas.authentication.method.kerberos.principal=&lt;principal&gt;/&lt;fqdn&gt;@EXAMPLE.COM
+atlas.authentication.method.kerberos.keytab = /&lt;key tab filepath&gt;.keytab
+atlas.authentication.method.kerberos.name.rules = RULE:[2:$1@$0](atlas@EXAMPLE.COM)s/.*/atlas/</pre>
+
+</div>
+
+<h3><bookmark content="2.3 Ldap authentication" level="2" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__ldap_authentication">2.3 Ldap authentication</a></h3>
+<div class="level3">
+
+<p>
+To enable the authentication in LDAP mode in Atlas, set the property atlas.authentication.method.ldap to true and also set Ldap type to property <strong>atlas.authentication.method.ldap.type</strong> to <strong>LDAP</strong> or <strong>AD</strong> in atlas-application.properties. Use AD if connecting to Active Directory.
+</p>
+<pre class="code">atlas.authentication.method.ldap=true
+atlas.authentication.method.ldap.type=ldap|ad</pre>
+
+</div>
+
+<h4><bookmark content="2.3.1 Active Directory" level="3" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__active_directory">2.3.1 Active Directory</a></h4>
+<div class="level4">
+<pre class="code">atlas.authentication.method.ldap.ad.domain= example.com
+atlas.authentication.method.ldap.ad.url=ldap://&lt;AD server ip&gt;:389
+atlas.authentication.method.ldap.ad.base.dn=DC=example,DC=com
+atlas.authentication.method.ldap.ad.bind.dn=CN=Administrator,CN=Users,DC=example,DC=com
+atlas.authentication.method.ldap.ad.bind.password=&lt;password&gt;
+atlas.authentication.method.ldap.ad.referral=ignore
+atlas.authentication.method.ldap.ad.user.searchfilter=(sAMAccountName={0})
+atlas.authentication.method.ldap.ad.default.role=ROLE_USER</pre>
+
+</div>
+
+<h4><bookmark content="2.3.2 LDAP Directory" level="3" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__ldap_directory">2.3.2 LDAP Directory</a></h4>
+<div class="level4">
+<pre class="code">atlas.authentication.method.ldap.url=ldap://&lt;Ldap server ip&gt;:389
+atlas.authentication.method.ldap.userDNpattern=uid={0],ou=users,dc=example,dc=com
+atlas.authentication.method.ldap.groupSearchBase=dc=example,dc=com
+atlas.authentication.method.ldap.groupSearchFilter=(member=cn={0},ou=users,dc=example,dc=com
+atlas.authentication.method.ldap.groupRoleAttribute=cn
+atlas.authentication.method.ldap.base.dn=dc=example,dc=com
+atlas.authentication.method.ldap.bind.dn=cn=Manager,dc=example,dc=com
+atlas.authentication.method.ldap.bind.password=&lt;password&gt;
+atlas.authentication.method.ldap.referral=ignore
+atlas.authentication.method.ldap.user.searchfilter=(uid={0})
+atlas.authentication.method.ldap.default.role=ROLE_USER</pre>
+
+</div>
+
+<h2><bookmark content="3. Authorization" level="1" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__authorization">3. Authorization</a></h2>
+<div class="level2">
+
+<p>
+Atlas supports two authorization methods
+</p>
+<ul>
+<li class="level1"><div class="li"> Simple</div>
+</li>
+<li class="level1"><div class="li"> Ranger</div>
+</li>
+</ul>
+
+<p>
+To set authorization in atlas, update the <strong>atlas.authorizer.impl</strong> properties in <strong>atlas-application.properties</strong>
+</p>
+<pre class="code">atlas.authorizer.impl=simple | ranger | &lt;Qualified Authorizer Class Name&gt;</pre>
+
+</div>
+
+<h3><bookmark content="3.1 Simple Authorizer" level="2" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__simple_authorizer">3.1 Simple Authorizer</a></h3>
+<div class="level3">
+
+<p>
+In Simple Authorizer the policy store file is configured locally. The path of policy store file is set in atlas.auth.policy.file property of atlas-application.properties
+</p>
+<pre class="code">atlas.auth.policy.file={{conf_dir}}/policy-store.txt</pre>
+
+<p>
+The policy store file format is as follows:
+</p>
+<pre class="code"># General format
+Policy_Name;;User_Name:Operations_Allowed;;Group_Name:Operations_Allowed;;Resource_Type:Resource_Name
+
+# Example of an admin policy, admin can do everything
+adminPolicy;;admin:rwud;;ROLE_ADMIN:rwud;;type:*,entity:*,operation:*,taxonomy:*,term:*</pre>
+
+<p>
+Note : The <strong>User_Name</strong>, <strong>Group_Name</strong> and <strong>Operations_Allowed</strong> are comma(,) separated lists.
+</p>
+
+<p>
+Authorizer Resource Types:
+</p>
+<ul>
+<li class="level1"><div class="li"> Operation</div>
+</li>
+<li class="level1"><div class="li"> Type</div>
+</li>
+<li class="level1"><div class="li"> Entity</div>
+</li>
+<li class="level1"><div class="li"> Taxonomy</div>
+</li>
+<li class="level1"><div class="li"> Term</div>
+</li>
+<li class="level1"><div class="li"> Unknown</div>
+</li>
+</ul>
+
+<p>
+Operations_Allowed are r = read, w = write, u = update, d = delete
+</p>
+
+</div>
+
+<h3><bookmark content="3.2 Ranger Authorizer" level="2" /><a name="employespengfeiliubig_datadata_governanceatlasinstallation__ranger_authorizer">3.2 Ranger Authorizer</a></h3>
+<div class="level3">
+
+<p>
+Ranger Authorizer is enabled by activating Atlas-Ranger plugin from Ambari.
+</p>
+
+<p>
+For more details visit the <a href="http://ranger.apache.org/" class="urlextern" title="http://ranger.apache.org/" rel="nofollow">http://ranger.apache.org/</a>
+</p>
+
+</div>

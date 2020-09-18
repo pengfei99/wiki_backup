@@ -1,0 +1,8 @@
+a:16:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:33:"Gestionnaire d'index de recherche";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1;}i:4;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:359:"Cette page permet de reconstruire l'index utilisé par la recherche en
+texte intégral. C'est généralement inutile puisque l'index se construit
+et se met à jour lorsque les internautes parcourent le wiki. Cependant,
+si vous venez de faire une mise à jour, d'ajouter ou de supprimer un
+grand nombre de pages, cela peut être une bonne idée de le nettoyer.";}i:2;i:50;}i:5;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:409;}i:6;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:409;}i:7;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:150:"Il faut avoir un navigateur récent, car le gestionnaire utilise du
+JavaScript moderne pour effectuer plusieurs tâches en arrière plan
+(technologie ";}i:2;i:411;}i:8;a:3:{i:0;s:13:"interwikilink";i:1;a:4:{i:0;s:7:"wp>AJAX";i:1;N;i:2;s:2:"wp";i:3;s:4:"AJAX";}i:2;i:561;}i:9;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:").";}i:2;i:572;}i:10;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:574;}i:11;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:574;}i:12;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:118:"Reconstruire l'index prend du temps. Vous devriez laisser la page ouverte
+jusqu'à ce que l'indexation soit terminée.";}i:2;i:576;}i:13;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:694;}i:14;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:695;}i:15;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:695;}}

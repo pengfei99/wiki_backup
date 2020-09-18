@@ -1,0 +1,2 @@
+outputDir = <span class="st_h">'$OWNCLOUD/Projet_Biospecimens/exportDataFromV1/'</span>
+<span class="kw2">cp</span> ~<span class="sy0">/</span>Téléchargements<span class="sy0">/</span>partager-de-l<span class="co3">\'</span>information-relative-à-vos-collections.csv <span class="co1">${outputDir}</span><span class="sy0">/</span>partager-de-linformation-relative-à-vos-collections.csv

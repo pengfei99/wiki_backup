@@ -1,0 +1,94 @@
+
+<h1 class="sectionedit1" id="cycle_de_vie_des_branches">Cycle de vie des branches</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap"><ul>
+<li class="level1"><div class="li"> Finir de répondre aux questions</div>
+</li>
+<li class="level1"><div class="li"> Intégrer le script et les images de <code>bzr-flow</code></div>
+</li>
+</ul>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Cycle de vie des branches" [1-159] -->
+<h1 class="sectionedit4" id="presupposes">Présupposés</h1>
+<div class="level1">
+
+<p>
+Le <em>flow</em> décrit ici donnera un meilleur résultat si on accepte les contraintes suivantes :
+</p>
+<ul>
+<li class="level1"><div class="li"> Seul le chef de projet contrôle les branches <code>trunk</code>, <code>develop</code> et <code>release-X.Y.Z</code></div>
+</li>
+<li class="level1"><div class="li"> Il ne peut y avoir qu&#039;une branche <code>release-X.Y.Z</code> active à la fois</div>
+</li>
+<li class="level1"><div class="li"> Les branches de <code>features</code> démarrent toujours de <code>develop</code> et merge les modifications les plus récentes de celui-ci</div>
+</li>
+<li class="level1"><div class="li"> Un merge dans <code>trunk</code> est <strong>toujours</strong> synonyme de nouveau numéro de version</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Présupposés" [160-664] -->
+<h1 class="sectionedit5" id="explications">Explications</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <code>trunk</code> et <code>develop</code> séparées<br/>
+car les fonctionnalités sont incluses au fur et à mesure dans <code>develop</code> puis d&#039;un coup dans <code>trunk</code>. En les gardant distinctes, on évite d&#039;avoir le cas ou quelqu&#039;un branchant depuis <code>trunk</code> n&#039;aurait qu&#039;un partie de fonctionnalités, et donc un outil pas utilisable.</div>
+</li>
+<li class="level1"><div class="li"> merge de <code>develop</code> dans <code>trunk</code> (et pas push)<br/>
+car c&#039;est plus joli et logique dans l&#039;historique, et que cela évite le problème de fonctionnalités manquante évoqué ci-dessus.</div>
+</li>
+<li class="level1"><div class="li"> créer les branches <code>feature-X</code> à partir de <code>develop</code> (et pas de <code>trunk</code>)<br/>
+cela permet aux développements commencés après l&#039;intégration d&#039;une feature du sprint de commencer avec le nouveau code, ce qui évitera une possible résolution de conflit ultérieure.</div>
+</li>
+<li class="level1"><div class="li"> faire un double merge quand on merge les <code>features</code> dans <code>develop</code><br/>
+car cela permet d&#039;intégrer le code des features intégrés avant.</div>
+</li>
+<li class="level1"><div class="li"> mettre à jour (push) <code>develop</code> après chaque release<br/>
+car si on fait un merge, ben c&#039;est moche dans l&#039;historique !</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Explications" [665-1741] -->
+<h1 class="sectionedit6" id="questions">Questions</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Peut-il y avoir plusieurs branches de release en parallèle ?</div>
+</li>
+<li class="level1"><div class="li"> Pourquoi créer une branche de release ?</div>
+</li>
+<li class="level1"><div class="li"> Comment intégrer les <code>hotfix</code> à une ancienne release toujours maintenue ?</div>
+</li>
+<li class="level1"><div class="li"> Pour corriger un bug, où faire démarrer la branche ?<br/>
+(Cela se fait en branchant de <code>master/develop</code> en précisant <code>-r 1.3.2</code> pour atteindre les révisions imbriquées.)</div>
+<ul>
+<li class="level2"><div class="li"> Depuis <code>master</code>, après la release qui introduit le problème ;</div>
+</li>
+<li class="level2"><div class="li"> Depuis <code>develop</code>, après le merge de la feature problématique ;</div>
+</li>
+<li class="level2"><div class="li"> Depuis <code>feature</code>, juste après l&#039;introduction du bug.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Questions" [1742-2353] -->
+<h1 class="sectionedit7" id="sources">Sources</h1>
+<div class="level1">
+
+<p>
+Inspiré de <a class="folder" href="#folded_1">&quot;A successful Git branching model&quot; </a><span class="folded hidden" id="folded_1"><br/>
+
+<img src="/_media/informatique/logiciels/git-model_2x.png?w=600&amp;tok=f21a0f" class="media" alt="" width="600" /><br/>
+
+<a href="http://nvie.com/posts/a-successful-git-branching-model" class="urlextern" title="http://nvie.com/posts/a-successful-git-branching-model"  rel="nofollow">http://nvie.com/posts/a-successful-git-branching-model</a></span>
+</p>
+
+<p>
+C&#039;est assez différent de <a href="https://help.launchpad.net/Projects/SeriesMilestonesReleases" class="urlextern" title="https://help.launchpad.net/Projects/SeriesMilestonesReleases"  rel="nofollow">la méthode Launchpad</a>.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Sources" [2354-] -->

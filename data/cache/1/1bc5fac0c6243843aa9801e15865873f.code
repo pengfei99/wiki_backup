@@ -1,0 +1,3 @@
+# Mot de passe généré en utilisant grub-mkpasswd-pbkdf2
+set superusers=&quot;root&quot;
+password_pbkdf2 root grub.pbkdf2.sha512.10000.AK…

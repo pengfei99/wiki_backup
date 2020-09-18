@@ -1,0 +1,101 @@
+
+<h1 class="sectionedit1" id="vm_sonarqube">VM SONARQUBE</h1>
+<div class="level1">
+
+<p>
+<strong>Instance de test/évalution de la plateforme Sonarqube</strong>
+</p>
+
+<p>
+<strong>Adresses IP :</strong> 134.158.37.7
+</p>
+
+<p>
+<strong>Infrastructure :</strong> Open Stack CC, tenant bioaster
+</p>
+
+<p>
+<strong>Nom :</strong> SONARQUBE
+</p>
+
+<p>
+<strong>Image de base :</strong> official-centos-7x-x86_64 
+</p>
+
+<p>
+<strong>Point de montage GPFS :</strong> aucun pour le moment
+</p>
+
+<p>
+<strong>Serveur NFS :</strong> aucun pour le moment
+</p>
+
+<p>
+<strong>Flavor :</strong> m1.medium
+</p>
+
+<p>
+<strong>Utilisateurs créés et mode d&#039;accès :</strong>
+</p>
+
+<p>
+<strong>Logiciels installés :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> sonarqube <a href="http://www.sonarqube.org/" class="urlextern" title="http://www.sonarqube.org/"  rel="nofollow">http://www.sonarqube.org/</a></div>
+</li>
+<li class="level1"><div class="li"> Procédure d&#039;installation : <a href="http://docs.sonarqube.org/display/SONAR/Installing+the+Server" class="urlextern" title="http://docs.sonarqube.org/display/SONAR/Installing+the+Server"  rel="nofollow">http://docs.sonarqube.org/display/SONAR/Installing+the+Server</a></div>
+</li>
+</ul>
+
+<p>
+<strong>Accès oueb : </strong><a href="http://134.158.37.7/" class="urlextern" title="http://134.158.37.7/"  rel="nofollow">http://134.158.37.7/</a>
+</p>
+
+<p>
+<strong>ACLs réseau sur le port 80</strong> : 
+</p>
+
+<p>
+10.69.0.0 0.0.63.255
+</p>
+
+<p>
+46.218.31.185 0.0.0.7
+</p>
+
+<p>
+134.158.230.0 0.0.1.255
+</p>
+
+<p>
+157.99.42.0 0.0.0.255
+</p>
+
+<p>
+<strong>Base de données</strong> :
+</p>
+<ul>
+<li class="level1"><div class="li"> L&#039;instance est reliée à la base nommée PostgreSQL “sonarqube” hébergée au CC (codes d&#039;accès dans le keepass)</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> L&#039;instance est reliée à Gitlab avec un token générique</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "VM SONARQUBE" [1-949] -->
+<h2 class="sectionedit2" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.11.21 (pv)</strong> Add Gitlab OAUTH functionality, but restricted for the moment</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.11.21 (pv)</strong> Configuration + paramétrage avec des projets Python, Php et Ansible</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.08.31 (pv)</strong> Instanciation &amp; installation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Journal" [950-] -->

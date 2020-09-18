@@ -1,0 +1,23 @@
+====== Configuration d'un client ce messagerie ======
+
+===== Mozilla Thunderbird =====
+
+==== Ajout du certificat ====
+
+Aller dans ''Account Settings'' (Clic droit sur un compte puis ''Settings...'') puis dans l'onglet ''Security''.
+
+{{:securite:thunderbird_certif-1.png?direct&400|}}
+
+Cliquer ensuite sur ''View Certificates'' puis dans l'onglet ''Your ceritifcates'' cliquer sur ''Import''.
+
+{{:securite:thunderbird_certif-2.png?direct&400|}}
+
+Saisir la phrase de passe puis passer à la configuration du compte.
+
+==== Configuration du compte ====
+
+Aller dans ''Account Settings'' (Clic droit sur un compte puis ''Settings...'') puis dans l'onglet ''Security''.
+
+{{:securite:thunderbird_certif-1.png?direct&400|}}
+
+Dans le champs ''Digital Signing'' cliquer sur ''Select...'' et sélectionner le certificat à utiliser. Faire de même dans le champs ''Encryption''.

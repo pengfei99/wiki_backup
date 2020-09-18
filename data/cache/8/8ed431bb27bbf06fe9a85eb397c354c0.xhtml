@@ -1,0 +1,106 @@
+
+<h1 class="sectionedit1" id="reunion_du_28_fevrier_2017">Réunion du 28 Février 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 28 Février 2017" [1-45] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Benoit Beitz">BB</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [46-95] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Anticorps</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="etat_de_l_art">État de l&#039;art</h4>
+<div class="level4">
+
+<p>
+Il y a trois types d&#039;anticorps utilisés par l&#039;UTEC 03
+</p>
+<ol>
+<li class="level1"><div class="li"> Les anticorps purifiés (“seul”)</div>
+</li>
+<li class="level1"><div class="li"> Les anticorps fluorescents</div>
+</li>
+<li class="level1"><div class="li"> Les anticorps couplés avec des métaux. Dans ce cas là l&#039;échantillon est donc un couple anticorps + métal. Donc il aurait 2 parents.</div>
+</li>
+</ol>
+
+<p>
+Il y a environ une cinquantaine de métaux enregistrés par l&#039;UTEC03 (fichier excel). Ils sont décrits par les champs suivants :
+</p>
+<ul>
+<li class="level1"><div class="li"> Fournisseur</div>
+</li>
+<li class="level1"><div class="li"> Isotope</div>
+</li>
+<li class="level1"><div class="li"> Numéro de lot</div>
+</li>
+<li class="level1"><div class="li"> Stock</div>
+</li>
+<li class="level1"><div class="li"> Quantité/Statut (nombre de réaction restantes)</div>
+</li>
+<li class="level1"><div class="li"> Date de réception</div>
+</li>
+</ul>
+
+<p>
+Il y a environ 300 anticorps enregistrés par l&#039;UTEC03 (fichier excel). Ils sont décrits par les champs suivants :
+</p>
+<ul>
+<li class="level1"><div class="li"> Marqueur</div>
+</li>
+<li class="level1"><div class="li"> Clone</div>
+</li>
+<li class="level1"><div class="li"> Date de réception</div>
+</li>
+<li class="level1"><div class="li"> Quantité</div>
+</li>
+<li class="level1"><div class="li"> Fournisseur</div>
+</li>
+<li class="level1"><div class="li"> + 10 champs selon si l&#039;Anticorps fonctionne plus ou moins bien dans le froid</div>
+</li>
+</ul>
+
+<p>
+Les échantillons de sang sont décrits par l&#039;UTEC03 de la manière suivantes :
+</p>
+<ul>
+<li class="level1"><div class="li"> Type (sang,plasma,serum)</div>
+</li>
+<li class="level1"><div class="li"> Fournisseur (2 EFS et 2 privés) → table Provider ?</div>
+</li>
+<li class="level1"><div class="li"> Stock</div>
+</li>
+<li class="level1"><div class="li"> un ID (12 chiffres)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="resume">Résumé</h4>
+<div class="level4">
+
+<p>
+La gestion des métaux revient à gérer les réactifs, comment s&#039;organiser dans ce cas là ? Voir avec <abbr title="Yoann Mouscaz">YM</abbr>.
+</p>
+
+<p>
+Un échantillon anticorps a 2 “parents” un anticorps + un métal → implémenter une table de relation many to many entre sample et sample. On peut imaginer une liste déroulante avec les anticorps et une autre avec les métaux (qui affiche <em>nom</em>_<em>isotope</em>).
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [96-] -->

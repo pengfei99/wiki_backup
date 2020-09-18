@@ -1,0 +1,4 @@
+<span class="re0">$bundles</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="co1">// …</span>
+            <span class="kw2">new</span> Propel\PropelBundle\PropelBundle<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+        <span class="br0">&#41;</span><span class="sy0">;</span>

@@ -1,0 +1,98 @@
+
+<h1 class="sectionedit1" id="use_redis_for_file_blocking">Use redis for file blocking</h1>
+<div class="level1">
+
+<p>
+Additional notes for Redis vs. APCu on Memory Caching
+</p>
+
+<p>
+APCu is faster at local caching than Redis. If you have enough memory, use APCu for memory caching and <span style='color:#ed1c24; '>Redis for file locking</span>. If you are low on memory, use Redis for both.
+</p>
+<pre class="prettyprint">
+yum install epel-release
+yum update
+# install redis server
+yum install redis
+# install php71 redis driver
+php71w-pecl-redis
+
+#start redis
+systemctl start/stop/status/restart redis
+
+#run redis at bootup
+systemctl enable redis
+
+#verify redis, it should answer PONG
+redis-cli ping
+
+</pre>
+</div>
+<!-- EDIT1 SECTION "Use redis for file blocking" [1-591] -->
+<h2 class="sectionedit2" id="persistence_options">Persistence Options</h2>
+<div class="level2">
+
+<p>
+Redis provides two options for disk persistence:
+</p>
+
+<p>
+Point-in-time snapshots of the dataset, made at specified intervals (RDB).
+</p>
+
+<p>
+Append-only logs of all the write operations performed by the server (AOF).
+</p>
+
+<p>
+Each option has its own pros and cons which are detailed in the Redis documentation. For the greatest level of data safety, consider running both persistence methods.
+</p>
+
+<p>
+Because the Point-in-time snapshot persistence is enabled by default, you only need to set up AOF persistence:
+</p>
+<pre class="prettyprint">
+#Edit /etc/redis.conf, change the following lines
+appendonly yes
+appendfsync everysec
+</pre>
+<p>
+Restart redis to make it effective
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Persistence Options" [592-1246] -->
+<h2 class="sectionedit3" id="basic_system_tuning">Basic System Tuning</h2>
+<div class="level2">
+
+<p>
+To improve Redis performance, set the Linux kernel overcommit memory setting to 1:
+</p>
+
+<p>
+<code>sudo sysctl vm.overcommit_memory=1</code>
+</p>
+
+<p>
+This immediately changes the overcommit memory setting, but the change will not persist across reboots. To make it permanent, add vm.overcommit_memory = 1 to /etc/sysctl.conf:
+</p>
+<pre class="prettyprint">
+sudo vim /etc/sysctl.conf
+
+vm.overcommit_memory = 1
+
+</pre>
+</div>
+<!-- EDIT3 SECTION "Basic System Tuning" [1247-1649] -->
+<h3 class="sectionedit4" id="edit_configphp_for_owncloud_to_use_redis">Edit config.php for owncloud to use redis</h3>
+<div class="level3">
+<pre class="prettyprint">
+&#039;memcache.locking&#039; =&gt; &#039;\\OC\\Memcache\\Redis&#039;,
+  &#039;redis&#039; =&gt; 
+  array (
+    &#039;host&#039; =&gt; &#039;localhost&#039;,
+    &#039;port&#039; =&gt; 6379,
+  ),
+</pre>
+</div>
+<!-- EDIT4 SECTION "Edit config.php for owncloud to use redis" [1650-] -->

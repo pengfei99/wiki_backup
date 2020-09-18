@@ -1,0 +1,64 @@
+====== Spark doc list ======
+
+===== Lessons for spark introduction, key components and internals =====
+[[employes:pengfei.liu:big_data:spark:l01_spark_introduction|Lesson01: Spark basics]]
+
+[[employes:pengfei.liu:big_data:spark:l02_spark_stack|Lesson02: Spark unified stack and applicatioins]]
+
+[[employes:pengfei.liu:big_data:spark:l03_spark_shell|Lesson03: Introduction of spark shell and spark UI]]
+
+spark user define fonction use in sql and dataframe : 
+[[employes:pengfei.liu:big_data:spark:spark_udf|Spark user define function]]
+
+===== Spark infratructure =====
+
+[[employes:pengfei.liu:big_data:spark:spark_multi_node_cluster|Install spark on multi node mode]]
+
+
+[[employes:pengfei.liu:big_data:spark:spark_dev_environment|Install a devlopment envirionment for spark]]
+
+===== Spark data structure =====
+
+1. Overview of spark data structure [[employes:pengfei.liu:big_data:spark:data_structure_overview|Data structure overview]]
+
+2. Spark RDD [[employes:pengfei.liu:big_data:spark:spark_rdd|Spark RDD]]
+
+3. Spark dataframe [[employes:pengfei.liu:big_data:spark:spark_dataframe|DataFrame in SPARK (vs RDD)]]
+
+4. Spark datasets [[employes:pengfei.liu:big_data:spark:spark_dataset|Spark dataset]]
+
+5. Spark data partitions [[employes:pengfei.liu:big_data:spark:spark_partitions|Spark Partitions]]
+
+
+===== Spark IO =====
+File IO: [[employes:pengfei.liu:big_data:spark:spark_file_io|Spark file input and output]]
+
+PARQUET IO : [[employes:pengfei.liu:big_data:spark:spark_parquetio|Spark read and write parquet in file system]]
+
+IO with external data base: 
+  - [[employes:pengfei.liu:big_data:spark:spark_hbase_io|Use spark to get and set data in HBase]]
+  - [[employes:pengfei.liu:big_data:spark:spark_jdbc_io|Read write data via jdbc]]
+
+===== Spark streaming =====
+
+File streaming : [[employes:pengfei.liu:big_data:spark:spark_streaming:file_streaming|Spark file Streaming]]
+
+Socket streaming : [[employes:pengfei.liu:big_data:spark:spark_streaming:socket_streaming|Spark socket streaming]]
+
+RDD flux streaming: It's normally for testing or debugging.
+
+kafka spark streaming : [[employes:pengfei.liu:big_data:spark:spark_streaming:kafka_streaming|Apache Kafka spark streaming]]
+
+flume spark streaming : [[employes:pengfei.liu:big_data:spark:spark_streaming:flume_streaming|Flume spark streaming]]
+===== Spark application example =====
+
+[[employes:pengfei.liu:big_data:spark:spark_usecase:sf_fire_call|Spark analyse 911 fire service call]]
+
+[[employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction|Happy customers]]
+
+Inverted index of files [[employes:pengfei.liu:big_data:spark:spark_usecase:inverted_index_shake|Inverted index of files of Shakespeare's works]]
+
+===== Spark Optimization =====
+
+[[employes:pengfei.liu:big_data:spark:spark_optimization:start|Spark Optimization]]
+

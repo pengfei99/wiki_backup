@@ -1,0 +1,67 @@
+====== Install vmware tools on a centos7 guest via vmware player ======
+
+The VMware tools enable you to create share folders between guest and host, print in the guest os, etc. So it's nice to have them. In this tutorial, I will show you how to install them.
+
+===== 0. Prerequisites =====
+
+VMware tools are written in perl, and it will use gcc, make, kernel-headers, etc. to compile drivers in your guest OS. In my example, the guest os is centos 7. So you need to install the following dependencies
+
+<code>
+# centos 7 
+$ sudo yum install perl gcc make kernel-headers kernel-devel -y
+
+# ubuntu
+sudo apt-get install build-essential
+</code> 
+
+===== 1. Mount the VMware tools cd rom and install=====
+
+In this tutorial, I used VMware workstation 12 player. Open it, click on Player-> Manager -> Install VMware tools.
+
+This will trigger a cd room mount, you should see it on your desktop.
+
+<code>
+# blkid list all block device
+$ blkid
+/dev/sr0: UUID="2017-03-17-07-21-14-00" LABEL="VMware Tools" TYPE="iso9660" 
+
+# create a directory to mount the CD
+$ sudo mkdir /media/VMware_Tools
+# Mount the CD 
+$ sudo mount /dev/sr0 /media/VMware_Tools/
+# You wiil receive a message that your CD/DVD files should now be accessible read-only
+
+# check the contennt
+$ ls -lah /media/VMware_Tools
+manifest.txt     VMwareTools-10.1.6-5214329.tar.gz  vmware-tools-upgrader-64
+run_upgrader.sh  vmware-tools-upgrader-32
+
+# If you want to make the mount permanent, you can add the following line in your /etc/fstab
+UUID=2017-03-17-07-21-14-00             /media/VMware_Tools   iso9660 ro,user,auto  0 0 
+
+# Untar the VMwareTools-10.1.6-5214329.tar.gz,  you should see a folder vmware-tools-distrib
+
+# Run the vmware-install.pl script
+$ cd vmware-tools-distrib/
+$ ls
+bin  caf  doc  etc  FILES  INSTALL  installer  lib  vgauth  vmware-install.pl
+
+$ sudo ./vmware-install.pl
+# Follow the instruction, finish the installation 
+</code>
+
+
+===== 2. Create share folder =====
+
+2.1 Create or choose a folder in your Host OS which you want to share with your Guest OS. For example, I choose C:\Users\pliu\Downloads\vm_shareFolder as my share folder.
+
+2.2 Now, I need to go to vmware workstation to config it as share folder.
+
+Click on Player -> Manage -> Virtual Machine Settings -> Options (Tab after Hardware) -> Shared Folders
+
+Now, you just follow the instruction, the share folder is created. 
+
+2.3 Go to your Guest OS, the share folder is mounted on /mnt/hgfs
+
+2.4 Set un a quick access point
+$ ln -s /mnt/hgfs/shared-directory ~/Desktop/Name-of-the-folder

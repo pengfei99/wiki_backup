@@ -1,0 +1,662 @@
+<a name="employespengfeiliubig_datasparkspark_optimizationjob_config__"></a>
+<h1><bookmark content="Spark Job Configuration" level="0" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__spark_job_configuration">Spark Job Configuration</a></h1>
+<div class="level1">
+
+</div>
+
+<h2><bookmark content="1. Data Serialization" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__data_serialization">1. Data Serialization</a></h2>
+<div class="level2">
+
+<p>
+Spark is a distributed computation engine, which requires send and receive data(objects) through network. Serialization and De-serialization plays an important role in the performance. Formats and data structures that are slow to serialize objects into, or consume a large number of bytes, will greatly slow down the computation.
+</p>
+
+<p>
+As a result, for a well optimized spark application, data serialization is the first thing you need to take into account. Spark supports two serialization libraries:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Java serialization</strong>: By default, Spark serializes objects using Java’s ObjectOutputStream framework, and can work with any class you create that implements java.io.Serializable. You can also control the performance of your serialization more closely by extending java.io.Externalizable. <strong>Java serialization is flexible but often quite slow, and leads to large serialized formats for many classes</strong>, so not recommended for large spark jobs</div>
+</li>
+<li class="level1"><div class="li"> <strong>Kryo serialization</strong>: Spark can also use the Kryo library (version 4) to serialize objects more quickly. <strong>Kryo is significantly faster and more compact than Java serialization (often as much as 10x), but does not support all Serializable types and requires you to register the classes you’ll use in the program in advance for best performance</strong>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3><bookmark content="1.1 Configure Spark job to use Kryo as serialization" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__configure_spark_job_to_use_kryo_as_serialization">1.1 Configure Spark job to use Kryo as serialization</a></h3>
+<div class="level3">
+
+<p>
+Old school config by using spark context, may be deprecated in new version. So not recommended for new applications.
+</p>
+<pre class="code">
+val conf = new SparkConf().setMaster(&quot;My spark cluster resource manager url&quot;).setAppName(&quot;My spark application name&quot;)
+conf.registerKryoClasses(Array(classOf[java.lang.Class], classOf[org.apache.spark.sql.catalyst.InternalRow],...))
+val sc = new SparkContext(conf)
+
+
+</pre>
+<pre class="code">//create a spark session who works with Kryo.
+object SparkSessionKryo {
+    def getSparkSession: SparkSession = {
+        val spark = SparkSession
+            .builder
+            .master(&quot;My spark cluster resource manager url&quot;)
+            .appName(&quot;My spark application name&quot;)
+            .config(getConfig)
+            .config(&quot;spark.serializer&quot;, &quot;org.apache.spark.serializer.KryoSerializer&quot;)
+            // use this if you need to increment Kryo buffer size. Default 64k
+            .config(&quot;spark.kryoserializer.buffer&quot;, &quot;1024k&quot;) 
+            // use this if you need to increment Kryo buffer max size. Default 64m
+            .config(&quot;spark.kryoserializer.buffer.max&quot;, &quot;1024m&quot;) 
+            /*
+            * Use this if you need to register all Kryo required classes. 
+            * If it is false, you do not need register any class for Kryo, but it will increase your data size when the data is serializing.
+            */
+            .config(&quot;spark.kryo.registrationRequired&quot;, &quot;true&quot;)
+            .getOrCreate
+    }
+
+    private def getConfig = {
+        val conf = new SparkConf()
+        conf.registerKryoClasses(
+          Array(
+            classOf[scala.collection.mutable.WrappedArray.ofRef[_]],
+            classOf[org.apache.spark.sql.types.StructType],
+            classOf[Array[org.apache.spark.sql.types.StructType]],
+            classOf[org.apache.spark.sql.types.StructField],
+            classOf[Array[org.apache.spark.sql.types.StructField]],
+            Class.forName(&quot;org.apache.spark.sql.types.StringType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.types.LongType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.types.BooleanType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.types.DoubleType$&quot;),
+            Class.forName(&quot;[[B&quot;),
+            classOf[org.apache.spark.sql.types.Metadata],
+            classOf[org.apache.spark.sql.types.ArrayType],
+            Class.forName(&quot;org.apache.spark.sql.execution.joins.UnsafeHashedRelation&quot;),
+            classOf[org.apache.spark.sql.catalyst.InternalRow],
+            classOf[Array[org.apache.spark.sql.catalyst.InternalRow]],
+            classOf[org.apache.spark.sql.catalyst.expressions.UnsafeRow],
+            Class.forName(&quot;org.apache.spark.sql.execution.joins.LongHashedRelation&quot;),
+            Class.forName(&quot;org.apache.spark.sql.execution.joins.LongToUnsafeRowMap&quot;),
+            classOf[org.apache.spark.util.collection.BitSet],
+            classOf[org.apache.spark.sql.types.DataType],
+            classOf[Array[org.apache.spark.sql.types.DataType]],
+            Class.forName(&quot;org.apache.spark.sql.types.NullType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.types.IntegerType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.types.TimestampType$&quot;),
+            Class.forName(&quot;org.apache.spark.sql.execution.datasources.FileFormatWriter$WriteTaskResult&quot;),
+            Class.forName(&quot;org.apache.spark.internal.io.FileCommitProtocol$TaskCommitMessage&quot;),
+            Class.forName(&quot;scala.collection.immutable.Set$EmptySet$&quot;),
+            Class.forName(&quot;scala.reflect.ClassTag$$anon$1&quot;),
+            Class.forName(&quot;java.lang.Class&quot;)
+          )
+        )
+    }    
+}</pre>
+
+<p>
+In the above config, we set spark.kryoserializer.buffer = 1024K. This value needs to be large enough to hold the largest object you will serialize. We also set spark.kryoserializer.buffer.max=1024M to avoid kryo takes all memory of spark worker
+</p>
+
+<p>
+For more details about Kryo configuration, please visit the Kryo documentation (<a href="https://github.com/EsotericSoftware/kryo" class="urlextern" title="https://github.com/EsotericSoftware/kryo" rel="ugc nofollow">https://github.com/EsotericSoftware/kryo</a>), which describes more advanced registration options.
+</p>
+
+<p>
+Finally, if you don’t register your custom classes, Kryo will still work, but it will have to store the full class name with each object, which is wasteful.
+</p>
+
+</div>
+
+<h2><bookmark content="2. Memory management inside spark application" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__memory_management_inside_spark_application">2. Memory management inside spark application</a></h2>
+<div class="level2">
+
+<p>
+Spark largely divide memory into two categories:
+</p>
+<ul>
+<li class="level1"><div class="li"> Execution: It refers to memory that is used for computation in shuffles, joins, sorts, aggregations, etc.</div>
+</li>
+<li class="level1"><div class="li"> Storage: It refers to memory that is used for caching and propagating internal data across the cluster.</div>
+</li>
+</ul>
+
+<p>
+Execution and storage memory share a <strong>unified region (M)</strong>. When no execution memory is used, <strong>storage can acquire all the available memory and vice versa. Execution may evict storage if necessary, but only until total storage memory usage falls under a certain threshold (R).</strong> In other words, R describes a subregion within M where cached blocks are never evicted. <strong>Storage may not evict execution due to complexities in implementation</strong>.
+</p>
+
+<p>
+As a result Execution has priority over Storage memory, and storage memory has a minimun reservation for data caching.
+</p>
+
+</div>
+
+<h3><bookmark content="2.1 Reset default memory region size" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__reset_default_memory_region_size">2.1 Reset default memory region size</a></h3>
+<div class="level3">
+
+<p>
+There are two relevant configurations for <strong>unified region (M)</strong> and <strong>cached subregion (R)</strong>, the typical user should not need to adjust them as the default values are applicable to most workloads:
+</p>
+<ul>
+<li class="level1"><div class="li"> spark.memory.fraction expresses the size of M as a fraction of the JVM heap space (default value is 0.6, means 60% of the memory). The rest of the space (40%) is reserved for user data structures, internal metadata in Spark, and safeguarding against OOM errors in the case of sparse and unusually large records.</div>
+</li>
+<li class="level1"><div class="li"> spark.memory.storageFraction expresses the size of R as a fraction of M (default 0.5). R is the storage space within M where cached blocks immune to being evicted by execution.</div>
+</li>
+</ul>
+
+<p>
+The value of spark.memory.fraction should be set in order to fit this amount of heap space comfortably within the JVM’s old or “tenured” generation. See the discussion of advanced GC tuning below for details.
+</p>
+
+</div>
+
+<h3><bookmark content="2.2 Determining Memory Consumption" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__determining_memory_consumption">2.2 Determining Memory Consumption</a></h3>
+<div class="level3">
+
+</div>
+
+<h4><bookmark content="2.2.1 Dataset memory consumption" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__dataset_memory_consumption">2.2.1 Dataset memory consumption</a></h4>
+<div class="level4">
+
+<p>
+The best way to size the amount of memory consumption a dataset will require is to create an RDD, put it into cache, and look at the “Storage” page in the web UI. The page will tell you how much memory the RDD is occupying.
+</p>
+
+</div>
+
+<h4><bookmark content="2.2.1 Application Object consumption" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__application_object_consumption">2.2.1 Application Object consumption</a></h4>
+<div class="level4">
+
+<p>
+To estimate the memory consumption of a particular object, use <strong>SizeEstimator’s estimate</strong> method. This is useful for experimenting with different data layouts to trim memory usage, as well as determining the amount of space a broadcast variable will occupy on each executor heap.
+</p>
+<pre class="code">import org.apache.spark.util.SizeEstimator
+
+val someObj
+
+//estimate is a static method, so no need to create an instance
+SizeEstimator.estimate(someObj)
+
+// estimate will return a Long in byte, for example if it returns 115&#039;715&#039;808 (bytes), it means omeObj will consume 116MB in cached object region of spark application
+ 
+</pre>
+
+</div>
+
+<h3><bookmark content="2.3 Reduce memory consumption by choosing right data structures" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__reduce_memory_consumption_by_choosing_right_data_structures">2.3 Reduce memory consumption by choosing right data structures</a></h3>
+<div class="level3">
+
+<p>
+To reduce memory consumption in spark jobs, we need to avoid the Java features that add overhead, such as pointer-based data structures and wrapper objects. There are several ways to do this:
+</p>
+
+</div>
+
+<h4><bookmark content="2.3.1  Use primitive type" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__use_primitive_type">2.3.1  Use primitive type</a></h4>
+<div class="level4">
+
+<p>
+<strong>Use primitive type</strong> as much as you can, don&#039;t use their wrapper classes.(Use int instead of Integer). Each distinct Java object has an “object header”, which is about 16 bytes and contains information such as a pointer to its class. 
+</p>
+
+<p>
+For example, a int of 32bits(4 Bytes), the Integer object header(16 Bytes) is greater the actual data. Java Strings have about 40 bytes of overhead over the raw string data (since they store it in an array of Chars and keep extra data such as the length), and store each character as two bytes due to String’s internal usage of UTF-16 encoding. Thus a 10-character string can easily consume 60 bytes.
+</p>
+
+</div>
+
+<h4><bookmark content="2.3.2 Don&#039;t use string for keys" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__don_t_use_string_for_keys">2.3.2 Don&#039;t use string for keys</a></h4>
+<div class="level4">
+
+<p>
+Consider using numeric IDs or enumeration objects instead of strings for keys.
+</p>
+
+</div>
+
+<h4><bookmark content="2.3.3 Use array" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__use_array">2.3.3 Use array</a></h4>
+<div class="level4">
+
+<p>
+Don&#039;t use standard Java or Scala collection classes(e.g. HashMap, LinkedList, etc.). Use array in preference. If you have to use collection classes in your code, check <strong>fastutil</strong> (<a href="http://fastutil.di.unimi.it/#big" class="urlextern" title="http://fastutil.di.unimi.it/#big" rel="ugc nofollow">http://fastutil.di.unimi.it/#big</a>) lib, which provides convenient collection classes with a small memory footprint and fast access and insertion.
+</p>
+
+<p>
+They are too main reasons for this.
+</p>
+<ul>
+<li class="level1"><div class="li"> Common collection classes, such as HashMap and LinkedList, use linked data structures, where there is a “wrapper” object for each entry (e.g. Map.Entry). This object not only has a header, but also pointers (typically 8 bytes each) to the next object in the list.</div>
+</li>
+<li class="level1"><div class="li"> Java common Collection classes does not support primitive types, it store them as “boxed” objects such as java.lang.Integer which add unnecessary overhead.</div>
+</li>
+</ul>
+
+</div>
+
+<h3><bookmark content="2.4 Reduce object overhead by changing JVM config" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__reduce_object_overhead_by_changing_jvm_config">2.4 Reduce object overhead by changing JVM config</a></h3>
+<div class="level3">
+
+<p>
+In spark-env.sh, you can set the JVM flag -XX:+UseCompressedOops to make pointers be four bytes instead of eight. 
+</p>
+
+<p>
+For example, in spark-env.sh, you can set the jvm flag for both driver and executor.
+</p>
+<pre class="code"># reduce pointer size for driver and executor
+spark.driver.extraJavaOptions=-XX:+UseCompressedOops
+spark.executor.extraJavaOptions=-XX:+UseCompressedOops
+
+#If you have many jvm options to add, just separate them by space, for example we want to print GC details
+spark.executor.extraJavaOptions=-XX:+UseCompressedOops -XX:+PrintGCDetails -XX:+PrintGCTimeStamps</pre>
+
+<p>
+If you don&#039;t want to do this in your spark-env.sh. You can change it also in your sparkSession 
+</p>
+<pre class="code">object SparkSessionReducePointerSize {
+    def getSparkSession: SparkSession = {
+        val spark = SparkSession
+            .builder
+            .master(&quot;My spark cluster resource manager url&quot;)
+            .appName(&quot;My spark application name&quot;)
+            .config(&quot;spark.executor.extraJavaOptions&quot;, &quot;-XX:+UseCompressedOops&quot;)
+            .config(&quot;spark.driver.extraJavaOptions&quot;, &quot;-XX:+UseCompressedOops&quot;)
+            .getOrCreate
+    }
+</pre>
+
+<p>
+In case of submit, you can change it in your submit command
+</p>
+<pre class="code">./bin/spark-submit \ 
+  --name &quot;My app&quot; \ 
+  --master local[4] \  
+  --conf spark.eventLog.enabled=false \ 
+  --conf &quot;spark.driver.extraJavaOptions=-XX:+UseCompressedOops -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot; \ 
+  --conf &quot;spark.executor.extraJavaOptions=-XX:+UseCompressedOops -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot; \
+  myApp.jar</pre>
+
+</div>
+
+<h3><bookmark content="2.5 Reduce memory consumption by caching data(RDD) in serialize form" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__reduce_memory_consumption_by_caching_data_rdd_in_serialize_form">2.5 Reduce memory consumption by caching data(RDD) in serialize form</a></h3>
+<div class="level3">
+
+<p>
+You can mark an RDD to be persisted using the persist() or cache() methods on it. The first time it is computed in an action, it will be kept in memory on the nodes. Spark’s cache is fault-tolerant – if any partition of an RDD is lost, it will automatically be recomputed using the transformations that originally created it.
+</p>
+
+<p>
+The cache() method is a shorthand for using the default storage level, which is StorageLevel.MEMORY_ONLY (store deserialized objects in memory).
+</p>
+
+<p>
+With persist() method, you have the following storage level to choose
+</p>
+<ul>
+<li class="level1"><div class="li"> MEMORY_ONLY	: It stores RDD as <strong>deserialized Java objects</strong> in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they&#039;re needed. This is the default level.</div>
+</li>
+<li class="level1"><div class="li"> MEMORY_AND_DISK : It stores RDD as <strong>deserialized Java objects</strong> in the JVM. If the RDD does not fit in memory, store the partitions that don&#039;t fit on disk, and read them from there when they&#039;re needed.</div>
+</li>
+<li class="level1"><div class="li"> MEMORY_ONLY_SER : (Java and Scala) It stores RDD as <strong>serialized Java objects</strong> (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using a fast serializer, but more CPU-intensive to read.</div>
+</li>
+<li class="level1"><div class="li"> MEMORY_AND_DISK_SER : (Java and Scala) Similar to MEMORY_ONLY_SER, but spill partitions that don&#039;t fit in memory to disk instead of recomputing them on the fly each time they&#039;re needed.</div>
+</li>
+<li class="level1"><div class="li"> DISK_ONLY : It stores the RDD partitions only on disk.</div>
+</li>
+<li class="level1"><div class="li"> MEMORY_ONLY_2, MEMORY_AND_DISK_2, etc : Same as the levels above, but replicate each partition on two cluster nodes.</div>
+</li>
+<li class="level1"><div class="li"> OFF_HEAP (experimental) : Similar to MEMORY_ONLY_SER, but store the data in off-heap memory. This requires off-heap memory to be enabled.</div>
+</li>
+</ul>
+
+</div>
+
+<h4><bookmark content="The recommendation" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__the_recommendation">The recommendation</a></h4>
+<div class="level4">
+
+<p>
+If your data (RDD,df) requires heavy CPU consumption, or will be reused by many other jobs, its better to persist it. And if its too large to persist in deserialize form, you can persist it in serialize form. W<strong>e highly recommend using Kryo if you want to cache data in serialized form</strong>, as it leads to much smaller sizes than Java serialization.
+</p>
+
+<p>
+The only downside of storing data in serialized form is slower access times, due to having to deserialize each object on the fly
+</p>
+
+</div>
+
+<h2><bookmark content="3. Spark partitions" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__spark_partitions">3. Spark partitions</a></h2>
+<div class="level2">
+
+</div>
+
+<h3><bookmark content="3.1 Input data partitions" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__input_data_partitions">3.1 Input data partitions</a></h3>
+<div class="level3">
+
+<p>
+Use spark default partition size(i.e. 128MB), unless:
+</p>
+<ul>
+<li class="level1"><div class="li"> You have much more cores than your partition, and you want to increase the parallelism</div>
+</li>
+<li class="level1"><div class="li"> Your data is heavily nested/repetitive</div>
+</li>
+<li class="level1"><div class="li"> You generate data by using <strong>explode</strong></div>
+</li>
+<li class="level1"><div class="li"> Your data source structure is not optimal(upstream)</div>
+</li>
+<li class="level1"><div class="li"> You use UDFs in your spark application</div>
+</li>
+</ul>
+<pre class="code">// We can directly modify the config of spark session by using the following code
+// The default size is 128MB
+spark.conf.set(&quot;spark.sql.files.maxPartitionBytes&quot;,1024*1024*128) 
+
+// We can set it to 16MB, now the partition size is decreased, and the partition number is increased. We have more tasks, so the parallelism is increased.
+spark.conf.set(&quot;spark.sql.files.maxPartitionBytes&quot;,1024*1024*16) </pre>
+
+</div>
+
+<h3><bookmark content="3.2 Shuffle data partitions" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__shuffle_data_partitions">3.2 Shuffle data partitions</a></h3>
+<div class="level3">
+
+<p>
+You have no longer control on the shuffle data partitions size. You can only control the number of partitions.The default number of shuffle partitions is 200. You need to change it.
+</p>
+
+<p>
+There are some rules to determine the shuffle partition numbers:
+</p>
+<ol>
+<li class="level1"><div class="li"> Master equation to determine the shuffle partition count base line: <strong>Partition_Count = Stage_Input_Data_Size/Shuffle_partition_size</strong> </div>
+</li>
+<li class="level1"><div class="li"> The Shuffle_partition_size should always less than 200MB(The default max size is 2GB). Because larger partition size will create shuffle spill in memory and disk.</div>
+</li>
+<li class="level1"><div class="li"> The Shuffle_partition_number should always = total_core_number*N where N is 1,2,..,n. This can avoid extra useless shuffle task cycle </div>
+</li>
+</ol>
+
+</div>
+
+<h4><bookmark content="3.2.1 Shuffle partition count calculation example" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__shuffle_partition_count_calculation_example">3.2.1 Shuffle partition count calculation example</a></h4>
+<div class="level4">
+
+<p>
+For example, we have Stage_Input_Data_Size = 210GB, and we set Shuffle_partition_size =200 MB
+</p>
+
+<p>
+As a result, Partition_Count=210000MB/100MB = 2100.
+</p>
+
+</div>
+
+<h5><bookmark content="case 1, our cluster has more core than the partition" level="4" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__case_1_our_cluster_has_more_core_than_the_partition">case 1, our cluster has more core than the partition</a></h5>
+<div class="level5">
+
+<p>
+If our spark cluster has more than 2100 cores, for example 4000 core, if we only have 2100 partitions, it means we have 1900 cores that will not be used. To use all the cores in our cluster, we should set shuffle partition count to 4000. Note in some case, you may not want to use all the cores in your cluster. But we don&#039;t discuss these cases in this article. 
+</p>
+<pre class="code">// You can change the shuffle partition number with the following command
+spark.conf.set(&quot;spark.sql.shuffle.partitions&quot;,4000)</pre>
+
+</div>
+
+<h5><bookmark content="case 2, our cluster has less core than the partition" level="4" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__case_2_our_cluster_has_less_core_than_the_partition">case 2, our cluster has less core than the partition</a></h5>
+<div class="level5">
+
+<p>
+If our spark cluster has less than 2100 cores, we should use rule number 3. Suppose we have 256 cores in our cluster. 2100/256=8.2. So we need 8.2 cycle to finish all the shuffle task. But the last cycle uses only 20 percent of the cores which is a huge waster. So we want to finish all the tasks in 8 cycles. 256*8= 2048. As a result the optimal shuffle partition number is 2048, and the partition size is 103MB.  
+</p>
+<pre class="code">// You can change the shuffle partition number with the following command
+spark.conf.set(&quot;spark.sql.shuffle.partitions&quot;,2048)</pre>
+
+</div>
+
+<h4><bookmark content="Important note" level="3" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__important_note">Important note</a></h4>
+<div class="level4">
+
+<p>
+<strong>In your spark ui, you can check the data shuffled between each stage. If you see shuffle spill (memory) and shuffle spill (disk) happens a lot(e.g. more than half of the tasks) and it takes a lot of space(e.g. 1 or 2GB). This means your partition count number is wrong. You need to change it.</strong>
+</p>
+
+</div>
+
+<h3><bookmark content="3.3 Output data partitions" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__output_data_partitions">3.3 Output data partitions</a></h3>
+<div class="level3">
+
+<p>
+We can control the number and the size.
+</p>
+<pre class="code">// To shrink the partition number
+Coalesce(n)
+
+// For example, myDf has 100 partitions, we want to shrink it to 10
+val shrinkedDf=myDf.Coalesce(10)
+
+
+// Increase partition number to n
+Repartition(n) 
+
+// note Repartition can only increase the number of partition, for example if myDf has 10 partitions
+// The following command will not change the number of partition. newDf still has 10 partitions
+val newDf= myDf.repartition(1)
+
+// We can also control how many lines in one partition
+df.write.option(&quot;maxRecordsPerFile&quot;,N)
+ </pre>
+
+</div>
+
+<h2><bookmark content="4. JVM Garbage Collection Tuning" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__jvm_garbage_collection_tuning">4. JVM Garbage Collection Tuning</a></h2>
+<div class="level2">
+
+<p>
+All JVM based languages (e.g. scala/spark) need GC to clear unused object and free memory. <strong>And the cost of garbage collection is proportional to the number of Java objects inside JVM heap memory. Because it needs to scan all objects in JVM to check if they are still in use or not. So if your GC take too much time to complete, try to reduce the number of Java objects.</strong>
+</p>
+
+<p>
+For example, If we have a RDD or DF, each record contains a LinkList of Integer of 100 elements. If we have 100 records, the GC will need to work with 100*100 object. If we persist it in serialize form, this RDD will become one object(a byte array) for each RDD partition. 
+</p>
+
+<p>
+Before trying other techniques, the first thing to try if GC is a problem is to use serialized caching.
+</p>
+
+</div>
+
+<h3><bookmark content="4.1 Measuring the Impact of GC for all your spark jobs" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__measuring_the_impact_of_gc_for_all_your_spark_jobs">4.1 Measuring the Impact of GC for all your spark jobs</a></h3>
+<div class="level3">
+
+<p>
+The first step in GC tuning is to collect statistics on how frequently garbage collection occurs and the amount of time spent GC. This can be done by adding -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps to the Java options. Depends on how you run your spark jobs, you may want to set this config for both executor and driver.
+</p>
+<pre class="code">#Deploy client mode, the driver runs on your local machine, the executors runs on spark cluster
+
+val spark = SparkSession
+            .builder
+            .master(&quot;My spark cluster resource manager url&quot;)
+            .appName(&quot;My spark application name&quot;)
+            .config(&quot;spark.executor.extraJavaOptions&quot;, &quot;-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot;)
+            .config(&quot;spark.driver.extraJavaOptions&quot;, &quot;-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot;)
+            .getOrCreate</pre>
+<pre class="code"># Deploy server mode, the driver and executors are all running on spark cluster
+./bin/spark-submit \ 
+  --name &quot;My app&quot; \ 
+  --master local[4] \  
+  --conf spark.eventLog.enabled=false \ 
+  --conf &quot;spark.driver.extraJavaOptions=-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot; \ 
+  --conf &quot;spark.executor.extraJavaOptions=-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps&quot; \
+  myApp.jar</pre>
+
+<p>
+When you run your Spark job with above config, you will see messages printed in the logs (each time a garbage collection occurs. Note executors&#039; logs will be on your cluster’s worker nodes (in the stdout files in their work directories). The driver&#039;s log can be found in your local machine or workers who runs the driver, depends on your deploy mode) 
+</p>
+
+</div>
+
+<h3><bookmark content="4.2 Basic JVM GC tunning tips" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__basic_jvm_gc_tunning_tips">4.2 Basic JVM GC tunning tips</a></h3>
+<div class="level3">
+
+<p>
+The goal of GC tuning in Spark is to ensure that <strong>only long-lived RDDs are stored in the Old generation and that the Young generation is sufficiently sized to store short-lived objects</strong>. If you don&#039;t know what is old/young generation, please go read <a href="/doku.php?id=employes:pengfei.liu:java:java_gc" class="wikilink1" title="employes:pengfei.liu:java:java_gc" data-wiki-id="employes:pengfei.liu:java:java_gc">Understanding Java Garbage Collection</a> before. 
+</p>
+
+<p>
+Check in GC stats, there are some signs which indicates your jvm memory config is wrong:
+</p>
+<ul>
+<li class="level1"><div class="li"> If a full GC is invoked multiple times for before a task completes, it means that there isn’t enough memory available for executing tasks.</div>
+</li>
+<li class="level1"><div class="li"> If there are too many minor collections but not many major GCs, allocating more memory for Eden would help. You can set the size of the Eden to be an over-estimate of how much memory each task will need. If the size of Eden is determined to be E, then you can set the size of the Young generation using the option -Xmn=4/3*E. (The scaling up by 4/3 is to account for space used by survivor regions as well.). To be more accurate, you can estimate the size of Eden by using the size of the input data. For example, if you read data from HDFS, a block of 128MB will need 4*3*128MB. Because the size of a decompressed block is often 2 or 3 times the size of the block, and if we want to have 3 or 4 tasks’ worth of working space.</div>
+</li>
+<li class="level1"><div class="li"> if the OldGen is close to being full, reduce the amount of memory used for caching by lowering spark.memory.fraction; it is better to cache fewer objects than to slow down task execution. Alternatively, consider decreasing the size of the Young generation. This means lowering -Xmn if you’ve set it as above. If not, try changing the value of the JVM’s NewRatio parameter. Many JVMs default this to 2, meaning that the Old generation occupies 2/3 of the heap. It should be large enough such that this fraction exceeds spark.memory.fraction.</div>
+</li>
+</ul>
+
+</div>
+
+<h3><bookmark content="4.3 Deal with large memory worker node" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__deal_with_large_memory_worker_node">4.3 Deal with large memory worker node</a></h3>
+<div class="level3">
+
+<p>
+If your worker node has more than 200GB memory, the default jvm GC may not be able to handle it efficiently. So use more advanced GC such as <strong>G1 garbage collector</strong> may improve performance in some situations where garbage collection is a bottleneck. You can find a detailed doc on how to tune G1 performance here(<a href="https://www.oracle.com/technical-resources/articles/java/g1gc.html" class="urlextern" title="https://www.oracle.com/technical-resources/articles/java/g1gc.html" rel="ugc nofollow">https://www.oracle.com/technical-resources/articles/java/g1gc.html</a>). 
+</p>
+
+</div>
+
+<h3><bookmark content="4.4 GC tuning Summery" level="2" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__gc_tuning_summery">4.4 GC tuning Summery</a></h3>
+<div class="level3">
+
+<p>
+Here we don&#039;t give any specific numbers in the GC tuning, because it depends on your spark application and the amount of memory available of your spark cluster. So a specific configuration does not make sense. You need to use above principals to estimate the correct configuration and test it. Then monitor how the frequency and time taken by garbage collection changes with the new settings. 
+</p>
+
+<p>
+GC tuning flags for executors can be specified by setting spark.executor.defaultJavaOptions or spark.executor.extraJavaOptions in a job’s configuration.
+</p>
+
+<p>
+There are many more tuning options(<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html" class="urlextern" title="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html" rel="ugc nofollow">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html</a>), if you want to know more about GC tunning, please go read it. 
+</p>
+
+</div>
+
+<h2><bookmark content="5. Increase Parallelism on reading input paths" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__increase_parallelism_on_reading_input_paths">5. Increase Parallelism on reading input paths</a></h2>
+<div class="level2">
+
+<p>
+If your spark job needs to read data from a large number of directories, you may also need to increase directory listing parallelism, otherwise the process could take a very long time, especially when against object store like S3 or Minio. 
+</p>
+
+<p>
+If your job works on <strong>RDD with Hadoop input formats</strong> (e.g., via SparkContext.sequenceFile), the parallelism is controlled via spark.hadoop.mapreduce.input.fileinputformat.list-status.num-threads (currently default is 1).
+</p>
+<pre class="code">config(&quot;spark.hadoop.mapreduce.input.fileinputformat.list-status.num-threads&quot;, 1)</pre>
+
+<p>
+For <strong>Spark SQL with file-based data sources</strong>, you can tune spark.sql.sources.parallelPartitionDiscovery.threshold and spark.sql.sources.parallelPartitionDiscovery.parallelism to improve listing parallelism. Please refer to Spark SQL performance tuning guide for more details.
+</p>
+<pre class="code"># the default value for sql threshold is 32, for sql parallelism is 10000
+val spark = SparkSession
+            .builder
+            .master(&quot;My spark cluster resource manager url&quot;)
+            .appName(&quot;My spark application name&quot;)
+            .config(&quot;spark.sql.sources.parallelPartitionDiscovery.threshold&quot;, 32)
+            .config(&quot;spark.sql.sources.parallelPartitionDiscovery.parallelism&quot;, 10000)
+            .getOrCreate</pre>
+
+<p>
+The spark source code which uses sql threshold config <a href="https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L171-L176" class="urlextern" title="https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L171-L176" rel="ugc nofollow">https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L171-L176</a>
+</p>
+
+<p>
+The spark source code which uses sql parallelism config <a href="https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L187-L189" class="urlextern" title="https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L187-L189" rel="ugc nofollow">https://github.com/apache/spark/blob/v2.3.0/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/InMemoryFileIndex.scala#L187-L189</a>
+</p>
+
+<p>
+The default setting code for sql threshold and parallelism : <a href="https://github.com/apache/spark/blob/v2.3.0/sql/catalyst/src/main/scala/org/apache/spark/sql/internal/SQLConf.scala#L584-L601" class="urlextern" title="https://github.com/apache/spark/blob/v2.3.0/sql/catalyst/src/main/scala/org/apache/spark/sql/internal/SQLConf.scala#L584-L601" rel="ugc nofollow">https://github.com/apache/spark/blob/v2.3.0/sql/catalyst/src/main/scala/org/apache/spark/sql/internal/SQLConf.scala#L584-L601</a>
+</p>
+
+</div>
+
+<h2><bookmark content="6. Data locality" level="1" /><a name="employespengfeiliubig_datasparkspark_optimizationjob_config__data_locality">6. Data locality</a></h2>
+<div class="level2">
+
+<p>
+Data locality can have a major impact on the performance of Spark jobs. If data and the code that operates on it are together then computation tends to be fast. But if code and data are separated, one must move to the other. Typically it is faster to ship serialized code from place to place than a chunk of data because code size is much smaller than data. Spark builds its scheduling around this general principle of data locality.
+</p>
+
+<p>
+<strong>Data locality is how close data is to the code processing it</strong>. There are several levels of locality based on the data’s current location. In order from closest to farthest:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>PROCESS_LOCAL</strong> : data is in the same JVM as the running code. This is the best locality possible</div>
+</li>
+<li class="level1"><div class="li"> <strong>NODE_LOCAL</strong> : data is on the same node. Examples might be in HDFS on the same node, or in another executor on the same node. This is a little slower than PROCESS_LOCAL because the data has to travel between processes</div>
+</li>
+<li class="level1"><div class="li"> <strong>NO_PREF</strong> : data is accessed equally quickly from anywhere and has no locality preference</div>
+</li>
+<li class="level1"><div class="li"> <strong>RACK_LOCAL</strong> : data is on the same rack of servers. Data is on a different server on the same rack so needs to be sent over the network, typically through a single switch</div>
+</li>
+<li class="level1"><div class="li"> <strong>ANY</strong> : data is elsewhere on the network and not in the same rack</div>
+</li>
+</ul>
+
+<p>
+Spark prefers to schedule all tasks at the best locality level. But its common to be in a situation that many data reside in a worker and all executors are busy, and another worker is IDLE because no data is available on the worker. 
+</p>
+
+<p>
+To avoid this kind of situation, Spark typically waits a bit in the hopes that a busy CPU frees up. Once that timeout expires, it starts moving the data from far away to the free CPU. The wait timeout for fallback between each level can be configured individually or all together with the following configuration parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>spark.locality.wait</strong>: How long to wait to launch a data-local task before giving up and launching it on a less-local node. The same wait will be used to step through multiple locality levels (process-local, node-local, rack-local and then any). </div>
+</li>
+<li class="level1"><div class="li"> <strong>spark.locality.wait.process</strong>: Customize the locality wait for process locality. </div>
+</li>
+<li class="level1"><div class="li"> <strong>spark.locality.wait.node</strong>: Customize the locality wait for node locality. </div>
+</li>
+<li class="level1"><div class="li"> <strong>spark.locality.wait.rack</strong>: Customize the locality wait for rack locality. </div>
+</li>
+</ul>
+
+<p>
+The default value for all the wait time is 3 sec.
+</p>
+<pre class="code">//Spark session config
+.config(&quot;spark.locality.wait&quot;, 3)
+.config(&quot;spark.locality.wait.node&quot;, 2)
+
+//Spark submit config
+./bin/spark-submit --name &quot;My app&quot; --master yarn-client --conf spark.locality.wait=3
+  --conf spark.locality.wait.node=2 myApp.jar
+</pre>
+
+<p>
+The default config usually works well. But you may encounter two possible scenarios:
+</p>
+<ul>
+<li class="level1"><div class="li"> Scenario 1 (Large data sets): Jobs are taking too long to complete and on investigation, it was determined that tasks are being run on non-local nodes. Large amounts of data are being transferred to remote nodes (shuffling) resulting in delays in processing. </div>
+</li>
+<li class="level1"><div class="li"> Scenario 2 (Small data sets): Despite jobs processing small amounts of data, it is still taking too long since only 1 or 2 tasks are running on data-local nodes with the rest of the cluster mostly idle.</div>
+</li>
+</ul>
+
+<p>
+In scenario 1, shuffling data between workers costs more expensive than wait the worker to finish. So we should increase the spark.locality.wait time from 3 to 30s. This can avoid data shuffling.
+</p>
+
+<p>
+In scenario 2, the data sets are small, so the cost of shuffling is negligible. We can reduce the spark.locality.wait time from 3 to 0. So spark will not wait and do shuffling directly.
+</p>
+
+<p>
+As a general rule, long running jobs with big datasets would benefit from a higher wait time since the cost of waiting will have a less impact on the job&#039;s overall completion time. short time running Jobs with small datasets(e.g. 0.5-2 seconds) will be better off with a small wait time. In some circumstances, really short jobs should use a wait time of zero since they get executed immediately on the next available node.
+</p>
+
+<p>
+Ultimately, determine the best wait time by achieving a balance between the cost of shuffling data around the cluster against the parallelisation of tasks around the cluster.
+</p>
+
+</div>

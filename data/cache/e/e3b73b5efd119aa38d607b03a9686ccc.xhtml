@@ -1,0 +1,343 @@
+
+<h1 class="sectionedit1" id="inverted_index_of_files_of_shakespeare_s_works">Inverted index of files of Shakespeare&#039;s works</h1>
+<div class="level1">
+
+<p>
+Inverted Index is mapping of content like text to the document in which it can be found. Mainly used in search engines, it provides faster lookup on text searches i.e to find the documents where the search text occurs.
+</p>
+
+<p>
+Problem Statement:
+</p>
+<ul>
+<li class="level1"><div class="li"> Dataset contains Shakespeare&#039;s works split among many files</div>
+</li>
+<li class="level1"><div class="li"> The output must contain a list of all words with the file in which it occurs and the number of times it occurs</div>
+</li>
+</ul>
+
+<p>
+In this example, we have a folder full of files which contains shake speare&#039;s work. We want to know which words in which file has the most word count.
+</p>
+
+<p>
+You can find the data set at <a href="https://github.com/pengfei99/Spark/tree/master/dataset/shakespeare" class="urlextern" title="https://github.com/pengfei99/Spark/tree/master/dataset/shakespeare" rel="nofollow">https://github.com/pengfei99/Spark/tree/master/dataset/shakespeare</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Inverted index of files of Shakespeare&#039;s works&quot;,&quot;hid&quot;:&quot;inverted_index_of_files_of_shakespeare_s_works&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-730&quot;} -->
+<h2 class="sectionedit2" id="objectives">Objectives</h2>
+<div class="level2">
+
+<p>
+Write a spark script which count of word in all the files of dataset shakespeare. Eliminate the empty word.
+transform the result into a dataframe such as
+</p>
+<pre class="code">+---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|     Ham.|       337|0ws2610.txt|
+|    Iago.|       272|0ws3210.txt|</pre>
+
+<p>
+Then write the data frame in a parquet file.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Objectives&quot;,&quot;hid&quot;:&quot;objectives&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;731-1147&quot;} -->
+<h2 class="sectionedit3" id="maven_dependencies">maven dependencies</h2>
+<div class="level2">
+
+<p>
+To archive the above objectives, we need spark core and spark sql. add the following dependencies
+into your pom.xml 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_usecase:inverted_index_shake&amp;codeblock=1" title="Download Snippet" class="mediafile mf_xml">pom.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.2.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;project.build.sourceEncoding<span class="re2">&gt;</span></span></span>UTF-8<span class="sc3"><span class="re1">&lt;/project.build.sourceEncoding<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+ <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>       </pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;maven dependencies&quot;,&quot;hid&quot;:&quot;maven_dependencies&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1148-1916&quot;} -->
+<h2 class="sectionedit4" id="count_word_spark_script">Count word spark script</h2>
+<div class="level2">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_usecase:inverted_index_shake&amp;codeblock=2" title="Download Snippet" class="mediafile mf_scala">InvertedIndexShakespeare.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">application</span>.<span class="me1">example</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> java.<span class="me1">io</span>.<span class="me1">File</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="sy0">_</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">types</span>.<span class="br0">&#123;</span>IntegerType, StringType, StructField, StructType<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="coMULTI">/*
+*
+* Inverted Index is mapping of content like text to the document in
+* which it can be found. Mainly used in search engines, it provides
+* faster lookup on text searches i.e to find the documents where the
+* search text occurs.
+*
+*
+* Problem Statement:
+* 1. Dataset contains Shakespeare's works split among many files
+* 2. The output must contain a list of all words with the file in which
+*    it occurs and the number of times it occurs
+*
+* */</span>
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> InvertedIndexShakespeare <span class="br0">&#123;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">case</span></a> <a href="http://scala-lang.org"><span class="kw1">class</span></a> wordFile<span class="br0">&#40;</span>wordName<span class="sy0">:</span>String,wordCount<span class="sy0">:</span>Int,fileName<span class="sy0">:</span>String<span class="br0">&#41;</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span> <span class="br0">&#123;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileDir<span class="sy0">=</span><span class="st0">&quot;/home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare&quot;</span>
+    <span class="co1">//get the file list</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileList<span class="sy0">=</span>getFileList<span class="br0">&#40;</span>fileDir<span class="br0">&#41;</span>
+    <span class="co1">//fileList.foreach(file=&gt;println(&quot;file://&quot;+file.getAbsolutePath))</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>.<span class="me1">appName</span><span class="br0">&#40;</span><span class="st0">&quot;InvertedIndexShakespeare&quot;</span><span class="br0">&#41;</span>.<span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+&nbsp;
+    <span class="coMULTI">/*******************************************
+    *build wordCound df for all files in the directory and write df to parquet file
+      * *********************************************/</span>
+    <span class="coMULTI">/*val wordCountDF=buildFullWordCountDataFrame(fileList,spark)
+    val parquetFilePath=&quot;file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/parquet&quot;
+    wordCountDF.write.parquet(parquetFilePath)*/</span>
+&nbsp;
+    <span class="coMULTI">/*
+    * WE can use dataframe build in function to transform data
+    *
+    * */</span>
+&nbsp;
+    <span class="co1">//wordCountDF.filter($&quot;word_name&quot;=!=&quot;/s&quot;).orderBy($&quot;word_count&quot;.desc).show(10)</span>
+&nbsp;
+    <span class="coMULTI">/******************************************
+      * Read parquet file and create  a view for sql query
+      * *****************************/</span>
+   <span class="coMULTI">/* val wordCountDF=spark.read.parquet(parquetFilePath)
+    wordCountDF.createOrReplaceTempView(&quot;wordCount&quot;)
+    val popularWord=spark.sql(&quot;select * from wordCount where word_name &lt;&gt; ' ' ORDER BY word_count DESC&quot;)
+    popularWord.show(20)*/</span>
+    <span class="co1">//wordCountDF.orderBy($&quot;word_count&quot;.desc).show(10)</span>
+   <span class="co1">// wordCountDF.show(10)</span>
+&nbsp;
+    <span class="coMULTI">/*val testfilePath=&quot;file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare/0ws0110.txt&quot;
+    val testDF=wordCount(testfilePath,spark,&quot;0ws0110.txt&quot;)
+    testDF.orderBy($&quot;word_count&quot;.desc).show(10)*/</span>
+&nbsp;
+&nbsp;
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * This function takes a list of files and a spark session, count all words in all files
+  * return a dataframe
+  * */</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> buildFullWordCountDataFrame<span class="br0">&#40;</span>fileList<span class="sy0">:</span>List<span class="br0">&#91;</span>File<span class="br0">&#93;</span>,spark<span class="sy0">:</span>SparkSession<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> spark.<span class="me1">sparkContext</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sqlC<span class="sy0">=</span>spark.<span class="me1">sqlContext</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> schema <span class="sy0">=</span> StructType<span class="br0">&#40;</span>Array<span class="br0">&#40;</span>
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;word_name&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;word_count&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;file_name&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+    <span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> fullDf <span class="sy0">:</span> DataFrame <span class="sy0">=</span> sqlC.<span class="me1">createDataFrame</span><span class="br0">&#40;</span>sc.<span class="me1">emptyRDD</span><span class="br0">&#91;</span>Row<span class="br0">&#93;</span>,schema<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">var</span></a> totalColumn<span class="sy0">:</span>Long <span class="sy0">=</span> <span class="nu0">0</span>
+    <a href="http://scala-lang.org"><span class="kw1">for</span></a><span class="br0">&#40;</span>file<span class="sy0">&lt;</span>-fileList<span class="br0">&#41;</span><span class="br0">&#123;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileName<span class="sy0">=</span>file.<span class="me1">getName</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> filePath<span class="sy0">=</span><span class="st0">&quot;file://&quot;</span>+file.<span class="me1">getAbsolutePath</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordDF<span class="sy0">=</span>wordCount<span class="br0">&#40;</span>filePath,spark,fileName<span class="br0">&#41;</span>
+      fullDf<span class="sy0">=</span>fullDf.<span class="me1">union</span><span class="br0">&#40;</span>wordDF<span class="br0">&#41;</span>
+      totalColumn<span class="sy0">=</span>totalColumn+wordDF.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+    <span class="coMULTI">/*println(&quot;Total row :&quot;+totalColumn)
+    println(&quot;Data frame row :&quot;+ fullDf.count())*/</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> fullDf
+  <span class="br0">&#125;</span>
+<span class="coMULTI">/*
+* This function take a file path, spark session, a file name.
+* it counts all words in this file and return a data frame
+* */</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> wordCount<span class="br0">&#40;</span>filePath<span class="sy0">:</span>String,spark<span class="sy0">:</span>SparkSession,fileName<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame<span class="sy0">=</span> <span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> spark.<span class="me1">sparkContext</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> textFile <span class="sy0">=</span> sc.<span class="me1">textFile</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span>
+    <span class="co1">//filter word.isEmpty eliminats white space words</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCount <span class="sy0">=</span> textFile.<span class="me1">flatMap</span><span class="br0">&#40;</span>line<span class="sy0">=&gt;</span>line.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">filter</span><span class="br0">&#40;</span>word <span class="sy0">=&gt;</span> <span class="sy0">!</span>word.<span class="me1">isEmpty</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>word<span class="sy0">=&gt;</span><span class="br0">&#40;</span>word,<span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="br0">&#40;</span>a,b<span class="br0">&#41;</span><span class="sy0">=&gt;</span>a+b<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordDF<span class="sy0">=</span>wordCount.<span class="me1">map</span><span class="br0">&#40;</span>atts<span class="sy0">=&gt;</span>wordFile<span class="br0">&#40;</span>atts.<span class="sy0">_</span>1,atts.<span class="sy0">_</span>2.<span class="me1">toInt</span>,fileName<span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">toDF</span><span class="br0">&#40;</span><span class="st0">&quot;word_name&quot;</span>,<span class="st0">&quot;word_count&quot;</span>,<span class="st0">&quot;file_name&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> wordDF
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * This function take a dir path, return a list of files in this dir*/</span>
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getFileList<span class="br0">&#40;</span>fileDir<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>List<span class="br0">&#91;</span>File<span class="br0">&#93;</span><span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> dir <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> File<span class="br0">&#40;</span>fileDir<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">if</span></a><span class="br0">&#40;</span>dir.<span class="me1">exists</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> dir.<span class="me1">isDirectory</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> fileList<span class="sy0">=</span>dir.<span class="me1">listFiles</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">filter</span><span class="br0">&#40;</span>file<span class="sy0">=&gt;</span>file.<span class="me1">getName</span>.<span class="me1">startsWith</span><span class="br0">&#40;</span><span class="st0">&quot;0ws&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">toList</span>
+      <a href="http://scala-lang.org"><span class="kw1">return</span></a> fileList
+    <span class="br0">&#125;</span>
+    <a href="http://scala-lang.org"><span class="kw1">else</span></a> <a href="http://scala-lang.org"><span class="kw1">null</span></a>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+With this you can write a parquet file which contains the dataframe.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Count word spark script&quot;,&quot;hid&quot;:&quot;count_word_spark_script&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1917-6566&quot;} -->
+<h2 class="sectionedit5" id="analysis_of_the_dataframe">Analysis of the dataframe</h2>
+<div class="level2">
+
+<p>
+Open a spark shell
+</p>
+<pre class="code">#load the parquet file
+scala&gt; import spark.implicits._
+import spark.implicits._
+
+scala&gt; val wordCountDF=spark.read.parquet(&quot;/tmp/parquet&quot;)
+wordCountDF: org.apache.spark.sql.DataFrame = [word_name: string, word_count: int ... 1 more field]
+
+scala&gt; wordCountDF.show(10)
++--------------+----------+-----------+
+|     word_name|word_count|  file_name|
++--------------+----------+-----------+
+|  University&quot;.|         1|0ws2610.txt|
+|Beere-barrell?|         1|0ws2610.txt|
+|           Let|        39|0ws2610.txt|
+|        stuck,|         1|0ws2610.txt|
+|         rites|         1|0ws2610.txt|
+|     instance,|         1|0ws2610.txt|
+|     felicitie|         1|0ws2610.txt|
+|    Obseruers,|         1|0ws2610.txt|
+|        Amber,|         1|0ws2610.txt|
+|        secure|         2|0ws2610.txt|
++--------------+----------+-----------+
+only showing top 10 rows
+
+# Get the most popular word
+wordCountDF.orderBy($&quot;word_count&quot;.desc).show(10)
++---------+----------+-----------+                                              
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|      the|       997|0ws2310.txt|
+|      the|       952|0ws2610.txt|
+|      the|       939|0ws2110.txt|
+|      the|       935|0ws0210.txt|
+|      the|       933|0ws0410.txt|
+|      the|       865|0ws3610.txt|
+|      the|       854|0ws1910.txt|
+|      and|       849|0ws2310.txt|
+|      the|       831|0ws1210.txt|
+|      the|       831|0ws1810.txt|
++---------+----------+-----------+
+</pre>
+
+<p>
+You can notice that, the most used word is the, it did not give you any useful info.
+</p>
+
+<p>
+So we want to eliminate this kind of noise word
+</p>
+<pre class="code">scala&gt; wordCountDF.filter($&quot;word_name&quot;=!=&quot;the&quot;).orderBy($&quot;word_count&quot;.desc).show(10)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|      and|       849|0ws2310.txt|
+|        I|       830|0ws3210.txt|
+|        I|       780|0ws2010.txt|
+|       of|       753|0ws2310.txt|
+|        I|       710|0ws3010.txt|
+|      and|       693|0ws2110.txt|
+|       to|       692|0ws0410.txt|
+|        I|       689|0ws3910.txt|
+|       of|       689|0ws0410.txt|
+|       of|       678|0ws1910.txt|
++---------+----------+-----------+
+only showing top 10 rows
+</pre>
+
+<p>
+It&#039;s a little bit better, we don&#039;t see the anymore.
+</p>
+<pre class="code">scala&gt; wordCountDF.filter($&quot;word_name&quot;=!=&quot;the&quot;).filter($&quot;word_name&quot;=!=&quot;and&quot;).orderBy($&quot;word_count&quot;.desc).show(10)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|        I|       830|0ws3210.txt|
+|        I|       780|0ws2010.txt|
+|       of|       753|0ws2310.txt|
+|        I|       710|0ws3010.txt|
+|       to|       692|0ws0410.txt|
+|        I|       689|0ws3910.txt|
+|       of|       689|0ws0410.txt|
+|       of|       678|0ws1910.txt|
+|        I|       676|0ws0410.txt|
+|        I|       674|0ws2210.txt|
++---------+----------+-----------+
+only showing top 10 rows
+</pre>
+
+<p>
+It&#039;s too hard to filter one word at a time 
+</p>
+<pre class="code">scala&gt; wordCountDF.filter(! (wordCountDF(&quot;word_name&quot;) isin (&quot;the&quot;,&quot;and&quot;,&quot;I&quot;,&quot;to&quot;,&quot;of&quot;,&quot;a&quot;,&quot;you&quot;,&quot;my&quot;,&quot;in&quot;,&quot;is&quot;,&quot;And&quot;,&quot;that&quot;,&quot;your&quot;,&quot;not&quot;,&quot;his&quot;,&quot;it&quot;,&quot;with&quot;,&quot;this&quot;,&quot;for&quot;,&quot;he&quot;,&quot;be&quot;,&quot;The&quot;,&quot;thou&quot;,&quot;me&quot;,&quot;as&quot;,&quot;will&quot;))).orderBy($&quot;word_count&quot;.desc).show(20)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|     Ham.|       337|0ws2610.txt|
+|    Iago.|       272|0ws3210.txt|
+|    Rich.|       252|0ws0410.txt|
+|     haue|       250|0ws3610.txt|
+|     haue|       212|0ws4010.txt|
+|    Cleo.|       202|0ws3510.txt|
+|     Ros.|       199|0ws2510.txt|
+|      thy|       198|0ws0410.txt|
+|     haue|       196|0ws3510.txt|
+|     Tim.|       195|0ws3710.txt|
+|     haue|       192|0ws3910.txt|
+|      thy|       191|0ws0310.txt|
+|     haue|       190|0ws2010.txt|
+|      thy|       189|0ws0910.txt|
+|     haue|       187|0ws3210.txt|
+|     haue|       186|0ws3010.txt|
+|     Oth.|       182|0ws3210.txt|
+|      our|       179|0ws2310.txt|
+|      thy|       178|0ws0210.txt|
+|    Lear.|       174|0ws3310.txt|
++---------+----------+-----------+
+only showing top 20 rows
+</pre>
+
+<p>
+Now we have some name out of the files, these name may be the main characteres of the shake spears work
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Analysis of the dataframe&quot;,&quot;hid&quot;:&quot;analysis_of_the_dataframe&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;6567-&quot;} -->

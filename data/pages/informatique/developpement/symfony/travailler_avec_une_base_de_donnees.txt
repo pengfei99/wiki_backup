@@ -1,0 +1,30 @@
+====== Travailler avec la base de données ======
+
+    $ vim src/AppBundle/Resources/config/schema.xml
+
+<code xml src/AppBundle/Resources/config/schema.xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" namespace="AppBundle\Model" defaultIdMethod="native">
+
+    <table name="user">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="first_name" type="varchar" size="100" />
+        <column name="last_name" type="varchar" size="100" />
+    </table>
+
+</database>
+</code>
+
+    $ php app/console propel:model:build
+    >>        AppBundle    Generated model classes from schema.xml
+    $ php app/console propel:migration:generate-diff
+    …
+    "PropelMigration_1426166067.php" file successfully created in […] /app/propel/migrations
+    …
+    $ php app/console propel:migration:status
+    $ php app/console propel:migration:migrate
+
+Pensez à ''commit'' le schéma et le code généré dans ''app/propel/migrations/'' et ''src/AppBundle/Model/''.
+
+    $ bzr add app/propel/migrations src/AppBundle/Model
+    $ bzr ci -m "Modification des modèles"

@@ -1,0 +1,38 @@
+====== PhyloSift ======
+
+===== Informations =====
+
+  * **Version** : 1.0.0-02
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://phylosift.wordpress.com/]]
+  * **Description** : PhyloSift is a suite of software tools to conduct phylogenetic analysis of genomes and metagenomes. Using a reference database of protein and RNA sequences, PhyloSift can scan new sequences against that database for homologs and identify the phylogenetic relationship of the new sequence to the database sequences. During this procedure, high quality alignments of codon and amino acid sequence are generated.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/phylosift/"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift/releases/phylosift_v1.0.0_02.tar.bz2
+tar xvjf phylosift_v1.0.0_02.tar.bz2
+mv phylosift_v1.0.0_02 $APP/1.0.0-02
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Phylogenetic and taxonomic analysis for genomes and metagenomes.\n"
+}
+
+set version "1.0.0-02"
+
+prepend-path PATH "/afs/in2p3.fr/throng/bioaster/apps/phylosift/${version}/bin/"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 1.0.0-02 installée

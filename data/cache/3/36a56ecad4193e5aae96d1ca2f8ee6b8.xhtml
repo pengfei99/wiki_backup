@@ -1,0 +1,83 @@
+
+<h1 class="sectionedit1" id="generation_d_une_image_pour_open_stackexemple_avec_centos_7">Génération d&#039;une image pour Open Stack : exemple avec CentOS 7</h1>
+<div class="level1">
+
+<p>
+Ce document décrit la procédure pour générer une image CentOS utilisable ensuite dans Open Stack.
+</p>
+
+<p>
+Cette procédure a été réalisée sur Xubuntu. 
+</p>
+
+<p>
+Tout d&#039;abord, installation des outils nécessaires : <a href="http://wiki.qemu.org/KVM" class="urlextern" title="http://wiki.qemu.org/KVM"  rel="nofollow"> Quemu KVM</a>,<a href="http://libvirt.org/" class="urlextern" title="http://libvirt.org/"  rel="nofollow">libvirt</a>, et l&#039;utilitaire virt-install
+</p>
+<pre class="prettyprint lang-class">
+$ sudo apt-get install qemu-kvm libvirt-bin
+$ sudo adduser $USER libvirtd
+$ sudo apt-get install virtinst
+</pre>
+<p>
+Création d&#039;un répertoire de travail et téléchargement de l&#039;image ISO CentOS (on utilise la version “Net install” car elle est légère)
+</p>
+<pre class="prettyprint lang-class">
+$ mkdir centos
+$ cd centos/
+$ wget http://mirror.in2p3.fr/linux/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso
+</pre>
+<p>
+Création d&#039;un disque virtuel au format qcow de 10 Giga
+</p>
+<pre class="prettyprint lang-class">
+$ qemu-img create -f qcow2 centos-7.qcow2 10G
+</pre>
+<p>
+Lancer la procédure d&#039;installation de l&#039;ISO sur le disque virtuel que l&#039;on vient de créer
+</p>
+<pre class="prettyprint lang-class">
+$ sudo virt-install --virt-type kvm --name centos-7 --ram 1024 \
+--disk ./centos-7.qcow2,format=qcow2 \
+--network network=default \
+--graphics vnc,listen=0.0.0.0,port=5901 --noautoconsole \
+--os-type=linux --os-variant=rhel7 \
+--location=CentOS-7-x86_64-NetInstall-1503.iso
+</pre>
+<p>
+A ce moment, l&#039;installation de l&#039;<abbr title="Operating System">OS</abbr> a commencé. On se connecte à la VM avec un client VNC (ici vinagre)
+</p>
+<pre class="prettyprint lang-class">
+$ vinagre 0.0.0.0:5901
+</pre><!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 50%;">
+<p>
+<strong>Si on s&#039;est trompé, une fois sorti de VNC, on peut arrêter et supprimer la VM.</strong>
+</p>
+
+<p>
+On liste les VMs en cours d&#039;éxécution
+</p>
+<pre class="prettyprint lang-class">
+$ virsh -c qemu:///system list --all
+ ID    Nom                            État
+----------------------------------------------------
+ 7     centos-7                       en cours d&#039;exécution
+</pre>
+<p>
+On arrête (brutalement :]) la VM
+</p>
+<pre class="prettyprint lang-class">
+$ virsh destroy centos-7
+</pre>
+<p>
+Et on la supprime
+</p>
+<pre class="prettyprint lang-class">
+$ virsh -c qemu:///system undefine centos-7
+</pre>
+<p>
+On supprime le dique virtuel (pour être propre) et on est bon pour recommencer à l&#039;étape “création d&#039;un disque virtuel au format qcow”
+</p>
+<pre class="prettyprint lang-class">
+$ rm -f centos-7.qcow2
+</pre></div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>

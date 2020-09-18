@@ -1,0 +1,140 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm02">BIOA-2014-VM02</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BIOA-2014-VM02" [1-30] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Machine servant de serveur de fichiers. Celle-ci a été mise en place pour des raisons historiques : le disque <strong>srvfic</strong> était difficile d&#039;accès depuis Paris. Owncloud, le VPN et le disque M ont permis d&#039;améliorer le transfert de fichiers. Le disque T est maintenant (janvier 2016) utilisé comme un espace de <strong>T</strong>ransfer pour échanger des données entre le réseau bureau et le réseau labo de Paris.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/vms/vmware/bioa-2014-vm02?do=backlink" class="wikilink1" title="vms:vmware:bioa-2014-vm02">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [31-574] -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Contacts" [575-646] -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : Debian GNU/Linux 7.5 (wheezy)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 2Go + 10Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:3B:FC:7B</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations Techniques" [647-888] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Installation" [889-914] -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo</pre>
+
+</div>
+<!-- EDIT6 SECTION "Système de base" [915-1054] -->
+<h3 class="sectionedit7" id="samba">Samba</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends samba</pre>
+<dl class="code">
+<dt><a href="/_export/code/vms/vmware/bioa-2014-vm02?codeblock=2" title="Télécharger un extrait" class="mediafile mf_conf">/etc/samba/smb.conf</a></dt>
+<dd><pre class="code text">[Donnees]
+    comment = Disque Commun Paris
+    read only = no
+    writable = yes
+    path = /mnt/dd2/samba/commun_paris
+    guest ok = yes</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT7 SECTION "Samba" [1055-1319] -->
+<h3 class="sectionedit8" id="montage">Montage</h3>
+<div class="level3">
+
+<p>
+Pour accéder aux données il suffit d&#039;accéder au montage SMB :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>\\157.99.42.13\Donnees</code> depuis le réseau <strong>bureau</strong></div>
+</li>
+<li class="level1"><div class="li"> <code>\\10.6.2.253\Donnees</code> depuis le réseau <strong>labo</strong></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Montage" [1320-1521] -->
+<h3 class="sectionedit9" id="les_disques">Les disques</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> VMware name </th><th class="col1"> SCSI number </th><th class="col2"> Size <abbr title="Guillaume Boissy">GB</abbr> </th><th class="col3 leftalign"> Device   </th><th class="col4 leftalign"> Mount point  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> Hard disk 1 </td><td class="col1 leftalign"> 0:0         </td><td class="col2 leftalign"> 2       </td><td class="col3 leftalign"> rootfs   </td><td class="col4 leftalign"> /            </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> Hard disk 2 </td><td class="col1 leftalign"> 0:1         </td><td class="col2 leftalign"> 1400    </td><td class="col3"> /dev/sdb </td><td class="col4 leftalign"> /mnt/disk1   </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Hard disk 3 </td><td class="col1 leftalign"> <img class="emojione" alt="&#x1f607;" src="//cdn.jsdelivr.net/emojione/assets/png/1F607.png?v=1.2.4"/>         </td><td class="col2 leftalign"> 1800    </td><td class="col3"> /dev/sdc </td><td class="col4 leftalign"> /mnt/disk2   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Hard disk 4 </td><td class="col1 leftalign"> 0:2         </td><td class="col2 leftalign"> 500     </td><td class="col3"> /dev/sde </td><td class="col4"> /mnt/disk_NL </td>
+	</tr>
+</table></div>
+<!-- EDIT10 TABLE [1545-1874] -->
+</div>
+<!-- EDIT9 SECTION "Les disques" [1522-1874] -->
+<h2 class="sectionedit11" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.06.26 (tlc)</strong> Ajout d&#039;un disque de 500Go pour stocker la sauvegarde des données de Nouara (datastore1/bioa-2014-vm02/bioa-2014-vm02_5.vmdk)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2014.06.17 (tlc)</strong> Installation</div>
+</li>
+<li class="level1"><div class="li"> <strong>2014.11.06 (tlc)</strong> Ajout d&#039;un disque de 20Go pour remplacer l&#039;ancien + tests de <a href="/ut6/vmware/resize_disk" class="wikilink1" title="ut6:vmware:resize_disk">redimensionnement</a> pour la prochaine fois</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.01.14 (tlc)</strong> Redimensionnement du disque de données (sdb) à 40 Go</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.03.20 (tlc)</strong> Redimensionnement du disque de données (sdb) à 80 Go et du disque de sauvegarde (sdc) à 100 Go</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.01 (tlc)</strong> Redimensionnement du disque de données (sdb) à 160 Go et du disque de sauvegarde (sdc) à 200 Go</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.10.13 (tlc)</strong> Redimensionnement du disque de données (sdb) à 320 Go et du disque de sauvegarde (sdc) à 400 Go</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.02.15 (tlc)</strong> Redimensionnement du disque de données (sdb) à 1.4 To et du disque de sauvegarde (sdc) à 1.8 To</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Journal" [1875-] -->

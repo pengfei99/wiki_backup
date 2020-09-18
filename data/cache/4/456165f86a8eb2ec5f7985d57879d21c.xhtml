@@ -1,0 +1,109 @@
+
+<h1 class="sectionedit1" id="install_python_3_on_centos">Install python 3 on centos</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install python 3 on centos&quot;,&quot;hid&quot;:&quot;install_python_3_on_centos&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-43&quot;} -->
+<h2 class="sectionedit2" id="step_1_requirements">Step 1 – Requirements</h2>
+<div class="level2">
+
+<p>
+To compile python from source, we need the following dependencies
+</p>
+<pre class="code">yum install gcc openssl-devel bzip2-devel libffi-devel</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step 1 \u2013 Requirements&quot;,&quot;hid&quot;:&quot;step_1_requirements&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;44-217&quot;} -->
+<h2 class="sectionedit3" id="step_2_download_python_37_source_file">Step 2 – Download Python 3.7 source file</h2>
+<div class="level2">
+
+<p>
+Download Python using the following command from the Python official site. You can find all available version in <a href="https://www.python.org/downloads/source/" class="urlextern" title="https://www.python.org/downloads/source/" rel="nofollow">https://www.python.org/downloads/source/</a>. In this tutorial, we download the current latest version which is 3.7.2.
+</p>
+<pre class="code">cd /usr/src
+wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz
+
+# extract the tgz file
+tar xzf Python-3.7.2.tgz</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step 2 \u2013 Download Python 3.7 source file&quot;,&quot;hid&quot;:&quot;step_2_download_python_37_source_file&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;218-640&quot;} -->
+<h2 class="sectionedit4" id="step_3_compile_and_install_python_37">Step 3 – Compile and Install Python 3.7</h2>
+<div class="level2">
+
+<p>
+Use below set of commands to compile Python source code on your system using altinstall.
+</p>
+<pre class="code">cd Python-3.7.2
+# Check all dependencies before compile
+./configure --enable-optimizations
+# make altinstall is used to prevent replacing the default python binary file /usr/bin/python.
+make altinstall</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step 3 \u2013 Compile and Install Python 3.7&quot;,&quot;hid&quot;:&quot;step_3_compile_and_install_python_37&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;641-1003&quot;} -->
+<h2 class="sectionedit5" id="step_4_check_python_version">Step 4 – Check Python Version</h2>
+<div class="level2">
+
+<p>
+You may need to log out and re login to reload your environment.
+</p>
+<pre class="code">[pliu@cclinmlp01 tmp]$ python3.7 -V
+Python 3.7.2
+[pliu@cclinmlp01 tmp]$ python3.7
+Python 3.7.2 (default, Mar 20 2019, 09:19:16) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-36)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; exit()</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step 4 \u2013 Check Python Version&quot;,&quot;hid&quot;:&quot;step_4_check_python_version&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;1004-1389&quot;} -->
+<h1 class="sectionedit6" id="install_python3_with_yum">Install python3 with yum</h1>
+<div class="level1">
+<pre class="code"># install ius repo
+sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+
+# install python36
+yum -y install python36u
+
+# check version
+$ python3.6 -V
+Python 3.6.5
+
+# install pip
+yum -y install python36u-pip
+
+# install python36 dev tools
+yum -y install python36u-devel
+
+# use pip36 to install package
+pip3.6 install package_name</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install python3 with yum&quot;,&quot;hid&quot;:&quot;install_python3_with_yum&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;1390-1788&quot;} -->
+<h2 class="sectionedit7" id="install_virtuel_env">Install virtuel env</h2>
+<div class="level2">
+
+<p>
+In the following section, we will create a virtural env with python3.6 for keras and tensorflow
+</p>
+<pre class="code"># create a directory which will contains the virtural env
+mkdir -p ~/data_science/tensorflow
+cd ~/data_science/tensorflow
+
+# create virtual env
+python3.6 -m venv my_venv
+
+# check the virtual env
+&gt; ls
+my_venv
+[pliu@template-centos-7-latest-14-08-17 tensorflow]$ source my_venv/bin/activate
+(my_venv) [pliu@template-centos-7-latest-14-08-17 tensorflow]$ python
+Python 3.6.5 (default, Apr 10 2018, 17:08:37) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; exit()
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install virtuel env&quot;,&quot;hid&quot;:&quot;install_virtuel_env&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;1789-&quot;} -->

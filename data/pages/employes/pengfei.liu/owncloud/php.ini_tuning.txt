@@ -1,0 +1,76 @@
+====== Php.ini tuning for running owncloud ======
+
+The php.ini file is a PHP server’s main configuration file. When your PHP server is first turned on or restarted, it reads the php.ini to load various settings and configurations. These settings control different server aspects like memory limits, data handling and file uploads.
+Your php.ini file is located in your server’s root or public_html folder, not your PrestaShop files. Most hosting companies will allow you to access and change the php.ini file. If you can’t find it or do not have not access to it, contact your hosting company and they will work with you to change these settings.
+It’s important to understand the php.ini file because its settings can be customized to solve common server-side errors and speed up your entire PrestaShop store. Let’s review some of the essential settings that you can change to optimize your online store.
+
+===== PHP.ini location =====
+
+<code>
+# In centos7, php7.1, the php.ini is located at /etc/php.ini
+
+# 1. Maximum amount of memory a script may consume, in megabytes
+memmory_limiit = 8096
+
+# 2. Maximum amount of time each script can wait for requested data, in seconds
+max_Input_time = 
+
+# 3. Maximum allowed execution time of each script, in seconds.
+max_execution_time = 
+
+# These two time limits are connected. The “max_input_time” setting controls how long a script can wait 
+# to receive data requested from the server while the “max_execution_time” controls how long a script can # run on your server after the data has been received. Most hosts have the default setting value to 30 
+# seconds each. As they are both connected, I recommend disabling the “max_input_time” and increasing the # “max_execution_time” to 300 seconds.
+
+# disable max Input time
+max_Input_time = -1 
+
+# set max execution time to 3600 seconds
+max_execution_time = 3600
+
+# 4. Maximum file size your server will allowed to be uploaded, in megabytes 
+upload_max_filesize=
+
+# 5. Maximum data size allowed to uploaded, in megabytes
+post_max_size=
+
+# These two values are intertwined. They control the size of files and data that you are allowed to upload
+# to your server. The post_max_size must be bigger or equal to the value of upload_max_filesize.
+
+# Beware, your disk space must have enough space to handle the temp file of the upload. For example, if you have 100 user which upload 10 Go file each, It requires 100*10 Go space to handle the upload.
+
+upload_max_filesize=16G
+post_max_size=16G 
+
+# 6. Maximum number of files that can be uploaded via a single request
+max_file_uploads = 10000
+
+# 7. The maximum number of variable form elements that can be submitted to a single page.
+max_Input_vars
+
+# It allows you to control the maximum number of form elements on a page. Some webpages have a 
+# large amount of forms/fields for administrative or page configuration purposes. In those cases, 
+# we need to increase the number of this value in order to properly view those pages.
+max_input_vars = 10000
+
+PS:  If your hosting provider has the “suhosin” php patch, you will need to change 
+     two more values to the same number. These values are
+     
+suhosin.get.max_vars = 10000;
+suhosin.post.max_vars = 10000;
+
+Owncloud does not have this needs
+</code>
+
+
+A quick summerize 
+
+<code>
+memory_limit = 8096M
+max_execution_time=3600;
+max_input_time=-1
+upload_max_filesize=16G;
+post_max_size=16G;
+max_file_uploads = 10000
+max_input_vars=10000
+</code>

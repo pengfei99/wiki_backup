@@ -1,0 +1,26 @@
+<span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.2.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;project.build.sourceEncoding<span class="re2">&gt;</span></span></span>UTF-8<span class="sc3"><span class="re1">&lt;/project.build.sourceEncoding<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.postgresql<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>postgresql<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>9.4-1200-jdbc41<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span>

@@ -1,0 +1,53 @@
+====== Keys in relational model ======
+
+In this article, we will explain the different keys in a relational model. I will use the following tables as examples.
+
+Student table:
+^STUD_NO^STUD_NAME^STUD_PHONE^STUD_STATE^STUD_COUNTRY^STUD_AG^
+|1|Liu|344545|LiaoNing|China|20|
+|2|Zhou|344545|ZheJiang|China|35|
+
+Student course table:
+^STUD_NO^COURSE_NO^COURSE_NAME^
+|1|C1|DBMS|
+|2|C2|Computer Networks|
+|1|C1|Computer Networks|
+ 
+
+
+===== Candidate Key =====
+
+The minimal set of attribute which can uniquely identify a tuple is known as candidate key. For Example, STUD_NO in STUDENT relation.
+
+The value of Candidate Key is **unique** and **non-null** for every tuple.
+There can be more than one candidate key in a relation. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT.
+The candidate key can be simple (having only one attribute) or composite as well. For Example, {STUD_NO, COURSE_NO} is a composite candidate key for relation STUDENT_COURSE.
+
+
+===== Super Key =====
+
+The set of attributes which can uniquely identify a tuple is known as Super Key. For Example, STUD_NO, (STUD_NO, STUD_NAME) etc.
+
+  * Adding zero or more attributes to candidate key generates super key.
+  * A candidate key is a super key but vice versa is not true.
+
+===== Primary Key =====
+
+There can be more than one candidate key in a relation out of which one can be chosen as primary key. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT but STUD_NO can be chosen as primary key (only one out of many candidate keys).
+
+
+===== Alternate Key =====
+
+The candidate key other than primary key is called as alternate key. For Example, STUD_NO as well as STUD_PHONE both are candidate keys for relation STUDENT but STUD_PHONE will be alternate key (only one out of many candidate keys).
+
+===== Foreign Key =====
+
+If an attribute can only take the values which are present as values of some other attribute, it will be foreign key to the attribute to which it refers. The relation which is being referenced is called **referenced relation** and corresponding attribute is called **referenced attribute** and the relation which refers to referenced relation is called **referencing relation** and corresponding attribute is called **referencing attribute**. Referenced attribute of referencing attribute should be primary key. 
+
+
+For Example, STUD_NO in STUDENT_COURSE is a foreign key to STUD_NO in STUDENT relation.
+
+
+
+
+

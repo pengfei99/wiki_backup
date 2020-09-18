@@ -1,0 +1,21 @@
+- name: Server for web development tools
+  hosts: devtools
+  vars:
+    - redmine_version: &quot;3.1.1&quot;
+    - redmine_archive_sha256sum: 57307b919bcc38ada8c5bd06e49d914e428cf11f0fc2cf02d13c5d00afddeecf
+    - db_redmine_name: bio_project
+    - db_redmine_user: bio_project
+    - db_redmine_hostname: ccmysql.in2p3.fr
+#    - db_redmine_password: &quot;defined in group_vars/all/private.yml&quot;
+  roles:
+    - { role: redmine,
+        vhost_name: devtools.bioaster.org,
+        archive_url: &quot;http://www.redmine.org/releases/redmine-{{ redmine_version }}.tar.gz&quot;,
+        sha256sum: &quot;{{ redmine_archive_sha256sum }}&quot;,
+        version: &quot;{{ redmine_version }}&quot;,
+        install_directory: /var/www/html,
+        database_hostname: &quot;{{ db_redmine_hostname }}&quot;,
+        database_name: &quot;{{ db_redmine_name }}&quot;,
+        database_user: &quot;{{ db_redmine_user }}&quot;,
+        database_password: &quot;{{ db_redmine_password }}&quot;,
+        backup_folder: /path/to/local/backups }

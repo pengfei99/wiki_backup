@@ -1,0 +1,101 @@
+
+<h1 class="sectionedit1" id="flume_agent_with_tweeter_source_hdfs_sink">Flume agent with tweeter source, hdfs sink</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we will use a tweeter source which can retrieve data from the tweeter, and stores the data in hdfs
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume agent with tweeter source, hdfs sink&quot;,&quot;hid&quot;:&quot;flume_agent_with_tweeter_source_hdfs_sink&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-176&quot;} -->
+<h2 class="sectionedit2" id="tweeter_source">tweeter source</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;tweeter source&quot;,&quot;hid&quot;:&quot;tweeter_source&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;177-204&quot;} -->
+<h3 class="sectionedit3" id="check_tweeter_source_dependenices">check tweeter source dependenices</h3>
+<div class="level3">
+
+<p>
+In some older version of the flume, the tweeter source dependencies are not present by default, you need to copy them in your flume lib directory. The version which is newer than 1.8.0 has all the dependencies for tweeter source. To be sure, you need to check the following 4 dependencies in /path/to/flume/lib
+</p>
+<pre class="code">twitter4j-core-3.0.3.jar
+twitter4j-media-support-3.0.3.jar
+flume-twitter-source-1.9.0.jar                            
+twitter4j-stream-3.0.3.jar</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;check tweeter source dependenices&quot;,&quot;hid&quot;:&quot;check_tweeter_source_dependenices&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;205-722&quot;} -->
+<h3 class="sectionedit4" id="get_an_tweeter_developer_account_to_connect_to_the_tweeter_api">Get an tweeter developer account to connect to the tweeter api</h3>
+<div class="level3">
+
+<p>
+Please check this site to get more details on creating account <a href="https://acadgild.com/blog/streaming-twitter-data-using-flume" class="urlextern" title="https://acadgild.com/blog/streaming-twitter-data-using-flume" rel="nofollow">https://acadgild.com/blog/streaming-twitter-data-using-flume</a>
+</p>
+
+<p>
+When your account is created, you should see a page like the following figure. <a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Aflume%3Atweeter_hdfs_agent&amp;media=employes:pengfei.liu:data_science:flume:twitter_flume.png" class="media" title="employes:pengfei.liu:data_science:flume:twitter_flume.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=ec02f3&amp;media=employes:pengfei.liu:data_science:flume:twitter_flume.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+There are important lines
+</p>
+<ul>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr> Key = Your OAuth consumer api key</div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr> Key Secret = Your OAuth consumer api key secret </div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr> accessToken = Your OAuth consumer key access token </div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr> accessTokenSecret = Your OAuth consumer key access token secret </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Get an tweeter developer account to connect to the tweeter api&quot;,&quot;hid&quot;:&quot;get_an_tweeter_developer_account_to_connect_to_the_tweeter_api&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;723-1329&quot;} -->
+<h2 class="sectionedit5" id="flume_agent_config">Flume agent config</h2>
+<div class="level2">
+
+<p>
+Do not copy entirely the below config, the api key and secret are not right, it won&#039;t work, you need to get your own api key and secret.
+</p>
+<pre class="code"># This agent gets data from Twitter and store it in the hdfs
+
+################################ Flume Agent ##################################
+TwitterAgent.sources = Twitter
+TwitterAgent.channels = MemChannel
+TwitterAgent.sinks = HDFS
+
+#################################### Source ################################# 
+TwitterAgent.sources.Twitter.type = org.apache.flume.source.twitter.TwitterSource
+TwitterAgent.sources.Twitter.consumerKey = 9F2cDP6mtFyLybWGqT
+TwitterAgent.sources.Twitter.consumerSecret = czoiPDtFaNrUbogW7WB6bZYxpBljy2Ozqrqc
+TwitterAgent.sources.Twitter.accessToken = 207529473-WHBQShBPtmyvOwmSN7JueREPgDPT9
+TwitterAgent.sources.Twitter.accessTokenSecret = P6A1I5lCbJWEAL1ynm3nOcyGfYrZkUd1la
+TwitterAgent.sources.Twitter.keywords = TRUMP, tradewar, china
+ 
+################## SINK #################################
+#TwitterAgent.sinks.HDFS.channel = MemChannel
+TwitterAgent.sinks.HDFS.type = hdfs
+TwitterAgent.sinks.HDFS.hdfs.path = hdfs://localhost:9000/tmp/tweets
+TwitterAgent.sinks.HDFS.hdfs.fileType = DataStream
+TwitterAgent.sinks.HDFS.hdfs.writeFormat = Text
+ 
+TwitterAgent.sinks.HDFS.hdfs.batchSize = 1000
+TwitterAgent.sinks.HDFS.hdfs.rollSize = 0
+TwitterAgent.sinks.HDFS.hdfs.rollInterval = 600
+TwitterAgent.sinks.HDFS.hdfs.rollCount = 10000
+ 
+#################### CHANNEL #########################
+TwitterAgent.channels.MemChannel.type = memory
+TwitterAgent.channels.MemChannel.capacity = 3000
+TwitterAgent.channels.MemChannel.transactionCapacity = 3000
+
+################Link source to channel, channel to sink########################
+# Good practice, get the link out of the sink, or source connection, make the config more readable
+TwitterAgent.sources.Twitter.channels = MemChannel
+TwitterAgent.sinks.HDFS.channel = MemChannel
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume agent config&quot;,&quot;hid&quot;:&quot;flume_agent_config&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1330-&quot;} -->

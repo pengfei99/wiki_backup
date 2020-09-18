@@ -1,0 +1,24 @@
+&lt;resolver:DataConnector id=&quot;SciformaUserDb&quot; xsi:type=&quot;RelationalDatabase&quot; xmlns=&quot;urn:mace:shibboleth:2.0:resolver:dc&quot; queryTimeout=&quot;PT0.000S&quot;&gt;
+        &lt;dc:ApplicationManagedConnection jdbcDriver=&quot;org.postgresql.Driver&quot;
+                                         poolAcquireRetryAttempts=&quot;1&quot;
+                                         poolAcquireRetryDelay=&quot;1&quot;
+                                         poolBreakAfterAcquireFailure=&quot;false&quot;
+                                         jdbcURL=&quot;jdbc:postgresql:/10.69.2.31:5432/&quot;
+                                         jdbcUserName=&quot;shibbolteh&quot;
+                                         jdbcPassword=&quot;KxCNzcTIo5G5expepLkT&quot;/&gt;
+&nbsp;
+        &lt;dc:QueryTemplate&gt;
+            &lt;![CDATA[
+                SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,';') AS wps 
+                FROM 
+                    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,'::', b.&quot;WorkPackageID&quot;) AS wps  
+                    FROM sciforma.&quot;BA_shib_LaborAsgn&quot; a INNER JOIN sciforma.&quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                    ORDER BY a.&quot;AD_ID&quot;) t 
+                WHERE t.&quot;AD_ID&quot;='$requestContext.principalName'    
+                GROUP BY t.&quot;AD_ID&quot;
+            ]]&gt;
+        &lt;/dc:QueryTemplate&gt;
+&nbsp;
+&nbsp;
+        &lt;dc:Column columnName=&quot;wps&quot; attributeID=&quot;wps&quot; /&gt;
+         &lt;/resolver:DataConnector&gt;

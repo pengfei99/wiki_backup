@@ -1,0 +1,393 @@
+====== Wiki Pengfei ======
+
+The objective of this wiki is to archive the tech doc of my professional life.
+
+====== Big data ======
+
+[[employes:pengfei.liu:big_data:start|Big data]]
+
+HDP : [[employes:pengfei.liu:big_data:hdp:start|Hortornworks hadoop distribution]]
+
+
+
+====== Data Science ======
+
+[[employes:pengfei.liu:data_science:start|Data Science]]
+
+====== Dev tools ======
+
+
+[[employes:pengfei.liu:dev_tools|Common dev tools]]
+
+===== Java tech doc =====
+[[employes:pengfei.liu:java:start|All JAVA Docs]]
+===== Python tech doc =====
+
+[[employes:pengfei.liu:python:env_installation:install_python3.7|Install python 3 on centos]]
+
+[[employes:pengfei.liu:python:conda:start|Anaconda documents]]
+
+====== Admin_system ======
+
+===== VM management =====
+
+Centos 8 gnome tweak: [[employes:pengfei.liu:admin_system:centos8:gnome_desktop|Gnome desktop configuration]]
+
+Procedure for creating vm : [[employes:pengfei.liu:admin_system:vm_administration:create_vm|Standard operation Procedure for creating centos 7 vm in VM ware]]
+
+VMware tools installation in VMware workstation player: [[employes:pengfei.liu:admin_system:vm_administration:vmware_player_tools|Install vmware tools on a centos7 guest via vmware player]]
+
+Extend disk space of a vm in centos7 : [[employes:pengfei.liu:admin_system:vm_administration:vm_extend_disk|Extend disk space of a vm in centos7]]
+
+
+===== Container =====
+
+docker [[employes:pengfei.liu:admin_system:container:docker:start|Docker]]
+
+
+
+
+===== Openstack cloud =====
+
+openstack cli : [[employes:pengfei.liu:admin_system:cloud:openstack_cli|OpenStack cli]]
+
+
+===== Load balancing =====
+
+Haproxy on centos7 : [[employes:pengfei.liu:admin_system:load_balancing:haproxy|Installing HaProxy on Centos 7]]
+
+haproxy loadbalancing owncloud : [[employes:pengfei.liu:admin_system:load_balancing:haproxy_owncloud_config|Haproxy load balancing ownlcoud]]
+===== Security =====
+
+ssh debug : [[employes:pengfei.liu:security:ssh_debug|SSH debug]]
+
+ssl certficat : [[employes:pengfei.liu:security:ssl_certificate|Working with SSL certificates, priate keys and CSRs]]
+
+==== OpenLdap ====
+
+Install openldap : [[employes:pengfei.liu:security:ldap:ldap_server:install_config|Install openldap on centos 7]]
+
+[[employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration|Install Ldap and configuration on Centos7]]
+
+
+Enable ssl for ldap : [[employes:pengfei.liu:security:ldap:ldap_server:config_ssl|Enable tls/ssl for openldap server]]
+
+Document of Ldap server architecture :  [[employes:pengfei.liu:security:ldap:ldap_server:architecture_example|Ldap architecture]]
+
+=== OpenLdap client for centos 7 ===
+
+
+
+Document of how to install openldap client on centos 7: 
+
+[[employes:pengfei.liu:security:ldap:ldap_client:nslcd|Use nslcd as ldap authentication client in centos7]]
+
+[[employes:pengfei.liu:security:ldap:ldap_client:sssd_install|Use sssd as ldap authentication client in centos7]]
+
+[[employes:pengfei.liu:security:ldap:ldap_client:apacheds|Apache directory studio trouble shoot]]
+
+==== Kerberos ====
+[[employes:pengfei.liu:security:kerberos:install|Kerberos installation and configuration]]
+
+==== Authorization server wso2 ====
+
+
+===== Data base =====
+
+
+Centos : 
+
+[[employes:pengfei.liu:admin_system:centos7_postgres95|Install postgresql on centos 7]]
+
+Keys in data base : [[employes:pengfei.liu:data_science:data_base:keys_in_relational_db|Keys in relational model]]
+
+
+Mariadb/Mysql :
+
+
+
+[[employes:pengfei.liu:admin_system:database:mariadb:install_config|Install mariadb on centos7]]
+
+[[employes:pengfei.liu:admin_system:database:mariadb:allow_remote_access|Configure mariadb to allow remote access]]
+
+[[employes:pengfei.liu:admin_system:database:mariadb:change_root_password|Reset root password for MySql or MariaDB]]
+
+[[employes:pengfei.liu:admin_system:database:mariadb:commands|Mysql useful command]]
+
+
+Database theory :
+
+windows function : [[employes:pengfei.liu:data_science:data_base:window_functions|SQL Window Functions]]
+
+CAP Theorem : [[employes:pengfei.liu:data_science:data_base:cap_theorem|CAP theorem]]
+
+training series : [[employes:pengfei.liu:data_science:data_base:theory|Data base training documentations]]
+==== Data modeling ====
+First Normal form ("1NF") data model : [[employes:pengfei.liu:data_science:data_base:theory:data_model:1st_normal_from|First normal form]]
+
+Second Normal form ("2NF") data model : [[employes:pengfei.liu:data_science:data_base:theory:data_model:2nd_normal_form|Second normal form]]
+
+Third Normal form ("3NF") Data model :  [[employes:pengfei.liu:data_science:data_base:theory:data_model:3rd_normal_form|Third normal form]]
+
+
+
+
+===== Linux basic =====
+Yum package manager: [[employes:pengfei.liu:admin_system:linux:yum_repo|Configure yum and manage Yum repo]]
+
+RPM VS DNF VS YUM : [[employes:pengfei.liu:admin_system:linux:rpm_dnf_yum|Difference between RPM, yum and dnf]]
+
+Symbolic link: [[employes:pengfei.liu:admin_system:symbolic_link|Create symbolic link in linux]]
+
+
+Screen : [[employes:pengfei.liu:admin_system:screen_tutorial|Screen]]
+
+
+change addip with cli : [[employes:pengfei.liu:admin_system:network:change_ip|Change Ip address with cli]]
+
+bash shells : [[employes:pengfei.liu:admin_system:bash:copy_hdfs_file_to_local|Bash script copy hdfs file to local file system]]
+
+Disk usage monitoring Tools : [[employes:pengfei.liu:admin_system:disk_usage|Use ncdu for disk usage monitoring]]
+
+mount nfs/gpfs on a vm : [[employes:pengfei.liu:admin_system:nfs_gpfs|Montage de l'espace GPFS dans une VM via NFS]]
+
+background/forground process : [[employes:pengfei.liu:admin_system:bash:close_window_keep_process|Close window without killing the process]]
+
+Linux advanced access control : [[employes:pengfei.liu:admin_system:linux:advanced_access_control|Linux file system advance access control]]
+
+[[employes:pengfei.liu:admin_system:linux:systemd|Create and manage services in centos7 with systemd]]
+
+[[employes:pengfei.liu:admin_system:linux:file_metadata|Linux file metadata]]
+
+[[employes:pengfei.liu:admin_system:linux:advanced_access_control|Linux file system advance access control]]
+
+[[employes:pengfei.liu:admin_system:linux:bash_terminal_basics|Linux bash terminal basics]]
+
+[[employes:pengfei.liu:admin_system:linux:centos_xfce_x2go|INSTALL Xfce and X2go on CentOS 7]]
+
+
+
+===== Network  =====
+Change Ip address : [[employes:pengfei.liu:admin_system:network:change_ip|Change Ip address with cli]]
+
+Statistic route : [[employes:pengfei.liu:admin_system:network:statistic_route|Statistic route]]
+
+ssh proxy : [[employes:pengfei.liu:admin_system:network:ssh_proxy|Use ssh proxy to connect to servers which is not reachable]]
+
+firewall : [[employes:pengfei.liu:admin_system:network:firewall:firewalld|Open port for service in Centos firewalld]]
+===== Apache 2 configuration =====
+
+Configure strong ssl on apache 2 : [[employes:pengfei.liu:admin_system:apache:apache_strong_ssl|Configure strong SSL on web server]]
+
+Common problems : [[employes:pengfei.liu:admin_system:apache:apache_common_pbs|Apache2 common problems]]
+
+Install tomcat and connect with apache with mod_ssl and mod_ajp [[employes:pengfei.liu:admin_system:apache:mod_ssl_ajp|Install httpd mod_ssl tomcat7 and config proxy ajp between them]]
+
+
+
+
+
+===== Build python django deploy environment =====
+
+Build Python 3.5 with mode share : [[employes:pengfei.liu:admin_system:build_python_mode_share|Install python without using pyenv]]
+
+
+Build wsgi : [[employes:pengfei.liu:admin_system:build_wsgi|wsgi]]
+
+===== Little tips =====
+
+
+===== Awstats for apache access log =====
+
+[[employes:pengfei.liu:admin_system:monitoring:awstats|Gets web site stats with awstats]]
+===== Owncloud install and update =====
+
+owncloud install : [[employes:pengfei.liu:owncloud:install_config|Procedure for Owncloud installation]]
+
+owncloud php.ini tuning: [[employes:pengfei.liu:owncloud:php.ini_tuning|Php.ini tuning for running owncloud]]
+
+owncloud update :  [[employes:pengfei.liu:owncloud:upgrade_and_backup|Owncloud upgrade]]
+
+owncloud ldap authentication : [[employes:pengfei.liu:owncloud:ladp_authentication|Install ldap authentication on owncloud]]
+
+redis file blocking : [[employes:pengfei.liu:owncloud:redis_file_locking|Use redis for file blocking]]
+
+Mount web dav on centos7 : [[employes:pengfei.liu:owncloud:mount_webdav|Install owncloud client on centos 7]]
+
+
+===== Grid computing and matlab support =====
+
+[[employes:pengfei.liu:admin_system:grid_computing|Grid computing]]
+===== http and https proxy =====
+
+''export http_proxy=http://134.158.37.239:3128/''
+
+
+''export https_proxy=https://134.158.37.239:3128/''
+
+
+
+
+
+
+
+
+===== Data transfer =====
+
+ rsync -avzhe ssh --progress Data_analyze pliu@10.70.3.18:/tmp/.
+
+
+
+
+
+
+
+
+OpenStack docs [[employes:pengfei.liu:admin_system:cloud:openstack|Openstack docs]]
+
+===== Synchronize server time =====
+
+
+[[employes:pengfei.liu:admin_system:ntp_setup|Network time protocol (NTP)]]
+
+
+
+
+
+
+===== Linux User account and group config  =====
+
+
+[[employes:pengfei.liu:linux_user_account|Linux user account creation and group creation]]
+
+====== System architecture design ======
+[[employes:pengfei.liu:system_architecture:start|System architecture design]]
+
+====== Project ======
+===== Project Realism =====
+
+transmart installation and data loading : [[employes:pengfei.liu:bio_info:tools:transmart|Transmart For Realism]]
+
+===== Project metaseq =====
+
+airflow guide: [[employes:pengfei.liu:data_science:work_flow_management:airflow:install_config|AirFlow instllation guide]]
+
+airflow 16s pipeline implementation: https://gitlab.in2p3.fr/bioaster/metaseq-pipelines/tree/airflow
+
+pipeline 16s dependencies ： [[employes:pengfei.liu:data_science:work_flow_management:airflow:pipeline_16s|Pipeline 16s dependencies installation]]
+
+===== Project THOR =====
+
+Possible candidate : IRODS (Dev server on 10.70.3.38)
+
+irods installation guide : [[informatique:data_management:irods|Introduction of IRODS installation]]
+
+irods ldap guide : [[informatique:data_management:irods_ldap|Irods pam/sssd/ldap authentication]]
+
+
+Globus gridftp :
+
+===== Projet PASSPORT =====
+
+==== Authentication service ====
+
+**IDentity provider**
+  - Shibboleth (auth-shib.bioaster.org)
+  - OPenldap (10.70.3.118)
+  - AD
+**admin dashboard**
+  - Bioaster User Management Portal (bump.bioaster.org)
+  - Admin guide
+
+
+**Authentication Client**
+
+sssd-pam-ldap dev VM (10.70.3.117)
+
+sssd cache user group, so when use change group in ldap, you don't have the change in your vm right away.
+
+Admin user needs to refresh sssd cache, if end user wants to see immediately the change.
+
+''sudo sss_cache -E''
+
+To have to change right away, you need to clear sssd cache, and user need to log out and re-login to see the difference.
+
+==== Authorization service ====
+
+**PDP,PIP** 
+
+WSO2-IS 5.3.0 (https://acc-wso.bioaster.org:9443/carbon/)
+    
+Doc for wso2 server installation :
+[[employes:pengfei.liu:security:wso2:install|Install WSO2_IS server]]
+
+Doc for changing wso2 default certificate:
+[[employes:pengfei.liu:security:wso2:change_https_cert|Change wso2 default https certificate]]
+
+
+
+
+
+
+
+
+====== Front end ======
+
+===== Java script lib =====
+data table : [[datatables|Guide d'utilisation]]
+
+====== Soft skills ======
+
+[[bonnes_pratiques_de_codage|Bonnes pratiques de codage]]
+
+
+
+====== Security tool ======
+
+
+
+===== Shibbolet =====
+
+idp 3.3.0: 10.70.3.18 (/opt/shibbolet, /opt/jetty)
+
+idp 2.4.4: 10.70.3.11 (/opt/shibbolet, et /opt/jetty)
+
+sciforma dev : 10.69.2.31 (shib access)
+
+sciforma test : 10.69.2.41 (postgres access)
+
+sp_noe: 10.70.3.13
+
+
+Shibboleth SP install and configuration doc: 
+
+[[employes:pengfei.liu:security:shibboleth:install_sp|Install Shibboleth SP]]
+
+Shibboleth SP install and configuration playbook : 
+https://github.com/pengfei99/Dev_Ops/tree/master/Shibboleth_installation_playbooks
+
+
+Shibboleth IDP 2.4.4 install and configuration doc: 
+[[employes:pengfei.liu:security:shibboleth:install_shibboleth_idp|Install shibboleth IDP]]
+
+Shibboleth IDP 3.3.0 install and configuration doc:
+[[employes:pengfei.liu:security:shibboleth:install_shibboleth_idp33|Install shibboleth 3.3 on centos 7]]
+
+
+
+===== Bioaster_shit =====
+
+[[employes:pengfei.liu_bioaster.org:bioaster_shit:redmin|Redmine FAQ]]
+
+
+
+
+
+
+
+
+
+
+
+
+

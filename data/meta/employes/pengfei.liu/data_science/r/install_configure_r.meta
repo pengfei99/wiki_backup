@@ -1,0 +1,17 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1553616580;s:8:"modified";i:1553616580;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1553616580;s:2:"ip";s:13:"134.158.32.76";s:4:"type";s:1:"C";s:2:"id";s:55:"employes:pengfei.liu:data_science:r:install_configure_r";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:1617;}s:5:"title";s:22:"Install R and R studio";s:11:"description";a:2:{s:15:"tableofcontents";a:1:{i:0;a:4:{s:3:"hid";s:22:"install_r_and_r_studio";s:5:"title";s:22:"Install R and R studio";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:507:"Install R and R studio
+
+
+# Install R + RStudio on Ubuntu 16.04
+
+sudo apt-key adv –keyserver keyserver.ubuntu.com –recv-keys E084DAB9
+
+# Ubuntu 12.04: precise
+# Ubuntu 14.04: trusty
+# Ubuntu 16.04: xenial
+# Basic format of next line deb https://<my.favorite.cran.mirror>/bin/linux/ubuntu <enter your ubuntu version>/
+sudo add-apt-repository 'deb https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/'
+sudo apt-get update
+sudo apt-get install r-base
+sudo apt-get install r-base-dev
+
+# Download and Inst…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1553616580;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1553616580;s:2:"ip";s:13:"134.158.32.76";s:4:"type";s:1:"C";s:2:"id";s:55:"employes:pengfei.liu:data_science:r:install_configure_r";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:1617;}}}

@@ -1,0 +1,101 @@
+
+<h1 class="sectionedit1" id="convert_rdd_to_dataframe">Convert RDD to dataframe</h1>
+<div class="level1">
+
+<p>
+There are many ways to convert rdd to dataframe
+</p>
+<ul>
+<li class="level1"><div class="li"> From existing RDD using a reflection</div>
+</li>
+<li class="level1"><div class="li"> From existing RDD by programmatically specifying the schema</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Convert RDD to dataframe" [1-196] -->
+<h2 class="sectionedit2" id="example_of_refection">Example of refection</h2>
+<div class="level2">
+<pre class="code">#prepare data
+vim /tmp/people.txt
+
+Michael,29
+Andy,30
+Justin,19
+
+#define dependencies
+scala&gt; import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
+scala&gt; import org.apache.spark.sql.Encoder
+scala&gt; import spark.implicits._
+
+#define case class for the rdd (like a schema of the RDD)
+scala&gt; case class Person(name: String, age: Long)
+
+#read file as rdd then convert it to data frame
+val peopleDF= spark.sparkContext.textFile(&quot;file:///tmp/people.txt&quot;).map(_.split(&quot;,&quot;)).map(attributes =&gt; Person(attributes(0), attributes(1).trim.toInt)).toDF()
+
+
+#you can also use sc to do it separatly
+val textFile=sc.textFile(&quot;file:///tmp/people.txt&quot;)
+val testDF = textFile.map(_.split(&quot;,&quot;)).map(attributes =&gt; Person(attributes(0), attributes(1).trim.toInt)).toDF()</pre>
+
+</div>
+<!-- EDIT2 SECTION "Example of refection" [197-1003] -->
+<h2 class="sectionedit3" id="example_of_schema">Example of schema</h2>
+<div class="level2">
+
+<p>
+We need to define a schema of the data 
+</p>
+
+<p>
+A schema in spark is a <span style='color:#ed1c24; '>StructType</span> which contains a seq of StructField
+</p>
+
+<p>
+For our example, we have name(String) and age(Integer).
+</p>
+<pre class="code"># define schema
+val schema = StructType(
+    Seq(
+      StructField(name = &quot;name&quot;, dataType = StringType, nullable = false),
+      StructField(name = &quot;age&quot;, dataType = IntegerType, nullable = false)
+    )
+  )
+  
+# transform file rdd to row rdd 
+val rowRDD = textFile.map(lines=&gt;lines.split(&quot;,&quot;)).map(atts=&gt; Row(atts(0),atts(1).toInt))
+
+#create dataframe with row rdd and schema
+scala&gt; val peopleDF= spark.createDataFrame(rowRDD,schema)
+peopleDF: org.apache.spark.sql.DataFrame = [name: string, age: int]
+
+#beware, the data type in row RDD must be the same in schema, otherwise the convert will fail
+</pre>
+
+<p>
+Now you can do all the dataframe operations (e.g. select, sort, filter, groupby, etc.)
+You can also use sql script to play with dataframe
+</p>
+<pre class="code">#create a temproal view for sql
+scala&gt; peopleDF.createOrReplaceTempView(&quot;people&quot;)
+ 
+scala&gt; val results = spark.sql(&quot;SELECT name,age FROM people&quot;)
+
+scala&gt; results.collect
+res25: Array[org.apache.spark.sql.Row] = Array([Michael,29], [Andy,30], [Justin,19])
+
+
+scala&gt; results.map(attributes =&gt; &quot;name: &quot; + attributes(0)+&quot;,&quot;+&quot;age:&quot;+attributes(1)).show()
+
++--------------------+
+|               value|
++--------------------+
+|name: Michael,age:29|
+|   name: Andy,age:30|
+| name: Justin,age:19|
++--------------------+
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Example of schema" [1004-] -->

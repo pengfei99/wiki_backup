@@ -1,0 +1,69 @@
+====== Plateau Technique no 7 : Métabolomique et Protéomique ======
+
+
+The first goal of the PT7, is to develop innovative analytical approaches in metabolomics and proteomics, in the fields of infectiology and microbiology, that will be used for R&D projects of BIOASTER, in collaboration with the academic community and industrial partners.
+
+{{:pt7:fiche_pt7.png}}
+
+
+
+===== Equipe =====
+
+===== Projets =====
+
+Description des projets \\
+Lien vers l'ensemble des projets du plateau -> [[/pt7/projets|Projets PT7]] 
+
+===== Rapports (Réunions & Echanges scientifiques) =====
+
+Cette section est réservée aux rapports des réunions, conférences et autres échanges scientifiques en lien avec le PT7
+
+  * Rapports des [[/pt7/reunions-pt7|réunions d'équipe (PT7)]]
+
+  * Rapports des [[/pt7/reunions-internes-et-partenaires|autres réunions]] internes à bioaster (e.g. avec d'autres plateaux) ou avec des partenaires externes
+
+  * Rapports des [[/pt7/conferences|conférences]] nationales ou internationales sur la métabolomique et la protéomique
+
+
+
+
+
+===== Documents techniques=====
+
+==== Mass spectrometry (MS) ====
+
+Description, Equipements, Rapports, Publis
+
+==== Nuclear magnetic resonance (NMR) ====
+
+Description, Equipements, Rapports, Publis
+
+
+==== Computers for data acquisition and analysis ====
+
+ISA dns server : ''sca.cnrs.fr''\\
+List of PT7 computers [[/pt7/inventaire-pc|Inventaire PC PT7]]
+
+==== Bioinformatics ====
+
+L'analyse de données en métabolimique et protéomique, Fluxomique, Logiciels, Publis
+
+List of bioinformatics software [[/pt7/software/|list]]
+
+== OpenMS ==
+
+[[http://open-ms.sourceforge.net|OpenMS]] is an cross-platform open-source software C++ library for LC/MS data management and analyses ([[http://ftp.mi.fu-berlin.de/OpenMS/doc-1.9-official/html/index.html|Doc]]).
+It comes with ready-to-use tools for 
+  * proteomics and metabolomics data analysis ([[http://ftp.mi.fu-berlin.de/OpenMS/doc-1.9-official/html/TOPP_documentation.html|TOPPTools]]) and 
+  * 2D and 3D visualization([[http://ftp.mi.fu-berlin.de/OpenMS/release-documentation/html/TOPPView_introduction.html|TOPPView]]).
+
+== ProteoWizard ==
+
+[[http://proteowizard.sourceforge.net|ProteoWizard]] Library and Tools are a set of modular and extensible open-source, cross-platform tools and software libraries that facilitate proteomics data analysis. 
+
+  * [[http://proteowizard.sourceforge.net/tools/msconvert.html|msconvert]] is a command line tool for converting between various file formats.
+
+=== R ===
+
+  * [[http://www.bioconductor.org|Bioconductor]] is a collection of R packages for bioinformatics
+  * [[http://www.bioconductor.org/packages/release/bioc/html/xcms.html|XCMS]]is a Bioconductor-based package for LC-MS, tandem MS/MS data analysis

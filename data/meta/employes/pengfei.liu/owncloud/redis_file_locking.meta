@@ -1,0 +1,22 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1533124558;s:8:"modified";i:1533124614;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1533124614;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:48:"employes:pengfei.liu:owncloud:redis_file_locking";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:-1;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:27:"Use redis for file blocking";s:11:"description";a:2:{s:15:"tableofcontents";a:4:{i:0;a:4:{s:3:"hid";s:27:"use_redis_for_file_blocking";s:5:"title";s:27:"Use redis for file blocking";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:19:"persistence_options";s:5:"title";s:19:"Persistence Options";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:19:"basic_system_tuning";s:5:"title";s:19:"Basic System Tuning";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:3;a:4:{s:3:"hid";s:40:"edit_configphp_for_owncloud_to_use_redis";s:5:"title";s:41:"Edit config.php for owncloud to use redis";s:4:"type";s:2:"ul";s:5:"level";i:3;}}s:8:"abstract";s:503:"Use redis for file blocking
+
+Additional notes for Redis vs. APCu on Memory Caching
+
+APCu is faster at local caching than Redis. If you have enough memory, use APCu for memory caching and . If you are low on memory, use Redis for both.
+
+
+yum install epel-release
+yum update
+# install redis server
+yum install redis
+# install php71 redis driver
+php71w-pecl-redis
+
+#start redis
+systemctl start/stop/status/restart redis
+
+#run redis at bootup
+systemctl enable redis
+
+#verify redis, it should answer PONG
+…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1533124558;s:8:"modified";i:1533124614;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1533124614;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:48:"employes:pengfei.liu:owncloud:redis_file_locking";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:-1;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

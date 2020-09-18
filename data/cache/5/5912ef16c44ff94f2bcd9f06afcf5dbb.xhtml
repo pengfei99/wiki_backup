@@ -1,0 +1,204 @@
+
+<h1 class="sectionedit1" id="installation">Installation</h1>
+<div class="level1">
+
+<p>
+Here is a short list of some features available in Zabbix:<br/>
+
+</p>
+
+<p>
+auto-discovery of servers and network devices<br/>
+
+low-level discovery<br/>
+
+distributed monitoring with centralized web administration<br/>
+
+support for both polling and trapping mechanisms<br/>
+
+agent-less monitoring<br/>
+
+secure user authentication<br/>
+
+flexible user permissions<br/>
+
+web-based interface<br/>
+
+flexible e-mail notification of predefined events<br/>
+
+high-level (business) view of monitored resources<br/>
+
+audit log<br/>
+
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Installation" [1-491] -->
+<h3 class="sectionedit2" id="install_zabbix_server">Install Zabbix Server</h3>
+<div class="level3">
+<pre class="code">pkg install zabbix22-server-2.2.2
+rehash</pre>
+
+</div>
+<!-- EDIT2 SECTION "Install Zabbix Server" [492-580] -->
+<h3 class="sectionedit3" id="configure_snmp">Configure snmp</h3>
+<div class="level3">
+
+<p>
+Zabbix package install snmpd but does not start it by default<br/>
+
+</p>
+<pre class="code">cp /usr/local/share/snmp/snmpd.conf.example /usr/local/share/snmp/snmpd.conf
+
+echo &#039;snmpd_enable=&quot;YES&quot;&#039; &gt;&gt; /etc/rc.conf
+echo &#039;snmpd_flags=&quot;-a&quot;&#039; &gt;&gt; /etc/rc.conf
+echo &#039;snmpd_conffile=&quot;/usr/local/share/snmp/snmpd.conf /etc/snmpd.config&quot;&#039; &gt;&gt; /etc/rc.conf
+echo &#039;snmptrapd_enable=&quot;YES&quot;&#039; &gt;&gt; /etc/rc.conf
+echo &#039;snmptrapd_flags=&quot;-a -p /var/run/snmptrapd.pid&quot;&#039; &gt;&gt; /etc/rc.conf</pre>
+
+</div>
+<!-- EDIT3 SECTION "Configure snmp" [581-1052] -->
+<h3 class="sectionedit4" id="install_zabbix_database">Install Zabbix Database</h3>
+<div class="level3">
+
+<p>
+The Zabbix server needs a database to save the statistics and settings.<br/>
+
+</p>
+<pre class="code">pkg install mysql55-server
+
+echo &#039;mysql_enable=&quot;YES&quot;&#039; &gt;&gt; /etc/rc.conf
+
+service mysql-server start
+
+mysql -u root
+
+mysql&gt; SET PASSWORD FOR &#039;&#039;@&#039;localhost&#039; = PASSWORD(&#039;nouveau_mot&#039;);
+mysql&gt; SET PASSWORD FOR &#039;&#039;@&#039;ccbiowiki1.in2p3.fr&#039; = PASSWORD(&#039;nouveau_mot&#039;);
+mysql&gt; create database zabbix character set utf8;
+mysql&gt; grant all privileges on zabbix.* to zabbix@localhost identified by &#039;PASSWORD&#039;;
+mysql&gt; flush privileges;
+mysql&gt; quit;
+
+passwd zabbix
+
+cd /usr/local/share/zabbix22/server/database/mysql/
+mysql -u zabbix -p zabbix &lt; schema.sql
+mysql -u zabbix -p zabbix &lt; images.sql
+mysql -u zabbix -p zabbix &lt; data.sql
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "Install Zabbix Database" [1053-1792] -->
+<h3 class="sectionedit5" id="configure_zabbix">configure zabbix</h3>
+<div class="level3">
+<pre class="code">cd /usr/local/etc/zabbix22
+cp zabbix_server.conf.sample zabbix_server.conf</pre>
+
+<p>
+Change in zabbix_server.conf :
+</p>
+<pre class="code">DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=PASSWORD</pre>
+
+</div>
+<!-- EDIT5 SECTION "configure zabbix" [1793-2022] -->
+<h3 class="sectionedit6" id="configure_system_for_zabbix">configure system for zabbix</h3>
+<div class="level3">
+
+<p>
+sysctl kern.ipc.shmall=409600<br/>
+
+sysctl kern.ipc.shmmax=204800000
+</p>
+<pre class="code">echo &#039;kern.ipc.shmall=409600&#039; &gt;&gt; /etc/sysctl.conf
+echo &#039;kern.ipc.shmmax=204800000&#039; &gt;&gt; /etc/sysctl.conf
+echo &#039;zabbix_server_enable=&quot;YES&quot;&#039; &gt;&gt; /etc/rc.conf</pre>
+
+</div>
+<!-- EDIT6 SECTION "configure system for zabbix" [2023-2296] -->
+<h3 class="sectionedit7" id="install_zabbix_agent">Install Zabbix Agent</h3>
+<div class="level3">
+
+<p>
+Now install the Zabbix agent on every client you want to track with the server.<br/>
+
+Again I have choosen the default installation options without IPV6.<br/>
+
+</p>
+<pre class="code">pkg install zabbix22-agent</pre>
+
+</div>
+<!-- EDIT7 SECTION "Install Zabbix Agent" [2297-2523] -->
+<h3 class="sectionedit8" id="configure_zabbix_agent">Configure Zabbix Agent</h3>
+<div class="level3">
+<pre class="code">cd /usr/local/etc/zabbix22
+cp zabbix_agentd.conf.sample zabbix_agentd.conf</pre>
+
+<p>
+In the zabbix_agentd.conf you need to change the server value. <br/>
+
+Replace the IP address with the IP address of your Zabbix server.<br/>
+
+</p>
+
+<p>
+Server=134.158.36.5
+</p>
+
+<p>
+Add the startup value to the rc.conf and start the agent.<br/>
+
+</p>
+<pre class="code">echo &#039;zabbix_agentd_enable=&quot;YES&quot;&#039; &gt;&gt; /etc/rc.conf
+service zabbix_agentd start</pre>
+
+</div>
+<!-- EDIT8 SECTION "Configure Zabbix Agent" [2524-2957] -->
+<h3 class="sectionedit9" id="install_zabbix_frontend">Install Zabbix Frontend</h3>
+<div class="level3">
+
+<p>
+After the installation of the Zabbix server and the Zabbix agents we will install the frontend on the same backend we used for the Zabbix server.
+</p>
+<pre class="code">pkg install zabbix22-frontend-2.2.2_1</pre>
+
+</div>
+<!-- EDIT9 SECTION "Install Zabbix Frontend" [2958-3191] -->
+<h3 class="sectionedit10" id="configure_lighttpd_and_php_for_zabbix">Configure lighttpd and PHP for zabbix</h3>
+<div class="level3">
+<pre class="code">cat /usr/local/etc/lighttpd/vhosts.d/zabbix
+
+$SERVER[&quot;socket&quot;] == &quot;:80&quot; {
+
+  server.name = &quot;ccbiowiki1.in2p3.fr&quot;
+  server.document-root = vhosts_dir + &quot;/zabbix/&quot;
+  alias.url = (
+    &quot;/Zabbix/&quot; =&gt; &quot;/usr/local/www/zabbix22/&quot;
+  )
+}</pre>
+<pre class="code">cd /usr/local/etc
+cp php.ini-production php.ini
+
+max_execution_time = 300
+max_input_time = 300
+post_max_size = 16M
+date.timezone = &quot;Europe/Paris&quot;
+</pre>
+
+<p>
+Finally you can access the Zabbix frontend and start the setup.<br/>
+
+Follow the installation and make the required changes in your php.ini.<br/>
+
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Configure lighttpd and PHP for zabbix" [3192-3787] -->
+<h1 class="sectionedit11" id="administration">Administration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT11 SECTION "Administration" [3788-] -->

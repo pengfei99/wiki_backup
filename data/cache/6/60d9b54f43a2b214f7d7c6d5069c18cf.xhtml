@@ -1,0 +1,27 @@
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> </th><th class="col1 leftalign">Django                 </th><th class="col2 leftalign">Symfony   </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0"><span style='color:#22b14c; '>ManyToMany</span> </th><td class="col1"> On fait <code>.add</code> que sur un <code>model</code> de la relation </td><td class="col2"> On doit faire <code>.add</code> sur les deux entités </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0"><span style='color:#22b14c; '>Dépendances</span> </th><td class="col1"> 1 <code>pip</code> 2 modif du fichier <code>settings.py</code> </td><td class="col2"> 1 <code>composer.phar</code> 2 modif de <code>app/AppKernel.php</code> 3  modif du fichier <code>app/config/config.yml</code> + parfois routing.yml… </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0"><span style='color:#22b14c; '>Data</span><span style='color:#00a2e8; '>Loader</span> </th><td class="col1"> Pas de datafixtures simples → à vous de faire votre propre commande. Donc chaque app aura sa propre commande pour charger des données </td><td class="col2"> <span style='color:#00a2e8; '>Une et une seule</span> commande pour charger des données (<code>datafixtures</code>) + une classe par entité. <br/>
+<span style='color:#22b14c; '>En contrepartie</span> cette commande ne peut rien faire de plus que charger des données et passer une variable d&#039;une classe à l&#039;autre est un peu complexe de plus on doit définir un ordre de priorité </td>
+	</tr>
+	<tr class="row4">
+		<th class="col0"><span style='color:#00a2e8; '>Migration</span> </th><td class="col1"> Après chaque migration il faut mettre à jour les formulaires en conséquence. </td><td class="col2"> Si un formulaire n&#039;a rien à voir avec une entité, le serveur va démarrer quand même (mais la page où le formulaire est affiché va sûrement planter). </td>
+	</tr>
+	<tr class="row5">
+		<th class="col0"><span style='color:#00a2e8; '>Models</span> </th><td class="col1"> On fout tout dans models.py </td><td class="col2"> Un fichier/classe (entity) </td>
+	</tr>
+	<tr class="row6">
+		<th class="col0"><span style='color:#00a2e8; '>Fichier de paramètres</span> </th><td class="col1"> Rien du settings.py ne doit être versionné d&#039;après les bonnes pratiques </td><td class="col2"> Les bonnes pratiques nous encouragent à créer un fichier <code>parameters.yml.dist</code> (versionné) dans lequel on met le nom des variables mais pas leurs valeurs </td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [1-1590] -->

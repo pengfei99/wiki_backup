@@ -1,0 +1,56 @@
+====== The saga pattern ======
+
+===== Context =====
+You have applied the [[employes:pengfei.liu:system_architecture:microservice:database_per_service|The Database per Service pattern]]. Each service has its own database. Some business transactions, however, span multiple services, so you need a mechanism to ensure data consistency across services. For example, let's imagine that you are building an e-commerce store where customers have a credit limit. The application must ensure that a new order will not exceed the customer's credit limit. Orders and Customers are in different databases, the application cannot simply use a local ACID transaction.
+
+===== Solution =====
+
+Implement each business transaction that spans multiple services as a saga. A saga is a sequence of local transactions. Each local transaction updates the database and publishes a message or event to trigger the next local transaction in the saga. If a local transaction fails because it violates a business rule then the saga executes a series of compensating transactions that undo the changes that were made by the preceding local transactions.
+
+==== Saga coordination ====
+
+There are two ways of saga coordination:
+  * Choreography: each local transaction publishes the domain events that trigger local transactions in other events.
+  * Orchestration: an orchestrator (object) tells the participants what local transactions to execute.
+
+=== Example ===
+
+**Choreography-based saga**
+Let's reuse the e-commerce store example, if we use the choreography-based saga, to create an order, the system needs to do the following steps:
+  - The **order Service** creates an Order in a pending state and publishes an **OrderCreated** event.
+  - The **Customer Service** receives the **OrderCreated** event and attempts to reserve credit for that order. Based on the user credit, It publishes either a **Credit Reserved** event or a **CreditLimitExceeded** event.
+  - The **order Service** receives the event and changes the state of the order to either approved or canceled.
+
+If we use the orchestration-based saga, the system needs to do the following steps:
+  - The **Order Service** creates an Order in a pending state and creates a CreateOrderSaga (object)
+  - The **CreateOrderSaga** sends a **ReserveCredit** command to the **Customer Service**
+  - The **Customer Service** attempts to reserve credit for that Order and sends back a reply
+  - The **CreateOrderSaga** receives the reply and sends either an **ApproveOrder** or **RejectOrder** command to the **Order Service**
+  - The **Order Service** changes the state of the order to either approved or canceled
+
+===== Conclusion =====
+
+This pattern has the following benefits:
+  * It enables an application to maintain data consistency across multiple services without using distributed transactions
+
+It has the following drawbacks:
+  * The programming model is more complex. For example, a developer must design compensating transactions that explicitly undo changes made earlier in a saga.
+
+There are also the following issues to address:
+In order to be reliable, a service must atomically update its database and publish a message/event. It cannot use the traditional mechanism of a distributed transaction that spans the database and the message broker. Instead, it must use one of the patterns listed below.
+
+==== Related patterns ====
+
+[[employes:pengfei.liu:system_architecture:microservice:database_per_service|The Database per Service pattern]] creates the need for this pattern
+The following patterns are ways to atomically update state and publish messages/events:
+  * [[employes:pengfei.liu:system_architecture:microservice:event_sourcing|Event sourcing]]
+  * [[employes:pengfei.liu:system_architecture:microservice:application_events|Applicaiton publishes events]]
+A choreography-based saga can publish events using **Aggregates** and **Domain Events**.
+
+===== Code Example =====
+
+The following examples implement the customers and orders example in different ways:
+
+  * Choreography-based saga(https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders) where the services publish domain events using the **Eventuate Tram framework** (https://github.com/eventuate-tram/eventuate-tram-core)
+  * Orchestration-based saga(https://github.com/eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders) where the Order Service uses a saga orchestrator implemented using the **Eventuate Tram Sagas framework** (https://github.com/eventuate-tram/eventuate-tram-sagas)
+  * Choreography and event sourcing-based saga(https://github.com/eventuate-examples/eventuate-examples-java-customers-and-orders) where the services publish domain events using the **Eventuate event sourcing framework** (http://eventuate.io/)

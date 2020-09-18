@@ -1,0 +1,87 @@
+<span class="kw2">&lt;?php</span>
+<span class="co4">/**
+ * DokuWiki Plugin certlogin (Auth Component)
+ *
+ * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
+ * @author  Tanguy LE CARROUR &lt;tanguy.lecarrour@bioaster.org&gt;
+ */</span>
+&nbsp;
+<span class="co1">// must be run within Dokuwiki</span>
+<span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.php.net/defined"><span class="kw3">defined</span></a><span class="br0">&#40;</span><span class="st_h">'DOKU_INC'</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <a href="http://www.php.net/die"><span class="kw3">die</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> auth_plugin_certlogin <span class="kw2">extends</span> DokuWiki_Auth_Plugin <span class="br0">&#123;</span>
+&nbsp;
+    <span class="co4">/**
+     * Constructor.
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> __construct<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        parent<span class="sy0">::</span>__construct<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// for compatibility</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">cando</span><span class="br0">&#91;</span><span class="st_h">'external'</span><span class="br0">&#93;</span>    <span class="sy0">=</span> <span class="kw4">true</span><span class="sy0">;</span> <span class="co1">// does the module do external auth checking?</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">cando</span><span class="br0">&#91;</span><span class="st_h">'logout'</span><span class="br0">&#93;</span>      <span class="sy0">=</span> <span class="kw4">true</span><span class="sy0">;</span> <span class="co1">// can the user logout again? (eg. not possible with HTTP auth)</span>
+&nbsp;
+        <span class="co1">// FIXME intialize your auth system and set success to true, if successful</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">success</span> <span class="sy0">=</span> <span class="kw4">true</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co4">/**
+     * Log off the current user [ OPTIONAL ]
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> logOff<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co4">/**
+     * Do all authentication [ OPTIONAL ]
+     *
+     * @param   string  $user    Username
+     * @param   string  $pass    Cleartext Password
+     * @param   bool    $sticky  Cookie should not expire
+     * @return  bool             true on successful auth
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> trustExternal<span class="br0">&#40;</span><span class="re0">$user</span><span class="sy0">,</span> <span class="re0">$pass</span><span class="sy0">,</span> <span class="re0">$sticky</span> <span class="sy0">=</span> <span class="kw4">false</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+        <span class="kw2">global</span> <span class="re0">$USERINFO</span><span class="sy0">;</span>
+        <span class="kw2">global</span> <span class="re0">$conf</span><span class="sy0">;</span>
+        <span class="re0">$sticky</span> ? <span class="re0">$sticky</span> <span class="sy0">=</span> <span class="kw4">true</span> <span class="sy0">:</span> <span class="re0">$sticky</span> <span class="sy0">=</span> <span class="kw4">false</span><span class="sy0">;</span> <span class="co1">//sanity check</span>
+&nbsp;
+        <span class="co1">// do the checking here</span>
+&nbsp;
+        <span class="re0">$name</span> <span class="sy0">=</span> <a href="http://www.php.net/array_shift"><span class="kw3">array_shift</span></a><span class="br0">&#40;</span><a href="http://www.php.net/explode"><span class="kw3">explode</span></a><span class="br0">&#40;</span><span class="st0">&quot;,&quot;</span><span class="sy0">,</span> <span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st0">&quot;SSL_CLIENT_S_DN_CN&quot;</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$email</span> <span class="sy0">=</span> <a href="http://www.php.net/array_shift"><span class="kw3">array_shift</span></a><span class="br0">&#40;</span><a href="http://www.php.net/explode"><span class="kw3">explode</span></a><span class="br0">&#40;</span><span class="st0">&quot;,&quot;</span><span class="sy0">,</span> <span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st0">&quot;SSL_CLIENT_S_DN_EMAILADDRESS&quot;</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$pattern</span> <span class="sy0">=</span> <span class="st_h">'/@bioaster.org$/'</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.php.net/preg_match"><span class="kw3">preg_match</span></a><span class="br0">&#40;</span><span class="re0">$pattern</span><span class="sy0">,</span> <span class="re0">$email</span><span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'name'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;anonymous&quot;</span><span class="sy0">;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'mail'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;&quot;</span><span class="sy0">;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'grps'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'ALL'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw1">else</span> <span class="br0">&#123;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'name'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$name</span><span class="sy0">;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'mail'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$email</span><span class="sy0">;</span>
+            <span class="re0">$USERINFO</span><span class="br0">&#91;</span><span class="st_h">'grps'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'admin'</span><span class="sy0">,</span> <span class="st_h">'user'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st_h">'REMOTE_USER'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$email</span><span class="sy0">;</span>
+        <span class="re0">$_SESSION</span><span class="br0">&#91;</span>DOKU_COOKIE<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'auth'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'user'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$user</span><span class="sy0">;</span>
+        <span class="re0">$_SESSION</span><span class="br0">&#91;</span>DOKU_COOKIE<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'auth'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'pass'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$pass</span><span class="sy0">;</span>
+        <span class="re0">$_SESSION</span><span class="br0">&#91;</span>DOKU_COOKIE<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'auth'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'info'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="re0">$USERINFO</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="kw4">true</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co4">/**
+     * Return user info
+     *
+     * Returns info about the given user needs to contain
+     * at least these fields:
+     *
+     * name string  full name of the user
+     * mail string  email addres of the user
+     * grps array   list of groups the user is in
+     *
+     * @param   string $user the user name
+     * @return  array containing user data or false
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> getUserData<span class="br0">&#40;</span><span class="re0">$user</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <span class="re0">$USERINFO</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

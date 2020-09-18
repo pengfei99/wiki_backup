@@ -1,0 +1,192 @@
+====== Create and manage services in centos7 with systemd ======
+
+Systemd is a system and service manager and like most major Linux distributions the init daemon was replaced by Systemd in CentOS 7. One of the main functions of Systemd is to manage the services, devices, mount points, sockets and other entities in a Linux system. Each of these entities that are managed by Systemd is called a unit. Each unit is defined by a unit file (configuration file) which is located in one of the following directories.
+
+
+^Directory ^Description^
+| /usr/lib/systemd/system/ | Unit files distributed with installed packages. Do not modify unit files in this location.|
+| /run/systemd/system/	| Unit files that are dynamically created at runtime. Changes in this directory are lost when rebooted.|
+| /etc/systemd/system/	| Unit files created by systemctl enable and custom unit files created by system administrators.|
+
+Any custom unit files that you create should be placed in the **/etc/system/system/** directory. This directory takes precedence over other directories.
+
+Unit files names are of the form **unit_name.unit_type**. Unit_type can be one of the following:
+
+^Unit Type ^	Description^
+|device | A device unit.|
+|service | A system service.|
+|socket	| A socket for inter-process communication.|
+|swap |A swap file or device.|
+|target	| A group of units. |
+|timer	| A systemd timer. |
+|snapshot | A snapshot of systemd manager. |
+|mount	| A mount point. |
+|slice	| A group of unit that manage the system processes. |
+|path	| A file or directory.|
+|automount | A automount point.|
+|scope	| An externally created process.|
+
+===== Creating a new service (Systemd unit) =====
+
+To create a custom service to be managed by systemd, you create a unit file that defines the configuration of that service. To create a service named Zeppelin, for example, you create a file named zeppelin.service in **/etc/systemd/system/**. The unit file of service consists of a set of directives that are organized into three sections - Unit, Service and Install. Below is an example of a very simple unit file.
+
+<code>
+[Unit]
+ Description=Service description
+
+[Service]	
+ ExecStart=path_to_executable
+
+[Install]
+ WantedBy=default.target
+</code>
+
+Once you have created the unit file with all the necessary configuration options, save the file and set the correct file permissions.
+
+<code>
+chmod 664 /etc/systemd/system/zeppelin.service
+
+# The next step is to reload all unit files to make systemd know about the new service.
+systemctl daemon-reload
+
+#Finally to start the service, run
+systemctl start zeppelin.service
+</code>
+
+==== Unit Section ====
+
+The following are the main directives that you specify in the [Unit] section.
+
+  * **Description**: A short description of the unit.
+  * **Documentation**: A list of URIs pointing to the documentation for the unit.
+  * **Requires**: A list of units that must be started alongside the current unit. If any these units fail to start then the current unit will not be activated.
+  * **Wants**: Similar to the Requires directive but the difference is the current unit will be activated even if the depended units fail to start.
+  * **Before**: List of units that cannot be started before the current unit.
+  * **After**: The current unit can start only after the units listed here. 
+  * **Conflicts**: List units that cannot be run concurrently with the current unit.
+
+==== Service Section ====
+
+Some of the common directives that you'll see in the service section are.
+
+  * **Type**: Defines the startup type of the unit which can be one of the values:
+      * **Simple**: This is the default. The main process of the service is the process started with ExecStart.
+      * **Forking**: The process started with ExecStart spawns a new child process which becomes the main process and the parent process is terminated when the startup is completed.
+      * **Onehot**: Similar to simple but systemd waits for the process to exit before proceeding with other units.
+      * **Dbus**: Similar to simple but systemd waits for the process to take a name on the dbus.
+      * **Notify**: Similar to simple Systemd will wait for a notification from the process before continuing with other units.
+      * **Idle**: Similar to simple but service will not run until all other jobs are finished.
+  * **ExecStart**: Specifies the command to the executed to start service.
+  * **ExecStartPre**: Specifies the command to be executed before the main process specified in the ExecStart is started.
+  * **ExecStartPost**: Specifies the command to be executed after the main process specified in the ExecStart has finished.
+  * **ExecStop**: Specifies the command to be executed when the service is stopped.
+  * **ExecReload**: Specifies the command to be executed when the service is restarted.
+  * **Restart**: Specifies when to restart the service automatically. Possible values are "always", "on-success", "on-failure", "on-abnormal", "on-abort", or "on-watchdog".
+
+==== Install section ====
+
+The [install] section provides information required to enable or disable the units using the systemctl command. The common options are:
+
+  * **RequiredBy**: A list of units that requires unit. A symbolic link of this unit is created in the .requires directory of the listed unit.
+  * **WantedBy**: Specifies a list of targets under which the service should be started. A symbolic link of this unit is created in the .wants directory of the listed target.
+
+==== Zeppelin systemd unit file example ====
+
+Suppose we have zeppelin installed on /opt/zeppelin/zeppelin-0.7.3. We can use command like bin/zeppelin-daemon.sh start to start the zeppelin service. So we can write the following zeppelin.service. If you want to run the zeppelin service with a user named zeppelin, you need to create a user account.
+<code>
+sudo adduser -d /opt/zeppelin -s /sbin/nologin zeppelin
+
+# make sure user zeppelin has access of the zeppelin service bin
+chown -R zeppelin:zeppelin /opt/zeppelin
+</code>
+
+But in our example, we use hadoop as user which runs the zeppelin service.
+ 
+<code>
+vim /etc/systemd/system/zeppelin.service
+
+[Unit]
+Description=Zeppelin service
+# before running zeppelin service, we must make sure syslog and network service is already running.
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh start
+ExecStop=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh stop
+ExecReload=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh reload
+User=hadoop
+Group=hadoop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+</code>
+
+
+===== Using systemctl to manage services =====
+
+systemctl is the command line tool you can use to control and manage services in systemd. Let's now take a look at the some of the important systemctl commands for service management.
+
+Listing Service Units and Unit files
+<code>
+# To list all the units that are loaded
+systemctl list-units
+
+# To list only units of type service
+systemctl list-units -t service
+
+# To list all installed unit files of type service
+systemctl list-unit-files -t service
+
+
+# You can use the --state option to filter the output by the state of the unit. The following command lists all services that are enabled.
+systemctl list-unit-files --state enabled
+</code>
+
+Note the difference between list-units and list-unit-files is that list-unit will only show units that are loaded while list-unit-files shows all unit files that are installed on the system.
+
+==== Start and stop service ====
+
+This is quite straightforward, start option to start a service and stop option to stop a service
+
+<code>
+systemctl start service_name.service
+systemctl stop service_name.service
+</code>
+
+==== restart and reload services ====
+
+The restart option will restart a service that is running. If the service is not running, it will be started.
+
+<code>
+systemctl restart service_name.service
+
+# If you want to restart the service only if it's running then use the try-restart option.
+systemctl try-restart service_name.service
+</code>
+
+The reload option will try to reload the service-specific configuration of a unit if it is supported.
+
+<code>
+# not supported by all the services
+systemctl reload service_name.service
+</code>
+
+
+==== Enable and Disable services ====
+
+Units can be enabled or disabled using the enable or disable options of systemctl command. When a unit a enabled symbolic links are created in various locations as specified in the [install] section of the unit file. Disabling a unit will remove the symbolic links that wer created when the unit was enabled.
+
+<code>
+systemctl enable service_name.service
+systemctl disable service_name.service
+</code>
+
+==== Reload Unit Files ====
+
+Whenever you make any changes to the unit files you need to let systemd know by executing daemon-reload which reloads all unit files.
+
+<code>
+# systemctl daemon-reload
+</code>

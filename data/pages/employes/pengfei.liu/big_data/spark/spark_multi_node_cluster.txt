@@ -1,0 +1,242 @@
+====== Install spark on multi node mode ======
+
+===== Pre-requise =====
+
+Install jdk [[employes:pengfei.liu:java:install_jdk|Install oracle jdk on ubuntu 16.04]]
+
+Install scala [[employes:pengfei.liu:java:scala|Install scala on centos]]
+
+===== Get spark source =====
+
+You can get your required version from here
+
+https://spark.apache.org/downloads.html
+
+
+<code>
+#suppose you have downloaded spark and put it under /opt/spark/spark-2.2.0
+
+[hadoop@CCLinDataWHD01 spark-2.2.0]$ pwd
+/opt/spark/spark-2.2.0
+[hadoop@CCLinDataWHD01 spark-2.2.0]$ ls -lah
+total 92K
+drwxr-xr-x 13 hadoop hadoop 4.0K Dec 25 11:22 .
+drwxr-xr-x  3 hadoop hadoop   24 Dec 25 10:34 ..
+drwxr-xr-x  2 hadoop hadoop 4.0K Jul  1 01:09 bin
+drwxr-xr-x  2 hadoop hadoop 4.0K Dec 25 10:56 conf
+drwxr-xr-x  5 hadoop hadoop   47 Jul  1 01:09 data
+drwxr-xr-x  4 hadoop hadoop   27 Jul  1 01:09 examples
+drwxr-xr-x  2 hadoop hadoop 8.0K Jul  1 01:09 jars
+-rw-r--r--  1 hadoop hadoop  18K Jul  1 01:09 LICENSE
+drwxr-xr-x  2 hadoop hadoop 4.0K Jul  1 01:09 licenses
+drwxrwxr-x  2 hadoop hadoop   97 Dec 25 11:22 logs
+-rw-r--r--  1 hadoop hadoop  25K Jul  1 01:09 NOTICE
+drwxr-xr-x  8 hadoop hadoop 4.0K Jul  1 01:09 python
+drwxr-xr-x  3 hadoop hadoop   16 Jul  1 01:09 R
+-rw-r--r--  1 hadoop hadoop 3.8K Jul  1 01:09 README.md
+-rw-r--r--  1 hadoop hadoop  128 Jul  1 01:09 RELEASE
+drwxr-xr-x  2 hadoop hadoop 4.0K Jul  1 01:09 sbin
+drwxr-xr-x  2 hadoop hadoop   41 Jul  1 01:09 yarn
+ 
+</code>
+===== Configure spark =====
+
+Suppose we have three server.
+
+<code>
+spark master: 192.168.1.1 ( hadoop-nn.pengfei.org )
+
+spark worker1 : 192.168.1.2 ( hadoop-dn1.pengfei.org )
+
+spark worker2 : 192.168.1.3 ( hadoop-dn2.pengfei.org )
+</code>
+
+add spark to path
+
+<code>
+
+#enable spark to use yarn as resource manager
+
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:LD_LIBRARY_PATH
+
+
+#spark home path config
+export SPARK_HOME=/opt/spark/spark-2.2.0
+export PATH=$PATH:$SPARK_HOME/bin
+
+</code>
+
+Spark can use different resource manager such as yarn, mesos
+
+==== Spark-Mesos ====
+
+In the case of the Spark-Mesos, STAC used Mesos 0.26 and Spark 1.5.2 configured in coarse integration mode. Using coarse integration mode for a Spark workload running multiple short jobs is the documented best practice from Spark. When the coarse integration mode is used, Mesos offers all resources available on an agent (also called node or slave) to Spark. Spark accepts all the resources that it will find useful. In this particular case, useful resources involved all CPU resources available on the agent and enough memory to satisfy the memory requirement of the executor configured on the Spark side via the spark.executor.memory parameter.
+
+Only one executor per agent is started when running Spark-Mesos. When there are more users running jobs concurrently on the cluster than there are agents in the cluster, each job gets only a single executor running on a single agent. Spark schedules all job tasks to run on that agent and executor. Spark will not release CPU and memory resources to Mesos until all job tasks have finished.
+
+Spark executes multiple tasks concurrently on this single executor. From a runtime architecture perspective, this means that up to 32 Spark tasks (using STAC configuration settings) will run concurrently on a single JVM. As the tasks complete, the CPU utilization drops, and will not increase again (because Spark is not releasing resources to other applications) until a new set of tasks is ready to execute, or until another application is scheduled to run on this agent.
+
+Thus, the effective granularity of resource sharing among SMB applications for Spark-Mesos is one agent (server), with 32 virtual CPUs. This is the reason for the really spiky CPU utilization trace shown above for Spark-Mesos.
+
+==== Spark-YARN ====
+
+In the case of Spark-YARN, the number of executors started by YARN is determined primarily by the ratio of YARN node manager memory (yarn.nodemanager.resource.memory-mb) to executor memory requested by Spark (spark.executor.memory). Using STAC settings, you can see that each agent (node in YARN terminology) can host up to 12 executors. These executors don’t need to belong to the same SMB application, but can be shared among different applications. If one application finishes and its executor(s) on that agent (node) finish, YARN can immediately create new executor(s) on that agent (node) to be used by the next application.
+
+Thus, the effective granularity of resource sharing among SMB applications for Spark-YARN is one agent (server)/12, or roughly 3 virtual CPUs. CPUs end up being more consistently used due to this, and the CPU utilization profile shows fewer, wider spikes. It’s important to note that when Spark tasks running on a particular executor complete, Spark-YARN cannot schedule tasks from a different SMB application to run on that executor. The executor has to complete all its tasks and exit, and a new executor has to be started.
+
+==== IBM Platform Conductor For Spark ====
+
+IBM Platform Conductor For Spark includes a resource manager that defines the concept of slots to represent CPU resources. STAC used a configuration whereby one slot would be equal to one virtual CPU. IBM Platform Conductor also includes a session scheduler, which is a multi-user component that has a scheduling policy. When the SMB benchmark is started, Spark interacts with the session scheduler to schedule tasks on available resources.
+
+When creating a new application, Spark communicates the number of tasks that need to be run to the session scheduler. The session scheduler then requests an allotment of slots from the underlying resource manager, and receives an allotment that may or may not have slots for all requested tasks. The session scheduler then splits the slot allotment among applications based on the configured policy (in the case of the STAC report, it was fair share). If the priority of the applications is equal, then each receives the same number of slots, which will be spread across each application’s executors. Once some of the tasks of one application are completed, the freed-up slots are transferred to the other applications’ executors, thus allowing Spark to schedule more tasks concurrently for the other applications.
+
+Thus for IBM Platform Conductor For Spark, the effective granularity of resource sharing among SMB applications is one slot or one virtual CPU. This is equivalent to 1/32 of one agent (server). This much more fine-grained, resource-sharing model leads to effective and consistent CPU utilization and, consequently, higher throughput performance.
+
+IBM Platform Computing developers have worked on resource managers and schedulers for the past 20 years. They have gained considerable experience in optimizing resource granularity and allocation efficiency. These skills and experiences are now being applied to Apache Spark, and, as STAC report demonstrates, are driving significant performance advantages for IBM Platform Conductor For Spark.
+
+===== Spark Standalone =====
+The official doc on spark standalone cluster config: https://spark.apache.org/docs/latest/spark-standalone.html
+Edit the spark-env.sh
+
+==== Configure spark master ====
+
+<code>
+cd /opt/spark/spark-2.2.0/conf
+cp spark-env.sh.template spark-env.sh
+
+vim spark-env.sh
+
+#put the following lines
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_151
+export SPARK_WORKER_CORES=4
+export SPARK_WORKER_MEMORY=6G
+export SPARK_EXECUTOR_MEMORY=4G
+export SPARK_MASTER_IP=10.70.3.48
+
+</code>
+
+Edit the slaves
+<code>
+vim slaves
+
+#put the following lines
+hadoop-dn1.pengfei.org
+hadoop-dn2.pengfei.org
+</code>
+
+
+===== Configure spark worker =====
+Edit the spark-env.sh
+
+<code>
+cd /opt/spark/spark-2.2.0/conf
+cp spark-env.sh.template spark-env.sh
+
+vim spark-env.sh
+
+#put the following lines
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_151
+export SPARK_WORKER_CORES=2
+
+</code>
+
+Edit the slaves
+<code>
+vim slaves
+
+#put the following lines
+localhost
+</code>
+
+====== Run the spark ======
+
+Befor you run the following command on your spark master server, you need to make sure that your master node can ssh to worker node with ssh key. if you don't have that, see the [[employes:pengfei.liu:big_data|Install hdfs on multi node cluster]] section 3, 4.
+
+<code>
+cd /opt/spark/spark-2.2.0
+sbin/start-all.sh
+</code>
+
+====== Check the status ======
+
+<code>
+# JPS on master
+[hadoop@CCLinDataWHD01 spark-2.2.0]$ jps
+7872 Jps
+2385 SecondaryNameNode
+4227 Master
+2164 NameNode
+2551 ResourceManager
+
+#JPS on worker
+[hadoop@CCLinDataWHD02 conf]$ jps
+5408 Worker
+2018 DataNode
+5461 Jps
+
+</code>
+
+check web ui
+
+I. Spark Master UI
+Browse the Spark UI to know about worker nodes, running application, cluster resources.
+
+http://MASTER-IP:8080/
+
+II. Spark application UI
+
+http://MASTER-IP:4040/
+
+
+====== FAQ ======
+
+===== Spark shuffle failed =====
+
+It often caused by firewalld. Add the required port to firewalld or disable firewalld 
+
+===== Losing spark pid file  =====
+
+If you do stop-all.sh at spark master, and it says no master to stop
+
+It means the file spark-hadoop-org.apache.spark.deploy.master.Master-1.pid in /tmp is lost
+
+To stop spark master and slaves, you need to use jps to find the pid of spark master and slave.
+
+Then enter kill <pid> in the termniale
+
+Long term solution, set the spark pid dir in /var/run. not in /tmp. So it will not be deleted.
+
+<code>
+# create a dir in /var/run
+mkdir -p /var/run/spark
+
+# change owner and acl to make sure spark can write files in it.
+# In my case, I run spark with user:group hadoop:hadoop
+chown hadoop:hadoop -R /var/run/spark
+chmod 755 -R /var/run/spark
+#edit <spark-home>/conf/spark-evn.sh
+# add the following line
+export SPARK_PID_DIR=/var/run/spark
+
+# important note, this needs to be done on all nodes(master and slave)
+</code>
+
+===== Spark use all disk in the sever/vm =====
+
+When you run spark with complex operations that excide the size of your disk capacity. You need to clean up the temporary files. Normally, they are all deleted when you restart the spark. 
+
+You can also ask spark to clean them automatically
+
+<code>
+# go to spark-env.sh file of all your spark nodes(master and slave)
+vim spark-env.sh
+
+# add the following line, it enables periodic cleanup of worker / application directories for every 30 mins
+SPARK_WORKER_OPTS="-Dspark.worker.cleanup.enabled=true -Dspark.worker.cleanup.appDataTtl=172800"
+
+# note that, the above config works only for spark standalone mode, for yarn or Mesos, you need to configure yarn or Mesos to clean them
+
+</code>
+
+For more SPARK_WORKER_OPTS options, you can visit the following page https://spark.apache.org/docs/latest/spark-standalone.html

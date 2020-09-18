@@ -1,0 +1,33 @@
+{
+  &quot;entities&quot;: [
+    {
+      &quot;typeName&quot;: &quot;GPFSDataFile&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;guid&quot;: &quot;-208942807557404&quot;,
+      &quot;status&quot;: &quot;ACTIVE&quot;,
+      &quot;version&quot;: 0,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;data_from_mosaic&quot;,
+        &quot;uri&quot;: &quot;data_from_mosaic&quot;,
+        &quot;name&quot;: &quot;data_from_mosaic&quot;,
+&nbsp;
+        &quot;file_name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;Fri Nov 16 13:51:21 UTC 2018&quot;,
+        &quot;format&quot;:&quot;csv&quot;,
+        &quot;schema&quot;:[
+          { &quot;col&quot; : &quot;name&quot; ,&quot;data_type&quot; : &quot;string&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;age&quot; ,&quot;data_type&quot; : &quot;int&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;blood_type&quot; ,&quot;data_type&quot; : &quot;string&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;white_cell_num&quot; ,&quot;data_type&quot; : &quot;int&quot; ,&quot;required&quot; : true }
+        ]
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    }
+]
+}

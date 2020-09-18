@@ -1,0 +1,22 @@
+<span class="kw2">&lt;?php</span>
+<span class="kw2">namespace</span> AppBundle\DataFixtures\ORM<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Doctrine\Common\DataFixtures\FixtureInterface<span class="sy0">;</span>
+<span class="kw2">use</span> Doctrine\Common\Persistence\ObjectManager<span class="sy0">;</span>
+<span class="kw2">use</span> AppBundle\Entity\Book<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> LoadBookData implements FixtureInterface
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * {@inheritDoc}
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> load<span class="br0">&#40;</span>ObjectManager <span class="re0">$manager</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$b1</span> <span class="sy0">=</span> <span class="kw2">new</span> Book<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$b1</span><span class="sy0">-&gt;</span><span class="me1">setIsbn</span><span class="br0">&#40;</span><span class="st_h">'0123456789ABC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$b1</span><span class="sy0">-&gt;</span><span class="me1">setTitle</span><span class="br0">&#40;</span><span class="st_h">'This is my title'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$manager</span><span class="sy0">-&gt;</span><span class="me1">persist</span><span class="br0">&#40;</span><span class="re0">$b1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$manager</span><span class="sy0">-&gt;</span><a href="http://www.php.net/flush"><span class="kw3">flush</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

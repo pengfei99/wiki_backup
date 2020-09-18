@@ -1,0 +1,118 @@
+
+<h1 class="sectionedit1" id="openstack_cli">OpenStack cli</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "OpenStack cli" [1-29] -->
+<h2 class="sectionedit2" id="credetials_to_use_openstack">Credetials to use openstack</h2>
+<div class="level2">
+
+<p>
+In your home, you should find a dir .novacreds
+</p>
+
+<p>
+In this dir, you can find a key pair and novarc.sh. In novarc.sh, you can find your login and pwd and keystone server info.
+</p>
+<pre class="code">#novarc.sh
+export OS_USERNAME=&quot;pliu&quot;
+export OS_PASSWORD=&quot;6521963a-fabf-11e2-ba12-020000006c0d&quot;
+export OS_PROJECT_NAME=&quot;bioaster&quot;
+export OS_AUTH_URL=&quot;https://cckeystone.in2p3.fr:5000/v3/&quot;
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_IDENTITY_API_VERSION=3
+export OS_VOLUME_API_VERSION=2</pre>
+
+</div>
+<!-- EDIT2 SECTION "Credetials to use openstack" [30-583] -->
+<h2 class="sectionedit3" id="command_for_adding_key_pair_in_openstack">Command for adding key pair in openstack</h2>
+<div class="level2">
+
+<p>
+When you boot a new vm you need to give a default ssh keypair for ssh connextion after the vm creation.
+</p>
+<pre class="code"># list all registered keypair
+nova keypair-list
+
+# create a key pair named &quot;mykey&quot; and output it to a file in user&#039;s .ssh dir
+nova keypair-add mykey &gt; ~/.ssh/cloudkey
+
+# if you already have a key pair you can upload the public key to openstack with name mykeyy
+nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+
+# show key key details
+nova keypair-show mykey
+
+# delete key
+nova keypair-delete mykey</pre>
+
+</div>
+<!-- EDIT3 SECTION "Command for adding key pair in openstack" [584-1157] -->
+<h2 class="sectionedit4" id="command_for_vm">Command for vm</h2>
+<div class="level2">
+<pre class="code"># list all vms in tenant
+nova list
+
+# list all flavors
+nova flavor-list
+
+# list all images
+glance image-list
+
+# create a vm
+nova boot --flavor &lt;flavor-id&gt; --image &lt;img-id&gt; --key-name &lt;key-name&gt; &lt;vm-name&gt;
+# example
+nova boot --flavor m1.medium.2 --image Template_Centos_7_latest_28_06_2018 --key-name bioaster_os CCLinCytoD01
+
+# stop/start/restart a vm
+nova stop/start/restart &lt;vm-name&gt;
+
+# delete a vm
+nova delete &lt;vm-name&gt;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Command for vm" [1158-1624] -->
+<h2 class="sectionedit5" id="command_for_image">Command for image</h2>
+<div class="level2">
+<pre class="code"># create image (snapshoot of a vm)
+nova image-create --poll &lt;vm-name&gt; &lt;image-name&gt;
+# delete image
+glance image-delete &lt;image-name&gt;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Command for image" [1625-1802] -->
+<h2 class="sectionedit6" id="resize_your_vm">Resize your vm</h2>
+<div class="level2">
+<pre class="code"># Step 1: resize your vm flavor, --poll option shows the resize progress.
+nova resize &lt;server-id/name&gt; &lt;flavor-id/name&gt; --poll
+
+# By default, the nova resize command gives the guest operating system a chance to perform a controlled shutdown before the instance is powered off and the instance is resized. The shutdown behavior is configured by the shutdown_timeout parameter that can be set in the nova.conf file. Its value stands for the overall period (in seconds) a guest operation system is allowed to complete the shutdown. The default timeout is 60 seconds. See Description of Compute configuration options for details.
+
+The timeout value can be overridden on a per image basis by means of os_shutdown_timeout that is an image metadata setting allowing different types of operating systems to specify how much time they need to shut down cleanly.
+
+# Step 2: show the status of your vm, if the resize complete, the status becomes VERIFY_RESIZE.
+
+# Step 3: Confirm the resize
+openstack server resize --confirm &lt;server-id/name&gt;
+
+# After confirm, the server status becomes active
+# if the resize fails or does not work as expected, you can revert the  resize
+openstack server resize --revert &lt;server-id/name&gt;
+
+# The server status becomes active after convert</pre>
+
+</div>
+<!-- EDIT6 SECTION "Resize your vm" [1803-3106] -->
+<h2 class="sectionedit7" id="new_openstack_cli">New openstack cli</h2>
+<div class="level2">
+<pre class="code"># show information about your server
+openstack server show &lt;server-id/name&gt;
+
+# show flavor list
+openstack flavor list
+
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "New openstack cli" [3107-] -->

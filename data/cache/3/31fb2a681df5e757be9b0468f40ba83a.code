@@ -1,0 +1,6 @@
+[Donnees]
+    comment = Disque Commun Paris
+    read only = no
+    writable = yes
+    path = /mnt/dd2/samba/commun_paris
+    guest ok = yes

@@ -1,0 +1,224 @@
+====== FOSCommentBundle ======
+
+Bundle permettant de gérer les flux de commentaires.
+
+La documentation est disponible [[https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/1-setting_up_the_bundle.md|ici]].
+
+====Étape 1 ====
+
+==Téléchargement et installation du bundle ==
+    $ php composer.phar require friendsofsymfony/comment-bundle
+
+==Activation du bundle ==
+    <?php
+    // app/AppKernel.php
+    
+    public function registerBundles()
+    {
+        $bundles = array(
+           // ...
+           new FOS\RestBundle\FOSRestBundle(),
+           new FOS\CommentBundle\FOSCommentBundle(),
+           new JMS\SerializerBundle\JMSSerializerBundle($this),
+        );
+    }
+
+==Activation de la traduction en langue française ==
+    #app/config/config.yml
+    
+    parameters:
+        locale: fr
+        
+    //...
+    
+    framework:
+         #esi:    ~
+         translator: {fallbacks: fr}
+
+====Étape 2 ====
+
+[[https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle|Créer un bundle]] qui va contenir les entités : Comment et Thread.
+
+Par exemple pour l'entité Comment : 
+    <?php
+    // src/MyProject/MyBundle/Entity/Comment.php
+    
+    namespace MyProject\MyBundle\Entity;
+    
+    use Doctrine\ORM\Mapping as ORM;
+    use FOS\CommentBundle\Entity\Comment as BaseComment;
+    
+    /**
+     * @ORM\Entity
+     * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+     */
+    class Comment extends BaseComment
+    {
+        /**
+         * @ORM\Id
+         * @ORM\Column(type="integer")
+         * @ORM\GeneratedValue(strategy="AUTO")
+         */
+        protected $id;
+        
+        /**
+         * Thread of this comment
+         *
+         * @var Thread
+         * @ORM\ManyToOne(targetEntity="MyProject\MyBundle\Entity\Thread")
+         */
+        protected $thread;
+    }
+
+et pour Thread : 
+    <?php
+    // src/MyProject/MyBundle/Entity/Thread.php
+    
+    namespace MyProject\MyBundle\Entity;
+    use Doctrine\ORM\Mapping as ORM;
+    use FOS\CommentBundle\Entity\Thread as BaseThread;
+    
+    /**
+    * @ORM\Entity
+    * 
+    * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+    */
+    
+    class Thread extends BaseThread
+    {
+        /**
+         * @var string $id
+         *
+         * @ORM\Id
+         * @ORM\Column(type="string")
+         */
+        protected $id;
+     }
+
+On n'oublie pas de déclarer Comment et Thread comme ci-dessous:
+    # app/config/config.yml
+    
+    fos_comment:
+        db_driver: orm
+        class:
+            model:
+                comment: MyProject\MyBundle\Entity\Comment
+                thread: MyProject\MyBundle\Entity\Thread
+                
+    assetic:
+        bundles: [ "FOSCommentBundle" ]    
+
+<WRAP round important >
+**Attention :** Ne pas oublier de télécharger le assetic-bundle, qui n'est pas installé par défaut depuis la version 2.8 de Symfony!!\\ Suivre les instructions sur ce [[http://symfony.com/doc/2.8/cookbook/assetic/asset_management.html|lien]].
+</WRAP>
+
+====Étape 3 ====
+
+==Importation des routing==
+    fos_comment_api:
+        type: rest
+        resource: "@FOSCommentBundle/Resources/config/routing.yml"
+        prefix: /api
+        defaults: { _format: html }
+
+<WRAP round important >
+**Attention :** Bien mettre ces instructions dans cet ordre-là.
+</WRAP>
+
+====Étape 4 ====
+
+Insérer ces lignes pour avoir le file de commentaire : 
+
+    <div>
+        {% block javascripts %}
+            <script src="//code.jquery.com/jquery-1.8.2.min.js"></script>
+            <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        {% endblock %}
+    
+        {% stylesheets '@FOSCommentBundle/Resources/assets/css/comments.css' %}
+            <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        {% endstylesheets %}
+        
+        {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': 'foo'} %}
+    </div>
+
+====== Bonus ======
+
+====Un exemple ?====
+
+Le seul exemple disponible en ligne [[https://github.com/pierres/FOSCommentBundle-Demo|ici]].
+
+====Intégration avec FOSUserBundle====
+
+Par défaut les commentaires sont faits anonymement.\\
+Pour que les commentaires puissent être associés à un utilisateur, suivez les étapes ci-dessous : 
+
+==Avoir FOSUserBundle==
+
+Assurez vous d'avoir FOSUserBundle dans votre projet.\\
+Aller sur ce [[https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/fosuserbundle|lien]] pour installer le bundle.
+
+==Modifier l'entité Comment==
+
+Compléter l'entité Comment avec les lignes ci-dessous: 
+
+    <?php
+    // src/MyProject/MyBundle/Entity/Comment.php
+    
+    namespace MyProject\MyBundle\Entity;
+    
+    use Doctrine\ORM\Mapping as ORM;
+    use FOS\CommentBundle\Entity\Comment as BaseComment;
+    use FOS\CommentBundle\Model\SignedCommentInterface;
+    use Symfony\Component\Security\Core\User\UserInterface;
+    
+    /**
+     * @ORM\Entity
+     */
+    class Comment extends BaseComment implements SignedCommentInterface
+    {
+        // .. fields
+        
+        /**
+         * Author of the comment
+         *
+         * @ORM\ManyToOne(targetEntity="MyProject\MyBundle\Entity\User")
+         * @var User
+         */
+        protected $author;
+           
+        public function setAuthor(UserInterface $author)
+        {
+            $this->author = $author;
+        }
+    
+        public function getAuthor()
+        {
+            return $this->author;
+        }
+     
+        public function getAuthorName()
+        {
+            if (null === $this->getAuthor()) {
+                return 'Anonymous';
+            }
+    
+            return $this->getAuthor()->getUsername();
+        }
+    }
+
+<WRAP round important >
+**Attention :** Ne pas oublier de modifier l'entité User.php comme dans ce [[http://symfony.com/doc/current/bundles/FOSUserBundle/index.html|lien]].
+</WRAP>
+
+Modifier l'entité User en ajoutant ces lignes : 
+    public function __construct()
+    {
+        prarent::__construct();
+    }
+
+Mettre à jour l'entité doctrine en faisant : 
+
+    php app/console doctrine:schema:update
+    
+

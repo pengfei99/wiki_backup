@@ -1,0 +1,150 @@
+====== ZooKeeper 03: The ZooKeeper operations ======
+
+ZooKeeper's data model and its API support the following nine basic operations:
+^ Operation ^ Description ^
+| create | Creates a znode in a specified path of the ZooKeeper namespace |
+| delete | Deletes a znode from a specified path of the ZooKeeper namespace |
+| exists | Checks if a znode exists in the path |
+| getChildren | Gets a list of children of a znode | 
+| getData | Gets the data associated with a znode |
+| setData | Sets/writes data into the data field of a znode |
+| getACL | Gets the ACL of a znode |
+| setACL | Sets the ACL in a znode |
+| sync | Synchronizes a client's view of a znode with ZooKeeper |
+
+ZooKeeper provide Java shell, C shell, etc. to play the role of a command-line client.
+
+===== 3.1 Run the ZooKeeper operations by using Java shell =====
+
+Let's look at the ZooKeeper operations mentioned in the preceding table using ZooKeeper Java shell:
+
+<code>
+## 1. Create a znode called root with ThisIsTheRootNodeDataContent as its data:
+[zk: localhost(CONNECTED) 0] create /root "ThisIsTheRootNodeDataContent"
+Created /root
+
+## 2. Get the data content of the just created znode root :
+[zk: localhost(CONNECTED) 1] get /root
+"ThisIsTheRootNodeDataContent"
+
+## 2.1 Set the data content of the root with ThisIsTheRootDodeModifiedData
+set /root "ThisIsTheRootDodeModifiedData"
+
+## 2.2 Get the data content again after modification
+get /root
+
+## 3. Create a child znode child-1 for root with ThisIsChild-1 as its data:
+[zk: localhost(CONNECTED) 2] create /root/child-1
+"ThisIsChild-1"
+Created /root/child-1
+
+## 4. Create a child znode child-2 for root with ThisIsChild-2 as its data:
+[zk: localhost(CONNECTED) 3] create /root/child-2
+"ThisIsChild-2"
+Created /root/child-2
+
+## 5. List the children of root :
+[zk: localhost(CONNECTED) 4] ls /root
+[child-2, child-1]
+
+## 6. Get the access control listing for root :
+[zk: localhost(CONNECTED) 5] getAcl /root
+'world,'anyone
+: cdrwa
+
+## 7. Deleting the root is not allowed as root has 2 child znodes:
+[zk: localhost(CONNECTED) 6] delete /root
+Node not empty: /root
+
+## 8. Delete child-1 :
+[zk: localhost(CONNECTED) 7] delete /root/child-1
+
+## 9. Delete child-2 :
+[zk: localhost(CONNECTED) 8] delete /root/child-2
+
+## 10. List the content of root :
+[zk: localhost(CONNECTED) 9] ls /root
+[]
+
+## 11. Delete root :
+[zk: localhost(CONNECTED) 10] delete /root
+
+## 12. create a ephemeral znode
+create -e /root "This is a ephemeral znode"
+
+## 13. create a sequential ephemeral znode
+create -s -e /file "First file"
+create -s -e /file "Second file"
+# You should see now two Znode is created [file0000000002, file0000000003], 
+# the index starts with 2 not 1. Even you logout, all the ephemeral znode are 
+# deleted. If you enter a new sequential znode called **file**, the index will # not be reset to 2. It remembers the last used index.
+
+## 14. create a sequential persistent znode
+create -s /file "third file"
+# notice, the persistent and ephemeral will use the same index if the znode 
+# name is the same.
+</code>
+
+===== 3.2 Batch updates =====
+
+ZooKeeper also supports batch updates to znodes with an operation called **multi**. This batches together multiple primitive operations into a single unit. **A multi operation is also atomic in nature**, which means that either all the updates succeed or the whole bunch of updates fails in its entirety.
+
+<code>
+# use multi to do a batch update
+
+</code>
+
+===== 3.3 No partial writes or reads of the znode data =====
+
+ZooKeeper does not allow partial writes or reads of the znode data. When setting the data of a znode or reading it, the content of the znode is replaced or read entirely. Update operations in ZooKeeper, such as a delete or setData operation, have to specify the version number of the znode that is being updated. The version number can be obtained by using the exists() call. The update operation will fail if the specified version number does not match the one in the znode. Also, another important thing to note is that updates in ZooKeeper are non-blocking operations.
+
+===== 3.4 Watches and ZooKeeper operations =====
+
+**读操作**exists、getChildren和getData都**被设置了watch**，并且这些**watch都由写操作来触发**：create、delete和setData。**ACL操作并不参与到watch中**。当watch被触发时，watch事件被生成，他的类型由watch和触发他的操作共同决定。
+
+
+The following are the types of watch events that might occur during a znode state change:
+  * NodeChildrenChanged: A znode's child is created or deleted
+  * NodeCreated: A znode is created in a ZooKeeper path
+  * NodeDataChanged: The data associated with a znode is updated
+  * NodeDeleted: A znode is deleted in a ZooKeeper path
+
+watch由客户端所连接的ZooKeeper服务器在本地维护，因此watch可以非常容易地设置、管理和分派。当客户端连接到一个新的服务器上时，任何的会话事件都将可能触发watch。另外，当从服务器断开连接的时候，watch将不会被接收。但是，当一个客户端重新建立连接的时候，任何先前注册过的watch都会被重新注册。
+
+exists操作上的watch，在被监视的Znode创建、删除或数据更新时被触发。
+
+getData操作上的watch，在被监视的Znode删除或数据更新时被触发。在被创建时不能被触发，因为只有Znode一定存在，getData操作才会成功。
+
+getChildren操作上的watch，在被监视的Znode的子节点创建或删除，或是这个Znode自身被删除时被触发。可以通过查看watch事件类型来区分是Znode还是他的子节点被删除：NodeDelete表示Znode被删除，NodeDeletedChanged表示子节点被删除。
+
+watch设置操作及相应的触发器如图下图所示：
+
+{{:employes:pengfei.liu:data_science:zookeeper:zookeeper_watch_event.png?600|}}
+
+**watch事件包括了事件所涉及的Znode的路径**，因此对于NodeCreated和NodeDeleted事件来说，根据路径就可以简单区分出是哪个Znode被创建或是被删除了。为了查询在NodeChildrenChanged事件后哪个子节点被改变了，需要再次调用getChildren来获得新的children列表。同样的，为了查询NodeDeletedChanged事件后产生的新数据，需要调用getData。
+
+在两种情况下，Znode可能在获取watch事件或执行读操作这两种状态下切换，在写应用程序时，必须记住这一点。
+
+（1）Zookeeper的watch实际上要处理两类事件：
+
+1. 连接状态事件(type=None, path=null)
+
+这类事件不需要注册，也不需要我们连续触发，我们只要处理就行了。
+
+2. 节点事件
+
+节点的建立，删除，数据的修改。它是one time trigger，我们需要不停的注册触发，还可能发生事件丢失的情况。
+
+上面2类事件都在Watch中处理，也就是重载的process(Event event)
+
+（2）节点事件的触发，通过函数exists,getData或getChildren来处理
+
+这类函数，有双重作用：
+
+1. 注册触发事件
+
+2. 函数本身的功能
+
+函数的本身的功能又可以用异步的回调函数来实现,重载processResult()过程中处理函数本身的的功能。
+
+函数还可以指定自己的watch,所以每个函数都有4个版本。根据自己的需要来选择不同的函数，不同的版本

@@ -1,0 +1,386 @@
+
+<h1 class="sectionedit1" id="cadre_de_developpement_web">Cadre de développement web</h1>
+<div class="level1">
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign" colspan="2">Critères                   </th><th class="col2 leftalign" colspan="5">Solutions                                                                                   </th>
+	</tr>
+	<tr class="row1">
+		<th class="col0">Fonctionnalité </th><th class="col1">Pondération </th><th class="col2 leftalign">CakePHP            </th><th class="col3 leftalign">Symfony            </th><th class="col4 leftalign">Laravel            </th><th class="col5 leftalign">CherryPy                </th><th class="col6">Django </th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<td class="col0 leftalign">Documentation  </td><td class="col1 leftalign">            </td><td class="col2"><a href="http://cakephp.org" class="urlextern" title="http://cakephp.org"  rel="nofollow">http://cakephp.org</a> </td><td class="col3"><a href="http://symfony.com" class="urlextern" title="http://symfony.com"  rel="nofollow">http://symfony.com</a> </td><td class="col4"><a href="http://laravel.com" class="urlextern" title="http://laravel.com"  rel="nofollow">http://laravel.com</a> </td><td class="col5"><a href="http://www.cherrypy.org" class="urlextern" title="http://www.cherrypy.org"  rel="nofollow">http://www.cherrypy.org</a> </td><td class="col6"><a href="https://www.djangoproject.com" class="urlextern" title="https://www.djangoproject.com"  rel="nofollow">https://www.djangoproject.com</a> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Licence        </td><td class="col1 leftalign">            </td><td class="col2 leftalign">                   </td><td class="col3 leftalign">                   </td><td class="col4 leftalign">                   </td><td class="col5 leftalign">                        </td><td class="col6"> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">Langage        </td><td class="col1 leftalign">            </td><td class="col2 leftalign">PHP                </td><td class="col3 leftalign">PHP                </td><td class="col4 leftalign">PHP                </td><td class="col5 leftalign">Python                  </td><td class="col6">Python </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">Difficulté     </td><td class="col1 leftalign">            </td><td class="col2 leftalign">facile             </td><td class="col3 leftalign">moyen              </td><td class="col4 leftalign">moyen/difficile    </td><td class="col5 leftalign">facile                  </td><td class="col6">moyen </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">Installation   </td><td class="col1 leftalign">            </td><td class="col2 leftalign">manuelle           </td><td class="col3 leftalign">composer           </td><td class="col4 leftalign">composer           </td><td class="col5 leftalign">package                 </td><td class="col6"> pip install django</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign">Backoffice     </td><td class="col1 leftalign">            </td><td class="col2 leftalign">non                </td><td class="col3 leftalign"><a href="https://github.com/symfony2admingenerator/AdmingeneratorGeneratorBundle" class="urlextern" title="https://github.com/symfony2admingenerator/AdmingeneratorGeneratorBundle"  rel="nofollow">AdmingeneratorGeneratorBundle</a>           </td><td class="col4 leftalign">?           </td><td class="col5 leftalign">?                 </td><td class="col6">oui de base (<a href="https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/" class="urlextern" title="https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/"  rel="nofollow">bootstrapable</a>)</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign">ORM            </td><td class="col1 leftalign">            </td><td class="col2 leftalign">simple             </td><td class="col3"><a href="http://symfony.com/doc/current/book/doctrine.html" class="urlextern" title="http://symfony.com/doc/current/book/doctrine.html"  rel="nofollow">Doctrine</a> </td><td class="col4"><a href="http://laravel.com/docs/4.2/eloquent" class="urlextern" title="http://laravel.com/docs/4.2/eloquent"  rel="nofollow">Eloquent</a></td><td class="col5"><a href="http://www.sqlalchemy.org/library.html#tutorials" class="urlextern" title="http://www.sqlalchemy.org/library.html#tutorials"  rel="nofollow">SQLAlchemy</a></td><td class="col6"> oui (complet) ou possibilité de switcher sur SQLAlchemy </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign">Migration      </td><td class="col1 leftalign">            </td><td class="col2"><a href="https://pypi.python.org/pypi/yoyo-migrations" class="urlextern" title="https://pypi.python.org/pypi/yoyo-migrations"  rel="nofollow">YoyoMigrations</a> </td><td class="col3"> <a href="http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html" class="urlextern" title="http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html"  rel="nofollow">Doctrine</a> </td><td class="col4"> <a href="http://laravel.com/docs/4.2/migrations" class="urlextern" title="http://laravel.com/docs/4.2/migrations"  rel="nofollow">Eloquent</a> </td><td class="col5"> <a href="http://sqlalchemy-migrate.readthedocs.org/en/latest/versioning.html" class="urlextern" title="http://sqlalchemy-migrate.readthedocs.org/en/latest/versioning.html"  rel="nofollow">SQLAlchemy</a></td><td class="col6"> oui </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"><strong>M</strong>odel      </td><td class="col1"> </td><td class="col2"> </td><td class="col3"> </td><td class="col4"> </td><td class="col5"> </td><td class="col6"> </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"><strong>V</strong>iew       </td><td class="col1 leftalign">            </td><td class="col2"><a href="http://book.cakephp.org/2.0/en/views.html" class="urlextern" title="http://book.cakephp.org/2.0/en/views.html"  rel="nofollow">PHP</a> </td><td class="col3"><a href="http://twig.sensiolabs.org/" class="urlextern" title="http://twig.sensiolabs.org/"  rel="nofollow">Twig</a> (Django ?) </td><td class="col4"><a href="http://laravel.com/docs/4.2/templates" class="urlextern" title="http://laravel.com/docs/4.2/templates"  rel="nofollow">Blade</a> </td><td class="col5"><a href="http://www.makotemplates.org" class="urlextern" title="http://www.makotemplates.org"  rel="nofollow">Mako</a> </td><td class="col6"> </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"><strong>C</strong>ontroller </td><td class="col1 leftalign">            </td><td class="col2 leftalign">                   </td><td class="col3"> </td><td class="col4"> </td><td class="col5"> </td><td class="col6"> </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign">Organisation du code       </td><td class="col1"> </td><td class="col2">classe, simple </td><td class="col3">classe </td><td class="col4">classe </td><td class="col5">? </td><td class="col6">tout sauf bordélique, je dirai structuré </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign">Routing        </td><td class="col1 leftalign">            </td><td class="col2 leftalign">classe/méthode     </td><td class="col3">statique, annotation</td><td class="col4 leftalign">pas intuitif !     </td><td class="col5">classe/méthode, @expose</td><td class="col6">système de routing dans urls.py, pouvant accepter des regex </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign">REST <abbr title="Application Programming Interface">API</abbr>       </td><td class="col1"> </td><td class="col2"> </td><td class="col3"> </td><td class="col4"> </td><td class="col5"> </td><td class="col6"> </td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [44-2497] -->
+</div>
+<!-- EDIT1 SECTION "Cadre de développement web" [1-2499] -->
+<h1 class="sectionedit3" id="django_vs_symfony">Django vs Symfony</h1>
+<div class="level1">
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap"><blockquote><div class="no">
+ “Django has the concept of “views” to encapsulate the logic responsible for processing a user’s request and for returning the response.”<br/>
+ <a href="https://docs.djangoproject.com/en/1.7/" class="urlextern" title="https://docs.djangoproject.com/en/1.7/"  rel="nofollow">https://docs.djangoproject.com/en/1.7/</a></div></blockquote>
+
+<p>
+[Tanguy] Django confond les concepts de vues et de contrôleur !! Ça commence mal…<br/>
+
+[Yoann] En fait non, Django ne confond pas. Il est Model View Template. Les controleurs sont appelés views.py et sont couplés avec les urls.py pour le routing interne.<br/>
+
+[Tanguy] Dans le <a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur" class="urlextern" title="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur"  rel="nofollow">MVC</a>, une vue est “l&#039;interface utilisateur”, et le contrôleur est “la logique de contrôle”. Dire que les contrôleurs s&#039;appellent des vues est au mieux un non sens complet… Quant aux templates, ils sont une manière d&#039;implémenter les vues, donc parler de “Model View Template”, c&#039;est un peu tout mélanger.
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] -->
+<p>
+Les + Django : <strong>[Tanguy] je raye tout ce qui n&#039;est pas spécifique à Django…</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Python : puissant, structuré, typage dynamique fort, multitudes de packages déjà en libre accès, langage très utilisé dans le monde scientifique, gestion des objets claire et facile</div>
+</li>
+<li class="level1"><div class="li"> <del>énorme communauté : difficile de ne pas trouver la solution à un problème quand il apparait</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Doc très complète et entièrement traduite pour ceux qui aurait du mal avec l&#039;anglais : <a href="https://docs.djangoproject.com/fr/1.7/" class="urlextern" title="https://docs.djangoproject.com/fr/1.7/"  rel="nofollow">https://docs.djangoproject.com/fr/1.7/</a></del></div>
+</li>
+<li class="level1"><div class="li"> <del>Très bons tutos à dispo : <a href="/bioinformatique/l_officiel" class="wikilink2" title="bioinformatique:l_officiel" rel="nofollow">https://docs.djangoproject.com/fr/1.7/intro/tutorial01/</a> traduit aussi en français, <a href="http://sametmax.com/ce-quil-faut-savoir-en-django/" class="urlextern" title="http://sametmax.com/ce-quil-faut-savoir-en-django/"  rel="nofollow">un très bon exemple de complément</a> à ce tuto officiel pour comprendre vraiment tout, puis <a href="http://sametmax.com/aller-plus-loin-avec-django/" class="urlextern" title="http://sametmax.com/aller-plus-loin-avec-django/"  rel="nofollow">des astuces</a> pour se pencher + dans le code</del></div>
+</li>
+<li class="level1"><div class="li"> <del>possède une <a href="https://github.com/django-debug-toolbar/django-debug-toolbar" class="urlextern" title="https://github.com/django-debug-toolbar/django-debug-toolbar"  rel="nofollow"> DebugToolbar</a></del></div>
+</li>
+<li class="level1"><div class="li"> <del>choix de l&#039;ORM si ORM de base( <a href="http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html" class="urlextern" title="http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html"  rel="nofollow">petite approche gentillette de la bête</a>) ne satisfait pas</del></div>
+</li>
+<li class="level1"><div class="li"> <del><a href="http://www.djangorocks.com/snippets/indexing-your-django-models.html" class="urlextern" title="http://www.djangorocks.com/snippets/indexing-your-django-models.html"  rel="nofollow">index</a> des models vraiment simple.</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Configurable avec Apache ou Nginx</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Possibilité d&#039;inclure des méthodes appelables en lignes de commande</del></div>
+</li>
+<li class="level1"><div class="li"> Maintenabilité et évolution : + facile de trouver un <strong>bioinformaticien</strong> pythonista qu&#039;un <strong>bioinformaticien</strong> PHP je pense <strong>[Tanguy]: et est-ce vraiment une bonne chose de prendre un bioinformaticien pour faire du développement web ?!</strong> </div>
+</li>
+<li class="level1"><div class="li"> <del>Module de login déjà présent de base et possibilité de le bypasser avec un autre si besoin</del></div>
+</li>
+<li class="level1"><div class="li"> Module d&#039;admin déjà présent de base <strong>[Tanguy]… c&#039;est un plus… mais je ne suis pas sûr qu&#039;on en ait vraiment besoin !</strong></div>
+</li>
+<li class="level1"><div class="li"> <del>Template engine, en + de la possibilité de faire les siens</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Gestion de l&#039;<a href="http://www.djangorocks.com/snippets/mail-staff.html" class="urlextern" title="http://www.djangorocks.com/snippets/mail-staff.html"  rel="nofollow">envoie de mails de base</a></del></div>
+</li>
+<li class="level1"><div class="li"> Configuration en python</div>
+</li>
+<li class="level1"><div class="li"> <del><abbr title="Access Control List">ACL</abbr> (Access Control List) de base</del></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://chriskief.com/2012/12/17/symfony2-vs-django-models/" class="urlextern" title="http://chriskief.com/2012/12/17/symfony2-vs-django-models/"  rel="nofollow">cet exemple</a> <strong>[Tanguy] très bon exemple !… si tu veux montrer que Django est bordélique ! Mélanger un modèle, un contrôleur et de la vue dans un seul fichier… wow, si on pouvait éviter de le faire ! <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" /> <br/>
+Ensuite c&#039;est vrai que l&#039;ORM de base (Doctrine) est très verbeux… c&#039;est pour ça que je conseille d&#039;utiliser Propel qui est beaucoup plus simple : tu décris ta base et il écrit tout le code pour toi.</strong></div>
+</li>
+</ul>
+
+<p>
+Les - Django :
+</p>
+
+<p>
+Les + Symfony :
+</p>
+
+<p>
+Les - Symfony :
+</p>
+<!-- EDIT6 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap"><ul>
+<li class="level1"><div class="li"> PHP donc clairement limité au Web <strong>on veut développer des appli web… ou j&#039;ai loupé un épisode ?</strong></div>
+</li>
+<li class="level1"><div class="li"> typage dynamique faible ⇒ <span class="curid"><a href="/informatique/framework_web" class="wikilink1" title="informatique:framework_web">Python is an example of a dynamic typed programming language, and so is PHP</a></span>, pour <a href="http://fr.wikipedia.org/wiki/Type_%28informatique%29#Typage_fort_et_typage_faible" class="urlextern" title="http://fr.wikipedia.org/wiki/Type_%28informatique%29#Typage_fort_et_typage_faible"  rel="nofollow">le faible et fort</a>, il faudra clarifier la différence. Quoi qu&#039;il en soit, le typage dynamique est peut-être une bonne chose pour le développement rapide, mais <strong>uniquement</strong> si elle est couplé à un test exhaustif, sinon, attention les surprise !!</div>
+</li>
+</ul>
+</div><!-- EDIT7 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT3 SECTION "Django vs Symfony" [2500-6771] -->
+<h2 class="sectionedit8" id="backoffice">Backoffice</h2>
+<div class="level2">
+
+<p>
+Le système d&#039;administration automatique de Django est un plus qui peut-être assez simplement implémenté dans Symfony grâce au bundle d&#039;administration.
+Dans les deux cas, se pose la question de la nécessité d&#039;un tel outil pour nos projets.
+</p>
+
+<p>
+Le “LIMS” n&#039;est pas une interface de publication de contenu, mais bien un outil de travail. Les utilisateurs créent et manipulent eux-même la plupart, voir la quasi totalité, des éléments contenus dans la base de données.
+</p>
+
+<p>
+Ces interfaces permettent de manipuler tous les objets, mais n&#039;accompagnent nullement l&#039;utilisateur. Elles ne contiennent pas “d&#039;intelligence” et ne facilitent donc pas vraiment la saisie des informations.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Backoffice" [6772-7477] -->
+<h2 class="sectionedit9" id="routes">Routes</h2>
+<div class="level2">
+
+<p>
+Le système de routes est peut-être l&#039;élément le plus faible de Django. Symfony permet d&#039;utiliser les annotations PHP, ajout contestable au langage, mais bien utiles ici.
+[Yoann] Je parlerais ici plutot de force mais bon. Je ne suis pas sûr que tu aies bien compris le routing à la Django :)
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=0" title="Télécharger un extrait" class="mediafile mf_py">polls/urls.py</a></dt>
+<dd><pre class="code python"><span class="kw1">from</span> django.<span class="me1">conf</span>.<span class="me1">urls</span> <span class="kw1">import</span> patterns<span class="sy0">,</span> url
+&nbsp;
+<span class="kw1">from</span> polls <span class="kw1">import</span> views
+&nbsp;
+urlpatterns <span class="sy0">=</span> patterns<span class="br0">&#40;</span><span class="st0">''</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^$'</span><span class="sy0">,</span> views.<span class="me1">IndexView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'index'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;pk&gt;<span class="es0">\d</span>+)/$'</span><span class="sy0">,</span> views.<span class="me1">DetailView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'detail'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;pk&gt;<span class="es0">\d</span>+)/results/$'</span><span class="sy0">,</span> views.<span class="me1">ResultsView</span>.<span class="me1">as_view</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'results'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^(?P&lt;question_id&gt;<span class="es0">\d</span>+)/vote/$'</span><span class="sy0">,</span> views.<span class="me1">vote</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'vote'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span></pre>
+</dd></dl>
+
+<p>
+Dans Symfony, une fois qu&#039;on a déclaré que le <code>bundle</code> utilise les annotations, il suffit de faire :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=1" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/HelloController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">namespace</span> AppBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> HelloController
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(&quot;/hello/{name}&quot;, name=&quot;hello&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="re0">$name</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="co2">#…
+</span>    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Les routes dans Symfony, bien que plus verbeuses, sont beaucoup plus lisibles.
+</p>
+<!-- EDIT10 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+[Yoann] Forcément, je peux te donner un exemple sans toutes les regex ça sera lisible aussi et ça fera très bien le job :)<br/>
+
+[Tanguy] Tu as raison, je ne suis pas fair-play ! … en fait, ce que je préfère (mais je ne sais pas si ce n&#039;est pas un énorme erreur), c&#039;est les routes dans les contrôleurs. Ça correspond bien à l&#039;esprit du contrôleur. Par contre la première fois que j&#039;ai vu utilisé les annotations PHP, j&#039;ai trouvé que c&#039;était une horreur. C&#039;est grosso modo la même chose que les décorateurs Python (quoique), mais la syntaxe n&#039;est pas vraiment heureuse.
+</p>
+</div><!-- EDIT11 PLUGIN_WRAP_END [0-] --><dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=2" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/ArticleController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">class</span> ArticleController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(
+     *     &quot;/articles/{_locale}/{year}/{title}.{_format}&quot;,
+     *     defaults={&quot;_format&quot;: &quot;html&quot;},
+     *     requirements={
+     *         &quot;_locale&quot;: &quot;en|fr&quot;,
+     *         &quot;_format&quot;: &quot;html|rss&quot;,
+     *         &quot;year&quot;: &quot;\d+&quot;
+     *     }
+     * )
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span><span class="re0">$_locale</span><span class="sy0">,</span> <span class="re0">$year</span><span class="sy0">,</span> <span class="re0">$title</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT9 SECTION "Routes" [7478-9776] -->
+<h2 class="sectionedit12" id="modeles">Modèles</h2>
+<div class="level2">
+
+<p>
+Django utilise en système “maison”. [Yoann] …qui peut être <strong>facilement</strong> remplacé par un autre, au hasard SQLAlchemy.
+</p>
+
+<p>
+Symfony laisse le choix de l&#039;ORM. Parmi ceux-ci, les plus connus sont :
+</p>
+<ul>
+<li class="level1"><div class="li"> Doctrine, qui utilise les annotations PHP (beurk) ;</div>
+</li>
+<li class="level1"><div class="li"> Propel, qui fait de la génération de code à partir de déclaration XML. </div>
+</li>
+</ul>
+
+<p>
+L&#039;avantage de Propel par rapport au autre et qu&#039;il crée un code propre, rapide et qui sépare le partie qui interagit avec la base de données de celle qui manipule la données.
+Le code est par défaut bien écrit et bien rangé avec Propel. Propel vient aussi avec un système de <a href="http://propelorm.org/documentation/06-behaviors.html" class="urlextern" title="http://propelorm.org/documentation/06-behaviors.html"  rel="nofollow">behaviours</a> bien pratique.
+</p>
+
+<p>
+[Yoann] De mon point de vue, les générateurs de code ne remplaceront jamais un bon codeur. Je préfère donc les éviter de base plutot que de me faire générer quelquechose que je devrais forcément controler et corriger à un moment donné.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=3" title="Télécharger un extrait" class="mediafile mf_">Django</a></dt>
+<dd><pre class="code python">b <span class="sy0">=</span> Blog<span class="br0">&#40;</span>name<span class="sy0">=</span><span class="st0">'Beatles Blog'</span><span class="sy0">,</span> tagline<span class="sy0">=</span><span class="st0">'All the latest Beatles news.'</span><span class="br0">&#41;</span>
+b.<span class="me1">save</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=4" title="Télécharger un extrait" class="mediafile mf_">Propel</a></dt>
+<dd><pre class="code php"><span class="re0">$author</span> <span class="sy0">=</span> <span class="kw2">new</span> Author<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$author</span><span class="sy0">-&gt;</span><span class="me1">setFirstName</span><span class="br0">&#40;</span><span class="st_h">'Jane'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">setLastName</span><span class="br0">&#40;</span><span class="st_h">'Austen'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">save</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+
+<p>
+Pour ce qui est de retrouver les données, Django mélange allégrement les modèles et le requêtes. Là encore, par défaut, Propel est plus propre.
+[Yoann] Différence de points de vue (ou d&#039;habitudes) je pense, personnellement je trouve le Django (python) plus propre. Encore plus avec SQLAlchemy du coup.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=5" title="Télécharger un extrait" class="mediafile mf_">Django</a></dt>
+<dd><pre class="code python">all_entries <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="kw2">all</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+entries <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="kw2">filter</span><span class="br0">&#40;</span>pub_date__year<span class="sy0">=</span><span class="nu0">2006</span><span class="br0">&#41;</span>
+one_entry <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="me1">get</span><span class="br0">&#40;</span>pk<span class="sy0">=</span><span class="nu0">1</span><span class="br0">&#41;</span>
+entries <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="kw2">all</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">5</span>:<span class="nu0">10</span><span class="br0">&#93;</span>
+Blog.<span class="me1">objects</span>.<span class="kw2">filter</span><span class="br0">&#40;</span>entry__authors__name__isnull<span class="sy0">=</span><span class="kw2">True</span><span class="br0">&#41;</span>
+Entry.<span class="me1">objects</span>.<span class="kw2">filter</span><span class="br0">&#40;</span>pub_date__year<span class="sy0">=</span><span class="nu0">2005</span><span class="br0">&#41;</span>.<span class="me1">delete</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+Entry.<span class="me1">objects</span>.<span class="kw2">filter</span><span class="br0">&#40;</span>pub_date__year<span class="sy0">=</span><span class="nu0">2007</span><span class="br0">&#41;</span>.<span class="me1">update</span><span class="br0">&#40;</span>headline<span class="sy0">=</span><span class="st0">'Everything is the same'</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=6" title="Télécharger un extrait" class="mediafile mf_">Propel</a></dt>
+<dd><pre class="code php"><span class="re0">$authors</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">find</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$authors</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">filterByFirstName</span><span class="br0">&#40;</span><span class="st_h">'Jane'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">find</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$firstAuthor</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">findPK</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$authors</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">offset</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">limit</span><span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">find</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// also see paginate()</span>
+<span class="re0">$authors</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">filterByFirstName</span><span class="br0">&#40;</span><span class="kw4">null</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">find</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$nbDeletedBooks</span> <span class="sy0">=</span> BookQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">filterByTitle</span><span class="br0">&#40;</span><span class="kw4">null</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">deleteAll</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$nbUpdatedRows</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">filterByName</span><span class="br0">&#40;</span><span class="st_h">'Leo Tolstoy'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">update</span><span class="br0">&#40;</span><a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'Name'</span> <span class="sy0">=&gt;</span> <span class="st_h">'Leo Tolstoi'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+
+<p>
+Les exemples relationnels sont plus long et peuvent être consultés sur les sites de <a href="https://docs.djangoproject.com/en/1.7/topics/db/queries/#related-objects" class="urlextern" title="https://docs.djangoproject.com/en/1.7/topics/db/queries/#related-objects"  rel="nofollow">Django</a> et de <a href="http://propelorm.org/documentation/04-relationships.html" class="urlextern" title="http://propelorm.org/documentation/04-relationships.html"  rel="nofollow">Propel</a>.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Modèles" [9777-12425] -->
+<h2 class="sectionedit13" id="migrations">Migrations</h2>
+<div class="level2">
+
+<p>
+Avec Django :
+</p>
+<pre class="code">$ vim polls/models.py
+$ python manage.py makemigrations polls
+$ python manage.py migrate
+$ # bzr add polls/models.py polls/migrations
+$ # bzr ci</pre>
+
+<p>
+Avec Propel :
+</p>
+<pre class="code">$ vim src/Acme/DemoBundle/Resources/config/schema.xml
+$ php app/console propel:migration:generate-diff
+$ php app/console propel:migration:migrate
+$ # bzr add src/Acme/DemoBundle/Resources/config/schema.xml …
+$ # bzr ci</pre>
+
+</div>
+<!-- EDIT13 SECTION "Migrations" [12426-12877] -->
+<h2 class="sectionedit14" id="controleurs">Contrôleurs</h2>
+<div class="level2">
+
+<p>
+Dans Django, le code(== projet) est rangé dans des <code>Applications</code> qui contiennent des <code>fonctions|classes</code>. 
+</p>
+
+<p>
+[Yoann] C&#039;est résumé trop simplement comme ça, <a href="http://sametmax.com/organisation-dune-application-django/" class="urlextern" title="http://sametmax.com/organisation-dune-application-django/"  rel="nofollow">ici</a> les bonnes pratiques sont beaucoup mieux expliquées et on comprend tout de suite que l&#039;organisation est vitale dans un projet. Ce n&#039;est biensur qu&#039;un exemple et on peut tendre vers une architecture totalement différente. Le tout étant de se mettre d&#039;accord dès le début (et quand on change si il y a lieu de changer en cours de projet)
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=9" title="Télécharger un extrait" class="mediafile mf_py">polls/views.py</a></dt>
+<dd><pre class="code python"><span class="kw1">from</span> django.<span class="me1">http</span> <span class="kw1">import</span> HttpResponse
+&nbsp;
+<span class="kw1">def</span> index<span class="br0">&#40;</span>request<span class="br0">&#41;</span>:
+    <span class="kw1">return</span> HttpResponse<span class="br0">&#40;</span><span class="st0">'&lt;html&gt;&lt;body&gt;Hello!&lt;/body&gt;&lt;/html&gt;'</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+<p>
+Dans Symfony, le code est rangé en <code>Bundles</code> puis en <code>Classes</code> qui contiennent des <code>méthodes</code>.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/framework_web?codeblock=10" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/HelloController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">namespace</span> AppBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Symfony\Component\HttpFoundation\Response<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> HelloController
+<span class="br0">&#123;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <span class="kw2">new</span> Response<span class="br0">&#40;</span><span class="st_h">'&lt;html&gt;&lt;body&gt;Hello!&lt;/body&gt;&lt;/html&gt;'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT14 SECTION "Contrôleurs" [12878-14018] -->
+<h2 class="sectionedit15" id="vues">Vues</h2>
+<div class="level2">
+
+<p>
+Le moteur <code>Twig</code> de Symfony utilise (exactement ?) la même syntaxe que le moteur de templates de Django. Ils utilisent tout les 2 les <code>blocks</code> et les <code>filters</code>.
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Vues" [14019-14204] -->
+<h2 class="sectionedit16" id="horreurs">Horreurs</h2>
+<div class="level2">
+<pre class="code python"><span class="kw1">from</span> django.<span class="me1">shortcuts</span> <span class="kw1">import</span> get_object_or_404<span class="sy0">,</span> render
+&nbsp;
+<span class="kw1">def</span> results<span class="br0">&#40;</span>request<span class="sy0">,</span> question_id<span class="br0">&#41;</span>:
+    question <span class="sy0">=</span> get_object_or_404<span class="br0">&#40;</span>Question<span class="sy0">,</span> pk<span class="sy0">=</span>question_id<span class="br0">&#41;</span>
+    <span class="kw1">return</span> render<span class="br0">&#40;</span>request<span class="sy0">,</span> <span class="st0">'polls/results.html'</span><span class="sy0">,</span> <span class="br0">&#123;</span><span class="st0">'question'</span>: question<span class="br0">&#125;</span><span class="br0">&#41;</span></pre>
+
+<p>
+La même chose (en plus élégant) avec le <code>paramConverter</code> de Symfony :
+</p>
+<pre class="code php"><span class="kw2">use</span> AppBundle\Entity\Question<span class="sy0">;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="co4">/**
+ * @Route(&quot;/{id}&quot;)
+ */</span>
+<span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span>Question <span class="re0">$question</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'post/results.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'question'</span> <span class="sy0">=&gt;</span> <span class="re0">$question</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT16 SECTION "Horreurs" [14205-] -->

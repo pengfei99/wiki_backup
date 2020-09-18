@@ -1,0 +1,35 @@
+Lors de la réunion du 26/06/2010, deux usages sont identifiés:
+  - Développement de fonctions ou d'outils réutilisables dans tous les projets (p.ex. codes sous Matlab et R). Ces codes peuvent faire parti d'un pot commun.
+    * <color red>**[TLC]** +1, en fait +1000 ! Je ne savais même pas qu'on pouvait travailler sans modules, //librairies// et code partagé !?</color>
+  - Développement de scripts d'analyses qui chaînent des fonctions ou des outils (p.ex un flux de génomique). Ces codes sont spécifiques à chaque projet. 
+
+  * **Proposition no 1**\\ Le code est documenté en début de script avec les informations suivantes : nom de l'auteur, date de création, a quoi sert le code, comment on l'utilise.
+    * <color red>**[TLC]** Un des bénéfices annexes du //versionning// : le nom de(s) (l')auteur(s) et les dates de création/modification sont déjà inclus.</color>
+    * <color red>**[TLC]** Pour la documentation, je propose d'utiliser un format standard comme celui de [[https://en.wikipedia.org/wiki/Doxygen#Example_code|Doxygen]].</color>
+    * <color red>**[TLC]** Pour le manuel d'utilisation, merci de fournir un ''-h'' pour chaque script (encore mieux, un ''man'')</color> :-D
+    * <color blue>**[DAO]** Peut-être définir ce qu'on entend par //manuel// ou //doc// non ? Pour moi, par manuel, j'entends en fait __doc orientée métier__ (i.e. utilisable par ceux qui ne codent pas forcément). Dans ce cas, c'est en effet une très bonne idée mais le manuel devra être au niveau des "flux d'analyses" seulement (pour ne pas être trop redondant avec la doc Doxygen). Je vois plutôt un ''.pdf'' qui illustre un simple cas d'utilisation de l'outil (par exemple des data + analyses + graphes) ou même un article qu'on aurait publié sur le "workflow" ou par exemple un manuel ''.pdf'' de ce type [[http://cran.r-project.org/web/packages/pls/index.html|package PLS de R]]. Le ''-h'' ou ''man'' dans une console me semble trop //linux-like//, ce que je ne trop pas très flexible surtout pour des outils scientifiques sui peuvent avoir du contenu plus riche.</color>
+      * <color red>**[TLC]** Je le vois du point de vue (actuel) du PT6 et dans l'idée les job seront principalement soumis sur [[univage|la ferme]], et donc en ligne de commande. Et quand on est en ligne de commande, le ''-h'' devient vite notre meilleur ami ! :-)</color>
+  * **Proposition no 2**\\ Les fonctions et les outils sont versionnées depuis l'espace de travail ([[ccin2p3:bioinformatique:outils:bazaar|bazaar est en test]]). Le code validée est copié dans l'espace projet. A priori, même les flux d'analyses codés dans les scripts sont versionnés.
+    * <color red>**[TLC]** On développe en local (PC perso) ou sur un serveur de dev, puis on l'envoie sur le serveur de prod avec un "simple" ''bzr push''.</color>
+    * <color red>**[TLC]** A priori on pourrait faire un truc plus sympa (et plus pédagogique) avec du //code review// (je suis en train de tester [[http://reviewboard.org|ReviewBoard]])</color>
+  * **Proposition no 3**\\ A la fin d'un projet, il faudra copier l'ensemble des versions dans le projet.
+    * <color red>**[TLC]** Si il est versionné avec un DVCS (donc pas SVN) il contient déjà toutes les versions !</color>
+  * **Proposition no 4**\\ Il est nécessaire de suivre la version des binaires (p.ex. la version de R, de Python, etc.). Ceci peut être fait avec [[http://modules.sourceforge.net/|Environment Modules]].
+    * <color red>**[TLC]** On ne peut pas garantir avec ''modules'' que la version sera disponible dans 5 ans.</color>
+
+Points à étudier :
+  * Faut-il utiliser Git ou Bazaar ?
+    * <color red>**[TLC]** Git est peut-être plus "flexible" mais expose du même coup détails d'implémentation, faisant ainsi monter la difficulté d'apprentissage et les chances d'erreurs. Malgré ça il n'apporte aucune fonctionnalité supplémentaire qui pourrait nous intéresser.</color>
+    * <color blue>**[DAO]** Je pense qu'ici le choix doit surtout venir de notre capacité à nous autoformer sur l'outil. Je ne sais pas si on a va atteindre un niveau de complexité des gros dev de soft qui peuvent "nécessiter" Git (codage en concurrence + merges complexes de branches), et encore Bazaar devrait se bien se débrouiller. On peut donc commencer simple. Si Tanguy connait Bazaar et peut former rapidement dessus, c'est mieux peut-être. L'important est de surtout bien connaitre l'outil qu'on va utiliser (pour effectivement //éviter les chances d'erreurs//).</color>
+      * <color red>**[TLC]** Je ne voudrais pas //troller// (s'pa mon genre), mais Bazaar fait tout ce que Git fait ! ... Le temps que quelqu'un trouve un //use case// pour nous qui nécessite Git je serai à la retraite de toute façon ! ;-)</color>
+  * Faut-il utiliser Env. Modules ou autre choses ?
+    * <color red>**[TLC]** Je n'étais pas convaincu par ''modules'' au début... mais maintenant je vois vraiment l'intérêt. En plus c'est simple à utiliser.</color>
+  * Faut-il un repository général à BIOASTER pour Git/Bzr ?
+    * <color red>**[TLC]** Je ne suis pas sûr d'avoir compris... un SEUL... ou un commun + d'autres par projet ? Pour moi la première solution est à éviter absolument !!</color>
+    * * <color green>**[NS]** Dit autrement, comment fait-on concrètement le lien entre la boite à outils commune, la boîte à outils du plateau et le projet?</color>
+  * Faut-il un suivie de logiciel générale à BIOASTER avec de fait un système d'installation et de mise à jour général ?
+    * <color red>**[TLC]** Euh... //use case?//</color>
+    * <color green>**[NS]** Dit autrement, est-ce que chaque plateau gère ses propres logiciels à sa façon (avec le risque que personnes n'utilise ''Modules'') ou bien le PT6 propose un set de base de logiciel sur toutes les machines (sous SL6)</color>
+
+
+__**Edit du 17 juillet 2014 :**__ Tanguy va travaillé avec Audrey et François pour voir comment implémenter Bzr dans le PT2.

@@ -1,0 +1,235 @@
+
+<h1 class="sectionedit1" id="grid_computing">Grid computing</h1>
+<div class="level1">
+
+<p>
+In this article, we describe how to use the grid @cc.in2p3.fr.
+</p>
+
+<p>
+1. First you need to connect to a interactive terminal in cc.
+</p>
+
+<p>
+ssh pliu@ccage.in2p3.fr
+</p>
+
+<p>
+2. Make sure you have the univa grid engine(i.e. qsub) client to submit job.
+</p>
+
+<p>
+For example, we want to read a input file, do some calculation and write the result on a output file
+</p>
+
+<p>
+ <code>vim my_script.sh</code>
+</p>
+<pre class="prettyprint">
+#Read file input.txt
+value=$(&lt;/sps/bioaster/pt6/pliu/qsub/input.txt)
+#Write the output in file output.txt
+echo &quot;Hello $value!!!&quot; &gt;&gt; /sps/bioaster/pt6/pliu/qsub/output.txt
+</pre>
+<p>
+NOTE that, all the access on file is only available on the /sps/…
+(NFS/GPFS)
+</p>
+
+<p>
+It&#039;s not possible to ask worker to access your local file system.
+</p>
+
+<p>
+Now, let&#039;s submit the scipt to the grid.
+</p>
+<pre class="prettyprint">
+qsub -P P_bioaster -N JOBPLIU02 -l sps=1 -q long mon_script.sh 
+</pre>
+<p>
+<code>-P P_bioaster</code> means this job is for prject bioaster
+</p>
+
+<p>
+<code>-N JOBPLIU02</code> means the name of this job is <code>JOBPLIU02</code>
+</p>
+
+<p>
+<code>sps=1</code> means job need sps access
+</p>
+
+<p>
+<code>-q long</code> means job will be submit to the queue long.
+</p>
+
+<p>
+After you submit your job, two file will be generated.
+</p>
+
+<p>
+<code>JOBPLIU02.e13783490</code> is the error message 
+</p>
+
+<p>
+<code>JOBPLIU02.o13783490</code> is the job stat and cost message.
+</p>
+
+<p>
+It looks like this
+</p>
+<pre class="prettyprint">
+***************************************************************
+*                  Grid Engine Batch System                   *
+*           IN2P3 Computing Centre, Villeurbanne FR           *
+***************************************************************
+* User:                    pliu                               *
+* Group:                   bioaster                           *
+* Jobname:                 JOBPLIU02                          *
+* JobID:                   13783490                           *
+* Queue:                   long                               *
+* Worker:                  ccwsge0720.in2p3.fr                *
+* Operating system:        Linux 2.6.32-642.13.1.el6.x86_64   *
+* Project:                 P_bioaster                         *
+***************************************************************
+* Submitted on:            Tue May 23 14:12:34 2017           *
+* Started on:              Tue May 23 14:12:49 2017           *
+***************************************************************
+
+
+***************************************************************
+* Ended on:                Tue May 23 14:12:52 2017           *
+* Exit status:             0                                  *
+* Consumed                                                    *
+*   cpu (HS06):            00:00:00                           *
+*   cpu scaling factor:    9.670000                           *
+*   cpu time:              0 / 172800                         *
+*   efficiency:            00 %                               *
+*   io:                    0.00000GB                          *
+*   vmem:                  N/A                                *
+*   maxvmem:               N/A                                *
+*   maxrss:                N/A                                *
+***************************************************************
+</pre>
+</div>
+<!-- EDIT1 SECTION "Grid computing" [1-3111] -->
+<h1 class="sectionedit2" id="use_grid_in_interactive_mod">Use grid in interactive mod</h1>
+<div class="level1">
+<pre class="prettyprint">
+qlogin -P P_bioaster -l sps=1
+
+qlogin -P P_bioaster -pe multicores 4 -l sps=1 -q mc_interactive
+</pre>
+<p>
+it will promp a terminal of the worker which execute your job.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Use grid in interactive mod" [3112-3330] -->
+<h1 class="sectionedit3" id="run_matlab_script_in_grid">Run matlab script in grid</h1>
+<div class="level1">
+<pre class="prettyprint">
+#!/bin/bash
+
+#run my first mablab job;
+
+qsub -P P_bioaster -N &quot;Pengfei_matlab_test&quot; -l sps=1 -q long &lt;&lt; EOF 
+
+#!/bin/bash
+cd /sps/bioaster/pt6/matlab/pengfei_test
+matlab -nodisplay -nosplash -nodesktop -r &#039;try calculator(98); catch; end; quit&#039;
+
+EOF
+
+</pre>
+</div>
+<!-- EDIT3 SECTION "Run matlab script in grid" [3331-3637] -->
+<h1 class="sectionedit4" id="compile_matlab_script_to_executable">Compile matlab script to executable</h1>
+<div class="level1">
+<pre class="prettyprint">
+mcc -m calculator.m -o cal_exe 
+</pre>
+<p>
+It will generate the following 5 files
+</p>
+<pre class="prettyprint">
+-rwxr--r-- 1 pliu   bioaster  87K May 29 14:41 cal_exe
+-rw-r--r-- 1 pliu   bioaster 1.8K May 29 14:41 mccExcludedFiles.log
+-rw-r--r-- 1 pliu   bioaster 3.7K May 29 14:41 readme.txt
+-rw-r--r-- 1 pliu   bioaster    6 May 29 14:41 requiredMCRProducts.txt
+-rwxr--r-- 1 pliu   bioaster  875 May 29 14:41 run_cal_exe.sh
+</pre>
+<p>
+To run the executable,
+</p>
+<pre class="prettyprint">
+sh run_cal_exe.sh args
+</pre>
+<p>
+If you have matlab runtime on your pc, it should do the job,
+</p>
+
+<p>
+otherwise, you will receive the following error:
+</p>
+<pre class="prettyprint">
+------------------------------------------
+Setting up environment variables
+---
+LD_LIBRARY_PATH is .:10/runtime/glnxa64:10/bin/glnxa64:10/sys/os/glnxa64:10/sys/opengl/lib/glnxa64
+./cal_exe: error while loading shared libraries: libmwlaunchermain.so: cannot open shared object file: No such file or directory
+</pre>
+<p>
+You need to install the matlab runtime (MCR) on your pc.
+</p>
+
+<p>
+The following page will guide you how to install MCR
+</p>
+
+<p>
+<a href="https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html" class="urlextern" title="https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html"  rel="nofollow">https://fr.mathworks.com/help/compiler_sdk/dotnet/install-the-matlab-runtime.html</a>
+</p>
+
+<p>
+After install MCR, we could run the script
+</p>
+<pre class="prettyprint">
+./run_cal_exe.sh &lt;mcr_directory&gt; &lt;argument_list&gt;
+#If you have version 9.1 of the MATLAB Runtime installed in /mathworks/home/application/v91, run the shell script as:
+
+./run_cal_exe.sh /mathworks/home/application/v91
+
+</pre>
+<p>
+If you want to run the matlab executable on a worker in grid of CC.
+</p>
+
+<p>
+you can use the mcr installed by cc.
+</p>
+
+<p>
+their location is /usr/local/matlab/, you also need to specify the version of your matlab mcr,
+</p>
+
+<p>
+for example, if your code is compile with R2016b, you need to use mcr R2016b.
+</p>
+
+<p>
+Suppose we have compiled the calculator.m with R2016b, to run it, we need the following command
+</p>
+<pre class="prettyprint">
+sh run_cal_exe.sh /usr/local/matlab/R2016b 2
+</pre>
+<p>
+where /usr/local/matlab/R2016b is the path of mcr.
+</p>
+
+<p>
+There is cc page which explains all about matlab in cc.
+<a href="https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc" class="urlextern" title="https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc"  rel="nofollow">https://doc.cc.in2p3.fr/soft_compilation_matlab?s[]=mcc</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Compile matlab script to executable" [3638-] -->

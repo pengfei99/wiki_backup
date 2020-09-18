@@ -1,0 +1,469 @@
+====== Data Cleaning ======
+
+In this tutorial, we will show how to clean data before analyze them.
+
+===== 1. Handling missing values =====
+
+
+There are 4 steps for handling missing values
+  - Get the missing value (per column, percentage in the entire dataset)
+  - Find out why the value is missing (not recorded vs not existant)
+  - Drop missing value
+  - Filling in missing with an estimated value
+
+
+The following python script (pythong version: 2.7) use the data set "NFL Play by Play 2009-2017 (v4).csv", you can use "Building_Permits.csv" for practice.
+
+<file python Find_replace_missing_value.py>
+import pandas as pd
+import numpy as np
+
+##########################################
+# Prepare data set #######################
+##########################################
+
+nfl_data = pd.read_csv("/home/pliu/Downloads/python_data_cleaning/NFL Play by Play 2009-2017 (v4).csv")
+sf_permits = pd.read_csv("/home/pliu/Downloads/python_data_cleaning/Building_Permits.csv")
+
+#set random number generator seed, to have the same sample in every execution of the code
+np.random.seed(0)
+
+# get 5 sample of the nfl data set
+print(nfl_data.sample(5))
+
+
+
+##########################################
+# Get missing value number ###############
+##########################################
+
+nfl_missing_value_count=nfl_data.isnull().sum()
+
+# look at the number of missing value in the first ten columns
+print(nfl_missing_value_count[0:10])
+
+# get the total missing value percentage
+# nfl_data.shape => (407688, 102) 407688 is rwo number, 102 is the column number
+nfl_total_cells=np.product(nfl_data.shape)
+# print(nfl_total_cells)
+nfl_total_missing=nfl_missing_value_count.sum()
+# print(nfl_total_missing)
+
+nfl_miss_percent=float(nfl_total_missing)/float(nfl_total_cells)
+
+print("Total missing percentage : "+str(nfl_miss_percent*100))
+
+########################################
+####Find out why the value is missing ##
+#######################################
+
+"""
+Value missing because of :
+
+1. not recorded -> need to estimate a value and replace it
+2. not exist -> no need to guess the value. Keep it as NaN.
+
+For example, in nfl data set 
+
+By looking at (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016), I can see that this column has information
+on the number of seconds left in the game when the play was made. This means that these values are probably missing 
+because they were not recorded, rather than because they don't exist. So, it would make sense for us to try and guess 
+what they should be rather than just leaving them as NA's.
+
+On the other hand, there are other fields, like `PenalizedTeam` that also have lot of missing fields. In this case, 
+though, the field is missing because if there was no penalty then it doesn't make sense to say *which* team was 
+penalized. For this column, it would make more sense to either leave it empty or to add a third value like "neither" 
+and use that to replace the NA's.
+"""
+
+#####################################
+#######Drop missing value ###########
+####################################
+
+# remove all the rows that contain a missing value
+nfl_data.dropna()
+
+# remove all columns with at least one missing value
+nfl_columns_with_na_dropped = nfl_data.dropna(axis=1)
+nfl_columns_with_na_dropped.head()
+
+# just how much data did we lose?
+print("Columns in original dataset: %d \n" % nfl_data.shape[1])
+print("Columns with na's dropped: %d" % nfl_columns_with_na_dropped.shape[1])
+
+##############################################
+### Filling in missing value automatically ##
+#############################################
+
+# get a small subset of the NFL dataset
+subset_nfl_data = nfl_data.loc[:, 'EPA':'Season'].head()
+print(subset_nfl_data.sample(5))
+
+# replace all NA's with 0
+subset_nfl_data.fillna(0)
+
+# replace all NA's the value with the value that comes directly after it (next row) in the same column, 
+# then replace all the reamining na's with 0
+subset_nfl_data.head()
+subset_nfl_data.fillna(method = 'bfill', axis=0).fillna(0)
+</file>
+
+
+===== Scale and normalize data =====
+
+==== Scaling ====
+
+This means that you're transforming your data so that it fits within a specific scale, like 0-100 or 0-1. You want to scale data when you're using methods based on measures of how far apart data points, like support vector machines, or SVM or k-nearest neighbors, or KNN. With these algorithms, a change of "1" in any numeric feature is given the same importance.
+
+For example, you might be looking at the prices of some products in both Yen and US Dollars. One US Dollar is worth about 100 Yen, but if you don't scale your prices methods like SVM or KNN will consider a difference in price of 1 Yen as important as a difference of 1 US Dollar! This clearly doesn't fit with our intuitions of the world. With currency, you can convert between currencies. But what about if you're looking at something like height and weight? It's not entirely clear how many pounds should equal one inch (or how many kilograms should equal one meter).
+
+By scaling your variables, you can help compare different variables on equal footing. To help solidify what scaling looks like, let's look at a made-up example. 
+
+**Scaling only change the range of your data, it does not change the shape of your data (In a graph).** 
+
+==== Normalization ====
+
+Scaling just changes the range of your data. Normalization is a more radical transformation. The point of normalization is to change your observations so that they can be described as a normal distribution.
+
+Normal distribution: Also known as the "bell curve", this is a specific statistical distribution where a roughly equal observations fall above and below the mean, the mean and the median are the same, and there are more observations closer to the mean. The normal distribution is also known as the Gaussian distribution.
+
+In general, you'll only want to normalize your data if you're going to be using a machine learning or statistics technique that assumes your data is normally distributed. Some examples of these include t-tests, ANOVAs, linear regression, linear discriminant analysis (LDA) and Gaussian naive Bayes. (Pro tip: any method with "Gaussian" in the name probably assumes normality.)
+
+The method were using to normalize here is called the Box-Cox Transformation. 
+
+<file python scale_normalize_data.py>
+import pandas as pd
+import numpy as np
+
+from scipy import stats
+
+from mlxtend.preprocessing import minmax_scaling
+
+import seaborn as sns
+
+import matplotlib.pyplot as plt
+
+kickstarters_2017=pd.read_csv("/home/pliu/Downloads/python_data_cleaning/day2_normallization/ks-projects-201801.csv")
+
+np.random.seed(0)
+
+
+#######################################################################
+###########Scalling data #############################################
+#####################################################################
+
+# generate 1000 data points randomly drawn from an exponential distribution
+original_data = np.random.exponential(size = 1000)
+#print(original_data[1],original_data[2])
+# mix-max scale the data between 0 and 1, it does not change the data distribution shape
+scaled_data = minmax_scaling(original_data, columns = [0])
+#print(scaled_data[1],original_data[2])
+# plot both together to compare
+fig, ax=plt.subplots(1,2)
+sns.distplot(original_data, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(scaled_data, ax=ax[1])
+ax[1].set_title("Scaled data")
+
+
+
+#######################################################################
+###########Normalize data #############################################
+#####################################################################
+
+# normalize the exponential data with boxcox
+normalized_data = stats.boxcox(original_data)
+
+# plot both together to compare
+fig, ax=plt.subplots(1,2)
+sns.distplot(original_data, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(normalized_data[0], ax=ax[1])
+ax[1].set_title("Normalized data")
+
+#######################################################################
+###########Scalling usd_goal_real of kickstarters #####################
+#####################################################################
+
+#print(kickstarters_2017.sample(5))
+
+# select the usd_goal_real column
+usd_goal = kickstarters_2017.usd_goal_real
+
+# scale the goals from 0 to 1
+scaled_data = minmax_scaling(usd_goal, columns = [0])
+
+# plot the original & scaled data together to compare
+fig, ax=plt.subplots(1,2)
+sns.distplot(kickstarters_2017.usd_goal_real, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(scaled_data, ax=ax[1])
+ax[1].set_title("Scaled data")
+
+
+#######################################################################
+###########Scalling goal of kickstarters #####################
+#####################################################################
+goal = kickstarters_2017.goal
+scaled_goal_data = minmax_scaling(goal,columns=[0])
+fig, ax=plt.subplots(1,2)
+sns.distplot(kickstarters_2017.goal, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(scaled_goal_data, ax=ax[1])
+ax[1].set_title("Scaled data")
+
+
+
+#######################################################################
+###########Normalize the positive_pledges #############################################
+#####################################################################
+# get the index of all positive pledges (Box-Cox only takes postive values)
+index_of_positive_pledges = kickstarters_2017.usd_pledged_real > 0
+# get only positive pledges (using their indexes)
+positive_pledges = kickstarters_2017.usd_pledged_real.loc[index_of_positive_pledges]
+# normalize the pledges (w/ Box-Cox)
+normalized_pledges = stats.boxcox(positive_pledges)[0]
+# plot both together to compare
+fig, ax=plt.subplots(1,2)
+sns.distplot(positive_pledges, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(normalized_pledges, ax=ax[1])
+ax[1].set_title("Normalized data")
+
+plt.show()
+</file>
+
+
+===== Parsing dates =====
+
+In pandas dataframe, if you don't specify, the date will be object string type, we need to transform it into datetime64, After the modification, we can use day, month, year on a date to do data analysis.
+
+<file python parsing_date.py>
+import pandas as pd
+import numpy as np
+from utils import getWrongDateFormat
+import seaborn as sns
+import datetime
+import matplotlib.pyplot as plt
+
+# read in our data
+earthquakes = pd.read_csv("/home/pliu/Downloads/python_data_cleaning/day3_date_format/database.csv")
+landslides = pd.read_csv("/home/pliu/Downloads/python_data_cleaning/day3_date_format/catalog.csv")
+
+np.random.seed(0)
+
+#print(landslides['date'].head())
+
+#print(earthquakes['Date'].head())
+
+# parse the date with the a given date format
+landslides['date_parsed'] = pd.to_datetime(landslides['date'], format = "%m/%d/%y")
+
+#print(landslides['date_parsed'].head())
+
+# parse the date with auto determin format
+earthquakes['Date_parsed'] = pd.to_datetime(earthquakes['Date'], infer_datetime_format=True)
+
+#print(earthquakes['Date_parsed'].head())
+
+# get array of all days in parsed date column
+day_of_month_landslides = landslides['date_parsed'].dt.day
+# get array of all months in parsed date column
+month_of_year_landslides = landslides['date_parsed'].dt.month
+
+day_of_month_landslides = day_of_month_landslides.dropna()
+
+
+day_of_month_earthquakes = earthquakes['Date_parsed'].dt.day.dropna()
+
+# show the days in a plot
+fig, ax=plt.subplots(1,2)
+sns.distplot(day_of_month_landslides,kde=False,bins=31, ax=ax[0])
+ax[0].set_title("Landslides")
+sns.distplot(day_of_month_earthquakes,kde=False,bins=31, ax=ax[1])
+ax[1].set_title("Earthquakes")
+plt.show()
+#print(month_of_year_landslides)
+
+
+# find out the bad date format in the column
+dateList=earthquakes['Date'].tolist()
+getWrongDateFormat(dateList)
+
+
+</file>
+===== Character encoding =====
+
+In python code, you can use the following code to define python source code encoding
+<code>
+# -*- coding: utf-8 -*-
+</code>
+
+If you read a file (csv, excel, etc), you need to determine the encoding of the file. Then open it with the right encoding.
+
+<code>
+# helpful character encoding module
+import chardet
+
+# start with a string
+before = "This is the euro symbol: €"
+
+# check to see what datatype it is
+type(before)
+
+# encode it to a different encoding, replacing characters that raise errors
+after = before.encode("utf-8", errors = "replace")
+
+# check the type
+type(after)
+
+# convert it back to utf-8
+print(after.decode("utf-8"))
+
+##################################################
+##########Read file with other encoding ##########
+################################################
+
+# look at the first ten thousand bytes to guess the character encoding
+with open("../input/kickstarter-projects/ks-projects-201801.csv", 'rb') as rawdata:
+    result = chardet.detect(rawdata.read(10000))
+
+# check what the character encoding might be
+print(result)
+
+{'encoding': 'Windows-1252', 'confidence': 0.73, 'language': ''}
+
+# So chardet is 73% confidence that the right encoding is "Windows-1252". Let's see if that's correct:
+# read in the file with the encoding detected by chardet
+kickstarter_2016 = pd.read_csv("../input/kickstarter-projects/ks-projects-201612.csv", encoding='Windows-1252')
+
+# look at the first few lines
+kickstarter_2016.head()
+
+
+# save our file (will be saved as UTF-8 by default!)
+kickstarter_2016.to_csv("ks-projects-201801-utf8.csv")
+</code>
+===== Clean_Inconsistent_data_Entry =====
+
+There are 3 main steps :
+  * convert all characters to lower case
+  * eliminate scaling white spaces
+  * find similar word, identify typo and correct typo 
+
+<file python clean_inconsistent_data.py>
+import pandas as pd
+import numpy as np
+import fuzzywuzzy
+from fuzzywuzzy import process
+from utils import *
+
+np.random.seed(0)
+
+# read in our data
+suicide_attacks = pd.read_csv("/home/pliu/Downloads/python_data_cleaning/day4_clean_inconsistent_data_entry/PakistanSuicideAttacks_v11.csv",encoding='Windows-1252')
+
+
+# print (suicide_attacks.sample(5))
+#######################################
+####Clean column city #################
+#####################################
+cities = suicide_attacks['City'].unique()
+cities.sort()
+print(cities.size)
+
+# convert all to lower case
+suicide_attacks['City'] = suicide_attacks['City'].str.lower()
+
+# remove trailing white spaces
+suicide_attacks['City'] = suicide_attacks['City'].str.strip()
+
+get_column_unique_entry_size(suicide_attacks,'City')
+# cities = suicide_attacks['City'].unique()
+# cities.sort()
+
+
+# find 10 first matches which looks like d.i khan
+#matches = fuzzywuzzy.process.extract("d.i khan",cities,limit=10,scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+#print(matches)
+
+# use the following function to replace close matches to "d.i khan" with "d.i khan"
+replace_matches_in_column(df=suicide_attacks, column='City', string_to_match="d.i khan")
+
+get_column_unique_entry_size(suicide_attacks,'City')
+
+# use the following function to replace close matches to "Kuram agency" with "Kuram agency"
+replace_matches_in_column(df=suicide_attacks, column='City', string_to_match="Kuram agency")
+
+cities=get_column_unique_entry_size(suicide_attacks, 'City')
+
+####################################################################
+#### clean the province column #####################################
+###################################################################
+province=get_column_unique_entry_size(suicide_attacks, 'Province')
+print(province)
+
+# convert all to lower case
+suicide_attacks['Province']= suicide_attacks['Province'].str.lower()
+
+# remove trailling space
+suicide_attacks['Province']= suicide_attacks['Province'].str.strip()
+
+# replace all matches "Baluchistan" to "Baluchistan"
+replace_matches_in_column(df=suicide_attacks,column='Province', string_to_match="baluchistan")
+
+province=get_column_unique_entry_size(suicide_attacks, 'Province')
+print(province)
+</file>
+===== require functions =====
+
+<file python utils.py>
+import fuzzywuzzy
+import re
+
+# function to replace rows in the provided column of the provided dataframe
+# that match the provided string above the provided ratio with the provided string
+def replace_matches_in_column(df, column, string_to_match, min_ratio=90):
+    # get a list of unique strings
+    strings = df[column].unique()
+
+    # get the top 10 closest matches to our input string
+    matches = fuzzywuzzy.process.extract(string_to_match, strings,
+                                         limit=10, scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+    # only get matches with a ratio > 90
+    close_matches = [matches[0] for matches in matches if matches[1] >= min_ratio]
+
+    # get the rows of all the close matches in our dataframe
+    rows_with_matches = df[column].isin(close_matches)
+
+    # replace all rows with close matches with the input matches
+    df.loc[rows_with_matches, column] = string_to_match
+
+    # let us know the function's done
+    print("All done!")
+
+# This function return a darray of unique values of a dataframe column
+# it takes a dataframe and column name
+def get_column_unique_entry_size(df, column):
+    entries = df[column].unique()
+    entries.sort()
+    print(entries.size)
+    return entries
+
+# This function takes a list of string (date with expected format 08/08/1888), it checks if all elements repects this format
+# or not, it takes a list of string (date), print the wrong format string, and the correct format string count.
+def getWrongDateFormat(dateList):
+    n=0
+    for date in dateList:
+        pattern = re.compile("[0-9]+/[0-9]+/[0-9]+")
+        if pattern.match(date):
+            n=n+1
+        else:
+            print(date)
+    print("Correct format date size : "+str(n))
+    print("All date size : "+str(len(dateList)))
+
+</file>
+

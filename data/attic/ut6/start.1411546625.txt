@@ -1,0 +1,88 @@
+====== Plateau Technique no 6 ======
+
+  * Les [[in2p3/logiciels|logiciels disponibles]] sur la [[in2p3/scheduler|ferme]] et le [[in2p3/cloud|nuage]] du [[in2p3|Centre de Calcul de l'IN2P3]] ;
+  * Le réseaux et les machines virtuelles disponibles sur le //[[/ordinateurs/mini_serveur|mini serveur]]// de Paris, sur les [[/pt6/vmware|VMware]] du CC et sur l'[[/pt6/openstack|OpenStack]] du CC ;
+  * Le [[wiki|wiki]] des équipes système.
+  * Les [[/pt6/reunions/|réunions d'équipe]]
+
+{{tag>todo}}
+
+====== Répartition des activités au PT6 ======
+
+===== Administration et accès aux ressources =====
+
+^OpenStack et ressources à la demande                  ^Site          ^Qui s'en charge?        ^Avec qui d'autres?  ^Priorité (1 - 5)    ^Avancement    ^
+| Accounting par tenant et utilisateur (Ceil-o-metter) | CCIN2P3      | PV                      | CCIN2P3           |1                   |Attente du retour de Mattieu Puel              |
+| Implémentation des groupes d'utilisateur             | CCIN2P3      | PV+CCIN2P3              | JG                |2                   |              |
+| Configuration réseau d'OpenStack                     | CCIN2P3      | CCIN2P3                 | PV+JG             |1                   |Attente du retour de J Bernier du CC              |
+| Wrapper Sysfera + Espace de test OpenStack           | CCIN2P3      | NS                      | PV+JG             |3                   |              |
+| Création d'image sous OpenStack                      | CCIN2P3      | PV+TLC                  | JG+CCIN2P3        |4                   |              |
+| Procédure de demande de ressource                    | BIOASTER     | PV+TLC+JG               | NS                |3                   |              |
+| Déploiement d'appliance/service                      | CCIN2P3      | TLC                     | PV                |3                   |              |
+| Support utilisateur + Doc                            | CCIN2P3      | NS+TLC+PV               | JG                |2                   |              | 
+| Opération d'OpenStack                                | CCIN2P3      | CCIN2P3                 | PV+JG             |2                   |              |
+
+===== Bonnes pratiques =====
+
+^Méthode et bonne pratique de développement            ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Déploiement d'une forge                              | CCIN2P3      | PV                      | AC+TLC+CD         |1                   |Demande par mail envoyée au CC le 24/09            |
+| Versionnage du code (bzr ou Github)                  | BIOASTER     | TLC+PV                  | Tous les bio-info |1                   |Utilisation de l'espace afs bioaster au cc pour stocker les repositories               |
+| Documentation et catalogue des développement         | BIOASTER     | TLC+PV                  | Tous les bio-info |3                   |              |
+| Coding style et bonne pratique de codage             | BIOASTER     | TLC+PV                  | Tous les bio-info |4                   |              |
+| Outils de connexions à distance                      | BIOASTER     | ???                     | Tous les bio-info |5                   |              |
+
+===== Suivi des échantillons et collection des données expérimentales =====
+
+^Suivie d'échantillon, LIMS et eCRF                    ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Suivi  d'échantillon avec miniLIMSPT2+PT3            | BIOASTER     | AC+CD             | NS+CG+ME+PV          |1                   | Lab meeting 17/09             |
+| eCRF                                                 | BIOASTER     | PV+KL+BR                | NS+CG             |1                   |Réunion à Paris le 2/10              |
+| LIMS                                                 | BIOASTER     | AC+BR+PV                | NS+CG+ME          |3                   |              |
+| Cahier de labo électronique                          | BIOASTER     | ME                      | NS+CG             |3                   |              |
+
+===== Intégration et analyse des données =====
+
+^Workflows d'analyse et data warehouse                 ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Compilation et suivi des logiciels de bio-info       | CCINP23      | TLC                     | NS                |2                   |              |
+| Suivi, intégration et gestion des workflows          | BIOASTER     | PV                      | NS+AC             |2                   |              |
+| Use case iRODS/PT2                                   | CCIN2P3      | PV+TLC                  | NS+AC             |1                   |Réunion avec Lilia le 6/10              |
+| Use case Midas/PT2                                   | CCIN2P3      | NS                      | PV+TLC+AC         |1                   |Réunion avec Lilia le 6/10              |
+
+^Services d'analyse et de visualisation                ^Site          ^Qui s'en charge?         ^Avec qui d'autres? ^Priorité (1 - 5)    ^Avancement    ^
+| Use case tranSMART                                   | CCIN2P3      | NS+TLC                  | AC+CCIN2P3        |1                   |              |
+| wwwblast                                             | CCIN2P3      | TLC                     | NS+PV+JG          |3                   |              |
+| bioMaJ                                               | CCIN2P3      | TLC+AC                  | NS+PV+JG          |4                   |              |
+| Galaxy                                               | CCIN2P3      | TLC                     | ???               |5                   |              |
+| Mobyle                                               | CCIN2P3      | TLC                     | Pasteur           |4                   |              |
+====== Tableau initial ======
+^Activité                                           ^site          ^Qui s'en charge au PT6?  ^avec qui d'autres? ^Qui peut prendre le relais?  ^
+| Suivi des stations de pilotage des instruments    |Paris+Lyon    | JG (Lyon) + TLC (Paris) | MR                | JG + TLC                    |
+| Documentation du PT6 dans le Wiki                 |BIOASTER      | TLC                     | NS                |                             |
+| Instanciation de machines sur VMware              |Paris+Lyon+CC | JG                      | TLC+MR            | JG+TLC+MR                   |
+| Déploiement d'applications sur la ferme           |CC            | TLC                     | NS                | TLC                         |
+| Création d'image sous VMware                      |Paris+Lyon+CC | JG                      | MR+TLC            | JG                          |
+| Mise en place des bonnes pratiques de développement |PT2,3,6,7     | NS                      | TLC               | TLC + PV                   | 
+| Déploiement de service du VMware                  |Paris+Lyon+CC | TLC+JG                  | MR                | TLC+JG                      |
+| Support utilisateur sous Windows                  |Paris+Lyon    | Deuzzi                  | MR                | Deuzzi                      |
+| Support utilisateur sous Windows                  |CC            | JG                      | -                 | JG                          |
+| Support utilisateur sous GNU/Linux                |Paris+Lyon    | TLC+JG+NS               | -                 | JG+TLC                      |
+| Support utilisateur sous GNU/Linux                |CC            | JG                      | -                 | JG+TLC                      |
+| Support utilisateur sur la ferme                  |CC            | NS+JG                   |                   | TLC?                        |
+| Opération des espaces de stockage                 |Paris+Lyon+CC | JG+TLC                  | MR                | JG+TLC                      |
+| Mise en place du système d'authentification       |Paris+Lyon+CC | NS+JG+TLC               | MR+LC             | JG                          |
+| Opération du système d'authentification           |Paris+Lyon+CC | JG+MR                   | TLC+LCO           | JG+MR                       |
+| Opération de VMware                               |Paris+Lyon+CC | JG                      | TLC+MR            | JG                          |
+| Opération du réseau                               |Paris+Lyon    | MR                      | TLC+JG            | MR                          |
+| Opération du réseau                               |CC            | JG (via CC)             | TLC+JG            | JG                          |
+| Chef de projet architecture IT                    |Paris+Lyon+CC | NS                      | LCO               | ???                         |
+| Catalogue de service et tarification              |Paris+Lyon    | NS                      | JG+MR+TLC+LCO+PV  | ???                         |
+| Catalogue de service et tarification              |CC            | NS                      | JG+TLC+PV         | ???                         |
+| Salle machine de BIOASTER1                        |Lyon          | JG+MR                   | -                 |                             |
+| Organisation et architecture des données exp.     |Paris+lyon    | NS                      | -                 | NS                          |
+| Organisation et architecture des données exp.     |CC            | NS                      | -                 | NS                          |
+| Déploiement d'une plateforme eTRIKS               |CC            | NS                      | TLC+PV            | NS                          |
+| Convention avec le CC-IN2P3                       |CC            | NS                      | -                 | Responsable PT6             |
+| Convention avec l'Institut Pasteur                |Paris         | TLC                     | MR+JG             | Responsable PT6             |
+| Coordination avec le CC                           |CC            | NS+JG                   | -                 | Responsable PT6             |
+| Définition des besoins des projets                |BIOASTER      | NS                      | -                 | NS(?)                       |
+| Gestion des demandes de ressources                |BIOASTER      | ?                       | ?                 | JG + TLC                    |
+

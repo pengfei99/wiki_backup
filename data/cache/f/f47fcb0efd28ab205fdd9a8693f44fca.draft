@@ -1,0 +1,161 @@
+a:6:{s:2:"id";s:35:"ut6:reunions:reunion_ut6_18.01.2017";s:6:"prefix";s:500:"
+**Date : 18/01/2017  **
+
+**Participants** :  AC, YM, PLU, CD, PDU, NS, PV, GB  +AB    //(excusés : AZ)//
+
+**Précédente réunion le [[reunion_ut6_11.01.2017|11/01/2017]]**
+
+==== IT/IS (AB) & UTEC06  ====
+  * [NS] Besoin d'un retour sur la procédure de stockage des données médicales!!!!
+
+
+==== POINTS URGENTS UTEC6 à traiter IMPERATIVEMENT  ====
+  * [PLU] Suppression de deux vieux VM wiki en FreeBSD. Nom de vm : 1.wiki 2. ccbiowiki1  => AC ?   (docs 2014-2015 eSAMPLES???)
+
+ 
+";s:4:"text";s:2429:"==== BIOASTER Corp. ====
+  * [GB] ANR...ANR...
+      * [NS] En cours pour REALISM/WP4 
+
+
+=== Vie de l'équipe / point RH ===
+  * [GB] Entrentien annuel + évaluation objectifs 2016 : avant mi-Février , à préparer, notamment le 'FeedBack'
+  * [GB] CPF demain matin
+  * [GB] Repas de Noel au MacDo du coin mercredi prochain ; départ BA1 : 12h
+  * [All] Restructuration du bureau. 
+    * [GB] Discussion + plans possibles dispos ici 
+    * {{ut6:projets_internes:201610_utec06_config_possible_opensapce.pptx}}
+    * ==> RAF: statuer next Team Meeting une fois AZ présent... (!?) soit mercredi prochain !
+  * [YM] Rappel : en RTT demain
+
+
+{{ employes:1hvcbk.jpg?150|The most interesting man on Earth}}
+
+=== Points Généraux (Veille technique, Idéations, idéations UTEC6, stratégies,... ) ===
+  * [GB] Pas si facile de travailler avec le journaliste de l'Usine Nouvelle...
+  * [YM] Laptop pour JH : Windows + VM ou Linux ?
+  * [PLU,AC,PV] Maintenance /sps/hep impact /sps/bioaster/ ou pas?
+
+
+=== Interaction avec les autres Unités / Services  / CC  /  PASTEUR  ===
+  * CC-IN2P3
+    * [GB, PV]  Demande ressources 2016 @CC  => Attente signature devis...
+    * [GB] propal de poster pour inauguration BA1
+    * [AC] Creation de l'espace owncloud pour l'étude clinique => nettoyage de la BD à faire pour nettoyer les liens obsoletes
+
+  * Bioinfo
+    * []
+  
+  * UTECx
+      * [UTEC01][NS][choix d'un file encrytper] A la recherche d'une solution ergonomique et Windows friendly pour chiffrer les fichier de données médicaux avec un mot de passe. La solution doit être facilement mise en oeuvre et utilisable par les IRCS. Les mots passe pourront être gérés dans une base de données Keepass commune. => [NS] en train de tester GnuPG/GPG4win sur proposition de [PV]. GPG génère une clé (privé) de chiffrement protégée par 1 mot de passe. Il faut donc générer une clé différente à chaque fichier, si on veut modifier le mot de passe ? Il faudrait le tester de façon plus complète (avec qui?).  
+    * [UTEC03][NS] Le stagiaire potentiel nous a fait défaut... Un entretien avec un nouveau candidat est prévu.
+  * UTHEMx
+    * []
+
+  * PMO
+    * [GB] CoPil GEDAIL => changement d'intégrateur (Alma) ? 
+  * Juridique
+  * Com
+  * QSI
+    * []
+  * DAF :
+    * []
+  * Pasteur-IP :
+    * [AC] : à Paris ce Jeudi & Vendredi
+  * Achat : 
+    * [AC] : achat Pymol
+";s:6:"suffix";s:5618:"
+==== Partnerships / BD ====
+  * [GB] Envoi présentation faite @GSK à ... Sanofi!
+
+
+====== PROJETs ======
+
+^Question ^Quoi?                  ^Qui?          ^Avancement / Action   ^
+^1 |Passport | [PLU] | [PLU] Serveur NTP resolu, un playbook a ete fait. Shibboleth 3.3.0 marche avec client python/django\\ [PLU] Serveur OpenLdap install, un sechema de utilisateur de test est applique, Un Serveur nss-pam-ldapd est install qui utilise Openldap serveur pour authentification. Doc1:[[employes:pengfei.liu_bioaster.org:install_openldap|Install openldap on centos 7]], Doc2:[[employes:pengfei.liu_bioaster.org:configure_nss_pam_ldapd]] \\ [PLU] Pb reseaux,ports 389, 636 sont ferme, impossible de utiliser les outils viz, tous est fait via shell.|
+^2 |Biospecimens |[YM + CD]| [Biospecimens V1.5][CD] Les bugs sont fixés. \\  [Biospecimens V1.5][CD] Le nouveau moteur de recherche est en route |
+^3 |NoE +eSample +FLEMS |YM + CD |[YM] Premier formulaire bien avancé. Second en cours de dev + workflow de création dynamique en cours de dev. \\ [YM] 1er NETMeeting le 24 janvier à 10h. Le PDF est toujours sur M. \\ [YM] SI CD peut arriver 1 jour/semaine sur le projet ça serait une bonne chose.  |
+^5 |REALISM + tranSMART |NS | [NS] En attente de la réunion du 26 janvier pour stature sur tranSMART \\ [NS] Discussion régulière avec BMX pour clarifier la codification des variables dans l'eCRF \\ [NS] Analyse critique de l'analyse intermédiaire => pas un  priorité, mais doit recontacter Trang à ce sujet. |
+^7 |eCRF |YM|[YM + KL] Retours de HV reçus. Quelques réglages que Clinfile va faire. Quand on aura le go de Clinfile on fait suivre pour test aux HCL. \\ [YM + KL + NS] Conférence téléphonique avec Sophie Blein et Boris Meunier de bMx. Quelques points d'ombre éclaircis + un bug sur l'export des warning par défaut mis en lumière et remonté à Clinfile. |
+^8 |MOSAIC|GB + NS + AZ| [GB] Budget + livrables + part valorisable @BA sur la seule première année... |
+^9 |bMx Metagenomics MetaSeq|GB + PV + PDU | [GB] ANR de MetaSeq + slides pour ComTech du 30/01 \\ [PDU] Intégration des maquettes \\ [PDU] Système de login |
+^10 |TBAGS|NS + AZ | |
+^11 |Schéma Directeur Data Science|NS| [NS] Retour en arrière sur les 3 premiers chapitres pour assurer la cohérence des propos et ajouter les références bibliogrpahique  |
+
+
+====== Archives ======
+  - [[reunion_pt6_06.06.2014|06/06/2014]]
+  - [[reunion_pt6_10.06.2014|10/06/2014]]
+  - [[reunion_pt6_25.06.2014|25/06/2014]]
+  - [[reunion_pt6_19.09.2014|19/09/2014]]
+  - [[reunion_pt6_30.09.2014|30/09/2014]]
+  - [[reunion_pt6_14.10.2014|14/10/2014]]
+  - [[reunion_pt6_28.10.2014|28/10/2014]]
+  - [[reunion_pt6_19.11.2014|19/11/2014]]
+  - [[reunion_pt6_25.11.2014|25/11/2014]]
+  - [[reunion_pt6_12.12.2014|12/12/2014]]
+  - [[reunion_pt6_18.12.2014|18/12/2014]]
+  - [[reunion_pt6_06.01.2015|06/01/2015]]
+  - [[reunion_ut6_20.01.2015|20/01/2015]]
+  - [[reunion_ut6_03.02.2015|03/02/2015]]
+  - [[reunion_ut6_17.02.2015|17/02/2015]]
+  - [[reunion_ut6_03.03.2015|03/03/2015]]
+  - [[reunion_ut6_20.03.2015|20/03/2015]]
+  - [[reunion_ut6_31.03.2015|31/03/2015]]
+  - [[reunion_ut6_14.04.2015|14/04/2015]]
+  - [[reunion_ut6_28.04.2015|28/04/2015]]
+  - [[reunion_ut6_12.05.2015|12/05/2015]]
+  - [[reunion_ut6_26.05.2015|26/05/2015]]
+  - [[reunion_ut6_09.06.2015|09/06/2015]]
+  - [[reunion_ut6_30.07.2015|30/07/2015]]
+  - [[reunion_ut6_18.08.2015|18/08/2015]]
+  - [[reunion_ut6_08.09.2015|08/09/2015]]
+  - [[reunion_ut6_22.09.2015|22/09/2015]]
+  - [[reunion_ut6_29.09.2015|29/09/2015]]
+  - [[reunion_ut6_06.10.2015|06/10/2015]]
+  - [[reunion_ut6_13.10.2015|13/10/2015]]
+  - [[reunion_ut6_28.10.2015|28/10/2015]]
+  - [[reunion_ut6_03.11.2015|03/11/2015]]
+  - [[reunion_ut6_10.11.2015|10/11/2015]]
+  - 24/11/2015
+  - [[reunion_ut6_08.12.2015|08/12/2015]]
+  - [[reunion_ut6_22.12.2015|22/12/2015 & 05/01/2016]]
+  - [[reunion_ut6_13.01.2016|13/01/2016 & 19/01/2016]]
+  - [[reunion_ut6_26.01.2016|26/01/2016]]
+  - [[reunion_ut6_10.02.2016|10/02/2016]]
+  - [[reunion_ut6_16.02.2016|16/02/2016]]
+  - [[reunion_ut6_23.02.2016|23/02/2016]]
+  - [[reunion_ut6_01.03.2016|01/03/2016]]
+  - [[reunion_ut6_08.03.2016|08/03/2016]]
+  - [[reunion_ut6_15.03.2016|15/03/2016]]
+  - [[reunion_ut6_22.03.2016|22/03/2016]]
+  - [[reunion_ut6_30.03.2016|30/03/2016]]
+  - [[reunion_ut6_05.04.2016|05/04/2016]]
+  - [[reunion_ut6_12.04.2016|12/04/2016]]
+  - [[reunion_ut6_27.04.2016|27/04/2016]]
+  - [[reunion_ut6_11.05.2016|11/05/2016]]
+  - [[reunion_ut6_18.05.2016|18/05/2016]]
+  - [[reunion_ut6_25.05.2016|25/05/2016]]
+  - [[reunion_ut6_01.06.2016|01/06/2016]]
+  - [[reunion_ut6_08.06.2016|08/06/2016]]
+  - [[reunion_ut6_15.06.2016|15/06/2016]]
+  - [[reunion_ut6_22.06.2016|22/06/2016]]
+  - [[reunion_ut6_06.07.2016|06/07/2016]]
+  - [[reunion_ut6_13.07.2016|13/07/2016]]
+  - [[reunion_ut6_26.07.2016|26/07/2016]]
+  - [[reunion_ut6_24.08.2016|24/08/2016]]
+  - [[reunion_ut6_01.09.2016|01/09/2016]]
+  - [[reunion_ut6_07.09.2016|07/09/2016]]
+  - [[reunion_ut6_21.09.2016|21/09/2016]]
+  - [[reunion_ut6_05.10.2016|05/10/2016]]
+  - [[reunion_ut6_12.10.2016|12/10/2016]]
+  - [[reunion_ut6_19.10.2016|19/10/2016]]
+  - [[reunion_ut6_26.10.2016|26/10/2016]]
+  - [[reunion_ut6_09.11.2016|09/11/2016]]
+  - [[reunion_ut6_22.11.2016|22/11/2016]]
+  - [[reunion_ut6_30.11.2016|30/11/2016]]
+  - [[reunion_ut6_07.12.2016|07/12/2016]]
+  - [[reunion_ut6_14.12.2016|14/12/2016]]
+  - [[reunion_ut6_21.12.2016|21/12/2016]]
+  - [[reunion_ut6_04.01.2017|04/01/2017]]
+  - [[reunion_ut6_11.01.2017|11/01/2017]]";s:4:"date";i:1485162705;s:6:"client";s:6:"nsapay";}

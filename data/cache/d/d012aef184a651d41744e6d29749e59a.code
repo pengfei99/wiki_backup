@@ -1,0 +1,5 @@
+$_vector_boxes[&quot;plugins&quot;][&quot;headline&quot;] = &quot;Plugins&quot;;
+$_vector_boxes[&quot;plugins&quot;][&quot;xhtml&quot;] = &quot;&lt;ul&gt;\n&quot;
+                                    .&quot;  &lt;li&gt;&lt;a href='&quot;.wl(cleanID(getId()), array(&quot;do&quot; =&gt; &quot;export_pdf&quot;)).&quot;'&gt;&quot;
+                                    .&quot;      PDF Export&quot;
+                                    .&quot;&lt;/a&gt;&quot;;

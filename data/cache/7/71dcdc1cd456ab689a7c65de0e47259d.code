@@ -1,0 +1,7 @@
+<span class="kw2">public</span> <span class="kw2">function</span> registerBundles<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="re0">$bundles</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+        <span class="co1">//...</span>
+        <span class="kw2">new</span> Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    <span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>

@@ -1,0 +1,18 @@
+====== PC d'acquisition de données ======
+
+== MS ==
+
+  * PC 1 - Triple Quad (Thermo)\\ Name : ''MININT-98N5VDQ'' \\ IP : ''192.168.101.20'' \\ MAC : ''F8:B1:56:DE:57:F0'' \\ Windows 7 Pro - CPU 64 bits - RAM 8 GB\\ Antivirus : Windows essential\\ Office : Oui\\
+
+  * PC 2 - Q-Exactive (Thermo)\\ Name : ''5FK6ZZ1'' \\ IP : ''192.168.101.43'' \\ MAC : ''F8:B1:56:9D:F8:9C'' \\ Windows 7 Pro - CPU 32 bits - RAM 4 GB\\ Antivirus : Norton (<color red>activated for 276 days</color>)\\ Office : Oui
+
+  * PC 3 - QTOF (Bruker)\\ Name : ''maXis_HD-21293'' \\ IP : ''192.168.101.71'' \\ MAC : ''10:60:4B:7C:A4:61'' \\ Windows 7 Pro - CPU 32 bits - RAM 16 GB\\ Antivirus : Windows essential\\ Office : Libre Offie\\ <color red>Warning : Do not let this computer connected to internet during data acquisition because of automatic updates</color>
+
+
+== RMN ==
+
+  * PC 4 - Bruker\\ Name : ''vesper'' \\ IP : ''192.168.102.23'' \\ MAC : ''00-0A-F7-40-84-1A'' \\ Linux (Red Hat Kernel) - CPU Intel Xeon Quad Core 3.6 GHz, 64 bits - RAM 16 GB\\ Office : Yes (Libre Office ?)
+
+====== PC de traitement de données données ======
+
+  * PC 5 - Bureau (Bruker)\\ Name : ''ESI-PC'' \\ IP : ''192.168.101.75'' \\ MAC : ''6C:3B:E5:0D:95:01'' \\ Windows 7 Pro - CPU 64 bit - RAM 16 GB\\ Antivirus : Windows Defender/Firewall\\ Office : Non

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+    {{ status_code }} {{ status_text }}
+{% endblock %}
+&nbsp;
+{% block body %}
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Oups ! ^_^'<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>Le serveur a retourné une erreur <span class="sc2">&lt;<a href="http://december.com/html/4/element/strong.html"><span class="kw2">strong</span></a>&gt;</span>&quot;{{ status_code }} {{ status_text }}&quot;<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/strong.html"><span class="kw2">strong</span></a>&gt;</span>.<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>
+{% endblock %}

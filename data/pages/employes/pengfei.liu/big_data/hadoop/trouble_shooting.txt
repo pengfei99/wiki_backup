@@ -1,0 +1,80 @@
+====== Hadoop common trouble shooting ======
+
+
+
+===== 1. Incompatible clusterIDs =====
+
+''Incompatible clusterIDs in /opt/hadoop/dfs/name/data: namenode clusterID = CID-43fc68af-0c43-4d06-8165-e582f23b0bc7; datanode clusterID = CID-925c7a06-e065-4b11-b4cd-3c84c19e0ef5''
+
+This error is caused by the reformatting of the name node and the data node still has the old name node data.
+
+There are two solutions:
+  - Copy the clusterIDs of the name node to data node
+  - remove the data node data
+
+
+
+==== 1st solution ====
+The 1st solution is useful when you want to restore the namenode and you are sure that the metadata in your name node correspond the data in your data node.
+
+You can find the cluster id of your name node in the error message.
+
+Copy the NameNode ClusterID to the VERSION file in the $HADOOP_DATA_DIR/data/current directory. In our case the path is /opt/hadoop/dfs/name/data/current
+
+<code>
+vim /opt/hadoop/dfs/name/data/current
+
+#Tue Jan 02 11:16:54 CET 2018
+storageID=DS-a9fb2197-10ca-4424-a2f0-c1bc83ca77ae
+clusterID=CID-43fc68af-0c43-4d06-8165-e582f23b0bc7
+cTime=0
+datanodeUuid=4e3d5d37-ac07-4700-ba7f-991ce4884953
+storageType=DATA_NODE
+layoutVersion=-57
+
+</code>
+
+==== 2nd solution ====
+
+The 2nd solution is useful when you want to have a new hadoop cluster.
+
+Just delete the $HADOOP_DATA_DIR/data/current directory. In our case, the path is /opt/hadoop/dfs/name/data/current
+
+<code>
+rm -rf /opt/hadoop/dfs/name/data/current
+</code>
+
+===== Port in use or Bind exception =====
+
+<code>
+java.net.BindException: Port in use: 0.0.0.0:50070
+        at org.apache.hadoop.http.HttpServer2.openListeners(HttpServer2.java:998)
+        at org.apache.hadoop.http.HttpServer2.start(HttpServer2.java:935)
+        at org.apache.hadoop.hdfs.server.namenode.NameNodeHttpServer.start(NameNodeHttpServer.java:171)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.startHttpServer(NameNode.java:841)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.initialize(NameNode.java:692)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.<init>(NameNode.java:905)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.<init>(NameNode.java:884)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.createNameNode(NameNode.java:1610)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.main(NameNode.java:1678)
+Caused by: java.net.BindException: Address already in use
+        at sun.nio.ch.Net.bind0(Native Method)
+        at sun.nio.ch.Net.bind(Net.java:433)
+        at sun.nio.ch.Net.bind(Net.java:425)
+        at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:223)
+        at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+        at org.mortbay.jetty.nio.SelectChannelConnector.open(SelectChannelConnector.java:216)
+        at org.apache.hadoop.http.HttpServer2.openListeners(HttpServer2.java:993)
+        ... 8 more
+
+</code>
+
+This error is occured because of the hadoop daemon is not properly shut down. 
+
+First close all hadoop services, even jps shows nothing
+
+<code>
+sh stop-yarn.sh
+sh stop-dfs.sh
+<code>
+After this, you need to use top htop to kill all hadoop zombie processes.

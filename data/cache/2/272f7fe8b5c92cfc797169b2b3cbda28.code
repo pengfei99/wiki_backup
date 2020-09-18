@@ -1,0 +1,21 @@
+[ext_client]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth
+subjectAltName = email:copy
+&nbsp;
+[ext_server]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = clientAuth,serverAuth,nsSGC,msSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:&lt;crlUri&gt; # where &lt;crlUri&gt; is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = &lt;see section 3.1.1&gt;
+&nbsp;
+[ext_code]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth,codeSigning,msCodeInd,msCodeCom,msEFS,msSGC,nsSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:&lt;crlUri&gt; # where &lt;crlUri&gt; is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = &lt;see section 3.1.1&gt;

@@ -1,0 +1,135 @@
+
+<h1 class="sectionedit1" id="reunion_du_14_septembre_2017">Réunion du 14 Septembre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 14 Septembre 2017" [1-46] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [47-95] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Éventuel stage 2018</div>
+</li>
+<li class="level1"><div class="li"> Avancée du code</div>
+</li>
+<li class="level1"><div class="li"> TODO list avant mise en prod v1</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [96-205] -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Éventuel stage 2018</em>
+</p>
+
+<p>
+Si stage il y a celui-ci serait axé principalement sur le développement du dashboard d&#039;accueil + maj et améliorations de eSAMPLES avec remontées des utilisateurs pendant que <abbr title="Clément Delestre">CD</abbr> (, <abbr title="Pierre Dupuis">PDU</abbr> ?) et <abbr title="Yoann Mouscaz">YM</abbr> avanceraient sur FLEMS.<br/>
+
+A voir avec <abbr title="Guillaume Boissy">GB</abbr>.
+</p>
+
+<p>
+<em class="u">Avancée du code</em>
+</p>
+
+<p>
+Les storages prennent en compte leurs tiroirs s&#039;ils existent. L&#039;affichage dans la liste à choix renseigne le nom du frigo, le nom du tiroir et sa localisation.<br/>
+
+Suite à la sélection d&#039;un storage par l&#039;utilisateur, la liste des BSL possibles se met à jour.<br/>
+
+Le problème des champs required avec chosen.js est réglé.<br/>
+
+La branche sécu-pengfei est mergée et intégrée à la branche de développement actuelle (feature-2). On peut connaitre l&#039;utilisateur connecté depuis n&#039;importe où (views, templates, forms).<br/>
+
+Ça permet de filtrer les projets selectionnables par l&#039;utilisateur en fonction de ses attribution dans Sciforma.
+</p>
+
+<p>
+<em class="u">TODO list avant mise en prod v1</em>
+</p>
+
+<p>
+Pour le premier formulaire (statique) :
+</p>
+<ul>
+<li class="level1"><div class="li"> <del><code>Filtrer les BSL en fonction des storages</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>Filtrer les storages en fonction des labo/UTECs</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>Faire la classification bioagent</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>Mettre étoiles devant champs obligatoires (ou après)</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>Afficher les noms des frigos et/ou tiroirs</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>réunir les champs proches (par logique) sur une même ligne pour formulaire statique</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>introduire flatpicker pour les DateTimeField</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>afficher uniquement les projets de l&#039;utilisateur</code></del></div>
+</li>
+<li class="level1"><div class="li"> <del><code>Afficher le champs <abbr title="Organisme Génétiquement Modifié">OGM</abbr> que si l&#039;utilisateur est un <abbr title="Organisme Génétiquement Modifié">OGM</abbr> user</code></del></div>
+</li>
+<li class="level1"><div class="li"> Afficher le champs <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> que si l&#039;utilisateur est un <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> user</div>
+</li>
+</ul>
+
+<p>
+Pour le second (champs dynamiques), quand il existera, il reste à faire:
+</p>
+<ul>
+<li class="level1"><div class="li"> image différentes selon types de classifications selectionnées (type + origine) (code OK, en attente réponse Emilie)</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assurer que tous les validateurs sont en place (automatiques + manuels)</div>
+</li>
+<li class="level1"><div class="li"> Gérer les dates avec flatpickr : <a href="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/biospecimens-sf/commit/e1d1cc8231ec7090289fba0b597f7ea1d7692945</a> <a href="https://chmln.github.io/flatpickr/getting-started/" class="urlextern" title="https://chmln.github.io/flatpickr/getting-started/"  rel="nofollow">https://chmln.github.io/flatpickr/getting-started/</a></div>
+</li>
+<li class="level1"><div class="li"> Concaténer les propositions de champs dynamiques venant de la NET avec les templates produits par <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+</ul>
+
+<p>
+<em class="u">Autre</em>
+</p>
+
+<p>
+Reste à faire avant beta test V1 par la NET :
+</p>
+<ul>
+<li class="level1"><div class="li"> <del><code>merger la branche de Pengfei (auth-shib/secu-dev-Pengfei)</code></del></div>
+</li>
+<li class="level1"><div class="li"> finaliser code de <abbr title="Julie Hardy">JHA</abbr> + merge de la branche au master</div>
+</li>
+<li class="level1"><div class="li"> finir la fonctionnalité recherche datatable</div>
+</li>
+<li class="level1"><div class="li"> définir quoi mettre (quels types d&#039;infos) dans le dropdown de datatable</div>
+</li>
+<li class="level1"><div class="li"> finir l&#039;édition d&#039;un échantillon</div>
+</li>
+<li class="level1"><div class="li"> avoir une page d&#039;information d&#039;un échantillon propre et sexy</div>
+</li>
+<li class="level1"><div class="li"> code barre</div>
+</li>
+<li class="level1"><div class="li"> créer un échantillon enfant</div>
+</li>
+<li class="level1"><div class="li"> dashboard d&#039;accueil v1 (simple)</div>
+</li>
+<li class="level1"><div class="li"> déployer <abbr title="Network Of Experiments">NoE</abbr> sur le serveur de dev</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Résumé" [206-] -->

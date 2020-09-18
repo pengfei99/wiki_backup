@@ -1,0 +1,9 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1591808021;s:8:"modified";i:1591808021;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1591808021;s:2:"ip";s:14:"213.44.168.220";s:4:"type";s:1:"C";s:2:"id";s:43:"employes:pengfei.liu:java:all_io:io_old_doc";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:2692;}s:5:"title";s:7:"Java IO";s:11:"description";a:2:{s:15:"tableofcontents";a:1:{i:0;a:4:{s:3:"hid";s:7:"java_io";s:5:"title";s:7:"Java IO";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:503:"Java IO
+
+The package java.io contains the classes that handle fundamental input and output operations in Java. The I/O classes can be grouped as follows:
+
+Classes for reading input from a stream of data.
+Classes for writing output to a stream of data.
+Classes that manipulate files on the local filesystem.
+Classes that handle object serialization.
+I/O in Java is based on streams. A stream represents a flow of data or a channel of communication. Java 1.0 supports only byte streams. The InputStream…";}s:8:"relation";a:2:{s:5:"media";a:2:{s:49:"employes:pengfei.liu:java:jio_class_hierarchy.gif";b:1;s:59:"employes:pengfei.liu:java:jio_exception_class_hierarchy.gif";b:1;}s:10:"firstimage";s:49:"employes:pengfei.liu:java:jio_class_hierarchy.gif";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1591808021;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1591808021;s:2:"ip";s:14:"213.44.168.220";s:4:"type";s:1:"C";s:2:"id";s:43:"employes:pengfei.liu:java:all_io:io_old_doc";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:2692;}}}

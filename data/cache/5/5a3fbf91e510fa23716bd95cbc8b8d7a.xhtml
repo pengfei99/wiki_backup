@@ -1,0 +1,42 @@
+
+<h1 class="sectionedit1" id="microservice_architecture">Microservice Architecture</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Microservice Architecture&quot;,&quot;hid&quot;:&quot;microservice_architecture&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="context">Context</h2>
+<div class="level2">
+
+<p>
+You are developing a server-side enterprise application. It must support a variety of different clients including desktop browsers, mobile browsers, and native mobile applications. The application might also expose an <abbr title="Application Programming Interface">API</abbr> for 3rd parties to consume. It might also integrate with other applications via either web services or a message broker. The application handles requests (HTTP requests and messages) by executing business logic; accessing a database; exchanging messages with other systems; and returning an <abbr title="HyperText Markup Language">HTML</abbr>/JSON/XML response. There are logical components corresponding to different functional areas of the application.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Context&quot;,&quot;hid&quot;:&quot;context&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-693&quot;} -->
+<h2 class="sectionedit3" id="solution">Solution</h2>
+<div class="level2">
+
+<p>
+Define an architecture that structures the application as a set of loosely coupled, collaborating services. This approach corresponds to the Y-axis of the <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:scale_cube" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:scale_cube">The Scale Cube</a>. Each service is:
+</p>
+<ul>
+<li class="level1"><div class="li"> Highly maintainable and testable - enables rapid and frequent development and deployment</div>
+</li>
+<li class="level1"><div class="li"> Loosely coupled with other services - enables a team to work independently the majority of time on their service(s) without being impacted by changes to other services and without affecting other services</div>
+</li>
+<li class="level1"><div class="li"> Independently deployable - enables a team to deploy their service without having to coordinate with other teams</div>
+</li>
+<li class="level1"><div class="li"> Capable of being developed by a small team - essential for high productivity by avoiding the high communication head of large teams</div>
+</li>
+</ul>
+
+<p>
+Services communicate using either synchronous protocols such as HTTP/REST or asynchronous protocols such as AMQP. Services can be developed and deployed independently of one another. Each service has its own database in order to be decoupled from other services. Data consistency between services is maintained using the <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:saga_pattern" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:saga_pattern">The saga pattern</a>
+</p>
+
+<p>
+To learn more about the nature of a service, please read this article <a href="/doku.php?id=employes:pengfei.liu:system_architecture:microservice:service_definition" class="wikilink1" title="employes:pengfei.liu:system_architecture:microservice:service_definition">What is a (micro)service?</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Solution&quot;,&quot;hid&quot;:&quot;solution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;694-&quot;} -->

@@ -1,0 +1,64 @@
+====== Shibboleth ======
+
+L'installation de Shibboleth est documenté dans le dépôt Ansible pour les rôles [[https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth|shibboleth]] et [[https://gitlab.in2p3.fr/bioaster/ansible/tree/master/roles/shibboleth-apache|shibboleth-apache]].
+
+La documentation pour intégrer des données de la base de données SCIFORMA se trouve [[/informatique/authauth/shibboleth_sciforma | sur cette page dédiée]].
+
+Ci-dessous, en vert et jaune, les principaux fichiers de configuration pour l'IDP et les SP.
+
+{{:informatique:authauth:passeport_shibboleth_config_files.png?800|}}
+
+===== Intégration avec Symfony =====
+
+Celle-ci se fait en utilisant le composant ''Guard'' disponible dans Symfony depuis la version 2.8. Le code pour l'intégration est disponible ici : https://gitlab.in2p3.fr/tlecarro/LIMS/commit/39a7a67e4d7b6850ad1dc02fbf84ab459d5550b8
+
+Celle-ci doit être un peu modifiée, car les attributs n'étaient pas fixés au moment du commit. Pour voir une version qui marche : https://devtools.bioaster.org/secure
+
+Cette version est juste une installe symfony de base avec qlq fichiers modifiés (voir ''cclindevtoolsp01:~$ cat /var/www/html/symfony_and_shibboleth/MISE_EN_PLACE_DE_GUARD.txt'')
+
+Dans l'environnement de dév., les variables d'environnement ne peuvent pas être définies. Elles sont remplacées par des headers de requêtes qui sont accessible avec ''$request->headers->get('xxxx')''. Le plugin FF modify headers permet de les définir.
+
+''Shibd'', le composant apache en charge de la communication avec Shibboleth définit les variables d'environnement en fonction des informations récupérées. Celles-ci sont récupéré en utilisant ''$request->server->get('xxxx')''.
+
+En dév., il est donc nécessaire de (au choix) :
+  - modifier le code ;
+  - créer un second guard modifié et de l'activer dans app/config/security.yml
+
+En prod, on pourrait convertir les variables d'env en header de requête… à voir…
+
+
+===== Dictionnaire des attributs  =====
+
+
+<WRAP leftround todo 60%>
+PV : A TERMINER ET A FAIRE VALIDER PAR UTEC06 \\
+YM : Introduire les BA_ID dans SHIB-WPS
+</WRAP>
+
+
+^Nom de l'attribut  ^Description  ^Source ^Nom de l'attribut dans la source ^Format/Exemple ^Remarque ^ 
+|SHIB-USERNAME |Nom de l'utilisateur |AD   | sn |Boissy |
+|SHIB-FIRSTNAME|Prénom de l'utilisateur |AD   | givenName  |Guillaume |
+|SHIB-EMAIL|Mail de l'utilisateur |AD   | mail |guillaume.boissy@bioaster.org |
+|SHIB-LABS|Appartenances labos de l'utilisateur |AD   | departement & ? |BIOASTER*DST*DUT*UTEC06 |
+|SHIB-SITE|Site physique de l'utilisateur |AD   | physicalDeliveryOfficeName  |BIOASTER1 |
+|SHIB-CITY|Ville de l'utilisateur |AD   |  |Lyon |
+|SHIB-COUNTRY|Pays de l'utilisateur |AD   |  |France |
+|SHIB-WPS|Appartenance Workpackages/projets de l'utilisateur |SCIFORMA   | wps |PROJECT1::WP1;PROJECT1::WP2;PROJECT2::WP0;PROJECT3::WP4;PROJECT3::WP1 |
+
+
+**NB : active directory adress => srvadmin.bioaster.local ; requête pour utilisateurs : (&(objectClass=user)(objectCategory=user)) **
+
+===== Instance serveur Shibboleth  =====
+
+IP adress : 10.70.3.11
+
+Infra : Vmware@CC
+
+OS : CentOS Linux release 7.1.1503 (Core)
+
+Flavor : 2 vCPU, RAM 4GB
+
+
+
+

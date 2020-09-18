@@ -1,0 +1,31 @@
+====== Formations ======
+
+  - [[http://presentations.bioaster.org/presentations/courriels|Un courriel c'est quoi ?]]
+    * <del>Juste du texte ! (//headers/body//)</del>
+    * <del>Intégration des pièces jointes (signature attachée)</del>
+  - [[http://presentations.bioaster.org/presentations/transfert_de_courriel|Comment voyagent-ils ?]]
+    * Serveurs (visibles dans //headers//) et protocoles (SMTP, IMAP, POP, SSL/TLS)
+    * Peuvent être interceptés
+  - [[http://presentations.bioaster.org/presentations/securite|Comment les sécuriser]] ?!
+    * Le contenu (chiffrement du corps)
+    * Le contenant (chiffrement de la connexion)
+  - [[http://presentations.bioaster.org/presentations/PKI|Infrastructure de clé publique]]
+    * PKI vs MdP
+    * Le contenu (certificats et OpenPGP == centralisé et décentralisé, WebOfTrust)
+    * Le contenant (SSL/TLS)
+  - [[http://presentations.bioaster.org/presentations/certificats|Autres utilisations des Certificats]]
+    * Authentifications des serveurs et services (plus de phishing)
+    * Authentifications auprès des services (plus de mot de passe, révocation)
+
+  * [[http://presentations.bioaster.org/presentations/informatique|Les autres trucs de geek]]
+    - Hexadécimal
+    - Base64
+    - Wiki
+    - Nétiquette (posting styles)
+    - Tor
+    - Doodle
+    - RSS
+    - Framasoft (Etherpad)
+    - "Propriété Intellectuelle"
+
+{{tag>todo}}

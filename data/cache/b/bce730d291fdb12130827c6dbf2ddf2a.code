@@ -1,0 +1,7 @@
+#default
+broker.id=0
+zookeeper.connect=localhost:2181
+&nbsp;
+#in my environment
+zookeeper.connect=hadoop-nn.pengfei.org:2181,hadoop-dn1.pengfei.org:2181,hadoop-dn2.pengfei.org:2181
+broker.id=1 (2,3 in other two machines)

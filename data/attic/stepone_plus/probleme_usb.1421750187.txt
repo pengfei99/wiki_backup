@@ -1,0 +1,18 @@
+====== Problème avec l'USB 3.0 ======
+
+**Problème :** Un message d'erreur apparait pendant la calibration de l'instrument //via// USB.
+
+**JT le //(date ?!)// :** Selon la commerciale, il faut des ports USB 2.0. L'USB 3.0 est pourtant censé être rétro-compatible avec le 2.0 ?!
+
+**TLC le 2014.07.24 :** D'après le support (Mme Donia Cheriet), le calibrage de l'appareil ne peut pas se faire sur USB 3.0 (pourtant il a été fait par JT ?!)\\
+L'USB 2.0 est un "pré-requis" dans la doc de l'instrument ! Nous nous orientons donc vers l'achat d'une carte d'extension PCI-E USB 2.0.
+
+**TLC le 2014.08.26 :** Installation de la carte d'extension... et après ? Appel du commercial (Davide), mais il est en vacances.\\
+Épluchage de la doc pour trouver le calibrage à lancer tous les 18 mois et qui causait un problème. D'après la doc (//[AB StepOne Plus] - Installation, Network, and Maintenance//) et [[http://www.lifetechnologies.com/fr/fr/home/technical-resources/technical-reference-library/real-time-digital-PCR-instruments-support-center/stepone-steponeplus-real-time-pcr-systems-support/stepone-steponeplus-real-time-pcr-systems-support-getting-started.html#cal-01|le site web]] les calibrations "annuelles" sont **Pure dye calibrations & Spatial calibration** et s'effectuent uniquement par **la connexion réseau**, contrairement à ce qui nous a été dit à 2 reprises !\\
+Sauf preuve du contraire, __l'achat de la carte d'extension était donc inutile__ !!\\
+Il faudra penser à demander un remboursement basé sur {{ut6:stepone_plus:probleme_usb:bioaster_pc_25072014.pdf|le devis}}.
+
+**TLC le 2014.09.08 :** Appelle de Mme X au support technique. Visiblement elle ne comprend pas tout et n'est pas très sûre (les gens du support technique ont tous l'air de confondre USB et liaison réseau ?!). Elle va contacter Aude LECTAR.\\
+Aude LECTAR rappelle et confirme qu'à priori la liaison USB ne sert à rien, à confirmer avec le service technique (et avec Donia Cheriet ?!). 
+
+**TLC le 2014.09.11 :** Réponse de Arnaud Prigent de chez thermofisher qui nous dit de ''tentez les calibrations avec votre ordinateur tel quel. Si cela marche, il ne devrait pas y avoir de problème caché. Nous n’avons pas testé ce genre de configuration, aussi nous ne pouvons pas être absolument certain de la faisabilité.''\\ En gros ils n'ont rien compris au problème et/ou ne savent pas vraiment comment leur système fonctionne ! Pour ne pas rentrer dans des débats sans fin, nous ravalons notre fierté et faisons un croix sur les 15€.

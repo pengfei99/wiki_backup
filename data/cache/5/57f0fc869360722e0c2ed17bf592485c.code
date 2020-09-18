@@ -1,0 +1,2 @@
+glance add name=Debian_7 is_public=true container_format=bare disk_format=vdi \
+       &lt; /sps/inter/bioaster/Debian_7_Wheezy_2Go.vdi

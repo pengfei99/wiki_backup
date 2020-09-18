@@ -1,0 +1,46 @@
+
+<h1 class="sectionedit1" id="list">List</h1>
+<div class="level1">
+
+<p>
+<strong>ArrayList</strong> class uses a dynamic array for storing the elements. It inherits AbstractList class and implements List interface.
+</p>
+
+<p>
+The important points about Java ArrayList class are:
+</p>
+<ul>
+<li class="level1"><div class="li"> Java ArrayList class can contain duplicate elements.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList class maintains insertion order.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList class is non synchronized.</div>
+</li>
+<li class="level1"><div class="li"> Java ArrayList allows random access because array works at the index basis.</div>
+</li>
+</ul>
+
+<p>
+In Java ArrayList class, manipulation is slow because a lot of shifting needs to occur if any element is removed from the array list.
+</p>
+<pre class="code">import java.util.*;  
+class ArrayList2{  
+ public static void main(String args[]){  
+  //Creating arraylist  
+  ArrayList&lt;String&gt; list=new ArrayList&lt;String&gt;();
+  
+  //Adding object in arraylist 
+  list.add(&quot;Ravi&quot;); 
+  list.add(&quot;Vijay&quot;);  
+  list.add(&quot;Ravi&quot;);  
+  list.add(&quot;Ajay&quot;); 
+   
+  //Traversing list through Iterator  
+  Iterator itr=list.iterator();  
+  while(itr.hasNext()){  
+   System.out.println(itr.next());  
+  }  
+ }  
+}  </pre>
+
+</div>

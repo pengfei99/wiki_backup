@@ -1,0 +1,105 @@
+====== Lesson02: Spark unified stack and applicatioins======
+
+Spark provides a unified data processing engine known as the **Spark stack**. Similar to other well-designed systems, this stack is built on top of a strong foundation called **Spark Core**, which provides all the necessary functionalities to manage and run distributed applications such as **scheduling, coordination, and fault tolerance**. Inside spark core, it provides a powerful and generic programming abstraction for data processing called **resilient distributed datasets (RDDs)**. 
+
+On top of the spark core, spark provides a collection of components where each one is designed for a specific data processing workload:
+  * **Spark SQL**: It is for batch as well as interactive data processing. 
+  * **Spark Streaming**: It is for real-time stream data processing. 
+  * **Spark GraphX**: It is for graph processing. 
+  * **Spark MLlib**: It is for machine learning. 
+  * **Spark R**: It is for running machine learning tasks using the R shell.
+
+This unified engine brings several important benefits to the task of building scalable and intelligent big data applications: 
+  - Applications are simpler to develop and deploy because they use a unified set of APIs and run on a single-engine. 
+  - It is way more efficient to combine different types of data processing (batch, streaming, etc.) because Spark can run those different sets of APIs over the same data without writing the intermediate data out to a storage system.
+  - The most exciting benefit is Spark enables new applications that were not possible before because of its ease of composing different sets of data processing types within a Spark application. For example, it can run interactive queries over the results of machine learning predictions of real-time data streams.
+
+
+===== 2.1 Spark Core =====
+
+
+Spark Core is the bedrock of the Spark distributed data processing engine. It consists of two parts
+  * The distributed computing infrastructure
+  * The RDD programming abstraction.
+
+==== 2.1.1 Distributed computing infrastructure ====
+
+The distributed computing infrastructure is responsible for the distribution, coordination, and scheduling of computing tasks across many machines in the cluster. This enables the ability to perform parallel data processing of a large volume of data efficiently and quickly on a large cluster of machines. Two other important responsibilities of the distributed computing infrastructure are
+  * Handling of computing task failures
+  * Efficiently moving data across machines, which is known as data shuffling. 
+
+**Advanced users of Spark need to have intimate knowledge of the Spark distributed computing infrastructure to be effective at designing highly performant Spark applications.**
+
+==== 2.1.2 RDD programming abstraction ====
+
+The technical definition of an RDD is that it is an immutable and fault-tolerant collection of objects partitioned across a cluster that can be manipulated in parallel. RDD provides a set of APIs for Spark application developers to easily and efficiently perform large-scale data processing without worrying where data resides on the cluster or dealing with machine failures.
+
+The RDD APIs are exposed in multiple programming languages (Scala, Java, and Python), and they allow users to pass local functions to run on the cluster.
+
+===== 2.2 Spark SQL =====
+
+Spark SQL is a component built on top of Spark Core, and it is designed for structured data processing at scale. Its popularity has skyrocketed since its inception because it brings a new level of flexibility, ease of use, and performance.
+
+**Spark users now can issue SQL queries to perform data processing or use the high-level abstraction exposed through the DataFrames APIs**. A DataFrame is effectively a distributed collection of data organized into named
+columns. This is not a novel idea; in fact, this idea was inspired by data frames in R and Python. An easier way to think about a DataFrame is that it is conceptually equivalent to a table in a relational database.
+
+Behind the scenes, Spark SQL leverages the Catalyst optimizer to perform the kinds of optimizations that are commonly done in many analytical database engines.
+
+Another feature Spark SQL provides is the ability to read data from and write data to various structured formats and storage systems, such as **JavaScript Object Notation (JSON), comma-separated value (CSV) files, Parquet or ORC files, relational databases, Hive, and others**. This feature really helps in elevating the level of versatility of Spark because Spark SQL can be used as a data conversion tool to easily convert data from one format to another.
+
+===== 2.3 Spark Structured Streaming and Streaming =====
+
+
+
+The ability to process data as it arrives is becoming a competitive advantage for many companies in highly competitive industries. The Spark Streaming module enables the ability to **process real-time streaming data** from various data sources in a **high-throughput and fault-tolerant manner**. Data can be ingested from sources such as **Kafka, Flume, Kinesis, Twitter, HDFS, or TCP sockets**.
+
+
+==== 2.3.1 discretized stream (DStream) ====
+The main abstraction in the first generation of the Spark Streaming processing engine is called **discretized stream (DStream)**, which implements an incremental stream processing model by **splitting the input data into small batches (based on a time interval)** that can regularly combine the current processing state to produce new results. In other words, once the incoming data is split into small batches, **each batch is treated as an RDD** and replicated out onto the cluster so they can be processed accordingly.
+
+
+Stream processing sometimes involves joining with data at rest, and Spark makes it easy to do so. In other words, combining batch and interactive queries with streaming processing can be easily done in Spark because of the unified Spark stack.
+
+==== 2.3.2 Structure streaming ====
+
+A new scalable and fault-tolerant streaming processing engine called **Structured Streaming was introduced in Spark 2.1**, and it was built on top of the **Spark SQL engine**. This engine further simplifies the life of streaming processing application developers by treating streaming computation the same way as one would express a batch computation on static data. This new engine will **automatically execute the streaming processing logic incrementally** and continuously as new streaming data continues to arrive. 
+
+Two important features have been added:
+  * The Structured Streaming provides the ability to process incoming streaming data based on the event time, which is necessary for many of the new streaming processing use cases. 
+  * The Structured Streaming engine is the **end-to-end**, **exactly once guarantee**, which will make a big data engineer’s life much easier than before in terms of saving data to a storage system such as a relational database or a NoSQL database.
+
+
+
+
+===== 2.4 Spark MLlib =====
+
+In addition to providing more than **50 common machine learning algorithms**, the Spark MLlib library provides abstractions for managing and simplifying many of the machine learning model building tasks, such as featurization, pipeline for constructing, evaluating and tuning model, and persistence of models to help with moving the model from development to production.
+
+Starting with Spark 2.0, the **MLlib APIs will be based on DataFrames** to take advantage of the user-friendliness and many optimizations provided by the** Catalyst and Tungsten components in the Spark SQL engine**.
+
+Machine learning algorithms are iterative in nature, meaning they run through many iterations until a desired objective is achieved. Spark makes it extremely easy to implement those algorithms and run them in a scalable manner through a cluster of machines. Commonly used machine learning algorithms such as classification, regression, clustering, and collaborative filtering are available out of the box for data scientists and engineers to use.
+
+
+===== 2.5 Spark Graphx =====
+
+Graph processing operates on data structures consisting of vertices and edges connecting them. A graph data structure is often used to represent real-life networks of interconnected entities, including professional social networks on LinkedIn, networks of connected web pages on the Internet, and so on. 
+
+Spark GraphX is a component that enables graph-parallel computations by providing an abstraction of a directed multigraph with properties attached to each vertex and edge. The GraphX component includes a collection of common graph processing algorithms including page ranks, connected components, shortest paths, and others.
+
+
+===== 2.6 SparkR =====
+
+SparkR is an R package that provides a light-weight front end to use Apache Spark. R is a popular statistical programming language that supports data processing and machine learning tasks. However, R was not designed to handle large datasets that can’t fit on a single machine. 
+
+SparkR leverages Spark’s distributed computing engine to enable large-scale data analysis using the familiar R shell and popular APIs that many data scientists love.
+
+===== 2.7  Spark Applications =====
+ 
+Spark is a versatile, fast, and scalable data processing engine. It was designed to be a general engine since the beginning days and has proven that it can be used to solve various use cases. Many companies in various industries are using Spark to solve real-life use cases. The following is a small list of applications that were developed using Spark:
+  * Customer intelligence applications
+  * Data warehouse solutions
+  * Real-time streaming solutions
+  * Recommendation engines
+  * Log processing
+  * User-facing services
+  * Fraud detection

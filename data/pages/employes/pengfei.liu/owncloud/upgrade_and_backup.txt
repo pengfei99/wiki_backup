@@ -1,0 +1,350 @@
+====== Owncloud upgrade ======
+
+In this article, we only show how to upgrade manually.
+
+For more information, please go to https://doc.owncloud.org/server/9.0/admin_manual/maintenance/manual_upgrade.html
+
+Backup yourowncloud before your upgrade. 
+
+''mkdir /home/bioaster/Documents/owncloud_backup/''
+
+Dump owncloud database:
+
+''mysqldump -h ccmysql.in2p3.fr -u bio_owncloud -p bio_owncloud | gzip > /home/bioaster/Documents/owncloud_backup/dump_owncloud.sql.zip''
+
+Copy config.php and data
+
+'' cp /var/www/html/owncloud/config/config.php /home/bioaster/Documents/owncloud_backup/''
+
+'' cp -r /var/www/html/owncloud/data /home/bioaster/Documents/owncloud_backup/''
+
+If you have extra apps in owncloud, you need to check them one by one. Because some of them change version also to match with owncloud.
+
+For example, the plugin **documents** has a version for 8.2.x, 9.0.x and 9.1.x. More details : https://apps.owncloud.com/content/show.php/Documents?content=168711.
+
+Now we can start the upgrade.
+
+goto the current owncloud folder
+
+''cd /var/www/html/owncloud/''
+
+Put current owncloud on maintenance mode
+
+''sudo -u biodata php occ maintenance:mode --on''
+
+Rename the current owncloud folder
+
+''mv /var/www/html/owncloud /var/www/html/owncloud-old''
+
+
+Now download the new version, unzip and put it under /var/www/html/.
+
+''cd /tmp''
+
+''wget https://download.owncloud.org/community/owncloud-9.1.1.tar.bz2''
+
+''tar -xjvf owncloud-9.1.1.tar.bz2''
+
+''chown -R biodata:bioaster owncloud ''
+
+If your selinux is still on,reset the selinux label
+
+''restorecon -vR owncloud''
+
+''mv owncloud /var/www/html/.''
+
+In the new version, you need to copy the config.php and data, Then you need to add apps in owncloud/apps/
+
+''cd /var/www/html/owncloud''
+
+''cp ../owncloud-old/config/config.php config/.''
+
+''cp -r ../owncloud-old/data .''
+
+Now let's run the upgrade script.
+
+''sudo -u biodata php occ upgrade''
+
+If everything goes well, you should see something like this.
+<code>
+Set log level to debug
+Turned on maintenance mode
+Checking whether the database schema can be updated (this can take a long time depending on the database size)
+Checked database schema update
+Checking updates of apps
+Checking whether the database schema for <activity> can be updated (this can take a long time depending on the database size)
+Checking whether the database schema for <files_sharing> can be updated (this can take a long time depending on the database size)
+Checking whether the database schema for <files_trashbin> can be updated (this can take a long time depending on the database size)
+Checking whether the database schema for <notifications> can be updated (this can take a long time depending on the database size)
+Checked database schema update for apps
+Updating database schema
+Updated database
+Disabled 3rd-party app: documents
+Disabled 3rd-party app: files_videoviewer
+Disabled 3rd-party app: updater
+Updating <files_pdfviewer> ...
+Updated <files_pdfviewer> to 0.8.1
+Updating <files_texteditor> ...
+Updated <files_texteditor> to 2.1
+Updating <gallery> ...
+Updated <gallery> to 14.5.0
+Updating <files> ...
+Updated <files> to 1.4.4
+Updating <activity> ...
+Updated <activity> to 2.2.1
+Updating <files_sharing> ...
+Updated <files_sharing> to 0.9.1
+Updating <files_trashbin> ...
+Updated <files_trashbin> to 0.8.0
+Updating <files_versions> ...
+Updated <files_versions> to 1.2.0
+Updating <notifications> ...
+Updated <notifications> to 0.2.3
+Updating <provisioning_api> ...
+Updated <provisioning_api> to 0.4.1
+Update 3rd-party app: documents
+Starting code integrity check...
+Finished code integrity check
+Update successful
+Turned off maintenance mode
+Reset log level
+</code>
+
+
+Restart httpd to see the new version
+
+====== Restore owncloud ======
+
+If something bad happens, you can no longer use your owncloud. You can restore it.
+
+Restore database, 
+
+''mysql -u root -p''
+
+remove the currupt database
+
+''drop database db_name;''
+
+Create a new database to import the dump
+
+''create database db_name;''
+
+Grant access to owncloud db_user bio_owncloud
+
+''GRANT ALL ON db_name.* TO 'bio_owncloud'@'localhost'; ''
+
+''FLUSH PRIVILEGES;'' 
+
+Import data to the new empty DB
+
+''mysql -u root -p db_name < owncloud_dump.sql''
+
+Copy the old version owncloud exectuable data and config back to /var/www/html/owncloud
+
+Restart httpd
+ 
+====== Upload data via terminal ======
+
+rsync -rltv source_file biodata@owncloud.bioaster.org:/mnt/gpfs/UsersData/userId/files/destination
+
+-r mean recursive
+-l copy symlinks as symlinks
+-t preserve modification time
+-v verbo
+
+userId is the user owncloud login. 
+
+As the gpfs(it's afs in front) is mounted on owncloud server, so we can use it to upload data.
+
+Update owncloud data base to show it on owncloud web interface.
+
+''sudo -u biodata php occ files:scan -p pliu/files/file_or_folder_to_scan''
+
+Ps. To use occ, you must under /var/www/html/owncloud/. You don't need to give complete path such as data/pliu/... .Because php occ will take the first as argument in path as uid. 
+
+
+
+====== log rotation for owncloud ======
+
+We use daemon logrotate to do the logration for owncloud.
+
+So we only need to create a conf file in 
+
+''/etc/logrotate.d/''
+
+''sudo vim owncloud''
+
+put the following lines in it
+
+<code>
+
+/var/www/html/owncloud/data/owncloud.log {
+        su biodata bioaster
+        weekly
+        missingok
+        rotate 8
+        compress
+        notifempty
+        create 640 biodata bioaster
+}
+
+</code>
+
+After this, you can test your conf by 
+
+<code>
+logrotate -s /var/log/logstatus /etc/logrotate.conf
+</code>
+
+====== Change owncloud default log location ======
+If you don't see any error message, it means your conf is correct
+
+If you don't want to put log in /data/, you can edit /config/config.php to redirect log to other location.
+
+For example if you want to put them in /var/log/owncloud.
+
+So first creat the folder owncloud
+
+''mkdir /var/log/ownlcoud ''
+
+Then change folder access rights
+
+''chown -R biodata:bioaster /var/log/owncloud''
+
+''chmod -R 0760 /var/log/owncloud''
+
+Ps. biodata need rwx on owncloud folder
+
+Now edit config/config.php, add the 4 lines
+
+<code>
+ 'log_type' => 'owncloud',
+  'logfile' => '/var/log/owncloud/owncloud.log',
+  'logdateformat' => 'F d, Y H:i:s',
+  'loglevel' => 0,
+</code>
+
+
+
+    0: DEBUG: All activity; the most detailed logging.
+    1: INFO: Activity such as user logins and file activities, plus warnings, errors, and fatal errors.
+    2: WARN: Operations succeed, but with warnings of potential problems, plus errors and fatal errors.
+    3: ERROR: An operation fails, but other services and operations continue, plus fatal errors.
+    4: FATAL: The server stops.
+
+
+====== upgrade from 9.1.1 to 10.0.2 ======
+
+The owncloud 10.0.2. requires the php 5.6. so we need to first upgrade php54 to php > 5.6. Initially, I want to update directly to php7.1. but php7.1 is not compatible with owncloud 9.1.1, so I think I will stay at php7.0. But as php7.0 has major security bugs, we finally decide to update to 7.1.7. Risk: we can not go back to oc 9.1.1. 
+
+1. Check php version
+
+''php -v''
+
+2. add webstatic rpm to yum
+
+<code>
+# rpm -Uvh https://mirror.webtatic.com/yum/el7/epel-release.rpm
+# rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+</code>
+
+3. Remove php 54
+
+''yum remove php-common''
+
+Removed package
+
+<code>
+php                         x86_64          5.4.16-36.3.el7_2          @updates          4.4 M
+ php-cli                     x86_64          5.4.16-36.3.el7_2          @updates          8.8 M
+ php-gd                      x86_64          5.4.16-36.3.el7_2          @updates          342 k
+ php-mbstring                x86_64          5.4.16-36.3.el7_2          @updates          1.3 M
+ php-mysql                   x86_64          5.4.16-36.3.el7_2          @updates          232 k
+ php-pdo                     x86_64          5.4.16-36.3.el7_2          @updates          192 k
+ php-pear                    noarch          1:1.9.4-21.el7             @base             2.2 M
+ php-pecl-apcu               x86_64          4.0.11-1.el7               @epel             151 k
+ php-pecl-igbinary           x86_64          1.2.1-1.el7                @epel              83 k
+ php-pecl-memcached          x86_64          2.2.0-1.el7                @epel             226 k
+ php-pecl-msgpack            x86_64          0.5.5-5.el7                @epel             111 k
+ php-process                 x86_64          5.4.16-36.3.el7_2          @updates           78 k
+ php-xml      
+</code>
+
+remove php 55
+
+''yum remove php55*''
+
+<code>
+Removing:
+ php55                          x86_64       2.0-1.el7            @centos-sclo-rh         0.0  
+ php55-php                      x86_64       5.5.21-5.el7         @centos-sclo-rh         4.2 M
+ php55-php-cli                  x86_64       5.5.21-5.el7         @centos-sclo-rh         8.4 M
+ php55-php-common               x86_64       5.5.21-5.el7         @centos-sclo-rh         4.2 M
+ php55-php-gd                   x86_64       5.5.21-5.el7         @centos-sclo-rh         408 k
+ php55-php-mbstring             x86_64       5.5.21-5.el7         @centos-sclo-rh         1.4 M
+ php55-php-mysqlnd              x86_64       5.5.21-5.el7         @centos-sclo-rh         2.5 M
+ php55-php-pdo                  x86_64       5.5.21-5.el7         @centos-sclo-rh         192 k
+ php55-php-pear                 noarch       1:1.9.4-10.el7       @centos-sclo-rh         2.2 M
+ php55-php-pecl-jsonc           x86_64       1.3.5-1.el7          @centos-sclo-rh          95 k
+ php55-php-process              x86_64       5.5.21-5.el7         @centos-sclo-rh          94 k
+ php55-php-xml                  x86_64       5.5.21-5.el7         @centos-sclo-rh         431 k
+ php55-runtime                  x86_64       2.0-1.el7            @centos-sclo-rh          21 k
+Removing for dependencies:
+ sclo-php55-php-pecl-apcu       x86_64       4.0.10-1.el7         @centos-sclo-sclo       187 k
+</code>
+
+
+4. Install php 7.1.7
+
+Add first the repo for webstatic php
+
+<code>
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+</code>
+
+<code>
+yum install php71w php71w-dom php71w-mbstring php71w-gd php71w-pdo php71w-json php71w-xml php71w-zip php71w-curl php71w-mcrypt php71w-pear php71w-mysql php71w-pecl-apcu-devel php71w-intl php71w-process
+</code>
+
+PS. There is a bug in php70/71w-pecl-apcu-devel, see the bug report here https://github.com/webtatic-rpms/php70/71w/issues/1
+
+Work around is 
+
+<code>
+vim /etc/php.d/apcu.ini
+
+removing the following line: 
+apc.serializer='default'
+</code>
+
+PS. Install php 70w
+
+<code>
+yum install php70w php70w-dom php70w-mbstring php70w-gd php70w-pdo php70w-json php70w-xml php70w-zip php70w-curl php70w-mcrypt php70w-pear php70w-mysql php70w-pecl-apcu-devel php70w-intl php70w-process
+</code>
+
+5. After update oc 10.0.2, we changed the log configuration of owncloud. Now the log is located at /var/log/ownlcoud/owncloud.log with weekly log rotation.
+
+php.config
+
+<code>
+  'log_type' => 'owncloud',
+  'logfile' => '/var/log/owncloud/owncloud.log',
+  'logdateformat' => 'F d, Y H:i:s',
+  'loglevel' => 2,
+</code>
+
+
+
+
+5. Use redis for file locking
+
+[[employes:pengfei.liu:owncloud:redis_file_locking|Use redis for file blocking]]
+
+6. Conclusion 
+
+  * php 5.5 -> php 7.1.7
+  * oc 9.1.1 -> oc 10.0.2.1
+  * log location change /mnt/gpfs/UserData/owncloud.log -> /var/log/owncloud/owncloud.log
+  * use redis for file locking

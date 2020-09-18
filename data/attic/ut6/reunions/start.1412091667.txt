@@ -1,0 +1,34 @@
+**Date** : 30/09/2014
+
+**Participants** : JG, TLC, PV, NS
+
+====== Ordre du jour ======
+Précédente réunion le [[pt6/reunions/reunion_pt6_19.09.2014|19/09/2014]]
+  - Appel à projet européen eINFRA9
+  - <del>Répartition des tâches : [[http://irods.org/|iRODS]], [[http://www.midasplatform.org/|MIDAS]] et use case PT2.</del>
+  - Mise en place d'OpenStack.
+  - Mise en place d'une forge et de bzr
+  - <del>Déploiement de [[http://www.sequenceserver.com/|SequenceServer]], de [[http://c4c.uwc4c.com/express_license_technologies/viroblast|ViroBlast]] ou de [[http://appmibio.uni-goettingen.de/software/|SecureBlast]].</del>
+  - <del>Répartition des tâches : LIMS, eCRF.</del>
+  - <del>Les stations de travail des bio-informaticiens.</del>
+  - Doc et tutoriaux dans le Wiki, ticket dans OTRS
+  - Est-ce qu'on peut utiliser OwnCloud pour récupérer des données non génomiques? 
+  - <del>Choisir un ETL pour BIOASTER : [[http://pegasus.isi.edu/|Pegasus]] et use case PT2</del>
+  
+====== Commentaires et actions ======
+  - <wrap info>NS</wrap>  |  OK pour continuer... On pourrait implémenter gridFTP dans iRODS? Quel protocole derrière iRODS.
+  - <wrap info>NS + PV</wrap>  |  Intégration et documentation du use case PT2 dans la forge.  
+  - <wrap info>JG+PV</wrap>  |  Pierre va tester les 2 nouveaux tenants. Jacques doit relancer Benoit sur la commande des Serveurs GPFS et OpenStack. En attendat, on peu définir une VM semi-permanentes qui monte GPFS. 
+  - <wrap info>PV</wrap>  |  En attente de la réponse de Jean-René pour le module Bazaar de la Forge. Demander comment est utilisé Bazaar par les Bio-info. 
+  - <wrap info>NS</wrap>  |  EN attente que bioaster service soit opérationnel
+  - <wrap info>NS+PV+AC</wrap>  |  On en discute le 2 octobre à Paris et dans le train
+  - <wrap info>JG+MR</wrap>  |  Pas prioritaire pour l'instant ?
+  - <wrap info>PV</wrap>  |  En attente de l'intervention de l'OTRS master. Penser à documenter la façon de demander des accès aux DB. 
+  - <wrap info>NS</wrap>  |  RAS
+  - <wrap info>NS</wrap>  |  RAS
+====== Archives ======
+  - [[pt6/reunions/reunion_pt6_06.06.2014|06/06/2014]]
+  - [[pt6/reunions/reunion_pt6_10.06.2014|10/06/2014]]
+  - [[pt6/reunions/reunion_pt6_25.06.2014|25/06/2014]]
+  - [[pt6/reunions/reunion_pt6_19.09.2014|19/09/2014]]
+  - [[pt6/reunions/reunion_pt6_30.09.2014|30/09/2014]]

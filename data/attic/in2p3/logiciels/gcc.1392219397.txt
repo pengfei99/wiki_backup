@@ -1,0 +1,98 @@
+====== GCC ======
+
+===== Informations =====
+
+  * **Version** : 4.4.7
+  * **Licence** : GPLv3/FDL
+  * **Page Web** : [[http://gcc.gnu.org/]]
+  * **Description** : The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Java, Ada, and Go, as well as libraries for these languages (libstdc++, libgcj,...). GCC was originally written as the compiler for the GNU operating system. The GNU system was developed to be 100% free software, free in the sense that it respects the user's freedom.
+
+===== Installation =====
+
+Les prérequis système :
+<code>
+yum -y install mpfr-devel.x86_64 gpm-libs.x86_64 gpm-devel.x86_64 \
+               glibc-devel.x86_64 glibc-headers.x86_64 gcc-gnat.x86_64 \
+               glibc-devel.i686
+</code>
+
+La compilation :
+<code>
+wget http://ftp.gnu.org/gnu/gcc/gcc-4.4.7/gcc-4.4.7.tar.bz2
+tar xvjf gcc-4.4.7.tar.bz2
+cd gcc-4.4.7
+./configure --prefix=/opt/apps/gcc/4.4.7  \
+            --enable-bootstrap --enable-shared --enable-threads=posix --enable-checking=release \
+            --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object \
+            --enable-languages=c,c++,objc,obj-c++,fortran,ada --disable-dssi \
+            --with-ppl --with-cloog --with-tune=generic --build=x86_64-scientific-linux
+
+# Removed flags
+# --enable-languages=c,c++,objc,obj-c++,java,fortran,ada
+# --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-1.5.0.0/jre --enable-libgcj-multifile \
+# --enable-java-maintainer-mode --with-ecj-jar=/usr/share/java/eclipse-ecj.jar \
+# --disable-libjava-multilib 
+# --with-arch_32=i686 --enable-java-awt=gtk 
+
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "GCC, the famous GNU compiler\n"
+}
+
+set version "4.4.7"
+
+# ugliest syntax ever follows...
+set tmp [ array get env SOFTWARE_ROOT ]
+if { $tmp eq "" } {
+        puts stderr "SOFTWARE_ROOT not set!"
+        exit 1
+} else {
+        set software_root [ eval set $tmp ]
+}
+set base_dir "${software_root}/gcc/${version}"
+set path "${base_dir}/bin"
+set lib_dir  "${base_dir}/lib"
+set include_dir "${base_dir}/include"
+set man_dir "${base_dir}/man"
+
+#help(help_message)
+#family compiler
+conflict "intel"
+
+setenv CC "cc"
+setenv CXX "c++"
+setenv FC "f95"
+setenv F77 "f95"
+setenv F90 "f95"
+setenv F95 "f95"
+setenv CFLAGS "-O2"
+setenv FFLAGS "-O2"
+setenv OFLAGS "-O3"
+setenv GFLAGS "-g -O1"
+setenv LIBRARY_PATH $lib_dir
+setenv LD_LIBRARY_PATH $lib_dir
+setenv C_INCLUDE_PATH $include_dir
+setenv CPLUS_INCLUDE_PATH $include_dir
+setenv PATH "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+
+# Q? why to alter MODULEPATH
+#prepend-path MODULEPATH "module_dir
+prepend-path PATH $path
+prepend-path MANPATH $man_dir
+
+#--prepend-path("--delim",   CPPFLAGS -I/opt/sharcnet/intel/11.0.083/icc/include - I/opt/sharcnet/intel/11.0.083/ifc/include -I/opt/sharcnet/intel/11.0.083/ifc/mkl/include
+#--prepend-path("--delim",   LDFLAGS -L/opt/sharcnet/intel/11.0.083/icc/lib/intel64 -  L/opt/sharcnet/intel/11.0.083/ifc/lib/intel64 -L/opt/sharcnet/intel/11.0.083/ifc/mkl/lib/em64t
+#--prepend-path(     LD_RUN_PATH /opt/sharcnet/intel/11.0.083/icc/lib/intel64:/opt/sharcnet/intel/11.0.083/ifc/lib/intel64:/opt/sharcnet/intel/11.0.083/ifc/mkl/lib/em64t
+#--prepend-path(     LD_LIBRARY_PATH /opt/sharcnet/intel/11.0.083/icc/lib/intel64:/opt/sharcnet/intel/11.0.083/ifc/lib/in tel64:/opt/sharcnet/intel/11.0.083/ifc/mkl/lib/em64t
+</code>
+
+===== Log =====
+
+* **2014.01.24 (tlc)** Version 4.4.7 installée

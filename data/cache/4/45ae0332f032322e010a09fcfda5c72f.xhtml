@@ -1,0 +1,24 @@
+
+<h1 class="sectionedit1" id="difference_between_rpm_yum_and_dnf">Difference between RPM, yum and dnf</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Difference between RPM, yum and dnf&quot;,&quot;hid&quot;:&quot;difference_between_rpm_yum_and_dnf&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-51&quot;} -->
+<h2 class="sectionedit2" id="rpm">RPM</h2>
+<div class="level2">
+
+<p>
+RPM is a package format, as well as a low-level package manager. Low-level package managers do basic things, they will install the package for you, but only if all dependencies are already installed, they will uninstall an installed package you specify and they will upgrade a package if you specify the RPM file you want to upgrade the package with. They will not manage dependencies and repositories for you. RPM and other low-level package managers (like Debian’s dpkg and Slackware’s pkgtools) are completely oblivious of the existence of repositories. As such if a package you are trying to install with it is missing a dependency they cannot search enabled repositories for the dependency, download and install it for you. You will have to do the repository searching yourself and then specify the download <abbr title="Uniform Resource Locator">URL</abbr> to RPM.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;RPM&quot;,&quot;hid&quot;:&quot;rpm&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;52-899&quot;} -->
+<h2 class="sectionedit3" id="yum_and_dnf">YUM and DNF</h2>
+<div class="level2">
+
+<p>
+yum and DNF are essentially programs that manage dependencies and repositories and then utilize RPM to do the actual installing, downloading and removing of packages. DNF is yum’s successor in this, its main difference from yum is that it uses some libraries from openSUSE’s ZYpp package manager in an attempt to enhance speed and otherwise improve things (although install speed tests I’ve performed seem to indicate that DNF is actually slower than yum overall).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;YUM and DNF&quot;,&quot;hid&quot;:&quot;yum_and_dnf&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;900-&quot;} -->

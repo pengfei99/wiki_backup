@@ -1,0 +1,19 @@
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.nodemanager.resource.memory-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>1536<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.scheduler.maximum-allocation-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>1536<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.scheduler.minimum-allocation-mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>128<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.nodemanager.vmem-check-enabled<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>false<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>

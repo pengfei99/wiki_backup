@@ -1,0 +1,163 @@
+
+<h1 class="sectionedit1" id="reunion_du_21_septembre_2017">Réunion du 21 Septembre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9union du 21 Septembre 2017&quot;,&quot;hid&quot;:&quot;reunion_du_21_septembre_2017&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-46&quot;} -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CD</div>
+</li>
+<li class="level1"><div class="li"> YM</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Personnes pr\u00e9sentes&quot;,&quot;hid&quot;:&quot;personnes_presentes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;47-95&quot;} -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Templates JHA/NET</div>
+</li>
+<li class="level1"><div class="li"> Classification Bioagent</div>
+</li>
+<li class="level1"><div class="li"> Validateurs lib js</div>
+</li>
+<li class="level1"><div class="li"> OGM/MOT</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ordre du jour :&quot;,&quot;hid&quot;:&quot;ordre_du_jour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;96-208&quot;} -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Templates JHA vs NET</em>
+</p>
+
+<p>
+YM a croisé les informations contenues dans les templates finaux de JHA et les réponses aux champs dynamiques des 3 binomes de la NET.<br/>
+
+Le fichier est ici <code>$OWNCLOUD/NoE/Dynamic_fields/dynamics_fields_JulievsNET.xlsx</code><br/>
+
+On constate que pour les templates <code>Plasmid</code> et <code>Clinical</code> on obtient un match supérieur à 90%. Par contre pour les templates <code>Cell &amp; Amibe</code>, <code>Bacteria</code> et <code>Antibody</code> il y a des incohérences.<br/>
+
+Dans un soucis de rapidité d&#039;éxécution, l&#039;équipe NoE prend la décision de merger sans consultations des experts les deux listes pour ces 3 templates.<br/>
+
+YM en a profité pour vérifier la présence des champs statiques obligatoires dans les 5 templates de JHA. Il en manque quelques uns dans l&#039;ensemble des templates. De plus, il ressort que le vocabulaire utilisé pour les headers dans les templates de JHA n&#039;est pas harmonisé avec celui des formulaires de NoE.<br/>
+
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> merge des 3 listes dynamiques étant en dessous de 80% de matching</div>
+</li>
+<li class="level1"><div class="li"> retravailler les template de JHA afin d&#039;avoir toutes les infos nécessaires à la création d&#039;un échantillon + un vocabulaire unique entre headers de template et labels de formulaires de NoE  </div>
+</li>
+</ul>
+
+<p>
+<em class="u">Classification Bioagent</em>
+</p>
+
+<p>
+La classification Bioagent a été créée. On y retrouve comme noeuds principaux : <code>Protein</code>, <code>Virus</code>, <code>Fungi</code>, <code>Bacteria</code> et <code>Plasmid</code> ainsi que tous leurs noeuds fils.<br/>
+
+A noter qu&#039;une page d&#039;aide à la visualisation des classifications utilisées dans NoE a été implémentée. <br/>
+
+Cela permet ainsi d&#039;éviter à NoE d&#039;être comparé à la feuille de saisie des temps (sic) et à l&#039;utilisateur d&#039;explorer facilement les classifications <code>type d&#039;échantillon</code>, <code>origine de l&#039;échantillon</code> et <code>bioagent</code>.
+</p>
+
+<p>
+<em class="u">Validateurs lib js</em>
+</p>
+
+<p>
+Des bibliothèques JavaScript exotiques ont été ajoutées à NoE. Il s&#039;agit de <a href="https://harvesthq.github.io/chosen/" class="urlextern" title="https://harvesthq.github.io/chosen/" rel="nofollow">chosen.js</a> et <a href="https://chmln.github.io/flatpickr/" class="urlextern" title="https://chmln.github.io/flatpickr/" rel="nofollow">flatpickr.js</a>.<br/>
+
+L&#039;esthétique des formulaires en a été grandement améliorée, mais les validateurs automatiques sur les champs impactés par ces bibliothèques ont disparus.<br/>
+
+La partie validateur pour chosen et flatpickr a donc été recodé respectivement par YM et CD.
+</p>
+
+<p>
+<em class="u">OGM/MOT</em>
+</p>
+
+<p>
+YM a retravaillé le fichier qualité de déclaration des OGM et des MOT afin de pouvoir en extraire les informations et les rentrer proprement dans la base de données de NoE. La validation de ce fichier par la QSI est en attente depuis le 19/09/2017.<br/>
+
+Le fichier est ici : <code>$OWNCLOUD/NoE/OGM-MOT/template_declaration_OGM_NoE_YM.xlsx</code><br/>
+
+Le mode d&#039;ajout d&#039;un OGM a été discuté.<br/>
+
+Pour ajouter un OGM, un utilisateur devra :
+</p>
+<ul>
+<li class="level1"><div class="li"> être sur le formulaire d&#039;ajout d&#039;un échantillon de NoE</div>
+</li>
+<li class="level1"><div class="li"> choisir “OGM” comme valeur dans la liste à choix “sample type” du formulaire</div>
+</li>
+<li class="level1"><div class="li"> choisir parmi l&#039;OGM parmi ceux qui lui seront proposés par rapport à ses droits connus</div>
+</li>
+</ul>
+
+<p>
+Pour ajouter un OGM à un échantillon, l&#039;utilisateur devra:
+</p>
+<ul>
+<li class="level1"><div class="li"> être sur le formulaie d&#039;ajout d&#039;un échantillon de NoE</div>
+</li>
+<li class="level1"><div class="li"> avoir des droits sur au moins un OGM</div>
+</li>
+<li class="level1"><div class="li"> cliquer sur le bouton “Ajouter un OGM”</div>
+</li>
+<li class="level1"><div class="li"> selectionner l&#039;OGM en question dans la liste à choix</div>
+</li>
+</ul>
+
+<p>
+<code>TODO</code> :
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>modifier la base de données pour que les opérations citées ci-dessus soit possibles</del> –&gt; Fait </div>
+</li>
+<li class="level1"><div class="li"> implémenter un ETL pour la liste des OGM venant du QSI à transférer en base de données</div>
+</li>
+<li class="level1"><div class="li"> modifier le formulaire statique de NoE</div>
+</li>
+<li class="level1"><div class="li"> <del>intégrer “OGM” à la classification <code>type d&#039;échantillon</code></del> –&gt; Fait.</div>
+</li>
+<li class="level1"><div class="li"> <del>Vérifier si tous les échantillons OGM manipulés à BIOASTER sont bien sur la liste (exemple qui nous fait douter : les souris OGM manipulées par UTEC05…)</del> –&gt; à priori c&#039;est ok, Hélène DUGA nous a confirmé que l&#039;UTEC05 ne manipulait pas d&#039;OGM. </div>
+</li>
+</ul>
+
+<p>
+<em class="u">autres TODO, liste générale avant beta test V1 par la NET</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del><code>merger la branche de Pengfei (auth-shib/secu-dev-Pengfei)</code></del></div>
+</li>
+<li class="level1"><div class="li"> finaliser code de JHA + merge de la branche au master</div>
+</li>
+<li class="level1"><div class="li"> finir la fonctionnalité recherche datatable</div>
+</li>
+<li class="level1"><div class="li"> définir quoi mettre (quels types d&#039;infos) dans le dropdown de datatable</div>
+</li>
+<li class="level1"><div class="li"> finir l&#039;édition d&#039;un échantillon</div>
+</li>
+<li class="level1"><div class="li"> avoir une page d&#039;information d&#039;un échantillon propre et sexy</div>
+</li>
+<li class="level1"><div class="li"> code barre</div>
+</li>
+<li class="level1"><div class="li"> créer un échantillon enfant</div>
+</li>
+<li class="level1"><div class="li"> <del><code>dashboard d&#039;accueil v1 (simple)</code></del></div>
+</li>
+<li class="level1"><div class="li"> déployer NoE sur le serveur de dev</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9sum\u00e9&quot;,&quot;hid&quot;:&quot;resume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;209-&quot;} -->

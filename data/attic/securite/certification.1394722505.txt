@@ -1,0 +1,143 @@
+====== Certification ======
+
+Pour les chiffrements des courriels et la connexion par certificats.
+
+Les certificats du système x509 sont soumis à de nombreuses critiques ([[https://www.cs.auckland.ac.nz/~pgut001/pubs/pkitutorial.pdf|1]], [[https://www.cs.auckland.ac.nz/~pgut001/pubs/notdead.pdf|2]], [[http://hackerproof.org/technotes/pki/pki_risks.pdf|3]]).
+
+===== Définir le 'Distinguished Name' =====
+
+Voici les informations à fournir lors de la création d'un certificat :
+
+    Country Name           = FR
+    State or Province Name = Île-de-France
+    Locality Name          = Paris
+    Organization Name      = BIOASTER
+
+    Country Name           = FR
+    State or Province Name = Rhône-Alpes
+    Locality Name          = Lyon
+    Organization Name      = BIOASTER
+
+===== Créer un CA =====
+
+__**TODO**__ : adapter pour multilevel CA
+
+Création d'une **clé RSA** :
+
+    openssl genrsa -des3 -out root_CA.key 2048
+
+Création d'un **certificat** auto-signé :
+
+    openssl req -new -x509 -days 3650 -key root_CA.key -out root_CA.crt
+
+Pour inspecter le **certificat** créé :
+
+    openssl x509 -noout -text -in root_CA.crt
+
+===== Créer un certificat serveur =====
+
+Création d'une **clé RSA** :
+
+    openssl genrsa -out server.tld.key 2048
+
+Création d'une **demande de signature** :
+
+    openssl req -new -key server.tld.key -out server.tld.csr
+
+Création d'un **certificat** signé par le **CA** :
+
+    openssl x509 -req -in server.tld.csr -CA root_CA.crt -CAkey root_CA.key \
+                 -CAcreateserial -days 365 -out server.tld.crt
+
+Pour inspecter la **demande de signature** et le **certificat** créés :
+
+    openssl req -noout -text -in server.tld.csr
+    openssl x509 -noout -text -in server.tld.crt
+
+===== Tester le certificat serveur =====
+
+Utiliser le serveur intégré à **OpenSSL** pour tester les éléments :
+
+    openssl s_server -cert server.tld.crt -key server.tld.key -www
+
+Un **certificat combiné** peut aussi être créé et testé :
+
+    cat server.tld.key server.tld.crt > server.tld-combined.pem
+    openssl s_server -cert server.tld-combined.pem -www
+
+La meilleure façon de le tester est de [[securite/serveur_web|configurer un serveur web avec HTTPS]].
+
+Une fois validé il faudra penser à l'[[securite/certificats_de_confiance|ajouter à la liste des certificats de confiance du système]].
+
+===== Créer un certificat client =====
+
+Création d'une **clé RSA** (protégée par un mot de passe) __et__ de la **demande de signature** en une commande :
+
+    openssl req -newkey rsa:2048 -keyout user.key -out user.csr
+
+Création d'un **certificat** signé par le **CA** :
+
+    openssl x509 -req -in user.csr -CA root_CA.crt -CAkey root_CA.key \
+                 -CAcreateserial -sha512 -days 365 -out user.crt \
+                 -extfile openssl.conf --extensions ext_client
+
+Les extensions sont nécessaires pour conférer certains rôles au certificat. Ceci inspiré des paramètres de **CAcert**, toutes les extensions ne sont peut-être pas nécessaires.
+
+<code text openssl.conf>
+[ext_client]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth
+subjectAltName = email:copy
+
+[ext_server]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = clientAuth,serverAuth,nsSGC,msSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:<crlUri> # where <crlUri> is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = <see section 3.1.1>
+
+[ext_code]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,keyAgreement
+extendedKeyUsage = emailProtection,clientAuth,codeSigning,msCodeInd,msCodeCom,msEFS,msSGC,nsSGC
+#authorityInfoAccess = OCSP;URI:http://ocsp.cacert.org
+#crlDistributionPoints = URI:<crlUri> # where <crlUri> is replaced with the URI where the certificate revocation list relating to the certificate is found
+#subjectAltName = <see section 3.1.1>
+</code>
+
+
+Pour inspecter la **demande de signature** et le **certificat** créés :
+
+    openssl req -noout -text -in user.csr
+    openssl x509 -noout -text -in user.crt
+
+Pour convertir le **certificat** et la **clé** au format **PKCS #12** :
+
+    openssl pkcs12 -export -out user.pfx -inkey user.key -in user.crt -certfile root_CA.crt
+
+Ce format est demandé pour les imports dans certains clients.
+
+===== Tester le certificat client =====
+
+Le meilleur moyen de tester un **certificat client** est de l'importer dans un [[securite/client_courriel|client de messagerie]] ou un [[securite/navigateur_internet|navigateur internet]].
+
+===== Révoquer le certificat client =====
+
+__**Remarque**__ : Le système de révocation n'étant pas le point fort des **certificats x509** mieux vaut confirmer l'authentification par une autorisation, par exemple en vérifiant l'adresse courriel donnée avec un annuaire (AD/LDAP).
+===== Tester le certificat client révoqué =====
+
+===== Liens =====
+
+  * [[http://pages.cs.wisc.edu/~zmiller/ca-howto/]]
+  * [[https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat]]
+  * [[http://www.ipsec-howto.org/x595.html]]
+  * [[http://www.madboa.com/geek/openssl/#cert-self]]
+  * [[http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html]]
+  * [[http://www.flatmtn.com/article/setting-openssl-create-certificates]]
+  * [[http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php]]
+  * [[http://advancedhomeserver.com/openssl-and-your-root-certificate/]]
+  * [[http://cweiske.de/tagebuch/ssl-client-certificates.htm]]
+
+{{tag>todo}}

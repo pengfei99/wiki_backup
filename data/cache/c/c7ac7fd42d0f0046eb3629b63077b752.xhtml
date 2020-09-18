@@ -1,0 +1,86 @@
+
+<h1 class="sectionedit1" id="critiques_symfony">Critiques Symfony</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Critiques Symfony" [1-33] -->
+<h2 class="sectionedit2" id="points_positifs">Points positifs</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Points positifs" [34-62] -->
+<h3 class="sectionedit3" id="mise_a_jour_d_entites_model">Mise à jour d&#039;entités (model)</h3>
+<div class="level3">
+
+<p>
+Lorsque l&#039;on modifie une entité il est tout à fait possible de lancer l&#039;application même si les formulaires n&#039;ont pas été mis à jour en conséquence. Bien sûr la page qui charge le formulaire en question risque de lever une exception mais le reste de l&#039;application reste disponible. Ce n&#039;est pas le cas en Django où le serveur ne veut pas se lancer tant que le formulaire contient des erreurs.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Mise à jour d'entités (model)" [63-508] -->
+<h3 class="sectionedit4" id="translation">Translation</h3>
+<div class="level3">
+
+<p>
+Le service de traduction est bien géré.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Translation" [509-574] -->
+<h3 class="sectionedit5" id="securite">Sécurité</h3>
+<div class="level3">
+
+<p>
+On donne des droits facilement a des routes, ou à un pattern de route (ex : “^/admin” pour tout ce qui commence par “/admin”, par contre si on veut que ce soit les routes admin en français ou en anglais on doit écrire ^/(en|fr)/admin)
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Sécurité" [575-835] -->
+<h2 class="sectionedit6" id="points_negatifs">Points négatifs</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Points négatifs" [836-865] -->
+<h3 class="sectionedit7" id="point_generaux">Point généraux</h3>
+<div class="level3">
+
+<p>
+Des répertoires à foison.
+Gère très mal les requêtes en POST (commun à tout framework ?)
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Point généraux" [866-987] -->
+<h3 class="sectionedit8" id="formulaires">Formulaires</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Validation : Par défaut pour un champ requit non rempli, Symfony va colorer se champ avec un message lambda (type “veuillez remplir ce champ”) mais uniquement ce champ. Donc le champ suivant qui lui n&#039;est pas rempli ne sera pas coloré. Ainsi les champs sont validés un par un. La solution pour valider tous les champs + afficher un message personnalisé et de rendre le champ facultatif (&#039;requiered&#039;⇒ false) et d&#039;ajouter un assert qui fera appel à un message défini dans validators.en.yml ou validators.fr.yml eux même placés dans le repertoire translations.</div>
+</li>
+<li class="level1"><div class="li"> Date : Impossible d&#039;utiliser le choiceType “date” et de ne faire sélectionner que l&#039;année.</div>
+</li>
+<li class="level1"><div class="li"> Data compliqué : Si on veut afficher que les projets commençant par la lettre A par exemple, c&#039;est à nous de faire une requête doctrine à l&#039;aide du query builder dans le formulaire, au détriment du pattern MVC.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Formulaires" [988-1900] -->
+<h3 class="sectionedit9" id="orm">ORM</h3>
+<div class="level3">
+
+<p>
+ORM relativement verbeux. De plus si on fait une “raw query” c&#039;est à nous de dire à Doctrine quelle colonne sera mappée à quel attribut…
+</p>
+
+</div>
+<!-- EDIT9 SECTION "ORM" [1901-2059] -->
+<h3 class="sectionedit10" id="messages_d_erreurs">Messages d&#039;erreurs</h3>
+<div class="level3">
+
+<p>
+<code>Expected argument of type “Symfony\Component\HttpFoundation\File\UploadedFile”, “string” given</code>
+veut dire :
+Veuillez rajouter <code><a href="/_media/informatique/developpement/symfony/form_enctype_commentform" class="media mediafile mf_ wikilink2" title="informatique:developpement:symfony:form_enctype_commentform">form_enctype_commentform</a></code>  dans la balise <code>&lt;form</code> dans votre vue.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Messages d'erreurs" [2060-] -->

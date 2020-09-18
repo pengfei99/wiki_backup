@@ -1,0 +1,75 @@
+
+<h1 class="sectionedit1" id="use_spark_to_do_mapreduce_job">Use spark to do mapreduce job</h1>
+<div class="level1">
+<pre class="code">#read the file
+scala&gt; val textFile = sc.textFile(&quot;file:///tmp/word.txt&quot;)
+textFile: org.apache.spark.rdd.RDD[String] = file:///tmp/word.txt MapPartitionsRDD[1] at textFile at &lt;console&gt;:24
+
+#lazy transformation
+scala&gt; val wordCount = textFile.flatMap(line =&gt; line.split(&quot; &quot;)).map(word =&gt; (word, 1)).reduceByKey((a, b) =&gt; a + b)
+wordCount: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[5] at reduceByKey at &lt;console&gt;:26
+
+#action, active spark job
+scala&gt; wordCount.collect
+res2: Array[(String, Int)] = Array((toto,1), (orange,1), (titi,1), (&quot;&quot;,2), (hello,1), (apple,1), (pengfei,1), (hah,1))</pre>
+
+<p>
+Now we explain the word count transformation bloc by bloc.
+textFile.flatMap(line ⇒ line.split(“ ”)),textFil.flatMap will loop over the file and assign variable line with the value of the current line content. The Lamda function line ⇒ line.split(“ ”) will split all the words in the line by using separator “ ”. You will have a array full of words of the target document.
+</p>
+<pre class="code">scala&gt; val wordMap = textFile.flatMap(line=&gt;line.split(&quot; &quot;))
+wordMap: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[6] at flatMap at &lt;console&gt;:26
+
+scala&gt; wordMap.collect
+res3: Array[String] = Array(hello, pengfei, apple, orange, hah, toto, titi, &quot;&quot;, &quot;&quot;)</pre>
+
+<p>
+Now we can start the map operation, the map funciton loop over all elements in the array and assign current word value to varaible word, the lamba function word⇒(word,1) just transform string variable to a (key,value) tuplet
+</p>
+<pre class="code">scala&gt; val afterMap=wordMap.map(word=&gt;(word,1))
+afterMap: org.apache.spark.rdd.RDD[(String, Int)] = MapPartitionsRDD[7] at map at &lt;console&gt;:28
+
+scala&gt; afterMap.collect
+res4: Array[(String, Int)] = Array((hello,1), (pengfei,1), (apple,1), (orange,1), (hah,1), (toto,1), (titi,1), (&quot;&quot;,1), (&quot;&quot;,1))
+
+</pre>
+
+<p>
+Now we need to reduce all the tuple which has the same key, reduceByKey() function will group all tuplet which has the same key, and apply the lamda fuction (a,b)⇒a+b, which add the value of two tuplet. 
+</p>
+<pre class="code">scala&gt; val afterReduce = afterMap.reduceByKey((a,b)=&gt;a+b)
+afterReduce: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[8] at reduceByKey at &lt;console&gt;:30
+
+scala&gt; afterReduce.collect
+res5: Array[(String, Int)] = Array((toto,1), (orange,1), (titi,1), (&quot;&quot;,2), (hello,1), (apple,1), (pengfei,1), (hah,1))
+</pre>
+
+<p>
+The spark-shell(client mode) is great for testing, but if you close the consol, you will lose everything (e.g. RDD, process)
+</p>
+
+<p>
+You can use cluster mode, even you close the consol, the spark cluster will finish the job.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_mapreduce&amp;codeblock=4" title="Download Snippet" class="mediafile mf_scala">wordCount.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">SparkContext</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">SparkContext</span>.<span class="sy0">_</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">SparkConf</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> WordCount <span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://scala-lang.org"><span class="kw1">val</span></a> inputFile <span class="sy0">=</span>  <span class="st0">&quot;file:///tmp/word.txt&quot;</span>
+        <a href="http://scala-lang.org"><span class="kw1">val</span></a> conf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;WordCount&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>
+        <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkContext<span class="br0">&#40;</span>conf<span class="br0">&#41;</span>
+                <a href="http://scala-lang.org"><span class="kw1">val</span></a> textFile <span class="sy0">=</span> sc.<span class="me1">textFile</span><span class="br0">&#40;</span>inputFile<span class="br0">&#41;</span>
+                <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCount <span class="sy0">=</span> textFile.<span class="me1">flatMap</span><span class="br0">&#40;</span>line <span class="sy0">=&gt;</span> line.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>word <span class="sy0">=&gt;</span> <span class="br0">&#40;</span>word, <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="br0">&#40;</span>a, b<span class="br0">&#41;</span> <span class="sy0">=&gt;</span> a + b<span class="br0">&#41;</span>
+                <span class="co1">//output to console</span>
+                wordCount.<span class="me1">foreach</span><span class="br0">&#40;</span>println<span class="br0">&#41;</span> 
+                <span class="co1">//write result to a file</span>
+                wordCount.<span class="me1">saveAsTextFile</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/wordCount&quot;</span><span class="br0">&#41;</span>     
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>

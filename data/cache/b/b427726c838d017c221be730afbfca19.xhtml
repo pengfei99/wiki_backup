@@ -1,0 +1,138 @@
+
+<h1 class="sectionedit1" id="data_base_theory_introduction">Data Base theory Introduction</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Data Base theory Introduction&quot;,&quot;hid&quot;:&quot;data_base_theory_introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-45&quot;} -->
+<h2 class="sectionedit2" id="introduction">1.Introduction</h2>
+<div class="level2">
+
+<p>
+A database is a centralized data repository which collects, stocks data, and organizes data in order to improve the consultation.
+</p>
+
+<p>
+With time, different types of databases have been proposed:
+</p>
+<ul>
+<li class="level1"><div class="li"> Tree (1960s, relation 1 to N, simple structure but inflexible)</div>
+</li>
+<li class="level1"><div class="li"> Network model (1970s, relation N to M, a flexible way of representing objects and their relationships, COmmon Business Oriented Language aka. cobol)</div>
+</li>
+<li class="level1"><div class="li"> Relational (N to M.Developed by IBM and proposed by Dr Edgar Codd in the 1970s, it was built on mathematics -Relational Algebra. No redundant data (save storage), Strong consistency, No data loss: the relation set represents the whole data set.)</div>
+</li>
+<li class="level1"><div class="li"> object-oriented (1980s, replaced by ORM frameworks)</div>
+</li>
+<li class="level1"><div class="li"> Multi-dimensional (1990s, often used in Business intelligence)</div>
+</li>
+<li class="level1"><div class="li"> NoSQL (2003,came in with big data ecosystem: four types: Key-Value store, Document store, Graph store, Column store)</div>
+</li>
+<li class="level1"><div class="li"> NewSQL (2011, NoSQL with acid (strong transactional check), newest solution: Google Spanner (successor of BigTable), VoltDB,H-Store).)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;46-1119&quot;} -->
+<h2 class="sectionedit3" id="terminologies">2.Terminologies</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.Terminologies&quot;,&quot;hid&quot;:&quot;terminologies&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1120-1148&quot;} -->
+<h3 class="sectionedit4" id="transaction">2.1 Transaction</h3>
+<div class="level3">
+
+<p>
+What is a transaction in a database?
+</p>
+
+<p>
+Each transaction is an operation set (Data Management Language) performed on data
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Transaction&quot;,&quot;hid&quot;:&quot;transaction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1149-1296&quot;} -->
+<h3 class="sectionedit5" id="oltp">2.2 OLTP</h3>
+<div class="level3">
+
+<p>
+On-Line Transactional Processing ( OLTP )
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 OLTP&quot;,&quot;hid&quot;:&quot;oltp&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1297-1361&quot;} -->
+<h2 class="sectionedit6" id="relational_database">3. Relational database</h2>
+<div class="level2">
+
+<p>
+A relational database:
+</p>
+<ul>
+<li class="level1"><div class="li"> manages transaction: Multi insert, delete, update simultaneously</div>
+</li>
+<li class="level1"><div class="li"> provides a high transaction concurrency level.</div>
+</li>
+<li class="level1"><div class="li"> introduce the normal form</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Relational database&quot;,&quot;hid&quot;:&quot;relational_database&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1362-1570&quot;} -->
+<h3 class="sectionedit7" id="four_properties_of_a_relational_database">3.1 Four properties of a relational database</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="atomic">Atomic</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Each transaction is an operation set (DML) performed on data which is efficient when the transaction had been validated.</div>
+</li>
+<li class="level1"><div class="li"> The database handles the transaction, as a unit, which can be validated or canceled.</div>
+</li>
+<li class="level1"><div class="li"> In case of failure, all DML in a transaction is canceled.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="consistency">Consistency</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Any valid or canceled transaction change the data status from one valid status to another valid status</div>
+</li>
+<li class="level1"><div class="li"> The transaction should be based on the business rules.</div>
+</li>
+<li class="level1"><div class="li"> In case of money transfers from account A into account B: money is not created or destroyed but moved only and the credited amount should be the same as the debited one</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="isolation">Isolation</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> All transactions are running as if each one is the only one executed by the system.</div>
+</li>
+<li class="level1"><div class="li"> Transactions control all accesses through a secure mechanism. When data are modified by a transaction, they are locked and can not be changed by another transaction.</div>
+</li>
+<li class="level1"><div class="li"> Through the « read consistency » mechanism displayed by the RDBMS, a transaction t1 can overlook the</div>
+</li>
+</ul>
+
+<p>
+current modifications by a transaction t2 just before t1
+</p>
+
+</div>
+
+<h4 id="durability">Durability</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Once the transaction is validated all data are stored and accessible to all users</div>
+</li>
+<li class="level1"><div class="li"> Any data change is done through a transaction</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Four properties of a relational database&quot;,&quot;hid&quot;:&quot;four_properties_of_a_relational_database&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1571-&quot;} -->

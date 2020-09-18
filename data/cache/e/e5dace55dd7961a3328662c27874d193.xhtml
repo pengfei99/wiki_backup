@@ -1,0 +1,263 @@
+
+<h1 class="sectionedit1" id="internationalisation_avec_django">Internationalisation avec Django</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Internationalisation avec Django" [1-47] -->
+<h2 class="sectionedit2" id="avant_propos">Avant Propos</h2>
+<div class="level2">
+
+<p>
+L&#039;internationalisation (ou i18n) consiste à rendre tous les messages d&#039;une application variables afin de pouvoir facilement les traduire sans avoir à regarder le code source d&#039;un soft.
+Ce tuto propose de mettre en place l&#039;i18n pour un projet django et prendra comme exemple la branche <code>feature-4</code> du projet <abbr title="Network Of Experiments">NoE</abbr>. 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Avant Propos" [48-392] -->
+<h2 class="sectionedit3" id="mettre_la_variable_locale_dans_les_routes">Mettre la variable locale dans les routes</h2>
+<div class="level2">
+
+<p>
+La variable locale est une variable spéciale, elle se trouve dans l&#039;<abbr title="Uniform Resource Locator">URL</abbr> d&#039;un site et contient la langue que l&#039;utilisateur souhaite afficher. Cela permet d&#039;avoir des adresses du type <code>monsite.com/fr</code> <code>monsite.com/en</code> <code>monsite.com/de</code> etc.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Mettre la variable locale dans les routes" [393-692] -->
+<h3 class="sectionedit4" id="parametrer_le_fichier_settingspy">Paramétrer le fichier settings.py</h3>
+<div class="level3">
+
+<p>
+Paramétrez votre fichier settings.py de la façon suivante :
+</p>
+<pre class="code python"><span class="co1"># Internationalization</span>
+<span class="co1"># https://docs.djangoproject.com/en/1.10/topics/i18n/</span>
+LANGUAGE_CODE <span class="sy0">=</span> <span class="st0">'en-us'</span> <span class="co1">#langue par défaut ie. si on écrit monsite.com dans la barre d'adresse, l'url sera remplacé par monsite.com/en</span>
+TIME_ZONE <span class="sy0">=</span> <span class="st0">'Europe/Paris'</span>
+USE_I18N <span class="sy0">=</span> <span class="kw2">True</span>
+USE_L10N <span class="sy0">=</span> <span class="kw2">True</span>
+USE_TZ <span class="sy0">=</span> <span class="kw2">True</span>
+&nbsp;
+TEMPLATES <span class="sy0">=</span> <span class="br0">&#91;</span>
+    <span class="br0">&#123;</span>
+        ...
+        <span class="st0">'OPTIONS'</span>: <span class="br0">&#123;</span>
+            <span class="st0">'context_processors'</span>: <span class="br0">&#91;</span>
+                ...
+                <span class="st0">'django.template.context_processors.i18n'</span><span class="sy0">,</span>
+            <span class="br0">&#93;</span><span class="sy0">,</span>
+        <span class="br0">&#125;</span><span class="sy0">,</span>
+    <span class="br0">&#125;</span><span class="sy0">,</span>
+<span class="br0">&#93;</span>
+&nbsp;
+MIDDLEWARE_CLASSES <span class="sy0">=</span> <span class="br0">&#40;</span>
+    ...
+    <span class="st0">'django.contrib.sessions.middleware.SessionMiddleware'</span><span class="sy0">,</span>
+    <span class="st0">'django.middleware.locale.LocaleMiddleware'</span><span class="sy0">,</span>
+    <span class="st0">'django.middleware.common.CommonMiddleware'</span><span class="sy0">,</span>
+    ...
+<span class="br0">&#41;</span></pre>
+
+<p>
+Et paramétrez votre fichier <code>urls.py</code> de la façon suivante :
+</p>
+<pre class="code python"><span class="kw1">from</span> django.<span class="me1">conf</span>.<span class="me1">urls</span>.<span class="me1">i18n</span> <span class="kw1">import</span> i18n_patterns
+&nbsp;
+urlpatterns <span class="sy0">=</span> i18n_patterns<span class="br0">&#40;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^profile/'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'bauser.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^auth/'</span><span class="sy0">,</span>include<span class="br0">&#40;</span><span class="st0">'auth_shib.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'core.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^admin/'</span><span class="sy0">,</span> admin.<span class="kw3">site</span>.<span class="me1">urls</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span></pre>
+
+<p>
+Uniquement les URLs préfixées par la fonction <code>i18n_patterns</code> commenceront par la variable <code>locale</code> (<code>fr</code>, <code>en</code>, <code>de</code> etc.). Dans l&#039;exemple ci-dessus c&#039;est le cas pour toutes les routes. Si certaines routes devraient ne pas être préfixées par la variable locale, alors il faut les déclarer au préalables dans la liste <code>urlspatterns</code>. Par exemple ci-dessous nous voulons pouvoir appeler <code>monsite.com/admin</code> et pas <code>monsite.com/fr/admin</code> tout en gardant la variable locale pour les autres routes.
+</p>
+<pre class="code python"><span class="kw1">from</span> django.<span class="me1">conf</span>.<span class="me1">urls</span>.<span class="me1">i18n</span> <span class="kw1">import</span> i18n_patterns
+&nbsp;
+urlpatterns <span class="sy0">=</span> <span class="br0">&#91;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^admin/'</span><span class="sy0">,</span> admin.<span class="kw3">site</span>.<span class="me1">urls</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#93;</span>
+&nbsp;
+urlpatterns +<span class="sy0">=</span> i18n_patterns<span class="br0">&#40;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^profile/'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'bauser.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^auth/'</span><span class="sy0">,</span>include<span class="br0">&#40;</span><span class="st0">'auth_shib.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^'</span><span class="sy0">,</span> include<span class="br0">&#40;</span><span class="st0">'core.urls'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span></pre>
+
+</div>
+
+<h4 id="exemple_avec_noe">Exemple avec NoE</h4>
+<div class="level4">
+
+<p>
+cf <a href="https://gitlab.in2p3.fr/bioaster/NoE/commit/9c9b617ecfda046ce631f32cba6c5c90cbef1bf2" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/commit/9c9b617ecfda046ce631f32cba6c5c90cbef1bf2"  rel="nofollow">[feature-4 9c9b617]</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Paramétrer le fichier settings.py" [693-2797] -->
+<h2 class="sectionedit5" id="configurer_des_fichiers_de_traductions">Configurer des fichiers de traductions</h2>
+<div class="level2">
+
+<p>
+Il n&#039;existe pas <a href="http://stackoverflow.com/questions/19174173/what-is-the-right-location-for-my-django-translation-files" class="urlextern" title="http://stackoverflow.com/questions/19174173/what-is-the-right-location-for-my-django-translation-files"  rel="nofollow">d&#039;endroit précis</a> où mettre les fichiers de traduction. Nous choisirons de les mettre dans <code>core/locale</code>.
+Ainsi dans le fichier <code>settings.py</code> nous devons rajouter :
+</p>
+<pre class="code python">LOCALE_PATHS <span class="sy0">=</span> <span class="br0">&#40;</span>
+    <span class="kw3">os</span>.<span class="me1">path</span>.<span class="me1">join</span><span class="br0">&#40;</span>BASE_DIR<span class="sy0">,</span> <span class="st0">'core/locale'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span></pre>
+
+<p>
+Si on veut autoriser que certaines langues dans notre application il faut définir les settings suivants  
+</p>
+<pre class="code python">LANGUAGES <span class="sy0">=</span> <span class="br0">&#91;</span>
+  <span class="br0">&#40;</span><span class="st0">'fr'</span><span class="sy0">,</span> ugettext_lazy<span class="br0">&#40;</span><span class="st0">'French'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+  <span class="br0">&#40;</span><span class="st0">'en'</span><span class="sy0">,</span> ugettext_lazy<span class="br0">&#40;</span><span class="st0">'English'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#93;</span></pre>
+
+</div>
+<!-- EDIT5 SECTION "Configurer des fichiers de traductions" [2798-3445] -->
+<h2 class="sectionedit6" id="workflow">Workflow</h2>
+<div class="level2">
+
+<p>
+À chaque nouveau message (ou nouvel &#039;id&#039;) il faut que django l&#039;ajoute dans le fichier plat (.po). Par la suite nous pouvons le compiler en .mo.
+Le workflow est donc le suivant :
+Nouveau message dans le code (vues ou controller) → déclaration du nouveau message dans le .po → compilation → .mo
+La commande pour créer les messages est <code>python manage.py makemessages -l $LANG</code> où <code>$LANG</code> peut être <code>fr</code> par exemple.
+La commande pour compiler les messages crées est python <code>manage.py compilemessages</code>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Workflow" [3446-3981] -->
+<h2 class="sectionedit7" id="traduire_un_message_a_partir_du_controller">Traduire un message à partir du controller</h2>
+<div class="level2">
+
+<p>
+Nous partirons du principe que nos IDs sont anglais et nous voulons les traduire en français.
+</p>
+
+<p>
+Tout d&#039;abord, définissez la route dans votre <code>controller</code> :
+</p>
+<pre class="code python"><span class="co1"># Translation tests</span>
+<span class="kw1">from</span> django.<span class="me1">http</span> <span class="kw1">import</span> HttpResponse
+<span class="kw1">from</span> django.<span class="me1">utils</span>.<span class="me1">translation</span> <span class="kw1">import</span> ugettext
+<span class="kw1">def</span> translation_test<span class="br0">&#40;</span>request<span class="br0">&#41;</span>:
+    output <span class="sy0">=</span> ugettext<span class="br0">&#40;</span><span class="st0">&quot;Welcome to my site.&quot;</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> HttpResponse<span class="br0">&#40;</span>output<span class="br0">&#41;</span></pre>
+
+<p>
+Vérifiez que vous avez bien défini la variable <code>LOCALE_PATHS</code> dans <code>settings.py</code> puis tapez : 
+</p>
+<pre class="code bash">python manage.py makemessages <span class="re5">-l</span> fr</pre>
+
+<p>
+Puis éditez le fichier .po ainsi crée ( <code>core/locale/fr/LC_MESSAGES/django.po</code> ) afin de rajouter la traduction de “Welcome to my site.”. Enfin, compilez votre fichier .po récemment modifié avec la commande : <code>python manage.py compilemessages</code>
+</p>
+
+<p>
+Bien sûr il faut configurer <code>urls.py</code> pour pouvoir appeler la méthode <code>translation_test</code> de votre controller :
+</p>
+<pre class="code python">urlpatterns <span class="sy0">=</span> i18n_patterns<span class="br0">&#40;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^test/$'</span><span class="sy0">,</span> samples.<span class="me1">translation_test</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'just_a_test'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span></pre>
+
+</div>
+
+<h4 id="exemple_avec_noe1">Exemple avec NoE</h4>
+<div class="level4">
+
+<p>
+cf <a href="https://gitlab.in2p3.fr/bioaster/NoE/commit/16ffe8baaf1a6ffc4d94d5bcf7ad35682cbd137a" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/commit/16ffe8baaf1a6ffc4d94d5bcf7ad35682cbd137a"  rel="nofollow">[feature-4 16ffe8b]</a>
+Testez par vous-même :
+<a href="http://localhost:8000/en/test/" class="urlextern" title="http://localhost:8000/en/test/"  rel="nofollow">http://localhost:8000/en/test/</a> et <a href="http://localhost:8000/fr/test/" class="urlextern" title="http://localhost:8000/fr/test/"  rel="nofollow">http://localhost:8000/fr/test/</a>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Traduire un message à partir du controller" [3982-5375] -->
+<h2 class="sectionedit8" id="traduire_un_message_a_partir_du_gabarit">Traduire un message à partir du gabarit</h2>
+<div class="level2">
+
+<p>
+Tout d&#039;abord votre fichier template doit contenir <code>{% load i18n %}</code>, même si il hérite d&#039;un fichier chargeant lui-même le module <code>i18n</code>.
+</p>
+
+<p>
+Utilisez ensuite la balise trans dans votre fichier gabarit : <code>{% trans “homepage” %}</code> générer vos messages puis compilez-les avec les commandes django (cf <span class="curid"><a href="/informatique/developpement/django/recettes/internationalisation#workflow" class="wikilink1" title="informatique:developpement:django:recettes:internationalisation">workflow</a></span>) et voilà !
+</p>
+
+<p>
+Plus d&#039;info sur comment jouer avec la traduction dans vos templates <a href="https://docs.djangoproject.com/fr/1.10/topics/i18n/translation/" class="urlextern" title="https://docs.djangoproject.com/fr/1.10/topics/i18n/translation/"  rel="nofollow">ici</a>.
+</p>
+
+</div>
+
+<h4 id="exemple_avec_noe2">Exemple avec NoE</h4>
+<div class="level4">
+
+<p>
+cf <a href="https://gitlab.in2p3.fr/bioaster/NoE/commit/2644fd04643edcf01dccdc24ce884ef65317a94b" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/commit/2644fd04643edcf01dccdc24ce884ef65317a94b"  rel="nofollow">[feature-4 2644fd0]</a> : &#039;Homepage&#039; est traduit dans la barre de navigation.
+</p>
+
+</div>
+
+<h4 id="commandes_pour_installation_de_l_application">Commandes pour installation de l&#039;application</h4>
+<div class="level4">
+
+<p>
+Se placer à la racine du projet et taper : <br/>
+
+</p>
+<pre class="prettyprint"> python manage.py compilemessages </pre>
+<p>
+ <br/>
+
+</p>
+
+<p>
+Pour les Mac users : <br/>
+
+Il se peut qu&#039;une erreur apparaisse. <br/>
+
+Exemple : <code>CommandError: Can&#039;t find msgfmt. Make sure you have GNU gettext tools 0.15 or newer installed.</code><br/>
+
+S&#039;assurer que gettext est installé via un 
+</p>
+<pre class="prettyprint">brew search gettext</pre>
+<p>
+puis lancer cette commande : 
+</p>
+<pre class="prettyprint">brew link gettext --force</pre>
+<p>
+ and “Voilà !” <img class="emojione" alt="&#x1f604;" src="//cdn.jsdelivr.net/emojione/assets/png/1F604.png?v=1.2.4"/>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Traduire un message à partir du gabarit" [5376-6657] -->
+<h2 class="sectionedit9" id="sources">Sources</h2>
+<div class="level2">
+
+<p>
+! Attention les sources ne sont pas forcément toutes à jours !
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.10/topics/i18n/" class="urlextern" title="https://docs.djangoproject.com/fr/1.10/topics/i18n/"  rel="nofollow">https://docs.djangoproject.com/fr/1.10/topics/i18n/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://docs.djangoproject.com/fr/1.10/topics/i18n/translation/" class="urlextern" title="https://docs.djangoproject.com/fr/1.10/topics/i18n/translation/"  rel="nofollow">https://docs.djangoproject.com/fr/1.10/topics/i18n/translation/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://stackoverflow.com/questions/16768809/django-internationalization-minimal-example" class="urlextern" title="http://stackoverflow.com/questions/16768809/django-internationalization-minimal-example"  rel="nofollow">http://stackoverflow.com/questions/16768809/django-internationalization-minimal-example</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.marinamele.com/taskbuster-django-tutorial/internationalization-localization-languages-time-zones" class="urlextern" title="http://www.marinamele.com/taskbuster-django-tutorial/internationalization-localization-languages-time-zones"  rel="nofollow">http://www.marinamele.com/taskbuster-django-tutorial/internationalization-localization-languages-time-zones</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.stackoverflow.com/questions/19174173/what-is-the-right-location-for-my-django-translation-files" class="urlextern" title="http://www.stackoverflow.com/questions/19174173/what-is-the-right-location-for-my-django-translation-files"  rel="nofollow">http://www.stackoverflow.com/questions/19174173/what-is-the-right-location-for-my-django-translation-files</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://stackoverflow.com/questions/32536665/django-translation-not-working-in-my-case" class="urlextern" title="http://stackoverflow.com/questions/32536665/django-translation-not-working-in-my-case"  rel="nofollow">http://stackoverflow.com/questions/32536665/django-translation-not-working-in-my-case</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://stackoverflow.com/questions/39801933/should-i-recompile-po-files-to-mo-on-the-server-in-deployment-or-deploy-mo" class="urlextern" title="http://stackoverflow.com/questions/39801933/should-i-recompile-po-files-to-mo-on-the-server-in-deployment-or-deploy-mo"  rel="nofollow">http://stackoverflow.com/questions/39801933/should-i-recompile-po-files-to-mo-on-the-server-in-deployment-or-deploy-mo</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://stackoverflow.com/questions/974645/should-i-check-in-mo-files" class="urlextern" title="http://stackoverflow.com/questions/974645/should-i-check-in-mo-files"  rel="nofollow">http://stackoverflow.com/questions/974645/should-i-check-in-mo-files</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Sources" [6658-] -->

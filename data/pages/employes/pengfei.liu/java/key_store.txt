@@ -1,0 +1,49 @@
+====== Java key store ======
+Pre-requis:
+
+Before importing private key and certificate in the keystore, you must make sure they are in the right format
+
+<code>
+openssl rsa -text -in sp-key.pem
+
+openssl x509 -in sp-cert.pem -text -noout
+
+</code>
+
+This two openssl command can check their validity.
+
+1.encrypte a existing private key
+
+''openssl rsa -aes256 -in acc-wso.bioaster.org.key -out encrypted.key''
+
+algo can be aes128, aes192, aes256, camellia128, camellia192, camellia256, des, des3 and idea.
+
+I recommand aes256, it's the best for now
+
+2.Create a pkcs12 key store with certificate, private key and intermediate.crt
+
+''openssl pkcs12 -export -in acc-wso.bioaster.org.crt -inkey encrypted.key -name wso2carbon -certfile intermediate.crt -out keystore.pfx ''
+
+-name defines the alias of your private key
+
+3. Convert pkcs12 keystore to jks keystore
+
+''keytool -importkeystore -srckeystore keystore.pfx -srcstoretype pkcs12 -destkeystore wso2carbonNew.jks -deststoretype JKS''
+
+4. Export the public key of the keypair
+
+''keytool -export -alias wso2carbon -keystore wso2carbonNew.jks -file acc-wso.bioaster.org.pub
+''
+
+5. Add the public key into the keystore
+
+'' keytool -import -alias wso2carbon -file acc-wso.bioaster.org.pub -keystore client-truststore.jks -storepass wso2carbon''
+
+6. Delete an entry from keystore
+
+<code>
+keytool -delete
+ -alias keyAlias
+ -keystore keystore-name
+ -storepass password
+</code>

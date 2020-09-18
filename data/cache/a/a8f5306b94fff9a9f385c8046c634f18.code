@@ -1,0 +1,5 @@
+ByteBuffer buf <span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;datagramchannel&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">flip</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> send <span class="sy0">=</span> channel.<span class="me1">send</span><span class="br0">&#40;</span>buffer, <span class="kw1">new</span> InetSocketAddress<span class="br0">&#40;</span><span class="st0">&quot;localhost&quot;</span>,<span class="nu0">1234</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>

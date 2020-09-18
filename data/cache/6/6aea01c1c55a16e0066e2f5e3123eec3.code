@@ -1,0 +1,8 @@
+Host proxy
+  HostName &lt;PUBLIC_PROXY_IP&gt;
+  User root
+&nbsp;
+Host private_server
+  HostName &lt;PRIVATE_SERVER_IP&gt;
+  ProxyCommand  ssh proxy nc -w 120 %h %p
+  User root

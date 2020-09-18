@@ -1,0 +1,454 @@
+
+<h1 class="sectionedit1" id="integrer_des_donnees_de_la_base_sciforma_dans_shibboleth">Intégrer des données de la base SCIFORMA dans Shibboleth</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Intégrer des données de la base SCIFORMA dans Shibboleth" [1-74] -->
+<h3 class="sectionedit2" id="creation_d_un_utilisateur_dedie_dans_sciforma">Création d&#039;un utilisateur dédié dans SCIFORMA</h3>
+<div class="level3">
+
+<p>
+Il y a deux instances du logiciel SCIFORMA, celle de production (promise.bioaster.local, 10.69.2.30) et celle de développement (promise-dev.bioaster.local, 10.69.2.31)
+</p>
+
+<p>
+Se connecter à la machine avec le user bioaster depuis une machine du réseau bioaster
+</p>
+<pre class="prettyprint lang-class">
+$ ssh bioaster@10.69.2.31
+</pre>
+<p>
+Une fois connecté, passer en utilisateur root pour ensuite pouvoir passer en user postgres
+</p>
+<pre class="prettyprint lang-class">
+$ sudo -s
+$ su postgres
+</pre>
+<p>
+Positionner la variable d’environnement PGHOST sur localhost (pour que le client postgres sache où tourne le serveur postgres)
+</p>
+<pre class="prettyprint lang-class">
+$ export PGHOST=localhost
+</pre>
+<p>
+Se connecter à la base postgres sciforma avec le user sciforma (le mot de passe vous est demandé, il est dans le keepass dans “Général”)
+</p>
+<pre class="prettyprint lang-class">
+$ psql -d sciforma -U sciforma -W
+</pre>
+<p>
+Passez chacunes des commandes SQL suivantes (le password du user shibboleth est dans le keepass, dans “Général”, “User shibboleth pour sciforma dev”)
+</p>
+<pre class="prettyprint lang-class">
+sciforma=&gt; CREATE ROLE shibboleth LOGIN PASSWORD &#039;password&#039;;
+sciforma=&gt; GRANT CONNECT ON DATABASE sciforma TO shibboleth;
+sciforma=&gt; GRANT USAGE ON SCHEMA sciforma TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_IDM&quot; TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_shib_projWPtask&quot; TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_shib_LaborAsgn&quot; TO shibboleth;
+sciforma=# grant select on sciforma.&quot;Project&quot; to shibboleth;
+</pre>
+<p>
+Quittez psql avec la commande \q
+</p>
+<pre class="prettyprint lang-class">
+sciforma=&gt; \q
+</pre>
+<p>
+<strong>Commandes utiles</strong> :
+</p>
+
+<p>
+\c nom_de_la_base
+</p>
+
+<p>
+\dt
+</p>
+
+<p>
+\d+ sciforma.“BA_IDM”
+</p>
+
+<p>
+\q
+</p>
+
+<p>
+<strong>Get project ID from sciforma</strong>
+</p>
+<pre class="prettyprint">
+select distinct &quot;ID&quot;,&quot;Name&quot;,&quot;Version&quot; from sciforma.&quot;Project&quot; ;
+</pre><pre class="prettyprint lang-class">
+ BAP201      | CODIRA                               |       5
+ BAP201      | CODIRA                               |       1
+ BAP201      | CODIRA                               |       0
+ BA009       | CODIRA 2                             |       1
+ BAT401      | ColiXXL                              |       0
+ BAT402      | ColiXXL                              |       4
+ BAT402      | ColiXXL                              |       2
+ BAT401      | ColiXXL                              |       1
+ BAT401      | ColiXXL                              |       3
+ BAT401      | ColiXXL                              |       5
+</pre>
+<p>
+<strong>Structure de la table BA_shib_LaborAsgn</strong>
+</p>
+<pre class="prettyprint lang-class">
+sciforma=&gt; \d+ sciforma.&quot;BA_shib_LaborAsgn&quot;
+                                    Table &quot;sciforma.BA_shib_LaborAsgn&quot;
+       Column       |          Type          |     Modifiers      | Storage  | Stats target | Description
+--------------------+------------------------+--------------------+----------+--------------+-------------
+ _Project_IID       | double precision       | not null default 0 | plain    |              |
+ _Res_IID           | double precision       | not null default 0 | plain    |              |
+ _Task_IID          | double precision       | not null default 0 | plain    |              |
+ Resource__FirstNam | character varying(255) |                    | extended |              |
+ Resource__ID       | character varying(255) |                    | extended |              |
+ Res_Name           | character varying(255) |                    | extended |              |
+ AD_ID              | character varying(255) |                    | extended |              |
+Indexes:
+    &quot;BA_shib_LaborAsgn_pkey&quot; PRIMARY KEY, btree (&quot;_Project_IID&quot;, &quot;_Res_IID&quot;, &quot;_Task_IID&quot;)
+
+
+</pre>
+<p>
+<strong>Premières lignes de la table sciforma.BA_shib_LaborAsgn</strong>
+</p>
+<pre class="prettyprint lang-class">
+sciforma=&gt; select * from sciforma.&quot;BA_shib_LaborAsgn&quot;;
+ _Project_IID | _Res_IID | _Task_IID | Resource__FirstNam | Resource__ID |    Res_Name    |      AD_ID
+--------------+----------+-----------+--------------------+--------------+----------------+-----------------
+        19623 |     4337 |     21103 | Bettina            | BW           | WERLE          | bwerle
+        19623 |     4300 |     19700 | Adrien             | AL           | LUGARI         | alugari
+        19623 |     4300 |     19702 | Adrien             | AL           | LUGARI         | alugari
+        19623 |     4335 |     21104 | Christophe         | CV           | VEDRINE        | cvedrine
+        19623 |     4248 |     21053 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4248 |     19717 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19717 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19719 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19719 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19721 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19721 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19723 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4248 |     21054 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4323 |     19727 | Maryline           | MRL          | RIPAUX LEFEVRE | mripaux lefevre
+        19623 |     4248 |     19727 | Benoit             | BB           | BEITZ          | bbeitz
+        19623 |     4306 |     19736 | Xavier             | XM           | MENICHE        | xmeniche
+        19623 |     4255 |     19736 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        19623 |    35670 |     19736 |                    | QTof         | QTof           | qtof
+        19623 |     4306 |     19738 | Xavier             | XM           | MENICHE        | xmeniche
+        19623 |     4255 |     19738 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        19623 |    35670 |     19738 |                    | QTof         | QTof           | qtof
+        19623 |     4335 |     21105 | Christophe         | CV           | VEDRINE        | cvedrine
+        19623 |     4273 |     21105 | Céline             | CC           | COUTURIER      | ccouturier
+        19623 |     4273 |     19743 | Céline             | CC           | COUTURIER      | ccouturier
+        14889 |     4283 |     15984 | Christelle         | CBO          | BOISSE         | cboisse
+        14889 |     4263 |     14917 | Andrei             | ABU          | BUNESCU        | abunescu
+        14889 |     3922 |     14917 | Djomangan Adama    | DAO          | OUATTARA       | douattara
+        14889 |     4306 |     14917 | Xavier             | XM           | MENICHE        | xmeniche
+        14889 |     4255 |     14917 | Emeline            | EBI          | BILIAUT        | ebiliaut
+        14889 |     4283 |     14917 | Christelle         | CBO          | BOISSE         | cboisse
+        14889 |    35669 |     14917 |                    | RMN          | RMN            | rmn
+
+</pre>
+<p>
+<strong>Structure de la table BA_shib_projWPtask</strong>
+</p>
+<pre class="prettyprint lang-class">
+sciforma-&gt; \d+ sciforma.&quot;BA_shib_projWPtask&quot;
+                                      Table &quot;sciforma.BA_shib_projWPtask&quot;
+       Column       |            Type             |     Modifiers      | Storage  | Stats target | Description 
+--------------------+-----------------------------+--------------------+----------+--------------+-------------
+ _Project_IID       | double precision            | not null default 0 | plain    |              | 
+ _Task_IID          | double precision            | not null default 0 | plain    |              | 
+ Name               | character varying(255)      |                    | extended |              | 
+ WorkPackageID      | character varying(255)      |                    | extended |              | 
+ WorkPackage__Start | timestamp without time zone |                    | plain    |              | 
+ WorkPackage__Finis | timestamp without time zone |                    | plain    |              | 
+ Type               | character varying(255)      |                    | extended |              | 
+ Start              | timestamp without time zone |                    | plain    |              | 
+ Finish             | timestamp without time zone |                    | plain    |              | 
+ TaskName           | character varying(255)      |                    | extended |              | 
+ WorkPackage__Name  | character varying(255)      |                    | extended |              | 
+Indexes:
+    &quot;BA_shib_projWPtask_pkey&quot; PRIMARY KEY, btree (&quot;_Project_IID&quot;, &quot;_Task_IID&quot;)
+
+</pre>
+<p>
+<strong>Premières lignes de la table sciforma.BA_shib_projWPtask</strong>
+</p>
+<pre class="prettyprint lang-class">
+
+sciforma=&gt; select * from sciforma.&quot;BA_shib_projWPtask&quot;;
+
+ _Project_IID | _Task_IID |                 Name                 | WorkPackageID | WorkPackage__Start  |   WorkPackage__Finis    |         Type          |        Start        |         Finish          |                                                         
+                                     TaskName                                                                                              |                                                         WorkPackage__Name                                             
+            
+--------------+-----------+--------------------------------------+---------------+---------------------+-------------------------+-----------------------+---------------------+-------------------------+---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------
+------------
+        19623 |     20874 | EBODIAG                              |               | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | First Contract - Feasibiluty study (Fujifilm)           
+                                                                                                                                           | EBODIAG
+        19623 |     21222 | EBODIAG                              |               | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | First Contract - Feasibiluty study (Fujifilm)           
+                                                                                                                                           | EBODIAG
+        19623 |     20848 | EBODIAG                              |               | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Contract Amendment Signed                               
+                                                                                                                                           | EBODIAG
+        19623 |     21223 | EBODIAG                              |               | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Contract Amendment Signed                               
+                                                                                                                                           | EBODIAG
+        19623 |     19624 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | WP0: Project management                                 
+                                                                                                                                           | WP0: Project management
+        19623 |     20876 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Project Management during feasibility study and maturati
+on                                                                                                                                         | WP0: Project management
+        19623 |     19626 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | BIOASTER project management                             
+                                                                                                                                           | WP0: Project management
+        19623 |     21083 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | BIOASTER Project Management                             
+                                                                                                                                           | WP0: Project management
+        19623 |     20850 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Kick-Off / Technical Committee 1                        
+                                                                                                                                           | WP0: Project management
+        19623 |     20851 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Technical Committee 2                                   
+                                                                                                                                           | WP0: Project management
+        19623 |     20852 | EBODIAG                              | WP0           | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Collaborative project | 2015-02-02 09:00:00 | 2016-12-12 17:00:00     | Technical Committee 3                                   
+       
+
+</pre>
+<p>
+<strong>Requête qui fait la jointure des deux tables </strong>
+</p>
+<pre class="prettyprint lang-class">
+
+sciforma=&gt; select distinct a.&quot;AD_ID&quot;, b.&quot;Name&quot;, b.&quot;WorkPackageID&quot;  from &quot;BA_shib_LaborAsgn&quot; a, &quot;BA_shib_projWPtask&quot; b where  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; order by a.&quot;AD_ID&quot;;
+      AD_ID      |    Name     | WorkPackageID
+-----------------+-------------+---------------
+ abunescu        | Cinnabiotic | WP1
+ abunescu        | GNOTOMICE   | WP2
+ abunescu        | REALISM     | WP5
+ acauchard       | REALISM     | WP4
+ alugari         | EBODIAG     | WP2
+ atamellini      | GNOTOMICE   | WP0
+ atamellini      | GNOTOMICE   | WP1
+ atamellini      | GNOTOMICE   | WP2
+ bbeitz          | EBODIAG     | WP3
+ bbeitz          | REALISM     | WP3
+ bwerle          | EBODIAG     | WP2
+ cboisse         | Cinnabiotic | WP1
+ ccouturier      | EBODIAG     | WP6
+ ccouturier      | GNOTOMICE   | WP2
+ celie           | Cinnabiotic | WP1
+ criffaud        | REALISM     | WP1
+ cvedrine        | EBODIAG     | WP3
+ cvedrine        | EBODIAG     | WP6
+ cvedrine        | REALISM     | WP0
+ cvedrine        | REALISM     | WP3
+ douattara       | Cinnabiotic | WP1
+ douattara       | GNOTOMICE   | WP2
+ douattara       | REALISM     | WP5
+ ebiliaut        | Cinnabiotic | WP1
+ ebiliaut        | EBODIAG     | WP5
+ ebiliaut        | GNOTOMICE   | WP2
+ ebiliaut        | REALISM     | WP5
+ fbequet         | Cinnabiotic | WP1
+ fbequet         | REALISM     | WP5
+ freynier        | Cinnabiotic | WP1
+ freynier        | REALISM     | WP1
+ freynier        | REALISM     | WP2
+ hdugua          | GNOTOMICE   | WP1
+ hdugua          | GNOTOMICE   | WP2
+ iu7rgid         | REALISM     | WP5
+ jbecker         | Cinnabiotic | WP1
+ jmoriniere      | REALISM     | WP0
+ khennig         | Cinnabiotic | WP1
+ klouis          | REALISM     | WP4
+ lboucinha       | Cinnabiotic | WP1
+ lboucinha       | GNOTOMICE   | WP1
+ mdarnaud        | GNOTOMICE   | WP1
+ mdarnaud        | GNOTOMICE   | WP2
+ mmistretta      | REALISM     | WP3
+ mperret         | Cinnabiotic | WP1
+ mperret         | GNOTOMICE   | WP1
+ mperret         | REALISM     | WP1
+ mperret         | REALISM     | WP2
+ mripaux lefevre | EBODIAG     | WP3
+ mripaux lefevre | REALISM     | WP3
+ mrol            | REALISM     | WP1
+ nsapay          | Cinnabiotic | WP1
+ nsapay          | REALISM     | WP4
+ qexactive       | Cinnabiotic | WP1
+ qtof            | Cinnabiotic | WP1
+ qtof            | EBODIAG     | WP5
+ rmn             | Cinnabiotic | WP1
+ splanel         | GNOTOMICE   | WP2
+ ttran           | REALISM     | WP1
+ ttran           | REALISM     | WP2
+ tu1rgte         | REALISM     | WP1
+ ultra           | Cinnabiotic | WP1
+ vthomas         | Cinnabiotic | WP1
+ xmeniche        | Cinnabiotic | WP1
+ xmeniche        | EBODIAG     | WP5
+ xmeniche        | REALISM     | WP5
+ ybounab         | REALISM     | WP3
+ ymouscaz        | REALISM     | WP4
+ ytahirou        | GNOTOMICE   | WP0
+(69 rows)
+
+</pre>
+<p>
+<strong>Requête qui fait l&#039;aggrégation et la concaténation</strong>
+</p>
+<pre class="prettyprint lang-class">
+SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+FROM 
+    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+    FROM &quot;BA_shib_LaborAsgn&quot; a INNER JOIN &quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+    ORDER BY a.&quot;AD_ID&quot;) t 
+GROUP BY t.&quot;AD_ID&quot;;
+</pre><pre class="prettyprint lang-class">
+sciforma=&gt; select t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) as wps from (select distinct a.&quot;AD_ID&quot;, concat(b.&quot;Name&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) as wps  from &quot;BA_shib_LaborAsgn&quot; a inner join &quot;BA_shib_projWPtask&quot; b on  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; order by a.&quot;AD_ID&quot;) t group by t.&quot;AD_ID&quot;;
+      AD_ID      |                            wps
+-----------------+-----------------------------------------------------------
+ abunescu        | Cinnabiotic::WP1;GNOTOMICE::WP2;REALISM::WP5
+ acauchard       | REALISM::WP4
+ alugari         | EBODIAG::WP2
+ atamellini      | GNOTOMICE::WP0;GNOTOMICE::WP1;GNOTOMICE::WP2
+ bbeitz          | EBODIAG::WP3;REALISM::WP3
+ bwerle          | EBODIAG::WP2
+ cboisse         | Cinnabiotic::WP1
+ ccouturier      | EBODIAG::WP6;GNOTOMICE::WP2
+ celie           | Cinnabiotic::WP1
+ criffaud        | REALISM::WP1
+ cvedrine        | EBODIAG::WP3;EBODIAG::WP6;REALISM::WP0;REALISM::WP3
+ douattara       | Cinnabiotic::WP1;GNOTOMICE::WP2;REALISM::WP5
+ ebiliaut        | Cinnabiotic::WP1;EBODIAG::WP5;GNOTOMICE::WP2;REALISM::WP5
+ fbequet         | Cinnabiotic::WP1;REALISM::WP5
+ freynier        | Cinnabiotic::WP1;REALISM::WP1;REALISM::WP2
+ hdugua          | GNOTOMICE::WP1;GNOTOMICE::WP2
+ iu7rgid         | REALISM::WP5
+ jbecker         | Cinnabiotic::WP1
+ jmoriniere      | REALISM::WP0
+ khennig         | Cinnabiotic::WP1
+ klouis          | REALISM::WP4
+ lboucinha       | Cinnabiotic::WP1;GNOTOMICE::WP1
+ mdarnaud        | GNOTOMICE::WP1;GNOTOMICE::WP2
+ mmistretta      | REALISM::WP3
+ mperret         | Cinnabiotic::WP1;GNOTOMICE::WP1;REALISM::WP1;REALISM::WP2
+ mripaux lefevre | EBODIAG::WP3;REALISM::WP3
+ mrol            | REALISM::WP1
+ nsapay          | Cinnabiotic::WP1;REALISM::WP4
+ qexactive       | Cinnabiotic::WP1
+ qtof            | Cinnabiotic::WP1;EBODIAG::WP5
+ rmn             | Cinnabiotic::WP1
+ splanel         | GNOTOMICE::WP2
+ ttran           | REALISM::WP1;REALISM::WP2
+ tu1rgte         | REALISM::WP1
+ ultra           | Cinnabiotic::WP1
+ vthomas         | Cinnabiotic::WP1
+ xmeniche        | Cinnabiotic::WP1;EBODIAG::WP5;REALISM::WP5
+ ybounab         | REALISM::WP3
+ ymouscaz        | REALISM::WP4
+ ytahirou        | GNOTOMICE::WP0
+(40 rows)
+
+</pre>
+<p>
+A new requirement has been asked by [<abbr title="Yoann Mouscaz">YM</abbr>], we need to send both project name and project id.
+</p>
+
+<p>
+The result must looks like this : <code>REALISM|BAP209::WP4;Setup UTEC06|BAS600::WP15;Setup UTEC06|BAS600::WP8</code>
+</p>
+
+<p>
+So we have to modify the sql request, we add a third inner join on table projects
+</p>
+<pre class="prettyprint">
+SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+                FROM 
+                    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;|&#039;,c.&quot;ID&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+                    FROM sciforma.&quot;BA_shib_LaborAsgn&quot; a INNER JOIN sciforma.&quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                    INNER JOIN sciforma.&quot;Project&quot; c ON b.&quot;Name&quot; = c.&quot;Name&quot; ORDER BY a.&quot;AD_ID&quot;) t 
+                WHERE t.&quot;AD_ID&quot;=&#039;acauchard&#039;    
+                GROUP BY t.&quot;AD_ID&quot;;
+
+</pre>
+<p>
+<strong> Configuration des accès “réseaux” à postgresql, dans le fichier /var/lib/pgsql/9.4/data/pg_hba.conf (en tant que user postgres) </strong>
+</p>
+
+<p>
+Ajouter une entrée pour la machine ou le réseau souhaité, exemple pour un accès depuis le VPN :
+</p>
+<pre class="prettyprint lang-class">
+host    all             all             10.69.14.20/32          md5
+</pre><!-- EDIT3 PLUGIN_WRAP_START [0-] --><div class="wrap_leftround wrap_todo plugin_wrap" style="width: 30%;">
+<p>
+RAF: Faire le bon paramétrage pour la machine shibboleth
+</p>
+</div><!-- EDIT4 PLUGIN_WRAP_END [0-] -->
+<p>
+Ensuite, redémarrage du service postgresql (en tant que root)
+</p>
+<pre class="prettyprint lang-class">
+$ sudo -s
+$ /etc/init.d/postgresql-9.4 restart
+</pre>
+<p>
+Pour vérifier les ACLs réseaux, tester le port postgres (5432) d&#039;un serveur (10.69.2.31)
+</p>
+<pre class="prettyprint lang-class">
+$ nc -vv 10.69.2.31 5432
+Connection to 10.69.2.31 5432 port [tcp/postgresql] succeeded!
+</pre>
+<p>
+Pour tester la connexion depuis une machine extérieure, avec le client psql:
+</p>
+<pre class="prettyprint lang-class">
+$ psql -h 10.69.2.31 -d sciforma -U shibboleth -W
+</pre>
+</div>
+<!-- EDIT2 SECTION "Création d'un utilisateur dédié dans SCIFORMA" [75-21962] -->
+<h3 class="sectionedit5" id="integration_des_donnees_dans_shibboleth">Intégration des données dans Shibboleth</h3>
+<div class="level3">
+
+<p>
+<strong>NB: Le mot de passe du user shibboleth pour postgres est dans le keepass</strong>
+</p>
+<pre class="prettyprint lang-class  linenums:1">
+&lt;resolver:DataConnector id=&quot;kszUserDb&quot; xsi:type=&quot;RelationalDatabase&quot; xmlns=&quot;urn:mace:shibboleth:2.0:resolver:dc&quot; queryTimeout=&quot;PT0.000S&quot;&gt;
+    &lt;dc:ApplicationManagedConnection jdbcDriver=&quot;org.postgresql.Driver&quot;
+                                     poolAcquireRetryAttempts=&quot;1&quot;
+                                     poolAcquireRetryDelay=&quot;1&quot;
+                                     poolBreakAfterAcquireFailure=&quot;false&quot;
+                                     jdbcURL=&quot;jdbc:postgresql:/10.69.2.31:5432/&quot;
+                                     jdbcUserName=&quot;shibbolteh&quot;
+                                     jdbcPassword=&quot;Zepassword&quot;/&gt;
+
+    &lt;dc:QueryTemplate&gt;
+        &lt;![CDATA[
+            SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+            FROM 
+                (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+                FROM &quot;BA_shib_LaborAsgn&quot; a INNER JOIN &quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                ORDER BY a.&quot;AD_ID&quot;) t 
+            WHERE t.&quot;AD_ID&quot;=&#039;$requestContext.uid&#039;    
+            GROUP BY t.&quot;AD_ID&quot;
+        ]]&gt;
+    &lt;/dc:QueryTemplate&gt;
+
+
+    &lt;dc:Column columnName=&quot;tag&quot; attributeID=&quot;dbtag&quot; /&gt;
+     &lt;/resolver:DataConnector&gt; 
+</pre>
+<p>
+The new shibboleth data source config should looks like this.
+</p>
+<pre class="prettyprint">
+ SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+                FROM 
+                    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;|&#039;,c.&quot;ID&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+                    FROM sciforma.&quot;BA_shib_LaborAsgn&quot; a INNER JOIN sciforma.&quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                    INNER JOIN sciforma.&quot;Project&quot; c ON b.&quot;Name&quot; = c.&quot;Name&quot; ORDER BY a.&quot;AD_ID&quot;) t 
+                WHERE t.&quot;AD_ID&quot;=&#039;${requestContext.principalName}&#039;    
+                GROUP BY t.&quot;AD_ID&quot;;
+
+</pre>
+</div>
+<!-- EDIT5 SECTION "Intégration des données dans Shibboleth" [21963-] -->

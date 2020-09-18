@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="apache2_common_problems">Apache2 common problems</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Apache2 common problems" [1-39] -->
+<h2 class="sectionedit2" id="no_space_left_on_device_ah00023couldn_t_create_the_ssl-cache_mutex">No space left on device AH00023: Couldn&#039;t create the ssl-cache mutex.</h2>
+<div class="level2">
+
+<p>
+Apache is basically saying “I want to start, but I need to write some things down before I can start, and I have nowhere to write them!” If this happens to you, check these items in order:
+</p>
+
+<p>
+1. Check your disk space
+</p>
+
+<p>
+2. Review filesystem quotas
+If your filesystem uses quotas, you might be reaching a quota limit rather than a disk space limit. Use repquota / to review your quotas on the root partition. If you’re at the limit, raise your quota or clear up some disk space. Apache logs are usually the culprit in these situations.
+</p>
+
+<p>
+3. Clear out your active semaphores
+Semaphores? What the heck is a semaphore? Well, it’s actually an apparatus for conveying information by means of visual signals. But, when it comes to programming, semaphores are used for communicating between the active processes of a certain application. In the case of Apache, they’re used to communicate between the parent and child processes. If Apache can’t write these things down, then it can’t communicate properly with all of the processes it starts.
+</p>
+<pre class="code file bash"><span class="co0">#stop apache</span>
+systemctl stop httpd
+<span class="co0">#show semaphores</span>
+ipcs <span class="re5">-s</span>
+&nbsp;
+<span class="co0">#create a clean script </span>
+<span class="kw2">vim</span> clean.sh
+<span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">`</span>ipcs <span class="re5">--semaphores</span> <span class="sy0">|</span> <span class="kw2">grep</span> apache <span class="sy0">|</span> <span class="kw2">awk</span> <span class="st_h">'{print $2}'</span><span class="sy0">`</span> ;
+<span class="kw1">do</span>
+ipcrm <span class="re5">--semaphore-id</span> <span class="re1">$i</span>;
+<span class="kw1">done</span> ;</pre>
+
+<p>
+if this is still not working you need to increase the semaphores spaces
+You need to tickle your kernel to do so.
+</p>
+<pre class="code">vim /etc/sysctl.conf
+
+#put the following lines
+kernel.msgmni = 1024
+kernel.sem = 250 256000 32 1024
+
+#reload the conf file
+sysctl -p</pre>
+
+</div>
+<!-- EDIT2 SECTION "No space left on device AH00023: Couldn't create the ssl-cache mutex." [40-] -->

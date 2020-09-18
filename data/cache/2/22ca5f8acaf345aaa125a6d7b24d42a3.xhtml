@@ -1,0 +1,156 @@
+
+<h1 class="sectionedit1" id="reunion_du_02_juin_2017">Réunion du 02 Juin 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9union du 02 Juin 2017&quot;,&quot;hid&quot;:&quot;reunion_du_02_juin_2017&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CD</div>
+</li>
+<li class="level1"><div class="li"> JHA</div>
+</li>
+<li class="level1"><div class="li"> YM</div>
+</li>
+<li class="level1"><div class="li"> PV</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Personnes pr\u00e9sentes&quot;,&quot;hid&quot;:&quot;personnes_presentes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-106&quot;} -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> JHA : Génération d&#039;un template unique par type d&#039;échantillon</div>
+</li>
+<li class="level1"><div class="li"> Avancée du projet</div>
+</li>
+<li class="level1"><div class="li"> Préparation NETMeeting 3</div>
+</li>
+<li class="level1"><div class="li"> Deadline v1 beta</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ordre du jour :&quot;,&quot;hid&quot;:&quot;ordre_du_jour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;107-276&quot;} -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Génération d&#039;un template unique par type d&#039;échantillon</em>
+</p>
+
+<p>
+JHA nous a présenté l&#039;avancée de ses travaux. <br/>
+
+Nous avons pu constater que les templates uniques (par type d&#039;échantillon) issus de la récolte des données et de leur curation étaient faits pour les échantillons de type : bactérie, plasmide, lignée cellulaire &amp; amibe, clinique. <br/>
+
+Toutes les UTECs n&#039;ont pas pu être couvertes du fait de la disparité au niveau de la qualité des inventaires d&#039;échantillons. Il faudra s&#039;assurer que les échantillons non-traités actuellement le soient par la suite.<br/>
+
+Un graphique par type d&#039;échantillon a été présenté : en abscisse les noms des champs à renseigner pour ce type d&#039;échantillon, en ordonnées la proportion de remplissage du champ.<br/>
+
+Il est alors facile de distinguer les champs partagés par l&#039;ensemble des UTECs pour un même type d&#039;échantillon tout comme il est aisé de constater les champs peu utilisés ou propres à une seule équipe (voire une seule personne…).<br/>
+
+Ces slides seront retravaillées grâce aux remarques récoltées durant la réunion pour les reproposer aux experts de la NeT durant le NETMeeting du 8 juin 2017.<br/>
+
+La prochaine étape de JHA sera alors de valider les champs à mettre dans chaque template lors du NETMeeting, puis de faire valider les documents par le QSI pour enfin les retourner aux experts afin de connaitre les champs obligatoires et les champs optionnels.<br/>
+
+Un mapping de ces champs vers les champs de la base de données de NoE sera réalisé par la suite avec l&#039;aide de CD et YM.<br/>
+
+</p>
+
+<p>
+<em class="u">Avancée du projet</em>
+</p>
+
+<p>
+Un état des lieux de l&#039;avancée du projet est réalisé.<br/>
+
+Il reste à faire :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>[DONE]</code>Générer deux templates propres aux MOT et aux OGM pour le QSI. Leur demander de remplir les documents et de nous les retourner au plus vite pour pouvoir donner les premières autorisations spéciales sur ces types d&#039;échantillon. </div>
+</li>
+<li class="level1 node"><div class="li"> Dans SampleForm (formulaire sample 1/2) :</div>
+<ul>
+<li class="level2"><div class="li"> <code>[DONE]</code>ne pas rendre le storage obligatoire</div>
+</li>
+<li class="level2"><div class="li"> <code>[DONE]</code>intégrer la <a href="https://harvesthq.github.io/chosen/" class="urlextern" title="https://harvesthq.github.io/chosen/" rel="nofollow">bibiliothèque JS Chosen</a> pour aider au filtre des classifications d&#039;échantillon et de bioentité</div>
+</li>
+<li class="level2"><div class="li"> Finir l&#039;intégration des Bioagents</div>
+</li>
+<li class="level2"><div class="li"> travailler le rendu du formulaire –&gt; Mise en page, <abbr title="Cascading Style Sheets">CSS</abbr></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> dans SampleDynForm (formulaire sample 2/2) :</div>
+<ul>
+<li class="level2"><div class="li"> générer et intégrer automatiquement le code barre de l&#039;échantillon à sa création (c&#039;est la bibliothèque Python Reportlab qui a été choisi pour cette tache.)</div>
+</li>
+<li class="level2"><div class="li"> travailler le rendu du formulaire –&gt; Mise en page, image en fonction du type d&#039;échantillon, logo en fonction du BSL, <abbr title="Cascading Style Sheets">CSS</abbr></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> dans listing sample (page de listing des échantillons):</div>
+<ul>
+<li class="level2"><div class="li"> paramétrer datatable coté serveur</div>
+</li>
+<li class="level2"><div class="li"> implémenter le module de recherche</div>
+</li>
+<li class="level2"><div class="li"> implémenter les différents filtres de vue applicable (“mes échantillons”, “échantillons de mes projets”, “échantillons de mon équipe”). Permettre un filtre en surcouche : “échantillon dispo”/“échantillon plus dispo”.</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Au niveau des actions possibles en rapport avec les échantillons :</div>
+<ul>
+<li class="level2"><div class="li"> implémenter la page d&#039;information d&#039;un échantillon regroupant toutes ses informations générales ainsi que ses informations de parenté</div>
+</li>
+<li class="level2"><div class="li"> Pouvoir éditer un échantillon (uniquement les siens dans un premier temps ?)</div>
+</li>
+<li class="level2"><div class="li"> Pouvoir créer un échantillon en fonction d&#039;un ou plusieurs parent(s)</div>
+</li>
+<li class="level2"><div class="li"> Pouvoir cloner n fois un échantillon (on afficherait alors le formulaire d&#039;ajout déjà prérempli)</div>
+</li>
+<li class="level2"><div class="li"> Pouvoir supprimer un échantillon (is_to_delete = True) –&gt; page “corbeille” a créer pour voir uniquement les échantillons à supprimer et recliquer sur delete pour confirmer la suppression définitive d&#039;un échantillon (uniquement les siens)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Implémenter une page d&#039;accueil digne de ce nom</div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Cascading Style Sheets">CSS</abbr>/thème général de l&#039;application</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Préparation NETMeeting 3</em>
+</p>
+
+<p>
+Le plan du NETMeeting 3 du 8 juin 2017 sera le suivant :
+</p>
+<ul>
+<li class="level1"><div class="li"> Retour sur travaux de JHA : présentation templates uniques par types d&#039;échantillons</div>
+</li>
+<li class="level1"><div class="li"> Classifications, retours des devoirs et explication de SNOMED CT</div>
+</li>
+<li class="level1"><div class="li"> Champs dynamiques : explication + demande de rentre une copie par binôme pour début juillet (<em>deadline</em> ne pouvant être décalée)</div>
+</li>
+<li class="level1"><div class="li"> Labo/frigo : discussion autour des règles d&#039;accessibilités à ces entités dans NoE + BSL des <a href="/doku.php?id=noe:laboratoires_physiques" class="wikilink2" title="noe:laboratoires_physiques" rel="nofollow">laboratoires physiques</a> à valider</div>
+</li>
+<li class="level1"><div class="li"> Maquette : déroulement d&#039;un use case d&#039;ajout d&#039;un échantillon + explications des champs dynamiques par le concret → bien préciser que si la NeT a des commentaires à faire ça sera jeudi (8 juin) ou jamais.</div>
+</li>
+<li class="level1"><div class="li"> Annonce de la sortie de la v1.0 en beta + spécifier ce que la v1.0 contiendra</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Deadline v1 beta</em>
+</p>
+
+<p>
+<code>Lundi 16 octobre 2017</code>, sauf apparition d&#039;événements incontrôlables.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9sum\u00e9&quot;,&quot;hid&quot;:&quot;resume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;277-&quot;} -->

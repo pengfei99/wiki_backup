@@ -1,0 +1,7 @@
+To add an acronym you have to edit the file ''/var/www/html/dokuwiki/conf'' the format is like this :
+<code perl>
+acronym(\s){14}definition
+</code>
+You don't have to restart any services to see the tooltype appear on the acronym, just refresh the page or edit it to save the changes.
+
+Enjoy !

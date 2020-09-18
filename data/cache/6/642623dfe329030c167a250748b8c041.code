@@ -1,0 +1,198 @@
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.conf.Configuration</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.client.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> ExampleForHbase<span class="br0">&#123;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Configuration configuration<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+connection"><span class="kw3">Connection</span></a> connection<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Admin admin<span class="sy0">;</span>
+&nbsp;
+    <span class="co1">//主函数中的语句请逐句执行，只需删除其前的//即可，如：执行insertRow时请将其他语句注释</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span><span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+        <span class="co1">//创建一个表，表名为Score，列族为sname,course</span>
+        createTable<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>,<span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#123;</span><span class="st0">&quot;sname&quot;</span>,<span class="st0">&quot;course&quot;</span><span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//在Score表中插入一条数据，其行键为95001,sname为Mary（因为sname列族下没有子列所以第四个参数为空）</span>
+        <span class="co1">//等价命令：put 'Score','95001','sname','Mary'</span>
+        <span class="co1">//insertRow(&quot;Score&quot;, &quot;95001&quot;, &quot;sname&quot;, &quot;&quot;, &quot;Mary&quot;);</span>
+        <span class="co1">//在Score表中插入一条数据，其行键为95001,course:Math为88（course为列族，Math为course下的子列）</span>
+        <span class="co1">//等价命令：put 'Score','95001','score:Math','88'</span>
+        <span class="co1">//insertRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;Math&quot;, &quot;88&quot;);</span>
+        <span class="co1">//在Score表中插入一条数据，其行键为95001,course:English为85（course为列族，English为course下的子列）</span>
+        <span class="co1">//等价命令：put 'Score','95001','score:English','85'</span>
+        <span class="co1">//insertRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;English&quot;, &quot;85&quot;);</span>
+&nbsp;
+        <span class="co1">//1、删除Score表中指定列数据，其行键为95001,列族为course，列为Math</span>
+        <span class="co1">//执行这句代码前请deleteRow方法的定义中，将删除指定列数据的代码取消注释注释，将删除制定列族的代码注释</span>
+        <span class="co1">//等价命令：delete 'Score','95001','score:Math'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;Math&quot;);</span>
+&nbsp;
+        <span class="co1">//2、删除Score表中指定列族数据，其行键为95001,列族为course（95001的Math和English的值都会被删除）</span>
+        <span class="co1">//执行这句代码前请deleteRow方法的定义中，将删除指定列数据的代码注释，将删除制定列族的代码取消注释</span>
+        <span class="co1">//等价命令：delete 'Score','95001','score'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//3、删除Score表中指定行数据，其行键为95001</span>
+        <span class="co1">//执行这句代码前请deleteRow方法的定义中，将删除指定列数据的代码注释，以及将删除制定列族的代码注释</span>
+        <span class="co1">//等价命令：deleteall 'Score','95001'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//查询Score表中，行键为95001，列族为course，列为Math的值</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;Math&quot;);</span>
+        <span class="co1">//查询Score表中，行键为95001，列族为sname的值（因为sname列族下没有子列所以第四个参数为空）</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;sname&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//删除Score表</span>
+        <span class="co1">//deleteTable(&quot;Score&quot;);</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//建立连接</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        configuration  <span class="sy0">=</span> HBaseConfiguration.<span class="me1">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        configuration.<span class="me1">set</span><span class="br0">&#40;</span><span class="st0">&quot;hbase.rootdir&quot;</span>,<span class="st0">&quot;hdfs://localhost:9000/hbase&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">try</span><span class="br0">&#123;</span>
+            connection <span class="sy0">=</span> ConnectionFactory.<span class="me1">createConnection</span><span class="br0">&#40;</span>configuration<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin <span class="sy0">=</span> connection.<span class="me1">getAdmin</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span><span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+    <span class="co1">//关闭连接</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="kw1">try</span><span class="br0">&#123;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span>admin <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                admin.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw2">null</span> <span class="sy0">!=</span> connection<span class="br0">&#41;</span><span class="br0">&#123;</span>
+                connection.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span><span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * 建表。HBase的表中会有一个系统默认的属性作为主键，主键无需自行创建，默认为put命令操作中表名后第一个数据，因此此处无需创建id列
+     * @param myTableName 表名
+     * @param colFamily 列族名
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> createTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> myTableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> colFamily<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+&nbsp;
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tableName <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>myTableName<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span><span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;talbe is exists!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span><span class="kw1">else</span> <span class="br0">&#123;</span>
+            HTableDescriptor hTableDescriptor <span class="sy0">=</span> <span class="kw1">new</span> HTableDescriptor<span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">for</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> str<span class="sy0">:</span>colFamily<span class="br0">&#41;</span><span class="br0">&#123;</span>
+                HColumnDescriptor hColumnDescriptor <span class="sy0">=</span> <span class="kw1">new</span> HColumnDescriptor<span class="br0">&#40;</span>str<span class="br0">&#41;</span><span class="sy0">;</span>
+                hTableDescriptor.<span class="me1">addFamily</span><span class="br0">&#40;</span>hColumnDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+            admin.<span class="me1">createTable</span><span class="br0">&#40;</span>hTableDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;create table success&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * 删除指定表
+     * @param tableName 表名
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tn <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            admin.<span class="me1">disableTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin.<span class="me1">deleteTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * 查看已有表
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> listTables<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        HTableDescriptor hTableDescriptors<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> admin.<span class="me1">listTables</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>HTableDescriptor hTableDescriptor <span class="sy0">:</span>hTableDescriptors<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>hTableDescriptor.<span class="me1">getNameAsString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * 向某一行的某一列插入数据
+     * @param tableName 表名
+     * @param rowKey 行键
+     * @param colFamily 列族名
+     * @param col 列名（如果其列族下没有子列，此参数可为空）
+     * @param val 值
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> insertRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> val<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connection.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Put put <span class="sy0">=</span> <span class="kw1">new</span> Put<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        put.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, val.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">put</span><span class="br0">&#40;</span>put<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * 删除数据
+     * @param tableName 表名
+     * @param rowKey 行键
+     * @param colFamily 列族名
+     * @param col 列名
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connection.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Delete delete <span class="sy0">=</span> <span class="kw1">new</span> Delete<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//删除指定列族的所有数据</span>
+        <span class="co1">//delete.addFamily(colFamily.getBytes());</span>
+        <span class="co1">//删除指定列的数据</span>
+        <span class="co1">//delete.addColumn(colFamily.getBytes(), col.getBytes());</span>
+&nbsp;
+        table.<span class="me1">delete</span><span class="br0">&#40;</span>delete<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * 根据行键rowkey查找数据
+     * @param tableName 表名
+     * @param rowKey 行键
+     * @param colFamily 列族名
+     * @param col 列名
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> getData<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span><span class="kw1">throws</span>  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connection.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Get get <span class="sy0">=</span> <span class="kw1">new</span> Get<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        get.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Result result <span class="sy0">=</span> table.<span class="me1">get</span><span class="br0">&#40;</span>get<span class="br0">&#41;</span><span class="sy0">;</span>
+        showCell<span class="br0">&#40;</span>result<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * 格式化输出
+     * @param result
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> showCell<span class="br0">&#40;</span>Result result<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        Cell<span class="br0">&#91;</span><span class="br0">&#93;</span> cells <span class="sy0">=</span> result.<span class="me1">rawCells</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>Cell cell<span class="sy0">:</span>cells<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;RowName:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneRow</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Timetamp:&quot;</span><span class="sy0">+</span>cell.<span class="me1">getTimestamp</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;column Family:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneFamily</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;row Name:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneQualifier</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;value:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneValue</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

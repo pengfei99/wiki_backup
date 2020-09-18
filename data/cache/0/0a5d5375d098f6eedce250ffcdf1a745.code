@@ -1,0 +1,9 @@
+$ nova volume-attach monserveur 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb /dev/vdb
++----------+--------------------------------------+
+| Property | Value                                |
++----------+--------------------------------------+
+| device   | /dev/vdb                             |
+| serverId | c16d3ecb-f504-4cbc-8fa0-89facd5eb3f5 |
+| id       | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
+| volumeId | 38ed8ee5-bcb6-4bea-91d4-5c25d8c21fdb |
++----------+--------------------------------------+

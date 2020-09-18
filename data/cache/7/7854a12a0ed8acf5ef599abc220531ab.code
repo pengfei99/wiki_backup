@@ -1,0 +1,6 @@
+SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,';') AS wps 
+FROM 
+    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,'::', b.&quot;WorkPackageID&quot;) AS wps  
+    FROM &quot;BA_shib_LaborAsgn&quot; a INNER JOIN &quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+    ORDER BY a.&quot;AD_ID&quot;) t 
+GROUP BY t.&quot;AD_ID&quot;;

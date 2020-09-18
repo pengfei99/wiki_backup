@@ -1,0 +1,14 @@
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcSuffix</span>
+<span class="re0">olcSuffix</span>:<span class="re1"> dc=pengfei,dc=org</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootDN</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,dc=pengfei,dc=org</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootPW</span>
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>jCfNbdgnB7TyOUWrCPByznrifWl/RhwM</span>

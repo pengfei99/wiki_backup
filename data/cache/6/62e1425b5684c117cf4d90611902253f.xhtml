@@ -1,0 +1,99 @@
+
+<h1 class="sectionedit1" id="open_port_for_service_in_centos_firewalld">Open port for service in Centos firewalld</h1>
+<div class="level1">
+
+<p>
+1. Check firewalld status
+</p>
+
+<p>
+<code>systemctl status firewalld</code>
+</p>
+
+<p>
+2. list all active zone
+</p>
+
+<p>
+<code>firewall-cmd –get-zones</code>
+</p>
+
+<p>
+3. list all openports and authorize service on one zone
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –list-ports</code>
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –list-services</code>
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –list-all</code>
+</p>
+
+<p>
+4. Open close ports on a zone, add –permanent if you want rule active after restart
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –add-port=5432/tcp –permanent</code>
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –remove-port=5432/tcp</code>
+</p>
+
+<p>
+5. Authorize and deny service on a zone, add –permanent if you want rule active after restart 
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –add-service=http –permanent</code>
+</p>
+
+<p>
+<code>firewall-cmd –zone=public –remove-service=http</code>
+</p>
+
+<p>
+6. Reload rule, after modification
+</p>
+
+<p>
+<code>firewall-cmd –reload</code>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Open port for service in Centos firewalld" [1-850] -->
+<h2 class="sectionedit2" id="other_usefull_command">Other usefull command</h2>
+<div class="level2">
+
+<p>
+1. Change zone on different interface
+</p>
+
+<p>
+<code>firewall-cmd –zone=test –change-interface=eth0</code>
+</p>
+
+<p>
+2.Block all incoming or outgoing connections
+</p>
+
+<p>
+<code>firewall-cmd –panic-on</code>
+</p>
+
+<p>
+3. Use nmap to see all service which listening on a port
+</p>
+
+<p>
+<code>nmap -sT -O localhost</code>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Other usefull command" [851-] -->

@@ -1,0 +1,214 @@
+
+<p>
+<strong>Date : 13/10/2015  </strong>
+</p>
+
+<p>
+<strong>Participants</strong> : AC, TLC, PV, YM, NS, <abbr title="Gigabyte">GB</abbr>   <strong>+  AB</strong>   <em>(excusés : )</em>
+</p>
+
+<p>
+<strong>Précédente réunion le <a href="/ut6/reunions/reunion_ut6_29.09.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_29.09.2015">29/09/2015</a></strong>
+</p>
+
+<h1 class="sectionedit1" id="ordre_du_jour">Ordre du jour</h1>
+<div class="level1">
+
+<p>
+<em>
+Les sujets <del>barrés</del> sont en attente.<br/>
+
+Les sujets <span class="wrap_round wrap_box ">surlignés en gris</span> sont traités s&#039;il y a assez de temps ou seront traités la prochaine fois en cas de manque de temps<br/>
+
+Les sujets <span class="wrap_danger ">surlignés en rouge</span> sont prioritaires.
+</em>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Ordre du jour" [171-481] -->
+<h1 class="sectionedit2" id="interactions_avec_it_is">INTERACTIONS avec IT&amp;IS</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> [AB]Gestion des Comptes extérieurs ⇒ solution : AD ou OU (Organizational Unit) ; AB voit Deuzzi pour cela et revient vers nous</div>
+</li>
+<li class="level1"><div class="li"> [AB / tous] Quel besoin @Institut Pasteur ?</div>
+<ul>
+<li class="level2"><div class="li"> Cluster ?  Pour l&#039;instant, 1 serveur ESX (Dell + 2DD en raid) et VMs : outils TLC + outils biologistes + serveurs de fichiers (+rapide que SRVFIC à une époque)  + montage samba</div>
+</li>
+<li class="level2"><div class="li"> Autres : Imagerie @UTEC5 : PC (en attente de l&#039;IT)  ; Analyses de données @UTEC3 : un mac…</div>
+</li>
+<li class="level2"><div class="li"> Autres : imagerie petits animaux ⇒ récupération via imagopole</div>
+</li>
+<li class="level2"><div class="li"> ⇒ Cluster = ex-ESX de DEUZZI + acquisition NAS de 10 To (après investigation, TLC : estimation de imagerie x100Go en 2015)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [AB] BACKUP ESX</div>
+<ul>
+<li class="level2"><div class="li"> Actuellement VM &#039;vdp&#039; / cluster  ; Pb : 1 vdp / ESX + limitation des tailles de volumes + # de VMs</div>
+</li>
+<li class="level2"><div class="li"> Propal : Sauvegarde sous VMware par VIM-backup; Besoin d&#039;un serveur cifs ; Externalisation sur 2 NAS bas-de-gamme hors CC pour backup  ⇒ externalisation par la même occasion</div>
+</li>
+<li class="level2"><div class="li"> besoins (budget) : Upgrade en V8 +qques CPU </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [NS] interopérabilité OpenSatck &lt;&gt; Vmware ?</div>
+<ul>
+<li class="level2"><div class="li"> natif : Images OpenStack déployées directement sous VMware; Pas le contraire à priori</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [<abbr title="Gigabyte">GB</abbr>] last keepass issues….</div>
+<ul>
+<li class="level2"><div class="li"> Bonne pratique: copie en locale + mise à jour lorsque modif</div>
+</li>
+<li class="level2"><div class="li"> Suspicion de ownCloud … [NA] : oui c&#039;est lui car autorise ouverture concurent du même fichier sans notification : le dernier qui met à jour &#039;gagne&#039;…</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [YM] Pb bannissement IP sur Github</div>
+<ul>
+<li class="level2"><div class="li"> Car tous nous avons la même adresse IP en sortie…</div>
+</li>
+<li class="level2"><div class="li"> 10&#039; sur liste grise… ;  Autres bioinfo utiliseraient GitHub  ???</div>
+</li>
+<li class="level2"><div class="li"> ⇒ AB : analyser le flux sortant vers GitHub pour détecter par exemple un serveur qui fait mise à jour auto… ?</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [YM] BioInfoChOS : Certificats VPN ⇒ dans les mains de Deuzzi</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "INTERACTIONS avec IT&IS" [482-2316] -->
+<h3 class="sectionedit3" id="interaction_avec_cc-in2p3_ip">Interaction avec CC-IN2P3,  IP</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> [NS] Backup policy DBs @cc-in2p3</div>
+<ul>
+<li class="level2"><div class="li"> Augmenter la Durée de rétention</div>
+</li>
+<li class="level2"><div class="li"> Besoins : mieux comprendre la totalité du système !!! [<abbr title="Gigabyte">GB</abbr>] devra être fait pour PCA fin 2016…</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [NS] Migration AFS vers GPFS  : En cours…</div>
+</li>
+<li class="level1"><div class="li"> <span class="wrap_round wrap_box ">[<abbr title="Gigabyte">GB</abbr>] rencontre M. Pressigout@IP + convention</span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Interaction avec CC-IN2P3,  IP" [2317-2664] -->
+<h1 class="sectionedit4" id="autres_utec6">AUTRES (UTEC6)</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> [YM] Propositions nom pour notre LIMS : MODULIMS, UNIVERSALIMS, BIOLOGIMS, BIOLOLIMS, MAITRE LIMS, HÉRODOTE, COMPENDIUM, LINNAEUS, MINERVA, SAMPLEX, COLONEL CODBARR, STRATAGEM, eBIOLIMS, MANAGESTER, LIMSOLUTION, BioDataX (<strong>Bio</strong>logical <strong>Data</strong> and e<strong>X</strong>periments)</div>
+</li>
+<li class="level1"><div class="li"> [YM] Retour confcall avec Dassault</div>
+<ul>
+<li class="level2"><div class="li"> RAF[<abbr title="Gigabyte">GB</abbr>] : fournir une liste de “buzzword” pour qu&#039;Alexis puisse revenir vers eux et que BA soit orienté vers les bonnes personnes.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [YM] Date première réunion Bioinfo + thème ?</div>
+</li>
+<li class="level1"><div class="li"> [PV] Demande de VM de la part de Lilia</div>
+<ul>
+<li class="level2"><div class="li"> il s&#039;agit des données d&#039;Helixio (prestation de service) sur DD_usb ; ~2To</div>
+</li>
+<li class="level2"><div class="li"> Transfert de données in situ (@CC) pas forcément mieux que depuis BA1 :  PV ⇒ confirmé !</div>
+</li>
+<li class="level2"><div class="li"> VM sur tenant &#039;htc&#039; - Nouvelle flavor = 128 Go</div>
+<ul>
+<li class="level3"><div class="li"> +Wrapper SysFera pour lancer des jobs sur le tenant htc </div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Q?  Où placer les applications de Lilia ?  ⇒  séparer les <abbr title="Operating System">OS</abbr> des applications</div>
+<ul>
+<li class="level3"><div class="li"> Stockage des sources et app compilées sur GPFS auxquelles ils accèdent une fois le montage fait : data et appli en même temps!</div>
+</li>
+<li class="level3"><div class="li"> Pour &#039;R&#039; ?  : version et package sont importants tous les deux ! ⇒ Packrat, Renv: outils pour  faire des “bulles” par projet</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> [PV] Formation future : tendance de la bio-informatique, quel choix pour mise à niveau de PV (ya du boulot …)</div>
+</li>
+<li class="level1"><div class="li"> [YM] Discussion autour des offres de stages pour retour vers Julie rapidement</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "AUTRES (UTEC6)" [2665-4097] -->
+<h1 class="sectionedit5" id="archives">Archives</h1>
+<div class="level1">
+<ol>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_06.06.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_06.06.2014">06/06/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_10.06.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_10.06.2014">10/06/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_25.06.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_25.06.2014">25/06/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_19.09.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_19.09.2014">19/09/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_30.09.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_30.09.2014">30/09/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_14.10.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_14.10.2014">14/10/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_28.10.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_28.10.2014">28/10/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_19.11.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_19.11.2014">19/11/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_25.11.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_25.11.2014">25/11/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_12.12.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_12.12.2014">12/12/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_18.12.2014" class="wikilink1" title="ut6:reunions:reunion_pt6_18.12.2014">18/12/2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_pt6_06.01.2015" class="wikilink1" title="ut6:reunions:reunion_pt6_06.01.2015">06/01/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_20.01.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_20.01.2015">20/01/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_03.02.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_03.02.2015">03/02/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_17.02.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_17.02.2015">17/02/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_03.03.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_03.03.2015">03/03/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_20.03.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_20.03.2015">20/03/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_31.03.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_31.03.2015">31/03/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_14.04.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_14.04.2015">14/04/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_28.04.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_28.04.2015">28/04/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_12.05.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_12.05.2015">12/05/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_26.05.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_26.05.2015">26/05/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_09.06.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_09.06.2015">09/06/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_30.07.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_30.07.2015">30/07/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_18.08.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_18.08.2015">18/08/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_08.09.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_08.09.2015">08/09/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_22.09.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_22.09.2015">22/09/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_29.09.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_29.09.2015">29/09/2015</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/ut6/reunions/reunion_ut6_06.10.2015" class="wikilink1" title="ut6:reunions:reunion_ut6_06.10.2015">06/10/2015</a></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Archives" [4098-] -->

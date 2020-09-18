@@ -1,0 +1,37 @@
+
+<h1 class="sectionedit1" id="manage_user_account_in_a_vm">Manage user account in a VM</h1>
+<div class="level1">
+
+<p>
+Add user with specific uid 54321
+</p>
+
+<p>
+# useradd pliu -u 54321
+</p>
+
+<p>
+Add new group with specific gid 54321
+</p>
+
+<p>
+# groupadd bio_dev -g 54321
+</p>
+
+<p>
+Add group bio_dev to pliu
+</p>
+
+<p>
+# usermod -a -G bio_dev pliu
+</p>
+
+<p>
+Change user primery group to bio_dev
+</p>
+
+<p>
+# usermod -g bio_dev tony
+</p>
+
+</div>

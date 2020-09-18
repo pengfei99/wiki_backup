@@ -1,0 +1,90 @@
+a:6:{s:2:"id";s:35:"ut6:reunions:reunion_ut6_19.04.2017";s:6:"prefix";s:0:"";s:4:"text";s:7235:"**Date : 19/04/2017  **
+
+**Participants** :  JHA, YA, YM, PLU, PDU, AC, CD, PV, AZ, GB  +AB    //(excusés : NS)//
+
+**Précédente réunion le [[reunion_ut6_12.04.2017|12/04/2017]]** \\
+[[reunion_pt6_Archive|Accéder à l'archive des Team meetings UTEC6]]
+
+====== UTEC6 : TOUS ======
+
+==== POINTS URGENTS UTEC6 à traiter IMPERATIVEMENT  ====
+  * [YM] Il ne reste plus qu'un slot d'une heure de labmeeting de réservable (12 juillet). Nos stagiaires ne présentent pas en labmeeting cette année ?
+==== PRESENTATION  ====
+  * [AC, ME] : ISO9001 
+  * [NEXT] formation bioinfo de Yasmina (26/04)
+ 
+==== BIOASTER Corp. ====
+  * []
+     
+=== Vie de l'équipe / point RH ===
+  * Bien venue à Yasmina!
+  * [GB]Rappel sur les congés et ponts... 
+    * <wrap important>Last minute...voir le mail de Véronique...</wrap>
+      * avoir soldé ses congés avant le 30 Juin   (dérogation +1mois)
+      * avoir posé ses congés principaux obligatoires (2 semaines consécutives entre 1/06 et 30/09) avant fin du mois
+      * profitons de la dernière année sans besoin réel d'arbitrer...
+    * Jour férié : les lundi 1er et 8 Mai
+    * Pont Ascension : Jeudi 25/05 + Vendredi (RTT obligatoire)
+    * Stagaires : prévoir du Travail@domicile (siner la paperasse avant!)  OU  Congé sans solde...
+  * [NS] Point sur le recrutement DataScientist -> Entretien avec Frederik Gwinner, la candidature de Cécile Chauvel reste #1.
+  * [YM] RTT ce jeudi 20/04. CP restants soldés : le mardi 09/05, le mardi 23/05 et le mercredi 24/05
+  * [AC] A Paris ce Jeudi et Vendredi
+
+
+=== Points Généraux (Veille technique, Idéations, idéations UTEC6, stratégies,... ) ===
+  * [NS, PV] CODIRA : 1ère discussion pour présenter la méthode UTEC06 (c)(r). Un sprint va être organisé avec PV (+PLU?) dans 2-3 semaine pour comprendre où sont les goulots d'étranglement dans leur calcul -> On pourra faire un bilan de l'utilisation des VMs à la suite de ça. Une formation sur Gitlab à prévoir avec PDU pour instiller quelques bonnes pratiques. Les licences Matlab sont à renouveler par le projet \\ -> Ne pas oublier de retransférer la licence à Fabian. \\ -> CODIRA doit préparer un jeu de données de test. (PV : peut-être l'occasion d'utiliser les GPUs du CC ...)
+  * [PLU] DDM : rucio ATLAS Distributed Data Management http://rucio.cern.ch/ \\ source code : https://gitlab.cern.ch/rucio01/rucio 
+
+=== Interaction avec les autres Unités / Services  de BIOASTER ===
+  * Bioinfo 
+    * [PV] Réunion resizing des VMs à prévoir avec UTEC02 (pas d'urgence)
+    * [AC] Transfert des data UTEC02 pénible : données compressées et pas rangées selon norme de stockage Owncloud, cahier de labo absent. Transfert stoppé en attente de rangement par l'UTEC02
+  * UTECx
+  * UTHEMx
+  * PMO
+  * Juridique
+  * Com
+  * QSI
+  * DAF  
+  * Achat
+    * [AC] Licence PRISM reçue pour Christophe Perret (UTEC05/Paris)
+    
+==== Partnerships / BD ====
+  * 
+
+
+===== PROJETs =====
+
+^# ^Quoi?                  ^Qui?          ^Avancement / Action   ^
+^0 |ISO9001| AC, GB | Refonte du logigramme: à discuter et mettre au propre...avant présentation @équipe par AC|
+^1 |PASSPORT| PLU |[PLU] Develope python/django Client soap for xacml authorization service \\ [PLU] Improve security of wso server |
+^2 |Biospecimens| YM + CD| [Biospecimens V1.5][CD] Règle les derniers soucis d'affichage avant d'entamer les choses sérieuses (CSS) \\ [Biospecimens V1.5][CD] J'aimerais que l'outil soit éprouvé par UTEC 06 -> OK pour tout le monde si je prévois une réunion entre 1er et 15 mai ? |
+^3 |NoE +eSample +FLEMS |YM + CD |[YM + CD] Mise au propre du [[https://devtools.bioaster.org/redmine/projects/sample_management/issues/gantt?utf8=%E2%9C%93&set_filter=1&gantt=1&f%5B%5D=status_id&op%5Bstatus_id%5D=o&f%5B%5D=&query%5Bdraw_relations%5D=0&query%5Bdraw_relations%5D=1&query%5Bdraw_progress_line%5D=0&months=12&month=1&year=2017&zoom=2|GANTT NoE v1]]. \\ [YM] Visualisation d3.js des classif sample et bioentity pour validation par la NeT + mail envoyé avec consignes claires. \\ [YM] JT part et ne sera pas forcément remplacer @ Paris, faut-elle la remplacer dans la NeT ou BB est-il suffisant ?  \\  [YM] Code : On a donc pour le moment 685 types d'échantillons et 902 origines possibles. --> intégration au formulaire de création, en mode bourrin on fait environ 7500 requêtes pour afficher ces deux listes avec un joli affichage de type "ancetre_1 >> ancetre_2 >> ancetre_3 >> ancetre_n >> feuille". PENDING : en phase d'amélioration |
+^4 |REALISM + tranSMART |NS |[NS] CdC MIPREA prêt à être envoyer aux partenaires (SANOFI d'abord) -> OK pour PLU? \\ [NS] Confirmation par MLR que l'eCRF serait sous utiliser (pas de données d'immuno saisies) -> situation exposé en réunion interne à BIOASTER... Je prévois ~10j supplémentaire pour intégrer le fichier Excel aux données \\ [NS] MLR devrait rentrer dans le rang des bonnes pratiques en sauvegardant sont fichier XLSX de résultat cyto sur OwnCloud \\ [NS] Réunion interne sur les dépassements de budget... Net refus du PMO de reconnaître la responsabilité des HCL dans le cas de l'eCRF. Des sources bien informées me disent que l'investissement de HV à 80% n'est pas probant. Que faire? | 
+^7 |bMx Metagenomics MetaSeq \\ [[https://gitlab.in2p3.fr/bioaster/metaseq/blob/master/CHANGELOG.md|CHANGELOG]] \\ [[https://gitlab.in2p3.fr/bioaster/metaseq/boards?milestone_title=v1.0|Board]] |GB + PV + PDU | [GB, PDU, PV] Mise en ligne officielle le lundi 24/04 \\ [PDU, PV] Quelques retards côté pipeline, pas grave on met en ligne \\ [PV] Alias metaseq@bioaster.org pour le support (bmx n'a pas accès à GLPI) |
+^8 |Schéma Directeur Data Science|NS| [GB] Relecture + retour \\ [NS] Réécriture du résumé à prévoir + restructuration de quelques paragraphes |
+^9 |THOR|AC+ PLU|   | 
+^10 | Stage NoE : the samples legacy | JHA+YM | [JHA] Visualisation des données brutes à l'aide du logiciel Cytoscape\\  Recherche de la possibilité d'un template unique à l'aide du graphe\\ Derniers Entretiens vendredi à Paris |   
+^11 | Stage Cyto | NS+YA | [NS] Il me faut les droits pour récupérer les données UTEC03 sur OwnCloud \\ [NS] Je dois créer un projet Gitlab pour le stage |
+====== UTEC6 : DataManagement + Core + SoftDEV ======
+
+==== DEV  ====
+  * [CD] Point sur les commandes d'IDEs
+  * [YM] J'ai fait un script de conversion JSON -> JSON schéma collapse.d3.js. J'aimerai faire un repo Gitlab de tous nos scripts de type "Mixoscripts/python - /php - /java ..." pour qu'on garde une trace de ces choses réalisées vite fait et certainement améliorables mais qui pourraient tout de même resservir. Tt le monde est ok ? Autre idée ?
+  * [PDU, PV] Formation Gitlab à prévoir pour équipe CODIRA (+Quentin Josso bmx) + Iasmina
+
+
+
+==== Core Services ====
+  *
+==== IT/IS (AB) & UTEC06 ====
+  * 
+
+==== INFRA  +CC-IN2P3 +IP ====
+  * [PV] Alias bioadmin : le communiquer au CC et y ajouter PLU
+==== Data Management ====
+  * [AC, PLU, PV] Réunion dashboard GPFS à planifier avec Loïc@CC (pas d'urgence)
+  * [AC, PLU] Clean UP de la DB Owncloud à faire : en attente de dispo de PLU
+
+
+";s:6:"suffix";s:0:"";s:4:"date";i:1493044667;s:6:"client";s:7:"gboissy";}

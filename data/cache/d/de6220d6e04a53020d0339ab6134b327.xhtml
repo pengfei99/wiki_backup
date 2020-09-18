@@ -1,0 +1,94 @@
+
+<h1 class="sectionedit1" id="install_python_without_using_pyenv">Install python without using pyenv</h1>
+<div class="level1">
+
+<p>
+1. Pre-install
+</p>
+
+<p>
+yum group install “Development Tools”
+</p>
+
+<p>
+2. Get the source 
+</p>
+
+<p>
+wget <a href="https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz" class="urlextern" title="https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz" rel="nofollow">https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz</a>
+</p>
+
+<p>
+3. Untar the source
+</p>
+
+<p>
+tar xzf Python-3.5.1.tgz
+cd Python-3.5.1
+</p>
+
+<p>
+4. Build make file
+</p>
+
+<p>
+&lt;Code&gt;
+./configure –prefix=/usr/local –enable-shared
+&lt;/Code&gt;
+</p>
+
+<p>
+PS : –enable-shared option is crutial for build wsgi with apache. So if you don&#039;t add this option, you can&#039;t compile wsgi.
+</p>
+
+<p>
+5. Install
+</p>
+
+<p>
+make altinstall
+</p>
+
+<p>
+6. Test
+</p>
+
+<p>
+#  python3.5 –V
+</p>
+
+<p>
+The executable are in /usr/local/bin, the dependence are in /usr/local/lib (or maybe /usr/local/lib64)
+</p>
+
+<p>
+Ps. if you see error like /usr/local/bin/python: error while loading shared libraries:libpython3.5m.so.1.0: cannot open shared object file: No such file or directory
+</p>
+
+<p>
+You need to add export LD_LIBRARY_PATH=/usr/local/lib
+</p>
+
+<p>
+To make permenant, you have two options.
+</p>
+<ul>
+<li class="level1"><div class="li"> Make it work only for you, open your <strong>.bash_profile</strong> file, and add the following line <strong>export LD_LIBRARY_PATH=/usr/local/lib</strong></div>
+</li>
+<li class="level1"><div class="li"> Make it work for all users. In <strong>/etc/ld.so.conf.d/</strong>, create a file “python3.5-lib.conf”. Then put the path of your python lib in it. For example, in my case, it&#039;s <strong>/usr/local/lib</strong>. Finally , run <strong>sudo ldconfig</strong></div>
+</li>
+</ul>
+
+<p>
+7. Determin if your python is 32 or 64 bits
+</p>
+
+<p>
+import struct
+</p>
+
+<p>
+print (struct.calcsize(“P”) * 8)
+</p>
+
+</div>

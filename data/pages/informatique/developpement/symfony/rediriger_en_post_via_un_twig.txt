@@ -1,0 +1,52 @@
+Le but de cette page est de montrer comment une vue en twig peut faire référence à une route (et à la méthode du //controller// associée) en l’appelant //via// la méthode POST afin de ne pas mettre les arguments dans l'URL.
+
+Si vous désirez rediriger vers une vue, en POST, à partir du //controller// alors vous devez utiliser la méthode [[http://symfony.com/doc/current/controller/forwarding.html|forward]] du //controller//.
+
+===Théorie===
+
+L'idée est tout simplement de faire un formulaire. Dans le //path// défini il ne faut pas mettre d'arguments sinon il seront affichés dans la barre d'adresse (ex : http://localhost:8000/biospecimens/fr/connected/workflow**?toto=4**). Il faut définir la méthode de form à POST et définir les bons paramètres de routing.
+
+===Implémentation===
+Dans notre exemple nous essayerons de passer le paramètre "toto" qui aura pour valeur "userDemand.id" (variable définie dans la vue) à la route biospecimens_connected_workflow et à son action associée. Le tout en POST.
+
+**Côté vue**
+<code html>
+<form action="{{ path('biospecimens_connected_workflow',{}) }}" method="post">  <input type="hidden" name="toto" value="{{userDemand.id}}"> <button type="submit">  {{userDemand.id}}</button> </form>
+</code>
+
+Notez qu'on **ne** donne **pas** de paramètres à biospecimens_connected_workflow ! L'array de paramètres est vide.
+
+**Définition de la route**
+
+en YML :
+<code yml>
+biospecimens_connected_workflow:
+    path : /biospecimens/fr/connected/workflow
+    defaults: {_controller:BSBiospecimensBundle:Workflow:workflow}
+    requirements:
+      _method: POST
+</code>
+
+en annotation dans le controller :
+<code php>
+   /**
+     * @Route("/biospecimens/fr/connected/workflow", name="biospecimens_connected_workflow")
+     * @Method("POST")
+     */
+</code>
+
+**Récupération des paramètres côtés controller**
+
+La méthode du controller appelée a juste besoin de Request $request en paramètre et rien d'autre. Pour récupérer les paramètres il faut utiliser $request->get('monparametre')
+
+Exemple: 
+
+<code php>
+  public function workflowAction(Request $request)
+  {
+    dump($request->get('toto'));
+    $id = $request->get('toto');
+    dump($request);
+    
+    }
+</code>    

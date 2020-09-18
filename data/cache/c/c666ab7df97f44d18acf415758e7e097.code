@@ -1,0 +1,13 @@
+# Assetic Configuration
+assetic:
+    debug:          &quot;%kernel.debug%&quot;
+    use_controller: false
+    bundles:        [ ]
+    filters:
+        cssrewrite: ~
+        less:
+            node: /usr/bin/node
+            node_paths: [/usr/lib/node_modules]
+            apply_to: &quot;\.less$&quot;
+braincrafted_bootstrap:
+    less_filter: less

@@ -1,0 +1,299 @@
+
+<h1 class="sectionedit1" id="create_and_manage_services_in_centos7_with_systemd">Create and manage services in centos7 with systemd</h1>
+<div class="level1">
+
+<p>
+Systemd is a system and service manager and like most major Linux distributions the init daemon was replaced by Systemd in CentOS 7. One of the main functions of Systemd is to manage the services, devices, mount points, sockets and other entities in a Linux system. Each of these entities that are managed by Systemd is called a unit. Each unit is defined by a unit file (configuration file) which is located in one of the following directories.
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Directory </th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> /usr/lib/systemd/system/ </td><td class="col1"> Unit files distributed with installed packages. Do not modify unit files in this location.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> /run/systemd/system/	</td><td class="col1"> Unit files that are dynamically created at runtime. Changes in this directory are lost when rebooted.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> /etc/systemd/system/	</td><td class="col1"> Unit files created by systemctl enable and custom unit files created by system administrators.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;515-909&quot;} -->
+<p>
+Any custom unit files that you create should be placed in the <strong>/etc/system/system/</strong> directory. This directory takes precedence over other directories.
+</p>
+
+<p>
+Unit files names are of the form <strong>unit_name.unit_type</strong>. Unit_type can be one of the following:
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Unit Type </th><th class="col1 rightalign">	Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">device </td><td class="col1"> A device unit.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">service </td><td class="col1"> A system service.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">socket	</td><td class="col1"> A socket for inter-process communication.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">swap </td><td class="col1">A swap file or device.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">target	</td><td class="col1"> A group of units. </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">timer	</td><td class="col1"> A systemd timer. </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">snapshot </td><td class="col1"> A snapshot of systemd manager. </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign">mount	</td><td class="col1"> A mount point. </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign">slice	</td><td class="col1"> A group of unit that manage the system processes. </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign">path	</td><td class="col1"> A file or directory.</td>
+	</tr>
+	<tr class="row11">
+		<td class="col0">automount </td><td class="col1"> A automount point.</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign">scope	</td><td class="col1"> An externally created process.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1163-1622&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create and manage services in centos7 with systemd&quot;,&quot;hid&quot;:&quot;create_and_manage_services_in_centos7_with_systemd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1623&quot;} -->
+<h2 class="sectionedit4" id="creating_a_new_service_systemd_unit">Creating a new service (Systemd unit)</h2>
+<div class="level2">
+
+<p>
+To create a custom service to be managed by systemd, you create a unit file that defines the configuration of that service. To create a service named Zeppelin, for example, you create a file named zeppelin.service in <strong>/etc/systemd/system/</strong>. The unit file of service consists of a set of directives that are organized into three sections - Unit, Service and Install. Below is an example of a very simple unit file.
+</p>
+<pre class="code">[Unit]
+ Description=Service description
+
+[Service]	
+ ExecStart=path_to_executable
+
+[Install]
+ WantedBy=default.target</pre>
+
+<p>
+Once you have created the unit file with all the necessary configuration options, save the file and set the correct file permissions.
+</p>
+<pre class="code">chmod 664 /etc/systemd/system/zeppelin.service
+
+# The next step is to reload all unit files to make systemd know about the new service.
+systemctl daemon-reload
+
+#Finally to start the service, run
+systemctl start zeppelin.service</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Creating a new service (Systemd unit)&quot;,&quot;hid&quot;:&quot;creating_a_new_service_systemd_unit&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1624-2605&quot;} -->
+<h3 class="sectionedit5" id="unit_section">Unit Section</h3>
+<div class="level3">
+
+<p>
+The following are the main directives that you specify in the [Unit] section.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Description</strong>: A short description of the unit.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Documentation</strong>: A list of URIs pointing to the documentation for the unit.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Requires</strong>: A list of units that must be started alongside the current unit. If any these units fail to start then the current unit will not be activated.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Wants</strong>: Similar to the Requires directive but the difference is the current unit will be activated even if the depended units fail to start.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Before</strong>: List of units that cannot be started before the current unit.</div>
+</li>
+<li class="level1"><div class="li"> <strong>After</strong>: The current unit can start only after the units listed here. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Conflicts</strong>: List units that cannot be run concurrently with the current unit.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Unit Section&quot;,&quot;hid&quot;:&quot;unit_section&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;2606-3394&quot;} -->
+<h3 class="sectionedit6" id="service_section">Service Section</h3>
+<div class="level3">
+
+<p>
+Some of the common directives that you&#039;ll see in the service section are.
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <strong>Type</strong>: Defines the startup type of the unit which can be one of the values:</div>
+<ul>
+<li class="level3"><div class="li"> <strong>Simple</strong>: This is the default. The main process of the service is the process started with ExecStart.</div>
+</li>
+<li class="level3"><div class="li"> <strong>Forking</strong>: The process started with ExecStart spawns a new child process which becomes the main process and the parent process is terminated when the startup is completed.</div>
+</li>
+<li class="level3"><div class="li"> <strong>Onehot</strong>: Similar to simple but systemd waits for the process to exit before proceeding with other units.</div>
+</li>
+<li class="level3"><div class="li"> <strong>Dbus</strong>: Similar to simple but systemd waits for the process to take a name on the dbus.</div>
+</li>
+<li class="level3"><div class="li"> <strong>Notify</strong>: Similar to simple Systemd will wait for a notification from the process before continuing with other units.</div>
+</li>
+<li class="level3"><div class="li"> <strong>Idle</strong>: Similar to simple but service will not run until all other jobs are finished.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>ExecStart</strong>: Specifies the command to the executed to start service.</div>
+</li>
+<li class="level1"><div class="li"> <strong>ExecStartPre</strong>: Specifies the command to be executed before the main process specified in the ExecStart is started.</div>
+</li>
+<li class="level1"><div class="li"> <strong>ExecStartPost</strong>: Specifies the command to be executed after the main process specified in the ExecStart has finished.</div>
+</li>
+<li class="level1"><div class="li"> <strong>ExecStop</strong>: Specifies the command to be executed when the service is stopped.</div>
+</li>
+<li class="level1"><div class="li"> <strong>ExecReload</strong>: Specifies the command to be executed when the service is restarted.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Restart</strong>: Specifies when to restart the service automatically. Possible values are “always”, “on-success”, “on-failure”, “on-abnormal”, “on-abort”, or “on-watchdog”.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Service Section&quot;,&quot;hid&quot;:&quot;service_section&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;3395-4978&quot;} -->
+<h3 class="sectionedit7" id="install_section">Install section</h3>
+<div class="level3">
+
+<p>
+The [install] section provides information required to enable or disable the units using the systemctl command. The common options are:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>RequiredBy</strong>: A list of units that requires unit. A symbolic link of this unit is created in the .requires directory of the listed unit.</div>
+</li>
+<li class="level1"><div class="li"> <strong>WantedBy</strong>: Specifies a list of targets under which the service should be started. A symbolic link of this unit is created in the .wants directory of the listed target.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install section&quot;,&quot;hid&quot;:&quot;install_section&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;4979-5461&quot;} -->
+<h3 class="sectionedit8" id="zeppelin_systemd_unit_file_example">Zeppelin systemd unit file example</h3>
+<div class="level3">
+
+<p>
+Suppose we have zeppelin installed on /opt/zeppelin/zeppelin-0.7.3. We can use command like bin/zeppelin-daemon.sh start to start the zeppelin service. So we can write the following zeppelin.service. If you want to run the zeppelin service with a user named zeppelin, you need to create a user account.
+</p>
+<pre class="code">sudo adduser -d /opt/zeppelin -s /sbin/nologin zeppelin
+
+# make sure user zeppelin has access of the zeppelin service bin
+chown -R zeppelin:zeppelin /opt/zeppelin</pre>
+
+<p>
+But in our example, we use hadoop as user which runs the zeppelin service.
+</p>
+<pre class="code">vim /etc/systemd/system/zeppelin.service
+
+[Unit]
+Description=Zeppelin service
+# before running zeppelin service, we must make sure syslog and network service is already running.
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh start
+ExecStop=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh stop
+ExecReload=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh reload
+User=hadoop
+Group=hadoop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zeppelin systemd unit file example&quot;,&quot;hid&quot;:&quot;zeppelin_systemd_unit_file_example&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;5462-6602&quot;} -->
+<h2 class="sectionedit9" id="using_systemctl_to_manage_services">Using systemctl to manage services</h2>
+<div class="level2">
+
+<p>
+systemctl is the command line tool you can use to control and manage services in systemd. Let&#039;s now take a look at the some of the important systemctl commands for service management.
+</p>
+
+<p>
+Listing Service Units and Unit files
+</p>
+<pre class="code"># To list all the units that are loaded
+systemctl list-units
+
+# To list only units of type service
+systemctl list-units -t service
+
+# To list all installed unit files of type service
+systemctl list-unit-files -t service
+
+
+# You can use the --state option to filter the output by the state of the unit. The following command lists all services that are enabled.
+systemctl list-unit-files --state enabled</pre>
+
+<p>
+Note the difference between list-units and list-unit-files is that list-unit will only show units that are loaded while list-unit-files shows all unit files that are installed on the system.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using systemctl to manage services&quot;,&quot;hid&quot;:&quot;using_systemctl_to_manage_services&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;6603-7483&quot;} -->
+<h3 class="sectionedit10" id="start_and_stop_service">Start and stop service</h3>
+<div class="level3">
+
+<p>
+This is quite straightforward, start option to start a service and stop option to stop a service
+</p>
+<pre class="code">systemctl start service_name.service
+systemctl stop service_name.service</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Start and stop service&quot;,&quot;hid&quot;:&quot;start_and_stop_service&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:10,&quot;range&quot;:&quot;7484-7704&quot;} -->
+<h3 class="sectionedit11" id="restart_and_reload_services">restart and reload services</h3>
+<div class="level3">
+
+<p>
+The restart option will restart a service that is running. If the service is not running, it will be started.
+</p>
+<pre class="code">systemctl restart service_name.service
+
+# If you want to restart the service only if it&#039;s running then use the try-restart option.
+systemctl try-restart service_name.service</pre>
+
+<p>
+The reload option will try to reload the service-specific configuration of a unit if it is supported.
+</p>
+<pre class="code"># not supported by all the services
+systemctl reload service_name.service</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;restart and reload services&quot;,&quot;hid&quot;:&quot;restart_and_reload_services&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;7705-8238&quot;} -->
+<h3 class="sectionedit12" id="enable_and_disable_services">Enable and Disable services</h3>
+<div class="level3">
+
+<p>
+Units can be enabled or disabled using the enable or disable options of systemctl command. When a unit a enabled symbolic links are created in various locations as specified in the [install] section of the unit file. Disabling a unit will remove the symbolic links that wer created when the unit was enabled.
+</p>
+<pre class="code">systemctl enable service_name.service
+systemctl disable service_name.service</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Enable and Disable services&quot;,&quot;hid&quot;:&quot;enable_and_disable_services&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;8239-8680&quot;} -->
+<h3 class="sectionedit13" id="reload_unit_files">Reload Unit Files</h3>
+<div class="level3">
+
+<p>
+Whenever you make any changes to the unit files you need to let systemd know by executing daemon-reload which reloads all unit files.
+</p>
+<pre class="code"># systemctl daemon-reload</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Reload Unit Files&quot;,&quot;hid&quot;:&quot;reload_unit_files&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;8681-&quot;} -->

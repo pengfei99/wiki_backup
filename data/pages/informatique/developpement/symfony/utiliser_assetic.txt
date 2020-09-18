@@ -1,0 +1,14 @@
+====== Utiliser Assetic ======
+
+Les ressources web peuvent être stockées dans le répertoire ''app'' (//cf// [[/informatique/developpement/symfony/bonnes_pratiques|bonnes pratiques]], mais aussi dans chaque bundle séparément.
+
+    src/AppBundle/Resources/public/css/dashboard.css
+
+Il doivent alors être installés en utilisant la commande suivante :
+
+    php app/console assets:install --symlink
+
+Ils ensuite être utilisés depuis les vues :
+
+     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}" />
+

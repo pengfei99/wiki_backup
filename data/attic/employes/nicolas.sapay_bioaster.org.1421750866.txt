@@ -1,0 +1,28 @@
+====== A faire ======
+  * Schéma générale du PT6
+  * Schéma applicatif du PT6
+  * Peut-on utiliser OwnCloud pour faire du transfert de données non intensif? Est-ce que [[http://www.waarp.fr/fr/|Waarp]] est une bonne alternative ?
+  * Le projet [[http://www.iplantcollaborative.org/|iPlant]] est génial.
+
+====== Trucs et astuces ======
+
+===== Wrap =====
+
+https://www.dokuwiki.org/_media/plugin:wrap_plugin_example7.png
+
+===== Move =====
+Pour déplacer un espace de nom (c-à-d un répertoire) :
+  - Aller sur la page d'entré du répertoire concerné. par exemple, aller sur ''pt6/start'' pour déplacer toutes les pages de ''pt6/''
+  - Aller dans Admin/Additional Plugins/Move...
+  - Aller dans move namespace 
+  - Sélectionner '':[Root namespace]'' dans ''Select new namespace''
+  - Ecrire l'espace de destination dans ''New namespace name''. Par exemple ut6 pour déplacer ''root:pt6'' vers ''root:ut6''
+  - Soumettre
+====== Easter eggs ======
+[[bioinformatique/easter_eggs/unamused_puppy|Unamused puppy is unamused]]\\
+[[bioinformatique/easter_eggs/sorry|I am sorry]]\\
+[[bioinformatique/easter_eggs/integration|Your service is now integrated to the system]]\\
+[[bioinformatique/easter_eggs/we_are_in_charge|We are now in charge of your ticket]]\\
+[[bioinformatique/easter_eggs/more_resources|Feel the power of your new resources]]\\
+[[bioinformatique/easter_eggs/I_dont_need_the_manual|Why reading the manual?]]\\
+[[bioinformatique/easter_eggs/true_self|Find your true self]]\\

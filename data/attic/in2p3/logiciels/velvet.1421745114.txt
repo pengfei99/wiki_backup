@@ -1,0 +1,43 @@
+====== Velvet ======
+
+===== Informations =====
+
+  * **Version** : 1.2.10
+  * **Licence** : GPLv2
+  * **Page Web** : [[http://www.ebi.ac.uk/~zerbino/velvet/]]
+  * **Description** : Velvet is a sequence assembler for very short reads.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export BIN_DIR="$SOFTWARE/apps/gcc-RedHat_4.4.7-3/velvet/1.2.10/bin"
+mkdir -p $BIN_DIR
+cd $SOFTWARE/src
+wget http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
+tar xvzf velvet_1.2.10.tgz
+cd velvet_1.2.10
+make
+mv velvet* $BIN_DIR
+</code>
+
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "A sequence assembler for very short reads..\n"
+}
+
+set version "1.2.10"
+
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/velvet/${version}/bin"
+
+prepend-path PATH $bin_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 1.2.10 installée

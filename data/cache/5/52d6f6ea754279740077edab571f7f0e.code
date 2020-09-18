@@ -1,0 +1,9 @@
+#in a single server with default zookeeper
+broker.id=0
+log.dirs=/tmp/kafka-logs
+zookeeper.connect=localhost:2181
+&nbsp;
+#in a cluster environment with multiple zookeeper instances
+zookeeper.connect=hadoop-nn.pengfei.org:2181,hadoop-dn1.pengfei.org:2181,hadoop-dn2.pengfei.org:2181
+broker.id=1 (2,3 in other two machines)
+log.dirs=fs_on_disk1,fs_on_disk2

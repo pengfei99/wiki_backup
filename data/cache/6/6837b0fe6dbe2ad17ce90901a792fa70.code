@@ -1,0 +1,39 @@
+<span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">80</span><span class="sy0">&gt;</span>
+    ServerName 10.70.3.12
+&nbsp;
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+    <span class="sy0">&lt;</span>Directory <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web<span class="sy0">&gt;</span>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+&nbsp;
+        <span class="sy0">&lt;</span>IfModule mod_rewrite.c<span class="sy0">&gt;</span>
+            Options <span class="re5">-MultiViews</span>
+            RewriteEngine On
+            RewriteCond <span class="sy0">%</span><span class="br0">&#123;</span>REQUEST_FILENAME<span class="br0">&#125;</span> <span class="sy0">!</span>-f
+            RewriteRule ^<span class="br0">&#40;</span>.<span class="sy0">*</span><span class="br0">&#41;</span>$ app.php <span class="br0">&#91;</span>QSA,L<span class="br0">&#93;</span>
+        <span class="sy0">&lt;/</span>IfModule<span class="sy0">&gt;</span>
+    <span class="sy0">&lt;/</span>Directory<span class="sy0">&gt;</span>
+&nbsp;
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span>
+&nbsp;
+<span class="co0"># Added by Clement DELESTRE the 19th of September</span>
+<span class="co0"># https vhost</span>
+<span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">443</span><span class="sy0">&gt;</span>
+    ServerName 10.70.3.12
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+&nbsp;
+    ServerSignature Off
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+&nbsp;
+&nbsp;
+    SSLEngine on
+    SSLCertificateFile <span class="sy0">/</span>home<span class="sy0">/</span>bioaster<span class="sy0">/</span>service.bioaster.org.csr
+    SSLCertificateKeyFile  <span class="sy0">/</span>home<span class="sy0">/</span>bioaster<span class="sy0">/</span>service.bioaster.org.key	
+&nbsp;
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span>

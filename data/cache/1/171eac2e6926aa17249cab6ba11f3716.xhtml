@@ -1,0 +1,37 @@
+
+<h1 class="sectionedit1" id="gestion_des_echantillons_esamples">Gestion des échantillons (eSAMPLES)</h1>
+<div class="level1">
+
+<p>
+Un échantillon (sample) possède sa propre table qui est reliée à de nombreuses autres tables en base de données.
+</p>
+
+<p>
+Sa description est consultable <a href="https://devtools.bioaster.org/redmine/projects/sample_management/wiki/Echantillon" class="urlextern" title="https://devtools.bioaster.org/redmine/projects/sample_management/wiki/Echantillon"  rel="nofollow"> ici sur le redmine du projet</a>.
+</p>
+
+<p>
+Sa création doit se faire le plus intelligemment possible. <br/>
+
+Pour cela nous avons choisi de séparer l&#039;action de création en deux formulaires :
+</p>
+<ul>
+<li class="level1"><div class="li"> un formulaire dit “statique” qui arrivera en premier et qui contiendra les informations nécessaires pour amener le second formulaire;</div>
+</li>
+<li class="level1"><div class="li"> ce second formulaire dit “dynamique” comportera alors quelque champs statiques communs à tous types d&#039;échantillon mais aussi des champs dynamiques créés à la volée en rapport avec les choix fait par l&#039;utilisateur dans le premier formulaire (essentiellement au niveau du type de classification de l&#039;échantillon et de sa bioentité).</div>
+</li>
+</ul>
+
+<p>
+Le but étant de pouvoir deviner le plus de valeurs possibles pour les champs à remplir. De cette manière, l&#039;ajout d&#039;échantillon via les formulaires de l&#039;application ne sera pas une corvée pour l&#039;utilisateur.
+</p>
+
+<p>
+Le mot d&#039;ordre est donc : le moins de scroll possible par formulaire sans pour autant perdre de qualité de description.
+</p>
+
+<p>
+Dans le processus de développement, c&#039;est la <a href="https://gitlab.in2p3.fr/bioaster/NoE/network/feature-2" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/network/feature-2"  rel="nofollow"> branche feature-2</a> qui a pour mission de délivrer ces formulaires et mécanismes de création des échantillons.
+</p>
+
+</div>

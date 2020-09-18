@@ -1,0 +1,93 @@
+====== Partenariat avec le CCIN2P3 ======
+
+Cette page regroupe les infos sur la mise en oeuvre technique du partenariat avec le Centre de Calcul de l'IN2P3. L'hébergement de matériel BIOASTER est inclus dans cette mise en oeuvre, bien qu'il fasse l'objet d'un contrat spécifique et indépendant de la convention. 
+
+===== Plan de développement et architecture =====
+
+==== Contexte ==== 
+=== Contexte 1 ===
+Au travers de l'Unité Technologique 6, BIOASTER doit concevoir et déployer un système d'information scientifique capable de récolter, stocker, organiser, traiter et visualisé les données et les informations obtenues au cours de ses projets de recherche et développement. 
+
+=== Contexte 2 ===
+La plupart des projets de BIOASTER sont réalisées en partenariat avec une institution académique, une entreprise privée, un projet européen, etc. Chaque projet est confidentiel. Le système de traitement de l'information doit gérer cette confidentialité, par exemple en cloisonnant les données entre projets. Par ailleurs, la traçabilité des données sera nécessaire pour gérer la propriété intellectuelle propre à chaque projet. Il est à noter qu'une partie des données est issue d'étude sur l'homme, ce qui peu impliquer un traitement et un suivi particulier.
+
+=== Contexte 3 ===
+BIOASTER et le CCIN2P3 ont conclut un partenariat afin que BIOASTER puisse mettre en place sont système d'information scientifique grâce à l'expertise et au savoir-faire acquis par le CCIN2P3 dans le domaine de la physique des hautes énergies et de l'astrophysique. Le CCIN2P3 constitue donc le cœur du système de BIOASTER. 
+
+==== Objectifs ====
+Idée générale de la gestion des traitements de données au CCIN2P3 :
+  * **La ferme de calcul :** La ferme est utilisée en priorité, dans la mesure où la configuration des workers correspond au besoin du calcul (RAM, scratch, CPU, système d'exploitation, etc.).
+  * **Le cloud :** le cloud est utilisé pour les calculs hors gabarit (c-à-d qui ne peuvent pas être exécutés sur les workers de la ferme) et pour les services bio-informatique non critiques (p.ex. Galaxy). 
+  * **L'infrastructure de BIOASTER hébergée au CCIN2P3 :** l'infrastructure hébergée est utilisée comme relais pour le transfert et la copie de données entre BIOASTER et le CCIN2P3, pour les services critiques (p.ex. LIMS) et pour les stations de travail virtualisées. 
+  * **Le stockage GPFS :** le stockage de fichiers sous GPFS centralise les données des projets ou communes à tout BIOASTER. Les fichiers doivent être accessibles depuis la ferme, le cloud ou l'infrastructure hébergée. 
+  * **Le cluster de base de données Oracle/pgSQL/mySQL :** le cluster de DB centralise les DB SQL des projets ou communes à tout BIOASTER. Les DB doivent être accessibles depuis la ferme, le cloud, l'infrastructure hébergée ou <wrap warning>un service distant (à vérifier)</wrap>.
+
+Le schéma ci-dessous présente l'architecture que BIOASTER souhaite déployer.//
+{{wiki:schema-archi.png}}
+
+==== Résultats attendus ====
+{{tag>à_compléter}}
+
+===== Demandes faites au CCIN2P3 =====
+
+=== Demande de ressources ===
+Demande actuelle : {{pt6:pt6:ccin2p3:bioaster_-_demandes_de_ressources_q4_2014_-_q2_2015.docx|2014/Q4 -> 2015/Q2}}
+
+^Infrastructure                ^      Volume^ Statut ^Remarque^
+|Stockage de fichier sous GPFS |      100 To|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Stockage de fichier sous AFS  |       50 Go|  OK    |Sauvegarde selon les conditions par défaut du CC |
+|Base de données PostgreSQL    |      200 Go|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Base de données MySQL         |      200 Go|  OK    |1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes |
+|Serveurs de calcul OpenStack  | 2x16 coeurs|  OK    |2 serveurs Dell de 16 coeurs physiques + 768 Go de RAM + 9 To de disque local |
+|Ferme de caclul               | 4x10<sup>6</sup> HS06|  OK    |Workers connectés à AFS et GPFS |
+
+=== Demande de services ===
+^Service                ^Volume            ^ Statut ^Remarque^
+|Forge Redmine          | 1 projet BIOASTER|  OK    |Les sous-projets ne sont visibles qu'aux membres de BIOASTER |
+|Ticket OTRS            |   1 file BIOASTER|  OK    |Pour les demandes bio-info/calcul/statistique/... |
+|Hébergement Web        |         0 demande|  -     |L'hébergement pur ne correspond pas à notre besoin actuel (développement et test) |
+
+=== Demande d'hébergement ===
+Demande en cours pour héberger du matériel BIOASTER au CCIN2P3.
+
+===== Plan de déploiement des services =====
+
+==== Configuration d'OpenStack ====
+
+=== Configuration actuelle ===
+
+Le cloud OpenStack doit être le coeur du système et permettant de déployer à la demande des VM de calculs ou de service. Il existe 2 Tenants associés à BIOASTER :
+  * ''bioaster'' : Tenant de service routé vers l'extérieur. Il peut accéder à Internet et au second Tenant de BIOASTER. Les ressource du Tenant ''bioaster'' sont mutualisées avec les autres Tenants CCIN2P3. le nombre de VM sur ''bioaster'' est limité à 3. 
+  * ''htc_bioaster'' : Tenant dédié au calcul. Il n'est pas routé vers l'extérieur et est uniquement accessible depuis les frontales SSH du CCIN2P3 ou les VM du tenant ''bioaster''. Les ressources du Tenant ''htc_bioaster'' ont été mise à disposition exclusive de de BIOASTER par le CCIN2P3 (cf. demande ci-dessus).  Les limites d'utilisation sont celles des machines physiques hébergeant les VM.
+
+L'accès au Tenant ''htc_bioasetr'' est facilité par l'utilisation du wrapper OpenStack développé par SysFera pour BIOASTER. 
+
+=== Liste des services à déployer ===
+
+BIOASTER prévoit de mettre en place les services suivants :
+
+^Nom ^Fonction ^Ressource ^Statut ^Remarque ^
+|Wrapper OpenStack |Utilisation du cloud à la façon des lignes de commande Grid Engine | Accessible depuis l'espace commun de BIOASTER sur GPFS | Opérationel | Utilisable depuis les frontales SSH du CCIN2P3 et le Tenant ''bioaster'' |
+|Environnement de développement Web |Environnement de dev. pour les projets de BIOASTER | 1 VM ''bioaster'' + 1 adresse IP | Opérationel | Utilisable depuis les frontales SSH du CCIN2P3 et le Tenant ''bioaster''. Bazaar commit le code ici |
+|Environnement de test Web |Environnement de test pour les projets de BIOASTER | 1 VM ''bioaster'' + 1 adresse IP | En discussion | Utilisable depuis les frontales SSH du CCIN2P3 et le Tenant ''bioaster''. Bazzar commit le code ici |
+|[[http://pegasus.isi.edu/|Pegasus]] |Gestionnaire de workflows de calcul | 1 VM ''bioaster'' + 1 adresse IP + VM ''htc_bioaster'' à la demande | Va démarrer| Nécessite le déploiement d'[[http://research.cs.wisc.edu/htcondor/|HTcondor]] |
+|Plateforme web d'accès aux moyens de calcul | Plateforme web d'accès aux moyens de calcul | 1 VM ''bioaster'' + 1 adresse IP + 1 FQN| Va démarrer | Projet de développement interne à BIOASTER |
+|HTCondor | Ordonnanceur| 1 VM ''bioaster'' + 1 adresse IP + 1 FQN| Va démarrer |  |
+|[[http://galaxyproject.org/|Galaxy]] |Service d'analyse génomique/transcriptomique  | 1 VM ''bioaster'' + 1 adresse IP | A planifier | Possibilité de liée Galaxy à la ferme et à l'AD? Connexion à une DB? |
+|[[http://www.sequenceserver.com/|SequenceServer]]|Simple service de BLAST |1 VM ''bioaster'' + 1 adresse IP | A planifier | Connexion à une DB? |
+|[[http://www.broadinstitute.org/cancer/software/genepattern|Gene Pattern]] |Service d'analyse génomique/transcriptomique | 1 VM ''bioaster'' + 1 adresse IP | A planifier | Connexion à une DB? |
+|[[http://biomaj.genouest.org/|BioMAJ]] |Mise à jour automatique des banques de séquences biologiques | 1 VM ''bioaster'' + 1 adresse IP | En discussion | Connexion à une DB? |
+|[[http://transmartfoundation.org/|tranSMART]] |Visualisation et analyse d'études cliniques | 1 VM ''bioaster'' + 1 adresse IP + 1 DB | A planifier | En discussion avec le projet européen eTRIKS |
+|[[https://forge.in2p3.fr/projects/lims|MiniLIMS]] |Suivi des échantillons | 1 VM ''bioaster'' + 1 adresse IP + 1 DB | Opérationel  | Développement en cours |
+
+
+=== Liste des problèmes identifiés ===
+
+BIOASTER a identifiés les problèmes suivant lors de la prise en main d'OpenStack :
+  * **Accès à GPFS depuis les VM :** l'accès se fait par l'intermédiaire d'un montage NFSv3 alors qu'un NFSv4 serait souhaitable pour des raisons de sécurité et de suivi des droits utilisateurs. 
+  * **Accès à AFS depuis les VM :** l'accès se fait nécessairement par une saisie du mot de passe au clavier, ce qui empêche une automatisation. 
+  * **Quota de VM limité sur le Tenant ''bioaster'' :** le quota ne correspond pas au besoin... Comment sera facturé l'utilisation des VMs ?
+  * **Suivi de la consommation :** nous aurons besoin à terme de monitorer et comptabiliser l'utilisation du cloud selon plusieurs critères (utilisateur, projet, RAM, etc.). Comment se fera le suivi de consommation ?
+
+
+{{tag>travail_en_cours}}

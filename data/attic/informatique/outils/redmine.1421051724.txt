@@ -1,0 +1,27 @@
+====== Redmine ======
+
+L'installation de Redmine est assez simple sous Debian : [[http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/]]
+
+<code>
+sudo aptitude install redmine redmine-sqlite
+sudo gem install bundler
+cd /usr/share/redmine
+sudo bundle install --without development test
+sudo aptitude install libapache2-mod-passenger
+sudo chown -R www-data:www-data /usr/share/redmine/public/
+</code>
+
+<code text /etc/apache2/sites-available/redmine>
+ServerName redmine.paris.bioaster.org
+DocumentRoot /usr/share/redmine/public
+<Directory /usr/share/redmine/public>
+    RailsBaseURI /
+    PassengerResolveSymlinksInDocumentRoot on
+    AllowOverride None
+</Directory>
+</code>
+
+<code>
+sudo a2ensite redmine
+sudo service apache2 reload
+</code>

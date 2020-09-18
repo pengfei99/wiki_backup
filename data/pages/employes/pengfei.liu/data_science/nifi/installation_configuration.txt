@@ -1,0 +1,103 @@
+====== Install and configure nifi ======
+
+===== What is nifi? =====
+
+Apache NiFi (short for NiagaraFiles) is a software project from the Apache Software Foundation designed to automate the flow of data between software systems. It is based on the "NiagaraFiles" software previously developed by the NSA and open-sourced as a part of its technology transfer program in 2014.
+
+===== Terminology in NiFi =====
+
+In order to talk about NiFi, there are a few key terms that readers should be familiar with. We will explain those NiFi-specific terms here, at a high level.
+
+**FlowFile**: Each piece of "User Data" (i.e., data that the user brings into NiFi for processing and distribution) is referred to as a FlowFile. A FlowFile is made up of two parts: Attributes and Content. The Content is the User Data itself. Attributes are key-value pairs that are associated with the User Data.
+
+**Processor**: The Processor is the NiFi component that is responsible for creating, sending, receiving, transforming, routing, splitting, merging, and processing FlowFiles. It is the most important building block available to NiFi users to build their dataflows.
+
+===== Download nifi =====
+
+NiFi can be downloaded from the NiFi Downloads Page (http://nifi.apache.org/download.html). There are two packaging options available: a "tarball" that is tailored more to Linux and a zip file that is more applicable for Windows users. 
+
+For information on how to configure the instance of NiFi (for example, to configure security, data storage configuration, or the port that NiFi is running on), see the Admin Guide (https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html).
+
+===== Install NiFi =====
+Nifi 1.7.0 needs java 1.8 or later to run. So before install nifi, you need to install jdk 8 or later and setup JAVA_HOME.
+
+<code>
+# create folder for nifi
+cd /opt
+mkdir nifi
+cd nifi
+# put nifi into folder
+# check sum
+[hadoop@localhost nifi]$ md5sum nifi-1.7.0-bin.tar.gz 
+53f3ac63ec910724ea6b18734c90ce53
+
+# unzip nifi
+tar -xzvf nifi-1.7.0-bin.tar.gz
+
+# change owner to nifi
+chown -R nifi:nifi nifi-1.7.0
+
+</code>
+
+===== Configure nifi =====
+
+The main configuration file of nifi is /conf/nifi.properties
+
+The nifi runs as a web application, which use default ports 8080.
+
+So if you have other web applications which runs on 8080, you may need to change the default port of nifi to avoid conflict.
+
+In my case , I change it to 8090
+<code>
+# in conf/nifi.prooperties
+nifi.web.http.port=8090
+
+#if you have firewall in place, you need to open the port
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --reload
+</code>
+
+
+===== Build systemd script to run nifi as a daemon =====
+
+<code>
+# run nifi via /bin/nifi.sh
+sh nifi.sh start/stop/status
+
+# create systemd script
+vim /etc/systemd/system/nifi.service
+
+# Put the following scirpt
+[Unit]
+Description=Apache NiFi
+After=network.target
+
+[Service]
+Type=forking
+# you need to make sure user below has the right to run nifi.sh, 
+# in this example, I use nifi as user and group
+User=nifi
+Group=nifi
+ExecStart=/opt/nifi/nifi-1.7.0/bin/nifi.sh start
+ExecStop=/opt/nifi/nifi-1.7.0/bin/nifi.sh stop
+ExecRestart=/opt/nifi/nifi-1.7.0/bin/nifi.sh restart 
+
+[Install]
+WantedBy=multi-user.target
+
+
+# reload systemd daemon script
+systemctl daemon-reload
+
+# start stop nifi service
+systemctl start/stop/status nifi
+
+</code>
+
+===== Accede Nifi via web browser =====
+
+http://127.0.0.1:8090/nifi/
+
+===== Get start with nifi =====
+
+https://nifi.apache.org/docs/nifi-docs/html/getting-started.html#who-is-this-guide-for

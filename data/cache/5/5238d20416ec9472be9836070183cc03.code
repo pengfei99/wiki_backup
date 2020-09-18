@@ -1,0 +1,2 @@
+$ sudo cp ($CONDOR_DIR)/lib/libdrmaa.so /usr/lib64
+$ echo &quot;export DRMAA_LIBRARY_PATH=/usr/lib64/libdrmaa.so&quot; &gt;&gt; ~/.bashrc

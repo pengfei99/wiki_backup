@@ -1,0 +1,44 @@
+
+<h1 class="sectionedit1" id="spark_analyse_911_fire_service_call">Spark analyse 911 fire service call</h1>
+<div class="level1">
+
+<p>
+This tutorial will use spark to analyse the SF 911 fire service call. The data set can be download here
+</p>
+
+<p>
+<a href="https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3" class="urlextern" title="https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3" rel="nofollow">https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3</a>
+</p>
+
+<p>
+The SF OpenData project was launched in 2009 and contains hundreds of datasets from the city and county of San Francisco. Open government data has the potential to increase the quality of life for residents, create more efficient government services, better public decisions, and even new local businesses and services.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Spark analyse 911 fire service call" [1-559] -->
+<h2 class="sectionedit2" id="load_data_to_hadoop_cluster">Load data to hadoop cluster</h2>
+<div class="level2">
+<pre class="code">Suppose that your hdfs runs on hdfs://localhost:9000
+
+The downloaded csv file is Fire_Department_Calls_for_Service.csv
+</pre>
+<pre class="code">#Load data
+hdfs dfs -put Fire_Department_Calls_for_Service.csv hdfs://localhost:9000/test_data/.
+
+#test data
+hdfs dfs -tail hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv</pre>
+
+<p>
+Run spark console, load this csv as a data frame
+</p>
+<pre class="code">spark-shell --master local[*]
+
+scala&gt; val fireServiceCallsDF = spark.read.format(&quot;csv&quot;).option(&quot;header&quot;,&quot;true&quot;).load(&quot;hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv&quot;)
+
+#count row numbers in this dataframe
+scala&gt; fireServiceCallsDF.count
+res0: Long = 4514057  
+</pre>
+
+</div>
+<!-- EDIT2 SECTION "Load data to hadoop cluster" [560-] -->

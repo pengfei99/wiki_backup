@@ -1,0 +1,2 @@
+<span class="co1">//如果你对不止一种事件感兴趣，使用或运算符即可 </span>
+<span class="kw4">int</span> interestSet <span class="sy0">=</span> SelectionKey.<span class="me1">OP_READ</span> <span class="sy0">|</span> SelectionKey.<span class="me1">OP_WRITE</span><span class="sy0">;</span>

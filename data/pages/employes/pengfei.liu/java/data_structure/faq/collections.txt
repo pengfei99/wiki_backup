@@ -1,0 +1,15 @@
+====== Collections Vs Collection ======
+
+===== Difference between collections and collection in java =====
+
+
+The major difference between Collection and Collections is:
+  * **Collection** is an interface
+  * **Collections** is a class.
+
+Both are belongs to java.util package
+
+**Collection** is a root level interface of the Java Collection Framework. It inherits the Iterable interface, and it has three sub interfaces, List, Set and Queue. All of the classes in the Java Collection Framework inherit from this interface through the sub interfaces(e.g. List, Set and Queue).
+
+
+**Collections** is an utility class in java.util package. It consists of only static methods that are used to operate on objects of type Collection. For example, it has the method to find the maximum element in a collection, it has the method to sort the collection, it has the method to search for a particular element in a collection.

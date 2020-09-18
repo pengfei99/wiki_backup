@@ -1,0 +1,150 @@
+
+<h1 class="sectionedit1" id="install_and_configure_nifi">Install and configure nifi</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Install and configure nifi" [1-42] -->
+<h2 class="sectionedit2" id="what_is_nifi">What is nifi?</h2>
+<div class="level2">
+
+<p>
+Apache NiFi (short for NiagaraFiles) is a software project from the Apache Software Foundation designed to automate the flow of data between software systems. It is based on the “NiagaraFiles” software previously developed by the NSA and open-sourced as a part of its technology transfer program in 2014.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "What is nifi?" [43-375] -->
+<h2 class="sectionedit3" id="terminology_in_nifi">Terminology in NiFi</h2>
+<div class="level2">
+
+<p>
+In order to talk about NiFi, there are a few key terms that readers should be familiar with. We will explain those NiFi-specific terms here, at a high level.
+</p>
+
+<p>
+<strong>FlowFile</strong>: Each piece of “User Data” (i.e., data that the user brings into NiFi for processing and distribution) is referred to as a FlowFile. A FlowFile is made up of two parts: Attributes and Content. The Content is the User Data itself. Attributes are key-value pairs that are associated with the User Data.
+</p>
+
+<p>
+<strong>Processor</strong>: The Processor is the NiFi component that is responsible for creating, sending, receiving, transforming, routing, splitting, merging, and processing FlowFiles. It is the most important building block available to NiFi users to build their dataflows.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Terminology in NiFi" [376-1147] -->
+<h2 class="sectionedit4" id="download_nifi">Download nifi</h2>
+<div class="level2">
+
+<p>
+NiFi can be downloaded from the NiFi Downloads Page (<a href="http://nifi.apache.org/download.html" class="urlextern" title="http://nifi.apache.org/download.html" rel="nofollow">http://nifi.apache.org/download.html</a>). There are two packaging options available: a “tarball” that is tailored more to Linux and a zip file that is more applicable for Windows users. 
+</p>
+
+<p>
+For information on how to configure the instance of NiFi (for example, to configure security, data storage configuration, or the port that NiFi is running on), see the Admin Guide (<a href="https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html" class="urlextern" title="https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html" rel="nofollow">https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html</a>).
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Download nifi" [1148-1666] -->
+<h2 class="sectionedit5" id="install_nifi">Install NiFi</h2>
+<div class="level2">
+
+<p>
+Nifi 1.7.0 needs java 1.8 or later to run. So before install nifi, you need to install jdk 8 or later and setup JAVA_HOME.
+</p>
+<pre class="code"># create folder for nifi
+cd /opt
+mkdir nifi
+cd nifi
+# put nifi into folder
+# check sum
+[hadoop@localhost nifi]$ md5sum nifi-1.7.0-bin.tar.gz 
+53f3ac63ec910724ea6b18734c90ce53
+
+# unzip nifi
+tar -xzvf nifi-1.7.0-bin.tar.gz
+
+# change owner to nifi
+chown -R nifi:nifi nifi-1.7.0
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Install NiFi" [1667-2107] -->
+<h2 class="sectionedit6" id="configure_nifi">Configure nifi</h2>
+<div class="level2">
+
+<p>
+The main configuration file of nifi is /conf/nifi.properties
+</p>
+
+<p>
+The nifi runs as a web application, which use default ports 8080.
+</p>
+
+<p>
+So if you have other web applications which runs on 8080, you may need to change the default port of nifi to avoid conflict.
+</p>
+
+<p>
+In my case , I change it to 8090
+</p>
+<pre class="code"># in conf/nifi.prooperties
+nifi.web.http.port=8090
+
+#if you have firewall in place, you need to open the port
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --reload</pre>
+
+</div>
+<!-- EDIT6 SECTION "Configure nifi" [2108-2617] -->
+<h2 class="sectionedit7" id="build_systemd_script_to_run_nifi_as_a_daemon">Build systemd script to run nifi as a daemon</h2>
+<div class="level2">
+<pre class="code"># run nifi via /bin/nifi.sh
+sh nifi.sh start/stop/status
+
+# create systemd script
+vim /etc/systemd/system/nifi.service
+
+# Put the following scirpt
+[Unit]
+Description=Apache NiFi
+After=network.target
+
+[Service]
+Type=forking
+# you need to make sure user below has the right to run nifi.sh, 
+# in this example, I use nifi as user and group
+User=nifi
+Group=nifi
+ExecStart=/opt/nifi/nifi-1.7.0/bin/nifi.sh start
+ExecStop=/opt/nifi/nifi-1.7.0/bin/nifi.sh stop
+ExecRestart=/opt/nifi/nifi-1.7.0/bin/nifi.sh restart 
+
+[Install]
+WantedBy=multi-user.target
+
+
+# reload systemd daemon script
+systemctl daemon-reload
+
+# start stop nifi service
+systemctl start/stop/status nifi
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Build systemd script to run nifi as a daemon" [2618-3355] -->
+<h2 class="sectionedit8" id="accede_nifi_via_web_browser">Accede Nifi via web browser</h2>
+<div class="level2">
+
+<p>
+<a href="http://127.0.0.1:8090/nifi/" class="urlextern" title="http://127.0.0.1:8090/nifi/" rel="nofollow">http://127.0.0.1:8090/nifi/</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Accede Nifi via web browser" [3356-3425] -->
+<h2 class="sectionedit9" id="get_start_with_nifi">Get start with nifi</h2>
+<div class="level2">
+
+<p>
+<a href="https://nifi.apache.org/docs/nifi-docs/html/getting-started.html#who-is-this-guide-for" class="urlextern" title="https://nifi.apache.org/docs/nifi-docs/html/getting-started.html#who-is-this-guide-for" rel="nofollow">https://nifi.apache.org/docs/nifi-docs/html/getting-started.html#who-is-this-guide-for</a>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Get start with nifi" [3426-] -->

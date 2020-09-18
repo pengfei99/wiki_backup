@@ -1,0 +1,4 @@
+$ git fetch upstream # mise à jour de upstream/master
+$ git merge --no-ff upstream/master # Demande un message de commit &quot;Implémente une fonctionnalité (Fix #123)&quot;
+# Re lancer les tests unitaires s'ils existent et corriger les problèmes/conflits
+$ git push

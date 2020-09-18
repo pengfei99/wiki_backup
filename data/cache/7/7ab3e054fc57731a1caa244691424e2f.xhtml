@@ -1,0 +1,69 @@
+
+<h1 class="sectionedit1" id="install_xfce_and_x2go_on_centos_7">INSTALL Xfce and X2go on CentOS 7</h1>
+<div class="level1">
+
+<p>
+The objective of this tutorial is to install a Linux desktop environment(Xfce) on a VM, then use X2go to access 
+the Xfce of the vm.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;INSTALL Xfce and X2go on CentOS 7&quot;,&quot;hid&quot;:&quot;install_xfce_and_x2go_on_centos_7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-184&quot;} -->
+<h2 class="sectionedit2" id="install_epel_and_x_window">Install EPEL and X window</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo yum install epel-release
+$ sudo yum groupinstall &quot;X Window system&quot;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install EPEL and X window&quot;,&quot;hid&quot;:&quot;install_epel_and_x_window&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;185-334&quot;} -->
+<h2 class="sectionedit3" id="install_xfce">Install XFCE</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo yum groupinstall xfce</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install XFCE&quot;,&quot;hid&quot;:&quot;install_xfce&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;335-425&quot;} -->
+<h2 class="sectionedit4" id="change_the_graphique_output_target">Change the graphique output target</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo systemctl isolate graphical.target</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Change the graphique output target&quot;,&quot;hid&quot;:&quot;change_the_graphique_output_target&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;426-552&quot;} -->
+<h2 class="sectionedit5" id="demarrer_l_interface_graphique_au_demarrage_de_la_machine">Démarrer l&#039;interface graphique au démarrage de la machine</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo systemctl set-default graphical.target
+$ sudo rm '/etc/systemd/system/default.target'
+$ sudo ln -s '/usr/lib/systemd/system/graphical.target' '/etc/systemd/system/default.target'</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;D\u00e9marrer l&#039;interface graphique au d\u00e9marrage de la machine&quot;,&quot;hid&quot;:&quot;demarrer_l_interface_graphique_au_demarrage_de_la_machine&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;553-848&quot;} -->
+<h2 class="sectionedit6" id="install_x2go_server">Install X2go server</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo yum -y install x2goserver-xsession</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install X2go server&quot;,&quot;hid&quot;:&quot;install_x2go_server&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;849-960&quot;} -->
+<h2 class="sectionedit7" id="permettre_la_connexion_ssh_avec_mot_de_passe">Permettre la connexion ssh avec mot de passe</h2>
+<div class="level2">
+
+<p>
+Dans /etc/ssh/sshd_config :
+</p>
+<pre class="code classprettyprint">PasswordAuthentication yes</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Permettre la connexion ssh avec mot de passe&quot;,&quot;hid&quot;:&quot;permettre_la_connexion_ssh_avec_mot_de_passe&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;961-1110&quot;} -->
+<h2 class="sectionedit8" id="restart_the_ssh_daemon">Restart the ssh daemon</h2>
+<div class="level2">
+<pre class="code classprettyprint">$ sudo service sshd restart</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Restart the ssh daemon&quot;,&quot;hid&quot;:&quot;restart_the_ssh_daemon&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;1111-1211&quot;} -->
+<h2 class="sectionedit9" id="install_x2go_client">Install x2go client</h2>
+<div class="level2">
+
+<p>
+To connect to the server with X2go, you need to install a client X2go on your pc. Please go check <a href="http://wiki.x2go.org/doku.php" class="urlextern" title="http://wiki.x2go.org/doku.php" rel="nofollow">http://wiki.x2go.org/doku.php</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install x2go client&quot;,&quot;hid&quot;:&quot;install_x2go_client&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:9,&quot;range&quot;:&quot;1212-&quot;} -->

@@ -1,0 +1,71 @@
+
+<h1 class="sectionedit1" id="lims_reunion_25092015">[LIMS] Réunion 25/09/2015</h1>
+<div class="level1">
+
+<p>
+<strong>AC, YM, NS, TLC</strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "[LIMS] Réunion 25/09/2015" [1-62] -->
+<h2 class="sectionedit2" id="point_sur_la_classification">Point sur la classification</h2>
+<div class="level2">
+
+<p>
+A priori, la classification doit plutôt refléter les technologie et leurs usages, plutôt que les thématiques. Par exemple, le MiSeq sera classé dans “séquençage”, plutôt que dans “infectiologie”, “microbiote” ou “diagnostic”. Les usages plus précis d&#039;un appareil sont détaillés dans les sous catégories. La catégorie “séquençage” inclura donc les sous catégories “génomique”, “transcriptomique”, etc.<br/>
+
+</p>
+
+<p>
+La classification sera modifiable par  l&#039;utec6, mais pas par l&#039;utilisateur. 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Point sur la classification" [63-602] -->
+<h2 class="sectionedit3" id="table_bioentity">Table Bioentity</h2>
+<div class="level2">
+
+<p>
+La table “Bioentity” sert à décrire les individus dont sont issus les échantillons. Elle est liée à la classification et à Information. Les valeurs sont stockées dans BioentityValue. La table InfoValue est renommée ProcessValue.  
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Table Bioentity" [603-871] -->
+<h2 class="sectionedit4" id="table_user_et_associees">Table User et associées</h2>
+<div class="level2">
+
+<p>
+Le remplissage de ces tables dépend de Shibboleth qui doit fournir l&#039;id/auth et les information sur les projets. Tant que Shibboleth n&#039;est pas en place a minima, ces tables devront être remplies en direct et c&#039;est l&#039;application qui devra gérer ses propres mots de passes. Ce point doit être discuté à la prochaine réunion d&#039;équipe du 29/092015.<br/>
+
+</p>
+
+<p>
+Lab décrit l&#039;institution/département/équipe auquel est affilié un utilisateur. Trivialement, Lab est celui qui paye l&#039;utilisateur.<br/>
+
+</p>
+
+<p>
+Site décrit le site d&#039;activité de l&#039;utilisateur. Trivialement, c&#039;est là où l&#039;utilisateur travaille. Un utilisateur peut être rattaché à plusieurs sites.<br/>
+
+</p>
+
+<p>
+Les Permissions d&#039;un User dépendent du Projet, du Site et du Labo. Un utilisateur de BIOASTER travaillant à la tour INSERM de Lyon ne doit pas forcément voir les frigos de Paris.<br/>
+
+</p>
+
+<p>
+Les permission de l&#039;utilisateurs peuvent-elles aussi être spécifique à l&#039;application (notion d&#039;admin de l&#039;application et de supper user)? A priori, c&#039;est possible en créant une permission spécifique et en la reliant à User. 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Table User et associées" [872-1984] -->
+<h2 class="sectionedit5" id="table_project_et_associees">Table Project et associées</h2>
+<div class="level2">
+
+<p>
+Les Projets sont décomposé en Work Package et Task, mais seul la notion de Work Package est retenue pour cloisonner les process. 
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Table Project et associées" [1985-] -->

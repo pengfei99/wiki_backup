@@ -1,0 +1,47 @@
+
+<h1 class="sectionedit1" id="qiime">QIIME</h1>
+<div class="level1">
+
+<p>
+L&#039;image à été mise à disposition car l&#039;installation manuelle de <a href="/in2p3/logiciels/qiime" class="wikilink1" title="in2p3:logiciels:qiime">QIIME</a> n&#039;est pas recommandée.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "QIIME" [1-147] -->
+<h2 class="sectionedit2" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+L&#039;image mise à disposition par l&#039;équipe de QIIME est faite pour tourner dans une interface graphique. Elle ne contient pas de serveur SSH permettant un accès distant. 
+</p>
+<ul>
+<li class="level1"><div class="li"> Télécharger l&#039;<a href="http://qiime.org/install/virtual_box.html" class="urlextern" title="http://qiime.org/install/virtual_box.html"  rel="nofollow">image VirtualBox</a> sur un PC ayant un VirtualBox</div>
+</li>
+<li class="level1"><div class="li"> Extraire l&#039;image</div>
+</li>
+<li class="level1"><div class="li"> Démarrer l&#039;image (“nouvelle VM avec un VDI existant”) et procéder à l&#039;installation et la configuration de SSH (utilisateur : qiime/qiime, paquet : <code>openssh-server</code>)</div>
+</li>
+<li class="level1"><div class="li"> Compresser l&#039;image</div>
+</li>
+<li class="level1"><div class="li"> Transférer l&#039;image sur une frontale du CC (/sps/inter/bioaster/)</div>
+</li>
+<li class="level1"><div class="li"> Enregistrer l&#039;image grâce à glance et tester <pre class="code">    $ bzcat QIIME-1.9.0-amd64.vdi.bz2 | glance image-create --name=&quot;QIIME-1.9.0&quot; --is-public=False --container-format=bare --disk-format=vdi
+    $ nova boot --image=QIIME-1.9.0 --flavor=m1.tiny Qiime1.9.0
+    $ ssh qiime@134.158.37.X</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Installation" [148-1049] -->
+<h2 class="sectionedit3" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2015.04.28 (tlc)</strong> Déploiement de la version 1.9.0</div>
+</li>
+<li class="level1"><div class="li"> <strong>2014.03.19 (tlc)</strong> Déploiement de la version 1.8.0</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Log" [1050-] -->

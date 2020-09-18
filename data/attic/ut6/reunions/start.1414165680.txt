@@ -1,0 +1,38 @@
+**Date** : 28/10/2014
+
+**Participants** : JG, TLC, PV, NS
+
+====== Ordre du jour ======
+
+Précédente réunion le [[pt6/reunions/reunion_pt6_30.09.2014|30/09/2014]]
+  - Quota AFS [[https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2014100311000027|ticket #2014100311000027]]
+  - Où héberger les "petits" services ? PorPro, présentations…
+  - "Cas d'utilisation" avec le projet d'Audrey
+  - VM projets, le cas nlhocine
+
+  - Appel à projet européen eINFRA9
+  - Retour du Forum Big Data Leaders
+  - MiniLIMS : Forge, framework etc.
+  - Use case PT2 et évaluation de [[http://irods.org/|iRODS]], [[http://www.midasplatform.org/|MIDAS]] et [[http://pegasus.isi.edu/|Pegasus]].
+  - eCRF : cahier des charges
+  - Mise en place d'OpenStack, tenant bioaser/bioaster_htc et liaison à GPFS.
+  - Budget PT6.
+  
+====== Commentaires et actions ======
+  - <wrap info>NS</wrap> | RAS
+  - <wrap info>NS</wrap> | RAS  
+  - <wrap info>AC+PV+TLC</wrap> | Forge: OK, Bzr: repo créé dans le $THRONG_DIR, Frameworkage du code prévu avec Symfony et lecture de la doc CakePHP, à faire : création d'un espace Web pour le test et la prod, à faire : création de la DB sur le cluster DB.   
+  - <wrap info>PV</wrap> | Installation de Pegasus en cours, il faut rester vigilant sur le temps nécessaire pour le tester. En attendant, PV essaye de récupérer des info auprès de Noua et de Fred Suter. 
+  - <wrap info>PV</wrap> | Visite à Karen jeudi 16/10 pour débrifer le PPT et mettre en place la procédure de sélection de l'eCRF. 
+  - <wrap info>PV+JG</wrap> | bioaster_htc est opérationnel, test de connective en cours entre bioaster et bioaster_htc, Sysfera utilise bioaster_htc, montage NFS/GPFS a priori prêt dans ~15 jours.
+  - <wrap info>NS</wrap> | En cours. Retour à la prochaine réunion.
+
+ 
+====== Archives ======
+  - [[pt6/reunions/reunion_pt6_06.06.2014|06/06/2014]]
+  - [[pt6/reunions/reunion_pt6_10.06.2014|10/06/2014]]
+  - [[pt6/reunions/reunion_pt6_25.06.2014|25/06/2014]]
+  - [[pt6/reunions/reunion_pt6_19.09.2014|19/09/2014]]
+  - [[pt6/reunions/reunion_pt6_30.09.2014|30/09/2014]]
+  - [[pt6/reunions/reunion_pt6_28.10.2014|14/10/2014]]
+  - [[pt6/reunions/reunion_pt6_28.10.2014|28/10/2014]]

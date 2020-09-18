@@ -1,0 +1,207 @@
+
+<h1 class="sectionedit1" id="install_a_devlopment_envirionment_for_spark">Install a devlopment envirionment for spark</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Install a devlopment envirionment for spark" [1-59] -->
+<h2 class="sectionedit2" id="spark_dev_env_with_intellij_and_maven">Spark dev env with Intellij and Maven</h2>
+<div class="level2">
+
+<p>
+1. Pre-requise
+</p>
+
+<p>
+Download a IntelliJ IDEA, install jdk and scala sdk,
+</p>
+
+<p>
+First install scala plugin in IntelliJ.
+</p>
+
+<p>
+Then you add jdk and scala sdk into Intellij.
+</p>
+
+<p>
+To add jdk and scala sdk into IntelliJ, you open IntelliJ click on <span style='color:#ed1c24; '>Configure → Project default → Project structure</span> . After this it should open a window, now click on Global libraries→ +, choose the location where you have installed your jdk and sdk.
+</p>
+
+<p>
+After all this, you have a Intellij for scala development environment.
+</p>
+
+<p>
+To create a spark-scala project
+</p>
+
+<p>
+You need
+</p>
+<ol>
+<li class="level1"><div class="li"> Create a Intellij scala project</div>
+</li>
+<li class="level1"><div class="li"> add maven framework support to the project</div>
+</li>
+</ol>
+
+<p>
+In the main/java folder create the following file
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_dev_environment&amp;codeblock=0" title="Download Snippet" class="mediafile mf_scala">WordCount.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="br0">&#123;</span>SparkConf, SparkContext<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> WordCount <span class="br0">&#123;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> inputFile <span class="sy0">=</span> <span class="st0">&quot;file:///tmp/word.txt&quot;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> conf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;WordCount&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkContext<span class="br0">&#40;</span>conf<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> textFile <span class="sy0">=</span> sc.<span class="me1">textFile</span><span class="br0">&#40;</span>inputFile<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCount <span class="sy0">=</span> textFile.<span class="me1">flatMap</span><span class="br0">&#40;</span>line<span class="sy0">=&gt;</span>line.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>word<span class="sy0">=&gt;</span><span class="br0">&#40;</span>word,<span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="br0">&#40;</span>a,b<span class="br0">&#41;</span><span class="sy0">=&gt;</span>a+b<span class="br0">&#41;</span>
+    wordCount.<span class="me1">foreach</span><span class="br0">&#40;</span>println<span class="br0">&#41;</span>
+    wordCount.<span class="me1">saveAsTextFile</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/wordCount&quot;</span><span class="br0">&#41;</span>
+    sc.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Change the pom.xml as following 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_dev_environment&amp;codeblock=1" title="Download Snippet" class="mediafile mf_xml">pom.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;UTF-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;project</span> <span class="re0">xmlns</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span>
+<span class="sc3">         <span class="re0">xmlns:xsi</span>=<span class="st0">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span class="sc3">         <span class="re0">xsi:schemaLocation</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;modelVersion<span class="re2">&gt;</span></span></span>4.0.0<span class="sc3"><span class="re1">&lt;/modelVersion<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.pengfei<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-tutor<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.0-SNAPSHOT<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.1.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-streaming_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-hive_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-mllib_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;build<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;plugins<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.scala-tools<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-scala-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.15.2<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;executions<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;execution<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;goals<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>compile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>testCompile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;/goals<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;/execution<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/executions<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-compiler-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>3.6.0<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;source<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/source<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;target<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/target<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.maven.plugins<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-surefire-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.19<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;skip<span class="re2">&gt;</span></span></span>true<span class="sc3"><span class="re1">&lt;/skip<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc3"><span class="re1">&lt;/plugins<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/build<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/project<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+In intelliJ, you can write click on the .scala file and choose Run &lt;file-name&gt;. It will lauch the scala script on spark cluster. 
+</p>
+
+<p>
+You can also use maven to build a jar file of project WordCount, we name it wordCount.jar
+</p>
+
+<p>
+To run it on spark with mode cluster 
+</p>
+<pre class="code">spark-submit --class WordCount --master local[*] wordCount.jar</pre>
+
+</div>
+<!-- EDIT2 SECTION "Spark dev env with Intellij and Maven" [60-4525] -->
+<h2 class="sectionedit3" id="launching_applications_with_spark-submit">Launching Applications with spark-submit</h2>
+<div class="level2">
+
+<p>
+The jar can be build based on scala or java source, In this section, we exam the spark-submit with more details.
+</p>
+<pre class="code">./bin/spark-submit \
+  --class &lt;main-class&gt; \
+  --master &lt;master-url&gt; \
+  --deploy-mode &lt;deploy-mode&gt; \
+  --conf &lt;key&gt;=&lt;value&gt; \
+  ... # other options
+  &lt;application-jar&gt; \
+  [application-arguments]</pre>
+
+<p>
+Some of the commonly used options are:
+</p>
+<pre class="code">  * --class: The entry point for your application (e.g. org.apache.spark.examples.SparkPi)
+  * --master: The master URL for the cluster (e.g. &#039;&#039;spark://23.195.26.187:7077&#039;&#039;)
+  * --deploy-mode: Whether to deploy your driver on the worker nodes (cluster) or locally as an external client (client) (default: client)
+  * --conf: Arbitrary Spark configuration property in key=value format. For values that contain spaces wrap “key=value” in quotes (as shown).
+  * application-jar: Path to a bundled jar including your application and all dependencies. The URL must be globally visible inside of your cluster, for instance, an hdfs:// path or a file:// path that is present on all nodes.
+  * application-arguments: Arguments passed to the main method of your main class, if any</pre>
+
+<p>
+The following command uses a jar file came from spark distribution and call a sparkPi class, it prints a pi value in the output
+</p>
+<pre class="code">spark-submit --class org.apache.spark.examples.SparkPi --master local[*] /opt/spark/spark-2.2.0/examples/jars/spark-examples_2.11-2.2.0.jar</pre>
+
+</div>
+<!-- EDIT3 SECTION "Launching Applications with spark-submit" [4526-] -->

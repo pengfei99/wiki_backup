@@ -1,0 +1,336 @@
+
+<h1 class="sectionedit1" id="biospecimens_access_log_origin">Biospecimens access log origin</h1>
+<div class="level1">
+
+<p>
+The apache conf for biospcimens prod (10.69.40.11)
+</p>
+
+<p>
+is under /usr/local/etc/apache24/sites-enabled
+</p>
+
+<p>
+The main conf looks like this
+</p>
+<pre class="prettyprint">
+Listen 443
+SSLSessionCache         &quot;shmcb:/var/run/ssl_scache(512000)&quot;
+SSLSessionCacheTimeout  300
+# RV 09/09/2015 preprod
+&lt;VirtualHost *:443&gt;
+    ServerName      biospecimens.bioaster.org
+    
+    ServerAlias     h5557.novius.net
+
+    SSLEngine               On
+    SSLProtocol             All -SSLv2 -SSLv3
+    #SSLCipherSuite          EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+    # Voir https://mozilla.github.io/server-side-tls/ssl-config-generator/
+    SSLCipherSuite          ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
+    SSLHonorCipherOrder     on
+    SSLCompression          off
+    #SSLCertificateFile      /etc/ssl/www.bioaster-biospecimens.org-20150909.crt
+    #SSLCertificateKeyFile   /etc/ssl/www.bioaster-biospecimens.org-20150909.key
+    #SSLCertificateFile      /etc/ssl/biospecimens.bioaster.org.20160912.crt
+    SSLCertificateFile      /etc/ssl/CERT/20170309/biospecimens-dev.bioaster.org.20170309.pem
+    #SSLCertificateKeyFile   /etc/ssl/biospecimens.bioaster.org.20160912.key
+    SSLCertificateKeyFile  /etc/ssl/CERT/20170309/biospecimens-dev.bioaster.org.20170309.key
+    #SSLCertificateChainFile /etc/ssl/sub.class1.server.ca.pem
+    SSLCertificateChainFile /etc/ssl/CERT/20170309/Geotrust-CA.pem
+    
+    SetEnv          NOS_ENV prod
+    SetEnv          NOS_ROOT /usr/local/www/bioaster-biospecimens/htdocs
+
+    DocumentRoot    /usr/local/www/bioaster-biospecimens/htdocs/public
+    ErrorLog        /usr/local/www/bioaster-biospecimens/logs/error.log
+    CustomLog       /usr/local/www/bioaster-biospecimens/logs/access.log combined
+
+    XSendFile On
+    XSendFilePath  /usr/local/www/bioaster-biospecimens/htdocs/local/data/
+    XSendFilePath  /usr/local/www/bioaster-biospecimens/htdocs/local/cache/
+
+    php_value      upload_max_filesize 30M
+    php_value      post_max_size 30M
+    
+    RewriteEngine   on
+    #LogLevel        alert rewrite:trace3
+
+    RewriteRule     ^/phpmyadmin/.*         -                                   [L]
+    Alias           /phpmyadmin     /usr/local/www/phpmyadmin/htdocs
+    &lt;DirectoryMatch /usr/local/www/phpmyadmin/htdocs&gt;
+        Options FollowSymLinks Includes
+        Require ip      82.67.34.88
+        Require ip      109.190.143.183
+        Require ip      82.127.106.105
+        Require ip      82.67.11.164
+        Require ip      78.192.6.76
+        # Bioaster
+        Require ip      46.218.31.186
+        Require ip      10.69.0.0/16
+        AddType         application/x-httpd-php .php .htm
+    &lt;/DirectoryMatch&gt;
+
+    &lt;DirectoryMatch /usr/local/www/bioaster-biospecimens/htdocs/(public|novius-os/static)&gt;
+        Options FollowSymLinks
+        Require all granted
+    &lt;/DirectoryMatch&gt;
+    &lt;DirectoryMatch /usr/local/www/bioaster-biospecimens/htdocs/(public|novius-os)/htdocs&gt;
+        Options FollowSymLinks
+        Require all granted
+        AddType         application/x-httpd-php .php .htm
+    &lt;/DirectoryMatch&gt;
+
+    ErrorDocument   404    /novius-os/404.php
+
+    RewriteRule     ^/static/novius-os/(.*) /novius-os/static/$1                [PT]
+    RewriteRule     ^/novius-os/(.*)        /novius-os/htdocs/$1                [PT]
+    RewriteRule     ^/admin(|/.*)$          /novius-os/htdocs/admin.php/$1      [QSA,PT]
+    RewriteRule     ^(/(.*/)?)$             /novius-os/htdocs/front.php         [QSA,PT]
+    RewriteRule     ^(/.+)\.html$           /novius-os/htdocs/front.php         [QSA,PT]
+    RewriteRule     ^/(static|cache|media|data) -                               [L]
+    RewriteRule     ^/(.*)                  /htdocs/$1                          [L]
+    Alias           /novius-os              /usr/local/www/bioaster-biospecimens/htdocs/novius-os
+&lt;/VirtualHost&gt;
+
+</pre>
+<p>
+<code>CustomLog     /usr/local/www/bioaster-biospecimens/logs/access.log combined</code>
+</p>
+
+<p>
+This line defines where the access log is located.
+</p>
+
+<p>
+We need this file to do statistic of the application.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Biospecimens access log origin" [2-4770] -->
+<h1 class="sectionedit2" id="install_awstats_on_centos_7">Install awstats on centos 7</h1>
+<div class="level1">
+
+<p>
+1. install apache 2.4
+</p>
+
+<p>
+<code>sudo yum install httpd</code>
+</p>
+
+<p>
+change firewall to autorize http and https
+</p>
+<pre class="prettyprint">
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --reload
+</pre>
+<p>
+2. Install epel repo
+</p>
+
+<p>
+<code>sudo yum install epel-release</code>
+</p>
+
+<p>
+3. Install awstats
+</p>
+
+<p>
+<code>sudo yum install awstats</code>
+</p>
+
+<p>
+4. Edit awstats Apach vhost config file under /etc/httpd/conf.d/
+</p>
+
+<p>
+<code>vim awstats.conf</code>
+</p>
+<pre class="prettyprint">
+#
+# Content of this file, with correct values, can be automatically added to
+# your Apache server by using the AWStats configure.pl tool.
+#
+
+
+# If using Windows and Perl ActiveStat, this is to enable Perl script as CGI.
+#ScriptInterpreterSource registry
+
+
+#
+# Directives to add to your Apache conf file to allow use of AWStats as a CGI.
+# Note that path &quot;/usr/share/awstats/&quot; must reflect your AWStats install path.
+#
+Alias /awstatsclasses &quot;/usr/share/awstats/wwwroot/classes/&quot;
+Alias /awstatscss &quot;/usr/share/awstats/wwwroot/css/&quot;
+Alias /awstatsicons &quot;/usr/share/awstats/wwwroot/icon/&quot;
+ScriptAlias /awstats/ &quot;/usr/share/awstats/wwwroot/cgi-bin/&quot;
+
+
+#
+# This is to permit URL access to scripts/files in AWStats directory.
+#
+&lt;Directory &quot;/usr/share/awstats/wwwroot&quot;&gt;
+    Options None
+    AllowOverride None
+    &lt;IfModule mod_authz_core.c&gt;
+        # Apache 2.4	
+        Require ip 10.69.10.0/24
+        Require ip 10.69.11.0/24
+    &lt;/IfModule&gt;
+    &lt;IfModule !mod_authz_core.c&gt;
+        # Apache 2.2
+        Order allow,deny
+        Allow from 127.0.0.1
+        Allow from 10.69.10.0/24
+        Allow from 10.69.11.0/24
+
+    &lt;/IfModule&gt;
+&lt;/Directory&gt;
+# Additional Perl modules
+&lt;IfModule mod_env.c&gt;
+    SetEnv PERL5LIB /usr/share/awstats/lib:/usr/share/awstats/plugins
+&lt;/IfModule&gt;
+
+</pre>
+<p>
+5. Build a stats conf for one web site
+</p>
+
+<p>
+In this example, we suppose the name of the web site is biospecimens.bioaster.org
+</p>
+
+<p>
+<code>cp /etc/awstats/awstats.localhost.localdomain.conf etc/awstats/awstats.biospecimens.bioaster.org.conf</code>
+</p>
+
+<p>
+edit awstats.biospecimens.bioaster.org.conf
+</p>
+
+<p>
+<code>vim /etc/awstats/awstats.biospecimens.bioaster.org.conf</code>
+</p>
+
+<p>
+change the following conf, 
+</p>
+<pre class="prettyprint">
+# Change to Apache log file, by default it&#039;s /var/log/apache2/access.log
+LogFile=&quot;/var/log/httpd/access.log
+
+# Change to the website domain name
+SiteDomain=&quot;biospecimens.bioaster.org&quot;
+
+# Possible values:
+#  W - For a web log file
+#  S - For a streaming log file
+#  M - For a mail log file
+#  F - For a ftp log file
+# Example: W
+# Default: W
+#
+LogType=W
+
+# The apache log format, the default is 1 which means apache combiened log.
+
+LogFormat=1
+
+
+SiteDomain=&quot;biospecimens.bioaster.org&quot;
+
+#
+HostAliases=&quot;localhost 127.0.0.1 biospecimens.bioaster.org&quot;
+
+# The awstats result file location
+DirData=&quot;/var/lib/awstats&quot;
+
+
+</pre>
+<p>
+In a normal case, change the above config is enough. If your apache server has special config, you need to read the awstats doc to ajust your config.
+</p>
+
+<p>
+6. run the stats
+</p>
+<pre class="prettyprint">
+sudo /usr/share/awstats/wwwroot/cgi-bin/awstats.pl -config=biospecimens.bioaster.org -update
+</pre>
+<p>
+the output of this command should looks like this
+</p>
+<pre class="prettyprint">
+From data in log file &quot;/var/log/httpd/access_log&quot;...
+Phase 1 : First bypass old records, searching new record...
+Direct access after last parsed record (after line 209)
+Jumped lines in file: 209
+Found 209 already parsed records.
+Parsed lines in file: 0
+Found 0 dropped records,
+Found 0 comments,
+Found 0 blank records,
+Found 0 corrupted records,
+Found 0 old records,
+Found 16 new qualified records
+&lt;/code&gt;
+
+it will generate a file in &quot;/var/lib/awstats&quot; 
+
+7. view the stats via web browser
+
+http://10.70.3.34/awstats/awstats.pl?config=biospecimens.bioaster.org
+
+8. Add geo location plugin.
+
+There are many geo location plugin available for awstats.
+
+Here, I only highlight the maxmind geoIP plugin.
+
+This plugin requires a perl dependencies perl geo Ip
+
+You can install it via perl pm
+
+&lt;Code&gt;
+perl -MCPAN -e shell;
+install Geo::IP::PurePerl
+exit
+</pre>
+<p>
+or via yum
+</p>
+
+<p>
+<code> yum install perl-Geo-IP </code>
+</p>
+
+<p>
+Once depence is installed, you can download the geo ip database
+</p>
+<pre class="prettyprint"> 
+mkdir -p /opt/GeoIP/
+cd /opt/GeoIP
+wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz 
+gzip -d GeoIP.dat.gz
+</pre>
+<p>
+Now edit awstats.biospecimens.bioaster.org.conf
+</p>
+
+<p>
+add following line in the plugin section
+</p>
+<pre class="prettyprint">
+LoadPlugin=”geoip GEOIP_STANDARD /opt/GeoIP/GeoIP.dat”
+</pre>
+<p>
+rescan the log, you will see the coutry flag of every IP
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Install awstats on centos 7" [4771-] -->

@@ -1,0 +1,46 @@
+
+<h1 class="sectionedit1" id="application_documents_sur_owncloud">Application &quot;Documents&quot; sur Owncloud</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Application Documents sur Owncloud" [1-53] -->
+<h3 class="sectionedit2" id="activation_de_l_app_documents">Activation de l&#039;App Documents</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Sur OwnCloud, via Project_admin : Applications &gt; Productivity &gt; Documents &gt; Activer</div>
+</li>
+<li class="level1"><div class="li"> Un message de demande de mise à jour s&#039;affiche sur OwnCloud, effectuer la mise à jour</div>
+</li>
+<li class="level1"><div class="li"> Penser à remettre le bon thème dans la configuration</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Activation de l'App Documents" [54-334] -->
+<h3 class="sectionedit3" id="prise_en_charge_de_ms_word">Prise en charge de MS Word</h3>
+<div class="level3">
+
+<p>
+Le serveur nécessite une mise à jour de Libreoffice.
+</p>
+<ol>
+<li class="level1"><div class="li"> Sur VSphere Client, créer un snapshot de la VM ccbioappl03. Par exemple, <strong>100516-Audrey</strong></div>
+</li>
+<li class="level1"><div class="li"> Sur ccbioappl03.in2p3.fr : <pre class="code">sudo yum install libreoffice-headless</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Sur OwnCloud, via Project_admin : Administration &gt; Documents &gt; Cocher “Local : openOffice/LibreOffice est installé sur ce serveur. Le chemin vers le binaire est fourni via preview_libreoffice_path dans config.php” &gt; Appliquer et essayer</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT3 SECTION "Prise en charge de MS Word" [335-847] -->
+<h3 class="sectionedit4" id="activer_l_acces_protege_a_plusieurs_utilisateurs">Activer l&#039;accès protégé à plusieurs utilisateurs</h3>
+<div class="level3">
+
+<p>
+<a href="https://doc.owncloud.org/server/8.2/admin_manual/configuration_files/files_locking_transactional.html" class="urlextern" title="https://doc.owncloud.org/server/8.2/admin_manual/configuration_files/files_locking_transactional.html" rel="nofollow">Documentation Transactional File Locking </a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Activer l'accès protégé à plusieurs utilisateurs" [848-] -->

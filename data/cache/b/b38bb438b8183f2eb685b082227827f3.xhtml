@@ -1,0 +1,72 @@
+
+<h1 class="sectionedit1" id="projet_de_developpement">Projet de développement</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Projet de développement" [1-40] -->
+<h2 class="sectionedit2" id="creer_le_projet_dans_son_espace_de_travail">Créer le projet dans son espace de travail</h2>
+<div class="level2">
+<pre class="code">  $ mkdir &lt;PROJECT_NAME&gt;
+  $ cd &lt;PROJECT_NAME&gt;
+  $ bzr init
+  $ vim &lt;YOUR_FILE&gt;
+  $ bzr add
+  $ bzr ci -m &quot;My commit message.&quot;</pre>
+
+</div>
+<!-- EDIT2 SECTION "Créer le projet dans son espace de travail" [41-237] -->
+<h2 class="sectionedit3" id="creer_un_depot_partage_pour_heberger_le_code">Créer un dépôt partagé pour héberger le code</h2>
+<div class="level2">
+
+<p>
+Celui-ci n&#039;a pas besoin de contenir un arbre de travail (<code>no-trees</code>) :
+</p>
+<pre class="code">  $ bzr init-repo --no-trees bzr+ssh://LOGIN@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/&lt;PROJECT_NAME&gt;
+  </pre>
+
+<p>
+Envoyer le code dans le nouveau dépôt :
+</p>
+<pre class="code">  $ bzr push bzr+ssh://LOGIN@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/&lt;PROJECT_NAME&gt;</pre>
+
+</div>
+<!-- EDIT3 SECTION "Créer un dépôt partagé pour héberger le code" [238-631] -->
+<h2 class="sectionedit4" id="travailler_sur_un_bug_ou_une_feature">Travailler sur un bug ou une feature</h2>
+<div class="level2">
+
+<p>
+Chaque développement devrait être associé à un ticket dans <span class="curid"><a href="/informatique/developpement/developpement_de_projet" class="wikilink1" title="informatique:developpement:developpement_de_projet">la forge</a></span>. Le nom de la branche devrait être de cette forme : <code>bug-4564</code>, <code>feature-8521</code>…
+</p>
+
+<p>
+La branche de développement se crée ainsi :
+</p>
+<pre class="code">  $ bzr branch bzr+ssh://LOGIN@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/&lt;PROJECT_NAME&gt; \
+               bzr+ssh://LOGIN@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/&lt;PROJECT_NAME&gt;/&lt;DEV_BRANCH&gt;</pre>
+
+<p>
+Pour travailler dessus, il suffit de créer une branche locale :
+</p>
+<pre class="code">  $ bzr branch bzr+ssh://LOGIN@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/&lt;PROJECT_NAME&gt;/&lt;DEV_BRANCH&gt;
+  $ cd &lt;DEV_BRANCH&gt;
+  # code, test, commit... ad infinitum!
+  
+  $ bzr push :parent
+  All changes applied successfully.                                                                      
+  Pushed up to revision X.</pre>
+
+</div>
+<!-- EDIT4 SECTION "Travailler sur un bug ou une feature" [632-1512] -->
+<h2 class="sectionedit5" id="soumettre_la_branche_pour_revue">Soumettre la branche pour revue</h2>
+<div class="level2">
+
+<p>
+Dans le ticket, ajouter un commentaire avec le lien vers la branche à fusionner et le réassigner à la personne qui doit faire la revue.
+</p>
+
+<p>
+<strong>Remarque :</strong> Comme <strong>“1 branch == 1 merge request”</strong>, il est déconseillé de continuer à travailler dans la branche de développement.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Soumettre la branche pour revue" [1513-] -->

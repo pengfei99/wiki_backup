@@ -1,0 +1,78 @@
+
+<h1 class="sectionedit1" id="reunion_du_19_octobre_2017">Réunion du 19 Octobre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 19 Octobre 2017" [1-44] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [45-93] -->
+<h2 class="sectionedit3" id="retours_de_bugs">Retours de bugs</h2>
+<div class="level2">
+
+<p>
+Les retours sont <a href="/biospecimens/retoursbugs/05102017" class="wikilink1" title="biospecimens:retoursbugs:05102017">ici</a>. Tout a été corrigé en une semaine. La doc a également été mise à jour, ainsi que le <abbr title="Domain Name System">DNS</abbr> et les mails sont spoolés…
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Retours de bugs" [94-311] -->
+<h2 class="sectionedit4" id="en_cours">En cours</h2>
+<div class="level2">
+
+<p>
+Reprise de l&#039;existant
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>Reprendre les champs description et commentaire liées aux demandes</del></div>
+</li>
+<li class="level1"><div class="li"> <del>CRB et contact</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Collections</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Microorganismes</del></div>
+</li>
+<li class="level1"><div class="li"> Reprendre les mails envoyés après une demande</div>
+</li>
+<li class="level1"><div class="li"> Mettre à jour le statut d&#039;une demande (annulée ou finie) cf <a href="https://devtools.bioaster.org/redmine/issues/608" class="urlextern" title="https://devtools.bioaster.org/redmine/issues/608"  rel="nofollow">https://devtools.bioaster.org/redmine/issues/608</a></div>
+</li>
+<li class="level1"><div class="li"> Vérifier que les champs avec des sauts de ligne (emails, commentaires etc) sont bien sauvegardés comme il faut en DB.</div>
+</li>
+<li class="level1"><div class="li"> Vérifier que tout est OK sur l&#039;appli : notamment les listes à choix donnent parfois un affichage inattendu. </div>
+</li>
+<li class="level1"><div class="li"> Les fichiers attachés à un commentaire ne fonctionnent pas quand on clique dessus.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "En cours" [312-1021] -->
+<h2 class="sectionedit5" id="reste_a_faire">Reste à faire</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Le tour des champs : certains sont en “longtext” alors qu&#039;un varchar(255) serait suffisant je pense.</div>
+</li>
+<li class="level1"><div class="li"> Dashboard : j&#039;ai l&#039;impréssion que par défaut on ne voit que les demandes faites sur des default workpackages. J&#039;aimerais en parler avec l&#039;UTEC01.</div>
+</li>
+<li class="level1"><div class="li"> SEO : robot.txt → ne pas indexer la page admin/ etc</div>
+</li>
+<li class="level1"><div class="li"> Demander à l&#039;IT si le système de spool peut mettre l&#039;adresse biospecimens@bioaster.org dans les spams (<abbr title="Clément Delestre">CD</abbr> : je pense que ça dépend du client mail du receveur)</div>
+</li>
+<li class="level1"><div class="li"> Awstats</div>
+</li>
+<li class="level1"><div class="li"> Minifier les fichiers <abbr title="HyperText Markup Language">HTML</abbr>/<abbr title="Cascading Style Sheets">CSS</abbr>/JS <a href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/utiliser-assetic-pour-gerer-les-codes-css-et-js-de-votre-site" class="urlextern" title="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/utiliser-assetic-pour-gerer-les-codes-css-et-js-de-votre-site"  rel="nofollow">tuto global</a> <a href="http://symfony.com/doc/current/assetic/uglifyjs.html" class="urlextern" title="http://symfony.com/doc/current/assetic/uglifyjs.html"  rel="nofollow">uglify JS</a>  <a href="http://symfony.com/doc/2.8/assetic/asset_management.html" class="urlextern" title="http://symfony.com/doc/2.8/assetic/asset_management.html"  rel="nofollow">assetic global</a></div>
+</li>
+<li class="level1"><div class="li"> Idée : charger les demandes dans le tableau de bord 15 par 15 en AJAX et mettre un loader dans une div en attendant. Ceci dit c&#039;est au delà de l&#039;isofonctionnalité. Sur la version de prod si on demande à afficher TOUTES les demandes ça met 4 secondes. Sur la version de dev en local ça met 2.5 secondes.</div>
+</li>
+<li class="level1"><div class="li"> Regarder <a href="http://webdevchecklist.com/" class="urlextern" title="http://webdevchecklist.com/"  rel="nofollow">ça</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Reste à faire" [1022-] -->

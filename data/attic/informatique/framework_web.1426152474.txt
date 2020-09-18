@@ -1,0 +1,144 @@
+====== Cadre de développement web ======
+
+^Critères                   ^^Solutions                                                                                   ^^^^^
+^Fonctionnalité ^Pondération ^CakePHP            ^Symfony            ^Laravel            ^CherryPy                ^Django ^
+|Documentation  |            |http://cakephp.org |http://symfony.com |http://laravel.com |http://www.cherrypy.org |https://www.djangoproject.com |
+|Licence        |            |                   |                   |                   |                        | |
+|Langage        |            |PHP                |PHP                |PHP                |Python                  |Python |
+|Difficulté     |            |facile             |moyen              |moyen/difficile    |facile                  | |
+|Installation   |            |manuelle           |composer           |composer           |package                 | |
+|Backoffice     |            |non                |[[https://github.com/symfony2admingenerator/AdmingeneratorGeneratorBundle|AdmingeneratorGeneratorBundle]]           |?           |?                 |oui ([[https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/|bootstrapable]])|
+|ORM            |            |simple             |[[http://symfony.com/doc/current/book/doctrine.html|Doctrine]] |[[http://laravel.com/docs/4.2/eloquent|Eloquent]]|[[http://www.sqlalchemy.org/library.html#tutorials|SQLAlchemy]]| |
+|Migration      |            |[[https://pypi.python.org/pypi/yoyo-migrations|YoyoMigrations]] | [[http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html|Doctrine]] | [[http://laravel.com/docs/4.2/migrations|Eloquent]] | [[http://sqlalchemy-migrate.readthedocs.org/en/latest/versioning.html|SQLAlchemy]]| |
+|**M**odel      | | | | | | |
+|**V**iew       |            |[[http://book.cakephp.org/2.0/en/views.html|PHP]] |[[http://twig.sensiolabs.org/|Twig]] (Django ?) |[[http://laravel.com/docs/4.2/templates|Blade]] |[[http://www.makotemplates.org|Mako]] | |
+|**C**ontroller |            |                   | | | | |
+|Organisation du code       | |classe, simple |classe |classe |? |fonction, bordélique ? |
+|Routing        |            |classe/méthode     |statique, anntotion|pas intuitif !     |classe/méthode, @expose| |
+|REST API       | | | | | | |
+
+
+====== Django vs Symfony ======
+
+===== Backoffice =====
+
+Le système d'administration automatique de Django est un plus qui peut-être assez simplement implémenté dans Symfony grâce au bundle d'administration.
+Dans les deux cas, se pose la question de la nécessité d'un tel outil pour nos projets.
+
+Le "LIMS" n'est pas une interface de publication de contenu, mais bien un outil de travail. Les utilisateurs créent et manipulent eux-même la plupart, voir la quasi totalité, des éléments contenus dans la base de données.
+
+Ces interfaces permettent de manipuler tous les objets, mais n'accompagnent nullement l'utilisateur. Elles ne contiennent pas "d'intelligence" et ne facilitent donc pas vraiment la saisie des informations.
+===== Routes =====
+
+Le système de route est peut-être l'élément le plus faible de Django. Symfony permet d'utiliser les annotations PHP, ajout contestable au langage, mais bien utiles ici.
+
+<code python polls/urls.py>
+from django.conf.urls import patterns, url
+
+from polls import views
+
+urlpatterns = patterns('',
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^(?P<pk>\d+)/results/$', views.ResultsView.as_view(), name='results'),
+    url(r'^(?P<question_id>\d+)/vote/$', views.vote, name='vote'),
+)
+</code>
+
+Dans Symfony, une fois qu'on a déclaré que le ''bundle'' utilise les annotations, il suffit de faire :
+
+<code php src/AppBundle/Controller/HelloController.php>
+namespace AppBundle\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+class HelloController
+{
+    /**
+     * @Route("/hello/{name}", name="hello")
+     */
+    public function indexAction($name)
+    {
+        #…
+    }
+}
+</code>
+
+Les routes dans Symfony, bien que plus verbeuses, sont beaucoup plus lisibles.
+
+<code php src/AppBundle/Controller/ArticleController.php>
+class ArticleController extends Controller
+{
+    /**
+     * @Route(
+     *     "/articles/{_locale}/{year}/{title}.{_format}",
+     *     defaults={"_format": "html"},
+     *     requirements={
+     *         "_locale": "en|fr",
+     *         "_format": "html|rss",
+     *         "year": "\d+"
+     *     }
+     * )
+     */
+    public function showAction($_locale, $year, $title)
+    {
+    }
+}
+</code>
+
+<code>
+</code>
+===== Modèles =====
+
+
+===== Contrôleurs =====
+
+Dans Django, le code est rangé dans des ''Applications'' qui contiennent des ''fonctions|classes''. 
+<code python polls/views.py>
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('<html><body>Hello!</body></html>')
+</code>
+
+Dans Symfony, le code est rangé en ''Bundles'' puis en ''Classes'' qui contiennent des ''méthodes''.
+<code php src/AppBundle/Controller/HelloController.php> 
+namespace AppBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Response;
+
+class HelloController
+{
+    public function indexAction()
+    {
+        return new Response('<html><body>Hello!</body></html>');
+    }
+}
+</code>
+
+===== Vues =====
+
+Le moteur ''Twig'' de Symfony utilise (exactement ?) la même syntaxe que le moteur de templates de Django. Ils utilisent tout les 2 les ''blocks'' et les ''filters''.
+===== Horreurs =====
+<code python>
+from django.shortcuts import get_object_or_404, render
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+</code>
+
+La même chose (en plus élégant) avec le ''paramConverter'' de Symfony :
+
+<code php>
+use AppBundle\Entity\Question;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+/**
+ * @Route("/{id}")
+ */
+public function showAction(Question $question)
+{
+    return $this->render('post/results.html.twig', array('question' => $question));
+}
+</code>

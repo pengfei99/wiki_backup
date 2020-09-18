@@ -1,0 +1,133 @@
+
+<h1 class="sectionedit1" id="solution_temporaire_pour_les_acces_mad">Solution temporaire pour les accès MAD</h1>
+<div class="level1">
+
+<p>
+Solution mise en place pour donner un accès GPFS restreint à des collaborateurs MAD (mis à disposition par des partenaires) et qui n&#039;ont pas de compte AFS au centre de calcul
+</p>
+<ul>
+<li class="level1"><div class="li"> Le script automatique qui réaffecte les fichiers au groupe “bioaster” a été désactivé par Loïc Tortay (CC)</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Il faut créer un nom de groupe avec un gid compris entre 8000 et 9000 et le communiquer (nom +gid) au CC pour qu&#039;il soit autorisé</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Il faut créer le nouveau groupe sur toutes les VMS qu&#039;utilisera le collaborateur MAD via le montage NFS</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Il faut créer le nouvel utilisateur MAD sur toutes les VMS qu&#039;il utilisera et lui affecter le bon groupe ainsi qu&#039;aux membres de l&#039;UTEC</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Eventuellement ajouter le nouveau groupe dans le fichier sudoers (visudo ou édition de /etc/sudoers)</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Réaffecter au nouveau groupe sur GPFS les fichiers que devra “voir” le collaborateur MAD (en général les fichiers du répertoire de son UTEC, ex /sps/bioaster/pt2) : chgrp -R ba_utec02 /sps/bioaster/pt2</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Positionner les bons droits UNIX et le bit “setgid” sur le répertoire : chmod 2770 /sps/bioaster/pt2</div>
+</li>
+</ul>
+
+<p>
+&lt;WRAP left round info 40%&gt;
+Pour modifier tous les sous-répertoire : find . -type d -exec chmod 2770 {} \;
+&lt;/WRAP&gt;&lt;WRAP clear&gt;&lt;/WRAP&gt;
+</p>
+<ul>
+<li class="level1"><div class="li"> Eventuellement, modifier les umasks dans le .bashrc des utilisateurs</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <strong>Sur toutes les VMs cibles : ajouter une route vers la machine “ssh gateway” : route add -net 134.158.37.0 netmask 255.255.255.0 gw  172.17.6.254</strong></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Solution temporaire pour les acc\u00e8s MAD&quot;,&quot;hid&quot;:&quot;solution_temporaire_pour_les_acces_mad&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1533&quot;} -->
+<h2 class="sectionedit2" id="cas_pour_nathalie_mugnier_mad_utec02">Cas pour Nathalie Mugnier, MAD UTEC02 :</h2>
+<div class="level2">
+
+<p>
+Groupe créé : ba_utec02 gid: 8000
+</p>
+
+<p>
+&lt;Code&gt;
+$ groupadd -g 8000 ba_utec02
+&lt;/Code&gt;
+</p>
+
+<p>
+Utilisateur créé : nmugnier
+&lt;Code&gt;
+$ useradd -g ba_utec02 nmugnier
+&lt;/Code&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cas pour Nathalie Mugnier, MAD UTEC02 :&quot;,&quot;hid&quot;:&quot;cas_pour_nathalie_mugnier_mad_utec02&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1534-1746&quot;} -->
+<h2 class="sectionedit3" id="cas_pour_gaelle_vilchez_hcl_bmx_intervenant_sur_le_projet_iroise_utec02">Cas pour Gaelle Vilchez (HCL/bmx), intervenant sur le projet IROISE/UTEC02 :</h2>
+<div class="level2">
+
+<p>
+Groupe créé le 21/06/2017 : ba_iroise gid: 8001
+</p>
+
+<p>
+&lt;Code&gt;
+$ groupadd -g 8001 ba_iroise
+&lt;/Code&gt;
+</p>
+
+<p>
+Utilisateur créé : gvilchez
+&lt;Code&gt;
+$ useradd -g ba_iroise gvilchez
+&lt;/Code&gt;
+</p>
+
+<p>
+<strong>ACLs  configurées côté CC : </strong>
+</p>
+
+<p>
+Les utilisateurs du groupe ba_iroise n&#039;ont accès qu&#039;à :
+</p>
+
+<p>
+/sps/bioaster/pt2/Apps/
+</p>
+
+<p>
+/sps/bioaster/pt2/Genomes/
+</p>
+
+<p>
+/sps/bioaster/pt2/Projets/Metagenomics/WP2-IROISE/
+</p>
+
+<p>
+(la commande : setfacl -Rm g:8001:rwx /sps/bioaster/pt2/Genomes )
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cas pour Gaelle Vilchez (HCL\/bmx), intervenant sur le projet IROISE\/UTEC02 :&quot;,&quot;hid&quot;:&quot;cas_pour_gaelle_vilchez_hcl_bmx_intervenant_sur_le_projet_iroise_utec02&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1747-2280&quot;} -->
+<h1 class="sectionedit4" id="ssh_proxy">SSH PROXY</h1>
+<div class="level1">
+
+<p>
+Une machine de rebond ssh a été crée pour accéder aux VMs UTEC02: <a href="/doku.php?id=vms:openstack:bioaster_ssh_proxy" class="wikilink2" title="vms:openstack:bioaster_ssh_proxy" rel="nofollow">VM SSH GATEWAY</a>
+</p>
+
+<p>
+Cela permet de s&#039;affranchir de la création de compte au CC pour les MADs
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SSH PROXY&quot;,&quot;hid&quot;:&quot;ssh_proxy&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;2281-&quot;} -->

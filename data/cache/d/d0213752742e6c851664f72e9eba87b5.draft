@@ -1,0 +1,77 @@
+a:6:{s:2:"id";s:35:"ut6:reunions:reunion_ut6_03.05.2017";s:6:"prefix";s:1809:"**Date : 3/05/2017  **
+
+**Participants** :  NS, JHA, YA, YM, PLU, PDU, AC, CD, PV, AZ, GB  +AB    //(excusés : )//
+
+**Précédente réunion le [[reunion_ut6_19.04.2017|19/04/2017]]** \\
+[[reunion_pt6_Archive|Accéder à l'archive des Team meetings UTEC6]]
+
+====== UTEC6 : TOUS ======
+
+==== POINTS URGENTS UTEC6 à traiter IMPERATIVEMENT  ====
+  * []
+==== PRESENTATION  ====
+  * [YA] Quelques mots sur ma formation bioinfo
+  * [AC] ISO9001@UTEC6 : roadmap
+
+==== BIOASTER Corp. ====
+  * [GB] Présentation de TOUT METAGENOMICS @LabMeeting en 2x, notamment le WP5 le 17 juillet (25 + 5')
+     
+=== Vie de l'équipe / point RH ===
+  * [NS] Point sur le recrutement DataScientist -> proposition envoyé à 1 candidate
+  * [GB] Actions prochaines de 'Team building' : SWOT utec6 + MBTI
+
+
+=== Points Généraux (Veille technique, Idéations, idéations UTEC6, stratégies,... ) ===
+  * [YM] Sans doute HS mais le nouveau site des équipes transversales de l'IP est super bien fait : http://inception.pasteur.fr/
+
+=== Interaction avec les autres Unités / Services  de BIOASTER ===
+  * Bioinfo 
+  * UTECx
+  * UTHEMx
+  * PMO
+    * [GB] meeting + beta-test des TimeSheet@SciForma...
+      * Formation prévue en juin pour release fin Juin
+    * [GB] Attention++ pour alimenter SciForma en temps réel pour le réel vs. prévisionnel...
+  * Juridique
+    * [YM] Unpaywall accepté par le juridique. Manque l'accord de principe de NG. En cours.
+  * Com
+  * QSI
+  * DAF  
+  * Achat
+    
+==== Partnerships / BD ====
+  * [GB, NS] [NEXT] Retour à faire aux pre-call H2020 2017-2019  (tableau de Corentin C.)
+  * [GB, NS] Corentin a contacté OpenPHACTS pour connaître leur positionnement dans le call fairification -> AU pire on gange des contacts et on se fait connaître.
+
+
+";s:4:"text";s:5194:"===== PROJETs =====
+
+^# ^Quoi?                  ^Qui?          ^Avancement / Action   ^
+^0 |ISO9001| AC, GB | Refonte du logigramme |
+^1 |PASSPORT| PLU |[PLU] OpenLdap server Redundancy (Primary : CCLinOpenLdapP01 (10.70.3.118), Second : CCLinOpenLdapP02 (10.70.3.119)), Real time synchronization between Second and Primary.\\ [PLU] Passport on pre-production \\ [PLU] Externalize DB to CC DB cluster?  |
+^2 |Biospecimens| YM + CD| [Biospecimens V1.5][all] Meeting avec utec1... \\ [Biospecimens V1.5][CD] Les listes finies c'est OK (notamment les 800 bactéries : le ''CSV'' a été //parsé// rapidement avec ''awk'' j'ai mis un exemple dans le readme). \\ [Biospecimens V1.5][CD] Implémentation de l'outil sans la partie import de données -> fini. Donc le fonctionnel est OK. \\ [Biospecimens V1.5][CD] Déployé sur [[https://biospecimens-15.bioaster.org]] (à retenir : faire des migrations au fur et à mesure). \\ [Biospecimens V1.5][CD][Hackathon] Le 11 mai, qui compte participer ? Il me faudrait des admins svp. Les scenarii sont sur [[https://owncloud.bioaster.org/index.php/s/nO0rY3DxPPzDJXY|ownCloud]] \\ [Biospecimens V1.5][CD] pending : reprise de l'existant : les données en prod (V1) ont été dumpées en tsv -> parsage en cours (société, utilisateurs, projets, workpackages et droits associés sont faits). |
+^3 |NoE +eSample +FLEMS |YM + CD |[YM + CD] Classifications : \\ DONE : Réunion avec Karen pour update des classifications. \\ SCHEDULED : Réunion avec Marion & Gustavo pour la même chose. Pas d'autres retours pour le moment. \\ [YM] Code : \\ - Requêtes et affichage "propre" ("on dirait une feuille de temps")  sur classification d'intérêt dans formulaire OK. (début : 7500 requêtes environ 30sec --> fin 21 requêtes 15 msec). Méthode documentée et présentée en NoE internal meeting. \\ - Générateur de BA uid ok (à tester). \\ - Récupération des projects BA ID en cours dans Sciforma avec PLU \\ [YM + CD] En attente des retours de la NET \\ [YM + CD] Report du NETMeeting3 5mai --> 8 juin... Mais on garde la date du 5 mai pour un atelier questions/réponses + présentation de //mock up// \\ [CD] //Update// du //mock up// en prévision de la réunion "questions ouvertes" du 5 mai |
+^4 |REALISM + eCRF + tranSMART |NS + YM + PLIU |[NS] DAD quasiment prêt pour MIPREA -> je dois inclure la doc de SANOFI sur le format d'entrée de tranSMART \\ [NS] DAD REALISM en attente. \\ [NS] Transfert des données de MLR sur OwnCloud a priori réglé? \\ [NS] Ambiance exécrable avec la CP lors de sa venue à BIOASTER... Point interne vendredi pour définir le message à faire passer au consoritum sur l'eCRF et tranSMART \\ [PLU] Design tranSMART master tree architecture for Miprea clinical data \\ [PLU] Develope loading script for Miprea dummy clinical data (dummy data is generated based on Miprea clinical data) -> merci PLU, ça m'aide beaucoup pour la rédaction du DAD! [[https://bioaster.etriks.org/transmart/datasetExplorer/index|dispo ici]] \\ [PLU] Load Miprea dummy clinical data into tranSMART with master tree architecture \\ [PLU] Data curation script for Miprea https://gitlab.in2p3.fr/pengfei/Realism_dataCuration  | 
+^6 |MOSAIC|GB + NS + AZ| [GB] Revue du contrat, notamment la partie sur les données ; Gantt=>charges dans SciForma \\ [NS] discussion avec Nitin Baliga le 2 mai à 17h00 -> Rédaction d'une proposition de "Fee for service" par le WP5 et LB. \\ [AZ] Trouvé 2 (probables) erreurs dans la définition des poids des blocs/omiques dans la GCCA-DA de mixOmics. Discussion skype prévue la semaine prochaine avec la project leader de mixOmics là-dessus. Continué la rédaction du rapport sur analyse comparative de la GCCA-DA et la MB-PLS. |
+^7 |bMx Metagenomics MetaSeq \\ [[https://gitlab.in2p3.fr/bioaster/metaseq/blob/master/CHANGELOG.md|CHANGELOG]] \\ [[https://gitlab.in2p3.fr/bioaster/metaseq/boards?milestone_title=v1.0|Board]] |GB + PV + PDU | [PDU, PV] V1 en cours de finalisation avec déjà des fonctionnalités de V2 \\ [PDU, PV] Une démo sera faite à Asmaa \\ [PDU, PV] Amélioration performances et ajout de tests automatisés \\ [PDU, PV] Automatisation du déploiement |
+^8 |Schéma Directeur Data Science|NS|Réécriture de l'executive summary... Je dois revoir encore la conclusion et 2-3 § du document. |
+^9 |THOR|AC+ PLU| Réunions programmées fin de semaine pour finir les documents.  | 
+^10 | Stage NoE : the samples legacy | JHA+YM | [JHA] Visualisation des données des échantillons biologiques à l'aide de cytoscape \\ Présentation des résultats à la réunion NoE 27.04.2017 \\ Récupération des échantillons biologiques de l'UTEC 1 et l'UTEC 3 de Paris \\ Création du template pour les bactéries et les plasmides|
+^11 | Stage Data Cyto | YA+NS | [YA] Revue biblio des méthodes de prétraitements des données de cytométrie de masse et de flux -> 3 packages R sélectionnés (1 pour la masse et 2 pour le flux) \\ [YA] Discussion le 25/04 avec BB sur les données de Cytof générées pour le stage \\ [YA] Lecture des données FCS dans R ok! -> visualisation des données et premiers test pour évaluer l'effet de la transformation sur la variabilité.  |";s:6:"suffix";s:728:"
+====== UTEC6 : DataManagement + Core + SoftDEV ======
+
+==== DEV  ====
+  * [YM] Je recherche activement des lib JS pour afficher mes chemins de classifications en autre chose que "feuille de temps". Pour le moment mes meilleurs candidats sont : http://jsfiddle.net/sreeram901/fosxumcb/ , http://mbraak.github.io/jqTree/ , http://jaredforsyth.com/treed/
+  * [YM] [[http://www.patternfly.org/|PatternFly]] : A community of designers and developers collaborating to build a UI framework for enterprise web applications. (maintenu par RedHat et sous licence CC Attribution 4.0)
+==== Core Services ====
+  *
+==== IT/IS (AB) & UTEC06 ====
+  * 
+
+==== INFRA  +CC-IN2P3 +IP ====
+  * []
+==== Data Management ====
+  * []
+
+
+";s:4:"date";i:1494315059;s:6:"client";s:7:"pdupuis";}

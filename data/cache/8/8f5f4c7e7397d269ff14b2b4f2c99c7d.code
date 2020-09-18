@@ -1,0 +1,3 @@
+urlpatterns <span class="sy0">=</span> i18n_patterns<span class="br0">&#40;</span>
+    url<span class="br0">&#40;</span>r<span class="st0">'^test/$'</span><span class="sy0">,</span> samples.<span class="me1">translation_test</span><span class="sy0">,</span> name<span class="sy0">=</span><span class="st0">'just_a_test'</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span>

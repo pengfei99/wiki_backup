@@ -1,0 +1,39 @@
+
+<h1 class="sectionedit1" id="part_4swarms">Part 4: Swarms</h1>
+<div class="level1">
+
+<p>
+In part 3, you took an app you wrote in part 2, and defined how it should run in production by turning it into a service, scaling it up 5x in the process.
+</p>
+
+<p>
+Here in part 4, you deploy this application onto a cluster, running it on multiple machines. Multi-container, multi-machine applications are made possible by joining multiple machines into a “Dockerized” cluster called a swarm.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Part 4: Swarms&quot;,&quot;hid&quot;:&quot;part_4swarms&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-419&quot;} -->
+<h2 class="sectionedit2" id="understanding_swarm_clusters">Understanding Swarm clusters</h2>
+<div class="level2">
+
+<p>
+A swarm is a group of machines that are running Docker and joined into a cluster. After that has happened, you continue to run the Docker commands you’re used to, but now they are executed on a cluster by a swarm manager. The machines in a swarm can be physical or virtual. After joining a swarm, they are referred to as nodes.
+</p>
+
+<p>
+Swarm managers can use several strategies to run containers, such as “emptiest node” – which fills the least utilized machines with containers. Or “global”, which ensures that each machine gets exactly one instance of the specified container. You instruct the swarm manager to use these strategies in the Compose file, just like the one you have already been using.
+</p>
+
+<p>
+Swarm managers are the only machines in a swarm that can execute your commands, or authorize other machines to join the swarm as workers. Workers are just there to provide capacity and do not have the authority to tell any other machine what it can and cannot do.
+</p>
+
+<p>
+Up until now, you have been using Docker in a single-host mode on your local machine. But Docker also can be switched into swarm mode, and that’s what enables the use of swarms. Enabling swarm mode instantly makes the current machine a swarm manager. From then on, Docker runs the commands you execute on the swarm you’re managing, rather than just on the current machine.
+</p>
+
+<p>
+Todo <a href="https://docs.docker.com/get-started/part4" class="urlextern" title="https://docs.docker.com/get-started/part4" rel="nofollow">https://docs.docker.com/get-started/part4</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Understanding Swarm clusters&quot;,&quot;hid&quot;:&quot;understanding_swarm_clusters&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;420-&quot;} -->

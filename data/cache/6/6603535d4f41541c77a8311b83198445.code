@@ -1,0 +1,4 @@
+<span class="nu0">1</span>. 从Channel中写数据到Buffer： 
+<span class="kw4">int</span> bytesRead <span class="sy0">=</span> inChannel.<span class="me1">read</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">//read into buffer.</span>
+&nbsp;
+<span class="nu0">2</span>. 通过put写数据： buf.<span class="me1">put</span><span class="br0">&#40;</span><span class="nu0">127</span><span class="br0">&#41;</span><span class="sy0">;</span>

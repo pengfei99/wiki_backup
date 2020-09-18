@@ -1,0 +1,4 @@
+pyenv virtualenv 3.5.1 python351
+mkdir Python351Test &amp;&amp; cd Python351Test/ 
+pyenv local python351
+# shows &quot;(python351) &quot; at the begining of the shell

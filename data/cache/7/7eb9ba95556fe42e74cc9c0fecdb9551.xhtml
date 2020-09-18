@@ -1,0 +1,754 @@
+
+<h1 class="sectionedit1" id="install_ldap_and_configuration_on_centos7">Install Ldap and configuration on Centos7</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we will install a openldap server and client on two vms.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install Ldap and configuration on Centos7&quot;,&quot;hid&quot;:&quot;install_ldap_and_configuration_on_centos7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-133&quot;} -->
+<h2 class="sectionedit2" id="environment">Environment</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Host Name</th><th class="col1"> IP</th><th class="col2"> <abbr title="Operating System">OS</abbr> </th><th class="col3"> Purpose</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">ldap-server.pengfei.org</td><td class="col1">10.70.3.66</td><td class="col2">Centos 7</td><td class="col3"> Ldap server</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">ldap-client.pengfei.org</td><td class="col1">10.70.3.68</td><td class="col2">Centos 7</td><td class="col3"> Ldap client</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;159-306&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Environment&quot;,&quot;hid&quot;:&quot;environment&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;134-307&quot;} -->
+<h2 class="sectionedit4" id="pre-installation">0. Pre-installation</h2>
+<div class="level2">
+
+<p>
+Add necessary conf in your /etc/hosts to make them accessible via host name.
+For example.
+</p>
+<pre class="code">10.70.3.66    ldap-server.pengfei.org
+10.70.3.68    ldap-client.pengfei.org</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0. Pre-installation&quot;,&quot;hid&quot;:&quot;pre-installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;308-522&quot;} -->
+<h3 class="sectionedit5" id="add_firewall_rules_to_allow_ldap_connextions">0.1 Add firewall rules to allow ldap connextions</h3>
+<div class="level3">
+<pre class="code">firewall-cmd --zone=public --add-port=389/tcp --permanent
+firewall-cmd --zone=public --add-port=636/tcp --permanent
+firewall-cmd --reload</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0.1 Add firewall rules to allow ldap connextions&quot;,&quot;hid&quot;:&quot;add_firewall_rules_to_allow_ldap_connextions&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;523-737&quot;} -->
+<h3 class="sectionedit6" id="generate_ldap_root_password">0.2 Generate ldap root password</h3>
+<div class="level3">
+<pre class="code">[root@server ~]# slappasswd
+New password: 
+Re-enter new password: 
+{SSHA}d/thexcQUuSfe3rx3gRaEhHpNJ52N8D3
+[root@server ~]#</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0.2 Generate ldap root password&quot;,&quot;hid&quot;:&quot;generate_ldap_root_password&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;738-919&quot;} -->
+<h2 class="sectionedit7" id="install_ldap_server">1. Install Ldap server</h2>
+<div class="level2">
+
+<p>
+Install openldap server, client and migration tools for inserting new dn into openldap server
+</p>
+<pre class="code">#Install the following package for ldap
+yum -y install openldap-clients openldap-servers migrationtools</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Install Ldap server&quot;,&quot;hid&quot;:&quot;install_ldap_server&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;920-1170&quot;} -->
+<h2 class="sectionedit8" id="edit_the_openldap_server_configuration">2. Edit the OpenLDAP Server Configuration</h2>
+<div class="level2">
+
+<p>
+There are two ways to configure the LDAP server, you can directly modify the conf file. Or you can use the LDAP dynamic configuration feature. To start a basic LDAP server we need to set the <strong>olcSuffix, olcRootDN, olcRootPW</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Edit the OpenLDAP Server Configuration&quot;,&quot;hid&quot;:&quot;edit_the_openldap_server_configuration&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:8,&quot;range&quot;:&quot;1171-1455&quot;} -->
+<h3 class="sectionedit9" id="chang_the_configuration_file_directly">2.1 Chang the configuration file directly</h3>
+<div class="level3">
+
+<p>
+OpenLDAP server Configuration files are located in /etc/openldap/slapd.d/.
+</p>
+
+</div>
+
+<h4 id="setup_hdb_configuration">2.1.1 Setup hdb configuration</h4>
+<div class="level4">
+
+<p>
+Go to cn=config directory under /etc/openldap/slapd.d/ and edit the “olcDatabase={2}hdb.ldif” to set backend database(hdb) configuration. This configure ldap admin account name and password, and root cn.
+</p>
+<pre class="code">$ cd /etc/openldap/slapd.d/cn=config
+
+$ vim olcDatabase={2}hdb.ldif
+
+# Password can be generated with the following command
+
+$ slappasswd</pre>
+
+<p>
+Based on your organization, you need to modify the dc accordingly.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=5" title="Download Snippet" class="mediafile mf_ldif">hdb.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">olcSuffix</span>:<span class="re1"> dc=pengfei,dc=org</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,dc=bioaster,dc=org</span>
+&nbsp;
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>bHSiwuPJEypHS6zHSE2Uy7M69sQjmkPL</span>
+<span class="co1"># The certification is optional, add them if you need ldaps</span>
+<span class="co1">#olcTLSCertificateFile: /etc/pki/tls/certs/ldap_cert.pem</span>
+<span class="co1">#olcTLSCertificateKeyFile: /etc/pki/tls/private/ldap_key.pem</span></pre>
+</dd></dl>
+
+</div>
+
+<h4 id="setup_configldif">2.1.2 Setup config.ldif</h4>
+<div class="level4">
+
+<p>
+This configures the admin account and password for ldap config backend. 
+</p>
+<pre class="code">$ vim olcDatabase={0}config.ldif
+
+# add the following lines
+olcRootDN: cn=admin,cn=config
+olcRootPW: {SSHA}136vcYXg5h8YJdfsgsdfgyg9mowJtGWA</pre>
+
+</div>
+
+<h4 id="setup_the_monitor_privilege">2.1.3 Setup the monitor privilege</h4>
+<div class="level4">
+
+<p>
+To allow admin account to read the monitor log, we need to modify the following config file.
+</p>
+<pre class="code">$ vim olcDatabase={1}monitor.ldif
+
+# add following line
+olcAccess: {0}to * by dn.base=&quot;gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth&quot; read by dn.base=&quot;cn=admin,dc=pengfei,dc=org&quot; read by * none</pre>
+
+</div>
+
+<h4 id="test_the_correctness_of_your_config">2.1.3 Test the correctness of your config</h4>
+<div class="level4">
+<pre class="code">$ slaptest -u
+
+# It should show something like this
+
+587cd848 ldif_read_file: checksum error on &quot;/etc/openldap/slapd.d/cn=config/olcDatabase={1}monitor.ldif&quot;
+587cd848 ldif_read_file: checksum error on &quot;/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif&quot;
+config file testing succeeded</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Chang the configuration file directly&quot;,&quot;hid&quot;:&quot;chang_the_configuration_file_directly&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;1456-3358&quot;} -->
+<h3 class="sectionedit10" id="configure_ldap_by_usnig_dynamic_configuration_feature">2.2 Configure LDAP by usnig dynamic configuration feature</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="start_and_enable_slapd_service">2.2.1 Start and enable slapd service</h4>
+<div class="level4">
+
+<p>
+To use the dynamic configuration feature, we need to start the LDAP server service first
+</p>
+<pre class="code">#start the service
+systemctl start slapd.service
+
+# enable the daemon launch at the start of the machine
+systemctl enable slapd.service
+
+#verify the LDAP running on port 389
+$ netstat -antup | grep -i 389
+
+# Or you can get all ldap connection
+netstat -antup | grep slapd
+
+tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      8545/slapd                            
+tcp6       0      0 :::389                  :::*                    LISTEN      8545/slapd  </pre>
+
+</div>
+
+<h4 id="set_olc_root_user_and_password_for_ldap_front_end">2.2.2 Set olc root user and password for ldap front end</h4>
+<div class="level4">
+
+<p>
+To start a basic LDAP server we need to set the <strong>olcSuffix, olcRootDN, olcRootPW</strong>.
+</p>
+
+<p>
+We will use ldapmodify to change them, prepare an init.ldif
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=10" title="Download Snippet" class="mediafile mf_ldif">init.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcSuffix</span>
+<span class="re0">olcSuffix</span>:<span class="re1"> dc=pengfei,dc=org</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootDN</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,dc=pengfei,dc=org</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>2<span class="br0">&#125;</span>hdb,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootPW</span>
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>jCfNbdgnB7TyOUWrCPByznrifWl/RhwM</span></pre>
+</dd></dl>
+
+<p>
+To add the above conf in the cn=config of ldap server, use the ldapmodify command
+</p>
+<pre class="code">$ ldapmodify -Y EXTERNAL -H ldapi:/// -f init.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry &quot;olcDatabase={2}hdb,cn=config&quot;
+
+modifying entry &quot;olcDatabase={2}hdb,cn=config&quot;
+
+modifying entry &quot;olcDatabase={2}hdb,cn=config&quot;
+</pre>
+
+</div>
+
+<h4 id="set_olc_login_and_password_for_ldap_backend_cn_config">2.2.3 Set olc login and password for ldap backend cn=config</h4>
+<div class="level4">
+
+<p>
+Prepare the following ldif file and use the ldapmodify command
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=12" title="Download Snippet" class="mediafile mf_ldif">rootpw_config.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>0<span class="br0">&#125;</span>config.ldif,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootDN</span>
+<span class="re0">olcRootDN</span>:<span class="re1"> cn=admin,cn=config</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>0<span class="br0">&#125;</span>config.ldif,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcRootPW</span>
+<span class="re0">olcRootPW</span>:<span class="re1"> <span class="br0">&#123;</span>SSHA<span class="br0">&#125;</span>jCfNbdgnB7TyOUWrCPByznrifWl/RhwM</span></pre>
+</dd></dl>
+
+</div>
+
+<h4 id="change_monitor_access_control">2.2.4 change monitor access control</h4>
+<div class="level4">
+
+<p>
+Change the /etc/openldap/slapd.d/cn=config/olcDatabase={1}monitor.ldif to restrict the monitor access only to ldap root user not to others.
+</p>
+
+<p>
+Create/Edit a monitor.ldif
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=13" title="Download Snippet" class="mediafile mf_ldif">monitor.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> olcDatabase=<span class="br0">&#123;</span>1<span class="br0">&#125;</span>monitor,cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">replace</span>:<span class="re1"> olcAccess</span>
+<span class="re0">olcAccess</span>:<span class="re1"> <span class="br0">&#123;</span>0<span class="br0">&#125;</span>to * by dn.base=&quot;gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth&quot; read by dn.base=&quot;cn=admin,dc=pengfei,dc=org&quot; read by * none</span></pre>
+</dd></dl>
+
+<p>
+add the above config in the ldap server
+</p>
+<pre class="code">$ ldapmodify -Y EXTERNAL -H ldapi:/// -f monitor.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry &quot;olcDatabase={1}monitor,cn=config&quot;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Configure LDAP by usnig dynamic configuration feature&quot;,&quot;hid&quot;:&quot;configure_ldap_by_usnig_dynamic_configuration_feature&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;3359-6222&quot;} -->
+<h2 class="sectionedit11" id="enable_tls_ssl_for_openldap_server">3. Enable tls/ssl for openldap server</h2>
+<div class="level2">
+
+<p>
+Why we don&#039;t use StarTLS?
+</p>
+
+<p>
+Because StarTLS for LDAP is slightly different from LDAPS, the main difference being, that first the client needs to establish an unencrypted connection with the directory server. At any point in time after establishing the connection (as long as there are no outstanding LDAP operations on the connection), the StartTLS extended operation shall be sent across to the server. Once a successful extended operation response has been received, the client can initiate the TLS handshake over the existing connection. Once the handshake is done, all future LDAP operations will be transmitted on the now secure, encrypted channel. Personally my concerns with StartTLS are:
+</p>
+
+<p>
+You must have a plain LDAP port open on the network.
+</p>
+
+<p>
+Even after a client connects to the directory there is absolutely nothing preventing the user from sending BIND or any other kind of requests on the unencrypted channel before actually performing the StartTLS extended operation.
+</p>
+
+<p>
+Conclusion: Use LDAPS if possible
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Enable tls\/ssl for openldap server&quot;,&quot;hid&quot;:&quot;enable_tls_ssl_for_openldap_server&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:11,&quot;range&quot;:&quot;6223-7288&quot;} -->
+<h3 class="sectionedit12" id="configure_firewall">3.0 Configure firewall</h3>
+<div class="level3">
+
+<p>
+In our case, we use centos7 native firewall firewalld. If you use iptables, you need to follow other instructions.
+</p>
+<pre class="code"># check your firewall status
+$ systemctl status firewalld
+
+● firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2017-01-19 15:37:00 CET; 1 years 5 months ago
+     Docs: man:firewalld(1)
+ Main PID: 6884 (firewalld)
+   CGroup: /system.slice/firewalld.service
+           └─6884 /usr/bin/python -Es /usr/sbin/firewalld --nofork --nopid
+
+# check your ldaps port open or not, in our case it&#039;s 636
+$ netstat -antup | grep -i 636
+(No info could be read for &quot;-p&quot;: geteuid()=1001 but you should be root.)
+tcp        0      0 0.0.0.0:636             0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::636                  :::*                    LISTEN      -   
+
+# if not open, add following rules to firewall
+$ firewall-cmd --permanent --add-service=ldaps
+$ firewall-cmd --reload</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.0 Configure firewall&quot;,&quot;hid&quot;:&quot;configure_firewall&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:12,&quot;range&quot;:&quot;7289-8398&quot;} -->
+<h3 class="sectionedit13" id="create_certificate_for_ldap_server">3.1 Create certificate for LDAP server</h3>
+<div class="level3">
+
+<p>
+If your certificate is signed by a real CA,
+</p>
+
+<p>
+You should have three important files:
+</p>
+<ul>
+<li class="level1"><div class="li"> ca-bundle.pem (ca certificate)</div>
+</li>
+<li class="level1"><div class="li"> privateKey.pem (private key of your PKI pair)</div>
+</li>
+<li class="level1"><div class="li"> cert.pem (signed public key of your PKI pair by CA)</div>
+</li>
+</ul>
+
+<p>
+If your certificate is self-signed, Your ca-bundle.pem is your cert.pem
+</p>
+
+<p>
+The following command creates a self-signed certificate.
+</p>
+<pre class="code">$ openssl req -new -x509 -nodes -out /etc/openldap/certs/cert.pem -keyout /etc/openldap/certs/privatKey.pem -days 365
+Generating a 2048 bit RSA private key
+.............................+++
+.......................+++
+writing new private key to &#039;/etc/openldap/certs/privatKey.pem&#039;
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &#039;.&#039;, the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:FR
+State or Province Name (full name) []:Rhone-Alpe
+Locality Name (eg, city) [Default City]:Lyon
+Organization Name (eg, company) [Default Company Ltd]:PENGFEI
+Organizational Unit Name (eg, section) []:PENGFEI
+Common Name (eg, your name or your server&#039;s hostname) []:pengfei.org
+Email Address []:pengfei@pengfei.org
+
+# Reset owner of the generated certificate and private key
+chown -R ldap:ldap /etc/openldap/certs/*.pem
+
+# verify them
+ll /etc/openldap/certs/*.pem</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Create certificate for LDAP server&quot;,&quot;hid&quot;:&quot;create_certificate_for_ldap_server&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:13,&quot;range&quot;:&quot;8399-9944&quot;} -->
+<h3 class="sectionedit14" id="add_cert_and_private_key_path_into_ldap_server_cn_config">3.2 Add cert and private key path into ldap server(cn=config)</h3>
+<div class="level3">
+
+<p>
+To add cert and private key path into LDAP server configuration, we need to
+</p>
+<ul>
+<li class="level1"><div class="li"> Copy the certificate and private key into /etc/openldap/certs</div>
+</li>
+<li class="level1"><div class="li"> Prepare the following ldif files</div>
+</li>
+</ul>
+<pre class="code">#copy certificate and private keys
+cp ca-bundle.pem /etc/openldap/certs/.
+cp cert.pem /etc/openldap/certs/.
+cp privateKey.pem /etc/openldap/certs/.
+
+#change owner to ldap for all
+chown ldap:ldap *.pem
+
+#change acl of private key
+chmod 0600 /etc/openldap/certs/privatekey.pem</pre>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=18" title="Download Snippet" class="mediafile mf_ldif">certs.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> cn=config</span>
+<span class="re0">changetype</span>:<span class="re1"> modify</span>
+<span class="re0">add</span>:<span class="re1"> olcTLSCACertificateFile</span>
+<span class="re0">olcTLSCACertificateFile</span>:<span class="re1"> /etc/openldap/certs/ca-bundle.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateFile</span>
+<span class="re0">olcTLSCertificateFile</span>:<span class="re1"> /etc/openldap/certs/cert.pem</span>
+-
+<span class="re0">replace</span>:<span class="re1"> olcTLSCertificateKeyFile</span>
+<span class="re0">olcTLSCertificateKeyFile</span>:<span class="re1"> /etc/openldap/certs/privateKey.pem</span></pre>
+</dd></dl>
+
+<p>
+Add it to the cn=config
+</p>
+<pre class="code">$ ldapmodify -Y EXTERNAL  -H ldapi:/// -f /tmp/certs.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry &quot;cn=config&quot;
+
+modifying entry &quot;cn=config&quot;
+
+
+# test the configuration
+
+$ slaptest -u
+config file testing succeeded
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Add cert and private key path into ldap server(cn=config)&quot;,&quot;hid&quot;:&quot;add_cert_and_private_key_path_into_ldap_server_cn_config&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:14,&quot;range&quot;:&quot;9945-11172&quot;} -->
+<h3 class="sectionedit15" id="enable_ldaps_on_your_slapd_daemon">3.3 Enable ldaps on your slapd daemon</h3>
+<div class="level3">
+
+<p>
+Edit /etc/sysconfig/slapd
+</p>
+<pre class="code">SLAPD_URLS=&quot;ldapi:/// ldap:/// ldaps:///&quot;</pre>
+
+<p>
+You need to restart slapd to enable new config
+</p>
+<pre class="code">systemctl restart slapd</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Enable ldaps on your slapd daemon&quot;,&quot;hid&quot;:&quot;enable_ldaps_on_your_slapd_daemon&quot;,&quot;codeblockOffset&quot;:20,&quot;secid&quot;:15,&quot;range&quot;:&quot;11173-11393&quot;} -->
+<h3 class="sectionedit16" id="test_the_ldaps_with_a_client">3.4 Test the ldaps with a client</h3>
+<div class="level3">
+<pre class="code"># on the client side server, install ldap-client
+sudo yum install openldap-clients
+
+#copy the ldap certificate in /etc/openldap/certs/cert.pem
+
+# edit the ldap.conf
+vim /etc/openldap/ldap.conf
+
+# Put the following lines
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldaps://10.70.3.118:636
+BASE dc=bioaster,dc=org
+
+TLS_CACERT /etc/openldap/certs/ldap.crt
+TLS_REQCERT allow</pre>
+
+<p>
+After OpenLDAP client configuration, we can try to connect to the ldap server with ldaps
+</p>
+<pre class="code"># on the client run the ldapsearch with ldaps protocol
+ldapsearch -x -LLL -H ldaps://10.70.3.66:636 -b dc=pengfei,dc=org dn
+dn: dc=pengfei,dc=org
+
+dn: cn=admin,dc=pengfei,dc=org
+
+dn: ou=Users,dc=pengfei,dc=org
+
+dn: ou=Groups,dc=pengfei,dc=org
+
+# in the /var/log/openldap/slapd.log, you could see the tls connextion is established.
+
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 ACCEPT from IP=10.70.3.66:54080 (IP=0.0.0.0:636)
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 TLS established tls_ssf=256 ssf=256
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 BIND dn=&quot;&quot; method=128
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=0 RESULT tag=97 err=0 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH base=&quot;dc=pengfei,dc=org&quot; scope=2 deref=0 filter=&quot;(objectClass=*)&quot;
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SRCH attr=dn
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=1 SEARCH RESULT tag=101 err=0 nentries=6 text=
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 op=2 UNBIND
+Feb 27 15:58:10 CCLinGridFtpD02 slapd[29735]: conn=1022 fd=27 closed</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 Test the ldaps with a client&quot;,&quot;hid&quot;:&quot;test_the_ldaps_with_a_client&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:16,&quot;range&quot;:&quot;11394-13415&quot;} -->
+<h2 class="sectionedit17" id="set_up_ldap_database">4. Set up ldap database</h2>
+<div class="level2">
+<pre class="code"># copy the sample database
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+
+# update the file permission
+chown ldap:ldap /var/lib/ldap/*
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Set up ldap database&quot;,&quot;hid&quot;:&quot;set_up_ldap_database&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:17,&quot;range&quot;:&quot;13416-13632&quot;} -->
+<h2 class="sectionedit18" id="add_basic_ldap_schemas">5. Add basic ldap schemas</h2>
+<div class="level2">
+<pre class="code">ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Add basic ldap schemas&quot;,&quot;hid&quot;:&quot;add_basic_ldap_schemas&quot;,&quot;codeblockOffset&quot;:25,&quot;secid&quot;:18,&quot;range&quot;:&quot;13633-13899&quot;} -->
+<h2 class="sectionedit19" id="build_basic_structure_in_ldap_server">6. Build basic structure in ldap server</h2>
+<div class="level2">
+
+<p>
+To create base objects in OpenLDAP, we need migration tools to be installed. We have already installed the migrationtools in the step 1 itself. So You will see lot of files and scripts under /usr/share/migrationtools/.
+</p>
+
+<p>
+We need to change some predefined values in the file “migrate_common.ph” according to our domain name, for that do the following:
+</p>
+
+<p>
+cd /usr/share/migrationtools/
+</p>
+
+<p>
+vi migrate_common.ph
+</p>
+
+<p>
+Change the following lines:
+</p>
+<pre class="code">DEFAULT_MAIL_DOMAIN = &quot;pengfei.org&quot;;
+DEFAULT_BASE = &quot;dc=pengfei,dc=org&quot;;
+EXTENDED_SCHEMA = 1;</pre>
+
+<p>
+Generate a base.ldif file for your domain
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=27" title="Download Snippet" class="mediafile mf_ldif">base.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">dn</span>:<span class="re1"> dc=pengfei,dc=org</span>
+<span class="re0">dc</span>:<span class="re1"> pengfei</span>
+<span class="re0">objectClass</span>:<span class="re1"> top</span>
+<span class="re0">objectClass</span>:<span class="re1"> domain</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> cn=admin ,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalRole</span>
+<span class="re0">cn</span>:<span class="re1"> admin</span>
+<span class="re0">description</span>:<span class="re1"> LDAP Manager</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> ou=Users,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalUnit</span>
+<span class="re0">ou</span>:<span class="re1"> People</span>
+&nbsp;
+<span class="re0">dn</span>:<span class="re1"> ou=Groups,dc=pengfei,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> organizationalUnit</span>
+<span class="re0">ou</span>:<span class="re1"> Group</span></pre>
+</dd></dl>
+
+<p>
+Add this to your ldap server
+</p>
+<pre class="code"># add the ldif file
+$ ldapadd -x -W -D &quot;cn=admin,dc=pengfei,dc=org&quot; -f base.ldif
+
+# test the result
+$ ldapsearch -x -LLL -H ldaps://10.70.3.66 -b dc=pengfei,dc=org dn
+
+dn: dc=pengfei,dc=org
+
+dn: cn=admin,dc=pengfei,dc=org
+
+dn: ou=Users,dc=pengfei,dc=org
+
+dn: ou=Groups,dc=pengfei,dc=org
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6. Build basic structure in ldap server&quot;,&quot;hid&quot;:&quot;build_basic_structure_in_ldap_server&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:19,&quot;range&quot;:&quot;13900-15230&quot;} -->
+<h3 class="sectionedit20" id="add_user_with_ldif_template">6.1 Add user with ldif template</h3>
+<div class="level3">
+
+<p>
+Now we need to add a user account by using the following ldif file 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration&amp;codeblock=29" title="Download Snippet" class="mediafile mf_ldif">user.ldif</a></dt>
+<dd><pre class="code file ldif"><span class="re0">DN</span>:<span class="re1"> cn=Pengfei Liu,ou=Users,dc=udl,dc=org</span>
+<span class="re0">objectClass</span>:<span class="re1"> top</span>
+<span class="re0">objectClass</span>:<span class="re1"> posixAccount</span>
+<span class="re0">objectClass</span>:<span class="re1"> shadowAccount</span>
+<span class="re0">objectClass</span>:<span class="re1"> inetOrgPerson</span>
+<span class="re0">mail</span>:<span class="re1"> liu.pengfei@hotmail.fr</span>
+<span class="re0">uid</span>:<span class="re1"> pliu</span>
+<span class="re0">sn</span>:<span class="re1"> Liu</span>
+<span class="re0">uidNumber</span>:<span class="re1"> 9999</span>
+<span class="re0">gidNumber</span>:<span class="re1"> 100</span>
+<span class="re0">homeDirectory</span>:<span class="re1"> /home/pliu</span>
+<span class="re0">loginShell</span>:<span class="re1"> /bin/bash</span>
+<span class="re0">userPassword</span>:<span class="re1"> <span class="br0">&#123;</span>ssha<span class="br0">&#125;</span>dGSuSVTBQ74dXL2F/gjx2kHQzpGrxZhuLAjmnw==</span>
+<span class="re0">shadowLastChange</span>:<span class="re1"> 17058</span>
+<span class="re0">shadowMin</span>:<span class="re1"> 0</span>
+<span class="re0">shadowMax</span>:<span class="re1"> 99999</span>
+<span class="re0">shadowWarning</span>:<span class="re1"> 7</span></pre>
+</dd></dl>
+
+<p>
+ShadowLastChange, shadowMin, shadowMax, shadowWarning, are attributes related to shadowAccount class. It controls the user password change policy. For more information, please check <a href="https://ldapwiki.com/wiki/ShadowAccount" class="urlextern" title="https://ldapwiki.com/wiki/ShadowAccount" rel="nofollow">https://ldapwiki.com/wiki/ShadowAccount</a>.
+</p>
+
+<p>
+Add user to the ldap server
+</p>
+<pre class="code"># add user
+$ ldapadd -x -W -D &quot;cn=admin,dc=pengfei,dc=org&quot; -f user.ldif
+
+# test user login password
+# ldapwhoami -vvv -h &lt;hostname&gt; -p &lt;port&gt; -D &lt;binddn&gt; -x -w &lt;passwd&gt;
+
+$ ldapwhoami -vvv -h 10.70.3.66 -D &quot;cn=LIU Pengfei,ou=Users,dc=pengfei,dc=org&quot; -x -w &quot;changeMe&quot;
+ldap_initialize( ldap://10.70.3.66 )
+dn:cn=LIU Pengfei,ou=Users,dc=pengfei,dc=org
+Result: Success (0)
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.1 Add user with ldif template&quot;,&quot;hid&quot;:&quot;add_user_with_ldif_template&quot;,&quot;codeblockOffset&quot;:29,&quot;secid&quot;:20,&quot;range&quot;:&quot;15231-16408&quot;} -->
+<h3 class="sectionedit21" id="add_roles_groups_with_ldif_template">6.2 Add roles/groups with ldif template</h3>
+<div class="level3">
+
+<p>
+We have different objectClass to define user roles/groups. We recommend groupOfNames. Because its the standard way, and most of ldap clients accept it.
+</p>
+<pre class="code">dn: ou=Roles,dc=udl,dc=org
+objectClass: organizationalUnit
+ou: Roles
+
+dn: cn=Admin,ou=Roles,dc=udl,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: Admin
+member: cn=Pengfei Liu,ou=Users,dc=udl,dc=org
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.2 Add roles\/groups with ldif template&quot;,&quot;hid&quot;:&quot;add_roles_groups_with_ldif_template&quot;,&quot;codeblockOffset&quot;:31,&quot;secid&quot;:21,&quot;range&quot;:&quot;16409-16835&quot;} -->
+<h2 class="sectionedit22" id="conifgure_log_location_and_rotation">7. Conifgure log location and rotation</h2>
+<div class="level2">
+
+<p>
+Openldap log is handled by rsyslog, So to output log in a location, you need to change the config file of /etc/rsyslog.conf
+</p>
+
+<p>
+<code>vim vim /etc/rsyslog.conf</code>
+</p>
+<pre class="code"># Log Openldap
+local4.*                                     -/var/log/openldap/slapd.log</pre>
+
+<p>
+To enable log rotation, you need to add a new rotation script for openldap
+</p>
+
+<p>
+<code> cd /etc/logrotate.d/</code>
+</p>
+
+<p>
+<code> vim openldap</code>
+</p>
+<pre class="code"># OpenLDAP
+/var/log/openldap/slapd.log {
+   missingok
+   notifempty
+   compress
+   weekly
+   rotate 10
+   size=50M
+   sharedscripts
+   postrotate
+ # OpenLDAP logs via syslog, restart syslog if running
+   /etc/init.d/rsyslog restart
+ endscript
+}</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7. Conifgure log location and rotation&quot;,&quot;hid&quot;:&quot;conifgure_log_location_and_rotation&quot;,&quot;codeblockOffset&quot;:32,&quot;secid&quot;:22,&quot;range&quot;:&quot;16836-17532&quot;} -->
+<h1 class="sectionedit23" id="common_erros">Common erros</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common erros&quot;,&quot;hid&quot;:&quot;common_erros&quot;,&quot;codeblockOffset&quot;:34,&quot;secid&quot;:23,&quot;range&quot;:&quot;17533-17560&quot;} -->
+<h2 class="sectionedit24" id="olcdatabase_name">olcdatabase name</h2>
+<div class="level2">
+
+<p>
+You need to check the olcdatabase, normally it&#039;s hdb, but for someone, it can be bdb. So you need to modify init.ldif accordingly. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;olcdatabase name&quot;,&quot;hid&quot;:&quot;olcdatabase_name&quot;,&quot;codeblockOffset&quot;:34,&quot;secid&quot;:24,&quot;range&quot;:&quot;17561-17723&quot;} -->
+<h2 class="sectionedit25" id="ldap_addno_such_object">ldap_add: No such object</h2>
+<div class="level2">
+
+<p>
+This error is commonly returned if parent of the entry being added does not exist. 
+</p>
+
+<p>
+For example, if you want to add an entry cn=bob,dc=pengfei,dc=org, and dc=pengfei,dc=org does not exist.
+</p>
+
+<p>
+Or if you want to add an entry cn=bob,ou=Users,dc=pengfei,dc=org and only parent ou=People,dc=pengfei,dc=org exist.
+</p>
+
+<p>
+Add the parent entry first
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ldap_add: No such object&quot;,&quot;hid&quot;:&quot;ldap_addno_such_object&quot;,&quot;codeblockOffset&quot;:34,&quot;secid&quot;:25,&quot;range&quot;:&quot;17724-&quot;} -->

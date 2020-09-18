@@ -1,0 +1,90 @@
+<a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">ml</span>.<span class="me1">classification</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">ml</span>.<span class="me1">feature</span>.<span class="me1">Word2Vec</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">SparkSession</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> Word2Vec <span class="br0">&#123;</span>
+<a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span>Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.
+    <span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>. <span class="co1">//spark://10.70.3.48:7077 remote</span>
+    appName<span class="br0">&#40;</span><span class="st0">&quot;Word2Vec&quot;</span><span class="br0">&#41;</span>.
+    <span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> documentDF <span class="sy0">=</span> spark.<span class="me1">createDataFrame</span><span class="br0">&#40;</span>Seq<span class="br0">&#40;</span>
+    <span class="st0">&quot;Hi I heard about Spark&quot;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>,
+    <span class="st0">&quot;I wish Java could use case classes&quot;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>,
+    <span class="st0">&quot;Logistic regression models are neat&quot;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>
+  <span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#40;</span>Tuple1.<span class="me1">apply</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">toDF</span><span class="br0">&#40;</span><span class="st0">&quot;text&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+  <span class="co1">//documentDF.printSchema()</span>
+  <span class="coMULTI">/*
+  * root
+ |-- text: array (nullable = true)
+ |    |-- element: string (containsNull = true)
+  *
+  * */</span>
+  <span class="co1">//documentDF.show()</span>
+&nbsp;
+  <span class="coMULTI">/*+--------------------+
+  |                text|
+  +--------------------+
+  |[Hi, I, heard, ab...|
+  |[I, wish, Java, c...|
+  |[Logistic, regres...|
+  +--------------------+*/</span>
+&nbsp;
+<span class="coMULTI">/*
+* Create an instance of word2Vec model, it's a estimator
+* */</span>
+  <span class="co1">//input col set the input column of the input dataset</span>
+  <span class="co1">//output col set the output column of the result dataset</span>
+  <span class="co1">//vectorSize set the size of generated word vec, in our case it's 6</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> word2Vec <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> Word2Vec<span class="br0">&#40;</span><span class="br0">&#41;</span>.
+           <span class="me1">setInputCol</span><span class="br0">&#40;</span><span class="st0">&quot;text&quot;</span><span class="br0">&#41;</span>.
+           <span class="me1">setOutputCol</span><span class="br0">&#40;</span><span class="st0">&quot;result&quot;</span><span class="br0">&#41;</span>.
+           <span class="me1">setVectorSize</span><span class="br0">&#40;</span><span class="nu0">6</span><span class="br0">&#41;</span>.
+           <span class="me1">setMinCount</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * Train the model with the dataset
+  * */</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> model <span class="sy0">=</span> word2Vec.<span class="me1">fit</span><span class="br0">&#40;</span>documentDF<span class="br0">&#41;</span>
+&nbsp;
+  <span class="coMULTI">/*println(model.getClass().getName)
+  org.apache.spark.ml.feature.Word2VecModel*/</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * transform the data set to word vector
+  * */</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> result <span class="sy0">=</span> model.<span class="me1">transform</span><span class="br0">&#40;</span>documentDF<span class="br0">&#41;</span>
+&nbsp;
+  <span class="coMULTI">/*println(result.getClass().getName)
+  org.apache.spark.sql.Dataset*/</span>
+&nbsp;
+  result.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * +--------------------+--------------------+
+|                text|              result|
++--------------------+--------------------+
+|[Hi, I, heard, ab...|[0.01390241272747...|
+|[I, wish, Java, c...|[0.01954013934092...|
+|[Logistic, regres...|[-2.5894027203321...|
++--------------------+--------------------+
+  * */</span>
+  result.<span class="me1">select</span><span class="br0">&#40;</span><span class="st0">&quot;result&quot;</span><span class="br0">&#41;</span>.<span class="me1">take</span><span class="br0">&#40;</span><span class="nu0">3</span><span class="br0">&#41;</span>.<span class="me1">foreach</span><span class="br0">&#40;</span>println<span class="br0">&#41;</span>
+&nbsp;
+  <span class="coMULTI">/*
+  * [[0.013902412727475166,0.00704740546643734,0.00576745766447857,-0.03196578547358513,0.0022785402019508184,0.030404809676110745]]
+[[0.01954013934092862,0.010227076576224394,0.008941462795649256,0.01654639121677194,-0.03726007044315338,-0.00852930758680616]]
+[[-2.5894027203321457E-4,0.025160790234804154,-0.001287880726158619,-0.024124881252646446,0.0072902611456811435,-0.008568133413791658]]
+  *
+  * */</span>
+<span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

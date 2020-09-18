@@ -1,0 +1,38 @@
+====== Critiques Symfony ======
+
+===== Points positifs =====
+
+==== Mise à jour d'entités (model) ====
+
+Lorsque l'on modifie une entité il est tout à fait possible de lancer l'application même si les formulaires n'ont pas été mis à jour en conséquence. Bien sûr la page qui charge le formulaire en question risque de lever une exception mais le reste de l'application reste disponible. Ce n'est pas le cas en Django où le serveur ne veut pas se lancer tant que le formulaire contient des erreurs.
+
+==== Translation ====
+
+Le service de traduction est bien géré.
+
+==== Sécurité ====
+
+On donne des droits facilement a des routes, ou à un pattern de route (ex : "^/admin" pour tout ce qui commence par "/admin", par contre si on veut que ce soit les routes admin en français ou en anglais on doit écrire ^/(en|fr)/admin)
+
+===== Points négatifs =====
+
+==== Point généraux ====
+Des répertoires à foison.
+Gère très mal les requêtes en POST (commun à tout framework ?)
+==== Formulaires ====
+
+  * Validation : Par défaut pour un champ requit non rempli, Symfony va colorer se champ avec un message lambda (type "veuillez remplir ce champ") mais uniquement ce champ. Donc le champ suivant qui lui n'est pas rempli ne sera pas coloré. Ainsi les champs sont validés un par un. La solution pour valider tous les champs + afficher un message personnalisé et de rendre le champ facultatif ('requiered'=> false) et d'ajouter un assert qui fera appel à un message défini dans validators.en.yml ou validators.fr.yml eux même placés dans le repertoire translations.
+  * Date : Impossible d'utiliser le choiceType "date" et de ne faire sélectionner que l'année.
+  * Data compliqué : Si on veut afficher que les projets commençant par la lettre A par exemple, c'est à nous de faire une requête doctrine à l'aide du query builder dans le formulaire, au détriment du pattern MVC.
+
+==== ORM ====
+
+ORM relativement verbeux. De plus si on fait une "raw query" c'est à nous de dire à Doctrine quelle colonne sera mappée à quel attribut...
+
+==== Messages d'erreurs ====
+
+''Expected argument of type "Symfony\Component\HttpFoundation\File\UploadedFile", "string" given''
+veut dire :
+Veuillez rajouter ''{{ form_enctype(commentForm) }}''  dans la balise ''<form'' dans votre vue.
+
+

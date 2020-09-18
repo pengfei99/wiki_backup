@@ -1,0 +1,197 @@
+
+<h1 class="sectionedit1" id="spark_cluster_hardware_setup">Spark cluster hardware setup</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark cluster hardware setup&quot;,&quot;hid&quot;:&quot;spark_cluster_hardware_setup&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-45&quot;} -->
+<h2 class="sectionedit2" id="general_rules_for_hardware_setup">0. General rules for hardware setup</h2>
+<div class="level2">
+
+<p>
+The general rule of thumb for a balanced Spark cluster is 4GB and 1 disk per CPU core. For disk-bound tasks, add more disks per CPU; CPU-bound tasks can get by with fewer disks per CPU. For memory-intensive jobs add more memory. Profile your application so you know what the limiting factor is.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0. General rules for hardware setup&quot;,&quot;hid&quot;:&quot;general_rules_for_hardware_setup&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;46-391&quot;} -->
+<h2 class="sectionedit3" id="data_source">1. Data source</h2>
+<div class="level2">
+
+<p>
+Spark often needs to read data from external sources(e.g HDFS, HBase, etc). 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Data source&quot;,&quot;hid&quot;:&quot;data_source&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;392-497&quot;} -->
+<h3 class="sectionedit4" id="hdfs_as_data_source">1.1 HDFS as data source</h3>
+<div class="level3">
+
+<p>
+If your spark cluster reads data mainly from HDFS, then the best solution is to install your spark workers on the hdfs data node.  If your mapreduce and spark use Mesos or yarn as resource manager, you don&#039;t need to worry about how mapreduce and spark share the cpu and memory. 
+</p>
+
+<p>
+But if your spark cluster uses standalone mode, you need to configure the cpu and memory usage for both Mapreduce and spark. 
+</p>
+
+<p>
+For mapreduce in hadoop:
+</p>
+<ul>
+<li class="level1"><div class="li"> mapred.child.java.opts: defines how many memory each task will use</div>
+</li>
+<li class="level1"><div class="li"> mapreduce.tasktracker.map.tasks.maximum: defines the max number of mapper task</div>
+</li>
+<li class="level1"><div class="li"> mapreduce.tasktracker.reduce.tasks.maximum: defines the max number of reduce task</div>
+</li>
+</ul>
+
+<p>
+For spark in standalone mode:
+</p>
+<ul>
+<li class="level1"><div class="li"> SPARK_WORKER_CORES: It defines total number of cores to allow Spark applications to use on the machine (default: all available cores).</div>
+</li>
+<li class="level1"><div class="li"> SPARK_WORKER_MEMORY: It defines total amount of memory to allow Spark applications to use on the machine, e.g. 1000m, 2g (default: total memory minus 1 GiB); note that each application&#039;s individual memory is configured using its spark.executor.memory property.</div>
+</li>
+</ul>
+
+<p>
+For full spark standalone cluster configuration, check this <a href="/doku.php?id=employes:pengfei.liu:big_data:spark:spark_multi_node_cluster" class="wikilink1" title="employes:pengfei.liu:big_data:spark:spark_multi_node_cluster" data-wiki-id="employes:pengfei.liu:big_data:spark:spark_multi_node_cluster">Install spark on multi node mode</a>
+</p>
+
+<p>
+Normally, we don&#039;t recommend spark worker use all cpu and memory of the server. We should leave 10~20 percent to system. This can avoid server lock down. 
+</p>
+
+<p>
+<strong>Note if you can&#039;t run spark on the same server of the HDFS node, the spark cluster should be at least on the same local network.</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 HDFS as data source&quot;,&quot;hid&quot;:&quot;hdfs_as_data_source&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;498-2091&quot;} -->
+<h3 class="sectionedit5" id="other_external_data_source">1.2 Other external data source</h3>
+<div class="level3">
+
+<p>
+For other external data source, there is no better solution than increase your network bandwidth.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 Other external data source&quot;,&quot;hid&quot;:&quot;other_external_data_source&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2092-2233&quot;} -->
+<h2 class="sectionedit6" id="network">2 Network</h2>
+<div class="level2">
+
+<p>
+Once the data have been loaded to spark, the bottleneck of spark performance is usually the network. Because spark needs to do distributed reduce(e.g groupBy, reduceBy, sortBy, etc). These operations need to shuffle data between executors which are in different workers(different severs). <strong>To accelerate the data transmission, we should have 10 <abbr title="Gigabyte">GB</abbr> or more bandwidth.</strong>
+</p>
+
+<p>
+<strong>You can use spark ui to check how many data have been transmitted due to spark shuffle.</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2 Network&quot;,&quot;hid&quot;:&quot;network&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2234-2721&quot;} -->
+<h2 class="sectionedit7" id="disks">3 Disks</h2>
+<div class="level2">
+
+<p>
+While Spark can perform a lot of its computation in memory, <strong>spark still uses local disks to store data that doesn’t fit in RAM, as well as to preserve intermediate output between stages.</strong> We recommend having 4-8 disks per node, configured without RAID (just as separate mount points). In Linux, <strong>mount the disks with the noatime option to reduce unnecessary writes</strong>. In Spark, configure the spark.local.dir variable to be a comma-separated list of the local disks. If you are running HDFS, it’s fine to use the same disks as HDFS.
+</p>
+
+<p>
+For example, we mount a disk(located /dev/vg01/lvol0) with gfs to directory /gfs1. with noatime option. For more info of gfs, plz visit <a href="https://en.wikipedia.org/wiki/GFS2" class="urlextern" title="https://en.wikipedia.org/wiki/GFS2" rel="ugc nofollow">https://en.wikipedia.org/wiki/GFS2</a>
+</p>
+<pre class="code">mount -t gfs /dev/vg01/lvol0 /gfs1 -o noatime</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3 Disks&quot;,&quot;hid&quot;:&quot;disks&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2722-3515&quot;} -->
+<h2 class="sectionedit8" id="memory">4 Memory</h2>
+<div class="level2">
+
+<p>
+In general, Spark can run well with anywhere from 8 GiB to hundreds of gigabytes of memory per machine(physical or VM). In all cases, <strong>we recommend allocating only at most 75% of the memory for Spark</strong>; leave the rest for the operating system and buffer cache.
+</p>
+
+<p>
+How much memory you will need will depend on your application. To determine how much your application uses for a certain dataset size, load part of your dataset in a Spark RDD and use the Storage tab of Spark’s monitoring UI to see its size in memory. Note that memory usage is greatly affected by storage level and serialization format – see the tuning guide(<a href="https://spark.apache.org/docs/latest/tuning.html" class="urlextern" title="https://spark.apache.org/docs/latest/tuning.html" rel="ugc nofollow">https://spark.apache.org/docs/latest/tuning.html</a>) for tips on how to reduce it.
+</p>
+
+<p>
+Spark worker divide memory into working memory and storage memory evenly. For example, if we set spark worker has 8GB memory, it will have 4GB for calculation and 4 <abbr title="Gigabyte">GB</abbr> for storage. 
+</p>
+<pre class="code"># You can access spark ui web interface via following url
+http://&lt;driver-node&gt;:4040</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4 Memory&quot;,&quot;hid&quot;:&quot;memory&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;3516-4528&quot;} -->
+<h3 class="sectionedit9" id="jvm_memory_limitation">4.1 JVM memory limitation</h3>
+<div class="level3">
+
+<p>
+Finally, <strong>note that the Java VM does not always behave well with more than 200 GiB of RAM</strong>. Because the default jvm garbage collector can&#039;t handle more than 200GiB of RAM. For more details about jvm GC, please visit <a href="/doku.php?id=employes:pengfei.liu:java:java_gc" class="wikilink1" title="employes:pengfei.liu:java:java_gc" data-wiki-id="employes:pengfei.liu:java:java_gc">Understanding Java Garbage Collection</a>.
+</p>
+
+<p>
+If you purchase machines with more RAM than this, you can launch multiple executors and/or workers in a single node. <strong>In Spark’s standalone mode, a worker is responsible for launching multiple executors according to its available memory and cores, and each executor will be launched in a separate Java VM.</strong>
+</p>
+
+<p>
+Normally we recommend you run only one worker per machine. But if you see many unused RAM, you can run multiple worker on one machine(Double check before you do this). 
+</p>
+
+</div>
+
+<h4 id="standalone_mode">Standalone mode</h4>
+<div class="level4">
+
+<p>
+In Spark Standalone mode，we can edit conf/spark-env.sh to configure 
+</p>
+<pre class="code"># for example if we want 4 workers on the machine 
+SPARK_WORKER_INSTANCES=4
+# each worker has 8 cores
+SPARK_WORKER_CORES=8
+# each worker has 8GB memory
+SPARK_WORKER_MEMORY=8GB</pre>
+
+</div>
+
+<h4 id="yarn_mode">Yarn mode</h4>
+<div class="level4">
+
+<p>
+In yarn mode, yarn will be responsible for distributing memory to each executor. 
+</p>
+<pre class="code"># each EXECUTOR has 8 cores
+SPARK_EXECUTOR_CORES=8
+# each EXECUTOR has 8GB memory
+SPARK_EXECUTOR_MEMORY=8GB</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 JVM memory limitation&quot;,&quot;hid&quot;:&quot;jvm_memory_limitation&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;4529-5858&quot;} -->
+<h3 class="sectionedit10" id="change_the_default_jvm_gc_to_support_large_memory">Change the default JVM GC to support large memory</h3>
+<div class="level3">
+
+<p>
+In Java 8, the default GC was the <strong>Parallel Garbage Collector</strong>, which does not work well with more than 200GB ram.
+</p>
+
+<p>
+We can use <strong>G1 Garbage Collector</strong> instead. For more details, please read this article <a href="https://databricks.com/blog/2015/05/28/tuning-java-garbage-collection-for-spark-applications.html" class="urlextern" title="https://databricks.com/blog/2015/05/28/tuning-java-garbage-collection-for-spark-applications.html" rel="ugc nofollow">https://databricks.com/blog/2015/05/28/tuning-java-garbage-collection-for-spark-applications.html</a>
+</p>
+
+<p>
+There are other GC available, you need to choose the most appropriate one based on your requirements. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Change the default JVM GC to support large memory&quot;,&quot;hid&quot;:&quot;change_the_default_jvm_gc_to_support_large_memory&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:10,&quot;range&quot;:&quot;5859-6328&quot;} -->
+<h2 class="sectionedit11" id="cpu_cores">5. CPU Cores</h2>
+<div class="level2">
+
+<p>
+Spark scales well to tens of CPU cores per machine because it performs minimal sharing between threads. You should likely provision at least 8-16 cores per machine. Depending on the CPU cost of your workload, you may also need more: once data is in memory, most applications are either CPU- or network-bound.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. CPU Cores&quot;,&quot;hid&quot;:&quot;cpu_cores&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:11,&quot;range&quot;:&quot;6329-&quot;} -->

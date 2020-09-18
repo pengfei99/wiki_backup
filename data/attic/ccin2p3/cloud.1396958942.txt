@@ -1,0 +1,24 @@
+====== Le nuage OpenStack ======
+
+La procédure BIOASTER est basée sur le [[https://ccwiki.in2p3.fr/infrastructure:cloud:start|guide OpenStack du CC-IN2P3]]. Ce dernier sert de document de base pour toutes bonnes pratiques concernant OpenStack.
+
+===== Obtenir un compte =====
+
+Un type de compte spécial est nécessaire afin de pouvoir utiliser les fonctionnalités d'OpenStack.
+Une demande doit être faite lors de la création du compte au CC.
+
+Si la demande n'a pas été faite lors de l'ouverture du compte il est tout de même possible d'obtenir un accès en passant par le [[https://cc-usersupport.in2p3.fr/|système de ticket]] de l'IN2P3. Dans le nouveau ticket il faut préciser le //laboratoire// auquel on appartient (BIOASTER) et le //service// auquel on veut accéder (plateforme de cloud IAAS).
+
+===== Se connecter au nuage =====
+
+===== Créer une machine virtuelle =====
+
+
+[[/in2p3/cloud/images|/in2p3/cloud/images]]
+
+===== Se connecter à une machine virtuelle =====
+
+
+===== Administrer un machine virtuelle =====
+
+

@@ -1,0 +1,2 @@
+composer require <span class="re5">--dev</span> phpunit<span class="sy0">/</span>phpunit ^<span class="nu0">5.7</span>
+composer update <span class="re5">--dev</span>

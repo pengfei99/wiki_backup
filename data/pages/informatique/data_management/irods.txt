@@ -1,0 +1,441 @@
+====== Introduction of IRODS installation ======
+
+iRODS is provided in binary form in a collection of interdependent packages.
+
+An iRODS server has a 'catalog_service_role' and can be configured as either a 'provider' or a 'consumer'. These two roles take the place of the previous compile-time option which provided two separate binaries, formerly known as 'iCAT server' and 'Resource server'. Since 4.2, a single server can be configured to serve in either role.
+
+Provider - A server in the 'provider' role manages a Zone, handles the database connection to the iCAT metadata catalog (which could be either co-resident or hosted on a separate machine or cluster), and can provide Storage Resources. At this time, an iRODS Zone will usually have exactly one server in the 'catalog_service_role' of 'provider'. Configuring iRODS for High Availability is possible with additional work, and would include having more than one server in this role.
+Consumer - A server in the 'consumer' role connects to an existing Zone and can provide additional storage resource(s). An iRODS Zone can have zero or more servers in the 'catalog_service_role' of 'consumer'.
+A 'provider' is just a 'consumer' that also provides the central point of coordination for the Zone and manages the metadata.
+
+The simplest iRODS installation consists of one iRODS server in the 'provider' role.
+
+====== Install a IRODS catalog service provider (vs consumer) ======
+
+Catalog Service Provider
+
+The irods-server package installs the iRODS binaries and management scripts.
+
+Additionally, an iRODS database plugin is required. iRODS uses this plugin (see Pluggable Database) to communicate with the desired database management system (e.g. Oracle, MySQL, PostgreSQL).
+
+The iRODS setup script (which also configures the iRODS database plugin) requires database connection information about an existing database. iRODS neither creates nor manages a database instance itself, just the tables within the database. Therefore, the database instance should be created and configured before installing iRODS.
+
+===== Database Setup =====
+
+iRODS can use many different database configurations. In this example we use postgresql db server:
+
+We suppose you have already install a postgresql server, if you need help , please go here https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&#configure_postgresql
+
+PS: Don't forget to modify pg_hba to allow iords remote/local access to db
+
+Now, you need to create a user and db for irods, the following is just an example, you can named the db name and user as you want.
+
+<code>
+$ (sudo) su - postgres
+postgres$ psql
+psql> CREATE USER irods WITH PASSWORD 'testpassword';
+psql> CREATE DATABASE "ICAT";
+psql> GRANT ALL PRIVILEGES ON DATABASE "ICAT" TO irods;
+</code>
+
+Now you should see this in your terminal
+
+<code>
+psql> \l
+                                   List of databases
+    Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+ -----------+----------+----------+-------------+-------------+-----------------------
+  ICAT      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =Tc/postgres         +
+            |          |          |             |             | postgres=CTc/postgres+
+            |          |          |             |             | irods=CTc/postgres
+ ...
+ (N rows)
+</code>
+
+=====  Configure ODBC for Postgresql =====
+
+IRODS needs odbc to connect to data base, so you need to install and configure the right odbc for your db server
+
+For example, I install postgres 9.5.7, I need to install odbc for postgresql95, the defaut odbc in centos 7 is for postgres 9.2.
+
+To Install odbc for postgres 9.5, do the following command
+
+<code>
+yum install postgresql95-odbc.x86_64 postgresql95-odbc-debuginfo.x86_64 unixODBC
+</code>
+
+te
+===== Configure odbc driver =====
+
+After install, you need to Configure the PostgreSQL ODBC Driver in the Odbcinst.ini File
+
+<code>
+vim /etc/odbcinst.ini
+
+# Then put the following config
+[PostgreSQL]
+Description     = ODBC for PostgreSQL
+Driver          = /usr/pgsql-9.5/lib/psqlodbc.so
+Setup           = /usr/lib/libodbcpsqlS.so
+FileUsage       = 1
+</code>
+
+To test your odbc config, you can use this command
+
+''odbcinst -q -d''
+
+It should show
+
+<code>
+[PostgreSQL]
+# PostgreSQL is the name of your odbc postgres driver
+</code>
+
+You can also configure an odbc connextion which connect an actuel data base
+
+<code>
+[irodsdb]
+Description         = PostgreSQL connection to IRODS DB
+Driver              = PostgreSQL
+Database            = ICAT
+Servername          = 127.0.0.1
+UserName            = irods
+Password            = changeMe
+Port                = 5432
+Protocol            = 9.5
+ReadOnly            = No
+RowVersioning       = No
+ShowSystemTables    = No
+ConnSettings        =
+
+</code>
+
+Type this command ''isql irodsdb'', you should see
+
+<code>
++---------------------------------------+
+| Connected!                            |
+|                                       |
+| sql-statement                         |
+| help [tablename]                      |
+| quit                                  |
+|                                       |
++---------------------------------------+
+</code>
+
+===== Install irods server =====
+
+<code>
+# Import irods rpm signing key
+sudo rpm --import https://packages.irods.org/irods-signing-key.asc
+
+# Creat yum repo for irods
+wget -qO - https://packages.irods.org/renci-irods.yum.repo | sudo tee /etc/yum.repos.d/renci-irods.yum.repo
+
+#Install epel repo for other dependencies
+sudo yum install epel-release
+
+#Install irods-server and postgres plugin
+sudo yum install irods-server irods-database-plugin-postgres
+</code>
+
+Now you need to configure irods server
+
+''(sudo) python /var/lib/irods/scripts/setup_irods.py''
+
+This command should start a configuration process, it will ask for information in four (possibly five) sections:
+
+  - Service Account
+  - Service Account Name
+  - Service Account Group
+  - Catalog Service Role
+  - Database Connection (if installing a 'provider')
+  - ODBC Driver
+  - Database Server's Hostname or IP
+  - Database Server's Port
+  - Database Name
+  - Database User
+  - Database Password
+  - Stored Passwords Salt
+  - iRODS Server Options
+  - Zone Name
+  - Zone Port
+  - Parallel Port Range (Begin)
+  - Parallel Port Range (End)
+  - Control Plane Port
+  - Schema Validation Base URI
+  - iRODS Administrator Username
+  - Keys and Passwords
+  - zone_key
+  - negotiation_key
+  - Control Plane Key
+  - iRODS Administrator Password
+  - Vault Directory
+
+After you enter all these information correctly, it will show you something like this:
+
+<code>
++---------------------+
+| Attempting test put |
++---------------------+
+
+2017-07-18 15:12:43,154 -    INFO -                 setup_irods.py: 144 - Putting the test file into iRODS...
+2017-07-18 15:12:43,154 -   DEBUG -                         lib.py:  56 - Calling ['iput', '/tmp/tmpT8n59WdemoResc'] with options:
+{'shell': False, 'stderr': -1, 'stdout': -1}
+2017-07-18 15:12:43,239 -   DEBUG -                         lib.py: 129 - Command ['iput', '/tmp/tmpT8n59WdemoResc'] returned with code 0.
+2017-07-18 15:12:43,239 -    INFO -                 setup_irods.py: 147 - Getting the test file from iRODS...
+2017-07-18 15:12:43,239 -   DEBUG -                         lib.py:  56 - Calling ['iget', 'tmpT8n59WdemoResc', '-'] with options:
+{'shell': False, 'stderr': -1, 'stdout': -1}
+2017-07-18 15:12:43,313 -   DEBUG -                         lib.py: 129 - Command ['iget', 'tmpT8n59WdemoResc', '-'] returned with code 0.
+stdout:
+  This is a test file written by the iRODS installation script.
+2017-07-18 15:12:43,314 -    INFO -                 setup_irods.py: 150 - Removing the test file from iRODS...
+2017-07-18 15:12:43,314 -   DEBUG -                         lib.py:  56 - Calling ['irm', '-f', 'tmpT8n59WdemoResc'] with options:
+{'shell': False, 'stderr': -1, 'stdout': -1}
+2017-07-18 15:12:43,395 -   DEBUG -                         lib.py: 129 - Command ['irm', '-f', 'tmpT8n59WdemoResc'] returned with code 0.
+2017-07-18 15:12:43,396 -    INFO -                 setup_irods.py: 153 - Success.
+2017-07-18 15:12:43,396 -    INFO -                 setup_irods.py: 133 - 
++--------------------------------+
+| iRODS is installed and running |
++--------------------------------+
+</code>
+
+All the information you entered in this step will be stored and userd in ''/var/lib/irods/.irods/irods_environment.json''
+
+After this, your irods server is up and running with a local resource(/var/lib/irods/Vault) server. To expand storage, we need to add new remote resource server.
+
+The irods server is installed in /var/lib/irods/, it contains the following folder
+
+<code>
+-rw-------   1 irods irods 1.5K Aug  7 10:27 .bash_history
+drwxrwxr-x   3 irods irods   17 Jul 19 14:24 .cache
+drwxr-xr-x   4 irods irods   32 Jul 18 11:23 clients
+drwxr-xr-x   4 irods irods   40 Jul 18 11:23 config
+drwxrwxr-x   3 irods irods   17 Jul 19 14:24 .config
+drwxr-xr-x   3 irods irods   15 Jul 18 11:23 configuration_schemas
+drwx------   2 irods irods  150 Jul 20 15:44 .irods
+-r-xr--r--   1 irods irods  283 Jun  8 08:30 irodsctl
+drwxr-xr-x   3 irods irods 4.0K Aug  6 00:13 log
+drwxr-xr-x   2 irods irods   94 Jul 18 11:23 msiExecCmd_bin
+-rw-r--r--   1 irods irods  247 Jul 18 17:12 .odbc.ini
+drwxr-xr-x   3 irods irods 4.0K Jul 18 11:23 packaging
+drwxr-xr-x   3 irods irods 4.0K Jul 18 11:23 scripts
+drwx------   3 irods irods   17 Jul 18 17:12 Vault
+-rw-------   1 irods irods  224 Jul 18 16:34 VERSION.json
+-rw-r--r--   1 irods irods  166 Jun  8 08:31 VERSION.json.dist
+
+</code>
+
+The irods server configuration files are located at /etc/irods/.
+
+<code>
+-rw-r--r--    1 irods irods 5.0K Jul 18 17:12 core.dvm
+-rw-r--r--    1 irods irods  831 Jul 18 17:12 core.fnm
+-rw-r--r--    1 irods irods  38K Jul 18 17:12 core.re
+-rw-r--r--    1 irods irods  106 Jul 18 17:12 host_access_control_config.json
+-rw-r--r--    1 irods irods   90 Jul 18 17:12 hosts_config.json
+-rw-------    1 irods irods 3.4K Jul 18 17:12 server_config.json
+-rw-r--r--    1 irods irods   64 Jul 18 17:07 service_account.config
+</code>
+
+Stop/Start/Status/Restart irods demaeon
+
+''service irods stop/status/start/restart''
+
+PS. The systemctl command is not recommanded for irods
+
+ 
+===== IRODS client =====
+
+
+
+The client which IRODS provides is called iCommand,
+you can download it for your distrbution from here (https://irods.org/download/), at section iCommands CLI
+
+CC also provides a page which list many available clients (https://doc.cc.in2p3.fr/clients_irods).
+
+Note that, the irods cli version less than 4.0 has a different configuration pattern.
+
+icommands < 4.0
+The client config is located at ~/.irods/.irodsEnv. The auth token is located at ~/.irods/.irodsA
+
+icommands > =4.0
+
+The client config is located at ~/.irods/irods_environment.json. The auth token is located at ~/.irods/.irodsA .
+
+
+The windows client, irods_explorer has been tested, it works well.
+
+Other clients needs to be tested
+
+The following example is admin user use iCommands to create new irods user
+
+To creat a user account, you need to be the admin user.
+In our example, the admin user is "rods"
+
+<code>
+su - irods
+
+iinit
+
+# On the same line, after the colon, enter: 1247
+Enter the port number:
+# On the same line, after the colon, enter: rods
+Enter your irods user name:
+# On the same line, after the colon, enter: bioaster
+Enter your irods zone:
+# Remember we set the rods password as changeMe
+Those values will be added to your environment file (for use by
+other iCommands) if the login succeeds.
+Enter your current iRODS password:
+</code>
+
+The iinit command will create your irods enviroment in the file ~/.irods/irods_environment.json
+
+Once you are login with this setting with right password, it will cache your credential in file ~/.irods/.irodsA.
+
+In our case, it's /var/lib/irods/.irods/irods_environment.json.
+
+<code>
+{
+    "irods_client_server_negotiation": 
+    "request_server_negotiation", 
+    "irods_client_server_policy": "CS_NEG_REFUSE", 
+    "irods_cwd": "/bioaster/home/rods", 
+    "irods_default_hash_scheme": "SHA256", 
+    "irods_default_number_of_transfer_threads": 4, 
+    "irods_default_resource": "demoResc", 
+    "irods_encryption_algorithm": "AES-256-CBC", 
+    "irods_encryption_key_size": 32, 
+    "irods_encryption_num_hash_rounds": 16, 
+    "irods_encryption_salt_size": 8, 
+    "irods_home": "/bioaster/home/rods", 
+    "irods_host": "CCLinIRODSD01.bioaster.org", 
+    "irods_match_hash_policy": "compatible", 
+    "irods_maximum_size_for_single_buffer_in_megabytes": 32, 
+    "irods_port": 1247, 
+    "irods_server_control_plane_encryption_algorithm": "AES-256-CBC", 
+    "irods_server_control_plane_encryption_num_hash_rounds": 16, 
+    "irods_server_control_plane_key": "bioasterbioasterbioasterbioaster", 
+    "irods_server_control_plane_port": 1248, 
+    "irods_transfer_buffer_size_for_parallel_transfer_in_megabytes": 4, 
+    "irods_user_name": "rods", 
+    "irods_zone_name": "bioaster", 
+    "schema_name": "irods_environment", 
+    "schema_version": "v3"
+}
+</code>
+
+Now you can run the following command to create a user account
+
+<code>
+iadmin mkuser alice rodsuser
+iadmin moduser alice password changeMe
+</code>
+
+You can notice that, alice has been granted with an role rodsuser.
+
+You can view all available user role with
+
+<code>
+iadmin lt user_type
+
+#It should show the following line
+rodsgroup
+rodsadmin
+rodsuser
+groupadmin
+</code>
+
+==== IDrop web 2 ====
+
+The IDrop web 2 is a java based(groovy/grails) web client. 
+To deploy it, you need to download the war file
+
+and create a configuration file <color #ed1c24>idrop-web-config2.groovy</color> at /etc/idrop-web/
+
+<code>
+vim /etc/idrop-web/idrop-web-config2.groovy
+
+# Put the following config code in this file
+
+/*
+ * Configuration for idrop-web - iDROP Cloud browser
+ * Project page: https://code.renci.org/gf/project/irodsidrop/
+ * 
+ * Deployment instructions:
+ * 
+ * 1) Set configuration for your deployment server.  Set the name in production below to the URL you want to use.  This value is used by Grails to 
+ * compute links, so it should be the front end for your application (e.g. if you run Apache HTTP server in front of Tomcat with SSL, this would be
+ * the end-users 'https://' URL 
+ * 
+ */
+environments {
+    
+         production {  grails.serverURL = "http://10.70.3.38:8080/idrop-web2" } 
+    
+}
+
+/*
+ * 2) If you want to set things up so that the idrop web browser automatically points to a certain grid (i.e. only user ID and password show, then do something like below.
+ * Take the following outside of the comment block and configure here
+ */
+ idrop.config.preset.host="127.0.0.1"
+ idrop.config.preset.port="1247"
+ idrop.config.preset.zone="bioaster"
+ idrop.config.preset.resource=""
+ // can be Standard or PAM right now
+ idrop.config.preset.authScheme="Standard"
+
+
+/*
+ * 3) iDROP web includes the idrop-lite Java applet, which is launched from the iDROP web interface.  The interface needs to know where to find this jar file.
+ * The Jar file should be placed on a web server in an accessible directory, and configured below
+ * 
+ * 
+ idrop.config.idrop.lite.applet.jar="idrop-lite-1.0.0-SNAPSHOT-jar-with-dependencies.jar"
+ idrop.config.idrop.lite.codebase="http://iren-web.renci.org/idrop-web/applet"
+ idrop.config.idrop.lite.use.applet.dir=false
+ idrop.config.idrop.lite.applet.jar="idrop-lite-1.0.0-SNAPSHOT-jar-with-dependencies.jar"
+ idrop.config.idrop.lite.codebase="https://lifetime-library.ils.unc.edu/llclient"
+ idrop.config.idrop.lite.use.applet.dir=false
+ */
+
+//idrop.config.idrop.lite.applet.jar="idrop-lite-2.0.1-SNAPSHOT-jar-with-dependencies.jar"
+//idrop.config.idrop.lite.codebase="http://localhost:8552/idrop-release"
+//idrop.config.idrop.lite.use.applet.dir=false
+
+/*
+ * 4) iDROP web includes a link to launch the iDROP desktop GUI, using Java WebStart.  WebStart looks for a jnlp file and the accompanying 
+ * lib directories.  This should be deployed on a web server at some accessible location and referred to here
+ * 
+ * idrop.config.idrop.jnlp="http://iren-web.renci.org:8080/idrop/idrop.jnlp"
+ * 
+ * idrop.config.idrop.jnlp="https://lifetime-library.ils.unc.edu/llclient/idrop.jnlp"
+ */
+
+//idrop.config.idrop.jnlp="http://iren-web.renci.org:8080/idrop/idrop.jnlp"
+//drop.config.idrop.jnlp="http://iren-web.renci.org/idrop-snapshot/idrop.jnlp"
+//idrop.config.idrop.jnlp="http://localhost:8552/idrop-release/idrop.jnlp"
+idrop.config.idrop.jnlp="http://iren-web.renci.org/idrop-snapshot/idrop.jnlp"
+/*
+ * 5) Customization properties
+ */
+
+// do I support tickets? This determies whether the ticket feature is available via the interface, it also requires ticket support in iRODS itself (version 3.1+)
+idrop.config.use.tickets=true
+
+// do I want to display the profile tab and maintain user profile info 
+idrop.config.use.userprofile=true
+
+// do I support sharing? Requires target server to have specific query support and sharing queries loaded from jargon-user-tagging
+idrop.config.use.sharing=true
+
+// do I want to show the gallery view?
+idrop.config.use.gallery.view=false
+
+// do I want to show the browse view?
+idrop.config.use.browse.view=true
+
+</code>
+

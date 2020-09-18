@@ -1,0 +1,55 @@
+====== Boost ======
+
+===== Informations =====
+
+  * **Version** : 1.55.0
+  * **Licence** : Boost Software License
+  * **Page Web** : [[http://www.boost.org/]]
+  * **Description** : Boost provides free peer-reviewed portable C++ source libraries. We emphasize libraries that work well with the C++ Standard Library. Boost libraries are intended to be widely useful, and usable across a broad spectrum of applications. The Boost license encourages both commercial and non-commercial use. We aim to establish "existing practice" and provide reference implementations so that Boost libraries are suitable for eventual standardization. Ten Boost libraries are included in the C++ Standards Committee's Library Technical Report (TR1) and in the new C++11 Standard. C++11 also includes several more Boost libraries in addition to those from TR1. More Boost libraries are proposed for TR2.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster/"
+cd $SOFTWARE/src
+wget "http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.55.0%2F&ts=1390818962&use_mirror=freefr" -O boost_1_55_0.zip
+unzip boost_1_55_0.zip
+./bootstrap.sh
+vim project-config.jam
+# option.set prefix :  /afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3//boost/1.55.0 ;
+# option.set exec-prefix : /afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/boost/1.55.0 ;
+# option.set libdir : /afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/boost/1.55.0/lib ;
+# option.set includedir : /afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/boost/1.55.0/include ;
+./b2
+mkdir -p $SOFTWARE/apps/gcc-RedHat_4.4.7-3/boost/1.55.0/include
+cp -r boost $SOFTWARE/apps/gcc-RedHat_4.4.7-3/boost/1.55.0/include
+cp -r stage/lib $SOFTWARE/apps/gcc-RedHat_4.4.7-3/boost/1.55.0
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Boost provides free peer-reviewed portable C++ source libraries.\n"
+}
+
+set root "/afs/in2p3.fr/throng/bioaster"
+
+set version "1.55.0"
+set gcc_version "RedHat_4.4.7-3"
+
+set base_dir "${root}/apps/gcc-${gcc_version}/boost/${version}"
+set lib_dir  "${base_dir}/lib"
+set include_dir "${base_dir}/include"
+
+prepend-path LIBRARY_PATH $lib_dir
+prepend-path LD_LIBRARY_PATH $lib_dir
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 1.55.0 installée

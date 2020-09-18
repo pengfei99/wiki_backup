@@ -1,0 +1,208 @@
+====== FOSUserBundle ======
+
+Bundle pour la gestion des utilisateurs et de leurs droits.\\
+Sécurité également assurée.\\
+
+Documentation disponible [[http://symfony.com/doc/current/bundles/FOSUserBundle/index.html|ici]].\\
+
+<WRAP round important >
+**Attention :** Ne pas oublier de télécharger le jms/security-extra-bundle et jms/di-extra-bundle.\\ Aller dans la section Bonus pour plus de détail.
+</WRAP>
+====Étape 1=====
+
+Téléchargement de FOSUserBundle avec le composer
+    $ composer require friendsofsymfony/user-bundle "~2.0@dev"
+
+====Etape 2====
+
+Déclaration de FOSUserBundle dans le kernel.
+
+    <?php
+    // app/AppKernel.php
+    
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new FOS\UserBundle\FOSUserBundle(),
+            // ...
+        );
+    }
+
+====Étape 3====
+Création d'un [[https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle?&#recettes_pour|bundle]] et de l'entité User.
+
+Classe User.php 
+
+    <?php
+    // src/AppBundle/Entity/User.php
+    
+    namespace AppBundle\Entity;
+    
+    use FOS\UserBundle\Model\User as BaseUser;
+    use Doctrine\ORM\Mapping as ORM;
+    
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="fos_user")
+     */
+     class User extends BaseUser
+    {
+        /**
+         * @ORM\Id
+         * @ORM\Column(type="integer")
+         * @ORM\GeneratedValue(strategy="AUTO")
+         */
+        protected $id;
+    
+        public function __construct()
+        {
+            parent::__construct();
+        }
+    }
+
+====Étape 4====
+Configuration de l'application dans le fichier security.yml
+
+    #app/config/security.ym
+    
+    security:
+        encoders:
+            Symfony\Component\Security\Core\User\User: plaintext
+            MyProject\MyBundle\Entity\User: sha512
+            
+        role_hierarchy:
+            ROLE_ADMIN: ROLE_USER
+            ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        
+        providers:
+            in_memory:
+                memory:
+                    users:
+                        user: {password: userpass, roles: ['ROLE_USER'] }
+                        admin: {password: adminpass, roles: ['ROLE_ADMIN'] }
+            main:
+                id: fos_user.user_provider.username
+    
+        firewalls:
+            # disables authentication for assets and the profiler, adapt it according to your needs
+            dev:
+                pattern: ^/(_(profiler|wdt)|css|images|js)/
+                security: false
+    
+            main_login:
+                pattern: ^/login$
+                anonymous: true
+            main:
+                pattern: ^/
+                anonymous: true
+                provider: main
+                form_login:
+                    login_path: fos_user_security_login
+                    check_path: fos_user_security_check
+                    use_referer: true
+                    always_use_default_target_path: false
+                    default_target_path: myproject_homepage
+                logout:
+                    path: /logout
+                    target: /homepage
+                    invalidate_session : false
+                remember_me:
+                    key: %secret%
+        access_control:
+         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+
+====Etape 5====
+Configuration de FOSUserBundle dans le fichier config.yml
+
+    #app/config/config.yml
+    
+    fos_user:
+      db_driver: orm
+      user_class : Sdz\SdzUserBundle\Entity\User
+      firewall_name : main
+    
+
+====Étape 6====
+
+Importation des routes.
+      
+    #app/config/routing.yml
+      
+    fos_user_security:
+        resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    
+    fos_user_profile:
+        resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+        prefix: /profile
+    
+    fos_user_register:
+        resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+        prefix: /register
+    
+    fos_user_resetting:
+        resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+        prefix: /resetting
+    
+    fos_user_change_password:
+        resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+        prefix: /profile
+
+====Étape 7====
+Mise à jours de la base de données.
+    $php app/console doctrine:schema:update --dump-sql
+    $php app/console doctrine:schema:update --force 
+
+
+====== Bonus ======
+
+====Bundle complémentaire====
+
+Depuis la version 2.8 de Symfony, il faut installer les bundles suivants pour que FOSUserBundle fonctionne.
+
+==Procédure d'installation==
+
+==Téléchargement via le composer==
+
+    #composer.json
+    
+    // ...
+    
+    "require":{
+        // ...
+        "jms/security-extra-bundle": "1.6.*",
+        "jms/di-extra-bundle": "1.4.*",
+        //..
+    },
+        
+==Déclaration dans le kernel==
+
+    <?php
+    // app/AppKernel.php
+    
+    public function registerBundles()
+    {
+        $bundles = array(
+           // ...
+           new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+           new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+        );
+    }
+    
+==Configuration==        
+
+    #app/config/security.yml
+    
+    jms_security_extra:
+        secure_all_services: false
+        expressions: true
+
+====Un exemple d'utilisation ?====
+
+Vous trouverez sur cet [[https://zestedesavoir.com/tutoriels/620/developpez-votre-site-web-avec-le-framework-symfony2/396_allons-plus-loin-avec-symfony2/2004_securite-et-gestion-des-utilisateurs/|page]] un exemple d'utilisation du FOSUserBundle. 
+
+====Utilisation avec le FOSCommentBundle====
+
+Suivre le [[https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/foscommentbundle/|lien]].
+
+

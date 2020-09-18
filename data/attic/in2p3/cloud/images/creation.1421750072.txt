@@ -1,0 +1,113 @@
+====== Création d'images de machine virtuelle ======
+
+La création d'une image suit les étapes suivantes :
+
+  * Téléchargement d'un média d'installation (CD, DVD...) ;
+  * Création d'une machine virtuelle locale (VirtualBox...) ;
+  * Installation du système ;
+  * Configuration du système pour supporter les fonctionnalités spécifiques du //cloud// ;
+  * Export de la machine virtuelle ;
+  * Ajout à la bibliothèque d'images d'OpenStack.
+
+La documentation suivante s'inspire du document OpenStack sur la [[http://docs.openstack.org/image-guide/content/ch_openstack_images.html|création des images]] et décrit plus en détail la procédure pour certains OS.
+
+===== Debian GNU/Linux =====
+
+L'image Debian a été créée en utilisant **VirtualBox**, le CD d'installation **debian-7.4.0-amd64-netinst.iso** et un **disque dur virtuel de 2Go** au format //vdi//.
+
+Le premier utilisateur après //root// est **bioaster**. Les paquets de base sont ''SSH server'' et ''system tools''. Une fois le système installé et redémarré, les étapes suivantes sont à effectuer.
+
+> **Remarque concernant les disques :**
+> Pour que le disque principal puisse être redimensionné en fonction de la //flavor//, il est nécessaire que la partition "/" soit hébergée sur la dernière partition du disque.
+> Lors de l'installation il faut donc partitionner manuellement le disque. La configuration la plus simple consiste à n'utiliser qu'une partition et pas de //swap//.
+
+Le système est **mis à jour** et les outils de base sont installés : 
+
+<code text>
+$ aptitude update
+$ aptitude dist-upgrade
+$ aptitude install --without-recommends sudo vim
+$ adduser bioaster sudo
+$ locale-gen en_GB.UTF-8
+$ locale-gen en_US.UTF-8
+$ dpkg-reconfigure locales
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail "root";
+</code>
+
+**Configuration de SSH**
+
+<code text /etc/ssh/sshd_config>
+PermitRootLogin no
+AllowUsers bioaster
+Protocol 2
+PasswordAuthentication no
+</code>
+
+**Protéger GRUB2**
+
+<code text /etc/grub.d/40_custom>
+set superusers="root"
+password root YtidDtcr…
+</code>
+
+<code text>
+$ update-grub
+$ chmod o-rwx /etc/grub.d/40_custom
+</code>
+
+**Préparation pour le cloud**
+
+Les paquets spécifiques au //cloud// doivent ensuite être installés. Ils ne sont pour le moment pas disponible dans Debian 7. Ils doivent donc être installés depuis les //backports//.
+
+<code text>
+$ vim /etc/apt/sources.list
+deb http://ftp.fr.debian.org/debian/ wheezy-backports main
+deb-src http://ftp.fr.debian.org/debian/ wheezy-backports main
+
+$ aptitude update
+$ aptitude install cloud-init cloud-utils cloud-initramfs-growroot
+$ echo "" > /etc/udev/rules.d/70-persistent-net.rules
+$ echo "" > /lib/udev/rules.d/75-persistent-net-generator.rules
+$ vim /etc/cloud/cloud.cfg
+name: bioaster
+groups: [..., sudo]
+lock_passwd: False # pour autoriser le sudo ?!
+</code>
+
+Une fois les composants //"cloud"// activés, le démarrage est plus long, car le système essaie de contacter des services extérieurs normalement fournis par le //"cloud"//.
+
+Le système doit ensuite être configuré pour afficher les messages de démarrage sur la bonne sortie.
+
+<code text>
+$ vim /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT="console=ttyS0"
+
+$ update-grub
+</code>
+
+À partir de cette modification de GRUB, les messages de démarrage ne sont plus visibles dans VirtualBox.
+
+Il faut maintenant compresser (**7-zip**) l'image et l'envoyer (**FileZilla**) sur une frontale du CC. Une fois décompressée au CC il faut l'importer dans la bibliothèque d'images.
+
+<code text>
+bzcat Debian-7.vdi.bz2 | glance image-create --name="Debian-7" --is-public=False --container-format=bare --disk-format=vdi
+</code>
+
+Elle peut maintenant être [[ccin2p3:cloud#creer_une_machine_virtuelle|instanciée]] comme n'importe quelle autre image.
+
+===== Astuces =====
+
+==== Redimensionner un disque sous VirtualBox ====
+
+L'utilitaire ''VBoxManager'' ne fonctionne pas sur les ''.vdi'' de taille fixe, il faut donc ruser :
+
+  * créer un nouveau ''.vdi'' de la taille voulue ;
+  * monter le nouveau et l'ancien disque sur une VM GNU/Linux ;
+  * utiliser ''dd'' pour copier le contenu ''dd if=/dev/sdb of=/dev/sdc'' ;
+  * redémarrer la VM pour prendre en compte le changement sur le nouveau disque ;
+  * utiliser ''gparted'' pour redimensionner le système de fichier.
+

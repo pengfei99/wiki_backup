@@ -1,0 +1,107 @@
+
+<h1 class="sectionedit1" id="cad4bio">CAD4Bio</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "CAD4Bio" [1-23] -->
+<h2 class="sectionedit2" id="presentation">Présentation</h2>
+<div class="level2">
+
+<p>
+High-throughput genomic design software for molecular biology.<br/>
+<a href="http://www.cad4bio.com" class="urlextern" title="http://www.cad4bio.com"  rel="nofollow">http://www.cad4bio.com</a>
+</p>
+
+<p>
+<strong>Contact :</strong> <a href="mailto:&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x63;&#x79;&#x72;&#x69;&#x6c;&#x2e;&#x70;&#x65;&#x72;&#x6f;&#x74;&#x40;&#x63;&#x61;&#x64;&#x34;&#x62;&#x69;&#x6f;&#x2e;&#x63;&#x6f;&#x6d;" class="mail" title="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x63;&#x79;&#x72;&#x69;&#x6c;&#x2e;&#x70;&#x65;&#x72;&#x6f;&#x74;&#x40;&#x63;&#x61;&#x64;&#x34;&#x62;&#x69;&#x6f;&#x2e;&#x63;&#x6f;&#x6d;">Cyril PEROT</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Présentation" [24-201] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+Le logiciel est une appli java à « installer » sur chaque client. Elle accède à une base de données que nous avons « déléguée » au CC-IN2P3.
+</p>
+
+<p>
+Au 07.07.2016, le logiciel pré-configuré pour l&#039;accès à la base de donnée peut-être téléchargé ici : <a href="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.2.1-windowsx86.zip" class="urlextern" title="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.2.1-windowsx86.zip"  rel="nofollow">https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.2.1-windowsx86.zip</a>
+</p>
+
+<p>
+Le 19.07.2016, Cyril Perot nous a fourni la version 2.4.3.0 (<a href="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip" class="urlextern" title="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip"  rel="nofollow">https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip</a>)
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/logiciels/cad4bio?codeblock=0" title="Télécharger un extrait" class="mediafile mf_properties">conf/META-INF/db.properties</a></dt>
+<dd><pre class="code ini"><span class="re1">dburl</span><span class="sy0">=</span><span class="re2">jdbc:postgresql://ccpgsqlvip.in2p3.fr:5432/cad4bio</span>
+<span class="re1">dburldefault</span><span class="sy0">=</span><span class="re2">jdbc:postgresql://ccpgsqlvip.in2p3.fr:5432/cad4bio</span>
+<span class="re1">dbuser</span><span class="sy0">=</span><span class="re2">cad4bio_admin</span>
+<span class="re1">dbpwd</span><span class="sy0">=</span><span class="re2">XXXXXX</span>
+<span class="re1">dbschema</span><span class="sy0">=</span><span class="re2">CAD4BIO</span>
+<span class="re1">dbdriver</span><span class="sy0">=</span><span class="re2">org.postgresql.Driver</span></pre>
+</dd></dl>
+
+<p>
+<strong>Comptes Administrateurs :</strong>
+</p>
+
+<p>
+Il y a deux comptes créés pour l&#039;administration éventuelle par l&#039;UTEC06, leurs mots de passe sont dans le Keepass
+</p>
+<ul>
+<li class="level1"><div class="li"> Administrateur CAD4Bio</div>
+</li>
+<li class="level1"><div class="li"> SuperAdministrateur CAD4Bio</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [202-1261] -->
+<h3 class="sectionedit4" id="utilisateurs">Utilisateurs</h3>
+<div class="level3">
+
+<p>
+CAD4BIO est actuellement installé sur les PCs de : DONNAT Stéphanie, LAGOUTTE Priscillia, LUGARI Adrien, MARIANO Natacha, MIGNON Charlotte, STADTHAGEN GOMEZ Gustavo
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Utilisateurs" [1262-1453] -->
+<h2 class="sectionedit5" id="securisation">Sécurisation</h2>
+<div class="level2">
+
+<p>
+Le logiciel utilise une base de données hébergée au CC sur le cluster PGSQL. L&#039;accès à la base n&#039;est possible que depuis les réseaux Bioaster (VPN compris). On ne peut donc utiliser le logiciel que depuis les réseaux Bioaster.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Sécurisation" [1454-1714] -->
+<h2 class="sectionedit6" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.07.19 (pv)</strong> Mise à disposition de la version 2.4.3.0 ici ⇒ <a href="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip" class="urlextern" title="https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip"  rel="nofollow">https://owncloud.bioaster.org/index.php/apps/files/ajax/download.php?dir=%2F&amp;files=Cad4Bio-bioaster-2.4.3.0-windowsx86.zip</a> </div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.07 (pv)</strong> Installation de la nouvelle version et modification du schéma de base de données PGSQL</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.03.24 (pv)</strong> Autorisation du réseau VPN Bioaster dans le filtrage côté PGSQL</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.02.16 (tlc)</strong> Mise à disposition d&#039;une version du logiciel pré-configuré sur le nouveau owncloud</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.07.02 (tlc)</strong> Mise à disposition d&#039;une version du logiciel pré-configuré sur owncloud</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.19 (tlc)</strong> Philippe CHEYNET du CC <a href="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2015061111000054" class="urlextern" title="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2015061111000054"  rel="nofollow">lance les requêtes SQL</a> pour initialiser la bd</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.17 (tlc)</strong> Demande de plus de droits pour pouvoir lancer les requêtes SQL nécessaires</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.17 (tlc)</strong> Réception de <a href="/_media/informatique/logiciels/2.initpostgresql-cad4bio.pdf" class="media mediafile mf_pdf" title="informatique:logiciels:2.initpostgresql-cad4bio.pdf (41.9 KB)">la seconde partie de la documentation</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.11 (tlc)</strong> <a href="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2015061111000054" class="urlextern" title="https://cc-usersupport.in2p3.fr/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=2015061111000054"  rel="nofollow">Demande de création d&#039;une BD</a> PostgreSQL auprès du CC</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.10 (tlc)</strong> Réception de <a href="/_media/informatique/logiciels/installpostgresql-cad4bio.pdf" class="media mediafile mf_pdf" title="informatique:logiciels:installpostgresql-cad4bio.pdf (169.7 KB)">la documentation d&#039;installation</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.06.08 (tlc)</strong> <a href="/informatique/logiciels/cad4bio/demande" class="wikilink1" title="informatique:logiciels:cad4bio:demande">Demande d&#039;installation</a> par Nicolas pour Bettina</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Journal" [1715-] -->

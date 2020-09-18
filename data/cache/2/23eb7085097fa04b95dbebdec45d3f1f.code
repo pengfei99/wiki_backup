@@ -1,0 +1,2 @@
+@echo off
+net use O: https://owncloud.bioaster.org/remote.php/webdav /user:LOGIN PASSWORD

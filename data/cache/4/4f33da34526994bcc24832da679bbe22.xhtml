@@ -1,0 +1,251 @@
+
+<h1 class="sectionedit1" id="zookeeper_05understanding_the_inner_working_of_zookeeper">ZooKeeper 05: Understanding the inner working of ZooKeeper</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we will discuss and learn about the lifetime of a client&#039;s interaction with a ZooKeeper service by introducing the concept of ZooKeeper sessions. We will also read in detail how ZooKeeper works internally by describing its protocols.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper 05: Understanding the inner working of ZooKeeper&quot;,&quot;hid&quot;:&quot;zookeeper_05understanding_the_inner_working_of_zookeeper&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-327&quot;} -->
+<h2 class="sectionedit2" id="clients_interact_with_a_zookeeper_service">5.1 Clients interact with a ZooKeeper service</h2>
+<div class="level2">
+
+<p>
+To connect to a ZooKeeper service (e.g. standalone or quorum), a client has to use <strong>APIs through a client library</strong>. ZooKeeper client libraries have language bindings for almost all popular programming languages. In the standalone mode, there is a single ZooKeeper server. On the other hand, the quorum mode means that ZooKeeper runs in a replicated mode on a cluster of machines, also known as an ensemble.
+</p>
+
+<p>
+In the quorum mode, ZooKeeper achieves high availability through replication and can provide a service as long as a majority of the machines in the ensemble are up.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1 Clients interact with a ZooKeeper service&quot;,&quot;hid&quot;:&quot;clients_interact_with_a_zookeeper_service&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;328-962&quot;} -->
+<h3 class="sectionedit3" id="the_quorum_mode">5.1.1 The quorum mode</h3>
+<div class="level3">
+
+<p>
+<strong>A ZooKeeper quorum constitutes the majority of replica nodes that store the most recent state of the ZooKeeper service among all servers in the ensemble</strong>. It&#039;s basically the minimum number of server nodes that must be up and running and available for client requests. Any update done to the ZooKeeper tree by the clients must be persistently stored in this quorum of nodes for a transaction to be completed successfully. 
+</p>
+
+<p>
+For example, in a five-node ensemble, any two machines can fail, and we can have a quorum of three servers, and the ZooKeeper service will still work. At a later time, if the other two failed nodes come up, they can sync up the ZooKeeper service state by getting the most recent state from the existing quorum.
+</p>
+
+<p>
+If a ZooKeeper quorum is not formed with the majority nodes in the ensemble, there can be inconsistencies in the state of the ZooKeeper namespace, leading to incorrect results. Apart from node failures, network partitions between the nodes in an ensemble can lead to inconsistent operations as the quorum members won&#039;t be able
+to communicate updates among themselves. This leads to a common problem seen in distributed clusters, called <strong>split-brain.</strong>
+</p>
+
+<p>
+<strong>Split-brain is a scenario when two subsets of servers in the ensemble function independently.</strong> It leads to an inconsistent state in the whole ZooKeeper service, and different clients get different results for the same request, depending upon the server they are connected to. By having a ZooKeeper cluster running with odd numbers of
+nodes, we can reduce the chance of such errors to a probabilistic minimum.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1.1 The quorum mode&quot;,&quot;hid&quot;:&quot;the_quorum_mode&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;963-2600&quot;} -->
+<h3 class="sectionedit4" id="client_session">5.1.2 Client session</h3>
+<div class="level3">
+
+<p>
+A client that is connecting to ZooKeeper can be configured with a list of servers that form a ZooKeeper ensemble. A client tries to connect to the servers on the list by picking up a random server from the list. If the connection fails, it tries to connect to the next server, and so on. This process goes on until all the servers in the list have been tried or a successful connection is established.
+</p>
+
+<p>
+Once a connection has been established, a session is created between the client and the server, a session-Id represented as a 64-bit number, which is assigned to the client.
+</p>
+
+<p>
+A session is associated with every operation a client executes in a ZooKeeper service. The <strong>Ephemeral znodes</strong> have the lifetime of a session.
+</p>
+
+</div>
+
+<h4 id="session_timeout">Session timeout</h4>
+<div class="level4">
+
+<p>
+<strong>A session has a timeout period in milliseconds,</strong> which is specified by the application or the client while connecting to the ZooKeeper service. If the connection remains idle for more than the timeout period, the session might get expired. Session expiration is managed by the ZooKeeper cluster itself and not by the client. The current implementation requires that the <strong>timeout be a minimum of two times the tickTime and a maximum of 20 times the tickTime</strong>.
+</p>
+
+<p>
+Specifying the <strong>right session timeout</strong> depends on various factors, such as network congestion, the complexity of the application logic, and even the size of the ZooKeeper ensemble. For example, in a very busy and congested network, if the latency is high, having a very low session timeout will lead to frequent session expiration.
+Similarly, it&#039;s recommended to have a larger timeout if your ensemble is large. Also, if the application sees frequent connection loss, increasing the session timeout can be useful. However, another caution to that is that it should not have an inadvertent effect on the application&#039;s core logic.
+</p>
+
+<p>
+Sessions between a client and a ZooKeeper server is maintained using a TCP connection. Sessions are kept alive by the client sending a ping request (heartbeat). These heartbeats are sent automatically by the client libraries. The interval between two subsequent heartbeats should be kept low, such that connection failure between the client and the ZooKeeper server can be detected quite early and a reconnection attempt can be made.
+</p>
+
+</div>
+
+<h4 id="reconnection">Reconnection</h4>
+<div class="level4">
+
+<p>
+Reconnection to another ZooKeeper server is usually done by the client library in a transparent way. When a reconnection to a different server of the same ensemble is done, <strong>the existing sessions and associated ephemeral znodes created by the client remains valid.</strong> For single sessions maintained between the client and the server, ZooKeeper guarantees the order, which is typically in the FIFO order.
+</p>
+
+<p>
+While reconnect attempts are being made to another ZooKeeper server, the application will receive notifications of disconnections and connections to the service. During this failover, watch notifications are not delivered to the client as the client is typically in a disconnected mode. However, all pending event notifications are
+dispatched in order when the client successfully reconnects to the service. Also, any client operations are not honored during the reconnection time, and hence, operations will fail. <strong>So, it&#039;s very important to handle connection-loss scenarios while developing applications with ZooKeeper</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.1.2 Client session&quot;,&quot;hid&quot;:&quot;client_session&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;2601-5965&quot;} -->
+<h2 class="sectionedit5" id="implementation_of_zookeeper_transactions">5.2 Implementation of ZooKeeper transactions</h2>
+<div class="level2">
+
+<p>
+The ZooKeeper service implementation uses three important concepts:
+</p>
+<ul>
+<li class="level1"><div class="li"> Replicated database</div>
+</li>
+<li class="level1"><div class="li"> Atomic broadcast protocol: </div>
+</li>
+<li class="level1"><div class="li"> Leader election mechanism:</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2 Implementation of ZooKeeper transactions&quot;,&quot;hid&quot;:&quot;implementation_of_zookeeper_transactions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;5966-6179&quot;} -->
+<h3 class="sectionedit6" id="leader_election">5.2.1 Leader election</h3>
+<div class="level3">
+
+<p>
+If a leader already exists in the ensemble, the peer servers inform the new servers about the existing leader. The new servers sync their state with the leader.
+</p>
+
+<p>
+When a leader doesn&#039;t exist in the ensemble, ZooKeeper runs a <strong>leader election algorithm in the ensemble of servers</strong>. In this case, to start with, all of the servers are in the <strong>LOOKING</strong> state. The algorithm dictates the servers to exchange messages to elect a leader. The algorithm stops when the participant servers converge on a common choice for a particular server, which becomes the leader. The server that wins this election enters the <strong>LEADING</strong> state, while the other servers in the ensemble enter the <strong>FOLLOWING</strong> state.
+</p>
+
+<p>
+The message exchanged by the participant servers with their peers in the ensemble contains <strong>the server&#039;s identifier (sid) and the transaction ID (zxid) of the most recent transaction it executed</strong>. Each participating server, upon receiving a peer server&#039;s message, compares its own sid and zxid with the one it receives. If the received zxid is greater than the one held by the server, the server <strong>accepts the received zxid as possible leader</strong>, otherwise, it <strong>sets and advertises its own zxid to the peers in the ensemble</strong>.
+</p>
+
+<p>
+At the end of this algorithm, <strong>the server that has the most recent transaction ID (zxid) wins the leader election</strong> algorithm. After the algorithm is completed, the follower servers sync their state with the elected leader.
+</p>
+
+<p>
+The next step to leader election is <strong>leader activation</strong>. The newly elected leader proposes a <strong>NEW_LEADER proposal</strong>, and only after the NEW_LEADER proposal is acknowledged by a majority of servers (quorum) in the ensemble, the leader gets activated. The new leader doesn&#039;t accept new proposals until the NEW_LEADER proposal is committed.
+</p>
+
+</div>
+
+<h4 id="paxos_protocol">Paxos Protocol</h4>
+<div class="level4">
+
+<p>
+Zk uses a simplified version of Paxos protocol, which is the most important protocol in distributed computing. It resolves the problem of a cluster of servers reach to an agreement. For example, we have 5 severs, one server propose “foo”, another one propose “bar”. In the end, if “foo” is the agreement, all 5 severs will accept “foo”, and “bar” is dropped. 
+</p>
+
+<p>
+It has three phases:
+</p>
+
+<p>
+P1a：提议者选择一个提案编号n，给大多数接收者发送一个带有编号n的提案预请求
+</p>
+
+<p>
+P1b：如果接收者收到了编号n的预请求，n大于前面已经响应过的提案预请求编号，这时接收者做出响应，
+承诺不再接收编号比n小的提案预请求，并且在响应中会带上自己曾接收过的最高编号提案
+</p>
+
+<p>
+P2a：如果提议者接收到了大多数接收者对于n的提案响应，这时提议者会给这些接收者的每一个服务发送接受请求，
+此接受请求的内容为编号n的提案并带上一个value，这个value是如何取值的呢，
+是取接收者响应中最高编号所对应的值，如果响应中根本不存在提议值，则可以任意取值
+</p>
+
+<p>
+P2b： 如果接收者接收到一个编号为n的接收请求，它接收该提案，但如果它将对大于编号n的预请求做出响应，则不接受n的提案
+</p>
+
+<p>
+P3: 如果learner想知道是否一个value已经被选择，那么它必须确定这个value已经被大多数的accepter所接受。为了实现这个，最佳方法是当一个accepter接受了一个value时，accepter会把这个value发送给所有的learner
+</p>
+
+<p>
+<strong>Important notes: Once the consensus value is accepted by the cluster. No one can change that anymore. Even someone submits a new proposal with higher n. This rule is called consensus forever.</strong>
+</p>
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Paxos_" class="urlextern" title="https://en.wikipedia.org/wiki/Paxos_" rel="nofollow">https://en.wikipedia.org/wiki/Paxos_</a>(computer_science)
+</p>
+
+<p>
+<a href="https://www.youtube.com/watch?v=UUQ8xYWR4do" class="urlextern" title="https://www.youtube.com/watch?v=UUQ8xYWR4do" rel="nofollow">https://www.youtube.com/watch?v=UUQ8xYWR4do</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2.1 Leader election&quot;,&quot;hid&quot;:&quot;leader_election&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;6180-9888&quot;} -->
+<h3 class="sectionedit7" id="atomic_broadcast">5.2.2 atomic broadcast</h3>
+<div class="level3">
+
+<p>
+All write requests in ZooKeeper are forwarded to the leader. The leader broadcasts the update to the followers in the ensemble. Only after a majority of the followers acknowledge that they have persisted the change does the leader commit the update.
+</p>
+
+<p>
+ZooKeeper uses the ZooKeeper Atomic Broadcast (ZAB) protocol to achieve consensus, which is designed to be atomic. Thus, an update either succeeds or fails. On a leader failure, the other servers in the ensemble enter a leader election algorithm to elect a new leader among them. This protocol ensures that the local replicas in the ensemble never diverge.
+</p>
+
+<p>
+Ref: (ZAB: High-performance broadcast for primary-backup systems by Junqueira, F.P; Reed, B.C; Serafini. M (LADIS 2008, in: Proceedings of the 2nd Workshop on Large-Scale Distributed Systems and Middleware)
+Readers can access the paper on ZAB from IEEE Xplore in this link: <a href="http://bit.ly/1v3N1NN" class="urlextern" title="http://bit.ly/1v3N1NN" rel="nofollow">http://bit.ly/1v3N1NN</a>)
+</p>
+
+<p>
+ZAB guarantees strict ordering in the delivery of transactions as well as in the committing of the transactions. Pictorially, the processing of transactions through atomic messaging can be illustrated as follows
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Azookeeper%3Azk05_inner_working&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_zab.png" class="media" title="employes:pengfei.liu:data_science:zookeeper:zookeeper_zab.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=e85f2b&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_zab.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+The two-phase commit guarantees the ordering of transactions. In the protocol, once the quorum acknowledges a transaction, the leader commits it and a follower records its acknowledgment on disk.
+</p>
+
+<p>
+<strong>Observers</strong> and followers are conceptually similar as they both commit proposals from the leader. However, unlike followers, <strong>observers do not participate in the voting processes of the two-phase commit process</strong>. Observers aid
+to the scalability of reading requests in a ZooKeeper service and help in propagating updates in the ZooKeeper ensemble that span multiple data centers.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2.2 atomic broadcast&quot;,&quot;hid&quot;:&quot;atomic_broadcast&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;9889-11697&quot;} -->
+<h3 class="sectionedit8" id="zookeeper_transaction">5.2.3 ZooKeeper transaction</h3>
+<div class="level3">
+
+<p>
+A ZooKeeper transaction also includes all the steps required to successfully execute the request as a single work unit, and the updates are applied atomically. Also, <strong>a transaction satisfies the property of isolation</strong>, which means that no transaction is interfered with by any other transaction. <strong>Transactions are identified by a transaction identifier (zxid), which is a 64-bit integer split into two parts: the epoch and the counter, each being 32 bits.</strong>
+</p>
+
+<p>
+Transaction processing involves two steps in ZooKeeper: leader election and atomic broadcast. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.2.3 ZooKeeper transaction&quot;,&quot;hid&quot;:&quot;zookeeper_transaction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;11698-12294&quot;} -->
+<h2 class="sectionedit9" id="local_storage_and_snapshots">5.3 Local storage and snapshots</h2>
+<div class="level2">
+
+<p>
+ZooKeeper servers use local storage to persist transactions. The transactions are logged to transaction logs, similar to the approach of sequential append-only log files used in database systems. ZooKeeper servers use pre-allocated files to flush transactions onto disk media. In the two-phase protocol for transaction processing
+in ZooKeeper, a server acknowledges a proposal only after forcing a write of the transaction to the transaction log. <strong>Since ZooKeeper transaction logs are written at great speed, it&#039;s very important for the transaction logs to be configured in a disk separate from the boot device of the server.</strong>
+</p>
+
+<p>
+The servers in the ZooKeeper service also keep on saving point-in-time copies or snapshots of the ZooKeeper tree or the namespace onto the local filesystem. The servers need not coordinate with the other members of the ensemble to save these snapshots. Also, the snapshot processing happens asynchronously to the normal functioning of the ZooKeeper server.
+</p>
+
+<p>
+The ZooKeeper snapshot files and transactional logs enable <strong>the recovery of data in times of catastrophic failure or user error.</strong> <strong>The data directory is specified by the dataDir parameter</strong> in the ZooKeeper configuration file, and <strong>the data log directory is specified by the dataLogDir parameter</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5.3 Local storage and snapshots&quot;,&quot;hid&quot;:&quot;local_storage_and_snapshots&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;12295-&quot;} -->

@@ -1,0 +1,126 @@
+====== Remove a LV or reduce disk volum of a LV in Centos7 ======
+
+Here we are going to see how to reduce the Logical Volumes. Everyone says its critical and may end up with disaster while we reduce the lvm. Reducing lvm is really interesting than any other part in Logical volume management.
+
+  * Before starting, it is always good to back up the data, so that it will not be a headache if something goes wrong.
+  * To Reduce a logical volume there are 5 steps needed to be done very carefully.
+  * While extending a volume we can extend it while the volume under mount status (online), but for reducing we must need to unmount the file system before reducing.
+
+Let’s wee what are the 5 steps:
+
+  - unmount the file system for reducing.
+  - Check the file system after unmount.
+  - Reduce the file system.
+  - Reduce the Logical Volume size than Current size.
+  - Recheck the file system for error.
+  - Remount the file-system back to stage.
+
+
+In this tutorial, we will reduce the LV /dev/pengfei_test/pengfei_manager, which we created in [[employes:pengfei.liu:admin_system:vm_administration:create_lvm_storage|Setup Flexible Disk Storage with Logical Volume Management (LVM) in Linux]].
+
+===== 1. Umount the file system =====
+
+<code>
+# check the mounted file system
+df -h
+
+# umount the file system
+umount -v /mnt/manager/
+
+# if you can't umount, because it's busy, use the following command to check which process are using it.
+lsof +f -- /home
+
+
+# check errors in the file system
+e2fsck -ff /dev/pengfei_test/pengfei_manager
+
+e2fsck 1.42.9 (28-Dec-2013)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/pengfei_test/pengfei_manager: 11/1179648 files (0.0% non-contiguous), 118098/4710400 blocks
+
+# Must pass in every 5 steps of file-system check if not there might be some issue with your file-system.
+</code>
+
+===== 2. Reduce the file system =====
+
+<code>
+# reduce the file system size. here 10 G is the size of file system after reduce. which
+# means we reduce 8G
+resize2fs /dev/pengfei_test/pengfei_manager 10G
+
+# reduce the lv size
+lvreduce -L -8G /dev/pengfei_test/pengfei_manager
+
+WARNING: Reducing active logical volume to <9.97 GiB.
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce pengfei_test/pengfei_manager? [y/n]: y
+  Size of logical volume pengfei_test/pengfei_manager changed from <17.97 GiB (575 extents) to <9.97 GiB (319 extents).
+  Logical volume pengfei_test/pengfei_manager successfully resized.
+
+# check your new lv size
+$ lsblk
+
+pengfei_test-pengfei_manager   253:3    0   10G  0 lvm 
+
+# Re-size the file system back. In this step if there is any error that means we have messed-up our file-system.
+resize2fs /dev/pengfei_test/pengfei_manager
+</code>
+
+===== 3. Mount back the file-system =====
+
+If everything goes well, now you can mount back the file system
+
+<code>
+# 
+mount /dev/pengfei_test/pengfei_manager /mnt/manager/
+
+# check the new size of your file system
+df -h
+/dev/mapper/pengfei_test-pengfei_manager    9.7G   37M  9.2G   1% /mnt/manager
+
+# we can also check our vg if they took back the 8G
+lvdisplay pengfei_test
+ 
+</code>
+
+===== 4. Remove a LV =====
+
+<code>
+# umount the lv
+umount /mnt/manager
+
+# Open fstab, remove the automount line, otherwise, it will not reboot again !!!
+vim /etc/fstab
+
+# remove the LV
+lvremove /dev/pengfei_test/pengfei_manager
+
+# use lsblk, or lvs to see the new list of lvs
+
+</code>
+
+
+===== 5. Common problems =====
+
+==== 5.1 Wrong fstab config results to reboot fail ====
+
+1. If your vm can boot in safe mode, with a root password you can get a prompt. Then just delete the bad lines in your /etc/fstab
+
+2. If your vm can only get a grub prompt, you need to do the following
+ 
+<code>
+1. At the grub prompt, hit a to append options
+2. add init=/bin/bash to the end of the kernel command line and press enter
+The system will boot to a prompt like 'bash-3.2#' enter the following commands at the prompt
+
+3. mount -o remount, rw / --target /
+4. vim /etc/fstab
+edit the fstab file commenting the errors by adding a # at the begining of each problematic line, save the file
+
+5. reboot by pressing CTRL+ALT+DEL
+</code>
+

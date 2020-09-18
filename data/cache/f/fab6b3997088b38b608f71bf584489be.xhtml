@@ -1,0 +1,95 @@
+
+<h1 class="sectionedit1" id="hdfs_and_mapreduce_basic_cli">HDFS and mapreduce basic cli</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HDFS and mapreduce basic cli&quot;,&quot;hid&quot;:&quot;hdfs_and_mapreduce_basic_cli&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-45&quot;} -->
+<h1 class="sectionedit2" id="start_the_hdfs_service">start the hdfs service</h1>
+<div class="level1">
+<pre class="code">cd $HADOOP_HOME/sbin/
+#start the hdfs
+./start-dfs.sh
+#start the yarn, which is essential for run mapreduce job
+#yarn will decide which node will run map and reduce job
+./start-yarn.sh
+
+
+#check status after starting the service
+jps</pre>
+
+<p>
+#check status via web interface
+<a href="http://name-node-ip:8042/" class="urlextern" title="http://name-node-ip:8042/" rel="nofollow">http://name-node-ip:8042/</a>
+</p>
+
+<p>
+<a href="http://name-node-ip:50070/dfshealth.html#tab-overview" class="urlextern" title="http://name-node-ip:50070/dfshealth.html#tab-overview" rel="nofollow">http://name-node-ip:50070/dfshealth.html#tab-overview</a>
+</p>
+
+<p>
+<a href="http://name-node-ip:8088/cluster" class="urlextern" title="http://name-node-ip:8088/cluster" rel="nofollow">http://name-node-ip:8088/cluster</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;start the hdfs service&quot;,&quot;hid&quot;:&quot;start_the_hdfs_service&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;46-479&quot;} -->
+<h1 class="sectionedit3" id="hdfs_data_management_command">Hdfs data management command</h1>
+<div class="level1">
+<pre class="code">
+#Upload data to hdfs
+
+hdfs dfs -mkdir /test_data
+
+hdfs dfs -put test.txt /test_data
+
+# test mapreduce 
+
+cd /opt/hadoop/hadoop/share/hadoop/mapreduce
+
+ls 
+
+hadoop-mapreduce-client-app-2.8.1.jar              hadoop-mapreduce-client-shuffle-2.8.1.jar
+hadoop-mapreduce-client-common-2.8.1.jar           hadoop-mapreduce-examples-2.8.1.jar
+hadoop-mapreduce-client-core-2.8.1.jar             jdiff
+hadoop-mapreduce-client-hs-2.8.1.jar               lib
+hadoop-mapreduce-client-hs-plugins-2.8.1.jar       lib-examples
+hadoop-mapreduce-client-jobclient-2.8.1.jar        sources
+hadoop-mapreduce-client-jobclient-2.8.1-tests.jar
+
+
+#use the hadoop-mapreduce-example-2.8.1.jar to calculate the pi
+#$1 is the name of the method, $2 is the number of thread in hdfs $3 is the example we use to calculate the pi, more examples will make the pi more accurate, but it will long time.
+
+hadoop jar hadoop-mapreduce-examples-2.8.1.jar pi 5 5 
+
+#calculate the word number
+#$1 is the method name, #2 is the input file dir, $3 is the output file dir
+hadoop jar hadoop-mapreduce-examples-2.8.1.jar wordcount /test_data/ /test_data/output
+
+hdfs -ls /test_data/output
+Found 2 items
+-rw-r--r--   1 hadoop supergroup          0 2017-10-03 12:29 /test_data/output/_SUCCESS
+-rw-r--r--   1 hadoop supergroup         89 2017-10-03 12:29 /test_data/output/part-r-00000
+
+#view the result
+hadoop dfs -cat /test_data/output/part-r-00000
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hdfs data management command&quot;,&quot;hid&quot;:&quot;hdfs_data_management_command&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;480-1943&quot;} -->
+<h1 class="sectionedit4" id="hdfs_root_user_and_clean_the_trash">Hdfs root user and clean the trash</h1>
+<div class="level1">
+<pre class="code"># When you remove a file by using hdfs dfs -rm, hadoop will put the removed file into hdfs trash
+# To clean the trash you need to type the following command and have root privilege.
+
+hdfs dfs -expunge
+
+# The trash location is /user/hdfs/.Trash
+
+# unlike linux file system, in hdfs, the root user is hdfs. So you can run the command by becoming hdfs
+sudo -u hdfs hdfs dfs -ls /user/hive
+
+hdfs dfs -rm -skipTrash /path/to/file/you/want/to/remove/permanently
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hdfs root user and clean the trash&quot;,&quot;hid&quot;:&quot;hdfs_root_user_and_clean_the_trash&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1944-&quot;} -->

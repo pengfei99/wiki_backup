@@ -1,0 +1,117 @@
+
+<h1 class="sectionedit1" id="le_data_management_a_bioaster">Le data management à BIOASTER</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Le data management à BIOASTER" [1-45] -->
+<h2 class="sectionedit2" id="les_utec_stores_a_bioaster_1">Les UTEC stores à BIOASTER 1</h2>
+<div class="level2">
+<div class="tags"><span>
+	<a href="/tag/a?do=showtag&amp;tag=A" class="wikilink1" title="tag:a" rel="tag">A</a>,
+	<a href="/tag/completer?do=showtag&amp;tag=compl%C3%A9ter" class="wikilink1" title="tag:completer" rel="tag">compléter</a>
+</span></div>
+
+<p>
+Les UTEC store sont créés sur la baie EMC de BIOASTER1 et montés sur les station de pilotage des équipements (<strong>montage SMB/NFS/CIFS?</strong>). Les fichiers générés par les appareils peuvent donc être directement copiés sur la baie. 
+</p>
+
+<p>
+<span class="wrap_alert ">A ce jour, les UTEC sotre ne sont pas sauvegardés !</span>
+</p>
+
+<p>
+Les UTEC store sont monté sur la VM de data management de BIOASTER1. De cette façon, l&#039;UTEC6 pourra automatiser le transfert vers le CCIN2P3 (<strong>quand?</strong>). Les données des UTEC stores seront copiées dans <code>/sps/bioaster/UTECstore/</code> (<span class="wrap_info ">suggestion de NS</span>)
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Les UTEC stores à BIOASTER 1" [46-693] -->
+<h2 class="sectionedit3" id="owncloud">OwnCloud</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "OwnCloud" [694-714] -->
+<h3 class="sectionedit4" id="actuellement">Actuellement</h3>
+<div class="level3">
+
+<p>
+OwnCloud est un service Web d&#039;échange et de partage de petits fichiers (&lt;500 Mo). Il est accessible depuis l&#039;<abbr title="Uniform Resource Locator">URL</abbr> <a href="https://ccbioappl04.in2p3.fr/owncloud/" class="urlextern" title="https://ccbioappl04.in2p3.fr/owncloud/"  rel="nofollow">https://ccbioappl04.in2p3.fr/owncloud/</a>. Pour l&#039;instant, OwnCloud possède sa propre base (SQLite) d&#039;utilisateurs et stocke les données sur la baire EMC du CCIN2P3. Les données doivent être sauvegardées/copiées à la mano sur GPFS. Les groupes d&#039;utilisateurs sont créés selon les directives de l&#039;AQ stockées dans un fichier Excel. Ces directives dépendent des projets et du P.M.O.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Actuellement" [715-1242] -->
+<h3 class="sectionedit5" id="owncloud2">OwnCloud2</h3>
+<div class="level3">
+
+<p>
+Une migration vers OwnCloud2 se prépare afin que le service OwnCloud écrive directement les données sur GPFS. Depuis GPFS, les fichiers seront rendu accessible par des montages NFS sur les VM d&#039;OpenStack du de VMware au CCIN2P3. 
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Tâche </th><th class="col1 leftalign">Quoi?                  </th><th class="col2 leftalign">Qui?          </th><th class="col3 leftalign">Avancement / Action   </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0">1 </th><td class="col1">Créer une VM OwnCloud 2 avec Apache et OwnCloud</td><td class="col2">TCL+AB</td><td class="col3"> </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0">2 </th><td class="col1">Créer un compte de data management qui écrira sur GPFS</td><td class="col2">NS</td><td class="col3"> <a href="/ccin2p3/stockage" class="wikilink1" title="ccin2p3:stockage">Compte créé</a> </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0">3 </th><td class="col1">Paramétrer OwnCloud et Apache pour qu&#039;il utilise le compte générique </td><td class="col2">TLC+AB</td><td class="col3"> </td>
+	</tr>
+	<tr class="row4">
+		<th class="col0">4 </th><td class="col1">Ansibeuliser le service</td><td class="col2">TCL+AB</td><td class="col3"> </td>
+	</tr>
+	<tr class="row5">
+		<th class="col0">5 </th><td class="col1">Migrer la base de données SQLite ver pgSQL</td><td class="col2">AC+TLC</td><td class="col3 leftalign">  </td>
+	</tr>
+	<tr class="row6">
+		<th class="col0">6 </th><td class="col1">Créer un script pour migrer les données actuelle de la baie EMC vers GPFS</td><td class="col2">AC+TLC</td><td class="col3"> </td>
+	</tr>
+	<tr class="row7">
+		<th class="col0">7 </th><td class="col1">Tester le script</td><td class="col2">AC+TLC+AB</td><td class="col3"> </td>
+	</tr>
+	<tr class="row8">
+		<th class="col0">8 </th><td class="col1">Définir un nouveau <abbr title="Domain Name System">DNS</abbr></td><td class="col2">AC+TLC+AB</td><td class="col3"> owncloud.bioaster.org</td>
+	</tr>
+	<tr class="row9">
+		<th class="col0">9 </th><td class="col1">prévenir les utilisateur du changement et de l&#039;arrêt de service </td><td class="col2">AC</td><td class="col3"> </td>
+	</tr>
+	<tr class="row10">
+		<th class="col0">10</th><td class="col1">Récupérer l&#039;IP d&#039;OwnCloud</td><td class="col2">AB</td><td class="col3"> </td>
+	</tr>
+	<tr class="row11">
+		<th class="col0">11</th><td class="col1">Arrêter OwnCloud et migrer</td><td class="col2">AB+AC+TLC</td><td class="col3"> </td>
+	</tr>
+	<tr class="row12">
+		<th class="col0">12</th><td class="col1">Démarrer OwnCloud2 et lui assigner l&#039;IP et un nouveau <abbr title="Domain Name System">DNS</abbr></td><td class="col2">AB</td><td class="col3"> </td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [1498-2333] -->
+<p>
+Points bloquants identifiés :
+</p>
+<ol>
+<li class="level1"><div class="li"> Les données appartiendront à <code><a href="/ccin2p3/stockage" class="wikilink1" title="ccin2p3:stockage">biodata</a></code> du groupe <code>bioaster</code>, et plus à des personnes physiques.</div>
+</li>
+<li class="level1"><div class="li"> Lors du montage NFS sur les VM GNU/Linux, il faudra forcer le UID/GID dans la VM pour que l&#039;écriture se fasse au nom de <code>biodata</code>.</div>
+</li>
+<li class="level1"><div class="li"> Il n&#039;y a pas d&#039;interface SMB pour permettre le montage de GPFS sous Windows.</div>
+</li>
+</ol>
+
+<p>
+<strong>Point 1 :</strong> Il semble que l&#039;on puisse donner n&#039;importe quel UID/GID à GPFS, même si l&#039;utilisateur n&#039;a pas de compte CCIN2P3. Ca permettrait de garder le nom de l&#039;utilisateur et de gérer les droits avec des groupes propres au labo bioaster (tel que défini par le CCIN2P3). <strong>En revanche, il faut déterminer si OwnCloud peut écrire en utilisant plusieurs UID/GID</strong>.
+</p>
+
+<p>
+<strong>Point 2 :</strong> A priori, c&#039;est possible et ça a été testé par AB. On peut forcer n&#039;importe quel UID/GID dans la VM.
+</p>
+
+<p>
+<strong>Point 3 :</strong> Il faut voir avec le CC s&#039;il peuvent nous fournir une interface SMB à GPFS (AB s&#039;en charge?)
+</p>
+
+</div>
+<!-- EDIT5 SECTION "OwnCloud2" [1243-] -->

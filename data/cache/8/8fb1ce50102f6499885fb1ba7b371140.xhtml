@@ -1,0 +1,50 @@
+
+<h1 class="sectionedit1" id="transmart">TranSMART</h1>
+<div class="level1">
+
+<p>
+”<a href="http://www.transmartfoundation.org/site/scientistsclinicians" class="urlextern" title="http://www.transmartfoundation.org/site/scientistsclinicians"  rel="nofollow">tranSMART</a> is a Web-based knowledge management platform that enables scientists to develop and refine research hypotheses by investigating correlations between genetic and phenotypic data, and assessing their analytical results in the context of published literature and other work.”
+</p>
+
+<p>
+Une version de TranSMART est installé à BIOASTER dans le cadre d&#039;une collaboration avec Danone.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "TranSMART" [1-474] -->
+<h2 class="sectionedit2" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+Installation à partir de l&#039;<a href="http://go.transmart.etriks.org/agreement" class="urlextern" title="http://go.transmart.etriks.org/agreement"  rel="nofollow">image disponible au téléchargement</a>.
+Avant d&#039;être importé, elle doit être démarrée (dans VirtualBox par exemple) une première fois pour accepter le contrat de licence de manière interactive.
+</p>
+
+<p>
+Elle peut ensuite être importée dans <em>glance</em> :
+</p>
+<pre class="code text">glance add name=TranSMART_1.1 is_public=true container_format=bare disk_format=qcow2 \
+       &lt; tranSMART_1.1_Virtual_Appliance.x86_64-1.0.0.vmdk</pre>
+
+<p>
+Une fois importée la VM peut être démarrée :
+</p>
+<pre class="code text">nova boot --key-name=cloudkey --security-groups=web_server --image=TranSMART_1.1 --flavor=m1.small TranSMART</pre>
+
+<p>
+<strong><em class="u">Problème</em></strong> : une fois démarrée (avec le bon security_group) la VM ne semble pas accessible ! La “console” dans <a href="https://cchorizon.in2p3.fr/" class="urlextern" title="https://cchorizon.in2p3.fr/"  rel="nofollow">Horizon</a> ne fonctionnant pas il est difficile de déboguer !<br/>
+
+Ceci vient surement du fait qu&#039;une série de questions sont posées lors du premier démarrage et qu&#039;il faut y répondre avant que l&#039;<abbr title="Operating System">OS</abbr> ne démarre.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installation" [475-1537] -->
+<h2 class="sectionedit3" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.04.14 (tlc)</strong> Déploiement de la version 1.1</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Log" [1538-] -->

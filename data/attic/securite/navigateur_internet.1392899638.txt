@@ -1,0 +1,11 @@
+====== Configuration d'un navigateur internet ======
+
+===== Mozilla Firefox =====
+
+Dans le menu ''Firefox'' sélectionner ''Options''. Dans la nouvelle fenêtre cliquer sur ''Avancé'' puis dans l'onglet ''Certificats'' cliquer sur ''Afficher les certificats''.
+
+Une fois le ''Gestionnaire de certificat'' ouvert, aller dans l'onglet ''Vos certificats'' et cliquer sur ''Importer''.
+
+{{securite/firefox_certif-1.png?direct&400|}}
+
+Saisir la phrase de passe. Le certificat est prêt à être utilisé.

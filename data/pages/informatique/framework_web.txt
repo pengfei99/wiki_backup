@@ -1,0 +1,273 @@
+====== Cadre de développement web ======
+
+^Critères                   ^^Solutions                                                                                   ^^^^^
+^Fonctionnalité ^Pondération ^CakePHP            ^Symfony            ^Laravel            ^CherryPy                ^Django ^
+|Documentation  |            |http://cakephp.org |http://symfony.com |http://laravel.com |http://www.cherrypy.org |https://www.djangoproject.com |
+|Licence        |            |                   |                   |                   |                        | |
+|Langage        |            |PHP                |PHP                |PHP                |Python                  |Python |
+|Difficulté     |            |facile             |moyen              |moyen/difficile    |facile                  |moyen |
+|Installation   |            |manuelle           |composer           |composer           |package                 | pip install django|
+|Backoffice     |            |non                |[[https://github.com/symfony2admingenerator/AdmingeneratorGeneratorBundle|AdmingeneratorGeneratorBundle]]           |?           |?                 |oui de base ([[https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/|bootstrapable]])|
+|ORM            |            |simple             |[[http://symfony.com/doc/current/book/doctrine.html|Doctrine]] |[[http://laravel.com/docs/4.2/eloquent|Eloquent]]|[[http://www.sqlalchemy.org/library.html#tutorials|SQLAlchemy]]| oui (complet) ou possibilité de switcher sur SQLAlchemy |
+|Migration      |            |[[https://pypi.python.org/pypi/yoyo-migrations|YoyoMigrations]] | [[http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html|Doctrine]] | [[http://laravel.com/docs/4.2/migrations|Eloquent]] | [[http://sqlalchemy-migrate.readthedocs.org/en/latest/versioning.html|SQLAlchemy]]| oui |
+|**M**odel      | | | | | | |
+|**V**iew       |            |[[http://book.cakephp.org/2.0/en/views.html|PHP]] |[[http://twig.sensiolabs.org/|Twig]] (Django ?) |[[http://laravel.com/docs/4.2/templates|Blade]] |[[http://www.makotemplates.org|Mako]] | |
+|**C**ontroller |            |                   | | | | |
+|Organisation du code       | |classe, simple |classe |classe |? |tout sauf bordélique, je dirai structuré |
+|Routing        |            |classe/méthode     |statique, annotation|pas intuitif !     |classe/méthode, @expose|système de routing dans urls.py, pouvant accepter des regex |
+|REST API       | | | | | | |
+
+
+====== Django vs Symfony ======
+
+<WRAP round help>
+
+> "Django has the concept of “views” to encapsulate the logic responsible for processing a user’s request and for returning the response."
+> [[https://docs.djangoproject.com/en/1.7/]]
+
+[Tanguy] Django confond les concepts de vues et de contrôleur !! Ça commence mal…\\ 
+[Yoann] En fait non, Django ne confond pas. Il est Model View Template. Les controleurs sont appelés views.py et sont couplés avec les urls.py pour le routing interne.\\
+[Tanguy] Dans le [[https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur|MVC]], une vue est "l'interface utilisateur", et le contrôleur est "la logique de contrôle". Dire que les contrôleurs s'appellent des vues est au mieux un non sens complet… Quant aux templates, ils sont une manière d'implémenter les vues, donc parler de "Model View Template", c'est un peu tout mélanger.
+</WRAP>
+
+
+Les + Django : **[Tanguy] je raye tout ce qui n'est pas spécifique à Django…**
+
+  * Python : puissant, structuré, typage dynamique fort, multitudes de packages déjà en libre accès, langage très utilisé dans le monde scientifique, gestion des objets claire et facile
+  * <del>énorme communauté : difficile de ne pas trouver la solution à un problème quand il apparait</del>
+  * <del>Doc très complète et entièrement traduite pour ceux qui aurait du mal avec l'anglais : [[https://docs.djangoproject.com/fr/1.7/]]</del>
+  * <del>Très bons tutos à dispo : [[bioinformatique:l'officiel|https://docs.djangoproject.com/fr/1.7/intro/tutorial01/]] traduit aussi en français, [[http://sametmax.com/ce-quil-faut-savoir-en-django/|un très bon exemple de complément]] à ce tuto officiel pour comprendre vraiment tout, puis [[http://sametmax.com/aller-plus-loin-avec-django/|des astuces]] pour se pencher + dans le code</del>
+  * <del>possède une [[https://github.com/django-debug-toolbar/django-debug-toolbar| DebugToolbar]]</del>
+  * <del>choix de l'ORM si ORM de base( [[http://www.formation-django.fr/framework-django/zoom-sur/orm-django.html|petite approche gentillette de la bête]]) ne satisfait pas</del>
+  * <del>[[http://www.djangorocks.com/snippets/indexing-your-django-models.html|index]] des models vraiment simple.</del>
+  * <del>Configurable avec Apache ou Nginx</del>
+  * <del>Possibilité d'inclure des méthodes appelables en lignes de commande</del>
+  * Maintenabilité et évolution : + facile de trouver un **bioinformaticien** pythonista qu'un **bioinformaticien** PHP je pense **[Tanguy]: et est-ce vraiment une bonne chose de prendre un bioinformaticien pour faire du développement web ?!** 
+  * <del>Module de login déjà présent de base et possibilité de le bypasser avec un autre si besoin</del>
+  * Module d'admin déjà présent de base **[Tanguy]… c'est un plus… mais je ne suis pas sûr qu'on en ait vraiment besoin !**
+  * <del>Template engine, en + de la possibilité de faire les siens</del>
+  * <del>Gestion de l'[[http://www.djangorocks.com/snippets/mail-staff.html|envoie de mails de base]]</del>
+  * Configuration en python
+  * <del>ACL (Access Control List) de base</del>
+  * [[http://chriskief.com/2012/12/17/symfony2-vs-django-models/|cet exemple]] **[Tanguy] très bon exemple !… si tu veux montrer que Django est bordélique ! Mélanger un modèle, un contrôleur et de la vue dans un seul fichier… wow, si on pouvait éviter de le faire ! ;-) \\ Ensuite c'est vrai que l'ORM de base (Doctrine) est très verbeux… c'est pour ça que je conseille d'utiliser Propel qui est beaucoup plus simple : tu décris ta base et il écrit tout le code pour toi.**
+
+Les - Django :
+
+Les + Symfony :
+
+Les - Symfony :
+<WRAP round help>
+  * PHP donc clairement limité au Web **on veut développer des appli web… ou j'ai loupé un épisode ?**
+  * typage dynamique faible => [[|Python is an example of a dynamic typed programming language, and so is PHP]], pour [[http://fr.wikipedia.org/wiki/Type_%28informatique%29#Typage_fort_et_typage_faible|le faible et fort]], il faudra clarifier la différence. Quoi qu'il en soit, le typage dynamique est peut-être une bonne chose pour le développement rapide, mais **uniquement** si elle est couplé à un test exhaustif, sinon, attention les surprise !!
+</WRAP>
+
+
+
+===== Backoffice =====
+
+Le système d'administration automatique de Django est un plus qui peut-être assez simplement implémenté dans Symfony grâce au bundle d'administration.
+Dans les deux cas, se pose la question de la nécessité d'un tel outil pour nos projets.
+
+Le "LIMS" n'est pas une interface de publication de contenu, mais bien un outil de travail. Les utilisateurs créent et manipulent eux-même la plupart, voir la quasi totalité, des éléments contenus dans la base de données.
+
+Ces interfaces permettent de manipuler tous les objets, mais n'accompagnent nullement l'utilisateur. Elles ne contiennent pas "d'intelligence" et ne facilitent donc pas vraiment la saisie des informations.
+===== Routes =====
+
+Le système de routes est peut-être l'élément le plus faible de Django. Symfony permet d'utiliser les annotations PHP, ajout contestable au langage, mais bien utiles ici.
+[Yoann] Je parlerais ici plutot de force mais bon. Je ne suis pas sûr que tu aies bien compris le routing à la Django :)
+
+<code python polls/urls.py>
+from django.conf.urls import patterns, url
+
+from polls import views
+
+urlpatterns = patterns('',
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^(?P<pk>\d+)/results/$', views.ResultsView.as_view(), name='results'),
+    url(r'^(?P<question_id>\d+)/vote/$', views.vote, name='vote'),
+)
+</code>
+
+Dans Symfony, une fois qu'on a déclaré que le ''bundle'' utilise les annotations, il suffit de faire :
+
+<code php src/AppBundle/Controller/HelloController.php>
+namespace AppBundle\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+class HelloController
+{
+    /**
+     * @Route("/hello/{name}", name="hello")
+     */
+    public function indexAction($name)
+    {
+        #…
+    }
+}
+</code>
+
+Les routes dans Symfony, bien que plus verbeuses, sont beaucoup plus lisibles.
+
+<WRAP round help>
+[Yoann] Forcément, je peux te donner un exemple sans toutes les regex ça sera lisible aussi et ça fera très bien le job :)\\ 
+[Tanguy] Tu as raison, je ne suis pas fair-play ! … en fait, ce que je préfère (mais je ne sais pas si ce n'est pas un énorme erreur), c'est les routes dans les contrôleurs. Ça correspond bien à l'esprit du contrôleur. Par contre la première fois que j'ai vu utilisé les annotations PHP, j'ai trouvé que c'était une horreur. C'est grosso modo la même chose que les décorateurs Python (quoique), mais la syntaxe n'est pas vraiment heureuse.
+</WRAP>
+
+<code php src/AppBundle/Controller/ArticleController.php>
+class ArticleController extends Controller
+{
+    /**
+     * @Route(
+     *     "/articles/{_locale}/{year}/{title}.{_format}",
+     *     defaults={"_format": "html"},
+     *     requirements={
+     *         "_locale": "en|fr",
+     *         "_format": "html|rss",
+     *         "year": "\d+"
+     *     }
+     * )
+     */
+    public function showAction($_locale, $year, $title)
+    {
+    }
+}
+</code>
+===== Modèles =====
+
+Django utilise en système "maison". [Yoann] ...qui peut être **facilement** remplacé par un autre, au hasard SQLAlchemy.
+
+Symfony laisse le choix de l'ORM. Parmi ceux-ci, les plus connus sont :
+
+  * Doctrine, qui utilise les annotations PHP (beurk) ;
+  * Propel, qui fait de la génération de code à partir de déclaration XML. 
+
+L'avantage de Propel par rapport au autre et qu'il crée un code propre, rapide et qui sépare le partie qui interagit avec la base de données de celle qui manipule la données.
+Le code est par défaut bien écrit et bien rangé avec Propel. Propel vient aussi avec un système de [[http://propelorm.org/documentation/06-behaviors.html|behaviours]] bien pratique.
+
+[Yoann] De mon point de vue, les générateurs de code ne remplaceront jamais un bon codeur. Je préfère donc les éviter de base plutot que de me faire générer quelquechose que je devrais forcément controler et corriger à un moment donné.
+
+<code python Django>
+b = Blog(name='Beatles Blog', tagline='All the latest Beatles news.')
+b.save()
+</code>
+
+<code php Propel>
+$author = new Author();
+$author->setFirstName('Jane')->setLastName('Austen')->save();
+</code>
+
+Pour ce qui est de retrouver les données, Django mélange allégrement les modèles et le requêtes. Là encore, par défaut, Propel est plus propre.
+[Yoann] Différence de points de vue (ou d'habitudes) je pense, personnellement je trouve le Django (python) plus propre. Encore plus avec SQLAlchemy du coup.
+
+<code python Django>
+all_entries = Entry.objects.all()
+entries = Entry.objects.filter(pub_date__year=2006)
+one_entry = Entry.objects.get(pk=1)
+entries = Entry.objects.all()[5:10]
+Blog.objects.filter(entry__authors__name__isnull=True)
+Entry.objects.filter(pub_date__year=2005).delete()
+Entry.objects.filter(pub_date__year=2007).update(headline='Everything is the same')
+</code>
+
+<code php Propel>
+$authors = AuthorQuery::create()->find();
+$authors = AuthorQuery::create()->filterByFirstName('Jane')->find();
+$firstAuthor = AuthorQuery::create()->findPK(1);
+$authors = AuthorQuery::create()->offset(5)->limit(5)->find(); // also see paginate()
+$authors = AuthorQuery::create()->filterByFirstName(null)->find();
+$nbDeletedBooks = BookQuery::create()->filterByTitle(null)->deleteAll();
+$nbUpdatedRows = AuthorQuery::create()->filterByName('Leo Tolstoy')->update(array('Name' => 'Leo Tolstoi'));
+</code>
+
+Les exemples relationnels sont plus long et peuvent être consultés sur les sites de [[https://docs.djangoproject.com/en/1.7/topics/db/queries/#related-objects|Django]] et de [[http://propelorm.org/documentation/04-relationships.html|Propel]].
+
+===== Migrations =====
+
+Avec Django :
+
+<code>
+$ vim polls/models.py
+$ python manage.py makemigrations polls
+$ python manage.py migrate
+$ # bzr add polls/models.py polls/migrations
+$ # bzr ci
+</code>
+
+Avec Propel :
+
+<code>
+$ vim src/Acme/DemoBundle/Resources/config/schema.xml
+$ php app/console propel:migration:generate-diff
+$ php app/console propel:migration:migrate
+$ # bzr add src/Acme/DemoBundle/Resources/config/schema.xml …
+$ # bzr ci
+</code>
+
+===== Contrôleurs =====
+
+Dans Django, le code(== projet) est rangé dans des ''Applications'' qui contiennent des ''fonctions|classes''. 
+
+[Yoann] C'est résumé trop simplement comme ça, [[http://sametmax.com/organisation-dune-application-django/|ici]] les bonnes pratiques sont beaucoup mieux expliquées et on comprend tout de suite que l'organisation est vitale dans un projet. Ce n'est biensur qu'un exemple et on peut tendre vers une architecture totalement différente. Le tout étant de se mettre d'accord dès le début (et quand on change si il y a lieu de changer en cours de projet)
+
+<code python polls/views.py>
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('<html><body>Hello!</body></html>')
+</code>
+
+Dans Symfony, le code est rangé en ''Bundles'' puis en ''Classes'' qui contiennent des ''méthodes''.
+<code php src/AppBundle/Controller/HelloController.php> 
+namespace AppBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Response;
+
+class HelloController
+{
+    public function indexAction()
+    {
+        return new Response('<html><body>Hello!</body></html>');
+    }
+}
+</code>
+
+===== Vues =====
+
+Le moteur ''Twig'' de Symfony utilise (exactement ?) la même syntaxe que le moteur de templates de Django. Ils utilisent tout les 2 les ''blocks'' et les ''filters''.
+===== Horreurs =====
+<code python>
+from django.shortcuts import get_object_or_404, render
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+</code>
+
+La même chose (en plus élégant) avec le ''paramConverter'' de Symfony :
+
+<code php>
+use AppBundle\Entity\Question;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+/**
+ * @Route("/{id}")
+ */
+public function showAction(Question $question)
+{
+    return $this->render('post/results.html.twig', array('question' => $question));
+}
+</code>
+
+===== Tableau comparatif (garanti sans troll) =====
+
+^ ^Django                 ^Symfony   ^
+^<color #22b14c>ManyToMany</color> | On fait ''.add'' que sur un ''model'' de la relation | On doit faire ''.add'' sur les deux entités |
+^<color #22b14c>Dépendances</color> | 1 ''pip'' 2 modif du fichier ''settings.py'' | 1 ''composer.phar'' 2 modif de ''app/AppKernel.php'' 3  modif du fichier ''app/config/config.yml'' + parfois routing.yml... |
+^<color #22b14c>Data</color><color #00a2e8>Loader</color> | Pas de datafixtures simples -> à vous de faire votre propre commande. Donc chaque app aura sa propre commande pour charger des données | <color #00a2e8>Une et une seule</color> commande pour charger des données (''datafixtures'') + une classe par entité. \\ <color #22b14c>En contrepartie</color> cette commande ne peut rien faire de plus que charger des données et passer une variable d'une classe à l'autre est un peu complexe de plus on doit définir un ordre de priorité |
+^<color #00a2e8>Migration</color> | Après chaque migration il faut mettre à jour les formulaires en conséquence. | Si un formulaire n'a rien à voir avec une entité, le serveur va démarrer quand même (mais la page où le formulaire est affiché va sûrement planter). |
+^<color #00a2e8>Models</color> | On fout tout dans models.py | Un fichier/classe (entity) |
+^<color #00a2e8>Fichier de paramètres</color> | Rien du settings.py ne doit être versionné d'après les bonnes pratiques | Les bonnes pratiques nous encouragent à créer un fichier ''parameters.yml.dist'' (versionné) dans lequel on met le nom des variables mais pas leurs valeurs | 
+^<color #22b14c>Vider une base de données</color> | python manage.py flush | La plaie. |
+^Gérer les erreurs | - | [[http://symfony.com/doc/current/controller/error_pages.html|Bien géré]] |

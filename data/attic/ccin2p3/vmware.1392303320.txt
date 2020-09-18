@@ -1,0 +1,11 @@
+====== Infrastructure VMware ======
+
+===== Connexion à OpenStack =====
+
+''$ ssh bioaster@ccbioappl03.in2p3.fr''
+
+Le mot de passe est défini par Jacques mais peut-être remplacé par l'utilisation d'une clé SSH.
+
+Pour forcer le système à détecter de nouveau volumes montés à chaud :
+
+''$ echo "- - -" > /sys/class/scsi_host/host0/scan''

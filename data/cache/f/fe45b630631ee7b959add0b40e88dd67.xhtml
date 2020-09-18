@@ -1,0 +1,121 @@
+
+<h1 class="sectionedit1" id="inventaire_des_vms_sur_b1_operees_par_utec6">Inventaire des VMs sur B1 opérées par utec6</h1>
+<div class="level1">
+
+<p>
+vm name : biospecimen, ip : 10.69.40.11, os : FreeBSD, service : biospecimen-prod
+</p>
+
+<p>
+vm name : biospecimen-dev, ip : 10.69.40.12, os : FreeBSD, service : biospecimen-dev
+</p>
+
+<p>
+vm name : DataManageBC, ip : 10.69.20.16, os : FreeBSD, service : data transfer de B1 au CC.
+</p>
+
+<p>
+vm name : drtpt202, ip : 192.168.122.1, os : FreeBSD, service : vm de calcul utec02.
+</p>
+
+<p>
+vm name : Freenas, ip : 10.69.2.12, os : FreeBSD, service : Server freenas.
+</p>
+
+<p>
+vm name : B1WinBNP01, ip : 10.69.3.30, os : Windows, service : Logiciel Bionumerics.
+</p>
+
+<p>
+vm name : B1LinAnsibleP01, ip : 10.69.2.242, os : CentOS, service : Machine Ansible master.
+</p>
+
+<p>
+vm name : B1WinBiomedic, ip : 10.69.3.11, os : Windows, service : Server de données biomédicales.
+</p>
+
+<p>
+vm name : Gentran2, ip : 10.69.20.15, os : SL6, service : Vm analyses UTEC02
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Inventaire des VMs sur B1 opérées par utec6" [1-845] -->
+<h1 class="sectionedit2" id="plan_d_arret">Plan d&#039;arret</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT2 SECTION "Plan d'arret" [846-873] -->
+<h2 class="sectionedit3" id="biospecimen_prod_et_dev">biospecimen prod et dev</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "biospecimen prod et dev" [874-909] -->
+<h3 class="sectionedit4" id="arret_vendredi_02-06-2017_soir">Arrêt vendredi (02-06-2017) soir</h3>
+<div class="level3">
+
+<p>
+C&#039;est conseille de arreter les services en utilisant l&#039;ordre suivant.
+</p>
+<pre class="prettyprint">
+1. stop apache web server 
+2. stop mysql db server
+3. stop sendmaild
+4. shut down vm
+</pre><pre class="prettyprint">
+#Stop Apache
+/usr/local/etc/rc.d/apache24 stop
+
+#Stop mysql db server
+/usr/local/etc/rc.d/mysql-server stop
+
+#Stop send mail
+cd /etc/mail
+make stop
+</pre>
+</div>
+<!-- EDIT4 SECTION "Arrêt vendredi (02-06-2017) soir" [910-1289] -->
+<h3 class="sectionedit5" id="reprise_de_service_05-06-2017">Reprise de service (05-06-2017)</h3>
+<div class="level3">
+
+<p>
+Il est conseillé de démarrer les services en utilisant l&#039;ordre suivant.
+</p>
+<pre class="prettyprint">
+1. Start vm and check http status, if it&#039;s ok skip the following steps
+2. start mysql db server
+3. start sendmail service
+4. start apache web server
+5. check http status
+</pre>
+<p>
+Reprise de service automatisée
+</p>
+
+<p>
+Sur /etc/rc.conf, j&#039;ai déjà ajouté
+</p>
+<pre class="prettyprint">
+mysql_enable=&quot;YES&quot;
+sendmail_enable=&quot;YES&quot;
+apache24_enable=&quot;yes&quot;
+</pre>
+<p>
+<code>Normalement, au démmarage, les 3 services se lancent automatiquement.</code>
+</p>
+
+<p>
+Si ça ne redémarre pas automatiquement, utiliser la commande suivant
+</p>
+<pre class="prettyprint">
+#Start mysql db server
+/usr/local/etc/rc.d/mysql-server start
+
+#Start send mail
+cd /etc/mail
+make start
+
+#Start Apache
+/usr/local/etc/rc.d/apache24 start
+</pre>
+</div>
+<!-- EDIT5 SECTION "Reprise de service (05-06-2017)" [1290-] -->

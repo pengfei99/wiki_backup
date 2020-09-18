@@ -1,0 +1,73 @@
+====== Use spark to do mapreduce job ======
+
+<code>
+#read the file
+scala> val textFile = sc.textFile("file:///tmp/word.txt")
+textFile: org.apache.spark.rdd.RDD[String] = file:///tmp/word.txt MapPartitionsRDD[1] at textFile at <console>:24
+
+#lazy transformation
+scala> val wordCount = textFile.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey((a, b) => a + b)
+wordCount: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[5] at reduceByKey at <console>:26
+
+#action, active spark job
+scala> wordCount.collect
+res2: Array[(String, Int)] = Array((toto,1), (orange,1), (titi,1), ("",2), (hello,1), (apple,1), (pengfei,1), (hah,1))
+</code>
+
+Now we explain the word count transformation bloc by bloc.
+textFile.flatMap(line => line.split(" ")),textFil.flatMap will loop over the file and assign variable line with the value of the current line content. The Lamda function line => line.split(" ") will split all the words in the line by using separator " ". You will have a array full of words of the target document.
+
+<code>
+scala> val wordMap = textFile.flatMap(line=>line.split(" "))
+wordMap: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[6] at flatMap at <console>:26
+
+scala> wordMap.collect
+res3: Array[String] = Array(hello, pengfei, apple, orange, hah, toto, titi, "", "")
+</code>
+
+Now we can start the map operation, the map funciton loop over all elements in the array and assign current word value to varaible word, the lamba function word=>(word,1) just transform string variable to a (key,value) tuplet
+
+<code>
+scala> val afterMap=wordMap.map(word=>(word,1))
+afterMap: org.apache.spark.rdd.RDD[(String, Int)] = MapPartitionsRDD[7] at map at <console>:28
+
+scala> afterMap.collect
+res4: Array[(String, Int)] = Array((hello,1), (pengfei,1), (apple,1), (orange,1), (hah,1), (toto,1), (titi,1), ("",1), ("",1))
+
+
+</code>
+
+Now we need to reduce all the tuple which has the same key, reduceByKey() function will group all tuplet which has the same key, and apply the lamda fuction (a,b)=>a+b, which add the value of two tuplet. 
+
+<code>
+scala> val afterReduce = afterMap.reduceByKey((a,b)=>a+b)
+afterReduce: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[8] at reduceByKey at <console>:30
+
+scala> afterReduce.collect
+res5: Array[(String, Int)] = Array((toto,1), (orange,1), (titi,1), ("",2), (hello,1), (apple,1), (pengfei,1), (hah,1))
+
+</code>
+
+The spark-shell(client mode) is great for testing, but if you close the consol, you will lose everything (e.g. RDD, process)
+
+You can use cluster mode, even you close the consol, the spark cluster will finish the job.
+
+<file scala wordCount.scala>
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
+
+object WordCount {
+    def main(args: Array[String]) {
+        val inputFile =  "file:///tmp/word.txt"
+        val conf = new SparkConf().setAppName("WordCount").setMaster("local[2]")
+        val sc = new SparkContext(conf)
+                val textFile = sc.textFile(inputFile)
+                val wordCount = textFile.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey((a, b) => a + b)
+                //output to console
+                wordCount.foreach(println) 
+                //write result to a file
+                wordCount.saveAsTextFile("file:///tmp/wordCount")     
+    }
+}
+</file>

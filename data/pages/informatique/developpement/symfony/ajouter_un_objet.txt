@@ -1,0 +1,485 @@
+====== Ajouter un objet au système ======
+
+__**Prérequis**__ : il faut s'assurer d'avoir tous les composants (''bundle'') du [[https://gitlab.in2p3.fr/bioaster/template-symfony/commits/master|template Symfony]] installés et configurés avant de continuer : doctrine-migrations, liip/functional-test, …
+
+Une des actions de base est d'ajouter un objet au système, et de fournir toutes les pages permettant de le gérer.
+
+===== Ajouter ou modifier un objet =====
+
+Créer une nouvelle classe entité :
+
+<code php src/AppBundle/Entity/Book.php>
+<?php
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="book")
+ */
+class Book
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $title;
+    
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $author;
+    
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $publish_date;
+    
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $genre;
+    
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $number_of_pages;
+    
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $description;
+}
+</code>
+
+Générer les accesseurs et les fichiers de migrations :
+
+<code>
+$ php app/console doctrine:generate:entities AppBundle
+Generating entity "AppBundle\Entity\Book"
+  > backing up Book.php to Book.php~
+  > generating AppBundle\Entity\Book
+</code>
+
+<code>
+$ php app/console doctrine:migrations:diff
+Generated new migration class to "app/DoctrineMigrations/Version20150929143419.php" from schema differences.
+</code>
+
+<code>
+$ php app/console doctrine:migrations:status
+
+ == Configuration
+
+    >> Name:                                               Application Migrations
+    >> Database Driver:                                    pdo_mysql
+    >> Database Name:                                      hector
+    >> Configuration Source:                               manually configured
+    >> Version Table Name:                                 migration_versions
+    >> Migrations Namespace:                               Application\Migrations
+    >> Migrations Directory:                               app/DoctrineMigrations
+    >> Previous Version:                                   Already at first version
+    >> Current Version:                                    0
+    >> Next Version:                                       2015-09-29 14:34:19 (20150929143419)
+    >> Latest Version:                                     2015-09-29 14:34:19 (20150929143419)
+    >> Executed Migrations:                                0
+    >> Executed Unavailable Migrations:                    0
+    >> Available Migrations:                               1
+    >> New Migrations:                                     1
+</code>
+
+<code>
+$ php app/console doctrine:migrations:migrate --no-interaction
+                                                              
+                    Application Migrations                    
+                                                              
+
+Migrating up to 20150929143419 from 0
+
+  ++ migrating 20150929143419
+
+     -> CREATE TABLE book (…) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+
+  ++ migrated (0.02s)
+
+  ------------------------
+
+  ++ finished in 0.02
+  ++ 1 migrations executed
+  ++ 1 sql queries
+</code>
+
+On peut maintenant enregistrer les modifications.
+
+<code>
+$ git add .
+$ git commit -m "Add model 'Book'"
+</code>
+
+===== Afficher les objets =====
+
+On veut lister tous les 'book' sur une page ''/books''. 
+
+On commence par écrire le test qui permettra de vérifier l'intégriter de cette fonction :
+
+<code php src/AppBundle/Tests/Controller/BookControllerTest.php>
+<?php
+ 
+namespace AppBundle\Tests\Controller;
+ 
+class BookControllerTest extends ControllerFunctionalTestCase
+{
+    public function testIndexAction()
+    {
+        $client = self::createClient();
+        $client->request('GET', "/books");
+        
+        $this->assertTrue($client->getResponse()->isSuccessful());
+    }
+}
+</code>
+
+Le test devrait logiquement échouer :
+
+<code>
+phpunit -c app
+
+PHPUnit 3.7.28 by Sebastian Bergmann.
+
+Configuration read from app/phpunit.xml.dist
+[…]
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1.
+</code>
+
+On peut maintenant créer le contrôleur et l'action qui va retrouver les données :
+
+<code php src/AppBundle/Controller/BookController.php>
+<?php
+ 
+namespace AppBundle\Controller;
+ 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+ 
+use AppBundle\Entity\Book;
+ 
+class BookController extends Controller
+{
+    /**
+     * @Route("/books", name="​book_index")
+     */
+    public function indexAction()
+    {
+        $books = $this->getDoctrine()
+                      ->getRepository('AppBundle:Book')
+                      ->findAll(true);
+        
+        return $this->render('book/index.html.twig', array(
+            'books' => $books
+        ));
+    }
+}
+</code>
+
+On crée la vue qui va avec :
+
+<code html app/Resources/views/book/index.html.twig>
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Books
+{% endblock %}
+
+{% block body %}
+<h1>Books</h1>
+<table class="table table-striped">
+    <thead><th>Title</th><th>Author</th></thead>
+    {% for book in books %}
+    <tr><td>{{ book.title }}</td>
+        <td>{{ book.author }}</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
+</code>
+
+Le résultat est visible à ''127.0.0.1:8000/books''.
+
+On peut ajouter un test plus poussé qui va vérifier que les données attendues s'affichent :
+
+<code php src/AppBundle/Tests/Controller/BookControllerTest.php>
+<?php
+ 
+namespace AppBundle\Tests\Controller;
+
+class BookControllerTest extends ControllerFunctionalTestCase
+{
+    public function testIndexAction()
+    {
+        $client = self::createClient();
+        $crawler = $client->request('GET', "/books");
+        
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($crawler->filter('html:contains("Books")')->count() == 1);
+    }
+}
+</code>
+
+On peut relancer les tests et constater les 2 succès :
+
+<code>
+$ phpunit -c app/
+PHPUnit 3.7.28 by Sebastian Bergmann.
+
+Configuration read from app/phpunit.xml.dist
+
+..
+
+Time: 692 ms, Memory: 18.75Mb
+
+OK (2 tests, 5 assertions)
+</code>
+
+On peut maintenant enregistrer les modifications :
+
+    $ git add .
+    $ git commit -m "Display list of 'Book'"
+
+===== Afficher un objet =====
+
+Dans cette section, on veut afficher les détails d'un 'book' dans la page ''/books/ID''.
+
+Avant de commencer, on crée les //fixtures// qui permettront de réaliser les tests :
+
+<code php AppBundle\DataFixtures\ORM\LoadBookData.php>
+<?php
+namespace AppBundle\DataFixtures\ORM;
+
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Entity\Book;
+
+class LoadBookData implements FixtureInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ObjectManager $manager)
+    {
+        $b1 = new Book();
+        $b1->setIsbn('0123456789ABC');
+        $b1->setTitle('This is my title');
+        $manager->persist($b1);
+                
+        $manager->flush();
+    }
+}
+</code>
+
+On ajoute ensuite le test fonctionnel pour cette méthode :
+
+<code php src/AppBundle/Tests/BookControllerFunctionalTest.php>
+[…]
+    public function testShow()
+    {
+        $this->loadFixtures(array(
+            'AppBundle\DataFixtures\ORM\LoadBookData'
+        ));
+        
+        $client = static::createClient();
+        
+        $crawler = $client->request('GET', '/books/1234567890ABC');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        
+        $this->assertCount(1, $crawler->filter('html:contains("This is my title")'));
+    }
+[…]
+</code>
+
+On crée ensuite l'action :
+
+<code php src/AppBundle/Controller/BookController.php>
+[…]
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+use AppBundle\Model\Book;
+
+class PersonController extends Controller
+{
+[…]
+    /**
+     * @Route("/books/{isbn}", name="book_show")
+     */
+    public function showAction(Book $book)
+    {
+        return $this->render('book/show.html.twig', array(
+            'book' => $book
+        ));
+    }
+[…]
+</code>
+
+Et on crée ensuite la vue et on ajoute un lien sur chaque titre dans la liste des 'book' :
+
+<code html app/Resources/views/book/show.html.twig>
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Détails sur l'ISBN #{{ book.isbn }}
+{% endblock %}
+
+{% block body %}
+<h1>Détails sur l'ISBN #{{ book.isbn }}</h1>
+<dl class="dl-horizontal">
+    <dt>ISBN</dt><dd>{{ book.isbn }}</dd>
+    <dt>Titre</dt><dd>{{ book.title|capitalize }}</dd>
+</dl>
+{% endblock %}
+</code>
+
+<code html app/Resources/views/book/index.html.twig>
+    <li><a href="{{ path('book_show', { 'isbn': book.isbn }) }}">{{ book.title|capitalize }}</a></li>
+</code>
+
+Pour finir, on relance les tests :
+
+    $ phpunit -c app
+
+On enregistre les modifications :
+
+    $ bzr add
+    $ bzr ci -m "Affiche les détails d'un 'book'"
+
+===== Créer un objet =====
+
+<WRAP round important>
+Work in progress…
+
+  * Écrire un test pour la soumission du formulaire
+</WRAP>
+
+Ici, on veut créer un nouvel objet en passant accédant y l'url ''/books/add''.
+
+On commence par tester l'existence de la page :
+
+<code php src/AppBundle/Tests/Controller/BookControllerTest.php>
+[…]
+public function testAddAction()
+{
+    $client = self::createClient();
+    $crawler = $client->request('GET', "/books/add");
+    
+    $this->assertTrue($client->getResponse()->isSuccessful());
+}
+[…]
+</code>
+
+On ajoute ensuite les contraintes de validation dans le modèle :
+
+<WRAP round todo >
+[[http://symfony.com/doc/current/book/validation.html]]
+
+[[http://symfony.com/doc/current/book/forms.html]]
+</WRAP>
+
+On crée ensuite l'action en faisant attention de déclarer la route avant le //catchall// ''/books/{id}'' :
+
+<code php src/AppBundle/Controller/BookController.php>
+[…]
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
+
+use AppBundle\Entity\Book;
+use AppBundle\Form\Type\BookType;
+
+class BookController extends Controller
+{
+[…]
+    /**
+     * @Route("/books/add", name="book_add")
+     */
+    public function addAction(Request $request)
+    {
+        $book = new Book();
+        $form = $this->createForm(new BookType(), $book);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $book->save();
+            
+            // $this->addFlash is equivalent to $this->get('session')->getFlashBag()->add()        
+            $this->addFlash('notice', 'Data has been saved!');
+            
+            return $this->redirect($this->generateUrl('book_show',
+                                                       array('id' => $book->getId())));
+        }
+        
+        return $this->render('book/add.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+[…]
+</code>
+
+Et on crée ensuite la vue et on ajoute un lien sur la page qui liste les 'book' :
+
+<code html app/Resources/views/book/add.html.twig>
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Add a Book
+{% endblock %}
+
+{% block body %}
+<h1>New Book</h1>
+<form action="{{ path('book_add') }}" method="post" {{ form_enctype(form) }} novalidate>
+    {{ form_widget(form) }}
+    
+    <input type="submit" value="Add a book"
+           class="btn btn-primary" />
+</form>
+{% endblock %}
+</code>
+
+<WRAP round info >
+L'option ''novalidate'' dans la balise ''<form>'' permet de désactiver la validation côté client. Celle-ci est "plus performante", mais les messages d'erreurs sont moins parlants. 
+</WRAP>
+
+<code html app/Resources/views/book/index.html.twig>
+{% block body %}
+<h1>
+    Books
+    <span class="pull-right">
+        <a href="{{ path('book_add') }}" class="btn btn-primary">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Add
+        </a>
+    </span>
+</h1>
+[…]
+</code>
+
+On relance les tests :
+
+    $ phpunit -c app
+
+On enregistre les modifications :
+
+    $ git add .
+    $ git commit -m "Enregistre une nouvelle 'book'"
+===== Modifier un objet =====
+<WRAP round todo>
+
+http://symfony.com/doc/current/book/forms.html
+</WRAP>
+
+===== Supprimer un objet =====
+

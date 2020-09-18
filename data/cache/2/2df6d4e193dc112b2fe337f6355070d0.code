@@ -1,0 +1,7 @@
+# To reuse connections
+ControlMaster auto
+ControlPath /home/&lt;LOGIN&gt;/.ssh/tmp/%h_%p_%r
+&nbsp;
+Host forge.bioaster.org
+  User esamples
+  IdentityFile /home/&lt;LOGIN&gt;/.ssh/id_rsa

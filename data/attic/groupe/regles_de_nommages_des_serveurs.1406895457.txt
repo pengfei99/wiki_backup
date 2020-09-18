@@ -1,0 +1,11 @@
+===== Règles de nommage =====
+
+Pour permettre de s'y retrouver facilement sans avoir à consulter une database des serveurs, le nom des serveurs est normalisé à Bioaster.
+
+Deux caractères  : site (Pa,Ly,Cc)\\
+Deux caractères  : os (Li,Bs,Wi,Au)\\
+Huit caractères  : fonction principale (ex: wiki, exchange, jabber)\\
+Un caractère     : Statut (D,Q,T,P)\\
+Deux à n caractères : Numéro (01,124)\\
+\\
+Exemple : LyWivmUpdManP01 --> VMware Update manager no 1, site de Lyon, OS Windows, en Production 

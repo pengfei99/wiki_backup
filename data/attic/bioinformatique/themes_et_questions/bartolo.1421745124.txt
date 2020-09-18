@@ -1,0 +1,39 @@
+====== Thèmes et questions à aborder ======
+
+<WRAP round info>
+//"A vot' bon coeur m'sieurs dames !"//\\ //-- Tanguy//\\ \\ Toutes les idées sont les bienvenues. N'hésitez pas à rajouter tout ce qui vous passe par la tête.
+</WRAP>
+
+Quelques explications :
+
+  * **J'ai besoin :** <color green>oui</color>/<color red>non</color>\\ Un besoin se fait sentir, mais je n'ai pas de solution pour le moment.
+  * **Je connais :** <color green>oui</color>/<color red>non</color>\\ Je connais une solution (un logiciel), mais je ne vois pas l'utilité de l'utiliser.
+  * **J'utilise :** //logiciel X//\\ J'ai trouvé la solution //X// à ce problème, et je suis prêt à vous montrer comment je fais.
+
+===== Écriture de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**............................................................................... |
+| Utiliser un IDE |<color green>oui</color> |<color green>oui</color> | Eclipse, Vim, Gedit, Padre...|
+| Mutualiser des bouts de codes : oui, mais comment ?\\ (//libraries// et autres modules) | <color green>oui</color>| <color red>non</color>| |
+| "-h" c'est bien, mais c'est galère, non ? | <color green>oui</color>| <color green>oui</color>| Getopt |
+| Y'a un "coding style" à BIOASTER ? |? | ?|? |
+| Documenter à part ou dans le code ? Quid des générateurs de doc ? |<color green>oui</color> | <color red>non</color>| |
+| pair programming, code review... //Qu'es aco// ? |? | ?| ?|
+
+===== Sauvegarde de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| Et si mon Laptop (où je développe) se crashe ? | <color green>oui</color> | <color red>non</color>| |
+| Comment faire pour revenir à une version antérieure ? |<color green>oui</color> | <color green>oui</color>| GIT,SVN|
+
+===== Déploiement de code =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| mettre mon code (la dernière version) sur la ferme ? |<color green>oui</color> | <color red>non</color>| rsync |
+| donner mon code à d'autres : oui, mais sous quelles conditions ? (licences) | <color red>non</color>| <color red>non</color>| |
+
+===== Se tenir au courant =====
+
+|  |**J'ai besoin**|**Je connais**|**J'utilise**...............................................................................|
+| nouveaux algorithmes |<color green>oui</color> | <color red>non</color>| |
+| nouvelles versions de logiciels |<color green>oui</color> | <color red>non</color>| |

@@ -1,0 +1,107 @@
+
+<h1 class="sectionedit1" id="echantillon">Echantillon</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Echantillon" [1-27] -->
+<h3 class="sectionedit2" id="creation_d_un_echantillon_unique">Création d&#039;un échantillon unique</h3>
+<div class="level3">
+
+<p>
+ Il faut créer une table Alias dans la DB. 
+</p>
+<pre class="code">Sample ________________________
+UID temporaire et non modifiable, à valider lors de la création
+Nom : a saisir par l&#039;utilisateur | Projet : (facultatif)
+Provider : liste définie dans un fichier de config. 
+Alias : liste des alias séparé par des &quot;,&quot;
+Date de création : la date du jour par défaut
+Type : classification
+Quantité + liste des unités de mesures
+
+Bioentity _______________________
+Bioentity est-il créé ? oui | non
+Si non =&gt; création d&#039;un formulaire dynamique ne fonction du type. 
+UID du bioentity générée par l&#039;application
+Si oui =&gt; l&#039;utilisateur le retrouve avec l&#039;UID et le nom. 
+
+Storage _______________________
+Storage name: reprendre le principe d&#039;esamples (choix déroulant avec liste hiérarchique). 
+Batch name (a.k.a boite) : facultatif
+Bouton &#039;créer une boite / un batch&#039; ==&gt; une boite est un batch</pre>
+
+<p>
+Les bioentities doivent aussi être identifiées par un UID, comme les échantillons. l&#039;UID pourrait être une sorte d&#039;adresse IP qui permettrait de retrouver facilement le bioentity dans une liste hiérarchique basée sur la classification.
+</p>
+
+<p>
+Les storage sont définis dans un fichier de config. L&#039;utilisateur ne peut pas créer de stockage au dessus du batch. 
+</p>
+
+<p>
+Les storages sont définis dans un fichier de configuration. 
+</p>
+
+<p>
+Les batch doivent être typés : boîte, plaque, virtuel, etc.
+</p>
+
+<p>
+La création multiple (aliquotage, plaques, etc) passera par une sample sheet importée. 
+</p>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_sample_create.jpeg?id=ut6%3Aprojets_internes%3Alims%3Areunion_15122015" class="media" title="ut6:projets_internes:lims_sample_create.jpeg"><img src="/_media/ut6/projets_internes/lims_sample_create.jpeg?w=800&amp;tok=cf55fb" class="media" title="lims_sample_create.jpeg" alt="lims_sample_create.jpeg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Création d'un échantillon unique" [28-1606] -->
+<h3 class="sectionedit3" id="creation_de_plusieurs_echantillons_a_la_volee">Création de plusieurs échantillons à la volée</h3>
+<div class="level3">
+
+<p>
+La création de plusieurs échantillons utilisera un template Excel/CSV (sample sheet). 
+A discuter plus tard. 
+Cette procédure permettra de reprendre les échantillons existant
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Création de plusieurs échantillons à la volée" [1607-1846] -->
+<h3 class="sectionedit4" id="listing">Listing</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="option_1">Option 1</h4>
+<div class="level4">
+<pre class="code">&gt;Ajouter un échantillon | Créer un lot d&#039;échantillon | etc.&lt;
+&gt;Barre de recherche spécifique aux colonnes afficher&lt;
+
+UID | Nom de l&#039;échantillon | Alias | Project name | Date de création | Statut | Type
+ + possibilité d&#039;ouvrir/fermer une minifiche qui détaille l&#039;échantillon</pre>
+
+</div>
+
+<h4 id="option_2">Option 2</h4>
+<div class="level4">
+<pre class="code">&gt;Ajouter un échantillon | Créer un lot d&#039;échantillon | etc.&lt;
+===&gt; Sur la droite, un menu volatile qui affiche les filtres disponible : Provider, stockage, etc. (à la Amazon)
+===&gt; Le menu pourrait aussi afficher un résumé des requêtes (n échantillon avec tel provier, etc, à la PDB)
+
+&gt;trier par : [liste déroulante des tris possibles]&lt;
+Liste détaillé des échantillon
+______________________________________________________
+UID | NOM    Alias                       Projet
+code barre   Provider
+             Stockage
+______________________________________________________
+Autre échantillon
+______________________________________________________</pre>
+
+</div>
+<!-- EDIT4 SECTION "Listing" [1847-2867] -->
+<h3 class="sectionedit5" id="show">Show</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT5 SECTION "Show" [2868-] -->

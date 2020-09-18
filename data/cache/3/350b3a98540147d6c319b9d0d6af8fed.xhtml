@@ -1,0 +1,80 @@
+
+<h1 class="sectionedit1" id="data_science">Data Science</h1>
+<div class="level1">
+
+<p>
+Big data infrastructure
+</p>
+
+<p>
+Data management
+</p>
+
+<p>
+Data curation
+</p>
+
+<p>
+Data analysis
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Data Science" [1-99] -->
+<h2 class="sectionedit2" id="data_analysis_tools">Data analysis tools</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Data analysis tools" [100-132] -->
+<h3 class="sectionedit3" id="install_r_and_r_studio">Install R and R studio</h3>
+<div class="level3">
+<pre class="prettyprint">
+# Install R + RStudio on Ubuntu 16.04
+
+sudo apt-key adv –keyserver keyserver.ubuntu.com –recv-keys E084DAB9
+
+# Ubuntu 12.04: precise
+# Ubuntu 14.04: trusty
+# Ubuntu 16.04: xenial
+# Basic format of next line deb https://&lt;my.favorite.cran.mirror&gt;/bin/linux/ubuntu &lt;enter your ubuntu version&gt;/
+sudo add-apt-repository &#039;deb https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/&#039;
+sudo apt-get update
+sudo apt-get install r-base
+sudo apt-get install r-base-dev
+
+# Download and Install RStudio
+sudo apt-get install gdebi-core
+wget https://download1.rstudio.org/rstudio-1.0.44-amd64.deb
+sudo gdebi rstudio-1.0.143-amd64.deb
+rm rstudio-1.0.44-amd64.deb
+
+# To remove R
+ sudo dpkg --remove rstudio
+</pre>
+<p>
+PS. The access to key server for cran via http may not always available, there is another way to add pgp key.
+</p>
+
+<p>
+If you see the following error,
+</p>
+<pre class="prettyprint">
+W: GPG error: https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/ InRelease: The following signatures couldn&#039;t be verified because the public key is not available: NO_PUBKEY 51716619E084DAB9
+W: The repository &#039;https://ftp.ussg.iu.edu/CRAN/bin/linux/ubuntu xenial/ InRelease&#039; is not signed.
+N: Data from such a repository can&#039;t be authenticated and is therefore potentially dangerous to use.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+
+</pre>
+<p>
+try this,
+</p>
+<pre class="prettyprint">
+gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 51716619E084DAB9
+
+gpg -a --export E084DAB9 | sudo apt-key add -
+</pre>
+<p>
+The first line download pgp key, the second line add the pgp key to apt trust key. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Install R and R studio" [133-] -->

@@ -1,0 +1,7 @@
+<span class="br0">&#91;</span>bioaster<span class="sy0">@</span>cclinbiospecp01 ~<span class="br0">&#93;</span>$ <span class="kw2">chmod</span> <span class="nu0">440</span> service.bioaster.org.key
+<span class="br0">&#91;</span>bioaster<span class="sy0">@</span>cclinbiospecp01 ~<span class="br0">&#93;</span>$ <span class="kw3">pwd</span>
+<span class="sy0">/</span>home<span class="sy0">/</span>bioaster
+<span class="sy0">&lt;</span>code<span class="sy0">&gt;</span>
+&nbsp;
+<span class="sy0">&lt;</span>code <span class="kw2">bash</span><span class="sy0">&gt;</span>
+<span class="kw2">ls</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span> <span class="co0"># Un milliard de trucs là dedans j'ai l'impression que ce sont des &quot;faux&quot; certificats</span>

@@ -1,0 +1,267 @@
+
+<h1 class="sectionedit1" id="install_openldap_on_centos_7">Install openldap on centos 7</h1>
+<div class="level1">
+
+<p>
+<strong>0. Firewalld config</strong>
+To open port 389, do the following command
+</p>
+<pre class="prettyprint"> 
+firewall-cmd --zone=public --add-port=389/tcp --permanent
+firewall-cmd --zone=public --add-port=636/tcp --permanent
+firewall-cmd --reload
+</pre>
+<p>
+<strong>1. Install openldap server, client and migration tools for inserting new dn into openldap server</strong>
+</p>
+
+<p>
+<code>yum -y install openldap-servers openldap-clients migrationtools</code>
+</p>
+
+<p>
+<strong>2. Edit the OpenLDAP Server Configuration</strong>
+</p>
+
+<p>
+OpenLDAP server Configuration files are located in /etc/openldap/slapd.d/.
+Go to cn=config directory under /etc/openldap/slapd.d/ and edit the “olcDatabase={2}hdb.ldif” for changing the configuration.
+</p>
+
+<p>
+<code>$ cd /etc/openldap/slapd.d/cn=config</code>
+</p>
+
+<p>
+<code>$ vim olcDatabase={2}hdb.ldif</code>
+</p>
+
+<p>
+Change the variables of “olcSuffix” and “olcRootDN” according to your domain as below, in our case, will be bioaster.org
+</p>
+<pre class="prettyprint">
+olcSuffix: dc=bioaster,dc=org
+olcRootDN: cn=admin,dc=bioaster,dc=org
+
+olcRootPW: {SSHA}bHSiwuPJEypHS6zHSE2Uy7M69sQjmkPL
+# The certification is optional, add them if you need ldaps
+#olcTLSCertificateFile: /etc/pki/tls/certs/ldap_cert.pem
+#olcTLSCertificateKeyFile: /etc/pki/tls/private/ldap_key.pem
+</pre>
+<p>
+Password can be generated with the following command
+</p>
+
+<p>
+<code>$ slappasswd</code>
+</p>
+
+<p>
+We also need to set a account and password for cn=config
+</p>
+
+<p>
+<code>$ vim  olcDatabase={0}config.ldif </code>
+</p>
+<pre class="prettyprint">
+olcRootDN: cn=admin,cn=config
+olcRootPW: {SSHA}136vcYXg5h8YJdfsgsdfgyg9mowJtGWA
+</pre>
+<p>
+<strong>3. Provide the Monitor privilege</strong>
+</p>
+
+<p>
+To allow admin compte to read the monitor log, we need to modify the following config file.
+</p>
+
+<p>
+ <code>$ vim olcDatabase={1}monitor.ldif</code>
+</p>
+<pre class="prettyprint">
+olcAccess: {0}to * by dn.base=&quot;gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth&quot; read by dn.base=&quot;cn=admin,dc=bioaster,dc=org&quot; read by * none
+
+</pre>
+<p>
+Now, you can check your config
+</p>
+
+<p>
+<code>$ slaptest -u</code>
+</p>
+
+<p>
+It should show something like this
+</p>
+<pre class="prettyprint">
+587cd848 ldif_read_file: checksum error on &quot;/etc/openldap/slapd.d/cn=config/olcDatabase={1}monitor.ldif&quot;
+587cd848 ldif_read_file: checksum error on &quot;/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif&quot;
+config file testing succeeded
+
+</pre>
+<p>
+<strong>4. Enable and Start the SLAPD service</strong>
+</p>
+
+<p>
+Start the slapd dameon
+</p>
+
+<p>
+<code>$ systemctl start slapd</code>
+</p>
+
+<p>
+Start the slapd dameon after reboot.
+</p>
+
+<p>
+<code>$ systemctl enable slapd</code>
+</p>
+
+<p>
+Check the slapd dameon network status
+</p>
+
+<p>
+<code>netstat -lt | grep ldap</code>
+</p>
+
+<p>
+It should show something like this 
+</p>
+<pre class="prettyprint">
+tcp        0      0 0.0.0.0:ldap            0.0.0.0:*               LISTEN
+tcp6       0      0 [::]:ldap               [::]:*                  LISTEN
+</pre>
+<p>
+<strong>5. Configure the LDAP Database</strong>
+</p>
+
+<p>
+<code>$ cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG </code>
+</p>
+
+<p>
+<code>$ chown -R ldap:ldap /var/lib/ldap/</code>
+</p>
+
+<p>
+<strong>6. Add LDAP Schemas into cn=config</strong>
+</p>
+
+<p>
+In openldap, all attributes must follow a schema, there are many default schema arleady defined by openldap. They can be found at this location : /etc/openldap/schema/.
+</p>
+
+<p>
+The following example is how we add them into ldap server backend.
+</p>
+<pre class="prettyprint">
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+</pre>
+<p>
+<strong>7. Creat base object for ldap server</strong>
+</p>
+
+<p>
+To create base objects in OpenLDAP, we need migration tools to be installed. We have already installed the migrationtools in the step 1 itself. So You will see lot of files and scripts under /usr/share/migrationtools/.
+</p>
+
+<p>
+We need to change some predefined values in the file “migrate_common.ph” according to our domain name, for that do the following:
+</p>
+
+<p>
+<code>cd /usr/share/migrationtools/</code>
+</p>
+
+<p>
+<code>vi migrate_common.ph</code>
+</p>
+
+<p>
+Change the following lines:
+</p>
+<pre class="prettyprint">
+DEFAULT_MAIL_DOMAIN = &quot;bioaster.org&quot;;
+DEFAULT_BASE = &quot;dc=bioaster,dc=org&quot;;
+EXTENDED_SCHEMA = 1;
+</pre>
+<p>
+<strong>8. Generate a base.ldif file for your Domain</strong>
+</p>
+<pre class="prettyprint">
+dn: dc=bioaster,dc=org
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: bioaster org
+dc: bioaster
+
+dn: cn=admin,dc=bioaster,dc=org
+objectClass: organizationalRole
+cn: admin
+description: Directory admin
+
+dn: ou=Users,dc=bioaster,dc=org
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Organizations,dc=bioaster,dc=org
+objectClass: organizationalUnit
+ou: Organizations
+</pre>
+<p>
+Add this base to your ldap server
+</p>
+<pre class="prettyprint">
+ ldapadd -x -W -D &quot;cn=admin,dc=bioaster,dc=org&quot; -f base.ldif
+</pre>
+<p>
+<strong>9. Configure log location and rotation</strong>
+</p>
+
+<p>
+Openldap log is handled by rsyslog, So to output log in a location, you need to change the config file of /etc/rsyslog.conf
+</p>
+
+<p>
+<code>vim vim /etc/rsyslog.conf</code>
+</p>
+<pre class="prettyprint">
+# Log Openldap
+local4.*                                     -/var/log/openldap/slapd.log
+</pre>
+<p>
+To enable log rotation, you need to add a new rotation script for openldap
+</p>
+
+<p>
+<code> cd /etc/logrotate.d/</code>
+</p>
+
+<p>
+<code> vim openldap</code>
+</p>
+<pre class="prettyprint">
+# OpenLDAP
+/var/log/openldap/slapd.log {
+   missingok
+   notifempty
+   compress
+   weekly
+   rotate 10
+   size=50M
+   sharedscripts
+   postrotate
+ # OpenLDAP logs via syslog, restart syslog if running
+   /etc/init.d/rsyslog restart
+ endscript
+}
+</pre>
+</div>

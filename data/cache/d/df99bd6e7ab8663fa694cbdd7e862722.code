@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Ajouter une personne
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Nouvelle personne<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a> <span class="kw3">action</span><span class="sy0">=</span><span class="st0">&quot;{{ path('person_new') }}&quot;</span> <span class="kw3">method</span><span class="sy0">=</span><span class="st0">&quot;post&quot;</span> <span class="br0">&#123;</span><span class="br0">&#123;</span> form_enctype<span class="br0">&#40;</span>form<span class="br0">&#41;</span> <span class="br0">&#125;</span><span class="br0">&#125;</span>&gt;</span>
+    {{ form_widget(form) }}
+&nbsp;
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/button.html"><span class="kw2">button</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;submit&quot;</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;btn btn-default&quot;</span>&gt;</span>
+        <span class="sc2">&lt;<a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;glyphicon glyphicon-plus&quot;</span> aria-hidden<span class="sy0">=</span><span class="st0">&quot;true&quot;</span>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a>&gt;</span> Ajouter
+    <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/button.html"><span class="kw2">button</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a>&gt;</span>
+{% endblock %}

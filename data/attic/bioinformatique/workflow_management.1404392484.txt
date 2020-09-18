@@ -1,0 +1,9 @@
+BIOASTER doit s'équiper d'un système pour gérer les flux de donner et les analyses automatiques. Trois solutions ont été identifiées: 
+  * [[http://www.knime.org/|KNIME]] : Claire va tester knime pour dans 2 semaines.
+  * [[http://www.pentaho.com/|Pentaho]]
+  * [[http://www.cs.cmu.edu/~pegasus/what%20is%20pegasus.htm|Pegasus]]
+
+A partir du retour d'expérience de Claire, il faudra établir les prérequis:
+  * Possibilité d'intégrer facilement un binaire/software/script.
+  * Possibilité d'utiliser n'importe quel langage.
+  * Possibilité d'associer 1 noeud d'analyse à une infrastructure de calcul particulière.

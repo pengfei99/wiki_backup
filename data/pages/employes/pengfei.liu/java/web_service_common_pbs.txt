@@ -1,0 +1,13 @@
+====== JAVA Web service ======
+
+===== Soap web service =====
+
+When you generate java code with wsdl, the jvm says ** Failed to read schema document 'xjc.xsd', because 'file' access is not allowed due to the restriction set by the accessExternalSchema property.**
+
+To correct this problem, do the following command.
+
+Create a file named jaxp.properties (if it doesn't exist) under /path/to/jdk1.8.0/jre/lib and then write this line in it:
+
+<code>
+javax.xml.accessExternalSchema = all
+</code>

@@ -1,0 +1,46 @@
+====== Outils pour les bioinformaticiens ======
+
+Ici sont listés les besoins les plus fréquents et les outils suggérés pour chacun.
+
+  * Connexion aux serveur distant : [[http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html|PuTTY]] qui remplace ''ssh'' sous Windows.
+  * Gestionnaire de version : [[bioinformatique:outils:bazaar|GNU Bazaar]]
+  * Environnement de développement : [[http://www.eclipse.org/|Eclipse]]
+  * Logiciel de virtualisation : [[https://www.vmware.com/products/player/|VMware Player]]
+  * Transfert de fichiers : [[https://filezilla-project.org/|FileZilla]]
+
+====== Bonnes Pratiques ======
+
+===== Contrôle de version ====== 
+
+Les logiciels de contrôle de versions (VCS) offrent plusieurs fonctionnalités intéressantes :
+  * **Traçabilité** : on sait qui a fait quelle modification quand et pourquoi ;
+  * **Retour dans le temps** : on peut toujours revenir à une version antérieure ;
+  * **Distribution** : n'importe quelle version des documents versionnés peut être copiée très facilement ;
+  * **Collaboration** : le VCS facilite le travaille collaboratif et l'intégration des contributions des différents membres de l'équipe.
+
+Le choix du VCS est pour le moment arrêté sur [[[[/si/outils/bazaar|GNU Bazaar]], bien que l'utilisation de l'un n'empêche pas certaines personnes ou équipes d'en utiliser un autre en parallèle.
+Et si vous vous la posez, voici la réponse à la question «[[/si/outils/bazaar/pourquoi|pourquoi Bazaar ?]]».
+
+===== Revue de code =====
+
+La revue de code est la pratique consistant à demander à un collègue de vérifier le code que l'on a écrit avant de l'inclure dans la version de production. Ceci vient compléter ou remplacer [[https://fr.wikipedia.org/wiki/Programmation_en_bin%C3%B4me|l'écriture de code en binôme]].
+
+De nombreux logiciels de revue de code existent (GitHub, GitLab, [[http://phabricator.org/|Phabricator]], [[https://launchpad.net|Launchpad]]...), mais la plupart sont étroitement liés à un VCS et imposent l'utiliser des méthodes de travail peu adaptées. Les logiciels de revue de correctifs (//patch//) peuvent fonctionner avec tous les VCS, mais pour ce faire ils laisses de côté la notion de branche.
+
+[[/si/outils/reviewboard|ReviewBoard]] est un outil utilisé pour de nombreux projets et qui n'est pas lié à un VCS particulier. Il est en ce moment en évaluation.
+
+Un simple système de suivi de project comme [[http://www.redmine.org/|Redmine]] pourrait-être utilisé pour faire le suivi de revue de code : un ticket est ouvert avec la branche à tester, la revue et le test se font en ligne de commande.
+
+====== Langages ======
+
+==== Python ====
+
+Des modèles de script sont à disposition dans les dépôts [[/si/outils/bazaar|Bazaar]] du CC.
+
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/templates/
+
+Dans le dossier ''python_libraries'' se trouve les dépôts des bibliothèques Python. Elles doivent être placées dans un répertoire situé dans le ''PYTHONPATH'' pour fonctionner.
+
+    $ cd /home/<LOGIN>/lib/python
+    $ bzr branch bzr+ssh://<LOGIN>@ccage.in2p3.fr/afs/in2p3.fr/throng/bioaster/repo/python_libraries/common
+    $ export PYTHONPATH="$PYTHONPATH:/home/<LOGIN>/lib/python"

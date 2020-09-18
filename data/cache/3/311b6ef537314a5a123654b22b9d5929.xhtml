@@ -1,0 +1,38 @@
+
+<h1 class="sectionedit1" id="remove_old_kernels">Remove old kernels</h1>
+<div class="level1">
+
+<p>
+Remove old kernels can save some disk spaces
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Remove old kernels" [1-80] -->
+<h2 class="sectionedit2" id="check_installed_kernels">1. Check installed kernels</h2>
+<div class="level2">
+<pre class="code">rpm -q kernel
+kernel-2.6.32-279.el6.x86_64
+kernel-2.6.32-279.2.1.el6.x86_64
+kernel-2.6.32-279.5.2.el6.x86_64
+kernel-2.6.32-279.9.1.el6.x86_64</pre>
+
+</div>
+<!-- EDIT2 SECTION "1. Check installed kernels" [81-278] -->
+<h2 class="sectionedit3" id="remove_old_kernels1">2. Remove old kernels</h2>
+<div class="level2">
+<pre class="code"># To run package-cleanup we need yum-utils as dependencies
+yum install yum-utils
+
+# cet count as how many old kernels you want to keep, it has to be 2 at least. So if the current kernel has problem, you can roll back to the previous.
+package-cleanup --oldkernels --count=2</pre>
+
+</div>
+<!-- EDIT3 SECTION "2. Remove old kernels" [279-602] -->
+<h2 class="sectionedit4" id="set_the_amount_of_installed_kernels_permanent">3. Set the amount of installed kernels permanent</h2>
+<div class="level2">
+<pre class="code"># edit /etc/yum.conf and set installonly_limit:
+
+installonly_limit=2</pre>
+
+</div>
+<!-- EDIT4 SECTION "3. Set the amount of installed kernels permanent" [603-] -->

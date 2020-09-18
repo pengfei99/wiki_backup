@@ -1,0 +1,284 @@
+
+<h1 class="sectionedit1" id="sqoop_import_data_from_db">Sqoop import data from DB</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sqoop import data from DB&quot;,&quot;hid&quot;:&quot;sqoop_import_data_from_db&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="check_connection_with_sqoop">1. Check connection with Sqoop</h2>
+<div class="level2">
+
+<p>
+Sqoop needs to read the database and write to hdfs/hive. It must have the right to do so. So first we need to check if Sqoop can read the database.
+</p>
+
+<p>
+<strong>1.1 To view the mysql files [mysql resides in local system on port 3306 , database name is retail_db]</strong>
+</p>
+
+<p>
+Note: you need to have the appropriate JDBC drivers to run the commands.
+</p>
+<pre class="code">#for mysql server
+$ sqoop list-tables --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop
+
+#for postgresql server
+sqoop list-tables --connect jdbc:postgresql://127.0.0.1:5432/northwind --username pliu -P
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Check connection with Sqoop&quot;,&quot;hid&quot;:&quot;check_connection_with_sqoop&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-667&quot;} -->
+<h2 class="sectionedit3" id="import_a_table_into_hdfs">2. Import a table into hdfs</h2>
+<div class="level2">
+
+<p>
+Sqoop supports four formats:
+</p>
+<ul>
+<li class="level1"><div class="li"> Text file format - Using command argument <strong>as-textfile</strong> (default)</div>
+</li>
+<li class="level1"><div class="li"> Sequence file format - Using command argument <strong>as-sequencefile</strong> (mapreduce default)</div>
+</li>
+<li class="level1"><div class="li"> Avro file format - Using command argument <strong>as-avrofile</strong> (row oriented)</div>
+</li>
+<li class="level1"><div class="li"> Parquet file format Using command argument <strong>as-parquetfile</strong> (column oriented)</div>
+</li>
+</ul>
+
+<p>
+<strong>2.1 To import a mysql table into hdfs [database name is retail_db, table name is categories] with default file format</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --target-dir /tmp/sqoop_test/categories
+
+# check the imported data
+$ hdfs dfs -cat /tmp/sqoop_test/categories/part-m-*
+
+# The default file format of sqoop import is textfile(csv), that&#039;s why we can use cat to show it.
+
+# If we don&#039;t specify --target-dir, sqoop will create a dir with the name of table (e.g. categories in the root dir of hdfs)
+</pre>
+
+<p>
+<strong>2.2 To import a mysql table into hdfs [database name is retail_db, table name is categories] with parquet file format</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --target-dir /tmp/sqoop_test/categories_parquet --as-parquetfile
+
+# parquet file format is a binary format, so you can&#039;t use cat to show the content.
+# you can see the generated files 
+$ hdfs dfs -ls /tmp/sqoop_test/categories_parquet/
+
+# To view the parquet file content, you need to download or build your parquet tools.
+hadoop jar /path/to/parquet-tools.jar head &lt;file_name&gt; | less</pre>
+
+<p>
+<strong>2.3 We can use the where clause to import a subset of the mysql table into hdfs [database name is retail_db, the table name is categories] </strong>
+</p>
+<pre class="code"># Sqoop imports only the rows which category_department_id =2 
+$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --target-dir /tmp/sqoop_test/categories_sub_depment --where &quot;category_department_id =2&quot;
+
+# check the imported data
+hdfs dfs -cat /tmp/sqoop_test/categories_sub_depment/part-m-*</pre>
+
+<p>
+<strong>2.4. To import a table using custome query</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --query &quot;select * from categories where category_department_id &gt; 2 AND \$CONDITIONS&quot; --split-by &quot;category_department_id&quot; --target-dir /tmp/sqoop_test/categories_sub_depment1 </pre>
+
+<p>
+<strong>2.5 To import a table into hdfs with specific delimiters</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --target-dir /tmp/sqoop_test/categories_deli --fields-terminated-by &quot;||&quot;
+
+# you can check the file
+$ hdfs dfs -cat /tmp/sqoop_test/categories_deli/part-m-*
+1|2|Football
+2|2|Soccer
+3|2|Baseball &amp; Softball</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Import a table into hdfs&quot;,&quot;hid&quot;:&quot;import_a_table_into_hdfs&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;668-3554&quot;} -->
+<h2 class="sectionedit4" id="import_a_table_into_hive">3. Import a table into hive</h2>
+<div class="level2">
+
+<p>
+<strong> 3.1. To import a mysql table into hive</strong>
+</p>
+<pre class="code"># By default, if nothing is specified, sqoop will use the mysql table name as the hive table name, and the 
+# table will be stored in the hive default database(db with name default)
+$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table categories --hive-import
+
+# If you want to change the hive table-name, you can use option --hive-table. If you want to also give a 
+# database name, you can use &lt;db_name&gt;.&lt;table_name&gt; (But this works only for hive 2)
+$ sqoop import --connect jdbc:mysql://lin03.udl.org:3306/retail_db --username hive -P --table categories --hive-import --hive-table retail_db.categories
+
+
+# In hive 3.*, we can&#039;t use the expression database.table anymore. We have to use --hive-database to express database name , and --hive-table to express table name. As a result, the above query should be like this:
+$ sqoop import --connect jdbc:mysql://lin03.udl.org:3306/retail_db --username hive -P --table categories --hive-import --hive-table categories --hive-database retail_db 
+</pre>
+
+<p>
+<strong> 3.2. To import table based on user-defined condition into hive  [–m denotes the mappers]
+</strong>
+</p>
+<pre class="code"># With --hive-table option, you can specify where the imported table will be store in Hive
+# For example, if you creat a db demo, and run the following command, you will see the table 
+# categories is in database demo not in default
+$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root -password hadoop --table categories --where &quot;category_name like &#039;k%&#039;&quot; --m 3 --hive-import --hive-table demo.categories
+
+</pre>
+
+<p>
+<strong> 3.3. Overwrite an existing table in hive  [–m denotes the mappers]
+</strong>
+</p>
+<pre class="code"># With --hive-overwrite option, you can overwrite any hive table
+$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root -password hadoop --table categories --m 1 --hive-import --hive-overwrite --hive-table demo.categories
+</pre>
+
+<p>
+<strong> 3.4 To import a table without hive delimiters [drops \n, \r and \01 from string fields]</strong>
+</p>
+<pre class="code">$sqoop import --connect jdbc:mysql://localhost:3306/hadoopdb --username root --password
+password1! --table demo hive-import --hive-drop-import-delims</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Import a table into hive&quot;,&quot;hid&quot;:&quot;import_a_table_into_hive&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:4,&quot;range&quot;:&quot;3555-5848&quot;} -->
+<h3 class="sectionedit5" id="set_up_hive_connection_conf">3.5 Set up hive connection conf</h3>
+<div class="level3">
+
+<p>
+As of Hive 2.2.0 (HIVE-14063), Beeline adds support to use the hive-site.xml present in the classpath to automatically generate a connection <abbr title="Uniform Resource Locator">URL</abbr> based on the configuration properties in <strong>hive-site.xml</strong> and an additional <strong>user configuration file (beeline-hs2-connection.xml)</strong>. 
+</p>
+
+<p>
+When Sqoop calls the hive client, this configuration will be used. The <strong>beeline-hs2-connection.xml</strong> should be located in ${user.home}/.beeline/ (Unix based <abbr title="Operating System">OS</abbr>) or ${user.home}\beeline\ directory (in case of Windows)
+</p>
+
+<p>
+If the file is not found in the above locations Beeline looks for it in ${HIVE_CONF_DIR} location and /etc/hive/conf (check HIVE-16335 which fixes this location from /etc/conf/hive in Hive 2.2.0) in that order. Once the file is found, Beeline uses beeline-hs2-connection.xml in conjunction with the hive-site.xml in the class path to determine the connection <abbr title="Uniform Resource Locator">URL</abbr>.
+</p>
+
+</div>
+
+<h4 id="the_most_simple_conf_is_to_set_up_hive_login_and_password">3.5.1 The most simple conf is to set up hive login and password</h4>
+<div class="level4">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:sqoop:import_data&amp;codeblock=10" title="Download Snippet" class="mediafile mf_xml">beeline-hs2-connection.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;?xml-stylesheet</span> <span class="re0">type</span>=<span class="st0">&quot;text/xsl&quot;</span> <span class="re0">href</span>=<span class="st0">&quot;configuration.xsl&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.user<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>hive<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.password<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>hive<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+</div>
+
+<h4 id="connect_to_remote_hive_server_with_kerberos_principal">3.5.2 Connect to remote hive server with kerberos principal</h4>
+<div class="level4">
+
+<p>
+In case of properties which are present in both beeline-hs2-connection.xml and hive-site.xml, the property value from beeline-hs2-connection.xml will be used.
+</p>
+
+<p>
+For example, the below kerberos config will overwrite the value of HiveConf.ConfVars.HIVE_SERVER2_KERBEROS_PRINCIPAL from hive-site.xml
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:sqoop:import_data&amp;codeblock=11" title="Download Snippet" class="mediafile mf_xml">beeline-hs2-connection.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;?xml-stylesheet</span> <span class="re0">type</span>=<span class="st0">&quot;text/xsl&quot;</span> <span class="re0">href</span>=<span class="st0">&quot;configuration.xsl&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.hosts<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>lin01.udl.org:10000<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.principal<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>hive/dummy-hostname@domain.com<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.hiveconf<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>hive.cli.print.current.db=true, hive.cli.print.header=true<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.hivevar<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>testVarName1=value1, testVarName2=value2<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+Multi values in the conf are comma separated. See the above hivevar and hiveconf example.
+</p>
+
+<p>
+For more details, please go to <a href="https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Usinghive-site.xmltoautomaticallyconnecttoHiveServer2" class="urlextern" title="https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Usinghive-site.xmltoautomaticallyconnecttoHiveServer2" rel="ugc nofollow">https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Usinghive-site.xmltoautomaticallyconnecttoHiveServer2</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.5 Set up hive connection conf&quot;,&quot;hid&quot;:&quot;set_up_hive_connection_conf&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:5,&quot;range&quot;:&quot;5849-8464&quot;} -->
+<h3 class="sectionedit6" id="common_problems">Common problems</h3>
+<div class="level3">
+
+<p>
+When sqoop import data into hive, it follows the following steps:
+</p>
+<ul>
+<li class="level1"><div class="li"> Sqoop creates/imports data into a temporal dir(HDFS) which is the user&#039;s home dir(e.g. If I run sqoop as pliu, the temporal dir will be /user/pliu/categories).</div>
+</li>
+<li class="level1"><div class="li"> Sqoop will connect to hive server to create database(optional) and table </div>
+</li>
+<li class="level1"><div class="li"> Then copy data to its actual hive location (i.e., /user/hive/wearhouse.)</div>
+</li>
+<li class="level1"><div class="li"> If everything goes right, hive will delete the temporal file.</div>
+</li>
+</ul>
+
+<p>
+There are two common problems:
+</p>
+<ul>
+<li class="level1"><div class="li"> If the hive server requires login and password, sqoop needs to provide them to connect to the Hive server. If sqoop does not have the right login and pwd, it will be stuck at hive server connection step.</div>
+</li>
+<li class="level1"><div class="li"> When you run sqoop with uid pliu, and sqoop connect to hive server with login hive. You will have a permission deny error. The problem is that hive server with hive as user does not have the right to write in /user/pliu/, so it can&#039;t complete the process encounter the following error</div>
+</li>
+</ul>
+<pre class="code">Access denied: Unable to move source hdfs://sandbox-hdp.hortonworks.com:8020/user/pliu/categories/part-m-00000 to destination hdfs://sandbox-hdp.hortonworks.com:8020/warehouse/tablespace/managed/hive/categories/delta_0000001_0000001_0000: Permission denied: user=hive, access=WRITE, inode=&quot;/user/pliu/categories&quot;:root:hdfs:drwxr-xr-x (state=08S01,code=1)
+</pre>
+
+<p>
+The solution of this is when you want to use sqoop to do the hive import, just use the same uid on sqoop and hive. For example, if I run sqoop as user hive, the credential which sqoop uses to connect to hive must be hive too.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common problems&quot;,&quot;hid&quot;:&quot;common_problems&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:6,&quot;range&quot;:&quot;8465-10071&quot;} -->
+<h2 class="sectionedit7" id="import_all_tables">4. Import all tables</h2>
+<div class="level2">
+
+<p>
+<strong>4.1 To import all tables [database name is hadoopdb, giving -P implies password to be given when prompted]
+</strong>
+If you want to import the table to hive just add option –hive-import
+</p>
+<pre class="code">$ sqoop import-all-tables --connect jdbc:postgresql://127.0.0.1:5432/northwind --username pliu -P --hive-import --create-hive-table --direct
+
+# We want to import all tables from retail_db to hive with the hive database name retail_db
+$ sqoop import-all-tables --connect jdbc:mysql://127.0.0.1:3306/retail_db --username=root -P --compression-codec=snappy --hive-overwrite --hive-import --hive-database retail_db --direct
+# if your retail_db does not exist in hive, login as hive via beeline and run
+$ create database if not exist retail_db</pre>
+
+<p>
+<strong>4.2. To import a table using split by option [mappers is decided based on the values in column specified in split by option, if you want to control the mappers then explicitly specify –m]
+</strong>
+</p>
+<pre class="code">$ sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username root --password hadoop --table products --split-by product_category_id --hive-import --hive-table products_splittest</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Import all tables&quot;,&quot;hid&quot;:&quot;import_all_tables&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:7,&quot;range&quot;:&quot;10072-&quot;} -->

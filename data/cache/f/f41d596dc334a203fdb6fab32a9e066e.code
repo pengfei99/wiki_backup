@@ -1,0 +1,17 @@
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="sy0">_</span> 
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">streaming</span>.<span class="sy0">_</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> WordCountStreaming <span class="br0">&#123;</span>  
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>  
+  <span class="co1">//set up sparkConf to run as local with 2 thread, one for listening , one for treat data</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sparkConf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;WordCountFileStreaming&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>  
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> ssc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> StreamingContext<span class="br0">&#40;</span>sparkConf, Seconds<span class="br0">&#40;</span><span class="nu0">20</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="co1">//set listener time interval for 20 sec</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> lines <span class="sy0">=</span> ssc.<span class="me1">textFileStream</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/log&quot;</span><span class="br0">&#41;</span>  <span class="co1">//monitor dir /tmp/log </span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> words <span class="sy0">=</span> lines.<span class="me1">flatMap</span><span class="br0">&#40;</span><span class="sy0">_</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>  
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCounts <span class="sy0">=</span> words.<span class="me1">map</span><span class="br0">&#40;</span>x <span class="sy0">=&gt;</span> <span class="br0">&#40;</span>x, <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="sy0">_</span> + <span class="sy0">_</span><span class="br0">&#41;</span>  
+    wordCounts.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+    ssc.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+&nbsp;
+    ssc.<span class="me1">awaitTermination</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+  <span class="br0">&#125;</span>  
+<span class="br0">&#125;</span>  

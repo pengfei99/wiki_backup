@@ -1,0 +1,6 @@
+# The producer provides two send methods
+# synchronously send
+Future<span class="sy0">&lt;</span>RecordMetadata<span class="sy0">&gt;</span> send<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+# asynchronously send
+Future<span class="sy0">&lt;</span>RecordMetadata<span class="sy0">&gt;</span> send<span class="br0">&#40;</span>ProducerRecord<span class="sy0">&lt;</span>K, V<span class="sy0">&gt;</span> record, Callback callback<span class="br0">&#41;</span><span class="sy0">;</span>

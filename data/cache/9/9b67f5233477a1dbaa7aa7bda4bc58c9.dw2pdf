@@ -1,0 +1,338 @@
+<a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__"></a>
+<h1><bookmark content="Gestion des utilisateurs" level="0" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__gestion_des_utilisateurs">Gestion des utilisateurs</a></h1>
+<div class="level1">
+
+<p>
+La plateforme est accessible aussi bien au personnel de Bioaster qu&#039;à des personnes extérieures impliquées dans des projets collaboratifs de Bioaster. En fonction de son appartenance à une UTEC, une UTEM ou un projet, l&#039;utilisateur se voit attribuer des droits sur des ressources/outils de calcul, des données, des modules ou des outils/applications.
+</p>
+
+</div>
+
+<h3><bookmark content="User stories" level="1" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__user_stories">User stories</a></h3>
+<div class="level3">
+<!-- EDIT1 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>[TLC]</strong> On va dire que je pinaille, mais je ne pense pas qu&#039;on puisse appeler ces “phrases” des <em>user stories</em>. Celles-ci doivent en effet être de la forme :
+</p>
+<pre class="code">  As a (role), I want (feature), so that (benefit).</pre>
+
+<p>
+Pour prendre un exemple concret, on pourrait écrire :
+</p>
+<pre class="code">  En tant qu&#039;administrateur, je veux pouvoir supprimer un compte utilisateur, de cette manière cette utilisateur ne pourra plus se logguer.</pre>
+
+<p>
+Mais cela n&#039;enlève rien a ton inventaire, c&#039;est juste l&#039;utilisation du terme <em>user stories</em> que je ne trouve pas approprié.
+</p>
+</div><!-- EDIT2 PLUGIN_WRAP_END [0-] -->
+</div>
+
+<h5><bookmark content="Authentification" level="2" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__authentification">Authentification</a></h5>
+<div class="level5">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur doit pouvoir s’authentifier avec un login/mot de passe </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Un utilisateur doit pouvoir s’authentifier avec un certificat (StartSSL, CaCert, …)  </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Un utilisateur doit pouvoir réinitialiser son mot de passe avec une confirmation envoyée par email </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur doit être averti de la politique de gestion des cookies appliquée sur la plateforme </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Un utilisateur doit pouvoir consulter les mentions légales applicables sur la plateforme </td><td class="col1"> UTEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [1027-1573] -->
+</div>
+
+<h5><bookmark content="Gestion des droits, autorisation" level="2" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__gestion_des_droits_autorisation">Gestion des droits, autorisation</a></h5>
+<div class="level5">
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur peut avoir accès à 0 ou à plusieurs applications </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur doit pouvoir visualiser ses droits d’accès aux applications </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Un utilisateur doit pouvoir faire une demande d’accès (en ligne) à une application  </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs UTECs </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs UTEMs </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Un utilisateur peut être rattaché à 0 ou plusieurs projets </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Un utilisateur doit pouvoir explorer l’espace GPFS de ses UTECs/UTEMs/projets (lecture seule ?) </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Chaque UTEC/UTEM/projet a au moins un utilisateur référent </td><td class="col1"> UTEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [1615-2315] -->
+</div>
+
+<h5><bookmark content="Administration" level="2" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__administration">Administration</a></h5>
+<div class="level5">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Story </th><th class="col1"> Référent / Vérificateur </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Un utilisateur ne choisit pas son mot de passe, il est généré à partir d’algorithme qui en gère la complexité </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Un utilisateur ne peut pas être supprimé. Si un utilisateur doit être supprimé, la date de suppression de son compte et la raison de suppression doivent être renseignées, le champ « actif » de son profil doit être positionné à « False » </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">L’utilisateur référant d’une entité est obligatoirement un employé de Bioaster </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Un utilisateur référent à des droits d&#039;administration des utilisateurs sur l&#039;entité qu&#039;il gère </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Lorsqu’un utilisateur est rattaché ou détaché d’une entité (UTEC/UTEM/projet), l’utilisateur référant de l’entité est notifié par mail </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Un administrateur doit pouvoir allouer/révoquer des droits sur une application à un utilisateur </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Un administrateur doit pouvoir visualiser toutes les demandes de réinitialisation de mot de passe </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Un administrateur doit pouvoir visualiser l’historique des connexions d’un utilisateur donné </td><td class="col1"> UTEC6 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">Un administrateur doit pouvoir bloquer l&#039;accès complet ou partiel (à une entité) à un utilisateur </td><td class="col1"> UEC6 </td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [2340-3580] -->
+</div>
+
+<h3><bookmark content="Dictionnaire et modèle de données" level="1" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__dictionnaire_et_modele_de_donnees">Dictionnaire et modèle de données</a></h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>Structure d&#039;un utilisateur :</strong></em>
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">id </td><td class="col1"> Identifiant </td><td class="col2 leftalign"> Identifiant unique de l’utilisateur	</td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">first_name </td><td class="col1"> Prénom </td><td class="col2"> Prénom de l’utilisateur </td><td class="col3"> Texte (100) </td><td class="col4"> Oui </td><td class="col5"> Ex : Anatole </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">last_name </td><td class="col1"> Nom </td><td class="col2 leftalign"> Nom de l’utilisateur	</td><td class="col3"> Texte (100) </td><td class="col4"> Oui </td><td class="col5"> Ex : France </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">email </td><td class="col1"> Email </td><td class="col2"> Email de l’utilisateur. Si utilisateur Bioaster forcément @bioaster.org </td><td class="col3 leftalign"> Texte (256)	</td><td class="col4"> Oui </td><td class="col5"> Format d’email valide (voir regexp/validator) </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">dn </td><td class="col1"> Nom distinctif </td><td class="col2"> Distinguished name du certificat de l’utilisateur </td><td class="col3"> Texte (256) </td><td class="col4"> Non </td><td class="col5">Sensé être unique car contient l’email. Todo : trouver regexp pour validateur </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">active </td><td class="col1"> Utilisateur actif </td><td class="col2"> Est-ce-que l’utilisateur a le droit de se connecter (ce champ servira à bloquer un utilisateur) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">password </td><td class="col1"> Mot de passe </td><td class="col2"> Mot de passe d’authentification  de l’utilisateur </td><td class="col3"> Texte (8-12) ? </td><td class="col4">Oui </td><td class="col5">Imposer des règles de complexité ? Ne peut être généré que par un algorithme ?</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">last_update </td><td class="col1"> Date de dernière modification </td><td class="col2"> Date de dernière modification des données du profil de l’utilisateur </td><td class="col3">Date </td><td class="col4"> Oui </td><td class="col5"> Automatique </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">creation_date </td><td class="col1"> Date de création </td><td class="col2"> Date de la création du profil de l’utilisateur </td><td class="col3"> Date </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">supression_date </td><td class="col1"> Date de suppression </td><td class="col2"> Date de la suppression du profil de l’utilisateur </td><td class="col3"> Date </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0">suppression_reason </td><td class="col1"> Motif de suppression </td><td class="col2 leftalign"> Motif pour lequel le compte a été supprimé	</td><td class="col3"> Texte (taille ?)</td><td class="col4"> Non </td><td class="col5">Champ libre ou liste de valeur possible : bannissement, a quitté Bioaster, …</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0">super_user </td><td class="col1 leftalign"> Super utilisateur	</td><td class="col2"> Donne accès à toutes les applications avec tous les droits (réservé aux administrateurs) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0">phone_number </td><td class="col1"> Numéro de téléphone </td><td class="col2"> Numéro de téléphone de l’utilisateur </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Trouvé regexp ou validateur « phone number »</td>
+	</tr>
+	<tr class="row14">
+		<td class="col0">uid </td><td class="col1">Identifiant AFS </td><td class="col2"> Identifiant AFS (uid) de l’utilisateur </td><td class="col3"> Numérique </td><td class="col4"> Non </td><td class="col5"> Pour le montage à la volée de l’espace AFS. Ex : 1789 </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0">afs_login </td><td class="col1"> Login AFS </td><td class="col2"> Login AFS de l&#039;utilisateur </td><td class="col3"> texte (8 ?) </td><td class="col4"> Non </td><td class="col5"> Ex : pveyre </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0">afs_path </td><td class="col1"> Racine AFS </td><td class="col2"> Répertoire racine de l’utilisateur sur l’espace AFS </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0">corporate </td><td class="col1"> Utilisateur Bioaster </td><td class="col2">L’utilisateur est-il un employé de Bioaster </td><td class="col3"> Booléen </td><td class="col4"> Non </td><td class="col5"> </td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [3669-6007] -->
+<p>
+<em class="u"><strong>Structure d&#039;une UTEC :</strong></em>
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique de l’UTEC </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">code </td><td class="col1"> Code </td><td class="col2"> Code de l’UTEC </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Exemple : UTEC-1 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">nom </td><td class="col1"> Nom </td><td class="col2"> Nom complet de l’UTEC </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5">Exemple : Collections d’échantillons biologiques </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">gpfs_path </td><td class="col1"> Racine GPFS </td><td class="col2"> Répertoire racine de l’UTEC sur l’espace de stockage GPFS </td><td class="col3"> Texte </td><td class="col4"> Non </td><td class="col5"> Ex : /sps/bioaster/UTEC1 ou juste const racine bioster + /UTEC1 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">email	</td><td class="col1 leftalign"> Email	</td><td class="col2 leftalign"> Alias mail de l’UTEC	</td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5 rightalign">	Validateur mail </td>
+	</tr>
+</table></div>
+<!-- EDIT7 TABLE [6042-6650] -->
+<p>
+<em class="u"><strong>Structure d&#039;une UTEM :</strong></em>
+</p>
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique de l’UTEM </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">code </td><td class="col1"> Code </td><td class="col2"> Code de l’UTEM </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Exemple : </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">nom </td><td class="col1"> Nom </td><td class="col2"> Nom complet de l’UTEM </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5 leftalign">Exemple :  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">email	</td><td class="col1 leftalign"> Email	</td><td class="col2 leftalign"> Alias mail de l’UTEM	</td><td class="col3"> Texte </td><td class="col4"> Non</td><td class="col5">Validateur mail</td>
+	</tr>
+</table></div>
+<!-- EDIT8 TABLE [6684-7069] --><!-- EDIT9 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap">
+<p>
+Peut-être faudrait-il penser à une table “Partner” aussi. (id, name, label/code [ex : “bmx_biospecimens”] pour faciliter les permissions car un partenaire peut être présent dans plusieurs projets mais les groupes de personnes du partenaire attachés aux projets ne sont pas forcément les mêmes et ne doivent donc pas forcément avoir accès à tous les projets, mail_referent)
+</p>
+</div><!-- EDIT10 PLUGIN_WRAP_END [0-] -->
+<p>
+<em class="u"><strong>Structure d&#039;un projet :</strong></em>
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Libellé (en français) </th><th class="col2"> Description </th><th class="col3"> Format/Taille </th><th class="col4"> Obligatoire </th><th class="col5"> Domaine de valeur / Commentaires </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> id </td><td class="col1"> Identifiant </td><td class="col2"> Identifiant unique d’un projet </td><td class="col3"> Numérique </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">nom </td><td class="col1"> Nom </td><td class="col2"> Nom du projet </td><td class="col3"> Texte </td><td class="col4"> Oui </td><td class="col5"> Ex : Realism </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">summary </td><td class="col1"> Résumé </td><td class="col2"> Texte de présentation du projet </td><td class="col3"> Texte (long) </td><td class="col4">Oui </td><td class="col5"> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">gpfs_path </td><td class="col1"> Racine GPFS </td><td class="col2"> Répertoire racine du projet sur l’espace de stockage GPFS </td><td class="col3"> Texte </td><td class="col4"> ? </td><td class="col5"> Note : cf chemin cahier de laboratoire ?</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">corporate </td><td class="col1"> Projet interne </td><td class="col2"> Projet interne à Bioaster (sans partenaire extérieur) </td><td class="col3"> Booléen </td><td class="col4"> Oui </td><td class="col5"> </td>
+	</tr>
+</table></div>
+<!-- EDIT11 TABLE [7521-8102] --><!-- EDIT12 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap" style="width: 40%;">
+<p>
+Faut-il déscendre jusqu&#039;au Work Package ?
+</p>
+</div><!-- EDIT13 PLUGIN_WRAP_END [0-] -->
+</div>
+
+<h3><bookmark content="Qui a besoin de quoi ?" level="1" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__qui_a_besoin_de_quoi">Qui a besoin de quoi ?</a></h3>
+<div class="level3">
+<div class="table sectionedit14"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Information </th><th class="col1"> Application 1 </th><th class="col2"> Application 2 </th><th class="col3"> Application 3 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> email </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> nom </td><td class="col1"> 0 </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> groupe </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> afs_path </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 1 </td>
+	</tr>
+</table></div>
+<!-- EDIT14 TABLE [8220-8373] -->
+</div>
+
+<h3><bookmark content="Implémentation" level="1" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__implementation">Implémentation</a></h3>
+<div class="level3">
+
+</div>
+
+<h4><bookmark content="MCD" level="2" /><a name="ut6projets_internesplateforme_bioinfogestion_utilisateur__mcd">MCD</a></h4>
+<div class="level4">
+
+<p>
+<a href="/_detail/ut6/pt6/projets_internes/plateforme_bioinfo/gestion_utilisateur/mcd.png?id=ut6%3Aprojets_internes%3Aplateforme_bioinfo%3Agestion_utilisateur" class="media" title="ut6:pt6:projets_internes:plateforme_bioinfo:gestion_utilisateur:mcd.png"><img src="/_media/ut6/pt6/projets_internes/plateforme_bioinfo/gestion_utilisateur/mcd.png?w=800&amp;tok=33448d" class="media" alt="" width="800" /></a>
+</p>
+
+<p>
+<em class="u"><strong>Quelques pointeurs :</strong></em>
+</p>
+
+<p>
+<a href="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html" class="urlextern" title="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html"  rel="nofollow">http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html</a>
+</p>
+
+<p>
+<a href="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle" class="urlextern" title="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle"  rel="nofollow">https://github.com/ztec/ZtecSecurityActiveDirectoryBundle</a>
+</p>
+
+<p>
+<a href="https://auth0.com/docs/server-platforms/symfony" class="urlextern" title="https://auth0.com/docs/server-platforms/symfony"  rel="nofollow">https://auth0.com/docs/server-platforms/symfony</a>
+</p>
+
+<p>
+<a href="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/" class="urlextern" title="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/"  rel="nofollow">http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/</a>
+</p>
+
+</div>

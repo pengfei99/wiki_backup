@@ -1,0 +1,14 @@
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>yarn.app.mapreduce.am.resource.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>512<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>mapreduce.map.memory.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>256<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>mapreduce.reduce.memory.mb<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>256<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>

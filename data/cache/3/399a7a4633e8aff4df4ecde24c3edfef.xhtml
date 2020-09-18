@@ -1,0 +1,524 @@
+
+<h1 class="sectionedit1" id="understanding_jvm_architecture">Understanding JVM Architecture</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Understanding JVM Architecture&quot;,&quot;hid&quot;:&quot;understanding_jvm_architecture&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-46&quot;} -->
+<h2 class="sectionedit2" id="java_environments">Java Environments</h2>
+<div class="level2">
+
+<p>
+For almost any programming language, you need a specific environment which comprises of all the necessary components, application programming interfaces, and libraries in order to develop, compile, debug, and execute its programs. Java has 2 such environments and everyone working with Java has to start their work after setting up one of these environments on their local development or production environment platforms.
+</p>
+<ul>
+<li class="level1"><div class="li"> JRE (Java Runtime Environment): the minimum environment needed for running a Java application (no support for developing). It includes JVM (Java Virtual Machine) and deployment tools.</div>
+</li>
+<li class="level1"><div class="li"> JDK (Java Development Kit): the complete development environment used for developing and executing Java applications. It includes both JRE and development tools.</div>
+</li>
+</ul>
+
+<p>
+In another word, JRE is meant for users, while JDK is meant for programmers.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Java Environments&quot;,&quot;hid&quot;:&quot;java_environments&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;47-933&quot;} -->
+<h3 class="sectionedit3" id="how_java_works">How Java Works</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Java source codes are compiled into an intermediate state called bytecode(i.e. a .class file) using the Java Compiler (javac) which comes inbuilt with JDK. </div>
+</li>
+<li class="level1"><div class="li"> This bytecode is in hexadecimal format with opcode-operand lines and JVM can interpret these instructions (without further recompilations) into native machine language which can be understood by the <abbr title="Operating System">OS</abbr> and underlying hardware platform. </div>
+</li>
+<li class="level1"><div class="li"> Therefore, bytecode acts as a platform-independent intermediary state which is portable among any JVM regardless of underlying <abbr title="Operating System">OS</abbr> and hardware architecture. However, since JVMs are developed to run and communicate with the underlying hardware &amp; <abbr title="Operating System">OS</abbr> structure, we need to select the appropriate JVM version for our <abbr title="Operating System">OS</abbr> version (Windows, Linux, Mac) and processor architecture (x86, x64).</div>
+</li>
+</ol>
+
+<p>
+So the <strong>JVM(Java virtual machine) is the most important part of java</strong>, which performs many run-time activities like JIT (Just-in-time) compilation &amp; GC (Garbage Collection) during the program execution.
+</p>
+
+<p>
+<strong>The JVM is a model of a whole computer, that resides on the RAM of a physical PC</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How Java Works&quot;,&quot;hid&quot;:&quot;how_java_works&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;934-2044&quot;} -->
+<h1 class="sectionedit4" id="jvm_architecture">JVM Architecture</h1>
+<div class="level1">
+
+<p>
+JVM is only a specification, and its implementation is different from vendor to vendor(e.g. Oracle, OpenJDK, etc.). In this article, we only address the commonly-accepted architecture of JVM as defined in the specification.
+</p>
+
+<p>
+A JVM contains three major components:
+</p>
+<ul>
+<li class="level1"><div class="li"> Class loader subsystem: It loads, links, and initializes the class file (.class) when it refers to a class for the first time at runtime (not compile time).</div>
+</li>
+<li class="level1"><div class="li"> Runtime Data Areas: They are the memory areas assigned when the JVM program runs on the <abbr title="Operating System">OS</abbr>.  </div>
+</li>
+<li class="level1"><div class="li"> Execution Engine: It executes the instructions in the bytecode line-by-line by reading the data assigned to the above runtime data areas.</div>
+</li>
+</ul>
+
+<p>
+See the below figure.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Aunderstand_jvm&amp;media=employes:pengfei.liu:java:full_jvm_architecture.png" class="media" title="employes:pengfei.liu:java:full_jvm_architecture.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=bda16b&amp;media=employes:pengfei.liu:java:full_jvm_architecture.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;JVM Architecture&quot;,&quot;hid&quot;:&quot;jvm_architecture&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;2045-2829&quot;} -->
+<h2 class="sectionedit5" id="class_loader_subsystem">1. Class Loader Subsystem</h2>
+<div class="level2">
+
+<p>
+During the execution of an application in JVM, JVM uses the Class loader subsystem to bring the class files on to the RAM. This is called Java’s dynamic class loading functionality. It loads, links, and initializes the class file (.class) when it refers to a class for the first time at runtime (not compile time).
+</p>
+
+<p>
+Class-loading has three main steps:
+</p>
+<ol>
+<li class="level1"><div class="li"> Loading</div>
+</li>
+<li class="level1"><div class="li"> Linking</div>
+</li>
+<li class="level1"><div class="li"> Initializing</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="loading">1.1 Loading</h4>
+<div class="level4">
+
+<p>
+In the Loading stage, class-loader loads compiled classes (.class files or bytecode) into memory. Usually, the class loading process starts from loading the main class (i.e. a class with static main() method declaration). All the subsequent class loading attempts are done according to the class references in the already-running classes as mentioned in the following cases:
+</p>
+<ul>
+<li class="level1"><div class="li"> When bytecode make a static reference to a class (e.g. System.out, calls the static field “out” of class “System”)</div>
+</li>
+<li class="level1"><div class="li"> When bytecode create a class object (e.g. Person person = new Person(“John”))</div>
+</li>
+</ul>
+
+<p>
+There are 3 types of class loaders:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>Bootstrap class loader</strong>: It loads standard JDK classes from rt.jar such as core Java <abbr title="Application Programming Interface">API</abbr> classes present in the bootstrap path — $JAVA_HOME/jre/lib directory (e.g. java.lang.* package classes). It is implemented in native languages like C/C++ and acts as the parent of all class loaders in Java.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Extension class loader</strong>: It delegates class loading requests to its parent, Bootstrap and if unsuccessful, loads classes from the extensions directories (e.g. security extension functions) in extension path — $JAVA_HOME/jre/lib/ext or any other directory specified by the java.ext.dirs system property. This class loader is implemented in Java by the sun.misc.Launcher$ExtClassLoader class.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Application class loader</strong>: It loads application-specific classes from system class-path, that can be set while using java -cp or -classpath command-line options. It internally uses Environment Variable which mapped to java.class.path. This class loader is implemented in Java by the sun.misc.Launcher$AppClassLoader class.</div>
+</li>
+</ol>
+
+<p>
+All class loader follows the following four principals:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>Visibility Principle</strong>: It states that the Child class loader can see the class loaded by parent class loader, but a Parent class loader cannot find the class loaded by the child class loader.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Uniqueness Principle</strong>: It states that a class loaded by a parent should not be loaded by any child class loader again and ensure that duplicate class loading does not occur. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Delegation Hierarchy Principle</strong>: In order to satisfy the above two principles, JVM follows a hierarchy of delegation to choose the class loader for each class loading request. Here, starting from the lowest child level, “Application Class Loader” delegates the received class loading request to “Extension Class Loader” and then “Extension Class Loader” delegates the request to “Bootstrap Class Loader”. If the requested class found in Bootstrap path, the class is loaded. Otherwise, the request again transfers back to Extension Class Loader level to find the class from Extension path or custom-specified path. If it also fails, the request comes back to Application Class Loader to find the class from System class path and if Application Class Loader also fails to load the requested class, then we get the run time exception (i.e. java.lang.ClassNotFoundException).</div>
+</li>
+<li class="level1"><div class="li"> <strong>No Unloading Principle</strong>: a class loader cannot unload a loaded class. Instead of unloading, the current class loader can be deleted, and a new class loader can be created.</div>
+</li>
+</ol>
+
+<p>
+The following figure shows the java class loader delegation hierarchy principle.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Aunderstand_jvm&amp;media=employes:pengfei.liu:java:class_loader_delegation_hierarchy.png" class="media" title="employes:pengfei.liu:java:class_loader_delegation_hierarchy.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=5dbb7c&amp;media=employes:pengfei.liu:java:class_loader_delegation_hierarchy.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+Two important notes of class loader:
+</p>
+<ol>
+<li class="level1"><div class="li"> A programmer can directly create a <strong>User-defined Class Loader</strong> on the code itself without changing the above three class loaders. This guarantees the independence of applications through class loader delegation model. This approach is used in web application servers like Tomcat to make web apps and enterprise solutions run independently.</div>
+</li>
+<li class="level1"><div class="li"> Each class loader has its namespace that stores the loaded classes. When a class loader loads a class, it searches the class based on FQCN (Fully Qualified Class Name) stored in the namespace to check whether or not the class has been already loaded. Even if the class has an identical FQCN but a different namespace, it is regarded as a different class. A different namespace means that the class has been loaded by another Class Loader.</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="linking">1.2 Linking</h4>
+<div class="level4">
+
+<p>
+Linking involves in verifying and preparing a loaded class or interface, its direct super-classes and super-interfaces, and its element type as necessary while following the below properties:
+</p>
+<ul>
+<li class="level1"><div class="li"> A class or interface must be completely loaded before it is linked.</div>
+</li>
+<li class="level1"><div class="li"> A class or interface must be completely verified and prepared before it initialized (in the next step).</div>
+</li>
+<li class="level1"><div class="li"> If an error occurs during linking, it is thrown at a point in the program where some action will be taken by the program that might, directly or indirectly, require linkage to the class or interface involved in the error.</div>
+</li>
+</ul>
+
+<p>
+Linking has three key stages as below:
+</p>
+
+</div>
+
+<h5 id="verification">Verification</h5>
+<div class="level5">
+
+<p>
+It ensures the correctness of .class file (is the code properly written according to Java Language Specification? is it generated by a valid compiler according to JVM specifications?). This is the most complicated test process of the class load processes. And it takes the longest time. Even though linking slows down the class loading process, it avoids the need to perform these checks multiple times when executing bytecode, hence makes the overall execution efficient and effective. If verification fails, it throws runtime errors (java.lang.VerifyError). For instance, the following checks are performed.
+</p>
+<ol>
+<li class="level1"><div class="li"> consistent and correctly formatted symbol table</div>
+</li>
+<li class="level1"><div class="li"> final methods/classes not overridden</div>
+</li>
+<li class="level1"><div class="li"> methods respect access control keywords</div>
+</li>
+<li class="level1"><div class="li"> methods have the correct number and type of parameters</div>
+</li>
+<li class="level1"><div class="li"> bytecode doesn’t manipulate stack incorrectly</div>
+</li>
+<li class="level1"><div class="li"> variables are initialized before being read</div>
+</li>
+<li class="level1"><div class="li"> variables are a value of the correct type</div>
+</li>
+</ol>
+
+</div>
+
+<h5 id="preparation">Preparation</h5>
+<div class="level5">
+
+<p>
+It allocates memory for static storage and any data structures used by the JVM such as method tables. Static fields are created and initialized to their default values, however, no initializers or code is executed at this stage as that happens as part of initialization. For example, if we have private static boolean flag=true; in a class. This 
+stage will only allocate memory for this field and assign a default value(e.g. false for primitive boolean, null for object Boolean). The value true will be assigned in the next stage initializing.
+</p>
+
+</div>
+
+<h5 id="resolution">Resolution</h5>
+<div class="level5">
+
+<p>
+It replaces symbolic references from the type with direct references. It is done by searching into the method area to locate the referenced entity.
+</p>
+
+</div>
+
+<h4 id="initializing">1.3 Initializing</h4>
+<div class="level4">
+
+<p>
+In this stage, the initialization logic of each loaded class or interface will be executed (e.g. calling the constructor of a class). Since JVM is multi-threaded, initialization of a class or interface should happen very carefully with proper synchronization to avoid some other thread from trying to initialize the same class or interface at the same time (i.e. make it thread-safe).
+</p>
+
+<p>
+This is the final phase of class loading where all the static variables are assigned with their original values defined in the code and the static block will be executed (if any). This is executed line by line from top to bottom in a class and from parent to child in a class hierarchy.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Class Loader Subsystem&quot;,&quot;hid&quot;:&quot;class_loader_subsystem&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2830-10478&quot;} -->
+<h2 class="sectionedit6" id="runtime_data_areas">2. Runtime data areas</h2>
+<div class="level2">
+
+<p>
+Runtime data areas are the memory areas assigned when the JVM program runs on the <abbr title="Operating System">OS</abbr>. It has five key components:
+</p>
+<ul>
+<li class="level1"><div class="li"> Method area: For each .class file, the class loader generates corresponding binary data and save the class metadata (e.g. 1.Fully qualified name of the loaded class and its immediate parent class. 2. if .class file is related to a Class, Interface or Enum. 3. class modifier(public, final, etc.), static variables, and method information etc.) in the method area for each class separately.</div>
+</li>
+<li class="level1"><div class="li"> Heap: For every .class file, class loader creates exactly one object of each class to represent .class file in the Heap memory as defined in java.lang package. This Class object can be used to read class level information (class name, parent name, methods, variable information, static variables etc.) later in our code.</div>
+</li>
+<li class="level1"><div class="li"> Stack:</div>
+</li>
+<li class="level1"><div class="li"> PC register:</div>
+</li>
+<li class="level1"><div class="li"> Native method stack:</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Runtime data areas&quot;,&quot;hid&quot;:&quot;runtime_data_areas&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;10479-11401&quot;} -->
+<h3 class="sectionedit7" id="method_area_shared_among_threads">2.1 Method area(Shared among threads)</h3>
+<div class="level3">
+
+<p>
+The method area is a shared resource (only 1 method area per JVM). All JVM threads share this same Method area, so the <strong>access to the method area data and the process of dynamic linking must be thread-safe</strong>.
+</p>
+
+<p>
+The method area stores class level data(including static variables) such as:
+</p>
+<ul>
+<li class="level1"><div class="li"> Classloader reference</div>
+</li>
+<li class="level1"><div class="li"> Run time constant pool: Numeric constants, field references, method references, attributes; As well as the constants of each class and interface, it contains all references for methods and fields. When a method or field is referred to, the JVM searches the actual address of the method or field on the memory by using the runtime constant pool.</div>
+</li>
+<li class="level1"><div class="li"> Field data — Per field: name, type, modifiers, attributes</div>
+</li>
+<li class="level1"><div class="li"> Method data — Per method: name, return type, parameter types (in order), modifiers, attributes</div>
+</li>
+<li class="level1"><div class="li"> Method code — Per method: bytecodes, operand stack size, local variable size, local variable table, exception table; Per exception handler in exception table: start point, end point, PC offset for handler code, constant pool index for exception class being caught</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Method area(Shared among threads)&quot;,&quot;hid&quot;:&quot;method_area_shared_among_threads&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;11402-12548&quot;} -->
+<h3 class="sectionedit8" id="heap_area_shared_among_thread">2.2 Heap area(Shared among Thread)</h3>
+<div class="level3">
+
+<p>
+The Heap area is also a shared resource (only 1 heap area per JVM). Information of all objects and their corresponding instance variables and arrays are stored in the Heap area. Since the Method and Heap areas share memory for multiple threads, the data stored in Method &amp; Heap areas are not thread-safe. The Heap area is a great target for GC.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.2 Heap area(Shared among Thread)&quot;,&quot;hid&quot;:&quot;heap_area_shared_among_thread&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;12549-12940&quot;} -->
+<h3 class="sectionedit9" id="stack_area_per_thread">2.3 Stack area(per Thread)</h3>
+<div class="level3">
+
+<p>
+For every JVM thread, when the thread starts, a separate runtime stack gets created in order to store method calls. For every such method call, one entry will be created and added (pushed) into the top of runtime stack and such entry it is called a Stack Frame.
+</p>
+
+<p>
+A Stack Frame is divided into three sub-entities(See figure below):
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Aunderstand_jvm&amp;media=employes:pengfei.liu:java:stack_frame.png" class="media" title="employes:pengfei.liu:java:stack_frame.png"><img src="/lib/exe/fetch.php?w=300&amp;tok=b98dff&amp;media=employes:pengfei.liu:java:stack_frame.png" class="media" alt="" width="300" /></a>
+</p>
+<ul>
+<li class="level1"><div class="li"> Local variable array: The index of the array starts with 0. All local variables of a method are stored here. At position 0, the array stores the reference of the object which the method belongs. Starts with 1, it stores the method parameters. After method parameters, it stores the local variables declared inside the method.  </div>
+</li>
+<li class="level1"><div class="li"> Operand stack: This acts as a runtime workspace to perform any intermediate operation if there’s a requirement. Each method exchanges data between the Operand stack and the local variable array and pushes or pops other methods invoke results. The necessary size of the Operand stack space can be determined during compiling. Therefore, the size of the Operand stack can also be determined during compiling.</div>
+</li>
+<li class="level1"><div class="li"> Frame data: All symbols related to the method are stored here. For exceptions, the catch block information will also be maintained in the frame data.</div>
+</li>
+</ul>
+
+<p>
+The stack frame is removed (popped) when the method returns normally or if an uncaught exception is thrown during the method invocation. Also note that if any exception occurs, each line of the stack trace (shown as a method such as printStackTrace()) expresses one stack frame. The Stack area is thread safe since it is not a shared resource.
+</p>
+
+<p>
+Since these are runtime stack frames, after a thread terminates, its stack frame will also be destroyed by JVM.
+A stack can be a dynamic or fixed size. If a thread requires a larger stack than allowed a StackOverflowError is thrown. If a thread requires a new frame and there isn’t enough memory to allocate it then an OutOfMemoryError is thrown.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.3 Stack area(per Thread)&quot;,&quot;hid&quot;:&quot;stack_area_per_thread&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;12941-14958&quot;} -->
+<h3 class="sectionedit10" id="pc_registers_per_thread">2.4 PC Registers(per Thread)</h3>
+<div class="level3">
+
+<p>
+For each JVM thread, when the thread starts, a separate PC (Program Counter) Register gets created in order to hold the address of currently-executing instruction (memory address in the Method area). If the current method is a native method, then the PC register is undefined. Once the execution finishes, the PC register gets updated with the address of next instruction.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.4 PC Registers(per Thread)&quot;,&quot;hid&quot;:&quot;pc_registers_per_thread&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;14959-15371&quot;} -->
+<h3 class="sectionedit11" id="native_method_stack_per_thread">2.5 Native Method Stack (per Thread)</h3>
+<div class="level3">
+
+<p>
+<strong>There is a direct mapping between a Java thread and a native operating system thread(i.e. native thread)</strong>. After preparing all the state for a Java thread, a separate native stack also gets created in order to store native method information (often written in C/C++) invoked through JNI (Java Native Interface).
+</p>
+
+<p>
+Once the native thread has been created and initialized, it invokes the run()method in the Java thread. When the run() method returns, uncaught exceptions (if any) are handled, then the native thread confirms whether the JVM needs to be terminated as a result of the thread terminating (i.e. it is the last non-deamon thread). When the thread terminates, all resources for both the native and Java threads are released.
+</p>
+
+<p>
+The native thread is reclaimed once the Java thread terminates. The operating system is therefore responsible for scheduling all threads and dispatching them to any available CPU.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.5 Native Method Stack (per Thread)&quot;,&quot;hid&quot;:&quot;native_method_stack_per_thread&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;15372-16337&quot;} -->
+<h2 class="sectionedit12" id="execution_engine">3. Execution engine</h2>
+<div class="level2">
+
+<p>
+The actual execution of the bytecode occurs in the Execution Engine, which executes the instructions in the bytecode line-by-line by reading the data stored in the runtime data areas.
+</p>
+
+<p>
+It has three key components:
+</p>
+<ul>
+<li class="level1"><div class="li"> Interpreter</div>
+</li>
+<li class="level1"><div class="li"> Just-In-Time(JIT) Compiler</div>
+</li>
+<li class="level1"><div class="li"> Garbage collector(GC)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Execution engine&quot;,&quot;hid&quot;:&quot;execution_engine&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;16338-16659&quot;} -->
+<h3 class="sectionedit13" id="interpreter">3.1 Interpreter</h3>
+<div class="level3">
+
+<p>
+The interpreter interprets the bytecode and executes the instructions one-by-one. Hence, it can interpret one bytecode line quickly, but executing the interpreted result is a slower task. The disadvantage is that when one method is called multiple times, each time a new interpretation and a slower execution are required.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Interpreter&quot;,&quot;hid&quot;:&quot;interpreter&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;16660-17010&quot;} -->
+<h3 class="sectionedit14" id="just-in-time_jit_compiler">3.2 Just-In-Time (JIT) Compiler</h3>
+<div class="level3">
+
+<p>
+If only the interpreter is available, when one method is called multiple times, each time the interpretation will also occur, which is a redundant operation. The JIT compiler can compile the entire bytecode to native code(machine code). Then for repeated method calls, it directly provides the native code. Because the <strong>execution of native code is much faster</strong> than interpreting instructions one by one. The native code is stored in the CPU cache, thus the compiled code can be executed quicker.
+</p>
+
+<p>
+But, compiling bytecode to native code takes more time than the interpreter to interpret. For a code segment that executes just once, it is better to interpret it instead of compiling it. Also, the native code is stored in the cache, which is an expensive resource. With these circumstances, the JIT compiler internally checks the frequency of each method call and decides to compile it only when the selected method has occurred more than a certain level of times. This idea of <strong>adaptive compiling</strong> has been used in Oracle Hotspot VMs.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Just-In-Time (JIT) Compiler&quot;,&quot;hid&quot;:&quot;just-in-time_jit_compiler&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:14,&quot;range&quot;:&quot;17011-18092&quot;} -->
+<h3 class="sectionedit15" id="garbage_collector_gc">3.3 Garbage collector (GC)</h3>
+<div class="level3">
+
+<p>
+As long as an object is being referenced, the JVM considers it alive. Once an object is no longer referenced and therefore is not reachable by the application code, the garbage collector removes it and reclaims the memory. In general, garbage collection happens under the hood, however, we can trigger it by calling System.gc() method (Again the execution is not guaranteed. Hence, call Thread.sleep(1000) and wait for GC to complete).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.3 Garbage collector (GC)&quot;,&quot;hid&quot;:&quot;garbage_collector_gc&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:15,&quot;range&quot;:&quot;18093-18567&quot;} -->
+<h3 class="sectionedit16" id="jvm_performance_optimizations">3.4 JVM performance optimizations</h3>
+<div class="level3">
+
+<p>
+Execution Engine is a key subsystem for JVM performance optimizations. Among such efforts, the following 4 components can largely improve its performance.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Intermediate Code Generator</strong> produces intermediate code.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Code Optimizer</strong> is responsible for optimizing the intermediate code generated above.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Target Code Generator</strong> is responsible for generating Native Code (i.e. Machine Code).</div>
+</li>
+<li class="level1"><div class="li"> <strong>Profiler</strong> is a special component, responsible for finding performance bottlenecks a.k.a. hotspots (e.g. instances where one method is called multiple times)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="vendor_approaches_for_compiling_optimizations">Vendor Approaches for Compiling Optimizations</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="oracle_hotspot_vms">Oracle Hotspot VMs</h5>
+<div class="level5">
+
+<p>
+Oracle has 2 implementations of their standard Java VMs with a popular JIT compiler model called Hotspot Compiler. Through profiling, it can identify the hotspots that require JIT compiling the most and then compile those performance-critical portions of the code to native code. Over time, if such a compiled method is no longer frequently invoked, it identifies the method as no longer a hotspot and quickly removes the native code from the cache and starts running in interpreter mode. This methodology creates a boost in performance while avoiding unnecessary compilation of seldom used code. Additionally, on the fly, the Hotspot Compiler decides how best to optimize compiled code with techniques such as “in lining”. The run time analysis performed by the compiler allows it to eliminate the guesswork in determining which optimizations will yield the largest performance benefit.
+</p>
+
+<p>
+The different vms use different custom-built implementations of the JIT compiler as mentioned below.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Oracle Java Hotspot Client VM</strong> is the default VM technology for Oracle JDK and JRE. It is tuned for best performance when running applications in a client environment by reducing application start up time and memory footprint.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Oracle Java Hotspot Server VM</strong> is designed for maximum program execution speed for applications running in a server environment. The JIT compiler used here is called Advanced Dynamic Optimizing Compiler and uses more complex and diverse performance optimization techniques. The Java HotSpot Server VM is invoked by using the server command line option (e.g. java server MyApp)</div>
+</li>
+</ul>
+
+<p>
+The Oracle’s Java Hotspot technology is famous for its rapid memory allocation, fast and efficient GC, and readily-scalable thread-handling capability in large shared-memory multiprocessor servers.
+</p>
+
+</div>
+
+<h5 id="ibm_aot_ahead-of-time_compiling">IBM AOT (Ahead-Of-Time) Compiling</h5>
+<div class="level5">
+
+<p>
+These JVMs share the native code compiled through the shared cache, thus the code that has been already compiled through the AOT compiler can be used by another JVM without compiling. In addition, IBM JVM provides a fast way of execution by pre-compiling code to JXE (Java Executable) file format using the AOT compiler.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.4 JVM performance optimizations&quot;,&quot;hid&quot;:&quot;jvm_performance_optimizations&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:16,&quot;range&quot;:&quot;18568-21437&quot;} -->
+<h2 class="sectionedit17" id="java_native_interface_jni">4. Java Native Interface (JNI)</h2>
+<div class="level2">
+
+<p>
+This interface is used to interact with Native Method Libraries required for the execution and provide the capabilities of such Native Libraries (often written in C/C++). This enables JVM to call C/C++ libraries and to be called by C/C++ libraries which may be specific to hardware.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Java Native Interface (JNI)&quot;,&quot;hid&quot;:&quot;java_native_interface_jni&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:17,&quot;range&quot;:&quot;21438-21765&quot;} -->
+<h2 class="sectionedit18" id="native_method_libraries">5. Native Method Libraries</h2>
+<div class="level2">
+
+<p>
+This is a collection of C/C++ Native Libraries which is required for the Execution Engine and can be accessed through the provided Native Interface.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Native Method Libraries&quot;,&quot;hid&quot;:&quot;native_method_libraries&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:18,&quot;range&quot;:&quot;21766-21955&quot;} -->
+<h1 class="sectionedit19" id="jvm_threads">JVM Threads</h1>
+<div class="level1">
+
+<p>
+We discussed how a Java program gets executed, but didn’t specifically mention the executors. Actually, to perform each task we discussed earlier, the JVM concurrently runs multiple threads. Some of these threads carry the programming logic and are created by the program (application threads), while the rest is created by JVM itself to undertake background tasks in the system (system threads).
+</p>
+
+<p>
+The main application thread is created by invoking public static void main(String[]) and all other application threads are created by this main thread. Application threads perform tasks such as executing instructions starting with the main() method, creating objects in the Heap area if it finds new keyword in any method logic, etc.
+</p>
+
+<p>
+The major system threads are as follows:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Compiler threads</strong>: At runtime, these threads compile bytecode to native code.</div>
+</li>
+<li class="level1"><div class="li"> <strong>GC threads</strong>: All the GC related activities are carried out by these threads.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Periodic task thread</strong>: The timer events (i.e. interrupts) to schedule execution of periodic operations are performed by this thread.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Signal dispatcher thread</strong>: This thread receives signals sent to the JVM process and handles them inside the JVM by calling the appropriate JVM methods.</div>
+</li>
+<li class="level1"><div class="li"> <strong>VM thread</strong>: As a pre-condition, some operations need the JVM to arrive at a safe point where modifications to the Heap area does no longer happen. Examples for such scenarios are “stop-the-world” garbage collections, thread stack dumps, thread suspension, and biased locking revocation. These operations can be performed on a special thread called VM thread.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;JVM Threads&quot;,&quot;hid&quot;:&quot;jvm_threads&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:19,&quot;range&quot;:&quot;21956-23597&quot;} -->
+<h1 class="sectionedit20" id="jvm_tuning">JVM Tuning</h1>
+<div class="level1">
+
+<p>
+General JVM Tuning Considerations
+</p>
+<ul>
+<li class="level1"><div class="li"> Jvm vendor and version</div>
+</li>
+<li class="level1"><div class="li"> Tuning Heap size</div>
+</li>
+<li class="level1"><div class="li"> Tuning GC and choose an appropriate GC scheme.</div>
+</li>
+</ul>
+
+<p>
+Oracle doc on jvm running for Weblogic server <a href="https://docs.oracle.com/cd/E15523_01/web.1111/e13814/jvm_tuning.htm#PERFM154" class="urlextern" title="https://docs.oracle.com/cd/E15523_01/web.1111/e13814/jvm_tuning.htm#PERFM154" rel="nofollow">https://docs.oracle.com/cd/E15523_01/web.1111/e13814/jvm_tuning.htm#PERFM154</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;JVM Tuning&quot;,&quot;hid&quot;:&quot;jvm_tuning&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:20,&quot;range&quot;:&quot;23598-&quot;} -->

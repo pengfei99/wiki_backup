@@ -1,0 +1,212 @@
+
+<h1 class="sectionedit1" id="linux_user_account_creation_and_group_creation">Linux user account creation and group creation</h1>
+<div class="level1">
+
+<p>
+All user account related information are stored in the following files:
+</p>
+<ul>
+<li class="level1"><div class="li"> Unordered List Item/etc/passwd – Contains one line for each user account.</div>
+</li>
+<li class="level1"><div class="li"> /etc/shadow – Contains the password information in encrypted formatfor the system’s accounts and optional account aging information.</div>
+</li>
+<li class="level1"><div class="li"> /etc/group – Defines the groups on the system.</div>
+</li>
+<li class="level1"><div class="li"> /etc/default/useradd – This file contains a value for the default group, if none is specified by the useradd command.</div>
+</li>
+<li class="level1"><div class="li"> /etc/login.defs – This file defines the site-specific configuration for the shadow password suite stored in /etc/shadow file.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Linux user account creation and group creation" [1-666] -->
+<h2 class="sectionedit2" id="create_user_account_with_all_possible_options">Create user account with all possible options</h2>
+<div class="level2">
+
+<p>
+Most used option table
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Option      </th><th class="col1 leftalign"> Action           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> -c    </td><td class="col1 leftalign"> Adds comment to the user account     </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> -m    </td><td class="col1"> Creates user home directory in default location, if nonexistent </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> -s    </td><td class="col1 leftalign"> Default shell other than /bin/bash     </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> -n    </td><td class="col1 leftalign"> Does not create a private group for the user, usually a group with username     </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [750-1053] -->
+<p>
+<strong>1. create user account</strong>
+</p>
+<pre class="code">
+# List all local users in your linux server
+cut -d: -f1 /etc/password
+
+sudo useradd pliu --uid 8888 --home /home/sweet_home/pliu/ --create-home --groups godTeam, bestDevs --gid bestMan 
+
+-add user pliu
+-uid is 8888
+-user home /home/sweet_home/pliu/ 
+-useradd will create user home
+-user will be added two groups godTeam and bestDevs as second group
+-user will be added group bestMan as primary group</pre>
+
+<p>
+<strong>2. set up password</strong>
+</p>
+<pre class="code">sudo passwd pliu
+</pre>
+
+</div>
+<!-- EDIT2 SECTION "Create user account with all possible options" [667-1556] -->
+<h2 class="sectionedit4" id="disabling_user_accounts">Disabling user accounts</h2>
+<div class="level2">
+
+<p>
+There are several methods to disable accounts on a system. These range from editing the /etc/passwd file by hand. Or even using the passwd command with the -lswitch. Both of these methods have one big drawback: if the user has ssh access and uses an RSA key for authentication, they can still login using this method.
+</p>
+
+<p>
+Now let’s use the chage command, changing the password expiry date to a previous date. Also, it may be good to make a note on the account as to why we disabled it.
+</p>
+<pre class="code">[root@localhost Downloads]# chage -E 2005-10-01 bjones
+ 
+[root@localhost Downloads]# usermod  -c &quot;Disabled Account while Bob out of the country 
+for five months&quot; bjones
+
+[root@localhost Downloads]# grep bjones /etc/passwd 
+bjones:x:1001:1001:Disabled Account while Bob out of the country for four 
+months:/home/bjones:/bin/bash
+
+[root@localhost Downloads]#</pre>
+
+<p>
+chage
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Disabling user accounts" [1557-2457] -->
+<h2 class="sectionedit5" id="create_group_with_all_options">Create group with all options</h2>
+<div class="level2">
+<pre class="code">#this will create a group bestDevs with gid 8888
+groupadd -g 8888 bestDevs
+
+# all group info is stored in /etc/group
+# getent can get entries from name service switch libraries
+#show all groups and memebers in the system
+getent group
+
+# get info of a specific group/gid
+getent group bestDevs
+getent group 8888
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Create group with all options" [2458-2826] -->
+<h3 class="sectionedit6" id="create_group_with_password">create group with password</h3>
+<div class="level3">
+
+<p>
+Let&#039;s make a new group called secret. We will add a password to the group, allowing the users to add themselves with a known password.
+</p>
+<pre class="code">[root@localhost]# groupadd secret
+
+[root@localhost]# gpasswd secret 
+Changing the password for group secret 
+New Password:  
+Re-enter new password:
+
+[root@localhost]# exit 
+exit
+
+[centos@localhost ~]$ newgrp secret 
+Password:
+
+[centos@localhost ~]$ groups 
+secret wheel rdc
+
+[centos@localhost ~]$</pre>
+
+</div>
+<!-- EDIT6 SECTION "create group with password" [2827-3313] -->
+<h3 class="sectionedit7" id="modifier_user_account">Modifier user account</h3>
+<div class="level3">
+
+<p>
+usermod is used to update account attributes.
+</p>
+
+<p>
+Following are the common usermod switches.
+</p>
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Option      </th><th class="col1 leftalign"> Action           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> -c    </td><td class="col1 leftalign"> Comment, updates the user comment value     </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> -a    </td><td class="col1"> Appends, adds user to supplementary groups, only with the -G option </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> -d    </td><td class="col1 leftalign"> Home directory, updates the user&#039;s home directory     </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> -G    </td><td class="col1 leftalign"> Groups, adds or removesthe secondary user groups     </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> -g    </td><td class="col1 leftalign"> Group, default primary group of the user     </td>
+	</tr>
+</table></div>
+<!-- EDIT8 TABLE [3439-3798] --><pre class="code">[root@localhost]# groups centos 
+centos : accounting secret
+
+# change the primary group of pliu to bioaster
+[root@localhost]# usermod -g bioaster pliu
+
+# add the secondary group wheel to user centos
+[root@localhost]# usermod -a -G wheel centos
+
+[root@localhost]# groups centos
+centos : accounting wheel secret
+
+[root@localhost]#</pre>
+
+</div>
+<!-- EDIT7 SECTION "Modifier user account" [3314-4144] -->
+<h3 class="sectionedit9" id="modify_group">modify group</h3>
+<div class="level3">
+
+<p>
+<code>groupmod -g 8888 mygroup</code>
+</p>
+
+<p>
+change gid of mygroup to 8888
+</p>
+
+</div>
+<!-- EDIT9 SECTION "modify group" [4145-4231] -->
+<h3 class="sectionedit10" id="remove_user">Remove user</h3>
+<div class="level3">
+<pre class="code">userdel pliu
+
+#remove user and user home
+userdel -r pliu</pre>
+
+</div>
+<!-- EDIT10 SECTION "Remove user" [4232-] -->

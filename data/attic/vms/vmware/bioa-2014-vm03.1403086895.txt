@@ -1,0 +1,41 @@
+====== BIOA-2014-VM03 ======
+
+===== Introduction =====
+
+Machine servant de serveur web.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : Debian GNU/Linux 7.5 (wheezy)
+  * **Matériel** : 
+    * //RAM//: 1Go
+    * //Disques durs//: 2Go
+    * //Adresse MAC// : 00:0C:29:2E:77:C5
+  * **Adresse IP** : -
+
+===== Installation =====
+
+==== Système de base ====
+
+<code text>
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+</code>
+
+==== Lighttpd ====
+
+<code text>
+$ aptitude install --without-recommends lighttpd php5-cgi php5 php5-sqlite python pip
+$ pip install yoyo-migrations
+</code>
+
+===== Journal =====
+
+  * **2014.06.17 (tlc)** Installation

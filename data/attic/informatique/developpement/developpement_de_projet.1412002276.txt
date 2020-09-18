@@ -1,0 +1,31 @@
+====== Développement collaboratif ======
+
+{{tag>todo}}
+
+Devrait s'inspirer de [[http://fgcz-intranet.uzh.ch/tiki-index.php?page=bioinformatics.tools.development_guidelines|la page du FGCZ]], mais sans le Redmine !
+
+    $ mkdir <PROJECT_NAME>
+    $ cd <PROJECT_NAME>
+    $ bzr init
+    $ vim <YOUR_FILE>
+    $ bzr add
+    $ bzr ci -m "My commit message."
+    
+    # Init a shared repository that won't contain working trees
+    $ bzr init-repo --no-trees bzr+ssh://code.bioaster.org/depots/<PROJECT_NAME>
+    
+    # Push your project to the remote repo, this will be the "trunk"
+    $ bzr push bzr+ssh://depots.bioaster.org/<PROJECT_NAME>
+
+    $ bzr branch bzr+ssh://code.bioaster.org/depots/<PROJECT_NAME> \
+                 bzr+ssh://code.bioaster.org/depots/<PROJECT_NAME>/<DEV_BRANCH>
+
+    $ bzr branch bzr+ssh://code.bioaster.org/depots/<PROJECT_NAME>/<DEV_BRANCH>
+    $ cd <DEV_BRANCH>
+    # code, test, commit... ad infinitum!
+
+    $ bzr push :parent
+    All changes applied successfully.                                                                      
+    Pushed up to revision X.
+
+As **"1 branch == 1 merge request"**, no further development should be done in the branch.

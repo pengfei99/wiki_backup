@@ -1,0 +1,133 @@
+
+<h1 class="sectionedit1" id="shiny_server">Shiny Server</h1>
+<div class="level1">
+
+<p>
+<strong>Shiny</strong> is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring <abbr title="HyperText Markup Language">HTML</abbr>, <abbr title="Cascading Style Sheets">CSS</abbr>, or JavaScript knowledge.
+</p>
+
+<p>
+<strong>Pour commencer :</strong>
+Instanciation d&#039;une VM SL7 sur Open Stack depuis une machine interactive du CC
+</p>
+<pre class="code text">$ nova boot --key-name=cloudkey --image=official-SL-7x-x86_64 --flavor=m1.medium shiny_server</pre>
+
+<p>
+Une fois la VM instanciée, s&#039;y connecter …
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Shiny Server" [1-544] -->
+<h2 class="sectionedit2" id="shiny_server1">Shiny Server</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Shiny Server" [545-570] -->
+<h3 class="sectionedit3" id="installation">Installation</h3>
+<div class="level3">
+
+<p>
+Installation de R :
+</p>
+<pre class="prettyprint lang-class">
+$ rpm -Uvh http://fr2.rpmfind.net/linux/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+$ sudo yum install R
+</pre>
+<p>
+Installation du package “shiny” dans R :
+</p>
+<pre class="prettyprint lang-class">
+$ sudo su -c &quot;R -e \&quot;install.packages(&#039;shiny&#039;, repos=&#039;http://cran.rstudio.com/&#039;)\&quot;&quot;
+</pre>
+<p>
+Installation du package “markdown” dans R :
+</p>
+<pre class="prettyprint lang-class">
+$ sudo su -c &quot;R -e \&quot;install.packages(&#039;markdown&#039;, repos=&#039;http://cran.univ-lyon1.fr/&#039;)\&quot;&quot;
+</pre>
+<p>
+Installation du package “devtools” dans R :
+</p>
+
+<p>
+Tout d&#039;abord installer libcurl et libcurl-devel (sinon on se tape : ERROR: dependencies ‘httr’, ‘RCurl’ are not available for package ‘devtools’)
+</p>
+<pre class="prettyprint lang-class">
+$ sudo yum -y install libcurl libcurl-devel
+</pre><pre class="prettyprint lang-class">
+$ sudo su -c &quot;R -e \&quot;install.packages(&#039;devtools&#039;, dependencies = TRUE, repos=&#039;http://cran.univ-lyon1.fr/&#039;)\&quot;&quot;
+</pre>
+<p>
+Téléchargement et installation de Shiny server :
+</p>
+<pre class="prettyprint lang-class">
+$ wget http://download3.rstudio.org/centos-5.9/x86_64/shiny-server-1.3.0.403-rh5-x86_64.rpm
+$ sudo yum install --nogpgcheck shiny-server-1.3.0.403-rh5-x86_64.rpm
+</pre>
+</div>
+<!-- EDIT3 SECTION "Installation" [571-1765] -->
+<h3 class="sectionedit4" id="configuration">Configuration</h3>
+<div class="level3">
+
+<p>
+Création d&#039;un user bioaster
+</p>
+<pre class="prettyprint lang-class">
+$ sudo useradd -r -m bioaster
+</pre><dl class="code">
+<dt><a href="/_export/code/ut6/projets_internes/plateforme_bioinfo/module_visualisation/instance_shiny?codeblock=1" title="Télécharger un extrait" class="mediafile mf_conf">/etc/shiny-server/shiny-server.conf</a></dt>
+<dd><pre class="code php"><span class="co2"># Define the user we should use when spawning R Shiny processes
+</span>run_as bioaster<span class="sy0">;</span>
+&nbsp;
+<span class="co2"># Define a top-level server which will listen on a port
+</span>server <span class="br0">&#123;</span>
+  <span class="co2"># Instruct this server to listen on port 3838
+</span>  listen <span class="nu0">80</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co2"># Define the location available at the base URL
+</span>  location <span class="sy0">/</span> <span class="br0">&#123;</span>
+    <span class="co2"># Run this location in 'site_dir' mode, which hosts the entire directory
+</span>    <span class="co2"># tree at '/srv/shiny-server'
+</span>    site_dir <span class="sy0">/</span>srv<span class="sy0">/</span>shiny<span class="sy0">-</span>server<span class="sy0">;</span>
+&nbsp;
+    <span class="co2"># Define where we should put the log files for this location
+</span>    log_dir <span class="sy0">/</span><span class="kw2">var</span><span class="sy0">/</span><a href="http://www.php.net/log"><span class="kw3">log</span></a><span class="sy0">/</span>shiny<span class="sy0">-</span>server<span class="sy0">;</span>
+&nbsp;
+    <span class="co2"># Should we list the contents of a (non-Shiny-App) directory when the user 
+</span>    <span class="co2"># visits the corresponding URL?
+</span>    directory_index off<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT4 SECTION "Configuration" [1766-2617] -->
+<h3 class="sectionedit5" id="demarrerarreterredemarrerrechargeretat">Démarrer / arrêter / redémarrer / recharger / état</h3>
+<div class="level3">
+<pre class="prettyprint lang-class">
+$ service shiny-server start
+$ service shiny-server stop
+$ service shiny-server restart
+$ service shiny-server reload
+$ service shiny-server status
+</pre>
+</div>
+<!-- EDIT5 SECTION "Démarrer / arrêter / redémarrer / recharger / état" [2618-2869] -->
+<h3 class="sectionedit6" id="personnalisation">Personnalisation</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT6 SECTION "Personnalisation" [2870-2897] -->
+<h2 class="sectionedit7" id="acces">Accès</h2>
+<div class="level2">
+
+<p>
+<abbr title="Uniform Resource Locator">URL</abbr> temporaire
+</p>
+
+<p>
+<a href="http://134.158.37.10/" class="urlextern" title="http://134.158.37.10/"  rel="nofollow">http://134.158.37.10/</a>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Accès" [2898-] -->

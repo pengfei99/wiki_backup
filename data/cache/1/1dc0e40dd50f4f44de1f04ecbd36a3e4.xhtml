@@ -1,0 +1,542 @@
+
+<h1 class="sectionedit1" id="ajouter_un_objet_au_systeme">Ajouter un objet au système</h1>
+<div class="level1">
+
+<p>
+<em class="u"><strong>Prérequis</strong></em> : il faut s&#039;assurer d&#039;avoir tous les composants (<code>bundle</code>) du <a href="https://gitlab.in2p3.fr/bioaster/template-symfony/commits/master" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/template-symfony/commits/master"  rel="nofollow">template Symfony</a> installés et configurés avant de continuer : doctrine-migrations, liip/functional-test, …
+</p>
+
+<p>
+Une des actions de base est d&#039;ajouter un objet au système, et de fournir toutes les pages permettant de le gérer.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Ajouter un objet au système" [1-426] -->
+<h2 class="sectionedit2" id="ajouter_ou_modifier_un_objet">Ajouter ou modifier un objet</h2>
+<div class="level2">
+
+<p>
+Créer une nouvelle classe entité :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=0" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Entity/Book.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+<span class="kw2">namespace</span> AppBundle\Entity<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Doctrine\ORM\Mapping <span class="kw1">as</span> ORM<span class="sy0">;</span>
+&nbsp;
+<span class="co4">/**
+ * @ORM\Entity
+ * @ORM\Table(name=&quot;book&quot;)
+ */</span>
+<span class="kw2">class</span> Book
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;integer&quot;)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$id</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;string&quot;, length=100)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$title</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;string&quot;, length=100)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$author</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;date&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$publish_date</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;text&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$genre</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;integer&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$number_of_pages</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;text&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$description</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Générer les accesseurs et les fichiers de migrations :
+</p>
+<pre class="code">$ php app/console doctrine:generate:entities AppBundle
+Generating entity &quot;AppBundle\Entity\Book&quot;
+  &gt; backing up Book.php to Book.php~
+  &gt; generating AppBundle\Entity\Book</pre>
+<pre class="code">$ php app/console doctrine:migrations:diff
+Generated new migration class to &quot;app/DoctrineMigrations/Version20150929143419.php&quot; from schema differences.</pre>
+<pre class="code">$ php app/console doctrine:migrations:status
+
+ == Configuration
+
+    &gt;&gt; Name:                                               Application Migrations
+    &gt;&gt; Database Driver:                                    pdo_mysql
+    &gt;&gt; Database Name:                                      hector
+    &gt;&gt; Configuration Source:                               manually configured
+    &gt;&gt; Version Table Name:                                 migration_versions
+    &gt;&gt; Migrations Namespace:                               Application\Migrations
+    &gt;&gt; Migrations Directory:                               app/DoctrineMigrations
+    &gt;&gt; Previous Version:                                   Already at first version
+    &gt;&gt; Current Version:                                    0
+    &gt;&gt; Next Version:                                       2015-09-29 14:34:19 (20150929143419)
+    &gt;&gt; Latest Version:                                     2015-09-29 14:34:19 (20150929143419)
+    &gt;&gt; Executed Migrations:                                0
+    &gt;&gt; Executed Unavailable Migrations:                    0
+    &gt;&gt; Available Migrations:                               1
+    &gt;&gt; New Migrations:                                     1</pre>
+<pre class="code">$ php app/console doctrine:migrations:migrate --no-interaction
+                                                              
+                    Application Migrations                    
+                                                              
+
+Migrating up to 20150929143419 from 0
+
+  ++ migrating 20150929143419
+
+     -&gt; CREATE TABLE book (…) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+
+  ++ migrated (0.02s)
+
+  ------------------------
+
+  ++ finished in 0.02
+  ++ 1 migrations executed
+  ++ 1 sql queries</pre>
+
+<p>
+On peut maintenant enregistrer les modifications.
+</p>
+<pre class="code">$ git add .
+$ git commit -m &quot;Add model &#039;Book&#039;&quot;</pre>
+
+</div>
+<!-- EDIT2 SECTION "Ajouter ou modifier un objet" [427-3610] -->
+<h2 class="sectionedit3" id="afficher_les_objets">Afficher les objets</h2>
+<div class="level2">
+
+<p>
+On veut lister tous les &#039;book&#039; sur une page <code>/books</code>. 
+</p>
+
+<p>
+On commence par écrire le test qui permettra de vérifier l&#039;intégriter de cette fonction :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=6" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Tests/Controller/BookControllerTest.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Tests\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> BookControllerTest <span class="kw2">extends</span> ControllerFunctionalTestCase
+<span class="br0">&#123;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> testIndexAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$client</span> <span class="sy0">=</span> <span class="kw2">self</span><span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="st0">&quot;/books&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Le test devrait logiquement échouer :
+</p>
+<pre class="code">phpunit -c app
+
+PHPUnit 3.7.28 by Sebastian Bergmann.
+
+Configuration read from app/phpunit.xml.dist
+[…]
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1.</pre>
+
+<p>
+On peut maintenant créer le contrôleur et l&#039;action qui va retrouver les données :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=8" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/BookController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+<span class="kw2">use</span> Symfony\Bundle\FrameworkBundle\Controller\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> AppBundle\Entity\Book<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> BookController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(&quot;/books&quot;, name=&quot;​book_index&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$books</span> <span class="sy0">=</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">getDoctrine</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+                      <span class="sy0">-&gt;</span><span class="me1">getRepository</span><span class="br0">&#40;</span><span class="st_h">'AppBundle:Book'</span><span class="br0">&#41;</span>
+                      <span class="sy0">-&gt;</span><span class="me1">findAll</span><span class="br0">&#40;</span><span class="kw4">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'book/index.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'books'</span> <span class="sy0">=&gt;</span> <span class="re0">$books</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+On crée la vue qui va avec :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=9" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/book/index.html.twig</a></dt>
+<dd><pre class="code html4strict">{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Books
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Books<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;table table-striped&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/thead.html"><span class="kw2">thead</span></a>&gt;&lt;<a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;</span>Title<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;&lt;<a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;</span>Author<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/thead.html"><span class="kw2">thead</span></a>&gt;</span>
+    {% for book in books %}
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/tr.html"><span class="kw2">tr</span></a>&gt;&lt;<a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>{{ book.title }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>
+        <span class="sc2">&lt;<a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>{{ book.author }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/tr.html"><span class="kw2">tr</span></a>&gt;</span>
+    {% endfor %}
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a>&gt;</span>
+{% endblock %}</pre>
+</dd></dl>
+
+<p>
+Le résultat est visible à <code>127.0.0.1:8000/books</code>.
+</p>
+
+<p>
+On peut ajouter un test plus poussé qui va vérifier que les données attendues s&#039;affichent :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=10" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Tests/Controller/BookControllerTest.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Tests\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> BookControllerTest <span class="kw2">extends</span> ControllerFunctionalTestCase
+<span class="br0">&#123;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> testIndexAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$client</span> <span class="sy0">=</span> <span class="kw2">self</span><span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$crawler</span> <span class="sy0">=</span> <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="st0">&quot;/books&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$crawler</span><span class="sy0">-&gt;</span><span class="me1">filter</span><span class="br0">&#40;</span><span class="st_h">'html:contains(&quot;Books&quot;)'</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><a href="http://www.php.net/count"><span class="kw3">count</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+On peut relancer les tests et constater les 2 succès :
+</p>
+<pre class="code">$ phpunit -c app/
+PHPUnit 3.7.28 by Sebastian Bergmann.
+
+Configuration read from app/phpunit.xml.dist
+
+..
+
+Time: 692 ms, Memory: 18.75Mb
+
+OK (2 tests, 5 assertions)</pre>
+
+<p>
+On peut maintenant enregistrer les modifications :
+</p>
+<pre class="code">  $ git add .
+  $ git commit -m &quot;Display list of &#039;Book&#039;&quot;</pre>
+
+</div>
+<!-- EDIT3 SECTION "Afficher les objets" [3611-6561] -->
+<h2 class="sectionedit4" id="afficher_un_objet">Afficher un objet</h2>
+<div class="level2">
+
+<p>
+Dans cette section, on veut afficher les détails d&#039;un &#039;book&#039; dans la page <code>/books/ID</code>.
+</p>
+
+<p>
+Avant de commencer, on crée les <em>fixtures</em> qui permettront de réaliser les tests :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=12" title="Télécharger un extrait" class="mediafile mf_php">AppBundle\DataFixtures\ORM\LoadBookData.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+<span class="kw2">namespace</span> AppBundle\DataFixtures\ORM<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Doctrine\Common\DataFixtures\FixtureInterface<span class="sy0">;</span>
+<span class="kw2">use</span> Doctrine\Common\Persistence\ObjectManager<span class="sy0">;</span>
+<span class="kw2">use</span> AppBundle\Entity\Book<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> LoadBookData implements FixtureInterface
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * {@inheritDoc}
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> load<span class="br0">&#40;</span>ObjectManager <span class="re0">$manager</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$b1</span> <span class="sy0">=</span> <span class="kw2">new</span> Book<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$b1</span><span class="sy0">-&gt;</span><span class="me1">setIsbn</span><span class="br0">&#40;</span><span class="st_h">'0123456789ABC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$b1</span><span class="sy0">-&gt;</span><span class="me1">setTitle</span><span class="br0">&#40;</span><span class="st_h">'This is my title'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$manager</span><span class="sy0">-&gt;</span><span class="me1">persist</span><span class="br0">&#40;</span><span class="re0">$b1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$manager</span><span class="sy0">-&gt;</span><a href="http://www.php.net/flush"><span class="kw3">flush</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+On ajoute ensuite le test fonctionnel pour cette méthode :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=13" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Tests/BookControllerFunctionalTest.php</a></dt>
+<dd><pre class="code php"><span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> testShow<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">loadFixtures</span><span class="br0">&#40;</span><a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'AppBundle\DataFixtures\ORM\LoadBookData'</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$client</span> <span class="sy0">=</span> static<span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$crawler</span> <span class="sy0">=</span> <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="st_h">'/books/1234567890ABC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertCount</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="re0">$crawler</span><span class="sy0">-&gt;</span><span class="me1">filter</span><span class="br0">&#40;</span><span class="st_h">'html:contains(&quot;This is my title&quot;)'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span></pre>
+</dd></dl>
+
+<p>
+On crée ensuite l&#039;action :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=14" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/BookController.php</a></dt>
+<dd><pre class="code php"><span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> AppBundle\Model\Book<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> PersonController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+    <span class="co4">/**
+     * @Route(&quot;/books/{isbn}&quot;, name=&quot;book_show&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span>Book <span class="re0">$book</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'book/show.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'book'</span> <span class="sy0">=&gt;</span> <span class="re0">$book</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span></pre>
+</dd></dl>
+
+<p>
+Et on crée ensuite la vue et on ajoute un lien sur chaque titre dans la liste des &#039;book&#039; :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=15" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/book/show.html.twig</a></dt>
+<dd><pre class="code html4strict">{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Détails sur l'ISBN #{{ book.isbn }}
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Détails sur l'ISBN #{{ book.isbn }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/dl.html"><span class="kw2">dl</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;dl-horizontal&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;</span>ISBN<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;&lt;<a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>{{ book.isbn }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;</span>Titre<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dt.html"><span class="kw2">dt</span></a>&gt;&lt;<a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>{{ book.title|capitalize }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dd.html"><span class="kw2">dd</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/dl.html"><span class="kw2">dl</span></a>&gt;</span>
+{% endblock %}</pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=16" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/book/index.html.twig</a></dt>
+<dd><pre class="code html4strict">    <span class="sc2">&lt;<a href="http://december.com/html/4/element/li.html"><span class="kw2">li</span></a>&gt;&lt;<a href="http://december.com/html/4/element/a.html"><span class="kw2">a</span></a> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;{{ path('book_show', { 'isbn': book.isbn }) }}&quot;</span>&gt;</span>{{ book.title|capitalize }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/a.html"><span class="kw2">a</span></a>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/li.html"><span class="kw2">li</span></a>&gt;</span></pre>
+</dd></dl>
+
+<p>
+Pour finir, on relance les tests :
+</p>
+<pre class="code">  $ phpunit -c app</pre>
+
+<p>
+On enregistre les modifications :
+</p>
+<pre class="code">  $ bzr add
+  $ bzr ci -m &quot;Affiche les détails d&#039;un &#039;book&#039;&quot;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Afficher un objet" [6562-9180] -->
+<h2 class="sectionedit5" id="creer_un_objet">Créer un objet</h2>
+<div class="level2">
+<!-- EDIT6 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+Work in progress…
+</p>
+<ul>
+<li class="level1"><div class="li"> Écrire un test pour la soumission du formulaire</div>
+</li>
+</ul>
+</div><!-- EDIT7 PLUGIN_WRAP_END [0-] -->
+<p>
+Ici, on veut créer un nouvel objet en passant accédant y l&#039;url <code>/books/add</code>.
+</p>
+
+<p>
+On commence par tester l&#039;existence de la page :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=17" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Tests/Controller/BookControllerTest.php</a></dt>
+<dd><pre class="code php"><span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+<span class="kw2">public</span> <span class="kw2">function</span> testAddAction<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="re0">$client</span> <span class="sy0">=</span> <span class="kw2">self</span><span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="re0">$crawler</span> <span class="sy0">=</span> <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="st0">&quot;/books/add&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span></pre>
+</dd></dl>
+
+<p>
+On ajoute ensuite les contraintes de validation dans le modèle :
+</p>
+<!-- EDIT8 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+<a href="http://symfony.com/doc/current/book/validation.html" class="urlextern" title="http://symfony.com/doc/current/book/validation.html"  rel="nofollow">http://symfony.com/doc/current/book/validation.html</a>
+</p>
+
+<p>
+<a href="http://symfony.com/doc/current/book/forms.html" class="urlextern" title="http://symfony.com/doc/current/book/forms.html"  rel="nofollow">http://symfony.com/doc/current/book/forms.html</a>
+</p>
+</div><!-- EDIT9 PLUGIN_WRAP_END [0-] -->
+<p>
+On crée ensuite l&#039;action en faisant attention de déclarer la route avant le <em>catchall</em> <code>/books/{id}</code> :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=18" title="Télécharger un extrait" class="mediafile mf_php">src/AppBundle/Controller/BookController.php</a></dt>
+<dd><pre class="code php"><span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter<span class="sy0">;</span>
+<span class="kw2">use</span> Symfony\Component\HttpFoundation\Request<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> AppBundle\Entity\Book<span class="sy0">;</span>
+<span class="kw2">use</span> AppBundle\Form\Type\BookType<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> BookController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+    <span class="co4">/**
+     * @Route(&quot;/books/add&quot;, name=&quot;book_add&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> addAction<span class="br0">&#40;</span>Request <span class="re0">$request</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$book</span> <span class="sy0">=</span> <span class="kw2">new</span> Book<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$form</span> <span class="sy0">=</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">createForm</span><span class="br0">&#40;</span><span class="kw2">new</span> BookType<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="re0">$book</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">handleRequest</span><span class="br0">&#40;</span><span class="re0">$request</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">isSubmitted</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">isValid</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <span class="re0">$book</span><span class="sy0">-&gt;</span><span class="me1">save</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+            <span class="co1">// $this-&gt;addFlash is equivalent to $this-&gt;get('session')-&gt;getFlashBag()-&gt;add()        </span>
+            <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">addFlash</span><span class="br0">&#40;</span><span class="st_h">'notice'</span><span class="sy0">,</span> <span class="st_h">'Data has been saved!'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+            <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">redirect</span><span class="br0">&#40;</span><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">generateUrl</span><span class="br0">&#40;</span><span class="st_h">'book_show'</span><span class="sy0">,</span>
+                                                       <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'id'</span> <span class="sy0">=&gt;</span> <span class="re0">$book</span><span class="sy0">-&gt;</span><span class="me1">getId</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'book/add.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'form'</span> <span class="sy0">=&gt;</span> <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">createView</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span></pre>
+</dd></dl>
+
+<p>
+Et on crée ensuite la vue et on ajoute un lien sur la page qui liste les &#039;book&#039; :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=19" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/book/add.html.twig</a></dt>
+<dd><pre class="code html4strict">{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Add a Book
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>New Book<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a> <span class="kw3">action</span><span class="sy0">=</span><span class="st0">&quot;{{ path('book_add') }}&quot;</span> <span class="kw3">method</span><span class="sy0">=</span><span class="st0">&quot;post&quot;</span> <span class="br0">&#123;</span><span class="br0">&#123;</span> form_enctype<span class="br0">&#40;</span>form<span class="br0">&#41;</span> <span class="br0">&#125;</span><span class="br0">&#125;</span> novalidate&gt;</span>
+    {{ form_widget(form) }}
+&nbsp;
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;submit&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;Add a book&quot;</span></span>
+<span class="sc2">           <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;btn btn-primary&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a>&gt;</span>
+{% endblock %}</pre>
+</dd></dl>
+<!-- EDIT10 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_info plugin_wrap">
+<p>
+L&#039;option <code>novalidate</code> dans la balise <code>&lt;form&gt;</code> permet de désactiver la validation côté client. Celle-ci est “plus performante”, mais les messages d&#039;erreurs sont moins parlants. 
+</p>
+</div><!-- EDIT11 PLUGIN_WRAP_END [0-] --><dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_un_objet?codeblock=20" title="Télécharger un extrait" class="mediafile mf_twig">app/Resources/views/book/index.html.twig</a></dt>
+<dd><pre class="code html4strict">{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+    Books
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;pull-right&quot;</span>&gt;</span>
+        <span class="sc2">&lt;<a href="http://december.com/html/4/element/a.html"><span class="kw2">a</span></a> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;{{ path('book_add') }}&quot;</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;btn btn-primary&quot;</span>&gt;</span>
+            <span class="sc2">&lt;<a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;glyphicon glyphicon-plus&quot;</span> aria-hidden<span class="sy0">=</span><span class="st0">&quot;true&quot;</span>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a>&gt;</span>
+            Add
+        <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/a.html"><span class="kw2">a</span></a>&gt;</span>
+    <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/span.html"><span class="kw2">span</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+[…]</pre>
+</dd></dl>
+
+<p>
+On relance les tests :
+</p>
+<pre class="code">  $ phpunit -c app</pre>
+
+<p>
+On enregistre les modifications :
+</p>
+<pre class="code">  $ git add .
+  $ git commit -m &quot;Enregistre une nouvelle &#039;book&#039;&quot;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Créer un objet" [9181-12332] -->
+<h2 class="sectionedit12" id="modifier_un_objet">Modifier un objet</h2>
+<div class="level2">
+<!-- EDIT13 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+<a href="http://symfony.com/doc/current/book/forms.html" class="urlextern" title="http://symfony.com/doc/current/book/forms.html"  rel="nofollow">http://symfony.com/doc/current/book/forms.html</a>
+</p>
+</div><!-- EDIT14 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT12 SECTION "Modifier un objet" [12333-12437] -->
+<h2 class="sectionedit15" id="supprimer_un_objet">Supprimer un objet</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT15 SECTION "Supprimer un objet" [12438-] -->

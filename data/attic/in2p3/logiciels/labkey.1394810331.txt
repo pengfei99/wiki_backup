@@ -1,0 +1,97 @@
+====== LabKey ======
+
+===== Informations =====
+
+  * **Version** : 13.3
+  * **Licence** : Apache Software License
+  * **Page Web** : [[https://www.labkey.org]]
+  * **Description** : LabKey Server is open source software that helps scientists organize, analyze, and share biomedical research data.
+
+===== Installation =====
+
+<code>
+http://labkey.s3.amazonaws.com/downloads/general/r/13.3/LabKey13.3-30648-bin.tar.gz
+http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jre-7u51-linux-x64.rpm
+rpm -Uvh jre-7u51-linux-x64.rpm
+http://wwwftp.ciril.fr/pub/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz
+tar xvfz apache-tomcat-7.0.50.tar.gz
+mv apache-tomcat-7.0.50 /usr/local/
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh
+yum install postgresql postgresql-server
+vim /var/lib/pgsql/data/postgresql.conf
+# join_collapse_limit = 10
+vim /var/lib/pgsql/data/pg_hba.conf
+# local   all         all                               trust
+# host    all         all         127.0.0.1/32          trust
+service postgresql initdb
+/etc/init.d/postgresql start
+su - postgres
+createlang -d template1 PLpgsql
+psql
+# create user labkey that owns db labkey
+ctrl+d
+tar xvzf LabKey13.3-30648-bin.tar.gz
+cd LabKey13.3-30648-bin
+cp tomcat-lib/* /usr/local/apache-tomcat-7.0.50/lib/
+mkdir /usr/local/labkey-13.3-30648
+cp -R bin/ labkeywebapp/ modules/ pipeline-lib/ /usr/local/labkey-13.3-30648
+### https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+mv labkey.xml /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/
+vim /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/labkey.xml
+chown -R apache:apache /usr/local/apache-tomcat-7.0.50
+/usr/local/apache-tomcat-7.0.50/conf/server.xml
+#<Connector port="8080" protocol="HTTP/1.1"
+#               connectionTimeout="20000"
+#               redirectPort="8443"
+#               proxyName="tomcat.bioaster.org"
+#               proxyPort="80"/>
+https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh
+</code>
+
+Installation du module **Genotypage** :
+
+<code>
+cd /usr/local/labkey-13.3-30648/modules
+cp /path/to/genotyping.module .
+</code>
+
+Sur la page d'un projet de type **Genotypage**, cliquer sur ''admin'' et définir les requêtes suivantes : 
+
+  * **Runs** = exp.Runs
+  * **Sample** = exp.DataInputs
+
+===== Dégogage =====
+
+[[http://4proc.com/2013/05/12/create-a-debug-log-file-for-your-labkey-server.html]]
+
+Ajouter la section suivante près de l'appender nommé ''LABKEY'' :
+
+<code xml LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml>
+<appender name="LABKEYDEBUG" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="${labkey.log.home}/labkey-debug.log"/>
+    <param name="Append" value="true"/>
+    <param name="MaxFileSize" value="10MB"/>
+    <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%-5p %-24.24c{1} %d{ISO8601} %24.24t : %m%n"/>
+    </layout>
+</appender>
+</code>
+
+Modifier le logger ''org.labkey'' :
+
+<code xml LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml>
+<logger name="org.labkey">
+    <level value="debug"/>
+    <appender-ref ref="LABKEY"/>
+    <appender-ref ref="LABKEYDEBUG"/>
+</logger>
+</code>
+
+Le fichier de log devrait apparaitre dans ''TOMCAT_HOME/logs/labkey-debug.log'' après redémarrage du serveur.
+===== Log =====
+
+* **2014.02.17 (tlc)** Version 13.3 installée
+
+{{tag>todo}}

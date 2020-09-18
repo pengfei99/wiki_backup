@@ -1,0 +1,14 @@
+$ nova secgroup-list
++---------+-------------+
+| Name    | Description |
++---------+-------------+
+| default | default     |
++---------+-------------+
+&nbsp;
+$ nova secgroup-list-rules default 
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
++-------------+-----------+---------+-----------+--------------+
+&nbsp;
+$ nova secgroup-add-rule default tcp 22 22 0.0.0.0/0 

@@ -1,0 +1,23 @@
+<span class="co1"># name of your virtural environment</span><span class="co3">
+name</span><span class="sy2">: </span>ml-env
+&nbsp;
+<span class="co1"># List of repos which conda will use to download dependenices</span><span class="co3">
+channels</span><span class="sy2">: </span>
+  - defaults
+&nbsp;
+<span class="co1"># List of dependencies which your environment will install</span><span class="co4">
+dependencies</span><span class="sy2">:
+</span>  - python=3.6
+  - numpy
+<span class="co1"># A set of utility functions for iterators, functions, and dictionaries.</span>
+  - toolz
+<span class="co1"># Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments</span>
+  - matplotlib
+<span class="co1"># dill extends python's pickle module for serializing and de-serializing python objects to the majority of the built-in python type</span>
+  - dill
+  - pandas
+  - tensorflow
+<span class="co1"># PyTables is a package for managing hierarchical datasets and designed to efficiently and easily cope with extremely large amounts of data</span>
+  - pytables
+<span class="co1"># Pyhical location where your environment will be located</span><span class="co3">
+prefix</span><span class="sy2">: </span>/tmp/pliu/envs/ml-env

@@ -1,0 +1,5 @@
+$ service shiny-server start
+$ service shiny-server stop
+$ service shiny-server restart
+$ service shiny-server reload
+$ service shiny-server status

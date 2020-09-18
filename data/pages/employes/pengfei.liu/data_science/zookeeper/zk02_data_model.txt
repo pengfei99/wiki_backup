@@ -1,0 +1,172 @@
+====== ZooKeeper 02: The ZooKeeper data model ======
+
+ZooKeeper拥有一个**层次的命名空间**，这个和分布式的文件系统非常相似。不同的是ZooKeeper命名空间中的**Znode**，兼具文件和目录两种特点。既像文件一样维护着数据、元信息、ACL、时间戳等数据结构，又像目录一样可以作为路径标识的一部分，并可以具有子znode。用户对znode具有增、删、改、查等操作（权限允许的情况下）。
+
+**znode具有原子性操作**，每个znode的数据将被原子性地读写，读操作会读取与znode相关的所有数据，写操作会一次性替换所有数据。zookeeper并没有被设计为常规的数据库或者大数据存储，相反的是，它用来管理调度数据，比如分布式应用中的配置文件信息、状态信息、汇集位置等等。**这些数据的共同特性就是它们都是很小的数据，通常以KB为大小单位。zooKeeper的服务器和客户端都被设计为严格检查并限制每个znode的数据大小至多1M，当时常规使用中应该远小于此值**。
+
+===== 2.1 Zonde Path (路径标注) =====
+
+Zonde由路径标注，ZooKeeper中被表示成有反斜杠分割的Unicode字符串，如同Unix中的文件路径。**路径必须是绝对的**，因此他们必须由**反斜杠来字符开头**。除此以外，**路径必须是唯一的**，也就是说每一个路径只有一个表示，因此这些路径不能改变。ZooKeeper的数据结构, 与普通的文件系统极为类似. 见下图:
+{{:employes:pengfei.liu:data_science:zookeeper:zookeeper_data_model.png?400|}}
+
+==== Restrictions of ZooKeeper path ====
+
+  * The slash-separated znode paths are canonical and have to be absolute. Relative paths and references are not recognized by ZooKeeper. 
+  * The znode names can be composed of any Unicode characters, and the znodes can have any name (except the word is reserved by ZooKeeper and "." ). 
+  * 1. null字符(\u0000)不能作为路径名的一部分；
+  * 2. 以下字符不能使用，因为它们不能很好地显示，或者以令人困惑的方式呈现:\u0001 - \u0019和\u007F - \u009F。
+  * 3. 不允许使用以下字符:\ud800 - uf8fff， \uFFF0 - uFFFF。
+  * 4. “.”字符可以用作另一个名称的一部分，但是“.”和“..”不能单独用于指示路径上的节点，因为ZooKeeper不使用相对路径. 下列内容无效:“/a/b/. / c”或“c / a / b / . . /”。
+  * 5. “zookeeper”是保留节点名。
+
+===== 2.2 Znode components =====
+
+图中的每个节点称为一个znode. 每个znode由3部分组成:
+
+  - stat：此为状态信息. 它包含着版本号(dataVersion)，时间戳(ctime,mtime), 权限等状态信息。ZooKeeper正是使用节点的这些特性来实现它的某些特定功能。每当Znode的数据改变时，他相应的版本号将会增加。每当客户端检索数据时，它将同时检索数据的版本号。并且如果一个客户端执行了某个节点的更新或删除操作，他也必须提供要被操作的数据版本号。如果所提供的数据版本号与实际不匹配，那么这个操作将会失败。(The version number increases whenever the znode's data changes. ZooKeeper uses the version numbers along with the associated timestamps to validate its in-core cache. The znode version number also enables the client to update or delete a particular znode through ZooKeeper APIs. If the version number specified doesn't match the current version of a znode, the operation fails. **However, this can be overridden by specifying 0 as the version number while performing a znode update or delete operation.**)
+  - data：与该znode关联的数据.
+  - children：该znode下的子节点.
+
+===== 2.3 Types of znodes =====
+
+ZooKeeper has three types of nodes: 
+  * persistent
+  * ephemeral. 
+  * sequential: It is a kind of a qualifier for the other two types. Both persistent and ephemeral znodes can be sequential znodes as well. 
+
+**Note that a znode's type is set at its creation time**.
+
+==== 2.3.1 The persistent znode ====
+
+As the name suggests, persistent znodes have a lifetime in the ZooKeeper's namespace until they're explicitly deleted. A znode can be deleted by calling the delete API call. It's not necessary that only the client that created a persistent znode has to delete it. Note that any authorized client of the ZooKeeper service can delete a znode.
+
+Persistent znodes are useful for storing data that needs to be highly available and accessible by all the components of a distributed application. For example, an application can store the configuration data in a persistent znode. The data as well as the znode will exist even if the creator client dies.
+
+==== 2.3.2 The ephemeral znode ====
+
+**An ephemeral znode is deleted by the ZooKeeper service when the creating client's session ends**. An end to a client's session can happen because of disconnection due to a client crash or explicit termination of the connection. 
+
+**Even though ephemeral nodes are tied to a client session, they are visible to all clients, depending on the configured Access Control List (ACL) policy.**
+
+An ephemeral znode can also be **explicitly deleted by the creator client or any other authorized client** by using the delete API call. An ephemeral znode ceases to exist once its creator client's session with the ZooKeeper service ends. Hence, in the current version of ZooKeeper, ephemeral **znodes are not allowed to have children**.
+
+
+**The concept of ephemeral znodes can be used to build distributed applications where the components need to know the state of the other constituent components or resources.** For example, a distributed group membership service can be implemented by using ephemeral znodes. The property of ephemeral nodes getting deleted when the creator client's session ends can be used as an analog of a node that is joining or leaving a distributed cluster.
+
+==== 2.3.3 The sequential znode ====
+
+A sequential znode is assigned a sequence number by ZooKeeper as a part of its name during its creation. The value of a monotonously increasing counter (maintained by the parent znode) is appended to the name of the znode.
+
+**The counter used to store the sequence number is a signed integer (4 bytes)**. It has a format of 10 digits with 0 (zero) padding. For example, look at /path/to/znode-0000000001. This naming convention is useful to sort the sequential znodes by the value assigned to them.
+
+Sequential znodes can be used for the implementation of a distributed global queue, as sequence numbers can impose a global ordering. They may also be used to design a lock service for a distributed application.
+
+===== 3. ZooKeeper Watches =====
+
+Clients can register with the ZooKeeper service for any changes associated with a znode. This registration is known as setting a watch on a znode in ZooKeeper terminology. Watches allow clients to get notifications when a znode changes in any way. 
+
+**A watch is a one-time operation**, which means that it triggers only one notification. To continue receiving notifications over time, the client must reregister the watch upon receiving each event notification.
+
+==== 3.1 An service discovery example via watches ====
+
+Let's use an example to illustrate the concept of ZooKeeper watches and notifications.
+
+In a cluster, we have tow types of nodes:
+- Client nodes: hosting an application and is interested in getting notified when another client node joins the cluster. They use ZooKeeper to know each other. Any node that is joining the cluster creates an ephemeral node in the ZooKeeper path /Members.
+- ZooKeeper node: It has a znode /Members which hosts all available client nodes information in the cluster
+
+
+Suppose we have the following scenario:
+  - In the beginning, we have 0 Client nodes in the cluster. Client1 connected to the cluster, and issues a create to create an ephemeral znode called Host1 in /Members. Then it issues getChildren request on the ZooKeeper path /Members, he sees only him is present in the cluster. It sets a watch on /Members for any changes. 
+  - Now, another node, Client2, joins the cluster and creates an ephemeral znode called Host2 in /Members. The watch gets triggered and Client1 receives a notification from the ZooKeeper service. If Client1 now issues getChildren request on the ZooKeeper path /Members, it sees the new znode Host2. 
+ 
+This flow of the setting of watches, and notifications and subsequent resetting of the watches is shown in the following image:
+
+{{:employes:pengfei.liu:data_science:zookeeper:zookeeper_member_discover_example.png?400|}}
+
+==== 3.2 Watch properties and trigger condition ====
+
+**ZooKeeper watches are a one-time trigger**. This means if a client receives a watch event and wants to get notified of future changes, it must set another watch. Whenever a watch is triggered, **a notification is dispatched to the client that had set the watch**. Watches are maintained in the **ZooKeeper server to which a client is connected**, and this makes it a fast and lean method of event notification.
+
+The watches are triggered for the following three changes to a znode:
+  - Any changes to the data of a znode, such as when new data is written to the znode's data field using the setData operation.
+  - Any changes to the children of a znode. For instance, children of a znode are deleted with the delete operation.
+  - A znode being created or deleted, which could happen in the event that a new znode is added to a path or an existing one is deleted.
+
+==== 3.3 Guarantees of watches and notifications ====
+
+ZooKeeper asserts the following guarantees with respect to watches and notifications:
+  * ZooKeeper ensures that watches are always ordered in the first in first out (FIFO) manner and that notifications are always dispatched in order.
+  * Watch notifications are delivered to a client before any other change is made to the same znode
+  * The order of the watch events are ordered with respect to the updates seen by the ZooKeeper service
+
+=== 3.3.1 Resetting watch after a notification can cause problems===
+
+Since ZooKeeper watches are one-time triggers and due to the latency involved between getting a watch event and resetting of the watch, it's possible that a client might lose changes done to a znode during this interval. In a distributed application in which a znode changes multiple times between the dispatch of an event and resetting the watch for events, developers must be careful to handle such situations in the application logic.
+
+=== 3.3.2 Watches properties after client disconnect and reconnect ===
+
+When a client gets disconnected from the ZooKeeper server, it doesn't receive any watches until the connection is re-established. If the client then reconnects, any previously registered watches will also be reregistered and triggered. 
+
+If the client connects to a new server, the watch will be triggered for any session events. This disconnection from a server and reconnection to a new server happens in a transparent way for the client applications.
+
+Although ZooKeeper guarantees that all registered watches get dispatched to the client, even if the client disconnects from one server and reconnects to another server within the ZooKeeper service, there is one possible scenario worth mentioning where a watch might be missed by a client. This specific scenario is when a client has set a watch for the existence of a znode that has not yet been created. In this case, a watch event will be missed if the znode is created, and deleted while the client is in the disconnected state.
+
+===== 4. ZooKeeper stat structure =====
+
+**Every znode in ZooKeeper's namespace has a stat structure associated with it**, which describes the status of the znode. The fields in the stat structure of a znode are shown as follows with their respective meanings:
+  * **cZxid** : This is the transaction ID of the change that caused this znode to be created.
+  * **mZxid** : This is the transaction ID of the change that last modified this znode.
+  * **pZxid** : This is the transaction ID for a znode change that pertains to adding or removing children.
+  * **ctime** : This denotes the creation time of a znode in milliseconds from epoch.
+  * **mtime** : This denotes the last modification time of a znode in milliseconds from epoch.
+  * **dataVersion** : This denotes the number of changes made to the data of this znode.
+  * **cversion** : This denotes the number of changes made to the children of this znode.
+  * **aclVersion** : This denotes the number of changes made to the ACL of this znode.
+  * **ephemeralOwner** : This is the session ID of the znode's owner if the znode is an ephemeral node. If the znode is not an ephemeral node, this field is set to zero.
+  * **dataLength** : This is the length of the data field of this znode.
+  * **numChildren** : This denotes the number of children of this znode.
+
+Some important notes:
+  - Zxid ：Zookeeper中每次写请求都对应一个唯一的事务id，称为 Zxid，它是全局的且有序的，如果 Zxid1 小于 Zxid2，那 Zxid1 就一定是发生在 Zxid2 前
+  - version numbers ： 版本号，对节点的写请求都会导致该节点的3种版本号增加（其实套路和乐观锁差不多），dataVersion（znode数据的更改次数），cversion（对znode子节点的更改次数），aclVersion（对znode ACL的更改次数
+  - ticks ： 当使用多服务器Zookeeper时，服务器使用一个“滴答”来定义事件的时间，如状态上传，会话超时等，它通过最小会话超时（默认是滴答时间x2）间接公开，如果客户端请求超过这个时间，那客户端就不再能连接上服务器端
+  - real time：Zookeeper并不使用真实时间
+
+
+
+In the ZooKeeper Java shell, the stat structure of a znode can be viewed using the **stat** or **ls2** command. This is illustrated as follows
+
+<code>
+stat /tmp
+# ls2 is deprecated since zk 3.6. so stat is recommended
+ls2 /tmp
+
+
+# for example
+[zk: 127.0.0.1:2181(CONNECTED) 3] stat /tmp
+cZxid = 0x4
+ctime = Wed May 27 16:36:40 CEST 2020
+mZxid = 0xa
+mtime = Wed May 27 16:41:20 CEST 2020
+pZxid = 0x9
+cversion = 3
+dataVersion = 1
+aclVersion = 3
+ephemeralOwner = 0x0
+dataLength = 24
+numChildren = 1
+
+cZxid：创建该节点的zxid
+ctime：该节点的创建时间
+mZxid：该节点的最后修改zxid
+mtime：该节点的最后修改时间
+pZxid：该节点的最后子节点修改zxid
+cversion：该节点的子节点变更次数
+dataVersion：该节点数据被修改的次数
+aclVersion：该节点的ACL变更次数
+aphemeraOwner：临时节点所有者会话id，非临时的为0
+dataLength：该节点数据长度
+numChildren：子节点数
+
+</code>

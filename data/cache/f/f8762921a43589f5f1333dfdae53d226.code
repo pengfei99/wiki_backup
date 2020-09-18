@@ -1,0 +1,3 @@
+all_entries <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="kw2">all</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+entries <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="kw2">filter</span><span class="br0">&#40;</span>pub_date__year<span class="sy0">=</span><span class="nu0">2006</span><span class="br0">&#41;</span>
+one_entry <span class="sy0">=</span> Entry.<span class="me1">objects</span>.<span class="me1">get</span><span class="br0">&#40;</span>pk<span class="sy0">=</span><span class="nu0">1</span><span class="br0">&#41;</span>

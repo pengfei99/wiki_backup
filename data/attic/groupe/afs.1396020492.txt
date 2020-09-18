@@ -1,0 +1,31 @@
+====== AFS : Andrew File System ======
+
+===== Introduction =====
+
+[[https://en.wikipedia.org/wiki/Andrew_File_System|AFS ou Andrew File System]] est un système d'archivage distribué inspiré de NFS, et créé à l'Université Carnegie-Mellon.
+NFSv4 a été fortement inspiré à son tour par AFS.
+Son principal défaut est qu'il n'est pas compatible avec ipv6.
+
+===== Installation =====
+
+<code>
+yum install -y openafs-client
+</code>
+
+===== Configuration =====
+
+<code>
+cd /usr/vice/etc
+echo in2p3.fr > ThisCell
+echo "in2p3.fr in" > CellAlias
+echo "test.in2p3.fr tin" >> CellAlias
+echo "in2p3.fr" > SuidCells
+echo "/afs:/var/cache/afs:200000" > cacheinfo
+</code>
+
+===== Démarrage et enregistrement =====
+
+<code>
+service afs start
+chkconfig --level 2345 afs on
+</code>

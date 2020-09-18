@@ -1,0 +1,313 @@
+
+<h1 class="sectionedit1" id="use_ldap_for_ssh_authentication_on_centos_7">Use ldap for ssh authentication on centos 7</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we use sssd, pam, ldapd to reconfigure ssh authentication on centos 7.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Use ldap for ssh authentication on centos 7" [1-148] -->
+<h1 class="sectionedit2" id="enviroment">Enviroment</h1>
+<div class="level1">
+
+<p>
+Suppose we have a openldap server runing with url <a href="ldap://auth-ldap.pengfei.org:389" class="urlextern" title="ldap://auth-ldap.pengfei.org:389" rel="nofollow">ldap://auth-ldap.pengfei.org:389</a>
+</p>
+
+<p>
+The base dn is dc=pengfei,dc=org
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Enviroment" [149-293] -->
+<h2 class="sectionedit3" id="disable_selinux">Disable selinux</h2>
+<div class="level2">
+<pre class="code">setenforce 0</pre>
+
+</div>
+<!-- EDIT3 SECTION "Disable selinux" [294-352] -->
+<h2 class="sectionedit4" id="install_sssd_packages_and_configure">Install sssd packages and configure</h2>
+<div class="level2">
+
+<p>
+The System Security Services Daemon (SSSD) provides a set of daemons to manage access to remote directories and authentication mechanisms. It provides Name Service Switch (NSS) and Pluggable Authentication Modules(PAM) interfaces toward the system and a pluggable back end system to connect to multiple different account sources.
+</p>
+<pre class="code">sudo yum install sssd</pre>
+
+<p>
+Edit /etc/sssd/sssd.conf,
+</p>
+<pre class="code">[domain/LDAP]
+##########Ldap basic connection config
+ldap_tls_reqcert = never
+enumerate = true
+auth_provider = ldap
+ldap_schema = rfc2307
+# root dn of the ldap server
+ldap_search_base = dc=pengfei,dc=org
+ldap_group_member = uniquemember
+id_provider = ldap
+ldap_id_use_start_tls = False
+chpass_provider = ldap
+# uri_ldap
+ldap_uri = ldap://auth-ldap.pengfei.org:389
+ldap_chpass_uri = ldap://auth-ldap.pengfei.org:389
+cache_credentials = true
+ldap_tls_cacertdir = /etc/openldap/cacerts
+entry_cache_timeout = 3
+
+############ ldap Group config ######
+ldap_group_object_class = posixGroup
+ldap_group_search_base = dc=pengfei,dc=org
+ldap_group_name = cn
+ldap_group_member = memberUid
+
+debug_level = 4
+
+[sssd]
+reconnection_retries=3
+config_file_version = 2
+services = nss, pam, sudo, ssh, autofs
+domains = LDAP
+
+[nss]
+filter_users = root,ldap,named,avahi,haldaemon,dbus,radiusd,news,nscd,slurm,munge
+[pam]
+reconnection_retries=3
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+</pre>
+
+</div>
+<!-- EDIT4 SECTION "Install sssd packages and configure" [353-1765] -->
+<h2 class="sectionedit5" id="edit_ldap_client">Edit ldap client</h2>
+<div class="level2">
+<pre class="code">#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldap://auth-ldap.pengfei.org:389
+BASE dc=pengfei,dc=org
+TLS_REQUIRE never
+</pre>
+
+<p>
+If you want to enable ldaps on your client. You need to get the ldap server certificate. In my case, the certificate is in a file named ldap-prod.crt. It&#039;s under /etc/openldap/certs/. You need also modify the openldap.conf as followed. 
+</p>
+<pre class="code">[root@CCLinPamD01 openldap]# cat ldap.conf
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example,dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+TLS_CACERTDIR	/etc/openldap/certs
+
+# Turning this off breaks GSSAPI used with krb5 when rdns = false
+SASL_NOCANON	on
+
+URI ldaps://auth-ldap.bioaster.org:636
+BASE dc=bioaster,dc=org
+TLS_CACERT /etc/openldap/certs/ldap-prod.crt
+TLS_REQCERT demand
+SSL ON
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Edit ldap client" [1766-3049] -->
+<h2 class="sectionedit6" id="edit_pamd_module_to_use_ldap_authentication">Edit pam.d module to use ldap authentication</h2>
+<div class="level2">
+
+<p>
+There are two conf file we need to edit in /etc/pam.d/
+</p>
+<ul>
+<li class="level1"><div class="li"> system-auth-ac</div>
+</li>
+<li class="level1"><div class="li"> password-auth-ac</div>
+</li>
+</ul>
+
+<p>
+Edit the system-auth-ac, add pam_sss support on 
+</p>
+<pre class="code file system-auth-ac">#%PAM-1.0
+## This file is auto-generated.
+## User changes will be destroyed the next time authconfig is run.
+auth        sufficient    pam_sss.so  forward_pass
+auth        required      pam_env.so
+auth        sufficient    pam_fprintd.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+auth        required      pam_deny.so
+&nbsp;
+account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+account     required      pam_unix.so
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+account     required      pam_permit.so
+&nbsp;
+password    sufficient    pam_sss.so use_authtok
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+password    required      pam_deny.so
+&nbsp;
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     required      pam_oddjob_mkhomedir.so umask=0022 skel=/etc/skel
+session     optional      pam_sss.so</pre>
+
+<p>
+Edit the password-auth-ac
+</p>
+<pre class="file">#%PAM-1.0
+## This file is auto-generated.
+## User changes will be destroyed the next time authconfig is run.
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+auth        sufficient    pam_sss.so use_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+account     required      pam_permit.so
+
+password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+password    sufficient    pam_sss.so use_authtok
+password    required      pam_deny.so
+
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+-session     optional      pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+session     required      pam_oddjob_mkhomedir.so umask=0022 skel=/etc/skel
+session     optional      pam_sss.so
+</pre>
+
+</div>
+<!-- EDIT6 SECTION "Edit pam.d module to use ldap authentication" [3050-5885] -->
+<h2 class="sectionedit7" id="edit_the_sshd_config">Edit the sshd_config</h2>
+<div class="level2">
+
+<p>
+Edit /etc/ssh/sshd_config
+</p>
+<pre class="code">AllowTcpForwarding yes
+ChallengeResponseAuthentication no
+ClientAliveCountMax 3
+ClientAliveInterval 0
+Compression yes
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+HostbasedAuthentication no
+IgnoreUserKnownHosts no
+KeepAlive yes
+KerberosTicketCleanup yes
+MaxStartups 10
+PasswordAuthentication yes
+PermitEmptyPasswords no
+PermitRootLogin yes
+PermitUserEnvironment no
+PrintLastLog yes
+PrintMotd yes
+Protocol 2
+RSAAuthentication yes
+RhostsRSAAuthentication yes
+ServerKeyBits 768
+StrictModes yes
+Subsystem sftp /usr/libexec/openssh/sftp-server
+SyslogFacility AUTH
+TCPKeepAlive yes
+UseLogin no
+# allow ssh server to use pam
+UsePAM yes
+UsePrivilegeSeparation yes
+X11DisplayOffset 10
+X11Forwarding yes
+X11UseLocalhost yes
+XAuthLocation /usr/bin/xauth
+# add group name of user in ldap to allow access on the server ssh connextion
+AllowGroups root wheel pengfei_ssh_test
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Edit the sshd_config" [5886-6832] -->
+<h2 class="sectionedit8" id="restart_sssd_and_sshd_daemon_to_test_ssh_connextion">Restart sssd and sshd daemon to test ssh connextion</h2>
+<div class="level2">
+<pre class="code">systemctl restart sssd
+systemctl restart sshd</pre>
+
+</div>
+<!-- EDIT8 SECTION "Restart sssd and sshd daemon to test ssh connextion" [6833-6959] -->
+<h2 class="sectionedit9" id="play_book_is_in_folder_vm_management">Play book is in folder VM_Management</h2>
+<div class="level2">
+
+<p>
+the play book name is playbook-nss_pam_ldapd
+</p>
+
+<p>
+There are two roles, the role nslcd install nslcd to use ldap. But it&#039;s too old.
+So use the role sssd
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Play book is in folder VM_Management" [6960-7158] -->
+<h2 class="sectionedit10" id="eliminate_sshd_warings">Eliminate sshd warings</h2>
+<div class="level2">
+
+<p>
+When you restart sshd, if you have errors messages
+</p>
+<pre class="code">#&quot;could not load host key: /etc/ssh/ssh_host_[rd]sa_key”
+
+#It means under /etc/ssh, you don&#039;t have generate all the host keys
+#To do so, in short you can do
+ssh-keygen -A
+
+# If you dont have the -A option which generates the host keys, you can generate them like so:
+# -N &quot;&quot; means no password for the secretkey
+ssh-keygen -t dsa -N &quot;&quot; -f /etc/ssh/ssh_host_dsa_key
+ssh-keygen -t rsa -N &quot;&quot; -f /etc/ssh/ssh_host_rsa_key
+ssh-keygen -t ecdsa -N &quot;&quot; -f /etc/ssh/ssh_host_ecdsa_key</pre>
+
+</div>
+<!-- EDIT10 SECTION "Eliminate sshd warings" [7159-] -->

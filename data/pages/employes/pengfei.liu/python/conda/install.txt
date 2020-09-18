@@ -1,0 +1,119 @@
+====== Install anaconda ======
+
+===== Introduction =====
+
+Anaconda is the most popular python data science and machine learning platform, used for large-scale data processing, predictive analytics, and scientific computing. Anaconda distribution ships with more than 1,000 data packages, the conda command-line tool and with a desktop graphical user interface called Anaconda Navigator.
+
+==== Anaconda vs Pip ====
+
+Having been involved in the python world for so long, we are all aware of pip, easy_install, and virtualenv, but these tools did not meet all of our specific requirements. The main problem is that they are focused around Python, neglecting non-Python library dependencies, such as HDF5, MKL, LLVM, etc., which do not have a setup.py in their source code and also do not install files into Python’s site-packages directory.
+
+So Conda is a packaging tool and installer that aims to do more than what pip does; handle library dependencies outside of the Python packages as well as the Python packages themselves. Conda also creates a virtual environment, like virtualenv does.
+
+
+Because Conda introduces a new packaging format, you cannot use pip and Conda interchangeably;  pip cannot install the Conda package format. You can use the two tools side by side (by installing pip with conda install pip) but they do not interoperate either.
+
+===== Step1. Get the conda installer =====
+
+You can get all available conda version at https://www.anaconda.com/distribution/#download-section. In this tutorial we choose the current latest version Anaconda3-2018.12. The following code will download the installer 
+
+<code>
+cd /tmp
+curl -O https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
+
+# check the script checksum
+sha256sum Anaconda3-2018.12-Linux-x86_64.sh 
+1019d0857e5865f8a6861eaf15bfe535b87e92b72ce4f531000dc672be7fce00  Anaconda3-2018.12-Linux-x86_64.sh
+
+# compare the above checksums with the checksum of the anaconda web site 
+</code>
+
+===== Step2. Run the anaconda installer =====
+
+Before you run the installer, you need to know, anaconda will download and install a python 3.7.0 which will you overwrite all your python3.7 installation.
+
+Anaconda installer needs some system dependencies to do the install, install the following dependencies
+
+<code>
+yum install -y bzip2 
+
+# run the installer, it's not recommended to run with sudo. Choose the user who wishes to install conda 
+sh Anaconda3-2018.12-Linux-x86_64.sh
+
+# you will be prompted with a series of questions. based on your needs, answer yes or no.
+Installation finished.
+
+Do you wish the installer to initialize Anaconda3
+in your /home/linuxize/.bashrc ? [yes|no]
+
+# I recommend you to enter yes
+
+</code> 
+
+The installer will also ask you whether you would like to download and install Visual Studio Code. You can find more information about Visual Studio on the website (https://code.visualstudio.com/). If you want to install Visual Studio Code type yes otherwise type no.
+
+To activate the Anaconda installation load the new PATH environment variable which was added by the Anaconda installer into the current shell session with the following command:
+
+<code>
+source ~/.bashrc
+</code>
+
+===== Step3. Verify the conda installation =====
+
+<code>
+conda info
+</code>
+
+===== Step4. Updating Anaconda =====
+
+<code>
+# Updating the Anaconda is a pretty straight forward process, first update the conda tool with:
+conda update anaconda
+
+# Once conda is updated, proceed with the Anaconda update:
+conda update anaconda
+</code>
+
+You should regularly update your Anaconda installation.
+
+====== Deleting Anaconda ======
+
+===== Step1. Remove the Anaconda install directory =====
+
+<code>
+# Find your anaconda installation path
+rm -rf /path/to/anaconda3
+</code>
+
+===== Step2. Edit your ~/.bashrc =====
+To remove conda from your path, you need to delete the lines which anaconda added, for example in my .bashrc
+I have the following line
+
+<code>
+# added by Anaconda3 5.3.1 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/linuxize/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/home/linuxize/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/linuxize/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/home/linuxize/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
+</code>
+
+Delete them.
+
+===== Step3. Remove the hidden files =====
+
+The following command will remove the hidden files and folders that have been created by Anaconda in your user home directory:
+
+<code>
+rm -rf ~/.condarc ~/.conda ~/.continuum
+</code>

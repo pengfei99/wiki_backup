@@ -1,0 +1,5 @@
+<span class="co1">//get all the response status of the request</span>
+tokenizedDf.<span class="me1">select</span><span class="br0">&#40;</span><span class="st0">&quot;status&quot;</span><span class="br0">&#41;</span>.<span class="me1">distinct</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">// get the top ten most visit product</span>
+ <a href="http://scala-lang.org"><span class="kw1">val</span></a> mostViewedPage <span class="sy0">=</span> tokenizedDf.<span class="me1">filter</span><span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span>.<span class="me1">contains</span><span class="br0">&#40;</span><span class="st0">&quot;product&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">groupBy</span><span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">orderBy</span><span class="br0">&#40;</span>$<span class="st0">&quot;count&quot;</span>.<span class="me1">desc</span><span class="br0">&#41;</span>

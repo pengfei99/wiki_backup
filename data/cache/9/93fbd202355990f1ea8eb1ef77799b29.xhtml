@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="configurer_les_serveurs">Configurer les serveurs</h1>
+<div class="level1">
+
+<p>
+Tous les serveurs CentOS peuvent être configurés grâce à <a href="/informatique/ansible" class="wikilink1" title="informatique:ansible">Ansible</a>.
+</p>
+
+<p>
+Les rôles peuvent être récupérés depuis <a href="https://gitlab.in2p3.fr/bioaster/ansible" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible"  rel="nofollow">le GitLab du CC</a> :
+</p>
+<pre class="code">  $ git clone git://gitlab.in2p3.fr/bioaster/ansible</pre>
+
+<p>
+Un fois le dépôt récupéré, il est facile de mettre à jour toutes les machines du site :
+</p>
+<pre class="code">  $ cd ansible
+  $ vim inventory site.yml
+  $ ansible-playbook -i inventory site.yml [-l group_or_host]</pre>
+
+</div>
+<!-- EDIT1 SECTION "Configurer les serveurs" [1-509] -->
+<h2 class="sectionedit2" id="mettre_a_jour_les_utilisateurs">Mettre à jour les utilisateurs</h2>
+<div class="level2">
+
+<p>
+Les utilisateurs sont gérés par le rôle <code>server</code>. Les tâches concernant les utilisateurs peuvent être ciblées grâce au tag <code>users</code>.
+</p>
+
+<p>
+La variable contenant les informations des utilisateurs est <code>system_users</code> :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/configurer_les_serveurs?codeblock=0" title="Télécharger un extrait" class="mediafile mf_yml">group_vars/all/public.yml</a></dt>
+<dd><pre class="code yml">system_users:
+  - { name: &quot;pveyre&quot;, comment: &quot;Pierre VEYRE&quot;, uid: 40639,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - …</pre>
+</dd></dl>
+
+<p>
+La clé publique pour la connection SSH est à mettre dans <code>ansible/roles/server/files/public_keys/pveyre </code> pour l&#039;utilisateur <code>pveyre</code>.
+</p>
+
+<p>
+Pour appliquer le changement, il suffit de relancer Ansible en le limitant au tag <code>users</code> :
+</p>
+<pre class="code">  $ ansible-playbook -i inventory site.yml --tags users</pre>
+
+</div>
+<!-- EDIT2 SECTION "Mettre à jour les utilisateurs" [510-1256] -->
+<h2 class="sectionedit3" id="cles_ssh_de_l_administrateur">Clés SSH de l&#039;administrateur</h2>
+<div class="level2">
+
+<p>
+Les clés SSH de l&#039;administrateur (centos, bioaster…) sont définies dans la variable <code>system_admin_keys</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Clés SSH de l'administrateur" [1257-] -->

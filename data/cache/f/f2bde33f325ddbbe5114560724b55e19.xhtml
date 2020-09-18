@@ -1,0 +1,29 @@
+
+<h1 class="sectionedit1" id="data_structure_overview">Data structure overview</h1>
+<div class="level1">
+
+<p>
+Generally speaking, Spark provides 3 main abstractions to work with it. First, we will provide you with a holistic view of all of them in one place. Second, we will explore each option with examples.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>RDD</strong> (Resilient Distributed Dataset). The main approach to work with unstructured data. Pretty similar to a distributed collection that is not always typed.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Datasets</strong>. The main approach to work with semi-structured and structured data. Typed distributed collection, type-safety at a compile time, strong typing, lambda functions.</div>
+</li>
+<li class="level1"><div class="li"> <strong>DataFrames</strong>. It is the Dataset organized into named columns. It is conceptually equivalent to a table in a relational database or a data frame in R/Python, but with richer optimizations under the hood. Think about it as a table in a relational database.</div>
+</li>
+</ul>
+
+<p>
+The more Spark knows about the data initially, the more optimizations are available for you.
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>RDD</strong>. Raw data lacking predefined structure forces you to do most of the optimizations by yourself. This results in lower performance out of the box and requires more effort to speed up the data processing.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Datasets</strong>. Typed data, possible to apply existing common optimizations, benefits of Spark SQL’s optimized execution engine.</div>
+</li>
+<li class="level1"><div class="li"> <strong>DataFrames</strong>. Share the codebase with the Datasets and have the same basic optimizations. In addition, you have optimized code generation, transparent conversions to column based format and an SQL interface.</div>
+</li>
+</ol>
+
+</div>

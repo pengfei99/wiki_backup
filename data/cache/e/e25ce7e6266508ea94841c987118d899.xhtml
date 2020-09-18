@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="configurer_les_serveurs">Configurer les serveurs</h1>
+<div class="level1">
+
+<p>
+Tous les serveurs CentOS peuvent être configurés grâce à <a href="/doku.php?id=informatique:informatique_ansible" class="wikilink2" title="informatique:informatique_ansible" rel="nofollow">Ansible</a>.
+</p>
+
+<p>
+Les rôles peuvent être récupérés depuis <a href="https://gitlab.in2p3.fr/bioaster/ansible" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible" rel="nofollow">le GitLab du CC</a> :
+</p>
+<pre class="code">  $ git clone git://gitlab.in2p3.fr/bioaster/ansible</pre>
+
+<p>
+Un fois le dépôt récupéré, il est facile de mettre à jour toutes les machines du site :
+</p>
+<pre class="code">  $ cd ansible
+  $ vim inventory site.yml
+  $ ansible-playbook -i inventory site.yml [-l group_or_host]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configurer les serveurs&quot;,&quot;hid&quot;:&quot;configurer_les_serveurs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-509&quot;} -->
+<h2 class="sectionedit2" id="mettre_a_jour_les_utilisateurs">Mettre à jour les utilisateurs</h2>
+<div class="level2">
+
+<p>
+Les utilisateurs sont gérés par le rôle <code>server</code>. Les tâches concernant les utilisateurs peuvent être ciblées grâce au tag <code>users</code>.
+</p>
+
+<p>
+La variable contenant les informations des utilisateurs est <code>system_users</code> :
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=informatique:configurer_les_serveurs&amp;codeblock=0" title="Download Snippet" class="mediafile mf_yml">group_vars/all/public.yml</a></dt>
+<dd><pre class="code yml">system_users:
+  - { name: &quot;pveyre&quot;, comment: &quot;Pierre VEYRE&quot;, uid: 40639,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - …</pre>
+</dd></dl>
+
+<p>
+La clé publique pour la connection SSH est à mettre dans <code>ansible/roles/server/files/public_keys/pveyre </code> pour l&#039;utilisateur <code>pveyre</code>.
+</p>
+
+<p>
+Pour appliquer le changement, il suffit de relancer Ansible en le limitant au tag <code>users</code> :
+</p>
+<pre class="code">  $ ansible-playbook -i inventory site.yml --tags users</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Mettre \u00e0 jour les utilisateurs&quot;,&quot;hid&quot;:&quot;mettre_a_jour_les_utilisateurs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;510-1256&quot;} -->
+<h2 class="sectionedit3" id="cles_ssh_de_l_administrateur">Clés SSH de l&#039;administrateur</h2>
+<div class="level2">
+
+<p>
+Les clés SSH de l&#039;administrateur (centos, bioaster…) sont définies dans la variable <code>system_admin_keys</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cl\u00e9s SSH de l&#039;administrateur&quot;,&quot;hid&quot;:&quot;cles_ssh_de_l_administrateur&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1257-&quot;} -->

@@ -1,0 +1,28 @@
+
+<h1 class="sectionedit1" id="create_home_directory_after_user_connection">Create home directory after user connection</h1>
+<div class="level1">
+
+<p>
+Install oddjod 
+</p>
+<pre class="code">yum install oddjob-mkhomedir
+
+systemctl enable oddjobd
+
+systemctl start oddjobd</pre>
+
+<p>
+Enable it after user login
+Edit /etc/pam.d/system-auth and Edit /etc/pam.d/password-auth 
+</p>
+<pre class="code">vim /etc/pam.d/system-auth
+vim /etc/pam.d/password-auth
+#add follwoing line 
+session     optional      pam_oddjob_mkhomedir.so skel=/etc/skel</pre>
+
+<p>
+Update the oddjob-mkhomedir configuration so that it has the right umask to use when creating a home directory
+</p>
+<pre class="code">sed -i &#039;s/0022/0077/g&#039; /etc/oddjobd.conf.d/oddjobd-mkhomedir.conf</pre>
+
+</div>

@@ -1,0 +1,129 @@
+
+<h1 class="sectionedit1" id="reunion_du_17_mars_2017">Réunion du 17 Mars 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 17 Mars 2017" [1-41] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Dupuis">PDU</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Veyre">PV</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [42-114] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Présentation biblio LIMS et SampleTracker par <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+<li class="level1"><div class="li"> Debriefing du NETMeeting2</div>
+<ul>
+<li class="level2"><div class="li"> BA UID adopté</div>
+</li>
+<li class="level2"><div class="li"> Mockup</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h4 id="resume">Résumé</h4>
+<div class="level4">
+
+<p>
+<em class="u">Présentation <abbr title="Julie Hardy">JHA</abbr></em>
+</p>
+
+<p>
+<abbr title="Julie Hardy">JHA</abbr> a présenté pendant 30min un état de l&#039;art des LIMS et des SampleTrackers trouvés dans la littérature. La présentation est sur M: /02_DST/04_UTEC/06_UTEC/Projets/En cours/<abbr title="Network Of Experiments">NoE</abbr>/2017_Stage_Julie/presentation_LIMS_ST_170317.pdf <br/>
+
+Remarques/propositions faites :
+</p>
+<ul>
+<li class="level1"><div class="li"> Ne pas s&#039;intéresser qu&#039;aux LIMS open source, inclure dans la recherche les LIMS propriétaires</div>
+</li>
+<li class="level1"><div class="li"> Mieux définir les critères de selections/présentations</div>
+</li>
+<li class="level1"><div class="li"> Produire une tableau comparatif des solutions en fonction de ce que BIOASTER attend d&#039;un LIMS et d&#039;un Sample Tracker</div>
+</li>
+</ul>
+
+<p>
+<em class="u">Débriefing NETMeeting2</em>
+</p>
+
+</div>
+
+<h5 id="ba_uid">BA UID</h5>
+<div class="level5">
+
+<p>
+Le BA UID qui a été choisi par les experts est le suivant : <br/>
+
+<span style='color:#22b14c; '>IDProjetBIOASTER</span>+<span style='color:#ffaec9; '>WorkpackageNuméro</span>_<span style='color:#ff7f27; '>IDincrémentalDeLechantillon</span> <br/>
+
+Exemple : <span style='color:#22b14c; '>010</span><span style='color:#ffaec9; '>WP3</span>_<span style='color:#ff7f27; '>12356</span>
+</p>
+
+<p>
+Il faudra que ce BA UID soit couplé à un codebarre ou/et un QRCode –&gt; nous allons commencer à nous renseigner sur les applications Django déjà existante sur ces sujets. Ils devront donc être présents dans la V1 de <abbr title="Network Of Experiments">NoE</abbr>.
+</p>
+
+<p>
+De plus, les experts souhaitent avoir la possibilité de renseigner 3 champs au choix au dessus du code barre. Ces 3 champs devront être des valeurs issues de listes finies ou de booléen. Cette possibilité pourra être selectionnée à la construction du template d&#039;étiquettes à imprimer.
+</p>
+
+<p>
+TODO :
+</p>
+<ul>
+<li class="level1"><div class="li"> Se renseigner sur la présence des douchettes dans les labos</div>
+</li>
+<li class="level1"><div class="li"> Se renseigner quand à l&#039;éventuel achat de douchette manquantes + postes connectés au labo</div>
+</li>
+<li class="level1"><div class="li"> Se renseigner sur les library python ou app django autour des codes barres</div>
+</li>
+<li class="level1"><div class="li"> Avoir les différentes tailles d&#039;étiquettes utilisées à BIOASTER à ce jour</div>
+</li>
+<li class="level1"><div class="li"> Se renseigner sur la conception de template d&#039;etiquettes pour impression </div>
+</li>
+<li class="level1"><div class="li"> Avoir une politique claire venant de la direction concernant quels échantillons doivent être dans <abbr title="Network Of Experiments">NoE</abbr> </div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="mockup">Mockup</h5>
+<div class="level5">
+
+<p>
+Présentation du use case déroulé lors du NETMeeting2 pour la team caillou (<abbr title="Pierre Veyre">PV</abbr> + <abbr title="Pierre Dupuis">PDU</abbr>).
+La maquette est sur owncloud <abbr title="Network Of Experiments">NoE</abbr>/
+Il s&#039;avère qu&#039;il y a une erreur de relation entre les tables Bioentity et Provider qui ne devraient pas être liées entre elles. De plus, la relation entre Provider et Sample est à modifier également. Un Sample ne peut être attaché qu&#039;à un seul Provider, mais un Provider peut avoir plusieurs Samples.
+</p>
+
+<p>
+TODO :
+</p>
+<ul>
+<li class="level1"><div class="li"> Migration autour des relations erronées (Provider ←→ Bioentity, Sample ←→ Provider et en profiter pour passer Sample –&gt; Wp en many)</div>
+</li>
+<li class="level1"><div class="li"> Mettre à jour la maquette</div>
+</li>
+<li class="level1"><div class="li"> retravailler les formulaires  </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [115-] -->

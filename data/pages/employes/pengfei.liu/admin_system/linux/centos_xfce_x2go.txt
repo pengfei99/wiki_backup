@@ -1,0 +1,69 @@
+====== INSTALL Xfce and X2go on CentOS 7 ======
+
+The objective of this tutorial is to install a Linux desktop environment(Xfce) on a VM, then use X2go to access 
+the Xfce of the vm.
+
+We choose xfce instead of gnome, kde. Because xfce is light weight and powerful.
+
+
+===== Install EPEL and X window =====
+
+
+<code class="prettyprint">
+$ sudo yum install epel-release
+$ sudo yum groupinstall "X Window system"
+</code>
+
+===== Install XFCE =====
+
+<code class="prettyprint">
+$ sudo yum groupinstall xfce
+</code>
+
+===== Change the graphique output target  =====
+
+<code class="prettyprint">
+$ sudo systemctl isolate graphical.target
+</code>
+
+===== Démarrer l'interface graphique au démarrage de la machine =====
+
+
+<code class="prettyprint">
+# automatically create the link
+$ sudo systemctl set-default graphical.target
+
+# if the automatic link creation does not work, you can manuanlly create the link
+$ sudo rm /etc/systemd/system/default.target
+$ sudo ln -s /usr/lib/systemd/system/graphical.target /etc/systemd/system/default.target
+</code>
+
+===== Install X2go server =====
+
+
+<code class="prettyprint">
+$ sudo yum -y install x2goserver-xsession
+
+# no need to start the service
+</code>
+
+===== Permettre la connexion ssh avec mot de passe =====
+
+
+Dans /etc/ssh/sshd_config :
+<code class="prettyprint">
+PasswordAuthentication yes
+</code>
+
+===== Restart the ssh daemon =====
+
+
+<code class="prettyprint">
+$ sudo service sshd restart
+</code>
+
+===== Install x2go client =====
+
+To connect to the server with X2go, you need to install a client X2go on your pc. Please go check http://wiki.x2go.org/doku.php 
+
+

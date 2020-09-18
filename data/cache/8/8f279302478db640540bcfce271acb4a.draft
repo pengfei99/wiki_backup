@@ -1,0 +1,30 @@
+a:6:{s:2:"id";s:75:"employes:pengfei.liu:data_science:machine_learning:algo:logistic_regression";s:6:"prefix";s:0:"";s:4:"text";s:1569:"====== Logistic regression ======
+
+===== What is logistic regression =====
+
+Logistic regression is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome. The outcome is measured with a dichotomous variable (in which there are only two possible outcomes 0 (true)or 1(false)).
+
+===== What is the objective of logistic regression =====
+
+The goal of logistic regression is to find the best fitting (yet biologically reasonable) model to describe the relationship between the dichotomous characteristic of interest (dependent variable = response or outcome variable) and a set of independent (predictor or explanatory) variables. Logistic regression generates the coefficients (and its standard errors and significance levels) of a formula to predict a logit transformation of the probability of presence of the characteristic of interest:
+
+Logistic regression equation : logit(p) = b0+b1X1+b2X2+b3X3+...+bkXk.
+
+
+where p is the probability of presence of the characteristic of interest. The logit transformation is defined as the logged odds:
+
+Odds=p/(1-p) 
+
+Where p is the probability of presence of characteristic, and 1-p is the probability of absence of characteristic.
+
+and
+
+Logit(p)=ln(p/(1-p))
+
+Rather than choosing parameters that minimize the sum of squared errors (like in ordinary regression), estimation in logistic regression chooses parameters that maximize the likelihood of observing the sample values.
+
+
+===== Real world example =====
+
+<file python ></file>
+";s:6:"suffix";s:0:"";s:4:"date";i:0;s:6:"client";s:4:"pliu";}

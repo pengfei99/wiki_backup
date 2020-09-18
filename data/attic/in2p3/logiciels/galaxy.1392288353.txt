@@ -1,0 +1,49 @@
+====== Galaxy ======
+
+===== Informations =====
+
+  * **Version** : 1.2.3
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[https://wiki.galaxyproject.org/]]
+  * **Description** : Galaxy is an open, web-based platform for accessible, reproducible, and transparent computational biomedical research. 
+
+Galaxy est un portail web qui //doit// être installé dans une VM dédiée.
+
+===== Préparation =====
+
+La procédure de mise en place de la VM s'inspire de la page décrivant l'[[in2p3/logiciels/installation|installation de nouveau logiciel]].
+
+<code>
+nova secgroup-create web_server "Web server"
+nova secgroup-add-rule web_server tcp 22 22 0.0.0.0/0
+nova secgroup-add-rule web_server tcp 80 80 0.0.0.0/0
+nova boot --key-name=cloudkey --security-groups=web_server \
+          --image=official-SL-6x-x86_64 --flavor=m1.small Galaxy
+nova floating-ip-list
+nova floating-ip-create # si besoin
+nova add-floating-ip Galaxy <AVAILABLE_FLOATING_IP>
+</code>
+
+===== Installation =====
+
+<code>
+hg clone https://bitbucket.org/galaxy/galaxy-dist/
+cd galaxy-dist
+hg update stable
+</code>
+
+Installe apache et l'utilise comme proxy car Galaxy n'ecoute pas ou il faut !!!
+
+===== Configuration =====
+
+TODO: Voir les liens suivants...
+
+  * [[https://wiki.galaxyproject.org/Admin/Config/Performance/ProductionServer]]
+  * [[https://wiki.galaxyproject.org/Admin/Config/ExternalUserDatbases]]
+  * [[https://wiki.galaxyproject.org/Admin/Config/Performance/nginx%20Proxy]]
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 1.2.3 installée
+
+{{tag>todo}}

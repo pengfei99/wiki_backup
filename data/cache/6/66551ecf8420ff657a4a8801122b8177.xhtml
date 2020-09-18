@@ -1,0 +1,134 @@
+
+<h1 class="sectionedit1" id="labkey">LabKey</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<br/>
+Le logiciel avait été installé pour évaluation dans le cadre du projet <strong>LIMS</strong> et n&#039;a pas été retenu.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "LabKey" [1-166] -->
+<h2 class="sectionedit4" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 13.3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : Apache Software License</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="https://www.labkey.org" class="urlextern" title="https://www.labkey.org"  rel="nofollow">https://www.labkey.org</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : LabKey Server is open source software that helps scientists organize, analyze, and share biomedical research data.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations" [167-441] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">http://labkey.s3.amazonaws.com/downloads/general/r/13.3/LabKey13.3-30648-bin.tar.gz
+http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jre-7u51-linux-x64.rpm
+rpm -Uvh jre-7u51-linux-x64.rpm
+http://wwwftp.ciril.fr/pub/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz
+tar xvfz apache-tomcat-7.0.50.tar.gz
+mv apache-tomcat-7.0.50 /usr/local/
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh
+yum install postgresql postgresql-server
+vim /var/lib/pgsql/data/postgresql.conf
+# join_collapse_limit = 10
+vim /var/lib/pgsql/data/pg_hba.conf
+# local   all         all                               trust
+# host    all         all         127.0.0.1/32          trust
+service postgresql initdb
+/etc/init.d/postgresql start
+su - postgres
+createlang -d template1 PLpgsql
+psql
+# create user labkey that owns db labkey
+ctrl+d
+tar xvzf LabKey13.3-30648-bin.tar.gz
+cd LabKey13.3-30648-bin
+cp tomcat-lib/* /usr/local/apache-tomcat-7.0.50/lib/
+mkdir /usr/local/labkey-13.3-30648
+cp -R bin/ labkeywebapp/ modules/ pipeline-lib/ /usr/local/labkey-13.3-30648
+### https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+mv labkey.xml /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/
+vim /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/labkey.xml
+chown -R apache:apache /usr/local/apache-tomcat-7.0.50
+/usr/local/apache-tomcat-7.0.50/conf/server.xml
+#&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;
+#               connectionTimeout=&quot;20000&quot;
+#               redirectPort=&quot;8443&quot;
+#               proxyName=&quot;tomcat.bioaster.org&quot;
+#               proxyPort=&quot;80&quot;/&gt;
+https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh</pre>
+
+<p>
+Installation du module <strong>Genotypage</strong> :
+</p>
+<pre class="code">cd /usr/local/labkey-13.3-30648/modules
+cp /path/to/genotyping.module .</pre>
+
+<p>
+Sur la page d&#039;un projet de type <strong>Genotypage</strong>, cliquer sur <code>admin</code> et définir les requêtes suivantes : 
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Runs</strong> = exp.Runs</div>
+</li>
+<li class="level1"><div class="li"> <strong>Sample</strong> = exp.DataInputs</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Installation" [442-2483] -->
+<h2 class="sectionedit6" id="degogage">Dégogage</h2>
+<div class="level2">
+
+<p>
+<a href="http://4proc.com/2013/05/12/create-a-debug-log-file-for-your-labkey-server.html" class="urlextern" title="http://4proc.com/2013/05/12/create-a-debug-log-file-for-your-labkey-server.html"  rel="nofollow">http://4proc.com/2013/05/12/create-a-debug-log-file-for-your-labkey-server.html</a>
+</p>
+
+<p>
+Ajouter la section suivante près de l&#039;appender nommé <code>LABKEY</code> :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/labkey?codeblock=2" title="Download Snippet" class="mediafile mf_xml">LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml</a></dt>
+<dd><pre class="code xml"><span class="sc3"><span class="re1">&lt;appender</span> <span class="re0">name</span>=<span class="st0">&quot;LABKEYDEBUG&quot;</span> <span class="re0">class</span>=<span class="st0">&quot;org.apache.log4j.RollingFileAppender&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;File&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;${labkey.log.home}/labkey-debug.log&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;Append&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;true&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;MaxFileSize&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;10MB&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;layout</span> <span class="re0">class</span>=<span class="st0">&quot;org.apache.log4j.PatternLayout&quot;</span><span class="re2">&gt;</span></span>
+        <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;ConversionPattern&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;%-5p %-24.24c{1} %d{ISO8601} %24.24t : %m%n&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/layout<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/appender<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+Modifier le logger <code>org.labkey</code> :
+</p>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/logiciels/labkey?codeblock=3" title="Download Snippet" class="mediafile mf_xml">LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml</a></dt>
+<dd><pre class="code xml"><span class="sc3"><span class="re1">&lt;logger</span> <span class="re0">name</span>=<span class="st0">&quot;org.labkey&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;level</span> <span class="re0">value</span>=<span class="st0">&quot;debug&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;appender-ref</span> <span class="re0">ref</span>=<span class="st0">&quot;LABKEY&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;appender-ref</span> <span class="re0">ref</span>=<span class="st0">&quot;LABKEYDEBUG&quot;</span><span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;/logger<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+Le fichier de log devrait apparaitre dans <code>TOMCAT_HOME/logs/labkey-debug.log</code> après redémarrage du serveur.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Dégogage" [2484-3487] -->
+<h2 class="sectionedit7" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.17 (tlc)</strong> Version 13.3 installée
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Log" [3488-] -->

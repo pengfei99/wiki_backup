@@ -1,0 +1,21 @@
+====== Gérer les migrations avec Doctrine ======
+
+Doctrine ne gère pas les migrations par défaut. Il faut donc installer un bundle :
+
+<code>
+$ composer require doctrine/doctrine-migrations-bundle "^1.0"
+</code>
+
+Il faut ensuite l'activer :
+
+<code php app/AppKernel.php>
+public function registerBundles()
+{
+    $bundles = array(
+        //...
+        new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+    );
+}
+</code>
+
+Les commandes ''php app/console doctrine:migrations:*'' sont maintenant disponibles.

@@ -1,0 +1,163 @@
+====== École Informatique 2014 : Maitriser le Cloud ======
+
+Du 1er au 5 juillet 2014, Centre Jean Bosco (Lyon, France)
+
+Lire la [[https://indico.in2p3.fr/conferenceDisplay.py?confId=9852|page officielle]] sur le site [[http://indico.in2p3.fr|Indico]]. L'emploi du temps et les documents peuvent être consultés sur [[https://indico.in2p3.fr/conferenceOtherViews.py?confId=9852&view=nicecompact|le calendrier]].
+
+La seconde moitié de la formation est divisée en deux sessions parallèles : **dev** et **admin**. La partie **admin** étant entièrement consacrée à l'installation de **StratusLab**, je suivrai donc la session **dev**.
+
+**Impressions :** Formation organisée autour, et largement consacrée à **StratusLab**, car elle est organisée par l'un des développeurs du logiciel. La plupart des sessions sont pour les débutants, les tutoriels sont peu, voir pas utiles et mal gérés.
+
+**À retenir :** 
+
+  * La présentation de Christophe BLANCHET sur [[#h00_-_cloud_pour_la_bioinformatiquechristophe_blanchet|le cloud pour la bio-informatique]]
+  * L'intervention de Rémi MOLLON sur [[#h00_-_la_securite_dans_le_cloudremi_mollon_equipe_securite_informatique_du_cern|la sécurité informatique]]
+
+===== Mardi 1er juillet =====
+
+==== 14h00 - Qu'est-ce que le "cloud" ? / Charles LOOMIS ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:20140701-1-what-is-cloud-v1.pdf|la présentation}}.
+
+  * Le mot "cloud" est utilisé pour faire du //marketing// d'un produit informatique.
+  * Pour une définition précise, voir [[http://csrc.nist.gov/publications/nistpubs/800-145/SP800-145.pdf|The NIST definition of cloud computing]] :
+    * On-demand self-service
+    * Broad network access
+    * Resource pooling
+    * Rapid elasticity
+    * Measured service
+  * Plusieurs niveaux : SaaS, PaaS, IaaS (et Maas qui s'apparente à du //hosting//)
+    * Problème de PaaS : les applications développées sont dépendantes de la boite à outils du fournisseur !
+  * 4 types de déploiements : privé, public, commercial et hybride (//bursting// de privé vers commercial)
+
+==== 14h30 - Fournisseurs e distributions "cloud" / Charles LOOMIS ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:20140701-2-cloud-services-v1.pdf|la présentation}}.
+
+Questions soulevées : sureté, sécurité appartenance des données
+
+==== 15h00 - Comment accéder aux services "cloud" ? / Charles LOOMIS ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:20140701-3-cloud-access-v1.pdf|la présentation}}.
+
+A des besoins différents correspondent des moyens différents : web, CLI, API (**Attention :** CL mélange allègrement "API" et //binding libraries//)
+
+**"API" :** [[https://launchpad.net/libcloud|LibCloud]] pour Python et jClouds pour Java.
+
+**Standards :** EC2/S3 (//de facto//), [[http://occi-wg.org/|OCCI]] (OGF), [[http://dmtf.org/standards/cloud|CIMI]]/CDMI (DMTF)
+
+==== 16h00 - "Cloud" pour la bio-informatique ? / Christophe BLANCHET ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:ecole_cloud_in2p3_2014_blanchet.pdf|la présentation}}.
+
+Présentation fort intéressante (et longue : 1h30) de l'IFB (Institut Français de Bio-informatique) et de sa [[http://idee-b.ibcp.fr/cloud.html|plateforme basée sur **StratusLab**]]. Celle-ci est fonctionnelle et met à disposition de ses utilisateurs de nombreuses VM (Galaxy...).
+
+==== 17h30 - Mise en place d'un "cloud" public/privé / Guillaume PHILIPPON (LAL)  ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:guillaume_phillipon.ppt|la présentation}}.
+
+  * **StratusLab** doit être simple à installer et à utiliser
+  * Les VMs sont envisagées de manière plus **volatile** que dans OpenStack ; il insiste donc beaucoup sur la contextualisation
+  * **Sécurité** des VMs : on ne sait pas ce qui tourne dessus et l'utilisateur est //root//
+  * **Autopsie** des VMs pour audit. Eux conservent les //cadavres// 15j
+  * [[http://opennebula.org/OpenNebula]]pour le management des VMs
+
+Fin de la première journée à 18h05
+
+===== Mercredi 2 juillet =====
+
+==== 9h30 - Gestion des appliances / Mohammed AIRAJ ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:gestion_appliances.pdf|la présentation}}.
+
+Présentation très lente et pas très technique
+
+  * //Appliance// = image de base + services installés
+  * [[https://launchpad.net/cloud-init|CloudInit]] est disponible pour la plupart des "clouds"
+  * Le standard de stockage d'image OVF n'est pas vraiment adopté
+  * Méthodes de création :
+    * Manuel : vmware desktop, libvirt... puis conversion ! A éviter... mais c'est ce qu'on utilisera en atelier !!
+    * Usines : [[https://bitnami.com/|Bitnami]]...
+    * Automatique : VMBUilder, VeeWee, BoxGrinder, VirtInstall...
+  * Quelques conseils : 
+    * désactiver le firewall (?!)
+    * désactiver SELinux (?!)
+    * SSH uniquement par clé
+    * attention à udev (net-gen et net.rules)
+    * installer ACPID pour l'ajout de disque à chaud
+  * Dépôts d'//appliances// : Glance (OpenStack) et MarketPlace (accès web pour StratusLab)
+  * Outils de transport d'//appliances// : [[https://github.com/hepix-virtualisation|HEPIX]] (vmcatcher/vmcaster) pour vérification (x509) et //caching//
+
+==== 11h00 - Client OpenStack/StratusLab : installation et utilisation / Jérome PANSANEL (IPHC) & CHarles LOOMIS (LAL) ====
+
+Circulez, y'a rien à voir !
+
+La présentation et les 2 TPs qui suivent au CC consistent à :
+
+  * se battre avec les WiFi du centre Jean BOSCO ;
+  * subir les questions "Comment installer X sous Mac ?" ;
+  * lancer les commandes de base sous StratusLab en suivant le [[http://stratuslab.readthedocs.org/en/latest/user-tutorial/index.html|tutoriel disponible en ligne]].
+
+===== Jeudi 3 juillet =====
+
+==== 09h00 - (suite de la veille) ====
+
+Voir [[#h00_-_client_openstackinstallation_et_utilisationjerome_pansanel_iphc|la session de mercredi après-midi]].
+
+==== 11h00 - TP "dev" au CC / Cécile CAVET ====
+
+Télécharger les TPs : {{:conferences:20140701-ecole_informatique_in2p3:tp1_image_disque.pdf|TP1}}, {{:conferences:20140701-ecole_informatique_in2p3:tp2_use_customized.pdf|TP2}} et {{:conferences:20140701-ecole_informatique_in2p3:tp3_perf.pdf|TP3}}.
+
+Tuto façon "laisser-faire", on aurait pu aller **beaucoup** plus vite.
+
+  * Fabrication d'une image (vmware desktop) et utilisation de cloud-init sous SL6.
+  * Lancement de tests de performance
+
+===== Vendredi 4 juillet =====
+
+==== 09h00 - Retour d'expérience en astrophysique / Cécile CAVET ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:ecole_cloud_dev_cloud_cavet_14.pdf|la présentation}}.
+
+  * Test de performance des VM avec HPCC et d'autres outils
+  * Évoque ''stratus-run-cluster'' qui est supposé lancer un ensemble de VM. C'est le rôle de [[http://sixsq.com/products/slipstream.html|SlipStream]] qui doit être présenté samedi.
+
+==== 11h00 - La sécurité dans le "cloud" / Rémi MOLLON (équipe sécurité informatique du CERN)  ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:cloud-security-rmollon.pdf|la présentation}}.
+
+  * Exemples d'attaques : VMWare (2009), iCloud (2012), DropBox (2012 x2), faille de interfaces de contrôle IPMI
+  * La sécurité est un processus continu (procédures + personnel + technologie)
+  * Formation régulière au CERN : //**SEC_RITY is not complete without U**//
+  * L'institut pour le développement sécurisé : [[https://www.owasp.org/index.php/Main_Page|OWASP]]
+  * Risques = (conséquences * probabilité) / mesure de protection
+  * Normes de sécurité informatique : 7498-2, 27001, 27002 (drafts: 27017, 27018 pour le cloud)
+
+==== 12h00 - La fédération des infrastructures / Charles LOOMIS  ====
+
+Télécharger {{:conferences:20140701-ecole_informatique_in2p3:20140704-clouds-federes-v1.pptx|la présentation}}.
+
+Constat : de nombreuses machines sont dispersées dans tous les labo ! Des raisons économiques et la capacité technique incitent à tout mutualiser. Il en va de même pour les services (e-mails...).
+
+Alors, tous dans Amazon ? **Non** car :
+
+  * (à court terme) des investissements ont déjà été faits
+  * (à moyen terme) problème de gestion, de sécurité et d'accès aux données
+  * (à long terme) minimiser la latence (distance) et redondance en cas de catastrophe
+
+Besoins scientifiques : partage, calcul, fiabilité
+
+Les objectifs sont donc d'**Harmoniser** (//via// des standards, ce n'est pas dans l'intérêt des privés) et **Agréger** (couche intermédiaire : monitoring multi-cloud...)
+
+Différents niveaux d'actions :
+
+  * **Authentification :** PKI du [[http://www.osiris-online.eu/EGI.html|EGI]], Shibboleth, eduGAIN...
+  * **API :** OCCI, CIMI...
+  * **Contextualisation :** cloud-init (//de facto//)
+  * **Fédération :** [[http://www.france-bioinformatique.fr/|IFB]] à l'IDRIS, EGI, FedCloud, Helix Nebula //via// SlipStream...
+
+===== Samedi 5 juillet =====
+
+<WRAP round info>
+\\ Je n'ai pas pu assister aux sessions du vendredi après-midi et samedi matin pour cause de vacances !!!
+</WRAP>

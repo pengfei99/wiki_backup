@@ -1,0 +1,282 @@
+
+<h1 class="sectionedit1" id="linux_file_system_advance_access_control">Linux file system advance access control</h1>
+<div class="level1">
+
+<p>
+We all know that the default owner:group:other acl will work for most of the time. But if we want to two different groups with different access rights to access the same data(e.g. file, directory).
+</p>
+
+<p>
+To set multiple groups on a single directory or file we need to use <strong>setfacl</strong>, to check all the privileges on the file, we need to use <strong>getfacl</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Linux file system advance access control&quot;,&quot;hid&quot;:&quot;linux_file_system_advance_access_control&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-406&quot;} -->
+<h2 class="sectionedit2" id="getfacl">1. GETFACL</h2>
+<div class="level2">
+
+<p>
+For each file, getfacl displays the file name, owner, the group, and the Access Control List (<abbr title="Access Control List">ACL</abbr>). If a directory has a default <abbr title="Access Control List">ACL</abbr>, getfacl also displays the default <abbr title="Access Control List">ACL</abbr>. Non-directories cannot have default ACLs.
+</p>
+
+<p>
+If getfacl is used on a file system that does not support ACLs, getfacl displays the access permissions defined by the traditional file mode permission bits.
+</p>
+
+<p>
+The output format of getfacl is as follows:
+</p>
+<pre class="code">1:  # file: somedir/
+2:  # owner: lisa
+3:  # group: staff
+4:  user::rwx
+5:  user:joe:rwx               #effective:r-x
+6:  group::rwx                 #effective:r-x
+7:  group:cool:r-x
+8:  mask:r-x
+9:  other:r-x
+10:  default:user::rwx
+11:  default:user:joe:rwx       #effective:r-x
+12:  default:group::r-x
+13:  default:mask:r-x
+14:  default:other:---</pre>
+
+<p>
+Lines 4, 6 and 9 correspond to the user, group and other fields of the file mode permission bits. These three are called the base <abbr title="Access Control List">ACL</abbr> entries. Lines 5 and 7 are named user and named group entries. Line 8 is the effective rights mask. This entry limits the effective rights granted to all groups and to named users. (The file owner and others permissions are not affected by the effective rights mask; all other entries are.) Lines 10 through 14 display the default <abbr title="Access Control List">ACL</abbr> associated with this directory. Directories may have a default <abbr title="Access Control List">ACL</abbr>. Regular files never have a default <abbr title="Access Control List">ACL</abbr>.
+</p>
+
+<p>
+The default behavior for getfacl is to display both the <abbr title="Access Control List">ACL</abbr> and the default <abbr title="Access Control List">ACL</abbr>, and to include an effective rights comment for lines where the rights of the entry differ from the effective rights.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. GETFACL&quot;,&quot;hid&quot;:&quot;getfacl&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;407-1991&quot;} -->
+<h3 class="sectionedit3" id="effective_rights">Effective rights</h3>
+<div class="level3">
+
+<p>
+Note that the <strong>effective rights</strong> are the real rights applied to users. For example, even we give user joe rwx in the acl, but with the effective rights mask, the effective right of joe is r-x, which means joe cant write on this directory. The same rule applies on the users of group staff, as the effective rights for group staff is r-x, Only lisa can write on this directory
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Effective rights&quot;,&quot;hid&quot;:&quot;effective_rights&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1992-2397&quot;} -->
+<h3 class="sectionedit4" id="permissions">Permissions</h3>
+<div class="level3">
+
+<p>
+Processes with search access to a file (i.e., processes with read access to the containing directory of a file) are also granted read access to the file&#039;s ACLs. This is analogous to the permissions required for accessing the file mode.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Permissions&quot;,&quot;hid&quot;:&quot;permissions&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2398-2657&quot;} -->
+<h3 class="sectionedit5" id="options">Options</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> – access:	Display the file access control list.</div>
+</li>
+<li class="level1"><div class="li"> -d, – default:	Display the default access control list.</div>
+</li>
+<li class="level1"><div class="li"> – omit-header:	Do not display the comment header (the first three lines of each file&#039;s output).</div>
+</li>
+<li class="level1"><div class="li"> – all-effective: Print all effective rights comments, even if identical to the rights defined by the <abbr title="Access Control List">ACL</abbr> entry.</div>
+</li>
+<li class="level1"><div class="li"> – no-effective: Do not print effective rights comments.</div>
+</li>
+<li class="level1"><div class="li"> – skip-base: Skip files that only have the base <abbr title="Access Control List">ACL</abbr> entries (owner, group, others).</div>
+</li>
+<li class="level1"><div class="li"> -R, –recursive: List the ACLs of all files and directories recursively.</div>
+</li>
+<li class="level1"><div class="li"> -L, –logical: “Logical walk” (follow symbolic links). The default behavior is to follow symbolic link arguments and to skip symbolic links encountered in subdirectories.</div>
+</li>
+<li class="level1"><div class="li"> -P, –physical:	“Physical walk” (skip all symbolic links). This also skips symbolic link arguments.</div>
+</li>
+<li class="level1"><div class="li"> –tabular: Use an alternative tabular output format. The <abbr title="Access Control List">ACL</abbr> and the default <abbr title="Access Control List">ACL</abbr> are displayed side by side. Permissions that are ineffective due to the <abbr title="Access Control List">ACL</abbr> mask entry are displayed capitalized. The entry tag names for the <abbr title="Access Control List">ACL</abbr>_USER_OBJ and <abbr title="Access Control List">ACL</abbr>_GROUP_OBJ entries are also displayed in capital letters, which helps in spotting those entries.</div>
+</li>
+<li class="level1"><div class="li"> –absolute-names: Do not strip leading slash characters (‘/’). The default behavior is to strip leading slash characters.</div>
+</li>
+<li class="level1"><div class="li"> –version: Print the version of getfacl and exit.</div>
+</li>
+<li class="level1"><div class="li"> –help: Print help explaining the command line options.</div>
+</li>
+<li class="level1"><div class="li"> –: End of command line options. All remaining parameters are interpreted as file names, even if they start with a dash character.</div>
+</li>
+<li class="level1"><div class="li"> -: If the filename parameter is a single dash character, getfacl reads a list of files from standard input.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2658-4350&quot;} -->
+<h3 class="sectionedit6" id="examples">Examples</h3>
+<div class="level3">
+<pre class="code"># 1. Get getfacl version
+&gt; getfacl -v
+getfacl 2.2.52
+
+# Note that if you put a filename behind -v, it will still only show &quot;getfacl 2.2.52&quot;
+
+# 2. A simple getfacl on a file
+&gt; getfacl test/toto.txt 
+
+# file: test/toto.txt
+# owner: root
+# group: root
+user::rw-
+group::r--
+group:bioaster:rwx
+mask::rwx
+other::r--
+
+# 3. Get default acl on a file
+&gt; getfacl -d test/toto.txt 
+
+# file: test/toto.txt
+# owner: root
+# group: root
+
+
+# 4. The following command will return all files acl in test recursively, all hard/soft symbolic link will be shown also
+&gt; getfacl -RLP test
+
+# file: test
+# owner: root
+# group: root
+user::rwx
+group::r-x
+group:bioaster:rwx
+mask::rwx
+other::r-x
+
+# file: test/toto.txt
+# owner: root
+# group: root
+user::rw-
+group::r--
+group:bioaster:rwx
+mask::rwx
+other::r--
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;4351-5166&quot;} -->
+<h2 class="sectionedit7" id="setfacl">2. SETFACL</h2>
+<div class="level2">
+
+<p>
+The setfacl utility sets Access Control Lists (ACLs) of files and directories. On the command line, a sequence of commands is followed by a sequence of files (which in turn can be followed by another sequence of commands, and so on).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. SETFACL&quot;,&quot;hid&quot;:&quot;setfacl&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;5167-5425&quot;} -->
+<h3 class="sectionedit8" id="main_options">Main options</h3>
+<div class="level3">
+
+<p>
+The options -m and -x expect an <abbr title="Access Control List">ACL</abbr> on the command line. Multiple <abbr title="Access Control List">ACL</abbr> entries are separated by commas (“,”). The options -M and -X read an <abbr title="Access Control List">ACL</abbr> from a file or from standard input. The <abbr title="Access Control List">ACL</abbr> entry format is described in the <abbr title="Access Control List">ACL</abbr> Entries section, below.
+</p>
+
+<p>
+The -m (–modify) and -M (–modify-file) options modify the <abbr title="Access Control List">ACL</abbr> of a file or directory. <abbr title="Access Control List">ACL</abbr> entries for this operation must include permissions.
+</p>
+
+<p>
+The -x (–remove) and -X (–remove-file) options remove <abbr title="Access Control List">ACL</abbr> entries. It is not an error to remove an entry which does not exist. Only <abbr title="Access Control List">ACL</abbr> entries without the perms field are accepted as parameters, unless the POSIXLY_CORRECT environment variable is defined.
+</p>
+
+<p>
+When reading from files using the -M and -X options, setfacl accepts the output produced by getfacl. There is at most one <abbr title="Access Control List">ACL</abbr> entry per line. After a pound sign (“#”), everything up to the end of the line is treated as a comment.
+</p>
+
+<p>
+The –set and –set-file options set the <abbr title="Access Control List">ACL</abbr> of a file or a directory. The previous <abbr title="Access Control List">ACL</abbr> is replaced. <abbr title="Access Control List">ACL</abbr> entries for this operation must include permissions.
+</p>
+
+<p>
+If setfacl is used on a file system which does not support ACLs, setfacl operates on the file mode permission bits. If the <abbr title="Access Control List">ACL</abbr> does not fit completely in the permission bits, setfacl modifies the file mode permission bits to reflect the <abbr title="Access Control List">ACL</abbr> as closely as possible, writes an error message to standard error, and returns with an exit status greater than 0.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Main options&quot;,&quot;hid&quot;:&quot;main_options&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;5426-6850&quot;} -->
+<h3 class="sectionedit9" id="other_options">Other options</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> -b, –remove-all: Remove all extended <abbr title="Access Control List">ACL</abbr> entries. The base <abbr title="Access Control List">ACL</abbr> entries of the owner, group and others are retained.</div>
+</li>
+<li class="level1"><div class="li"> -k, –remove-default: Remove the Default <abbr title="Access Control List">ACL</abbr>. If no Default <abbr title="Access Control List">ACL</abbr> exists, no warnings are issued.</div>
+</li>
+<li class="level1"><div class="li"> -n, –no-mask: Do not recalculate the effective rights mask. The default behavior of setfacl is to recalculate the <abbr title="Access Control List">ACL</abbr> mask entry, unless a mask entry was explicitly given. The mask entry is set to the union of all permissions of the owning group, and all named user and group entries. (These are exactly the entries affected by the mask entry).</div>
+</li>
+<li class="level1"><div class="li"> –mask: Do recalculate the effective rights mask, even if an <abbr title="Access Control List">ACL</abbr> mask entry was explicitly given. (See the -n option.)</div>
+</li>
+<li class="level1"><div class="li"> -d, –default: All operations apply to the Default <abbr title="Access Control List">ACL</abbr>. Regular <abbr title="Access Control List">ACL</abbr> entries in the input set are promoted to Default <abbr title="Access Control List">ACL</abbr> entries. Default <abbr title="Access Control List">ACL</abbr> entries in the input set are discarded. (A warning is issued if that happens).</div>
+</li>
+<li class="level1"><div class="li"> –restore=file: Restore a permission backup created by “getfacl -R” or similar. All permissions of a complete directory subtree are restored using this mechanism. If the input contains owner comments or group comments, setfacl attempts to restore the owner and owning group. If the input contains flags comments (which define the setuid, setgid, and sticky bits), setfacl sets those three bits accordingly; otherwise, it clears them. This option cannot be mixed with other options except “–test”.</div>
+</li>
+<li class="level1"><div class="li"> –test: Test mode. Instead of changing the ACLs of any files, the resulting ACLs are listed.</div>
+</li>
+<li class="level1"><div class="li"> -R, –recursive: Apply operations to all files and directories recursively. This option cannot be mixed with “–restore”.</div>
+</li>
+<li class="level1"><div class="li"> -L, –logical: “Logical walk”: follow symbolic links to directories. The default behavior is to follow symbolic link arguments and skip symbolic links encountered in subdirectories. Only effective in combination with -R. This option cannot be mixed with “–restore”.</div>
+</li>
+<li class="level1"><div class="li"> -P, –physical: “Physical walk”: do not follow symbolic links to directories. This also skips symbolic link arguments. Only effective in combination with -R. This option cannot be mixed with “–restore”.</div>
+</li>
+<li class="level1"><div class="li"> -v, –version: Print the version of setfacl, and exit.</div>
+</li>
+<li class="level1"><div class="li"> -h, –help: Print a help message explaining the command line options.</div>
+</li>
+<li class="level1"><div class="li"> –: A double-dash marks the end of command line options; all remaining parameters are interpreted as file names. This option is especially useful for file names that start with a dash.</div>
+</li>
+<li class="level1"><div class="li"> -: If the filename parameter is a single dash, setfacl reads a list of files from standard input.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Other options&quot;,&quot;hid&quot;:&quot;other_options&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;6851-9423&quot;} -->
+<h3 class="sectionedit10" id="acl_entries">Acl entries</h3>
+<div class="level3">
+
+<p>
+setfacl recognizes the following <abbr title="Access Control List">ACL</abbr> entry formats (spaces in the following formats are optional, but have been included for legibility):
+</p>
+<ul>
+<li class="level1"><div class="li"> [d[efault]:] [u[ser]:]uid [:perms]	→ Permissions of the user with user ID uid, or permissions of the file&#039;s owner if uid is empty.</div>
+</li>
+<li class="level1"><div class="li"> [d[efault]:] g[roup]:gid [:perms]	→ Permissions of the group with group ID gid, or permissions of the owning group if gid is empty.</div>
+</li>
+<li class="level1"><div class="li"> [d[efault]:] m[ask][:] [:perms] →	Effective rights mask.</div>
+</li>
+<li class="level1"><div class="li"> [d[efault]:] o[ther][:] [:perms] → Permissions of others.</div>
+</li>
+</ul>
+
+<p>
+Note : Whitespace between delimiter characters and non-delimiter characters is ignored.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Acl entries&quot;,&quot;hid&quot;:&quot;acl_entries&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:10,&quot;range&quot;:&quot;9424-10074&quot;} -->
+<h3 class="sectionedit11" id="examples1">Examples</h3>
+<div class="level3">
+<pre class="code"># 1. Grant user pliu read access to file foo.txt
+&gt; setfacl -m u:pliu:r foo.txt
+
+# 2. Revoke write access from all groups and all named users (using the effective rights mask) for file foo.txt
+&gt; setfacl -m m::rx foo.txt
+
+
+# 3. Grant group architect read,write and execute rights on a directory test and all subfiles or subdirs.
+&gt; setfacl -R -m g:architect:rwx test
+# Note that -R must be before -m, if you reverse the order it will return setfacl: Option -m: Invalid argument near character 1
+
+# 4. Remove the group entry for the group staff from file toto.txt&#039;s ACL
+&gt; setfacl -x g:staff toto.txt
+
+# 5. Copy the ACL of file1 to file2
+&gt; getfacl file1 | setfacl --set-file=- file2
+
+# 6. Copy the access ACL into the default ACL.
+&gt; getfacl --access dir | setfacl -d -M- dir 
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples1&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:11,&quot;range&quot;:&quot;10075-&quot;} -->

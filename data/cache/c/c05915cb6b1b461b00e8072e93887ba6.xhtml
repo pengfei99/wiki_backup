@@ -1,0 +1,265 @@
+
+<h1 class="sectionedit1" id="flume_installation_and_configuration">Flume installation and configuration</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume installation and configuration&quot;,&quot;hid&quot;:&quot;flume_installation_and_configuration&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-53&quot;} -->
+<h2 class="sectionedit2" id="install_flume">Install flume</h2>
+<div class="level2">
+
+<p>
+1. Download the flume tar ball from the flume site (<a href="https://www.apache.org/dist/flume/stable/" class="urlextern" title="https://www.apache.org/dist/flume/stable/" rel="nofollow">https://www.apache.org/dist/flume/stable/</a>).
+</p>
+
+<p>
+The current stable version is flume 1.9.
+</p>
+
+<p>
+Put the unziped flume under /opt/flume
+</p>
+<pre class="code">#flume home path
+[hadoop@localhost flume-1.9.0]$ ls
+bin        conf      doap_Flume.rdf  lib      NOTICE     RELEASE-NOTES
+CHANGELOG  DEVNOTES  docs            LICENSE  README.md  tools
+[hadoop@localhost flume-1.9.0]$ pwd
+/opt/flume/flume-1.8.0
+
+#add the flume home to the path
+vim /etc/profile.d/flume.sh
+
+export FLUME_HOME=/opt/flume/flume-1.9.0
+export PATH=$PATH:$FLUME_HOME/bin
+
+# check the flume home
+[root@localhost profile.d]# source flume.sh 
+[root@localhost profile.d]# echo $FLUME_HOME
+/opt/flume/flume-1.9.0
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install flume&quot;,&quot;hid&quot;:&quot;install_flume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;54-795&quot;} -->
+<h2 class="sectionedit3" id="configure_flume">Configure flume</h2>
+<div class="level2">
+
+<p>
+All the important flume configuration files are located under /path/to/flume/conf. There are the four following files
+</p>
+<ul>
+<li class="level1"><div class="li"> flume-conf.properties.template</div>
+</li>
+<li class="level1"><div class="li"> flume-env.sh.template</div>
+</li>
+<li class="level1"><div class="li"> flume-env.ps1.template</div>
+</li>
+<li class="level1"><div class="li"> log4j.properties</div>
+</li>
+</ul>
+
+<p>
+The most important config file for flume is <strong>flume-env.sh</strong>. Below is the minimum config which we need to do to run the flume.
+</p>
+<pre class="code">[hadoop@localhost conf]$ cp flume-env.sh.template flume-env.sh
+[hadoop@localhost conf]$ vim flume-env.sh
+
+#add the export java home
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_144
+
+# Check the flume version
+[pliu@localhost bin]$ sh flume-ng version
+Flume 1.9.0
+Source code repository: https://git-wip-us.apache.org/repos/asf/flume.git
+Revision: d4fcab4f501d41597bc616921329a4339f73585e
+Compiled by fszabo on Mon Dec 17 20:45:25 CET 2018
+From source with checksum 35db629a3bda49d23e9b3690c80737f9
+
+# The Error caused by HBAse has been corrected since flume1.9, if you are using flume 1.8 or less, you may get a Error: Could not find or load main class org.apache.flume.tools.GetJavaProperty.
+
+# To get rid of it, you need to modify the hbase-env.sh.
+#The simple way is to comment the line 
+##export HBASE_CLASSPATH 
+</pre>
+
+<p>
+The <strong>flume-conf.properties</strong> defines the flume agent 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure flume&quot;,&quot;hid&quot;:&quot;configure_flume&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;796-2060&quot;} -->
+<h2 class="sectionedit4" id="test_your_flume_with_different_scenario">Test your flume with different scenario</h2>
+<div class="level2">
+
+<p>
+For each data flow in Flume, we need to define a flume agent which contains: sources, channels, sinks. In the following examples, we will demonstrate how to configure different sources, channels and sinks.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Test your flume with different scenario&quot;,&quot;hid&quot;:&quot;test_your_flume_with_different_scenario&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2061-2321&quot;} -->
+<h3 class="sectionedit5" id="avro_agent">Avro agent</h3>
+<div class="level3">
+
+<p>
+Avro is a remote procedure call and data serialization framework developed within Apache&#039;s Hadoop project. It uses JSON for defining data types and protocols, and serializes data in a compact binary format. Its primary use is in Apache Hadoop, where it can provide both a serialization format for persistent data, and a wire format for communication between Hadoop nodes, and from client programs to the Hadoop services.
+</p>
+
+<p>
+It is similar to Thrift and Protocol Buffers, but does not require running a code-generation program when a schema changes (unless desired for statically-typed languages).
+</p>
+
+<p>
+Apache Spark SQL can access Avro as a data source.
+</p>
+
+</div>
+
+<h4 id="edit_avro_agent_conf_file">Edit avro agent conf file</h4>
+<div class="level4">
+
+<p>
+You can put the flume agent file anywhere. In this example, I put them under $FLUME_HOME/conf/agent-example
+</p>
+<pre class="code">vim /opt/flume/flume-1.8.0/conf/agent-example/avro.conf
+
+#Put the following lines
+# the name of this avro agent is avroAgent.
+# it has one sources localAvroClient, sinks stdLogger, channels memoryChannel.
+# Part 1. Define the name of sources, sinks, channels 
+  avroAgent.sources = localAvroClient
+  avroAgent.sinks = stdLogger
+  avroAgent.channels = memoryChannel
+ 
+# Part 2. Describe/configure the source
+  avroAgent.sources.localAvroClient.type = avro
+  avroAgent.sources.localAvroClient.channels = memoryChannel
+# this source bind on every available network interface on this server at port 4141
+  avroAgent.sources.localAvroClient.bind = 0.0.0.0
+  avroAgent.sources.localAvroClient.port = 4141
+ 
+# Part 3. Describe the sink
+  avroAgent.sinks.stdLogger.type = logger
+ 
+# Part 4. Use a channel which buffers events in memory
+  avroAgent.channels.memoryChannel.type = memory
+  avroAgent.channels.memoryChannel.capacity = 1000
+  avroAgent.channels.memoryChannel.transactionCapacity = 100
+ 
+# Bind the source and sink to the channel
+  avroAgent.sources.localAvroClient.channels = memoryChannel
+  avroAgent.sinks.stdLogger.channel = memoryChannel
+</pre>
+
+<p>
+You can notice that, one agent must have a comple conf of source, sink and channel
+</p>
+
+</div>
+
+<h4 id="run_flume_agent">Run flume agent</h4>
+<div class="level4">
+
+<p>
+To run the agent,
+</p>
+<pre class="code">$ bin/flume-ng agent --conf ./conf/ -f /opt/flume/flume-1.8.0/conf/agent-example/avro.conf -n avroAgent -Dflume.root.logger=INFO,console
+
+#agent -&gt; start a flume agent
+#--conf/-c &lt;dir path&gt;-&gt; Use configuration file in the conf directory
+#-f &lt;file path&gt; -&gt; Specifies a config file path, if missing
+#--name, -n &lt;agent name&gt; -&gt; Name of the agent in the conf file 
+# for example, if you put -n a1. WARN node.AbstractConfigurationProvider: No configuration found for this host:a1
+#-Dproperty = value -&gt; Sets a Java system property value
+
+</pre>
+
+</div>
+
+<h4 id="run_avro_client_to_send_flume_event_to_agent">Run avro client to send flume event to agent</h4>
+<div class="level4">
+
+<p>
+In this example, we use the flume native avro-client
+</p>
+<pre class="code">#As the above agent listen to all available network interface, 
+#so we need only send the content of text.txt to localhost on port 4141 ( port number defined in avro.conf file)
+flume-ng avro-client -H localhost -p 4141 -F test.txt </pre>
+
+<p>
+Suppose the contenx of test.txt is 
+</p>
+<pre class="code">real
+
+toto
+titi
+tata</pre>
+
+<p>
+You should see the following result
+</p>
+<pre class="code">18/01/22 10:43:44 INFO source.AvroSource: Avro source localAvroClient started.
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 =&gt; /127.0.0.1:4141] OPEN
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 =&gt; /127.0.0.1:4141] BOUND: /127.0.0.1:4141
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 =&gt; /127.0.0.1:4141] CONNECTED: /127.0.0.1:49466
+18/01/22 10:43:53 INFO sink.LoggerSink: Event: { headers:{} body: 72 65 61 6C                                     real }
+18/01/22 10:43:53 INFO sink.LoggerSink: Event: { headers:{} body: }
+18/01/22 10:43:53 INFO sink.LoggerSink: Event: { headers:{} body: 74 6F 74 6F                                     toto }
+18/01/22 10:43:53 INFO sink.LoggerSink: Event: { headers:{} body: 74 69 74 69                                     titi }
+18/01/22 10:43:53 INFO sink.LoggerSink: Event: { headers:{} body: 74 61 74 61                                     tata }
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 :&gt; /127.0.0.1:4141] DISCONNECTED
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 :&gt; /127.0.0.1:4141] UNBOUND
+18/01/22 10:43:53 INFO ipc.NettyServer: [id: 0x408ccd0a, /127.0.0.1:49466 :&gt; /127.0.0.1:4141] CLOSED
+18/01/22 10:43:53 INFO ipc.NettyServer: Connection to /127.0.0.1:49466 disconnected.
+</pre>
+
+<p>
+You can notice that, flume consider one line as a event, even the line is empty.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Avro agent&quot;,&quot;hid&quot;:&quot;avro_agent&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;2322-6900&quot;} -->
+<h3 class="sectionedit6" id="netcat_source_agent">Netcat source agent</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="flume_netcat_agent_conf">Flume netcat agent conf</h4>
+<div class="level4">
+<pre class="code">#name the components on this agent  
+    netcatAgent.sources = localSocket  
+    netcatAgent.sinks = stdLogger  
+    netcatAgent.channels = memoryChannel  
+ 
+    # Describe/configure the source  
+    netcatAgent.sources.localSocket.type = netcat  
+    netcatAgent.sources.localSocket.bind = localhost  
+    netcatAgent.sources.localSocket.port = 8888 
+     
+ 
+    # Describe the sink  
+    netcatAgent.sinks.stdLogger.type = logger  
+ 
+    # Use a channel which buffers events in memory  
+    netcatAgent.channels.memoryChannel.type = memory  
+    netcatAgent.channels.memoryChannel.capacity = 10000  
+    netcatAgent.channels.memoryChannel.transactionCapacity = 1000  
+ 
+    # Bind the source and sink to the channel  
+    netcatAgent.sources.localSocket.channels = memoryChannel  
+    netcatAgent.sinks.stdLogger.channel = memoryChannel
+
+   # set the line length of event 
+   netcatAgent.sources.localSocket.deserializer.maxLineLength=10000 </pre>
+
+</div>
+
+<h4 id="run_the_agent">run the agent</h4>
+<div class="level4">
+<pre class="code">flume-ng agent -f /opt/flume/flume-1.8.0/conf/agent-example/netcat.conf -n netcatAgent -Dflume.root.logger=INFO,console</pre>
+
+</div>
+
+<h4 id="run_the_client">run the client</h4>
+<div class="level4">
+<pre class="code">[hadoop@localhost log]$ telnet localhost 8888</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Netcat source agent&quot;,&quot;hid&quot;:&quot;netcat_source_agent&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;6901-&quot;} -->

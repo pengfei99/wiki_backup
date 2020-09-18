@@ -1,0 +1,78 @@
+
+<h1 class="sectionedit1" id="installer_la_django_debug_toolbar">Installer la Django Debug Toolbar</h1>
+<div class="level1">
+
+<p>
+Tout est ici <a href="http://django-debug-toolbar.readthedocs.io/en/stable/installation.html" class="urlextern" title="http://django-debug-toolbar.readthedocs.io/en/stable/installation.html"  rel="nofollow">http://django-debug-toolbar.readthedocs.io/en/stable/installation.html</a> mais pour les plus fainéants, il faut dans l&#039;ordre :
+</p>
+<pre class="prettyprint">$ pip install django-debug-toolbar</pre>
+</div>
+<!-- EDIT1 SECTION "Installer la Django Debug Toolbar" [1-236] -->
+<h2 class="sectionedit2" id="settingspy">settings.py</h2>
+<div class="level2">
+
+<p>
+Dans le fichiers settings.py de votre projet Django :
+</p>
+<pre class="prettyprint">
+INSTALLED_APPS = [
+    # ...
+    &#039;django.contrib.staticfiles&#039;,
+    # ...
+    &#039;debug_toolbar&#039;,
+]
+
+STATIC_URL = &#039;/static/&#039;
+</pre>
+<p>
+Puis à mettre le plus haut placé possible dans la liste :
+</p>
+<pre class="prettyprint">
+MIDDLEWARE = [
+    # ...
+    &#039;debug_toolbar.middleware.DebugToolbarMiddleware&#039;,
+    # ...
+]
+</pre>
+<p>
+Et enfin renseigner les ips de dev dans la clé INTERNAL_IPS :
+</p>
+<pre class="prettyprint">
+# mandatory for Django Debug Toolbar
+INTERNAL_IPS = [&#039;127.0.0.1&#039;]
+</pre>
+</div>
+<!-- EDIT2 SECTION "settings.py" [237-767] -->
+<h2 class="sectionedit3" id="urlspy">urls.py</h2>
+<div class="level2">
+
+<p>
+Dans le fichiers urls.py de votre projet Django :
+</p>
+<pre class="prettyprint">
+from django.conf import settings
+from django.conf.urls import include, url
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r&#039;^__debug__/&#039;, include(debug_toolbar.urls)),
+    ]
+</pre>
+</div>
+<!-- EDIT3 SECTION "urls.py" [768-1060] -->
+<h2 class="sectionedit4" id="problemes_possibles">Problèmes possibles</h2>
+<div class="level2">
+
+<p>
+Si la Debug Toolbar ne s&#039;affiche pas :
+</p>
+<ol>
+<li class="level1"><div class="li"> vérifier que vous êtes bien en mode DEBUG=True</div>
+</li>
+<li class="level1"><div class="li"> vérifier que votre template contient bien une balise &lt;/body&gt;</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT4 SECTION "Problèmes possibles" [1061-] -->

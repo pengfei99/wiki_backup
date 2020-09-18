@@ -1,0 +1,6 @@
+a:12:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:18:"Espace de stockage";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:35;}i:4;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:24:"AFS : Andrew File System";i:1;i:2;i:2;i:35;}i:2;i:35;}i:5;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:35;}i:6;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:75;}i:7;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:9:"SPS : ?!?";i:1;i:2;i:2;i:75;}i:2;i:75;}i:8;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:75;}i:9;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:255:"
+$ spsquota list /sps/inter/bioaster
+Fileset quota for '/sps/inter/bioaster': Explicit quota defined
+Space used:     47.31 GB, Hard quota:         1 TB, Soft quota:         1 TB
+Files used:          364, Hard quota:          1 M, Soft quota:          1 M
+";i:1;s:4:"text";i:2;N;}i:2;i:103;}i:10;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:372;}i:11;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:372;}}

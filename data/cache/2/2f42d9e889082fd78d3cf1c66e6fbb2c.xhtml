@@ -1,0 +1,180 @@
+
+<h1 class="sectionedit1" id="use_spark_to_get_and_set_data_in_hbase">Use spark to get and set data in HBase</h1>
+<div class="level1">
+
+<p>
+In this example, we suppose you have a local hadoop cluster runs on localhost:9000 and hbase runs on top of it. In a real Hbase environment, the Hbase uses zookeeper quorum to coordinate HMaster and HRegionServer.
+So the code will be a little different
+</p>
+
+<p>
+The full code also can be found <a href="https://github.com/pengfei99/Spark/" class="urlextern" title="https://github.com/pengfei99/Spark/" rel="nofollow">https://github.com/pengfei99/Spark/</a>
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_hbase_io&amp;codeblock=0" title="Download Snippet" class="mediafile mf_xml">pom.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;UTF-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;project</span> <span class="re0">xmlns</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span>
+<span class="sc3">         <span class="re0">xmlns:xsi</span>=<span class="st0">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span class="sc3">         <span class="re0">xsi:schemaLocation</span>=<span class="st0">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;modelVersion<span class="re2">&gt;</span></span></span>4.0.0<span class="sc3"><span class="re1">&lt;/modelVersion<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.pengfei<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>hbase<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.0-SNAPSHOT<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.1.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;project.build.sourceEncoding<span class="re2">&gt;</span></span></span>UTF-8<span class="sc3"><span class="re1">&lt;/project.build.sourceEncoding<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+&nbsp;
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-streaming_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-hive_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-mllib_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc-1">&lt;!-- dependencies for hbase client and server --&gt;</span>
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.hbase<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>hbase-client<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.2.4<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.hbase<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>hbase-server<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.2.4<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;build<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;plugins<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.scala-tools<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-scala-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.15.2<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;executions<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;execution<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;goals<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>compile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                            <span class="sc3"><span class="re1">&lt;goal<span class="re2">&gt;</span></span></span>testCompile<span class="sc3"><span class="re1">&lt;/goal<span class="re2">&gt;</span></span></span>
+                        <span class="sc3"><span class="re1">&lt;/goals<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;/execution<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/executions<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-compiler-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>3.6.0<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;source<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/source<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;target<span class="re2">&gt;</span></span></span>1.8<span class="sc3"><span class="re1">&lt;/target<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+            <span class="sc3"><span class="re1">&lt;plugin<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.maven.plugins<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>maven-surefire-plugin<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>2.19<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+                    <span class="sc3"><span class="re1">&lt;skip<span class="re2">&gt;</span></span></span>true<span class="sc3"><span class="re1">&lt;/skip<span class="re2">&gt;</span></span></span>
+                <span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;/plugin<span class="re2">&gt;</span></span></span>
+&nbsp;
+        <span class="sc3"><span class="re1">&lt;/plugins<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/build<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/project<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_hbase_io&amp;codeblock=1" title="Download Snippet" class="mediafile mf_scala">SparkHBaseIO.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">conf</span>.<span class="me1">Configuration</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">HBaseConfiguration</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">client</span>.<span class="br0">&#123;</span>Put, Result<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">io</span>.<span class="me1">ImmutableBytesWritable</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">mapreduce</span>.<span class="br0">&#123;</span>TableInputFormat, TableOutputFormat<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">util</span>.<span class="me1">Bytes</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">mapreduce</span>.<span class="me1">Job</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="br0">&#123;</span>SparkConf, SparkContext<span class="br0">&#125;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> SparkHBaseIO <span class="br0">&#123;</span>
+<a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span>Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+  <span class="co1">// create hbase configuration</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> hbaseConf <span class="sy0">=</span> HBaseConfiguration.<span class="me1">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> sparkConf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;SparkHBaseIO&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkContext<span class="br0">&#40;</span>sparkConf<span class="br0">&#41;</span>
+&nbsp;
+  insertRDDtoTable<span class="br0">&#40;</span><span class="st0">&quot;student&quot;</span>,sc<span class="br0">&#41;</span>
+  getTableAsRDD<span class="br0">&#40;</span><span class="st0">&quot;student&quot;</span>,sc,hbaseConf<span class="br0">&#41;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getTableAsRDD<span class="br0">&#40;</span>tableName<span class="sy0">:</span>String,sparkContext<span class="sy0">:</span> SparkContext,hbaseConf<span class="sy0">:</span>Configuration<span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+    <span class="co1">//set table name as student</span>
+    hbaseConf.<span class="me1">set</span><span class="br0">&#40;</span>TableInputFormat.<span class="me1">INPUT_TABLE</span>,tableName<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> stuRDD <span class="sy0">=</span> sparkContext.<span class="me1">newAPIHadoopRDD</span><span class="br0">&#40;</span>hbaseConf,classOf<span class="br0">&#91;</span>TableInputFormat<span class="br0">&#93;</span>,classOf<span class="br0">&#91;</span>org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">io</span>.<span class="me1">ImmutableBytesWritable</span><span class="br0">&#93;</span>,
+      classOf<span class="br0">&#91;</span>org.<span class="me1">apache</span>.<span class="me1">hadoop</span>.<span class="me1">hbase</span>.<span class="me1">client</span>.<span class="me1">Result</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> count <span class="sy0">=</span> stuRDD.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    println<span class="br0">&#40;</span><span class="st0">&quot;Studnets RDD count: &quot;</span>+ count<span class="br0">&#41;</span>
+    stuRDD.<span class="me1">cache</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    stuRDD.<span class="me1">foreach</span><span class="br0">&#40;</span><span class="br0">&#123;</span> <a href="http://scala-lang.org"><span class="kw1">case</span></a> <span class="br0">&#40;</span><span class="sy0">_</span>,result<span class="br0">&#41;</span> <span class="sy0">=&gt;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> key <span class="sy0">=</span> Bytes.<span class="me1">toString</span><span class="br0">&#40;</span>result.<span class="me1">getRow</span><span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> name <span class="sy0">=</span> Bytes.<span class="me1">toString</span><span class="br0">&#40;</span>result.<span class="me1">getValue</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span>.<span class="me1">getBytes</span>,<span class="st0">&quot;name&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> gender <span class="sy0">=</span> Bytes.<span class="me1">toString</span><span class="br0">&#40;</span>result.<span class="me1">getValue</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span>.<span class="me1">getBytes</span>,<span class="st0">&quot;gender&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> age <span class="sy0">=</span> Bytes.<span class="me1">toString</span><span class="br0">&#40;</span>result.<span class="me1">getValue</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span>.<span class="me1">getBytes</span>,<span class="st0">&quot;age&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      println<span class="br0">&#40;</span><span class="st0">&quot;Row key:&quot;</span>+key+<span class="st0">&quot; Name:&quot;</span>+name+<span class="st0">&quot; Gender:&quot;</span>+gender+<span class="st0">&quot; Age:&quot;</span>+age<span class="br0">&#41;</span>
+    <span class="br0">&#125;</span><span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> insertRDDtoTable<span class="br0">&#40;</span>tableName<span class="sy0">:</span>String,sc<span class="sy0">:</span>SparkContext<span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+    sc.<span class="me1">hadoopConfiguration</span>.<span class="me1">set</span><span class="br0">&#40;</span>TableOutputFormat.<span class="me1">OUTPUT_TABLE</span>, tableName<span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> job <span class="sy0">=</span> Job.<span class="me1">getInstance</span><span class="br0">&#40;</span>sc.<span class="me1">hadoopConfiguration</span><span class="br0">&#41;</span>
+    job.<span class="me1">setOutputKeyClass</span><span class="br0">&#40;</span>classOf<span class="br0">&#91;</span>ImmutableBytesWritable<span class="br0">&#93;</span><span class="br0">&#41;</span>
+    job.<span class="me1">setOutputValueClass</span><span class="br0">&#40;</span>classOf<span class="br0">&#91;</span>Result<span class="br0">&#93;</span><span class="br0">&#41;</span>
+    job.<span class="me1">setOutputFormatClass</span><span class="br0">&#40;</span>classOf<span class="br0">&#91;</span>TableOutputFormat<span class="br0">&#91;</span>ImmutableBytesWritable<span class="br0">&#93;</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+    <span class="co1">// create a rdd with two lines</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> indataRDD <span class="sy0">=</span> sc.<span class="me1">makeRDD</span><span class="br0">&#40;</span>Array<span class="br0">&#40;</span><span class="st0">&quot;3,Rongcheng,M,26&quot;</span>,<span class="st0">&quot;4,Guanhua,M,32&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> rdd <span class="sy0">=</span> indataRDD.<span class="me1">map</span><span class="br0">&#40;</span><span class="sy0">_</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">','</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">map</span><span class="br0">&#123;</span>arr<span class="sy0">=&gt;</span><span class="br0">&#123;</span>
+      <span class="co1">// add row key </span>
+      <a href="http://scala-lang.org"><span class="kw1">val</span></a> put <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> Put<span class="br0">&#40;</span>Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span>arr<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      <span class="co1">//add column name, gender, age to column family info</span>
+      put.<span class="me1">addColumn</span><span class="br0">&#40;</span>Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;name&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span>arr<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      put.<span class="me1">addColumn</span><span class="br0">&#40;</span>Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;gender&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span>arr<span class="br0">&#40;</span><span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> 
+      put.<span class="me1">addColumn</span><span class="br0">&#40;</span>Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;info&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span><span class="st0">&quot;age&quot;</span><span class="br0">&#41;</span>,Bytes.<span class="me1">toBytes</span><span class="br0">&#40;</span>arr<span class="br0">&#40;</span><span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> 
+      <span class="br0">&#40;</span><a href="http://scala-lang.org"><span class="kw1">new</span></a> ImmutableBytesWritable, put<span class="br0">&#41;</span>
+    <span class="br0">&#125;</span><span class="br0">&#125;</span>
+    rdd.<span class="me1">saveAsNewAPIHadoopDataset</span><span class="br0">&#40;</span>job.<span class="me1">getConfiguration</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>

@@ -1,0 +1,39 @@
+====== Bioinformatique ======
+
+<WRAP round todo>
+Mettre ici un schéma décrivant tous les "services" accessibles à BIOASTER, avec un lien vers les différentes pages du wiki :
+
+  * la ferme
+  * le nuage
+  * les machines déportées
+  * ...
+
+Celui-ci doit permettre d'identifier immédiatement quel service utiliser pour quel besoin.
+</WRAP>
+
+{{tag>todo}}
+
+====== Groupe de travail "gestion des données scientifiques" ======
+
+Les objectifs de ce groupe de travail sont de participer à la conception du système d'information scientifique de BIOASTER et de définir les bonnes pratiques du calcul scientifique. Ces bonnes pratiques doivent permettre de faciliter l'échange de données entre plateaux techniques. Ceci concerne :
+  - le versionnement des scripts et du codes;
+  - l'organisation des flux d'analyses;
+  - l'organisation des répertoires;
+  - l'utilisation des différentes ressources de stockage et de calcul;
+  - le benchmarking des applications;
+  - la documentation;
+  - etc.
+
+Les réunions du groupe de travail sont [[bioinformatique\gestion_des_données\réunion|ici]]
+
+
+====== Services du PT6 ======
+
+{{map>/bioinformatique/pt6.png?nolink&800x600 |PT6}}
+**Les différentes services offerts par le PT6 sont :**
+
+  * [[/bioinformatique/utilisateur|VMWare @ 68,29,67,64,56,80,95,83,102,111,129,116,140,105,139,89,136,59,126,50,122,31]]
+  * [[/bioinformatique/vmware|VMWare @ 61,327,213,552]]
+  * [[/bioinformatique/openstack|OpenStack @ 364,323,516,548]]
+  * [[/bioinformatique/univage|UnivaGE @ 619,31,771,265]]
+{{<map}}

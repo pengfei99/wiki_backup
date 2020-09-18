@@ -1,0 +1,20 @@
+====== Conventions de nommage ======
+
+//En cours de construction...//
+
+<WRAP center round tip 60%>
+//Use Intention-Revealing Names//\\
+La règle d'or est que les noms des objets doivent toujours décrire leur rôle dans le code
+</WRAP>
+
+===== Nommage des objets =====
+
+
+  * Mauvaise pratique :\\ ''int d; elapsed time in days''\\
+  * Bonne pratique :\\ ''int elapsedTimeInDays;''\\ ''int daysSinceModification;''
+  
+<WRAP center round info 60%>
+Une bonne pratique de nommage est donc celle qui nécessite le moins de commentaires dans le code.
+</WRAP>
+
+

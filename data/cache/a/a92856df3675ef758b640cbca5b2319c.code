@@ -1,0 +1,6 @@
+<span class="re0">$authors</span> <span class="sy0">=</span> AuthorQuery<span class="sy0">::</span><span class="me2">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">find</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// $authors contains a collection of Author objects</span>
+<span class="co1">// one object for every row of the author table</span>
+<span class="kw1">foreach</span><span class="br0">&#40;</span><span class="re0">$authors</span> <span class="kw1">as</span> <span class="re0">$author</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">echo</span> <span class="re0">$author</span><span class="sy0">-&gt;</span><span class="me1">getFirstName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>

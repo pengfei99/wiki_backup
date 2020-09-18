@@ -1,0 +1,90 @@
+
+<h1 class="sectionedit1" id="listes_des_certificats_de_confiance">Listes des certificats de confiance</h1>
+<div class="level1">
+
+<p>
+Tous les systèmes font par défaut confiance à une liste d&#039;<a href="https://fr.wikipedia.org/wiki/Autorit%C3%A9_de_certification" class="urlextern" title="https://fr.wikipedia.org/wiki/Autorit%C3%A9_de_certification" rel="nofollow">autorités de certification</a> (CA). La procédure pour ajouter un certificat à cette liste  dépend du système d&#039;exploitation (<abbr title="Operating System">OS</abbr>) et du navigateur.
+</p>
+
+<p>
+<strong>BIOASTER</strong> vous conseille de faire confiance aux CAs suivants et d&#039;importer leurs certificats :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://igc.services.cnrs.fr/search_CA_certificate/?CA=CNRS2-Standard&amp;lang=fr&amp;body=view_ca.html" class="urlextern" title="https://igc.services.cnrs.fr/search_CA_certificate/?CA=CNRS2-Standard&amp;lang=fr&amp;body=view_ca.html" rel="nofollow">CNRS</a>, en cliquant sur la croix à l&#039;intersection entre <code>Chargement dans le navigateur</code> et <code>Toute la chaine de certification</code> ;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.cacert.org/index.php?id=3" class="urlextern" title="http://www.cacert.org/index.php?id=3" rel="nofollow">CAcert</a> en cliquant sur les clés de classe 1 et 3 au format PEM.</div>
+</li>
+</ul>
+
+<p>
+Certains logiciels (<a href="/doku.php?id=securite:securite_client_courriel#mozilla_thunderbird" class="wikilink2" title="securite:securite_client_courriel" rel="nofollow">Thunderbird</a>, <a href="/doku.php?id=securite:securite_navigateur_internet#mozilla_firefox" class="wikilink2" title="securite:securite_navigateur_internet" rel="nofollow">Firefox</a>…) gèrent leur propre liste de CA de confiance. Les certificats des CA doivent donc aussi être rajoutés dans ces listes.
+</p>
+
+<p>
+Dans la suite de cette page sont décrites les procédures d&#039;import de certificats au niveau de l&#039;<abbr title="Operating System">OS</abbr>. Plus d&#039;info peuvent être trouvées sur la page “<a href="http://kb.kerio.com/product/kerio-connect/server-configuration/ssl-certificates/adding-trusted-root-certificates-to-the-server-1605.html" class="urlextern" title="http://kb.kerio.com/product/kerio-connect/server-configuration/ssl-certificates/adding-trusted-root-certificates-to-the-server-1605.html" rel="nofollow">Adding trusted root certificates to the server</a>”.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Listes des certificats de confiance&quot;,&quot;hid&quot;:&quot;listes_des_certificats_de_confiance&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1382&quot;} -->
+<h2 class="sectionedit2" id="microsoft_windows">Microsoft Windows®</h2>
+<div class="level2">
+
+<p>
+L&#039;importation se fait à partir d&#039;<a href="/doku.php?id=securite:securite_navigateur_internet#microsoft_internet_explorer" class="wikilink2" title="securite:securite_navigateur_internet" rel="nofollow">Internet Explorer</a>. Après avoir téléchargé un certificat, une fenêtre s&#039;ouvre pour l&#039;afficher. Il suffit de cliquer sur <code>Installer le certificat…</code> pour démarrer un assistant d&#039;installation.<br/>
+
+Au moment de choisir un magasin il faut faire bien attention de choisir <code>Placer le certificat dans le magasin suivant</code> puis de sélectionner <code>Autorité de certification racines de confiance</code>.
+</p>
+
+<p>
+<a href="/lib/exe/fetch.php?media=ut6:securite:import_cert_windows.png" class="media" title="ut6:securite:import_cert_windows.png"><img src="/lib/exe/fetch.php?w=500&amp;tok=0b488a&amp;media=ut6:securite:import_cert_windows.png" class="media" alt="" width="500" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Microsoft Windows\u00ae&quot;,&quot;hid&quot;:&quot;microsoft_windows&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1383-1963&quot;} -->
+<h2 class="sectionedit3" id="debian_gnu_linux">Debian GNU/Linux</h2>
+<div class="level2">
+
+<p>
+La gestion des certificats racines dépend du paquet <strong>ca-certificates</strong>.
+</p>
+
+<p>
+Les nouveaux certificats doivent être installés dans le dossier <code>/usr/share/ca-certificates</code> (ou dans un sous-dossier) et avoir l&#039;extension <code>.crt</code>.
+</p>
+
+<p>
+Une fois installé, il suffit de sélectionner les nouveaux certificats à activer dans la liste proposée en lançant la commande <code>sudo dpkg-reconfigure ca-certificates</code>.
+</p>
+
+<p>
+<a href="/lib/exe/fetch.php?media=ut6:securite:dpkg-reconfigure_ca-certificates.png" class="media" title="ut6:securite:dpkg-reconfigure_ca-certificates.png"><img src="/lib/exe/fetch.php?w=500&amp;tok=39a611&amp;media=ut6:securite:dpkg-reconfigure_ca-certificates.png" class="media" alt="" width="500" /></a>
+</p>
+
+<p>
+Tous les certificats sont dès lors disponibles dans un unique fichier : <code>/etc/ssl/certs/ca-certificates.crt</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debian GNU\/Linux&quot;,&quot;hid&quot;:&quot;debian_gnu_linux&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1964-2579&quot;} -->
+<h2 class="sectionedit4" id="derives_redhat_et_centos">Dérivés RedHat et CentOS</h2>
+<div class="level2">
+
+<p>
+La méthode est semblable à celle de Debian :
+</p>
+<pre class="code">  yum install ca-certificates
+  update-ca-trust enable
+  cp foo.crt /etc/pki/ca-trust/source/anchors/
+  update-ca-trust extract</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;D\u00e9riv\u00e9s RedHat et CentOS&quot;,&quot;hid&quot;:&quot;derives_redhat_et_centos&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;2580-2804&quot;} -->
+<h2 class="sectionedit5" id="freebsd">FreeBSD</h2>
+<div class="level2">
+
+<p>
+Il n&#039;y a pas vraiment de système de gestion de certificats. Il faut les gérer à la main dans <code>/etc/ssl</code> ou dans <code>/usr/local/etc/ssl</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FreeBSD&quot;,&quot;hid&quot;:&quot;freebsd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2805-&quot;} -->

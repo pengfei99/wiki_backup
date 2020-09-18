@@ -1,0 +1,61 @@
+
+<h1 class="sectionedit1" id="bwa">BWA</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BWA" [1-19] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 0.7.5a</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://bio-bwa.sourceforge.net/" class="urlextern" title="http://bio-bwa.sourceforge.net/"  rel="nofollow">http://bio-bwa.sourceforge.net/</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to 1Mbp. BWA-MEM and BWA-SW share similar features such as long-read support and split alignment, but BWA-MEM, which is the latest, is generally recommended for high-quality queries as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [20-794] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster&quot;
+export APP=&quot;$SOFTWARE/apps/gcc-RedHat_4.4.7-3/bwa/0.7.5a/bin&quot;
+mkdir -p $APP
+cd $SOFTWARE/src
+wget -O bwa-0.7.5a.tar.bz2 \
+     &quot;http://downloads.sourceforge.net/project/bio-bwa/bwa-0.7.5a.tar.bz2?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fbio-bwa%2Ffiles%2F&amp;ts=1391782162&amp;use_mirror=heanet&quot;
+tar xvjf bwa-0.7.5a.tar.bz2
+cd bwa-0.7.5a
+make
+mv bwa qualfa2fq.pl xa2multi.pl $APP/</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [795-1261] -->
+<h2 class="sectionedit4" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;Burrows-Wheeler Aligner.\n&quot;
+}
+
+set version &quot;0.7.5a&quot;
+
+set app &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/bwa/${version}&quot;
+
+prepend-path PATH &quot;${app}/bin&quot;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Intégration" [1262-1524] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.07 (tlc)</strong> Version 0.7.5a installée
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Log" [1525-] -->

@@ -1,0 +1,70 @@
+
+<h1 class="sectionedit1" id="nom">Nom</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Nom" [1-19] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 1.2.3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://exemple.org" class="urlextern" title="http://exemple.org"  rel="nofollow">http://exemple.org</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [20-362] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster&quot;
+export APP=&quot;$SOFTWARE/apps/[gcc-VERSION]/NAME/VERSION&quot;
+mkdir -p $APP
+cd $SOFTWARE/src
+[...]
+./configure --prefix $APP
+make &amp;&amp; make install</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [363-591] -->
+<h2 class="sectionedit4" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;Help message\n&quot;
+}
+
+set version &quot;1.2.3&quot;
+conflict &quot;bad_module&quot;
+module load un_module
+
+set app &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/NAME/${version}&quot;
+
+setenv ENV_VAR &quot;value&quot;
+
+prepend-path PATH &quot;${app}/bin&quot;
+prepend-path LIBRARY_PATH &quot;${app}/lib&quot;
+prepend-path LD_LIBRARY_PATH &quot;${app}/lib&quot;
+prepend-path C_INCLUDE_PATH &quot;${app}/include&quot;
+prepend-path CPLUS_INCLUDE_PATH &quot;${app}/include&quot;
+prepend-path PKG_CONFIG_PATH &quot;${app}/lib/pkgconfig&quot;
+prepend-path ACLOCAL_PATH &quot;${app}/share/aclocal&quot;
+prepend-path MANPATH &quot;${app}/share/man&quot;
+prepend-path CLASSPATH &quot;${app}/lib/java&quot;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Intégration" [592-1268] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.01.16 (tlc)</strong> Version 1.2.3 installée</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Log" [1269-] -->

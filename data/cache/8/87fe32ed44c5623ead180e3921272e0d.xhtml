@@ -1,0 +1,423 @@
+
+<h1 class="sectionedit1" id="working_with_ssl_certificates_priate_keys_and_csrs">Working with SSL certificates, priate keys and CSRs</h1>
+<div class="level1">
+
+<p>
+OpenSSL is a versatile command line tool that can be used for a large variety of tasks related to Public Key Infrastructure (PKI) and HTTPS (HTTP over TLS). This cheat sheet style guide provides a quick reference to OpenSSL commands that are useful in common, everyday scenarios. This includes OpenSSL examples of generating private keys, certificate signing requests, and certificate format conversion. It does not cover all of the uses of OpenSSL.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Working with SSL certificates, priate keys and CSRs&quot;,&quot;hid&quot;:&quot;working_with_ssl_certificates_priate_keys_and_csrs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-519&quot;} -->
+<h2 class="sectionedit2" id="about_certificate_signing_requests_csrs">About Certificate Signing Requests (CSRs)</h2>
+<div class="level2">
+
+<p>
+If you would like to obtain an SSL certificate from a certificate authority (CA), you must generate a certificate signing request (CSR). A CSR consists mainly of the public key of a key pair, and some additional information. Both of these components are inserted into the certificate when it is signed.
+</p>
+
+<p>
+Whenever you generate a CSR, you will be prompted to provide information regarding the certificate. This information is known as a Distinguised Name (DN). An important field in the DN is the Common Name (CN), which should be the exact Fully Qualified Domain Name (FQDN) of the host that you intend to use the certificate with. It is also possible to skip the interactive prompts when creating a CSR by passing the information via command line or from a file.
+</p>
+
+<p>
+The other items in a DN provide additional information about your business or organization. If you are purchasing an SSL certificate from a certificate authority, it is often required that these additional fields, such as “Organization”, accurately reflect your organization&#039;s details.
+</p>
+
+<p>
+Here is an example of what the CSR information prompt will look like:
+</p>
+<pre class="code">---
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:New York
+Locality Name (eg, city) []:Brooklyn
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Example Brooklyn Company
+Organizational Unit Name (eg, section) []:Technology Division
+Common Name (e.g. server FQDN or YOUR name) []:examplebrooklyn.com
+Email Address []:</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;About Certificate Signing Requests (CSRs)&quot;,&quot;hid&quot;:&quot;about_certificate_signing_requests_csrs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;520-2078&quot;} -->
+<h3 class="sectionedit3" id="generating_a_csr_without_a_private_key">Generating a csr without a private key</h3>
+<div class="level3">
+
+<p>
+Use this method if you want to use HTTPS (HTTP over TLS) to secure your Apache HTTP or Nginx web server, and you want to use a Certificate Authority (CA) to issue the SSL certificate. The CSR that is generated can be sent to a CA to request the issuance of a CA-signed SSL certificate. If your CA supports SHA-2, add the -sha256 option to sign the CSR with SHA-2.
+</p>
+
+<p>
+This command creates a 2048-bit private key (domain.key) and a CSR (domain.csr) from scratch:
+</p>
+<pre class="code">openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -out domain.csr</pre>
+
+<p>
+Answer the CSR information prompt to complete the process.
+</p>
+
+<p>
+The -newkey rsa:2048 option specifies that the key should be 2048-bit, generated using the RSA algorithm. The -nodes option specifies that the private key should not be encrypted with a pass phrase. The -new option, which is not included here but implied, indicates that a CSR is being generated.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generating a csr without a private key&quot;,&quot;hid&quot;:&quot;generating_a_csr_without_a_private_key&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;2079-3050&quot;} -->
+<h3 class="sectionedit4" id="generating_a_csr_with_a_private_key">Generating a csr with a private key</h3>
+<div class="level3">
+
+<p>
+This command creates a new CSR (domain.csr) based on an existing private key (domain.key):
+</p>
+<pre class="code">openssl req \
+       -key domain.key \
+       -new -out domain.csr</pre>
+
+<p>
+Answer the CSR information prompt to complete the process.
+</p>
+
+<p>
+The -key option specifies an existing private key (domain.key) that will be used to generate a new CSR. The -new option indicates that a CSR is being generated.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generating a csr with a private key&quot;,&quot;hid&quot;:&quot;generating_a_csr_with_a_private_key&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;3051-3495&quot;} -->
+<h3 class="sectionedit5" id="generate_a_csr_from_an_existing_certificate_and_private_key">Generate a CSR from an Existing Certificate and Private Key</h3>
+<div class="level3">
+
+<p>
+Use this method if you want to renew an existing certificate but you or your CA do not have the original CSR for some reason. It basically saves you the trouble of re-entering the CSR information, as it extracts that information from the existing certificate.
+</p>
+
+<p>
+This command creates a new CSR (domain.csr) based on an existing certificate (domain.crt) and private key (domain.key):
+</p>
+<pre class="code">openssl x509 \
+       -in domain.crt \
+       -signkey domain.key \
+       -x509toreq -out domain.csr</pre>
+
+<p>
+The -x509toreq option specifies that you are using an X509 certificate to make a CSR.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate a CSR from an Existing Certificate and Private Key&quot;,&quot;hid&quot;:&quot;generate_a_csr_from_an_existing_certificate_and_private_key&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;3496-4153&quot;} -->
+<h2 class="sectionedit6" id="generating_ssl_certificates_self_-_signed">Generating SSL Certificates (self - signed)</h2>
+<div class="level2">
+
+<p>
+Use this method if you want to use HTTPS (HTTP over TLS) to secure your Apache HTTP or Nginx web server, and you do not require that your certificate is signed by a CA.
+</p>
+
+<p>
+This command creates a 2048-bit private key (domain.key) and a self-signed certificate (domain.crt) from scratch:
+</p>
+<pre class="code">openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -x509 -days 365 -out domain.crt</pre>
+
+<p>
+Answer the CSR information prompt to complete the process.
+</p>
+
+<p>
+The -x509 option tells req to create a self-signed cerificate. The -days 365 option specifies that the certificate will be valid for 365 days. A temporary CSR is generated to gather information to associate with the certificate.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generating SSL Certificates (self - signed)&quot;,&quot;hid&quot;:&quot;generating_ssl_certificates_self_-_signed&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;4154-4906&quot;} -->
+<h2 class="sectionedit7" id="generate_a_self-signed_certificate_from_an_existing_private_key">Generate a Self-Signed Certificate from an Existing Private Key</h2>
+<div class="level2">
+
+<p>
+Use this method if you already have a private key that you would like to generate a self-signed certificate with it.
+</p>
+
+<p>
+This command creates a self-signed certificate (domain.crt) from an existing private key (domain.key):
+</p>
+<pre class="code">openssl req \
+       -key domain.key \
+       -new \
+       -x509 -days 365 -out domain.crt</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate a Self-Signed Certificate from an Existing Private Key&quot;,&quot;hid&quot;:&quot;generate_a_self-signed_certificate_from_an_existing_private_key&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;4907-5313&quot;} -->
+<h2 class="sectionedit8" id="generate_a_self-signed_certificate_from_an_existing_private_key_and_csr">Generate a Self-Signed Certificate from an Existing Private Key and CSR</h2>
+<div class="level2">
+
+<p>
+Use this method if you already have a private key and CSR, and you want to generate a self-signed certificate with them.
+</p>
+
+<p>
+This command creates a self-signed certificate (domain.crt) from an existing private key (domain.key) and (domain.csr):
+</p>
+<pre class="code">openssl x509 \
+       -signkey domain.key \
+       -in domain.csr \
+       -req -days 365 -out domain.crt</pre>
+
+<p>
+The -days 365 option specifies that the certificate will be valid for 365 days.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate a Self-Signed Certificate from an Existing Private Key and CSR&quot;,&quot;hid&quot;:&quot;generate_a_self-signed_certificate_from_an_existing_private_key_and_csr&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;5314-5845&quot;} -->
+<h1 class="sectionedit9" id="view_certificate_keys_csrs">View Certificate, keys, csrs</h1>
+<div class="level1">
+
+<p>
+Certificate and CSR files are encoded in PEM format, which is not readily human-readable.
+</p>
+
+<p>
+This section covers OpenSSL commands that will output the actual entries of PEM-encoded files.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;View Certificate, keys, csrs&quot;,&quot;hid&quot;:&quot;view_certificate_keys_csrs&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:9,&quot;range&quot;:&quot;5846-6076&quot;} -->
+<h2 class="sectionedit10" id="view_csr_entries">View CSR Entries</h2>
+<div class="level2">
+
+<p>
+This command allows you to view and verify the contents of a CSR (domain.csr) in plain text:
+</p>
+<pre class="code">openssl req -text -noout -verify -in domain.csr</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;View CSR Entries&quot;,&quot;hid&quot;:&quot;view_csr_entries&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;6077-6264&quot;} -->
+<h2 class="sectionedit11" id="view_certificate_entries">View Certificate Entries</h2>
+<div class="level2">
+
+<p>
+This command allows you to view the contents of a certificate(domain.crt) in plain text:
+</p>
+<pre class="code">openssl x509 -text -noout -in domain.crt</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;View Certificate Entries&quot;,&quot;hid&quot;:&quot;view_certificate_entries&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:11,&quot;range&quot;:&quot;6265-6449&quot;} -->
+<h2 class="sectionedit12" id="verify_a_certificate_was_signed_by_a_ca">Verify a Certificate was signed by a CA</h2>
+<div class="level2">
+
+<p>
+Use this command to verify that a certificate (domain.crt) was signed by a specific CA certificate (ca.crt):
+</p>
+<pre class="code">Openssl verify -verboose -CAFile ca.crt domain.crt</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Verify a Certificate was signed by a CA&quot;,&quot;hid&quot;:&quot;verify_a_certificate_was_signed_by_a_ca&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;6450-6679&quot;} -->
+<h1 class="sectionedit13" id="private_keys">Private Keys</h1>
+<div class="level1">
+
+<p>
+This section covers OpenSSL commands that are specific to creating and verifying private keys.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Private Keys&quot;,&quot;hid&quot;:&quot;private_keys&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:13,&quot;range&quot;:&quot;6680-6803&quot;} -->
+<h2 class="sectionedit14" id="create_a_private_key">Create a Private Key</h2>
+<div class="level2">
+
+<p>
+Use this command to create a password-protected, 2048-bit private key (domain.key):
+</p>
+<pre class="code">openssl genrsa -des3 -out domain.key 2048</pre>
+
+<p>
+Enter a password when prompted to complete the process.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create a Private Key&quot;,&quot;hid&quot;:&quot;create_a_private_key&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:14,&quot;range&quot;:&quot;6804-7036&quot;} -->
+<h2 class="sectionedit15" id="verify_a_private_key">Verify a Private Key</h2>
+<div class="level2">
+
+<p>
+Use this command to check that a private key (domain.key) is a valid key:
+</p>
+<pre class="code">openssl rsa -check -in domain.key</pre>
+
+<p>
+If your private key is encrypted, you will be prompted for its pass phrase. Upon success, the unencrypted key will be output on the terminal.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Verify a Private Key&quot;,&quot;hid&quot;:&quot;verify_a_private_key&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:15,&quot;range&quot;:&quot;7037-7337&quot;} -->
+<h2 class="sectionedit16" id="verify_a_private_key_matches_a_certificate_and_csr">Verify a Private Key Matches a Certificate and CSR</h2>
+<div class="level2">
+
+<p>
+Use these commands to verify if a private key (domain.key) matches a certificate (domain.crt) and CSR (domain.csr):
+</p>
+<pre class="code">openssl rsa -noout -modulus -in domain.key | openssl md5
+# don&#039;t know what to do with this
+openssl x509 -noout -modulus -in domain.crt | openssl md5
+# output certificat with text format
+openssl x509 -noout -in ldap.crt -text
+#
+openssl req -noout -modulus -in domain.csr | openssl md5</pre>
+
+<p>
+If the output of each command is identical there is an extremely high probability that the private key, certificate, and CSR are related.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Verify a Private Key Matches a Certificate and CSR&quot;,&quot;hid&quot;:&quot;verify_a_private_key_matches_a_certificate_and_csr&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:16,&quot;range&quot;:&quot;7338-7957&quot;} -->
+<h2 class="sectionedit17" id="encrypt_a_private_key">Encrypt a Private Key</h2>
+<div class="level2">
+
+<p>
+This takes an unencrypted private key (unencrypted.key) and outputs an encrypted version of it (encrypted.key):
+</p>
+<pre class="code">openssl rsa -des3 \
+       -in unencrypted.key \
+       -out encrypted.key</pre>
+
+<p>
+Enter your desired pass phrase, to encrypt the private key with.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Encrypt a Private Key&quot;,&quot;hid&quot;:&quot;encrypt_a_private_key&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:17,&quot;range&quot;:&quot;7958-8263&quot;} -->
+<h2 class="sectionedit18" id="decrypt_a_private_key">Decrypt a Private Key</h2>
+<div class="level2">
+
+<p>
+This takes an encrypted private key (encrypted.key) and outputs a decrypted version of it (decrypted.key):
+</p>
+<pre class="code">openssl rsa \
+       -in encrypted.key \
+       -out decrypted.key</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Decrypt a Private Key&quot;,&quot;hid&quot;:&quot;decrypt_a_private_key&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:18,&quot;range&quot;:&quot;8264-8489&quot;} -->
+<h1 class="sectionedit19" id="convert_certificate_formats">Convert certificate Formats</h1>
+<div class="level1">
+
+<p>
+All of the certificates that we have been working with have been X.509 certificates that are <abbr title="American Standard Code for Information Interchange">ASCII</abbr> PEM encoded. There are a variety of other certificate encoding and container types; some applications prefer certain formats over others. Also, many of these formats can contain multiple items, such as a private key, certificate, and CA certificate, in a single file.
+</p>
+
+<p>
+OpenSSL can be used to convert certificates to and from a large variety of these formats. This section will cover a some of the possible conversions.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert certificate Formats&quot;,&quot;hid&quot;:&quot;convert_certificate_formats&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:19,&quot;range&quot;:&quot;8490-9051&quot;} -->
+<h2 class="sectionedit20" id="convert_pem_to_der">Convert PEM to DER</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to convert a PEM-encoded certificate (domain.crt) to a DER-encoded certificate (domain.der), a binary format:
+</p>
+<pre class="code">openssl x509 \
+       -in domain.crt \
+       -outform der -out domain.der</pre>
+
+<p>
+The DER format is typically used with Java.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert PEM to DER&quot;,&quot;hid&quot;:&quot;convert_pem_to_der&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:20,&quot;range&quot;:&quot;9052-9359&quot;} -->
+<h2 class="sectionedit21" id="convert_der_to_pem">Convert DER to PEM</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to convert a DER-encoded certificate (domain.der) to a PEM-encoded certificate (domain.crt):
+</p>
+<pre class="code">openssl x509 \
+       -inform der -in domain.der \
+       -out domain.crt</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert DER to PEM&quot;,&quot;hid&quot;:&quot;convert_der_to_pem&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:21,&quot;range&quot;:&quot;9360-9604&quot;} -->
+<h2 class="sectionedit22" id="convert_pem_to_pkcs7">Convert PEM to PKCS7</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to add PEM certificates (domain.crt and ca-chain.crt) to a PKCS7 file (domain.p7b):
+</p>
+<pre class="code">openssl crl2pkcs7 -nocrl \
+       -certfile domain.crt \
+       -certfile ca-chain.crt \
+       -out domain.p7b</pre>
+
+<p>
+Note that you can use one or more -certfile options to specify which certificates to add to the PKCS7 file.
+</p>
+
+<p>
+PKCS7 files, also known as P7B, are typically used in Java Keystores and Microsoft IIS (Windows). They are <abbr title="American Standard Code for Information Interchange">ASCII</abbr> files which can contain certificates and CA certificates.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert PEM to PKCS7&quot;,&quot;hid&quot;:&quot;convert_pem_to_pkcs7&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:22,&quot;range&quot;:&quot;9605-10161&quot;} -->
+<h2 class="sectionedit23" id="convert_pkcs7_to_pem">Convert PKCS7 to PEM</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to convert a PKCS7 file (domain.p7b) to a PEM file:
+</p>
+<pre class="code">openssl pkcs7 \
+       -in domain.p7b \
+       -print_certs -out domain.crt</pre>
+
+<p>
+Note that if your PKCS7 file has multiple items in it (e.g. a certificate and a CA intermediate certificate), the PEM file that is created will contain all of the items in it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert PKCS7 to PEM&quot;,&quot;hid&quot;:&quot;convert_pkcs7_to_pem&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:23,&quot;range&quot;:&quot;10162-10546&quot;} -->
+<h2 class="sectionedit24" id="convert_pem_to_pkcs12">Convert PEM to PKCS12</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to take a private key (domain.key) and a certificate (domain.crt), and combine them into a PKCS12 file (domain.pfx):
+</p>
+<pre class="code">openssl pkcs12 \
+       -inkey domain.key \
+       -in domain.crt \
+       -export -out domain.pfx</pre>
+
+<p>
+You will be prompted for export passwords, which you may leave blank. Note that you may add a chain of certificates to the PKCS12 file by concatenating the certificates together in a single PEM file (domain.crt) in this case.
+</p>
+
+<p>
+PKCS12 files, also known as PFX files, are typically used for importing and exporting certificate chains in Micrsoft IIS (Windows).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert PEM to PKCS12&quot;,&quot;hid&quot;:&quot;convert_pem_to_pkcs12&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:24,&quot;range&quot;:&quot;10547-11202&quot;} -->
+<h2 class="sectionedit25" id="convert_pkcs12_to_pem">Convert PKCS12 to PEM</h2>
+<div class="level2">
+
+<p>
+Use this command if you want to convert a PKCS12 file (domain.pfx) and convert it to PEM format (domain.combined.crt):
+</p>
+<pre class="code">openssl pkcs12 \
+       -in domain.pfx \
+       -nodes -out domain.combined.crt</pre>
+
+<p>
+Note that if your PKCS12 file has multiple items in it (e.g. a certificate and private key), the PEM file that is created will contain all of the items in it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Convert PKCS12 to PEM&quot;,&quot;hid&quot;:&quot;convert_pkcs12_to_pem&quot;,&quot;codeblockOffset&quot;:20,&quot;secid&quot;:25,&quot;range&quot;:&quot;11203-11613&quot;} -->
+<h1 class="sectionedit26" id="openssl_version">OpenSSL Version</h1>
+<div class="level1">
+
+<p>
+The openssl version command can be used to check which version you are running. The version of OpenSSL that you are running, and the options it was compiled with affect the capabilities (and sometimes the command line options) that are available to you.
+</p>
+
+<p>
+The following command displays the OpenSSL version that you are running, and all of the options that it was compiled with:
+</p>
+<pre class="code">openssl version -a</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OpenSSL Version&quot;,&quot;hid&quot;:&quot;openssl_version&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:26,&quot;range&quot;:&quot;11614-&quot;} -->

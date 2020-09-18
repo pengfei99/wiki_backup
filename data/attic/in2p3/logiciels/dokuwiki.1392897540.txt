@@ -1,0 +1,193 @@
+====== DokuWiki ======
+
+===== Informations =====
+
+  * **Version** : 2013-12-08 //"Binky"//
+  * **Licence** : GPLv2
+  * **Page Web** : [[https://www.dokuwiki.org]]
+  * **Description** : DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in access controls and authentication connectors make DokuWiki especially useful in the enterprise context and the large number of plugins contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki. 
+
+Une instance du nuage VMware a été configurée pour mettre à disposition le wiki.
+
+===== Installation =====
+
+<code>
+
+pkg install lighttpd php5 php5-session php5-xml
+
+
+LightTPD
+ - /usr/local/etc/lighttpd/lighttpd.conf
+   faire attention à créer tous les sous dossiers !!!
+======
+server.port = 443
+#server.bind = "localhost"
+#server.use-ipv6 = "enable"
+
+# IPv4 listening socket
+#$SERVER["socket"] == "0.0.0.0:80" { }
+
+#include "vhosts.d/wiki.conf"
+
+
+server.document-root = vhosts_dir + "/dokuwiki/"
+$HTTP["url"] =~ "/(\.|_)ht" { url.access-deny = ( "" ) }
+$HTTP["url"] =~ "^/(bin|data|inc|conf)/"  { url.access-deny = ( "" ) }
+ssl.engine = "enable"
+ssl.pemfile = "/etc/ssl/private/ccbiowiki1.in2p3.fr-combined.pem"
+
+$HTTP["url"] =~ "^" { index-file.names = ("doku.php") }
+    url.rewrite = (
+      "^/lib/.*$"              => "$0",
+      "^/_media/(.*)?\?(.*)$"  => "/lib/exe/fetch.php?media=$1&$2",
+      "^/_media/(.*)$"         => "/lib/exe/fetch.php?media=$1",
+      "^/_detail/(.*)?\?(.*)$" => "/lib/exe/detail.php?media=$1&$2",
+      "^/_detail/(.*)?$"       => "/lib/exe/detail.php?media=$1",
+      "^/_export/([^/]+)/(.*)\?(.*)$" => "/doku.php?do=export_$1&id=$2&$3",
+      "^/_export/([^/]+)/(.*)" => "/doku.php?do=export_$1&id=$2",
+      "^/doku.php.*"           => "$0",
+      "^/feed.php.*"           => "$0",
+      "^/(.*)\?(.*)"           => "/doku.php?id=$1&$2",
+      "^/(.*)"                 => "/doku.php?id=$1"
+    )
+======
+ - /usr/local/etc/lighttpd/modules.conf
+======
+server.modules = (
+  "mod_access",
+#  "mod_alias",
+#  "mod_auth",
+#  "mod_evasive",
+#  "mod_redirect",
+  "mod_rewrite",
+#  "mod_setenv",
+#  "mod_usertrack",
+)
+======
+ - /usr/local/etc/lighttpd/conf.d/fastcgi.conf
+======
+fastcgi.server = ( ".php" =>
+                   ( "php-local" =>
+                     (
+                       "socket" => socket_dir + "/php-fastcgi-1.socket",
+                       "bin-path" => "/usr/local/bin/php-cgi",
+                       "max-procs" => 1,
+                       "broken-scriptfilename" => "enable",
+                     )
+                   ),
+#                   ( "php-tcp" =>
+# [...]
+#                   ),
+                )
+======
+
+Dokuwiki
+ - ajouter templatepagename (https://www.dokuwiki.org/plugin:templatepagename)
+ - configuration > advanced : nice URL w/ .htacces + use slash as name separator
+ - ajouter pagelist et tag
+</code>
+
+===== Configuration=====
+
+<code php lib/plugins/certlogin/auth.php>
+<?php
+/**
+ * DokuWiki Plugin certlogin (Auth Component)
+ *
+ * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
+ * @author  Tanguy LE CARROUR <tanguy.lecarrour@bioaster.org>
+ */
+
+// must be run within Dokuwiki
+if(!defined('DOKU_INC')) die();
+
+class auth_plugin_certlogin extends DokuWiki_Auth_Plugin {
+
+    /**
+     * Constructor.
+     */
+    public function __construct() {
+        parent::__construct(); // for compatibility
+
+        $this->cando['external']    = true; // does the module do external auth checking?
+        $this->cando['logout']      = true; // can the user logout again? (eg. not possible with HTTP auth)
+
+        // FIXME intialize your auth system and set success to true, if successful
+        $this->success = true;
+    }
+
+    /**
+     * Log off the current user [ OPTIONAL ]
+     */
+    public function logOff() {
+    }
+
+    /**
+     * Do all authentication [ OPTIONAL ]
+     *
+     * @param   string  $user    Username
+     * @param   string  $pass    Cleartext Password
+     * @param   bool    $sticky  Cookie should not expire
+     * @return  bool             true on successful auth
+     */
+    public function trustExternal($user, $pass, $sticky = false) {
+
+        global $USERINFO;
+        global $conf;
+        $sticky ? $sticky = true : $sticky = false; //sanity check
+
+        $name = array_shift(explode(",", $_SERVER["SSL_CLIENT_S_DN_CN"]));
+        $email = array_shift(explode(",", $_SERVER["SSL_CLIENT_S_DN_EMAILADDRESS"]));
+        $pattern = '/@bioaster.org$/';
+        if (preg_match($pattern, $email) == 0) {
+            header("HTTP/1.0 403 Forbidden");
+            print("<h1>Forbidden</h1><p>Go away!</p>");
+            die();
+        }
+
+        // do the checking here
+
+        // set the globals if authed
+        $USERINFO['name'] = $name;
+        $USERINFO['mail'] = $email;
+        $USERINFO['grps'] = array('admin', 'user');
+        $_SERVER['REMOTE_USER'] = $email;
+        $_SESSION[DOKU_COOKIE]['auth']['user'] = $user;
+        $_SESSION[DOKU_COOKIE]['auth']['pass'] = $pass;
+        $_SESSION[DOKU_COOKIE]['auth']['info'] = $USERINFO;
+        return true;
+    }
+
+    /**
+     * Return user info
+     *
+     * Returns info about the given user needs to contain
+     * at least these fields:
+     *
+     * name string  full name of the user
+     * mail string  email addres of the user
+     * grps array   list of groups the user is in
+     *
+     * @param   string $user the user name
+     * @return  array containing user data or false
+     */
+    public function getUserData($user) {
+        return $USERINFO;
+    }
+
+}
+
+</code>
+
+Ne pas oublier de changer le "Auth Backend" dans la configuration.
+
+**Sources** :
+
+  * [[https://www.dokuwiki.org/devel:auth_plugins]]
+  * [[http://pluginwiz.dokuwiki.org/]]
+
+===== Log =====
+
+* **2014.02.13 (tlc)** Version 2013-12-08 //"Binky"// installée
+
+{{tag>todo}}

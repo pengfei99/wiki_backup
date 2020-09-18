@@ -1,0 +1,636 @@
+====== Happy customers ======
+
+Business problem: “Happy Customers” online support center has 3 managers (Arjun Kumar, Rohit Srivastav, Kabir Vish). Smart internal system randomly picks a manager and assigns it to the new client persistently. Unfortunately, last week’s report showed a decrease in a customer satisfaction rate and you want to start your investigation with an average customer satisfaction per manager.
+
+In another word, we want to know the average satisfaction.
+We have some sample data such as
+
+<code>
+#in table format
++-----------------+---------------+-------------+----------+-------------+------------------+
+|     manager_name|    client_name|client_gender|client_age|response_time|satisfaction_level|
++-----------------+---------------+-------------+----------+-------------+------------------+
+|    “Arjun Kumar”|  ”Rehan Nigam”|       ”male”|        30|          4.0|               0.5|
+|     “Kabir Vish”| ”Abhinav Neel”|       ”male”|        28|         12.0|               0.1|
+|    “Arjun Kumar”|    ”Sam Mehta”|       ”male”|        27|          3.0|               0.7|
+|    “Arjun Kumar”|    ”Ira Pawan”|     ”female”|        40|          2.5|               0.6|
+|“Rohit Srivastav”| ”Vihaan Sahni”|       ”male”|        38|          6.0|               0.5|
+|     “Kabir Vish”|”Daivik Saxena”|       ”male”|        45|         16.0|               0.2|
+|“Rohit Srivastav”|   ”Lera Uddin”|     ”female”|        20|          8.0|               0.4|
+|“Rohit Srivastav”|   ”Aaran Puri”|       ”male”|        34|          7.5|               0.3|
+|     “Kabir Vish”|   ”Rudra Mati”|       ”male”|        50|         20.0|               0.1|
++-----------------+---------------+-------------+----------+-------------+------------------+
+
+#in csv format
+manager_name,client_name,client_gender,client_age,response_time,statisfaction_level
+Arjun Kumar,Rehan Nigam,male,30,4.0,0.5
+Kabir Vish,Abhinav Neel,male,28,12.0,0.1
+Arjun Kumar,Sam Mehta,male,27,3.0,0.7
+Arjun Kumar,Ira Pawan,female,40,2.5,0.6
+Rohit Srivastav,Vihaan Sahni,male,38,6.0,0.5
+Kabir Vish,Daivik Saxena,male,45,16.0,0.2
+Rohit Srivastav,Lera Uddin,female,20,8.0,0.4
+Rohit Srivastav,Aaran Puri,male,34,7.5,0.3
+Kabir Vish,Rudra Mati,male,50,20.0,0.1
+
+</code>
+
+====== Questions of manager ======
+Q1. What's the average response time for one client?
+Q2. What's the average satisfaction level of clients?
+Q3. which manager has the best response_time?
+Q4. which manager has the best satisfaction level?
+Q5. the worst response_time?
+Q6. the worst satisfaction level?
+ 
+
+===== Analyse data with spark shell =====
+
+==== Ingest csv data into a dataframe ====
+
+<code>
+#read csv data to output in a dataframe
+val inputFile = "file:///tmp/satisfait.csv"
+import org.apache.spark.sql.types._
+val schema = StructType(Array(
+      StructField("manager_name",StringType,false),
+      StructField("client_name",StringType,false),
+      StructField("client_gender",StringType,false),
+      StructField("client_age",IntegerType,false),
+      StructField("response_time",DoubleType,false),
+      StructField("satisfaction_level",DoubleType,false)
+    ))
+val df = spark.read.format("com.databricks.spark.csv").option("header", "true").schema(schema).load(inputFile)
+
+scala> df.show
++---------------+-------------+-------------+----------+-------------+------------------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|
++---------------+-------------+-------------+----------+-------------+------------------+
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|
+|    Arjun Kumar|    Sam Mehta|         male|        27|          3.0|               0.7|
+|    Arjun Kumar|    Ira Pawan|       female|        40|          2.5|               0.6|
+|Rohit Srivastav| Vihaan Sahni|         male|        38|          6.0|               0.5|
+|     Kabir Vish|Daivik Saxena|         male|        45|         16.0|               0.2|
+|Rohit Srivastav|   Lera Uddin|       female|        20|          8.0|               0.4|
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|
+|     Kabir Vish|   Rudra Mati|         male|        50|         20.0|               0.1|
++---------------+-------------+-------------+----------+-------------+------------------+
+
+
+#If needed ,we can output data with json format
+
+scala> df.write.json("file:///tmp/satisfait")
+
+#This will create a dir satisfait which contains the result and spark job status
+
+[pliu@localhost satisfait.json]$ ls
+part-00000-07450f7f-a1ea-4a2e-ae8e-b06371068eba-c000.json  _SUCCESS
+
+# The content of the json file 
+[pliu@localhost satisfait.json]$ cat part-00000-07450f7f-a1ea-4a2e-ae8e-b06371068eba-c000.json 
+{"manager_name":"Arjun Kumar","client_name":"Rehan Nigam","client_gender":"male","client_age":30,"response_time":4.0,"satisfaction_level":0.5}
+{"manager_name":"Kabir Vish","client_name":"Abhinav Neel","client_gender":"male","client_age":28,"response_time":12.0,"satisfaction_level":0.1}
+{"manager_name":"Arjun Kumar","client_name":"Sam Mehta","client_gender":"male","client_age":27,"response_time":3.0,"satisfaction_level":0.7}
+{"manager_name":"Arjun Kumar","client_name":"Ira Pawan","client_gender":"female","client_age":40,"response_time":2.5,"satisfaction_level":0.6}
+{"manager_name":"Rohit Srivastav","client_name":"Vihaan Sahni","client_gender":"male","client_age":38,"response_time":6.0,"satisfaction_level":0.5}
+{"manager_name":"Kabir Vish","client_name":"Daivik Saxena","client_gender":"male","client_age":45,"response_time":16.0,"satisfaction_level":0.2}
+{"manager_name":"Rohit Srivastav","client_name":"Lera Uddin","client_gender":"female","client_age":20,"response_time":8.0,"satisfaction_level":0.4}
+{"manager_name":"Rohit Srivastav","client_name":"Aaran Puri","client_gender":"male","client_age":34,"response_time":7.5,"satisfaction_level":0.3}
+{"manager_name":"Kabir Vish","client_name":"Rudra Mati","client_gender":"male","client_age":50,"response_time":20.0,"satisfaction_level":0.1}
+
+
+# we can read it easily by giving the dir path
+val jsonDF=spark.read.json("file:///tmp/satisfait")
+
+scala> jsonDF.show
++----------+-------------+-------------+---------------+-------------+------------------+
+|client_age|client_gender|  client_name|   manager_name|response_time|satisfaction_level|
++----------+-------------+-------------+---------------+-------------+------------------+
+|        30|         male|  Rehan Nigam|    Arjun Kumar|          4.0|               0.5|
+|        28|         male| Abhinav Neel|     Kabir Vish|         12.0|               0.1|
+|        27|         male|    Sam Mehta|    Arjun Kumar|          3.0|               0.7|
+|        40|       female|    Ira Pawan|    Arjun Kumar|          2.5|               0.6|
+|        38|         male| Vihaan Sahni|Rohit Srivastav|          6.0|               0.5|
+|        45|         male|Daivik Saxena|     Kabir Vish|         16.0|               0.2|
+|        20|       female|   Lera Uddin|Rohit Srivastav|          8.0|               0.4|
+|        34|         male|   Aaran Puri|Rohit Srivastav|          7.5|               0.3|
+|        50|         male|   Rudra Mati|     Kabir Vish|         20.0|               0.1|
++----------+-------------+-------------+---------------+-------------+------------------+
+# You can notice that the column number is quite different
+</code>
+
+===== Analyse dataframe =====
+
+Data frame use lazy evaluation, if it's a transfomation, spark will not do the calculation. when we meet an action, it will do all the calculations.
+
+==== Actions ====
+
+Action command list:   
+  * show(numRows: Int,truncate:Boolean) -> truncate is  true by default, it only shows the first 20 character.
+  * collect() -> it reads all data in data frame and return them as <color #ed1c24>Array</color>
+  * collectAsList() -> it reads all data in data frame and return them as <color #ed1c24>List</color>
+  * first -> it returns first row of the dataframe
+  * head(n:Int) , take(n:Int)-> it returns first n row in a array[Row]
+  * takeAsList(n:Int) -> it returns first n row in a List[Row].
+ 
+Transformatin command list:
+  * describe(column_name1:String,...) -> it takes one or more column_name, it return the basic statistic result of the column(e.g. count, mean,stddev,min,max).
+  * where(condExpression:String)/filter -> it filters data based on the given condition. 
+  * select(expressionColumn:String,...) -> it takes a list of column expression, and transform the dataframe to a new dataframe based on the column expression.
+  * selectExpr(transformationCommand:String,...) -> It take a list of transformation command of column and return a new dataframe. It can use a user define function directly. For example, we define a function round covert double to int. df.selectExpr("round(response_time)")
+  * col/apply (column:String) -> it takes a column name, returns a spak.sql.column 
+  * drop(columnName:String) -> it returns a new dataframe without the column
+  * limit(n:int) -> it take a int, return a dataframe with the first n row 
+  * orderBy(columnExpr:String)/sort -> it sorts the selected column of the dataframe
+  * distinct
+  * groupBy(columnName:String) -> it takes a clumn name and return a groupedData. GroupedData api supports the following functions : max(colNames:String*),min,mean,sum,count,<color #ed1c24>agg,pivot</color>. agg and pivot can do aggregate Operations on column.
+
+<code>
+scala> df.describe("client_age","response_time","satisfaction_level").show
++-------+------------------+-----------------+-------------------+
+|summary|        client_age|    response_time| satisfaction_level|
++-------+------------------+-----------------+-------------------+
+|  count|                 9|                9|                  9|
+|   mean|34.666666666666664|8.777777777777779|0.37777777777777777|
+| stddev|               9.5|6.062750567559616|0.21666666666666665|
+|    min|                20|              2.5|                0.1|
+|    max|                50|             20.0|                0.7|
++-------+------------------+-----------------+-------------------+
+
+scala> df.filter(df("client_age")>30).show
++-----------------+---------------+-------------+----------+-------------+------------------+
+|     manager_name|    client_name|client_gender|client_age|response_time|satisfaction_level|
++-----------------+---------------+-------------+----------+-------------+------------------+
+|    “Arjun Kumar”|    ”Ira Pawan”|     ”female”|        40|          2.5|               0.6|
+|“Rohit Srivastav”| ”Vihaan Sahni”|       ”male”|        38|          6.0|               0.5|
+|     “Kabir Vish”|”Daivik Saxena”|       ”male”|        45|         16.0|               0.2|
+|“Rohit Srivastav”|   ”Aaran Puri”|       ”male”|        34|          7.5|               0.3|
+|     “Kabir Vish”|   ”Rudra Mati”|       ”male”|        50|         20.0|               0.1|
++-----------------+---------------+-------------+----------+-------------+------------------+
+
+# round response_time
+scala> df.selectExpr("round(response_time)").show
++-----------------------+
+|round(response_time, 0)|
++-----------------------+
+|                    4.0|
+|                   12.0|
+|                    3.0|
+|                    3.0|
+|                    6.0|
+|                   16.0|
+|                    8.0|
+|                    8.0|
+|                   20.0|
++-----------------------+
+
+
+#drop a column in dataframe
+scala> val new_df=df.drop("client_gender")
+new_df: org.apache.spark.sql.DataFrame = [manager_name: string, client_name: string ... 3 more fields]
+
+scala> new_df.show
++---------------+-------------+----------+-------------+------------------+
+|   manager_name|  client_name|client_age|response_time|satisfaction_level|
++---------------+-------------+----------+-------------+------------------+
+|    Arjun Kumar|  Rehan Nigam|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|        28|         12.0|               0.1|
+|    Arjun Kumar|    Sam Mehta|        27|          3.0|               0.7|
+|    Arjun Kumar|    Ira Pawan|        40|          2.5|               0.6|
+|Rohit Srivastav| Vihaan Sahni|        38|          6.0|               0.5|
+|     Kabir Vish|Daivik Saxena|        45|         16.0|               0.2|
+|Rohit Srivastav|   Lera Uddin|        20|          8.0|               0.4|
+|Rohit Srivastav|   Aaran Puri|        34|          7.5|               0.3|
+|     Kabir Vish|   Rudra Mati|        50|         20.0|               0.1|
++---------------+-------------+----------+-------------+------------------+
+
+scala> df.orderBy($"client_age".desc).show
++---------------+-------------+-------------+----------+-------------+------------------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|
++---------------+-------------+-------------+----------+-------------+------------------+
+|     Kabir Vish|   Rudra Mati|         male|        50|         20.0|               0.1|
+|     Kabir Vish|Daivik Saxena|         male|        45|         16.0|               0.2|
+|    Arjun Kumar|    Ira Pawan|       female|        40|          2.5|               0.6|
+|Rohit Srivastav| Vihaan Sahni|         male|        38|          6.0|               0.5|
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|
+|    Arjun Kumar|    Sam Mehta|         male|        27|          3.0|               0.7|
+|Rohit Srivastav|   Lera Uddin|       female|        20|          8.0|               0.4|
++---------------+-------------+-------------+----------+-------------+------------------+
+
+</code>
+
+=== agg  ===
+
+Aggregation is normally used after groupBy, for example I want to know manager Arjun Kumar average response time.
+
+The agg function takes many expression 
+
+<code>
+# the simple way target column name, function name
+df.groupBy($"manager_name"==="Arjun Kumar").agg("response_time"->"sum","manager_name"->"count").show
++----------------------------+------------------+-------------------+
+|(manager_name = Arjun Kumar)|sum(response_time)|count(manager_name)|
++----------------------------+------------------+-------------------+
+|                        true|               9.5|                  3|
+|                       false|              69.5|                  6|
++----------------------------+------------------+-------------------+
+
+# you can also rename the column name
+
+df.groupBy($"manager_name"==="Arjun Kumar").agg(expr("sum(response_time) as sum"),expr("count(manager_name) as count")).show
++----------------------------+----+-----+
+|(manager_name = Arjun Kumar)| sum|count|
++----------------------------+----+-----+
+|                        true| 9.5|    3|
+|                       false|69.5|    6|
++----------------------------+----+-----+
+
+#calculate the average response time
+#get the data of manager arjun
+scala> val arjun=df.filter($"manager_name"==="Arjun Kumar").groupBy($"manager_name"==="Arjun Kumar").agg(expr("sum(response_time) as sum"),expr("count(manager_name) as count"))
+
+#get the average 
+arjun.withColumn("avg_res_time",$"sum"/$"count").show
++----------------------------+---+-----+------------------+
+|(manager_name = Arjun Kumar)|sum|count|      avg_res_time|
++----------------------------+---+-----+------------------+
+|                        true|9.5|    3|3.1666666666666665|
++----------------------------+---+-----+------------------+
+
+</code>
+
+=== union ===
+
+The union operator is used to combine the result-set of two or more select statements. To make union successful, you must follow the 3 rules below:
+
+  * Each SELECT statement within UNION must have the same number of columns
+  * The columns must also have similar data types
+  * The columns in each SELECT statement must also be in the same order
+
+For example ,we have two new tables called customers and managers
+
+
+<code>
+[pliu@localhost tmp]$ vim clients.csv 
+name,age,city
+Rehan Nigam,30,Lyon
+Abhinav Neel,28,Paris
+Sam Mehta,27,Bordeaux
+Ira Pawan,40,Beijin
+Vihaan Sahni,30,London
+
+[pliu@localhost tmp]$ vim managers.csv 
+name,city
+Kabir Vish,Annecy
+Arjun Kumar,Talenct
+Rohit Srivastav,Villeurbanne
+
+#load them in spark
+val client_file="file:///tmp/clients.csv"
+val manager_file="file:///tmp/managers.csv"
+#schema for clients
+val client_schema= StructType(Array(
+                     StructField("name", StringType, true),
+                     StructField("age", IntegerType, true),
+                     StructField("city", StringType, true)))
+                     
+val manager_schema= StructType(Array(
+                     StructField("name", StringType, true),
+                     StructField("city", StringType, true)))
+                     
+val clientDF=spark.read.format("com.databricks.spark.csv").option("header", "true").schema(client_schema).load(client_file)
+
+val managerDF=spark.read.format("com.databricks.spark.csv").option("header", "true").schema(manager_schema).load(manager_file)
+
+#union of one column
+scala> clientDF.select($"city").union(managerDF.select($"city")).show
++------------+
+|        city|
++------------+
+|        Lyon|
+|       Paris|
+|    Bordeaux|
+|      Beijin|
+|      London|
+|      Annecy|
+|     Talenct|
+|Villeurbanne|
++------------+
+
+#unionAll will not work here because two dataframe has different column numbers
+# load a manager_bis.csv
+[pliu@localhost tmp]$ vim managers_bis.csv 
+name,city
+Haha Liu,YangZhou
+Foo bar,HangZhou
+
+val managerBisDF=spark.read.format("com.databricks.spark.csv").option("header", "true").schema(manager_schema).load("file:///tmp/managers_bis.csv")
+
+scala> managerBisDF.show
++--------+--------+
+|    name|    city|
++--------+--------+
+|Haha Liu|YangZhou|
+| Foo bar|HangZhou|
++--------+--------+
+
+scala> managerBisDF.unionAll(managerDF).show
+warning: there was one deprecation warning; re-run with -deprecation for details
++---------------+------------+
+|           name|        city|
++---------------+------------+
+|       Haha Liu|    YangZhou|
+|        Foo bar|    HangZhou|
+|     Kabir Vish|      Annecy|
+|    Arjun Kumar|     Talenct|
+|Rohit Srivastav|Villeurbanne|
++---------------+------------+
+
+</code>
+
+=== Join ===
+
+Dataframe provides 6 join function
+
+1. Cartesian product
+<code>
+scala> managerDF.crossJoin(clientDF).show
++---------------+-------+------------+---+--------+
+|           name|   city|        name|age|    city|
++---------------+-------+------------+---+--------+
+|     Kabir Vish| Annecy| Rehan Nigam| 30|    Lyon|
+|     Kabir Vish| Annecy|Abhinav Neel| 28|   Paris|
+|     Kabir Vish| Annecy|   Sam Mehta| 27|Bordeaux|
+|     Kabir Vish| Annecy|   Ira Pawan| 40|  Beijin|
+|     Kabir Vish| Annecy|Vihaan Sahni| 30|  London|
+|    Arjun Kumar|Talenct| Rehan Nigam| 30|    Lyon|
+|    Arjun Kumar|Talenct|Abhinav Neel| 28|   Paris|
+|    Arjun Kumar|Talenct|   Sam Mehta| 27|Bordeaux|
+|    Arjun Kumar|Talenct|   Ira Pawan| 40|  Beijin|
+|    Arjun Kumar|Talenct|Vihaan Sahni| 30|  London|
+|Rohit Srivastav|   Lyon| Rehan Nigam| 30|    Lyon|
+|Rohit Srivastav|   Lyon|Abhinav Neel| 28|   Paris|
+|Rohit Srivastav|   Lyon|   Sam Mehta| 27|Bordeaux|
+|Rohit Srivastav|   Lyon|   Ira Pawan| 40|  Beijin|
+|Rohit Srivastav|   Lyon|Vihaan Sahni| 30|  London|
++---------------+-------+------------+---+--------+
+
+</code>
+2. Join of the same column(inner join)
+
+<code>
+#The join is empty,because there is no manager and client come from the same city
+scala> managerDF.join(clientDF,"city").show
++----+----+----+---+
+|city|name|name|age|
++----+----+----+---+
++----+----+----+---+
+
+#modify managers.csv. 
+[pliu@localhost tmp]$ cat managers.csv 
+name,city
+Kabir Vish,Annecy
+Arjun Kumar,Talenct
+Rohit Srivastav,Lyon
+
+scala> managerDF.join(clientDF,"city").show
++----+---------------+-----------+---+
+|city|           name|       name|age|
++----+---------------+-----------+---+
+|Lyon|Rohit Srivastav|Rehan Nigam| 30|
++----+---------------+-----------+---+
+</code>
+
+3. Join on multiple column
+
+<code>
+#it's empty, because there is no manager and client come from the same city and have the same name
+managerDF.join(clientDF,Seq("city","name")).show
++----+----+---+
+|city|name|age|
++----+----+---+
++----+----+---+
+
+#add a line in the managers.csv
+[pliu@localhost tmp]$ cat managers.csv 
+name,city
+Kabir Vish,Annecy
+Arjun Kumar,Talenct
+Rohit Srivastav,Lyon
+Rehan Nigam,Lyon
+
+
+scala> managerDF.join(clientDF,Seq("city","name")).show
++----+-----------+---+
+|city|       name|age|
++----+-----------+---+
+|Lyon|Rehan Nigam| 30|
++----+-----------+---+
+
+</code>
+
+4. You can specify the join type, by default it's a inner joint
+
+The following image show the difference between different joint type
+
+{{:employes:pengfei.liu:big_data:spark:spark_usecase:spl_join.png?400|}}
+
+<code>
+#it requires a Seq(), for 3 arguments join, so managerDF.join(clientDF,"city","inner") does not work
+#inner
+scala> managerDF.join(clientDF,Seq("city"),"inner").show
++----+---------------+-----------+---+
+|city|           name|       name|age|
++----+---------------+-----------+---+
+|Lyon|Rohit Srivastav|Rehan Nigam| 30|
+|Lyon|    Rehan Nigam|Rehan Nigam| 30|
++----+---------------+-----------+---+
+
+#left_outer, fill empty with null is automatic
+scala> managerDF.join(clientDF,Seq("city"),"left_outer").show
++-------+---------------+-----------+----+
+|   city|           name|       name| age|
++-------+---------------+-----------+----+
+| Annecy|     Kabir Vish|       null|null|
+|Talenct|    Arjun Kumar|       null|null|
+|   Lyon|Rohit Srivastav|Rehan Nigam|  30|
+|   Lyon|    Rehan Nigam|Rehan Nigam|  30|
++-------+---------------+-----------+----+
+
+#other join types : outer, right_outer, leftsemi
+
+#notice that outer does not equal Cartesian product
+scala> managerDF.join(clientDF,Seq("city"),"outer").show
++--------+---------------+------------+----+
+|    city|           name|        name| age|
++--------+---------------+------------+----+
+| Talenct|    Arjun Kumar|        null|null|
+|  Beijin|           null|   Ira Pawan|  40|
+|  London|           null|Vihaan Sahni|  30|
+|   Paris|           null|Abhinav Neel|  28|
+|    Lyon|Rohit Srivastav| Rehan Nigam|  30|
+|    Lyon|    Rehan Nigam| Rehan Nigam|  30|
+|  Annecy|     Kabir Vish|        null|null|
+|Bordeaux|           null|   Sam Mehta|  27|
++--------+---------------+------------+----+
+
+
+</code>
+
+5, 6 Join two columns with different column names
+<code>
+# the joint type can be empty
+scala> df.join(managerDF,df("manager_name")===managerDF("name"),"inner").select("manager_name","name","city").distinct().show
++---------------+---------------+-------+
+|   manager_name|           name|   city|
++---------------+---------------+-------+
+|     Kabir Vish|     Kabir Vish| Annecy|
+|Rohit Srivastav|Rohit Srivastav|   Lyon|
+|    Arjun Kumar|    Arjun Kumar|Talenct|
++---------------+---------------+-------+
+
+</code>
+
+=== Intersect ===
+
+Intersection of two data frame requires the data frame has the same column number
+
+<code>
+scala> managerDF.intersect(clientDF.select("name","city")).show
++-----------+----+
+|       name|city|
++-----------+----+
+|Rehan Nigam|Lyon|
++-----------+----+
+
+</code>
+
+=== Except ===
+
+A.except(B) will return elements exist in A and not in B
+
+<code>
+scala> managerDF.except(clientDF.select("name","city")).show
++---------------+-------+
+|           name|   city|
++---------------+-------+
+|     Kabir Vish| Annecy|
+|Rohit Srivastav|   Lyon|
+|    Arjun Kumar|Talenct|
++---------------+-------+
+</code>
+
+=== withColumnRenamed ===
+
+Rename a existing column, if the target column name does not exist. do nothing
+
+<code>
+df.withColumnRenamed("manager_name","name").show
++---------------+-------------+-------------+----------+-------------+------------------+
+|           name|  client_name|client_gender|client_age|response_time|satisfaction_level|
++---------------+-------------+-------------+----------+-------------+------------------+
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|
+
+</code>
+
+
+=== withColumn ===
+
+whtiColumn(colName: String , col: Column)takes a colName and a expression for adding value. The following example add a new column younger, which makes client_age - 10.
+
+<code>
+scala> df.withColumn("younger",df("client_age")-10).show
++---------------+-------------+-------------+----------+-------------+------------------+-------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|younger|
++---------------+-------------+-------------+----------+-------------+------------------+-------+
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|     20|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|     18|
+
+</code>
+
+=== explode ===
+
+withColumn add new column to dataframe, explode add new row and new data frame
+
+The following example break the manager name into first and last names, creat a row for each of it
+
+<code>
+scala> df.explode("manager_name","names"){n:String=>n.split(" ")}.orderBy($"manager_name".desc).show
+warning: there was one deprecation warning; re-run with -deprecation for details
++---------------+-------------+-------------+----------+-------------+------------------+---------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|    names|
++---------------+-------------+-------------+----------+-------------+------------------+---------+
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|    Rohit|
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|Srivastav|
+
+</code>
+
+==== Script to answer the questions ====
+
+<code>
+scala> df.describe("client_age","response_time","satisfaction_level").show
++-------+------------------+-----------------+-------------------+
+|summary|        client_age|    response_time| satisfaction_level|
++-------+------------------+-----------------+-------------------+
+|  count|                 9|                9|                  9|
+|   mean|34.666666666666664|8.777777777777779|0.37777777777777777|
+| stddev|               9.5|6.062750567559616|0.21666666666666665|
+|    min|                20|              2.5|                0.1|
+|    max|                50|             20.0|                0.7|
++-------+------------------+-----------------+-------------------+
+
+scala> val avg_response_time=df.describe("response_time").filter($"summary"==="mean").first()(1)
+avg_response_time: Any = 8.777777777777779
+
+scala> val avg_sat_level=df.describe("satisfaction_level").filter($"summary"==="mean").first()(1)
+avg_sat_level: Any = 0.37777777777777777
+
+#stats of manager Arjun Kumar
+scala> df.filter($"manager_name"==="Arjun Kumar").describe("response_time","satisfaction_level").show
++-------+------------------+-------------------+
+|summary|     response_time| satisfaction_level|
++-------+------------------+-------------------+
+|  count|                 3|                  3|
+|   mean|3.1666666666666665|                0.6|
+| stddev|0.7637626158259734|0.09999999999999998|
+|    min|               2.5|                0.5|
+|    max|               4.0|                0.7|
++-------+------------------+-------------------+
+
+#stats of manager Kabir Vish
+scala> df.filter($"manager_name"==="Kabir Vish").describe("response_time","satisfaction_level").show
++-------+-------------+-------------------+
+|summary|response_time| satisfaction_level|
++-------+-------------+-------------------+
+|  count|            3|                  3|
+|   mean|         16.0|0.13333333333333333|
+| stddev|          4.0|0.05773502691896259|
+|    min|         12.0|                0.1|
+|    max|         20.0|                0.2|
++-------+-------------+-------------------+
+
+#stats of manager Rohit Srivastav
+scala> df.filter($"manager_name"==="Rohit Srivastav").describe("response_time","satisfaction_level").show
++-------+------------------+-------------------+
+|summary|     response_time| satisfaction_level|
++-------+------------------+-------------------+
+|  count|                 3|                  3|
+|   mean| 7.166666666666667|0.39999999999999997|
+| stddev|1.0408329997330663|                0.1|
+|    min|               6.0|                0.3|
+|    max|               8.0|                0.5|
++-------+------------------+-------------------+
+
+#conclusion Arjun Kumar has the best response time (3.17) and sat level(0.6)
+#Kabir Vish has the worst response time (16.0) and sat level (0.13)
+</code>
+
+====== Analyse data with a scala program ======
+
+<file scala HappyClient.scala>
+
+</file>

@@ -1,0 +1,86 @@
+
+<h1 class="sectionedit1" id="zeppelin_jdbc_interpreter">Zeppelin JDBC interpreter</h1>
+<div class="level1">
+
+<p>
+The JDBC interpreter is created by default in Zeppelin. But the default configuration does not work at all.
+</p>
+
+<p>
+You need to change some configuration and add some jars to make it work. In this tutorial, we show how to use this interpreter to connect to a mysql database and a hive metastore.
+</p>
+
+<p>
+Check this page <a href="https://zeppelin.apache.org/docs/latest/interpreter/jdbc.html" class="urlextern" title="https://zeppelin.apache.org/docs/latest/interpreter/jdbc.html" rel="nofollow">https://zeppelin.apache.org/docs/latest/interpreter/jdbc.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zeppelin JDBC interpreter&quot;,&quot;hid&quot;:&quot;zeppelin_jdbc_interpreter&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-412&quot;} -->
+<h2 class="sectionedit2" id="common_errors">Common errors</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common errors&quot;,&quot;hid&quot;:&quot;common_errors&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;413-439&quot;} -->
+<h3 class="sectionedit3" id="access_denied">1. Access denied</h3>
+<div class="level3">
+
+<p>
+Error message:
+</p>
+<pre class="code">FAILED: HiveAccessControlException Permission denied: user [admin] does not have [USE] privilege on [null] [ERROR_STATUS]</pre>
+
+<p>
+Cause: No allow rules in ranger
+</p>
+
+<p>
+Solution: Add allow rules in ranger.
+</p>
+<ol>
+<li class="level1"><div class="li"> Login to range admin UI (<a href="http://lin03.udl.org:6080/login.jsp" class="urlextern" title="http://lin03.udl.org:6080/login.jsp" rel="nofollow">http://lin03.udl.org:6080/login.jsp</a> in my cluster)</div>
+</li>
+<li class="level1"><div class="li"> Access Manager→ Service Manager→ Hive → List of policies → Edit</div>
+</li>
+<li class="level1"><div class="li"> It should have some policy rules for default user hive, just add the user id in the same rules as hive.</div>
+</li>
+</ol>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Azeppelin%3Ajdbc_interpreter&amp;media=ranger_policy_rules.png" class="media" title="ranger_policy_rules.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=dcbcc0&amp;media=ranger_policy_rules.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Access denied&quot;,&quot;hid&quot;:&quot;access_denied&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;440-987&quot;} -->
+<h3 class="sectionedit4" id="can_t_find_hive_configuration_in_zookeeper">2. Can&#039;t find hive configuration in zookeeper</h3>
+<div class="level3">
+
+<p>
+Error message:
+</p>
+<pre class="code">java.sql.SQLException: org.apache.hive.jdbc.ZooKeeperHiveClientException: Unable to read HiveServer2</pre>
+
+<p>
+Cause: ZooKeeper configuration not found
+</p>
+
+<p>
+Solution: 
+1. Check the hive.url attribute value in JDBC interpreter. It must looks like this: 
+</p>
+<pre class="code">jdbc:hive2://lin02.udl.org:2181,lin03.udl.org:2181,lin04.udl.org:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2</pre>
+
+<p>
+2. Check the zookeeper namespace under hiveserver2 
+</p>
+<pre class="code">#login to your cluster, and connect to the zookeeper client
+
+$ zookeeper-client
+
+$ ls /hiveserver2
+
+# it should return something like this
+[serverUri=lin03:10000;version=3.1.0.3.1.4.0-315;sequence=0000000003]
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Can&#039;t find hive configuration in zookeeper&quot;,&quot;hid&quot;:&quot;can_t_find_hive_configuration_in_zookeeper&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;988-&quot;} -->

@@ -1,0 +1,129 @@
+====== Installation =====
+
+Here is a short list of some features available in Zabbix:\\
+
+auto-discovery of servers and network devices\\
+low-level discovery\\
+distributed monitoring with centralized web administration\\
+support for both polling and trapping mechanisms\\
+agent-less monitoring\\
+secure user authentication\\
+flexible user permissions\\
+web-based interface\\
+flexible e-mail notification of predefined events\\
+high-level (business) view of monitored resources\\
+audit log\\
+
+==== Install Zabbix Server ====
+<code>
+pkg install zabbix22-server-2.2.2
+rehash
+</code>
+
+==== Configure snmp ====
+
+Zabbix package install snmpd but does not start it by default\\
+<code>
+cp /usr/local/share/snmp/snmpd.conf.example /usr/local/share/snmp/snmpd.conf
+
+echo 'snmpd_enable="YES"' >> /etc/rc.conf
+echo 'snmpd_flags="-a"' >> /etc/rc.conf
+echo 'snmpd_conffile="/usr/local/share/snmp/snmpd.conf /etc/snmpd.conf"' >> /etc/rc.conf
+echo 'snmptrapd_enable="YES"' >> /etc/rc.conf
+echo 'snmptrapd_flags="-a -p /var/run/snmptrapd.pid"' >> /etc/rc.conf
+</code>
+==== Install Zabbix Database ====
+
+The Zabbix server needs a database to save the statistics and settings.\\
+
+<code>
+pkg install mysql55-server
+
+mysql -u root
+
+mysql> SET PASSWORD FOR ''@'localhost' = PASSWORD('nouveau_mot');
+mysql> SET PASSWORD FOR ''@'ccbiowiki1.in2p3.fr' = PASSWORD('nouveau_mot');
+mysql> create database zabbix character set utf8;
+mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'PASSWORD';
+mysql> flush privileges;
+mysql> quit;
+
+passwd zabbix
+
+cd /usr/local/share/zabbix22/server/database/mysql/
+mysql -u zabbix -p <password> zabbix < schema.sql
+mysql -u zabbix -p <password> zabbix < images.sql
+mysql -u zabbix -p <password> zabbix < data.sql
+
+</code>
+
+==== configure zabbix ====
+<code>
+cd /usr/local/etc/zabbix22
+cp zabbix_server.conf.sample zabbix_server.conf
+</code>
+
+Change in zabbix_server.conf :
+<code>
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=PASSWORD
+</code>
+
+==== configure system for zabbix ====
+
+sysctl kern.ipc.shmall=409600\\
+sysctl kern.ipc.shmmax=204800000
+
+<code>
+echo 'kern.ipc.shmall=409600' >> /etc/sysctl.conf
+echo 'kern.ipc.shmmax=204800000' >> /etc/sysctl.conf
+echo 'zabbix_server_enable="YES"' >> /etc/rc.conf
+</code>
+
+==== Install Zabbix Agent ====
+
+Now install the Zabbix agent on every client you want to track with the server.\\
+Again I have choosen the default installation options without IPV6.\\
+
+<code>
+cd /usr/ports/net-mgmt/zabbix-agent
+make install clean; rehash
+</code>
+==== Configure Zabbix Agent ====
+<code>
+cd /usr/local/etc/zabbix22
+cp zabbix_agentd.conf.sample zabbix_agentd.conf
+</code>
+
+In the zabbix_agentd.conf you need to change the server value. Replace the IP address with the IP address of your Zabbix server.
+Server=123.123.123.123
+Add the startup value to the rc.conf and start the agent.
+echo "zabbix_agentd_enable=\"YES\"" >> /etc/rc.conf
+/usr/local/etc/rc.d/zabbix_agentd start
+Install Zabbix Frontend
+After the installation of the Zabbix server and the Zabbix agents we will install the frontend on the same backend we used for the Zabbix server.
+cd /usr/ports/net-mgmt/zabbix-frontend
+make install clean; rehash
+Now you can add /usr/local/www/zabbix as a vhost or move it to your prefered location. The following is an example of a server block for Zabbix in Nginx. This example makes the Zabbix frontend accessible on localhost:82. Please change it to your requirements.
+server {
+        listen 82;
+        server_name localhost;
+        location / {
+            root /usr/local/www/zabbix;
+            index index.php index.html index.htm;
+        }
+        location ~ \.php$ {
+            root /usr/local/www/zabbix;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME /usr/local/www/zabbix$fastcgi_script_name;
+            include fastcgi_params;
+        }
+        location ~ /\.ht {
+            deny all;
+        }
+}
+Finally you can access the Zabbix frontend and start the setup. Follow the installation and make the required changes in your php.ini. After finishing the setup you can login with the user: admin and password: zabbix. Please change the password under Administration -> Users -> Admin. The official Zabbix documentation can be found here.
+====== Administration =====

@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="install_python_3_on_centos_7_and_virtual_env">Install python 3 on centos 7 and virtual env</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Install python 3 on centos 7 and virtual env" [1-59] -->
+<h2 class="sectionedit2" id="install_python3">install python3</h2>
+<div class="level2">
+<pre class="code"># install ius repo
+sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+
+# install python36
+yum -y install python36u
+
+# check version
+$ python3.6 -V
+Python 3.6.5
+
+# install pip
+yum -y install python36u-pip
+
+# install python36 dev tools
+yum -y install python36u-devel
+
+# use pip36 to install package
+pip3.6 install package_name</pre>
+
+</div>
+<!-- EDIT2 SECTION "install python3" [60-447] -->
+<h2 class="sectionedit3" id="install_virtuel_env">Install virtuel env</h2>
+<div class="level2">
+
+<p>
+In the following section, we will create a virtural env with python3.6 for keras and tensorflow
+</p>
+<pre class="code"># create a directory which will contains the virtural env
+mkdir -p ~/data_science/tensorflow
+cd ~/data_science/tensorflow
+
+# create virtual env
+python3.6 -m venv my_venv
+
+# check the virtual env
+&gt; ls
+my_venv
+[pliu@template-centos-7-latest-14-08-17 tensorflow]$ source my_venv/bin/activate
+(my_venv) [pliu@template-centos-7-latest-14-08-17 tensorflow]$ python
+Python 3.6.5 (default, Apr 10 2018, 17:08:37) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; exit()
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Install virtuel env" [448-] -->

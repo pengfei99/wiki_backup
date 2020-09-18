@@ -1,0 +1,307 @@
+====== Install Shibboleth SP ======
+
+1. Disable selinux
+
+''setenforce 0''
+
+2. Install shibboleth repo
+
+In /etc/yum.repo.d/, do ''vim shibboleth.repo'', and copy the following code
+
+<code>
+[security_shibboleth]
+name=Shibboleth (CentOS_7)
+type=rpm-md
+baseurl=http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7/
+gpgcheck=1
+gpgkey=http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7/repodata/repomd.xml.key
+enabled=1
+</code>
+
+3. Install shibboleth
+
+''sudo yum update''
+
+''sudo yum install shibboleth''
+
+====== Configure Shibboleth ======
+
+1. Generate certificate and private key for shibboleth SP
+
+''openssl req -x509 -newkey rsa:4096 -keyout sp-key.pem -out sp-cert.pem -days 365 -nodes''
+
+To test if the certificat and private key is correct. Use the following command
+
+''openssl rsa -text -in sp-key.pem''
+
+''openssl x509 -in sp-cert.pem -text -noout''
+
+2. Put certificate and private key in /etc/shibboleth
+
+3. Put idp-metadata.xml in /etc/shibboleth
+ The metadata of idp are provided by the shibboleth IDP. It should looks like this
+
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  entityID="https://auth.bioaster.org/idp/shibboleth">
+    
+    <IDPSSODescriptor protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        
+        <Extensions>
+            <shibmd:Scope regexp="false">bioaster.org</shibmd:Scope>
+        </Extensions>
+        
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDMDCCAhigAwIBAgIVANDeCNONJ6zyl+3ZC9nFDAG23gd0MA0GCSqGSIb3DQEB
+BQUAMBwxGjAYBgNVBAMMEWF1dGguYmlvYXN0ZXIub3JnMB4XDTE1MDgyMDA4NDU1
+NloXDTM1MDgyMDA4NDU1NlowHDEaMBgGA1UEAwwRYXV0aC5iaW9hc3Rlci5vcmcw
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJqQ5K+YFKPwewxpuYVNlM
+gOx7mlFoeTTJlkQADQGVNjrdd9ksY8TyotQMtZsc3DzEwambqnOrfRCsnqd091Ck
+Llv/qGtaNeKak8W8hkwge6tdF28+MF+YXMMk94Wi9fpaoGCZDBudNHN0eySK3eTi
+TVYQ0RDiB8BfVmQUhWJbI1/zxkdUz8vI13x1OfRCh88bkwvcdL4LuAvPhnPQ97S/
+hX3KDz0n/GO77iOwy8cnLTB/TXwlrkFZPOtwSdv+3Ah7A5uPR/fORHtqVW6lhlUA
+hfLim/Eu0x8WYc4p+8palX8OXuGP0uCe2Y4VIxTbRZYvYV7gi3zKip6S1fw6T+LT
+AgMBAAGjaTBnMB0GA1UdDgQWBBQ0/pBU7BCVC4jV1qfQCNpQoyKLKzBGBgNVHREE
+PzA9ghFhdXRoLmJpb2FzdGVyLm9yZ4YoaHR0cHM6Ly9hdXRoLmJpb2FzdGVyLm9y
+Zy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG9w0BAQUFAAOCAQEAD+Cd2kalrBMiRQjh
+2GVHTybwsfms3hKwgJJI8w/MSunXGWDHlXjtGf1iyl7CnDhgas6HpG1h9p15QalM
+FTaTf7SchU/dCB+hcWyToBi/inuFeTHe1d9lGqyA8x9xE/2ie8ihhs3eFWtejtiR
+7I4hj2kGdxgfQpcgnDwCzrC7831Xd/xlvOzs1lIvQh1o3BB5RNBz75bNl+zVIaKL
+fZhI9VLX8Fpxj/4GHyE0MQ7VaOwdggG6fsC/gLgxJVFB70lFb8Z9jfTdBAwuDLa/
+j0ky2N8EDW9PFEF3W1yFT710/pAVc7Mu3brjiSYjwcSorn47v2gqySLyNHjjgO3u
+58szPg==
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://auth.bioaster.org:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+        
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/Redirect/SLO" />
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/POST/SLO" />
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/SOAP/SLO" />
+        
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://auth.bioaster.org:8443/idp/profile/Shibboleth/SSO"/>
+        
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/POST/SSO"/>
+        
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+    
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        
+        <Extensions>
+            <shibmd:Scope regexp="false">bioaster.org</shibmd:Scope>
+        </Extensions>
+        
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDMDCCAhigAwIBAgIVANDeCNONJ6zyl+3ZC9nFDAG23gd0MA0GCSqGSIb3DQEB
+BQUAMBwxGjAYBgNVBAMMEWF1dGguYmlvYXN0ZXIub3JnMB4XDTE1MDgyMDA4NDU1
+NloXDTM1MDgyMDA4NDU1NlowHDEaMBgGA1UEAwwRYXV0aC5iaW9hc3Rlci5vcmcw
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJqQ5K+YFKPwewxpuYVNlM
+gOx7mlFoeTTJlkQADQGVNjrdd9ksY8TyotQMtZsc3DzEwambqnOrfRCsnqd091Ck
+Llv/qGtaNeKak8W8hkwge6tdF28+MF+YXMMk94Wi9fpaoGCZDBudNHN0eySK3eTi
+TVYQ0RDiB8BfVmQUhWJbI1/zxkdUz8vI13x1OfRCh88bkwvcdL4LuAvPhnPQ97S/
+hX3KDz0n/GO77iOwy8cnLTB/TXwlrkFZPOtwSdv+3Ah7A5uPR/fORHtqVW6lhlUA
+hfLim/Eu0x8WYc4p+8palX8OXuGP0uCe2Y4VIxTbRZYvYV7gi3zKip6S1fw6T+LT
+AgMBAAGjaTBnMB0GA1UdDgQWBBQ0/pBU7BCVC4jV1qfQCNpQoyKLKzBGBgNVHREE
+PzA9ghFhdXRoLmJpb2FzdGVyLm9yZ4YoaHR0cHM6Ly9hdXRoLmJpb2FzdGVyLm9y
+Zy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG9w0BAQUFAAOCAQEAD+Cd2kalrBMiRQjh
+2GVHTybwsfms3hKwgJJI8w/MSunXGWDHlXjtGf1iyl7CnDhgas6HpG1h9p15QalM
+FTaTf7SchU/dCB+hcWyToBi/inuFeTHe1d9lGqyA8x9xE/2ie8ihhs3eFWtejtiR
+7I4hj2kGdxgfQpcgnDwCzrC7831Xd/xlvOzs1lIvQh1o3BB5RNBz75bNl+zVIaKL
+fZhI9VLX8Fpxj/4GHyE0MQ7VaOwdggG6fsC/gLgxJVFB70lFb8Z9jfTdBAwuDLa/
+j0ky2N8EDW9PFEF3W1yFT710/pAVc7Mu3brjiSYjwcSorn47v2gqySLyNHjjgO3u
+58szPg==
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://auth.bioaster.org:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.bioaster.org:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        
+    </AttributeAuthorityDescriptor>
+</EntityDescriptor>
+
+</code>
+
+4. Generate sp-metadata.xml
+
+Shibboleth sp provide an script tool to generate the sp meta data, you can use the following command
+
+
+<code>
+cd /etc/shibboleth
+sh metagen.sh -c sp-cert.pem -h yourhost.yourdomain > /etc/shibboleth/yourSP-metadata.xml
+</code>
+
+
+5. Edite shibboleth2.xml, attribute-policy.xml and attribute-map.xml
+ 
+shibboleth2.xml is the main configuration file of the shibboleth
+
+attribute-map.xml configure the attributes which shibboleth sp will receive.
+
+attribute-policy.xml defines which application can view which attributes.
+
+
+6. Change owner and group of configuration files
+
+<code>
+chown shibd:shibd attribute-map.xml sp-cert.pem sp-key.pem sp-metadata.xml idp-metadata.xml,
+
+chmod 0640 shibboleth2.xml attribute-map.xml sp-cert.pem sp-metadata.xml idp-metadata.xml
+
+chmod 0600 sp-key.pem
+
+chown root:root attribute-policy.xml shibboleth2.xml
+
+chmod 0644 attribute-policy.xml
+
+</code>
+
+
+
+7. Restart shibd process
+
+''/etc/init.d/shibd restart''
+
+or 
+
+''service shibd restart''
+====== Change shibboleth Idp to accept sp auth request ======
+
+1. define sp in relying-party.xml of idp, There are two parts, you need to add
+
+   First replying party config
+
+  
+<code>
+   <rp:RelyingParty id="https://pengfei.org/shibboleth" provider="https://auth.bioaster.org/idp/shibboleth" defaultSigningCredentialRef="IdPCredential">
+        <rp:ProfileConfiguration xsi:type="saml:ShibbolethSSOProfile" includeAttributeStatement="false" 
+                                 assertionLifetime="PT5M" signResponses="conditional" signAssertions="never"
+                                 includeConditionsNotBefore="true"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML1AttributeQueryProfile" assertionLifetime="PT5M" 
+                                 signResponses="conditional" signAssertions="never"
+                                 includeConditionsNotBefore="true"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML1ArtifactResolutionProfile" signResponses="conditional" 
+                                 signAssertions="never"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML2SSOProfile" includeAttributeStatement="true" 
+                                 assertionLifetime="PT5M" assertionProxyCount="0" 
+                                 signResponses="never" signAssertions="always" 
+                                 encryptAssertions="conditional" encryptNameIds="never"
+                                 includeConditionsNotBefore="true"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML2ECPProfile" includeAttributeStatement="true" 
+                                 assertionLifetime="PT5M" assertionProxyCount="0" 
+                                 signResponses="never" signAssertions="always" 
+                                 encryptAssertions="conditional" encryptNameIds="never"
+                                 includeConditionsNotBefore="true"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML2AttributeQueryProfile" 
+                                 assertionLifetime="PT5M" assertionProxyCount="0" 
+                                 signResponses="conditional" signAssertions="never" 
+                                 encryptAssertions="conditional" encryptNameIds="never"
+                                 includeConditionsNotBefore="true"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML2ArtifactResolutionProfile" 
+                                 signResponses="never" signAssertions="always" 
+                                 encryptAssertions="conditional" encryptNameIds="never"/>
+
+        <rp:ProfileConfiguration xsi:type="saml:SAML2LogoutRequestProfile"
+                                 signResponses="conditional"/>
+    </rp:RelyingParty>
+
+</code>
+
+  
+===== Second metadataProvider =====
+ In the shibboleth 3.3, edit metadata-providers.xml is no more nessairy, because if you put your sp-metadata.xml in /opt/shibboleth-idp/metadata , it will be scaned automatically
+
+<code>
+ <metadata:MetadataProvider id="pengfei.org" xsi:type="metadata:FilesystemMetadataProvider"
+                                   metadataFile="/opt/shibboleth-idp/metadata/pengfei.org-metadata.xml"
+                                   maxRefreshDelay="P1D" />
+    
+</metadata:MetadataProvider>
+
+</code>
+   
+
+2. copy sp-certificate into credentials folder in idp. Good practice, rename the certificate as spHostname-cert.pem(e.g. pengfei.org-cert.pem)
+
+3. copy sp-metadat into metadat folder in idp.  Good practice, rename the metadata as spHostname-metadata.xml(e.g. pengfei.org-metadata.xml)
+
+
+====== Configure shibboleth sp on mod proxy pass ======
+Suppose that we have a following setup, we have a django app which runs on a app server (gunicorn) locally at http://localhost:8000.
+We use apache as fronent and ProxyPass to pass request to gunicorn.
+
+The following vhost is a working example.
+
+<code>
+<VirtualHost *:80>
+    ServerName noe-dev.bioaster.org
+    Redirect permanent / https://noe-dev.bioaster.org/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName noe-dev.bioaster.org
+    
+    SSLEngine       on
+    #SSLProtocol all -SSLv2
+    #SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+    SSLCertificateFile /etc/pki/tls/certs/noe-dev.bioaster.org.crt
+    SSLCertificateKeyFile /etc/pki/tls/private/noe-dev.bioaster.org.key
+    SSLCertificateChainFile    /etc/pki/tls/certs/intermediate.crt
+
+    Alias /static/ /var/www/NoE/static/
+    ProxyPass /static/ !
+    ProxyPass /media/ !
+    ProxyPass /noe http://localhost:8000
+
+    ProxyPassReverse /noe http://localhost:8000/
+
+    #This section defines that noe needs shibboleth as authentication
+    #ShibUseHeaders On acivate the Http header rewrite which adds on 
+    # 'HTTP_DN': 'CN=DUPUIS Pierre,OU=UTEC06,OU=DUT,OU=DST,OU=UTILISATEURS,DC=Bioaster,DC=local'
+    # 'HTTP_DEPARTMENT': 'DUT-UTEC06'
+    # 'HTTP_UID': 'pdupuis', 
+    # 'HTTP_CITY': 'LYON', 
+    # 'HTTP_MAIL': 'Pierre.DUPUIS@bioaster.org'
+    <Location /noe>
+        AuthType shibboleth
+        Require shibboleth
+        ShibUseHeaders On
+    </Location>
+
+</VirtualHost>
+</code>
+
+PS, we can't use ''ProxyPass / http://localhost:8000''
+Because it will pass also /shibboleth.sso to gunicorn, which gunicorn can't treat it.
+With ''ProxyPass /noe http://localhost:8000'' , it requires all your url in gunicorn are prefixed by /noe

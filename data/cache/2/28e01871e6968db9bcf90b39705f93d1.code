@@ -1,0 +1,6 @@
+ByteBuffer header <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">128</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ByteBuffer body <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">1024</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">//read()方法内部会负责把数据按顺序写进传入的buffer数组内。一个buffer写满后，接着写到下一个buffer中。</span>
+<span class="co1">//举个例子，假如通道中有200个字节数据，那么header会被写入128个字节数据，body会被写入72个字节数据；</span>
+ByteBuffer<span class="br0">&#91;</span><span class="br0">&#93;</span> bufferArray <span class="sy0">=</span><span class="br0">&#123;</span>header,body<span class="br0">&#125;</span><span class="sy0">;</span>
+channel.<span class="me1">read</span><span class="br0">&#40;</span>bufferArray<span class="br0">&#41;</span><span class="sy0">;</span>

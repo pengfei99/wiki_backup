@@ -1,0 +1,27 @@
+====== Create symbolic link in linux ======
+
+===== Create  a soft symbolic link =====
+
+ln -s source destination
+
+for example I'm currently at /tmp/.
+
+I want to creat a symbolic link my_documents of my home /home/pliu/Documents
+
+I need to do 
+
+<code>
+ln -s /home/pliu/Documents my_documents
+
+#this will create my_documents in my current location /tmp
+lrwxrwxrwx.  1 pliu     pliu       21 Feb  2 17:08 my_documents -> /home/pliu/Documents/
+
+</code>
+
+===== Remove a link =====
+
+<code>
+unlink my_documents
+
+$this will unlink, you will not see my_documents in /tmp anymore
+</code>

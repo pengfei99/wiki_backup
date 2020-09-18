@@ -1,0 +1,447 @@
+
+<h1 class="sectionedit1" id="elastic_search_rest_api">Elastic search rest api</h1>
+<div class="level1">
+
+<p>
+The process of adding data to Elasticsearch is called “indexing.” This is because when you feed data into Elasticsearch, the data is placed into Apache Lucene indexes. This makes sense because Elasticsearch uses the Lucene indexes to store and retrieve its data. Although you do not need to know a lot about Lucene, it does help to know how it works when you start getting serious with Elasticsearch.
+</p>
+
+<p>
+Elasticsearch behaves like a REST <abbr title="Application Programming Interface">API</abbr>, Use Get to get resource information. You can also do text search with get request with a request body contains elaticsearch query DSL. As many tools such as soap ui or postman does not support get request with body, the best tool to search your elastic cluster is kibanna.
+Install kibana and open this url (<a href="http://localhost:5601/app/kibana#/dev_tools/" class="urlextern" title="http://localhost:5601/app/kibana#/dev_tools/" rel="nofollow">http://localhost:5601/app/kibana#/dev_tools/</a>) in your favorite browser. 
+</p>
+
+<p>
+You can use either the POST or the PUT method to add data to it. You use PUT when you know the or want to specify the ID of the data item, or POST if you want Elasticsearch to generate an ID for the data item.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Elastic search rest api" [1-1080] -->
+<h2 class="sectionedit2" id="example_of_elastic_search">Example of elastic search</h2>
+<div class="level2">
+
+<p>
+In this example we will use rest api to create an index(database in sql) and type(table in sql),then we do crud(create, read, update, delete)
+</p>
+
+<p>
+The input data is from Happy customers spark tutorial (<a href="/doku.php?id=employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction" class="wikilink1" title="employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction">Happy customers</a>)
+</p>
+
+<p>
+The raw csv file looks like this 
+</p>
+<pre class="code">manager_name,client_name,client_gender,client_age,response_time,statisfaction_level
+Arjun Kumar,Rehan Nigam,male,30,4.0,0.5
+Kabir Vish,Abhinav Neel,male,28,12.0,0.1
+Arjun Kumar,Sam Mehta,male,27,3.0,0.7
+Arjun Kumar,Ira Pawan,female,40,2.5,0.6
+Rohit Srivastav,Vihaan Sahni,male,38,6.0,0.5
+Kabir Vish,Daivik Saxena,male,45,16.0,0.2
+Rohit Srivastav,Lera Uddin,female,20,8.0,0.4
+Rohit Srivastav,Aaran Puri,male,34,7.5,0.3
+Kabir Vish,Rudra Mati,male,50,20.0,0.1</pre>
+
+<p>
+As elastic search accept only json, we need to covert it first to json.
+</p>
+
+<p>
+After the conversion the json file looks like this 
+</p>
+<pre class="code">{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Rehan Nigam&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:30,&quot;response_time&quot;:4.0,&quot;satisfaction_level&quot;:0.5}
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Abhinav Neel&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:28,&quot;response_time&quot;:12.0,&quot;satisfaction_level&quot;:0.1}
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Sam Mehta&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:27,&quot;response_time&quot;:3.0,&quot;satisfaction_level&quot;:0.7}
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Ira Pawan&quot;,&quot;client_gender&quot;:&quot;female&quot;,&quot;client_age&quot;:40,&quot;response_time&quot;:2.5,&quot;satisfaction_level&quot;:0.6}
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Vihaan Sahni&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:38,&quot;response_time&quot;:6.0,&quot;satisfaction_level&quot;:0.5}
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Daivik Saxena&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:45,&quot;response_time&quot;:16.0,&quot;satisfaction_level&quot;:0.2}
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Lera Uddin&quot;,&quot;client_gender&quot;:&quot;female&quot;,&quot;client_age&quot;:20,&quot;response_time&quot;:8.0,&quot;satisfaction_level&quot;:0.4}
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Aaran Puri&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:34,&quot;response_time&quot;:7.5,&quot;satisfaction_level&quot;:0.3}
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Rudra Mati&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:50,&quot;response_time&quot;:20.0,&quot;satisfaction_level&quot;:0.1}</pre>
+
+</div>
+<!-- EDIT2 SECTION "Example of elastic search" [1081-3363] -->
+<h3 class="sectionedit3" id="create_index_and_type">Create index and type</h3>
+<div class="level3">
+
+<p>
+This is the first step, when you want to load data into ES cluster. In this example, we suppose we create a index called : customer_service and a type called client_satisfaction
+</p>
+
+</div>
+
+<h4 id="create_index">Create index</h4>
+<div class="level4">
+<pre class="code"># In kibana dev tools
+PUT /customer_service
+
+#Output
+
+{
+  &quot;acknowledged&quot;: true,
+  &quot;shards_acknowledged&quot;: true,
+  &quot;index&quot;: &quot;customer_service&quot;
+} 
+
+#In curl 
+ 
+curl -X PUT &#039;localhost:9200/customer_service&#039;
+</pre>
+
+</div>
+
+<h4 id="create_type">Create type</h4>
+<div class="level4">
+
+<p>
+This step is similar to define schema of a table in sql db. We need to give column names and types. ES has his own type systems (e.g. String is replaced by text and keyword). For more details, you need to check 
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html" class="urlextern" title="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html" rel="nofollow">https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html</a>
+</p>
+<pre class="code"># In kibana dev tools
+PUT /customer_service/client_satisfaction/_mapping
+{
+  &quot;client_satisfaction&quot;:{
+    &quot;properties&quot;: {
+      &quot;manager_name&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_name&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_gender&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_age&quot;:{&quot;type&quot;:&quot;integer&quot;},
+      &quot;response_time&quot;:{&quot;type&quot;:&quot;double&quot;},
+      &quot;satisfaction_level&quot;:{&quot;type&quot;:&quot;double&quot;}
+    }
+  }
+}
+
+#Output 
+{
+  &quot;acknowledged&quot;: true
+}
+
+#In curl 
+
+curl -X PUT &#039;localhost:9200/customer_service/client_satisfaction/_mapping&#039; -H &#039;Content-Type: application/json&#039; -d &#039;
+{
+  &quot;client_satisfaction&quot;:{
+    &quot;properties&quot;: {
+      &quot;manager_name&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_name&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_gender&quot;:{&quot;type&quot;:&quot;keyword&quot;},
+      &quot;client_age&quot;:{&quot;type&quot;:&quot;integer&quot;},
+      &quot;response_time&quot;:{&quot;type&quot;:&quot;double&quot;},
+      &quot;satisfaction_level&quot;:{&quot;type&quot;:&quot;double&quot;}
+    }
+  }
+}
+&#039;</pre>
+
+</div>
+
+<h4 id="check_the_index_and_type">Check the index and type</h4>
+<div class="level4">
+<pre class="code">#in kibana dev tools
+GET /customer_service/_mapping
+
+#Output 
+{
+  &quot;customer_service&quot;: {
+    &quot;mappings&quot;: {
+      &quot;client_satisfaction&quot;: {
+        &quot;properties&quot;: {
+          &quot;client_age&quot;: {
+            &quot;type&quot;: &quot;integer&quot;
+          },
+          &quot;client_gender&quot;: {
+            &quot;type&quot;: &quot;keyword&quot;
+          },
+          &quot;client_name&quot;: {
+            &quot;type&quot;: &quot;keyword&quot;
+          },
+          &quot;manager_name&quot;: {
+            &quot;type&quot;: &quot;keyword&quot;
+          },
+          &quot;response_time&quot;: {
+            &quot;type&quot;: &quot;double&quot;
+          },
+          &quot;satisfaction_level&quot;: {
+            &quot;type&quot;: &quot;double&quot;
+          }
+        }
+      }
+    }
+  }
+}
+
+#In curl 
+curl -X GET &#039;localhost:9200/customer_services/_mapping&#039;
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "Create index and type" [3364-5746] -->
+<h3 class="sectionedit4" id="adding_data">Adding data</h3>
+<div class="level3">
+
+<p>
+There are 2 main ways to load data in elastic search
+</p>
+<ul>
+<li class="level1"><div class="li"> Simple post on rest api</div>
+</li>
+<li class="level1"><div class="li"> bulk api</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="simple_post">Simple post</h4>
+<div class="level4">
+<pre class="code">#in kibana dev tools
+POST /customer_service/client_satisfaction/2
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Abhinav Neel&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:28,&quot;response_time&quot;:12.0,&quot;satisfaction_level&quot;:0.1}
+
+#in curl 
+curl -XPOST &#039;localhost:9200/customer_service/client_satisfaction&#039; -H &#039;Content-Type: application/json&#039; -d&#039; 
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Sam Mehta&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:27,&quot;response_time&quot;:3.0,&quot;satisfaction_level&quot;:0.7}
+&#039;
+
+#PS: if you don&#039;t give id when you post, es will generate an id for you (e.g. eMbFjmEBHeKdbutAXG6r)
+</pre>
+
+</div>
+
+<h4 id="bulk_api">Bulk api</h4>
+<div class="level4">
+
+<p>
+We&#039;ll add data to the client_satisfaction type using Elasticsearch&#039;s bulk <abbr title="Application Programming Interface">API</abbr>. The format for a bulk request is:
+</p>
+
+<p>
+{action_and_meta_data}\n
+</p>
+
+<p>
+{optional_data_source}\n
+</p>
+
+<p>
+The bulk <abbr title="Application Programming Interface">API</abbr> commands can be chained together in one line after another and should be in JSON format. It&#039;s important to note that each bulk request must be written on a single line (not pretty printed) and contain the new line character (\n) at the end of each line. 
+</p>
+
+<p>
+We can send a PUT request to localhost:9200/customer_service/client_satisfaction/_bulk with the JSON data.
+</p>
+<pre class="code">#in kibana dev tools 
+# The first line of json is the action (e.g. create new entry) and metadata (e.g. entry belongs to which index and type)
+PUT /customer_service/client_satisfaction/_bulk
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;3&quot; } }
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Rehan Nigam&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:30,&quot;response_time&quot;:4.0,&quot;satisfaction_level&quot;:0.5}</pre>
+
+<p>
+The above solution works but we have to do a lot of copy and past which can generate errors
+The best way is to edit a new json file which contains both the {action_and_meta_data}
+ and {optional_data_source}. Then we use the following curl command to load the entire json file.
+</p>
+
+<p>
+Here is the elastic loading ready json file
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:elastic_search:rest_api&amp;codeblock=7" title="Download Snippet" class="mediafile mf_json">happy_customer.json</a></dt>
+<dd><pre class="code file json">{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;1&quot; } }
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Rehan Nigam&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:30,&quot;response_time&quot;:4.0,&quot;satisfaction_level&quot;:0.5}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;2&quot; } }
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Abhinav Neel&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:28,&quot;response_time&quot;:12.0,&quot;satisfaction_level&quot;:0.1}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;3&quot; } }
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Sam Mehta&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:27,&quot;response_time&quot;:3.0,&quot;satisfaction_level&quot;:0.7}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;4&quot; } }
+{&quot;manager_name&quot;:&quot;Arjun Kumar&quot;,&quot;client_name&quot;:&quot;Ira Pawan&quot;,&quot;client_gender&quot;:&quot;female&quot;,&quot;client_age&quot;:40,&quot;response_time&quot;:2.5,&quot;satisfaction_level&quot;:0.6}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;5&quot; } }
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Vihaan Sahni&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:38,&quot;response_time&quot;:6.0,&quot;satisfaction_level&quot;:0.5}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;6&quot; } }
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Daivik Saxena&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:45,&quot;response_time&quot;:16.0,&quot;satisfaction_level&quot;:0.2}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;7&quot; } }
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Lera Uddin&quot;,&quot;client_gender&quot;:&quot;female&quot;,&quot;client_age&quot;:20,&quot;response_time&quot;:8.0,&quot;satisfaction_level&quot;:0.4}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;8&quot; } }
+{&quot;manager_name&quot;:&quot;Rohit Srivastav&quot;,&quot;client_name&quot;:&quot;Aaran Puri&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:34,&quot;response_time&quot;:7.5,&quot;satisfaction_level&quot;:0.3}
+{ &quot;create&quot; : { &quot;_index&quot; : &quot;customer_service&quot;, &quot;_type&quot; : &quot;client_satisfaction&quot;, &quot;_id&quot; : &quot;9&quot; } }
+{&quot;manager_name&quot;:&quot;Kabir Vish&quot;,&quot;client_name&quot;:&quot;Rudra Mati&quot;,&quot;client_gender&quot;:&quot;male&quot;,&quot;client_age&quot;:50,&quot;response_time&quot;:20.0,&quot;satisfaction_level&quot;:0.1}</pre>
+</dd></dl>
+<pre class="code">curl -H &#039;Content-Type: application/x-ndjson&#039; -XPOST &#039;localhost:9200/customer_service/client_satisfaction/_bulk?pretty&#039; --data-binary @happy_customer.json</pre>
+
+</div>
+<!-- EDIT4 SECTION "Adding data" [5747-10165] -->
+<h3 class="sectionedit5" id="read_and_or_search_data">Read and/or search data</h3>
+<div class="level3">
+
+<p>
+List all data inside one index and one type. In our case, we want to list all data in index customer_service, and type client_satisfaction
+</p>
+<pre class="code">#in kibana dev tools
+GET /customer_service/client_satisfaction/_search
+
+#in curl 
+curl -X GET http://localhost:9200/customer_service/client_satisfaction/_search
+
+# Output example
+# In the hits, it will display all the results which it finds.
+# All the fields start with _ is the metadata which are added by elastic search
+# All the real data is stored under _source
+&quot;hits&quot;: {
+    &quot;total&quot;: 4,
+    &quot;max_score&quot;: 1,
+    &quot;hits&quot;: [
+      {
+        &quot;_index&quot;: &quot;customer_service&quot;,
+        &quot;_type&quot;: &quot;client_satisfaction&quot;,
+        &quot;_id&quot;: &quot;2&quot;,
+        &quot;_score&quot;: 1,
+        &quot;_source&quot;: {
+          &quot;manager_name&quot;: &quot;Kabir Vish&quot;,
+          &quot;client_name&quot;: &quot;Abhinav Neel&quot;,
+          &quot;client_gender&quot;: &quot;male&quot;,
+          &quot;client_age&quot;: 28,
+          &quot;response_time&quot;: 12,
+          &quot;satisfaction_level&quot;: 0.1
+        }
+      },
+      {
+      ......
+      }</pre>
+
+</div>
+
+<h4 id="search_with_query_and_filter">Search with query and filter</h4>
+<div class="level4">
+
+<p>
+If we don&#039;t add the http request body in the search request, we will get all the data in this index and type. We can be more specific if we add query and filter inside the http request body
+</p>
+
+<p>
+Here I only illustrate some common used examples. For more details, you need to visit the official doc <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html" class="urlextern" title="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html" rel="nofollow">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html</a>
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html" class="urlextern" title="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html" rel="nofollow">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html</a>
+</p>
+
+<p>
+<strong>Query context</strong>
+</p>
+
+<p>
+A query clause used in query context answers the question “How well does this document match this query clause?” Besides deciding whether or not the document matches, the query clause also calculates a _score representing how well the document matches, relative to other documents.
+</p>
+
+<p>
+Query context is in effect whenever a query clause is passed to a query parameter, such as the query parameter in the search <abbr title="Application Programming Interface">API</abbr>.
+</p>
+
+<p>
+<strong>Filter context</strong>
+</p>
+
+<p>
+In filter context, a query clause answers the question “Does this document match this query clause?” The answer is a simple Yes or No  no scores are calculated. Filter context is mostly used for filtering structured data, e.g.
+</p>
+
+<p>
+Does this timestamp fall into the range 2015 to 2016?
+Is the status field set to “published”?
+Frequently used filters will be cached automatically by Elasticsearch, to speed up performance.
+</p>
+
+<p>
+Filter context is in effect whenever a query clause is passed to a filter parameter, such as the filter or must_not parameters in the bool query, the filter parameter in the constant_score query, or the filter aggregation.
+</p>
+<pre class="code"># The following query find us data which has response time is between (3.0, 20,0)
+# client gender must be male
+# and manager name is Arjun kumar
+GET /customer_service/client_satisfaction/_search?pretty
+{
+   &quot;query&quot;: { 
+    &quot;bool&quot;: { 
+      &quot;must&quot;: [
+        { &quot;range&quot;: { &quot;response_time&quot;:   {&quot;gte&quot;:3.0,&quot;lte&quot;:20.0}        }}, 
+        { &quot;match&quot;: { &quot;client_gender&quot;: &quot;male&quot; }}  
+      ],
+      &quot;filter&quot;: [ 
+        { &quot;term&quot;:  { &quot;manager_name&quot;: &quot;Arjun Kumar&quot; }}
+      ]
+    }
+  }
+}
+
+# From the above query, we want to only see the client age is under 30
+GET /customer_service/client_satisfaction/_search?pretty=true
+{
+   &quot;query&quot;: { 
+    &quot;bool&quot;: { 
+      &quot;must&quot;: [
+        { &quot;range&quot;: { &quot;response_time&quot;:   {&quot;gte&quot;:3.0,&quot;lte&quot;:20.0}        }}, 
+        { &quot;match&quot;: { &quot;client_gender&quot;: &quot;male&quot; }}  
+      ],
+      &quot;filter&quot;: [ 
+        { &quot;term&quot;:  { &quot;manager_name&quot;: &quot;Arjun Kumar&quot; }}
+      ]
+      , &quot;must_not&quot;: [
+        {&quot;range&quot;: { &quot;client_age&quot;: {&quot;gte&quot;: 29, &quot;lte&quot;: 100}
+        }}
+      ]
+    }
+  }
+}</pre>
+
+</div>
+<!-- EDIT5 SECTION "Read and/or search data" [10166-13814] -->
+<h3 class="sectionedit6" id="delete_an_entry">Delete an entry</h3>
+<div class="level3">
+
+<p>
+To remove a document, we need to use its id and http Delete request.
+For example, we want to remove document with id eMbFjmEBHeKdbutAXG6r
+</p>
+<pre class="code">#in kibana dev tools
+DELETE /customer_service/client_satisfaction/eMbFjmEBHeKdbutAXG6r
+
+#in curl
+curl -X DELETE http://localhost:9200/customer_service/client_satisfaction/eMbFjmEBHeKdbutAXG6r</pre>
+
+</div>
+<!-- EDIT6 SECTION "Delete an entry" [13815-14188] -->
+<h3 class="sectionedit7" id="update_an_entry">Update an entry</h3>
+<div class="level3">
+
+<p>
+Update an entry in ES cluster use PUT, with the _id of the entry. Note that, we can only update the source data, not the metadata (e.g. _id, _version, etc.). If you are not happy with the id of one document, you need to create a new doc with the id you want and delete old document.
+</p>
+
+<p>
+For example, we have an entry with a random id  “_id”: “eMbFjmEBHeKdbutAXG6r”,, we want to update the client age from 27 to 35.
+</p>
+<pre class="code"># in kibana dev tools
+GET /customer_service/client_satisfaction/eMbFjmEBHeKdbutAXG6r
+{
+          &quot;manager_name&quot;: &quot;Arjun Kumar&quot;,
+          &quot;client_name&quot;: &quot;Sam Mehta&quot;,
+          &quot;client_gender&quot;: &quot;male&quot;,
+          &quot;client_age&quot;: 35,
+          &quot;response_time&quot;: 3,
+          &quot;satisfaction_level&quot;: 0.7
+        }
+        
+#output
+{
+  &quot;_index&quot;: &quot;customer_service&quot;,
+  &quot;_type&quot;: &quot;client_satisfaction&quot;,
+  &quot;_id&quot;: &quot;eMbFjmEBHeKdbutAXG6r&quot;,
+  &quot;_version&quot;: 2,
+  &quot;result&quot;: &quot;updated&quot;,
+  &quot;_shards&quot;: {
+    &quot;total&quot;: 2,
+    &quot;successful&quot;: 1,
+    &quot;failed&quot;: 0
+  },
+  &quot;_seq_no&quot;: 2,
+  &quot;_primary_term&quot;: 1
+}</pre>
+
+</div>
+<!-- EDIT7 SECTION "Update an entry" [14189-] -->

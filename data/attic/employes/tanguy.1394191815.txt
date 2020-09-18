@@ -1,0 +1,46 @@
+====== Tanguy ======
+
+===== Objectifs 2014 =====
+
+  * **Convention** Pasteur
+    * rediger l'annexe technique
+  * **OpenStack** au CC
+    * Continuous Improvement
+    * Mise en place de l'environnement bioinformatique avec le //PT2//
+    * Créer des images personnalisées
+  * Mettre en place les bases de données sur SPS
+
+===== Autres =====
+
+  * <del>**Entretien Annuel**</del>
+    * <del>Rédiger les 4 objectifs manquants (voir avec LB et FP) et les faire valider par NS et AT.</del>
+  * **Aménagement des locaux** BIOASTER Paris
+    * <del>wifi (mais pas de réseau invité)</del>
+    * <del>téléphones des P2+</del>
+    * Imprimant "chez Gilles"
+  * Installer **Galaxy** (w/w/o LIMS)
+    * Mettre derrière HTTPS et authentifier par certificat
+  * Installer un serveur pour **Blast**
+    * <del>[[http://openwetware.org/wiki/Wwwblast|wwwblast]] serveur</del> et [[in2p3/logiciels/wwwblast|documenter la procédure]]
+
+===== A classer =====
+
+  * Mettre en place **Dokuwiki**
+    * <del>Installer avec les plugins tag, templatepagename...</del>
+    * <del>Mettre derrière HTTPS et authentifier par certificat</del>
+    * Mettre en place un backup
+    * Ecrire la [[in2p3/logiciels/dokuwiki|documentation]]
+  * Installer des **LIMS** pour les tester
+    * <del>[[https://www.labkey.org/wiki/home/Documentation/page.view?name=manualInstall|LabKey]]</del> et [[in2p3/logiciels/labkey|documenter la procédure]]
+    * [[http://hci-scrum.hci.utah.edu/gnomexdoc/?page_id=102|GnomEx]] et [[in2p3/logiciels/gnomex|documenter la procédure]]
+    * <del>[[https://wiki.galaxyproject.org/Admin/Sample%20Tracking/Next%20Gen|Galaxy LIMS]]</del> et [[in2p3/logiciels/galaxy|documenter la procédure]]
+  * [[formations|Documentation et Formation]]
+    * <del>Installer [[in2p3/logiciels/remark|remark]] pour servir les présentations</del>
+  * **Certification**
+    * [[securite/certification|Créer un CA]] pour pouvoir sécuriser dès à présent
+    * [[securite/certification/cacert|CAcert]] pour BIOASTER
+    * Pour l’intégrer à nos services il faut authentifier avec X509 *et* autoriser avec l'AD/LDAP (voir avec MR et JG) 
+  * Signer "remise de materiel informatique" @Emilie
+  * Mon poste
+    * Theme [[http://xfce-look.org/content/show.php?content=155043]]
+    * Free Laptotp [[http://www.fsf.org/news/gluglug-x60-laptop-now-certified-to-respect-your-freedom]]

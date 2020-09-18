@@ -1,0 +1,50 @@
+
+<h1 class="sectionedit1" id="les_codes_barres_qr_codes">Les codes barres &amp; QR codes</h1>
+<div class="level1">
+
+<p>
+Un code barre sera lié à un BA UID d&#039;échantillon ou de lot d&#039;échantillon.<br/>
+
+Il faudrait qu&#039;il soit possible d&#039;ajouter des informations dynamiques au dessus du code barre. Par exemple : origin, sample type, timepoint ou encore date <br/>
+
+</p>
+
+<p>
+Les codes barres et QR codes sont générés via les méthodes barcode_generator() et qrcode_generator() se trouvant dans <a href="https://gitlab.in2p3.fr/bioaster/NoE/blob/feature-2/core/views/barcodes.py" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/NoE/blob/feature-2/core/views/barcodes.py"  rel="nofollow">la view barcode.py</a> de l&#039;application core/ du projet <abbr title="Network Of Experiments">NoE</abbr>.<br/>
+
+</p>
+
+<p>
+Dans la V1, l&#039;information codée dans le code barre et le QR code sera le BA UID. Un code barre et un QR code seront créés à chaque nouvel échantillon.<br/>
+
+</p>
+
+<p>
+La bibliothèque python utilisée pour la génération des codes barres est <a href="https://bitbucket.org/whitie/python-barcode/" class="urlextern" title="https://bitbucket.org/whitie/python-barcode/"  rel="nofollow">python-barcode</a> (v0.8.1). <br/>
+
+La bibliothèque python utilisée pour la génération des QR codes est <a href="https://github.com/mmulqueen/pyStrich" class="urlextern" title="https://github.com/mmulqueen/pyStrich"  rel="nofollow">pyStrich</a> (v0.8 ). <br/>
+
+</p>
+
+<p>
+Exemple de code barre et de QR code générés par <abbr title="Network Of Experiments">NoE</abbr> : <br/>
+
+</p>
+
+<p>
+<a href="/_detail/ut6/pt6/barcode_qrcode_noe.png?id=noe%3Abarcode" class="media" title="ut6:pt6:barcode_qrcode_noe.png"><img src="/_media/ut6/pt6/barcode_qrcode_noe.png?w=400&amp;tok=1db479" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Les codes barres & QR codes" [1-1096] -->
+<h1 class="sectionedit2" id="les_etiquettes_et_templates_d_etiquettes">Les étiquettes et templates d&#039;étiquettes</h1>
+<div class="level1">
+
+<p>
+Différents templates d&#039;impression de code barre doivent être envisagés. Les tailles des différentes étiquettes sont à déterminer en fonction de ce qui existe déjà à BIOASTER (voir périphériques d&#039;impression et templates d&#039;étiquettes).<br/>
+
+Un budget de 10k€ a été demandé pour renouveler le matériel si besoin.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Les étiquettes et templates d'étiquettes" [1097-] -->

@@ -1,0 +1,248 @@
+a:6:{s:2:"id";s:12:"ut6:htcondor";s:6:"prefix";s:625:"===== HTCondor =====
+
+==== Introduction ====
+
+HTCondor is a specialized workload management system for compute-intensive jobs. Like other full-featured batch systems, HTCondor provides a job queueing mechanism, scheduling policy, priority scheme, resource monitoring, and resource management. Users submit their serial or parallel jobs to HTCondor, HTCondor places them into a queue, chooses when and where to run the jobs based upon a policy, carefully monitors their progress, and ultimately informs the user upon completion. 
+
+[[https://research.cs.wisc.edu/htcondor/description.html | See complete description]]
+
+";s:4:"text";s:2380:"==== HTCondor daemons configuration ====
+
+On a central manager machine that can submit jobs as well as execute them, there will be processes for:
+
+  * condor_master
+  * condor_collector
+  * condor_negotiator
+  * condor_startd
+  * condor_schedd
+
+On a central manager machine that does not submit jobs nor execute them, there will be processes for:
+
+  * condor_master
+  * condor_collector
+  * condor_negotiator
+
+For a machine that only submits jobs, there will be processes for:
+
+  * condor_master
+  * condor_schedd
+
+For a machine that only executes jobs, there will be processes for:
+
+  * condor_master
+  * condor_startd
+
+
+
+==== Debugging Jobs ====
+
+Common administrator task: help a user debug a job.
+        Typical case: Why won't my job run?
+    condor_q
+        Examine the job with condor_q
+            especially -long and -analyze
+            Compare with condor_status -long
+    User Log
+        Examine the job's user log
+            Quickly find with:
+        condor_q -format '%s\n' UserLog 17.0
+            Users should always have a user log (set with "log" in the submit file)
+        Contains the life history of the job
+        If a problem occurred, user log often contains details
+        Error messages for common problems are much improved in 6.6
+    ShadowLog
+        Examine ShadowLog on the submit machine
+            Note any machines the job tried to execute on
+            There is often an "ERROR" entry that can give a good indication of what failed
+    Matching Problems
+        No ShadowLog entries? Possible problem matching the job.
+            Examine ScheddLog on the submit machine
+            Examine NegotiatorLog on the central manager
+    Local Problems
+        ShadowLog entries suggest an error but aren't specific?
+            Examine StartLog and StarterLog on the execute machine
+    Reading Log Files
+        Condor logs will note the job ID each entry is for
+            Useful if multiple jobs are being processed simultaneously
+            grepping for the job ID will make it easy to find relevent entries
+    What Next?
+        If necessary add "D_FULLDEBUG D_COMMAND" to DEBUG_DAEMONNAME setting for additional log information
+        Increase MAX_DAEMONNAME_LOG if logs are rolling over too quickly
+        If all else fails, email us at condor-admin@cs.wisc.edu
+
+";s:6:"suffix";s:7642:"
+==== Deployment ====
+
+An Ansible playbook is available on [[https://gitlab.in2p3.fr/bioaster/htcondor-ansible-deployment | Gitlab]]
+
+==== Our platform architecture ====
+
+==== Universe used @ BIOASTER ====
+
+==== Operate it ====
+
+=== Checking pool status ===
+
+**condor_status: ** List slots in HTCondor pool and their status: Owner (used by owner), Claimed (used by HTCondor), Unclaimed (available to be used by HTCondor), etc. 
+
+Useful options:
+
+  * condor_status -avail: List those slots that are not busy and could run HTCondor jobs at this moment
+  * condor_status -submitters: Show information about the current general status, like number of running, idle and held jobs (and submitters)
+  * condor_status -run: List slots that are currently running jobs and show related information (owner of each job, machine where it was submitted from, etc.)
+  * condor_status -state -total: List a summary according to the state of each slot
+  * condor_status -master: List machines, but only names (status and slots are not shown)
+  * condor_status -server: List attributes of slots, like memory, disk, load, flops, etc.
+  * condor_status -sort Memory: Sort slots by Memory, you can try also with other attributes
+  * condor_status -format <fmt> <attr>: List attributes using the specified format. For instance, next command will show the name of each slot and the disk space: condor_status -format "%s\t " Name -format "%d KB\n" Disk
+  * condor_status <machine>: Show the status of a specific machine
+  * condor_status <machine> -long: Show the complete ClassAd of a machine (its specifications). We can use these specifications to add restrictions in the submit file so we can control which machines we want to use.
+  * condor_status -constraint <constraint>: Only Show slots that satisfy the constraint. I.e: condor_status -constraint 'Memory > 1536' will only show slots with more than 1.5GB of RAM per slot. 
+
+
+=== Submitting jobs ===
+
+**condor_submit <submit_file>: ** Submit jobs to HTCondor queue according to the information specified in submit_file. Visit the submit file page to see some examples of these files. There are also some FAQs related to the submit file. 
+
+Useful options:
+
+  * condor_submit <submit_file> -dry-run <dest_file> : this option parses the submit file and saves all the related info (name and locations of input and output files after expanding all variables, value of requirements, etc.) to <dest_file>, but real jobs are not submitted. Using this option is highly recommended when debugging or before the real submission if you have made some modifications in your submit file and you are not sure whether they will work.
+  * condor_submit <submit_file> 'var=value': add or modify variable(s) at submission time, without changing the submit file. For instance, if you are using queue $(N) in your submit file, then condor_submit <submit_file> 'N = 10' will submit 10 jobs. You can specify several pairs of var=value.
+  * condor_submit <submit_file> -append <command>: add submit commands at submission time, without changing the submit file. You can add more than one command using several times -append. 
+
+==== DRMAA API and python lib ====
+
+To use the DRMAA Python library, you need to install it via pip:
+
+<Code class="prettyprint">
+$ pip install drmaa
+</Code>
+
+We need access to the libdrmaa.so C library. To do so, we install the HTCondor one and set the DRMAA_LIBRARY_PATH environement variable:
+
+<Code class="prettyprint">
+$ sudo cp ($CONDOR_DIR)/lib/libdrmaa.so /usr/lib64
+$ echo "export DRMAA_LIBRARY_PATH=/usr/lib64/libdrmaa.so" >> ~/.bashrc
+</Code>
+
+To make test here a simple script that launch a bash job (job.sh) via drmaa:
+
+<Code class="prettyprint">
+#!/usr/bin/env python
+
+import drmaa
+import os
+
+def main():
+   """
+   Submit a job.
+   """
+   with drmaa.Session() as s:
+       print('Creating job template')
+       jt = s.createJobTemplate()
+       jt.remoteCommand = os.path.join(os.getcwd(), 'job.sh')
+       jt.joinFiles=True
+
+       jobid = s.runJob(jt)
+       print('Your job has been submitted with ID %s' % jobid)
+
+       print('Cleaning up')
+       s.deleteJobTemplate(jt)
+
+if __name__=='__main__':
+   main()
+
+</Code>
+
+Launch the script and validate its execution:
+
+<Code class="prettyprint">
+$ python job.py 
+Creating job template
+DEBUG: Join_files is set
+DEBUG: drmaa_join_files: y
+DEBUG: drmaa_remote_command: /home/pveyre/condor_test/job.sh
+Your job has been submitted with ID htcondor-test.in2p3.fr.19.0
+Cleaning up
+
+$ condor_q
+
+-- Schedd: htcondor-test.in2p3.fr : <134.158.37.4:43895?...
+ ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD               
+  19.0   pveyre          1/25 09:32   0+00:00:01 R  0   0.0  job.sh
+
+1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
+
+</Code>
+
+==== BIOASTER projects using it ====
+
+**Metaseq: ** [[https://gitlab.in2p3.fr/bioaster/metaseq | see its Gitlab project]]
+
+
+==== 16S pipeline tools (for ~/.bashrc) ====
+
+<Code>
+#######################################
+# NEEDED for 16S pipeline execution
+export PATH=$PATH:\
+/mnt/gpfs/pt2/Apps/CentOS7/PEAR/bin:\
+/mnt/gpfs/pt2/Apps/CentOS7/Trimmomatic-0.36:\
+/mnt/gpfs/pt2/Apps/CentOS7/a5_miseq_linux_20150522/bin:\
+/mnt/gpfs/pt2/Apps/CentOS7:\
+/mnt/gpfs/pt2/Apps/CentOS7/seqtk
+
+export RDP_JAR_PATH=/mnt/gpfs/pt2/Apps/rdpclassifier-2.2-release/rdp_classifier-2.2.jar
+
+#######################################
+</Code>
+
+
+==== Snakemake DRMAA Hack by PV (snakemake/executors.py) ====
+
+<Code>
+def _wait_for_jobs(self):
+        import drmaa
+        while True:
+            with self.lock:
+                if not self.wait:
+                    return
+                active_jobs = self.active_jobs
+                self.active_jobs = list()
+                for active_job in active_jobs:
+                    try:
+                        
+                        print(active_job)
+                        print(drmaa.Session.TIMEOUT_NO_WAIT)
+                        retval = self.session.synchronize([active_job.jobid],
+                                                   drmaa.Session.TIMEOUT_NO_WAIT)
+
+                    except drmaa.ExitTimeoutException as e:
+                        # job still active
+                        self.active_jobs.append(active_job)
+                        continue
+                    except (drmaa.InternalException, Exception) as e:
+                        print_exception(WorkflowError("DRMAA Error: {}".format(e)),
+                                        self.workflow.linemaps)
+                        os.remove(active_job.jobscript)
+                        active_job.error_callback(active_job.job)
+                        continue
+                    # job exited
+                    os.remove(active_job.jobscript)
+
+                    print(self.session.jobStatus(active_job.jobid))
+
+                    #if retval.hasExited and retval.exitStatus == 0:
+                    if self.session.jobStatus(active_job.jobid) == drmaa.JobState.DONE:
+                        self.finish_job(active_job.job)
+                        active_job.callback(active_job.job)
+                    else:
+                        self.print_job_error(active_job.job)
+                        print_exception(
+                            ClusterJobException(active_job.job, self.dag.jobid(active_job.job), active_job.jobscript),
+                            self.workflow.linemaps)
+                        active_job.error_callback(active_job.job)
+            time.sleep(1)
+
+
+</Code>";s:4:"date";i:1491471587;s:6:"client";s:6:"pveyre";}

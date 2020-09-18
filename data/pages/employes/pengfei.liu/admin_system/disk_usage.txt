@@ -1,0 +1,26 @@
+====== Use ncdu for disk usage monitoring ======
+
+===== What is ncdu? =====
+
+ncdu (NCurses Disk Usage) is an ncurses-based disk usage tool. It provides a disk usage summary in a TUI (text user interface), and also allows you to navigate between directories.
+
+===== Install ncdu =====
+
+<code>
+1. Enable epel repo
+yum install -y epel
+2. Install ncdu
+yum install ncdu
+</code>
+
+===== Use ncdu =====
+
+<code>
+# ncdu will analyse all the files and dirs in your current location, you can only navigate to child dir
+# and cant to parent dir of the current dir.
+# You also have to make sure you have the right to visit the dir, otherwise it will show noting
+> ncdu
+
+#By default, the rows are sorted by size, you can sort them by typing n.
+
+</code>

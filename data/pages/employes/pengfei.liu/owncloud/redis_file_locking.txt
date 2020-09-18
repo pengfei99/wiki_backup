@@ -1,0 +1,72 @@
+====== Use redis for file blocking ======
+
+
+Additional notes for Redis vs. APCu on Memory Caching
+
+APCu is faster at local caching than Redis. If you have enough memory, use APCu for memory caching and <color #ed1c24>Redis for file locking</color>. If you are low on memory, use Redis for both.
+
+<code>
+yum install epel-release
+yum update
+# install redis server
+yum install redis
+# install php71 redis driver
+php71w-pecl-redis
+
+#start redis
+systemctl start/stop/status/restart redis
+
+#run redis at bootup
+systemctl enable redis
+
+#verify redis, it should answer PONG
+redis-cli ping
+
+</code>
+
+===== Persistence Options =====
+
+Redis provides two options for disk persistence:
+
+Point-in-time snapshots of the dataset, made at specified intervals (RDB).
+
+Append-only logs of all the write operations performed by the server (AOF).
+
+Each option has its own pros and cons which are detailed in the Redis documentation. For the greatest level of data safety, consider running both persistence methods.
+
+Because the Point-in-time snapshot persistence is enabled by default, you only need to set up AOF persistence:
+
+<code>
+#Edit /etc/redis.conf, change the following lines
+appendonly yes
+appendfsync everysec
+</code>
+Restart redis to make it effective
+
+
+===== Basic System Tuning =====
+
+To improve Redis performance, set the Linux kernel overcommit memory setting to 1:
+
+''sudo sysctl vm.overcommit_memory=1''
+
+This immediately changes the overcommit memory setting, but the change will not persist across reboots. To make it permanent, add vm.overcommit_memory = 1 to /etc/sysctl.conf:
+
+<code>
+sudo vim /etc/sysctl.conf
+
+vm.overcommit_memory = 1
+
+</code>
+
+==== Edit config.php for owncloud to use redis ====
+
+
+<code>
+'memcache.locking' => '\\OC\\Memcache\\Redis',
+  'redis' => 
+  array (
+    'host' => 'localhost',
+    'port' => 6379,
+  ),
+</code>

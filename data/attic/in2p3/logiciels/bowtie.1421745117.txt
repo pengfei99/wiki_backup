@@ -1,0 +1,42 @@
+====== Bowtie ======
+
+===== Informations =====
+
+  * **Version** : 1.0.0
+  * **Licence** : //Artistic License//
+  * **Page Web** : [[http://bowtie-bio.sourceforge.net/index.shtml]]
+  * **Description** : Bowtie is an ultrafast, memory-efficient short read aligner. It aligns short DNA sequences (reads) to the human genome at a rate of over 25 million 35-bp reads per hour. Bowtie indexes the genome with a Burrows-Wheeler index to keep its memory footprint small: typically about 2.2 GB for the human genome (2.9 GB for paired-end). 
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster/"
+wget "http://downloads.sourceforge.net/project/bowtie-bio/bowtie/1.0.0/bowtie-1.0.0-src.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fbowtie-bio%2Ffiles%2Fbowtie%2F1.0.0%2F&ts=1387550290&use_mirror=garr" -O bowtie-1.0.0-src.zip
+unzip bowtie-1.0.0-src.zip
+cd bowtie-1.0.0/
+make
+mkdir -p $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin
+cp bowtie $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin
+cp bowtie-* $SOFTWARE/apps/gcc-RedHat_4.4.7-3/bowtie/1.0.0/bin
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "An ultrafast memory-efficient short read aligner.\n"
+}
+
+set version "1.0.0"
+
+set gcc_version "RedHat_4.4.7-3"
+set bin_dir "/afs/in2p3.fr/throng/bioaster/apps/gcc-${gcc_version}/bowtie/${version}/bin"
+
+prepend-path PATH $bin_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 1.0.0 installée

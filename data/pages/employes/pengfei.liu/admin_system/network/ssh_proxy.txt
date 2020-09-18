@@ -1,0 +1,68 @@
+====== Use ssh proxy to connect to servers which is not reachable ======
+
+
+In this tutorial we will use the following scenario to illustrate how to enable communications between vlans which is not interconnected directly.
+
+The Sample Network Architecture (to understand routing)
+
+We have 3 vlans 10.69.3.*/24 (private vlan3 for user terminals), 134.158.37.*/24 (vlan1 for servers), 172.17.6.*/24 (vlan2 for servers). vlan3 can connect to the vlan1, but not the vlan2, and vlan1 can connect to the vlan2. But the users in vlan3 has to access servers in vlan2.
+
+To do so, we need to build a gateway server in vlan1, users in vlan3 connect to the gateway vlan1, the gateway in vlan1 redirect the connection to vlan2.
+
+Suppose user terminal is t1, it use login pliu to login, gateway server **g1** in vlan1 has IP address **134.158.37.11**, the destination server **d1** in vlan2 has IP address **172.17.6.15**
+
+===== Create account and allow access in g1 and d1 =====
+
+Do the following commands in both g1 and d1 
+ 
+<code>
+# Create a group for user, to allow ssh access
+groupadd -g 16888 UTEC06_Admin_System
+groupadd -g 1072 bioaster
+
+# create user account and add user group
+useradd pliu --uid 42029 --home /home/pliu --create-home --gid bioaster
+usermod -a -G UTEC06_Admin_System pliu
+
+# generate keypaire, if you don't have, if you have skip this
+ssh-keygen -t ecdsa
+# you can choose other crypto algo such as rsa
+
+# add generated public key in authorized_keys for ssh access
+cd ~
+mkdir .ssh
+vim authorized_keys
+
+# change the acl
+chmod 0644 authorized_key 
+
+# modify the default allowgroup in sshd_config
+cd /etc/ssh
+vim sshd_config
+# find the allowgroup line, add the group you allow after root
+# in our example, it looks like this
+AllowGroups root bioaster
+</code>
+
+Test the ssh connection from user terminal to g1 first, then form g1 to d1. If the test pass, we can start to config the client terminal
+
+===== Client ssh configuration =====
+
+<code>
+cd ~/.ssh
+vim config
+# add the following lines
+Host 172.17.6.* 
+    User pliu
+    PasswordAuthentication no 
+    IdentityFile ~/.ssh/id_rsa
+    IdentitiesOnly yes  
+    PubkeyAuthentication yes  
+    Protocol 2 
+    ForwardX11 no 
+    ForwardAgent no 
+    ProxyCommand ssh pliu@134.158.37.11 "nc %h %p"
+#the proxy command line will be interpreted when we do ssh pliu@172.17.6.15 in client terminal
+# The result is Executing proxy command: exec ssh pliu@134.158.37.11 "nc 172.17.6.15 22"
+</code>
+

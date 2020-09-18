@@ -1,0 +1,49 @@
+<a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">application</span>.<span class="me1">example</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">types</span>.<span class="br0">&#123;</span>IntegerType, StringType, StructField, StructType<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="br0">&#123;</span>DataFrame, SparkSession<span class="br0">&#125;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> TaobaoSales <span class="br0">&#123;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span>Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.
+    <span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>.
+    <span class="me1">appName</span><span class="br0">&#40;</span><span class="st0">&quot;TaobaoSales&quot;</span><span class="br0">&#41;</span>.
+    <span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span>getDFFromDB<span class="br0">&#40;</span>spark<span class="br0">&#41;</span>
+  <span class="coMULTI">/*val filePath=&quot;file:///DATA/data_set/spark/taobao_data_set/small_user_log.csv&quot;
+  val userLogDF=getDFFromCSV(spark,filePath)*/</span>
+  <span class="co1">//userLogDF.show(5)</span>
+  userLogDF.<span class="me1">write</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;parquet&quot;</span><span class="br0">&#41;</span>.<span class="me1">save</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/taobao.parquet&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getDFFromDB<span class="br0">&#40;</span>spark <span class="sy0">:</span> SparkSession<span class="br0">&#41;</span><span class="sy0">:</span> DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span>spark.<span class="me1">read</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;jdbc&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;url&quot;</span>, <span class="st0">&quot;jdbc:postgresql://127.0.0.1:5432/dbtaobao&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;driver&quot;</span>,<span class="st0">&quot;org.postgresql.Driver&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;dbtable&quot;</span>, <span class="st0">&quot;user_log&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;user&quot;</span>, <span class="st0">&quot;pliu&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;password&quot;</span>, <span class="st0">&quot;Liua1983&quot;</span><span class="br0">&#41;</span>.<span class="me1">load</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> userLogDF
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getDFFromCSV<span class="br0">&#40;</span>spark<span class="sy0">:</span>SparkSession,filePath<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogSchema <span class="sy0">=</span> StructType<span class="br0">&#40;</span>Array<span class="br0">&#40;</span>
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;user_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;item_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;cat_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;merchant_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;brand_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;month&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;day&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;action&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;age_range&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;gender&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;province&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>
+    <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span> spark.<span class="me1">read</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;csv&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;header&quot;</span>,<span class="st0">&quot;false&quot;</span><span class="br0">&#41;</span>.<span class="me1">schema</span><span class="br0">&#40;</span>userLogSchema<span class="br0">&#41;</span>.<span class="me1">load</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> userLogDF
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span>

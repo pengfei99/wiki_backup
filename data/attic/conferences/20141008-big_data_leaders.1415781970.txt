@@ -1,0 +1,68 @@
+====== Big Data Leader Forum ======
+
+
+  * **Site Web :** http://www.bigdataleadersforum.com/
+  * **Participants :** Nicolas SAPAY et ~150 autres personnes
+  * **Lieu :** Washington DC, USA
+  * **Data :** 8-9 Oct 2014
+  * **Présentation / Poster :** Non
+  * **Programme :** http://www.bigdataleadersforum.com/files/phacilitate_big_data_leaders_forum_2014__draft_agenda_01.10.pdf
+
+====== Thématiques ======
+  - Turning theory into action and value for all stakeholders
+  - Analytics strategy and toolbox
+  - Real world evidence : applying big data approaches throughout the product life cycle (not cover)
+  - Which therapeutic areas lend themselves mare readily to big data applications and how might others learn from those experiences ?
+  - Important data sources : what questions should budget holders ask to determine quality, relevance and value of EHRs, etc? 
+  - How can biotechz and SMEs participate in the big data revolution ?
+  - Real world evidence applying big data approaches throughout the product life cycle. 
+
+====== Résumé ======
+
+Ce forum aborde le problème du « big data » dans les compagnies pharmaceutiques (Roche, Sanofi, Pfizer, Janssen, J & J, Merck) dans le cas des études cliniques de phase 1 à 3, ou du suivi de produits (médicament ou dispositif médical). Les institutionnels (FDA, CPRD, ASCO), les associations de patients (Patients like me, Fight colorectal cancer) et les PME impliquées dans la médecine personnalisée ([[http://www.biovest.com/|Biovest International]], [[http://www.opexatherapeutics.com/|Opexa]]) étaient également présents. L’audience était composée des 2 groupes :
+  - Une majorité de routards des études cliniques. Ils ne sont pas des « data scientists » mais comprennent les enjeux et les difficultés du domaine.
+  - Quelques « data scientists » issus des grands groupes (Sanofi/Brian ELLERMAN, Merck/Jason JOHNSON, AstraZenaca/Tom DEFAY), quelques PME innovantes dans le domaine ([[http://www.cambridgesemantics.com/|Cambridge Semantics]], [[http://bioxcel.com/|BioXcel]]) et un « data scientist » d’IBM (Gustavo STOLOVITZKY).
+
+Trois conclusions ont émergées des discussions :
+  - L’expression « big data » est à proscrire. On parle de « data analytics » ou de « data science ».
+  - Les compagnies ont un grand intérêt sur l’utilisation de données du monde réel (« real world data ») dans leurs études. Il s’agit des données issues des systèmes de santés (sécurité sociale, hôpitaux, réseaux de cancérologues, etc.) qui suivent les patients, des patients eux-mêmes, des appareils médicaux ou des applications pour téléphones portables.
+  - Mais les grands groupes hésitent encore à investir massivement dans l’analyse intensive de données, faute de visibilité sur le retour sur investissement. À l’heure actuelle, il ne semble pas que cela amène à une amélioration significative des coûts de R&D. Cependant, la présentation de Jason JOHNSON (Merck) montre une tendance favorable qui pourrait se concrétiser dans les années à venir.
+
+En fait, la vraie attente des grands groupes et de diminuer le coût des études cliniques en sélectionnant mieux les patients à partir de leurs données personnelles, ou en augmentant le nombre de données disponibles par patients pour faire des lots de patients. L’idée est de faire des échantillons de plus petite taille, mais mieux représentatifs de la population réelle. Il est à noter que la recherche de biomarqueurs génétiques est plutôt décevante jusqu’à présent. Les compagnies cherchent plutôt des marqueurs dans les données réelles que dans les données génomiques, car les sources de données sont plus abondantes et moins coûteuses. 
+
+====== Focus sur les « data scientists » ======
+
+Des entrepôts ont été développés dans plusieurs compagnies (Roche avec Glide, Pfizer avec CAL, SANOFI, Merck). La difficulté est souvent de reprendre l’existant plutôt que d’intégrer des nouvelles études. Tous sont d’accord pour dire que le problème du « big data » dans les « big pharma » n’est pas une question de volume ou de vélocité, mais une question de variété des sources et da complexité des données. Pour information, Roche estime que l’ensemble de ses études cliniques représente environ 200 To, ce qui est tout à fait gérable. Tous sont également d’accord que le verrou technologique actuel est la curation des données. Ce processus doit être totalement intégré à l’entreposage des données. 
+Il est à noter que Jason JOHNSON (Merck) a développé un système particulièrement efficace de « stewardship » des données. Roche semble aussi très avancé sur le sujet ainsi que Pfizer. Le système de Pfizer (CAL) est particulièrement performant. Il gère plus de 500 essais par ans et 300 partenariats externes. Pfizer semble particulièrement ouvert au partage des données. 
+Parmi les entreprises innovantes, le système développé par Cambridge Semantics est impressionnant, car capable d’intégrer n’importe quelle collection de données dans n’importe quel format. Leur solution est basée sur les technologies du Web sémantique ([[http://fr.wikipedia.org/wiki/Resource_Description_Framework|Resource Description Framework]], [[http://en.wikipedia.org/wiki/Graph_database|base de donnée orientée graphe]], [[http://en.wikipedia.org/wiki/SPARQL|SPARQL]], [[http://en.wikipedia.org/wiki/Web_Ontology_Language|OWL]]), le tout en respectant les normes du [[http://www.w3.org/|W3C]].
+
+Il est à noter que les PME et les grands groupes ont des difficultés à recruter des « data scientists ». La plupart sont embauchés par Google, Facebook, etc. Les « data scientist » présents sont issus de la bio-informatique, le la chimio-informatique et de la modélisation moléculaire.  
+
+Pour finir, il est important de parler d’IBM. IBM est impliqué dans le computing challenge [[http://www.the-dream-project.org/|DREAM]] qui évalue chaque année les meilleurs méthodes de prédiction bio-informatique à partir de données biologiques réelles.  
+====== En conclusion ======
+
+Les compagnies pharmaceutiques sont déjà très avancées dans l’analyse massive de données de médicales. Les institutionnels (FDA, CISCO, CPRD) ont de leur côté des systèmes particulièrement performants de collecte et de partage de données :
+  * La FDA a lancé l'initiative [[https://open.fda.gov/|OpenFDA]] pour rendre les données publiques plus accessibles, notamment grâce à des API [[http://www.elasticsearch.org/|ElasticSearch]].
+  * Le [[http://www.cprd.com/|CPRD]] a développé [[http://www.dataline.co.uk/portfolio/cprd-trialviz/|TrialViz]], un système dynamique de sélection de cohortes à partir des patients suivis par le système de santé britannique, grâce à un partenariat avec [[http://www.dataline.co.uk/|Dataline]] 
+  * L'[[http://www.asco.org/|ASCO]] a développé [[http://www.instituteforquality.org/cancerlinq|CancerLinQ]], un système expert pour accompagner le diagnostic et le traitement du cancer.  
+
+Les « data scientists » voient tous l’intérêt de l’Open Source, du partage de données, mais peine à convaincre les décideurs de changer de paradigme. Les développements se font essentiellement en interne, avec comme difficulté majeure la reprise de l’existant. Il s’agit en effet de charger des années d’études cliniques générées bien avant l’apparition d’entrepôts de données. 
+
+====== Documents ======
+Tous les déocuments sont protégés pas ce mot de passe : ''XXX'' (3 fois la lettre ''X'' en majuscule)
+  * {{:conferences:20141008-big_data_leaders:agenda_for_big_data_leaders_forum_2014.pdf|agenda_for_big_data_leaders_forum_2014.pdf}} : Agenda de la conférence
+  * {{:conferences:20141008-big_data_leaders:1.04_taha_kasshout_protected.pdf|1.04_taha_kasshout_protected.pdf}} : Présentation de Taha KASS-HOUT, FDA
+  * {{:conferences:20141008-big_data_leaders:1.1_juergen_hammer_protected.pdf|1.1_juergen_hammer_protected.pdf}} : Présentation de Juergen HAMMER, Roche
+  * {{:conferences:20141008-big_data_leaders:1.2_richard_schilsky_protected.pdf|1.2_richard_schilsky_protected.pdf}} : Présentation de Richard Schilsky, ASCO
+  * {{:conferences:20141008-big_data_leaders:1.17_ben_szekely_protected.pdf|1.17_ben_szekely_protected.pdf}} : Présentationd de Ben SZEKELY, Cambridge Semantics
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}
+  * {{:conferences:20141008-big_data_leaders:|}}

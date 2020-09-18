@@ -1,0 +1,29 @@
+====== Third normal form ======
+
+Third normal form (3NF) is a normal form that is used in normalizing a database design to reduce the duplication of data and ensure referential integrity by ensuring that (1) the entity is in second normal form, and (2) all the attributes in a table are determined only by the candidate keys of that relation and not by any non-prime attributes. 3NF was designed to improve database processing while minimizing storage costs. 3NF data modeling was ideal for online transaction processing (OLTP) applications with heavy order entry type of needs.
+
+
+The third normal form (3NF) is a normal form used in database normalization. 3NF was originally defined by E.F. Codd in 1971.[2] Codd's definition states that a table is in 3NF if and only if both of the following conditions hold:
+
+  * The relation R (table) is in second normal form (2NF)
+  * Every non-prime attribute of R is non-transitively dependent on every key of R. (In a simple way, all candidate keys only depend on the primary key)
+
+===== Example 1 =====
+
+For example, the following table is 2nf, but not 3nf. Because of the total = unit_price * quantity, which means the Total depends not only the order number but also the Unit Price and Quantity.
+
+^Order Number ^Customer Name ^Unit Price ^Quantity ^Total^
+|1000	|David	|$35.00	|3	|$105.00|
+|1001	|Jim	|$25.00	|2	|$50.00|
+|1002	|Bob	|$25.00	|3	|$75.00|
+
+To transform this table into 3nf, We need to delete the Total column
+
+^Order Number ^Customer Name ^Unit Price ^Quantity ^
+|1000	|David	|$35.00	|3	|
+|1001	|Jim	|$25.00	|2	|
+|1002	|Bob	|$25.00	|3	|
+
+
+
+ 

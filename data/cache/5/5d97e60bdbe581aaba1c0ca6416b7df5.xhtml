@@ -1,0 +1,113 @@
+<pre class="code">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9LmzW/Zhr3yLsCmBnouIFmS3I408t+zb+3dokmIke4TDuaTNVWUIf7o6TxTfZ4KBYB5ZhcZDkfNOyLvXD/mUpw6woYksfnZIeJCP3TIwA6y8Kr1oMk1cMrbYIUwpkeq7kKtrciGFK+4DXE5JLEvwB0mJnv5QSQLnCFjoqhBtl+m4/oLaS7xJIYhVGnBg0rDUShOjsRDVll9pRF1ThKCiRqgaT/y8XZXZ/h92cS3ydWMtDNrHGKudonzwtGdxV1CQ2QW/0GfA6l5Pq1b6aegpAHTid3MhBOoGx/LNpDZ1J6A15nWc5GLpX75rEZ3KvdI3QRw3n1GOmz1BwIgMafGxX cauchard@Jack2</pre>
+
+<h2 class="sectionedit1" id="fixed_bug_eclipse_kepler_apres_maj_sl6">Fixed Bug Eclipse (Kepler) après MàJ SL6</h2>
+<div class="level2">
+<pre class="code">sudo vi /opt/eclipse/eclipse.ini
+Add &quot;-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false&quot;</pre>
+
+</div>
+<!-- EDIT1 SECTION "Fixed Bug Eclipse (Kepler) après MàJ SL6" [412-571] -->
+<h2 class="sectionedit2" id="building_des_genomes_pour_bowtie2">Building des genomes pour Bowtie2</h2>
+<div class="level2">
+<pre class="code">/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build &lt;FASTA&gt; &lt;NOM&gt;
+Exemple :
+/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build hg19.fa hg19.fa</pre>
+
+</div>
+<!-- EDIT2 SECTION "Building des genomes pour Bowtie2" [572-778] -->
+<h2 class="sectionedit3" id="compilation_des_scripts_python">Compilation des scripts Python</h2>
+<div class="level2">
+<pre class="code">python -m compileall /home/cauchard/Sources/Bioaster/</pre>
+
+</div>
+<!-- EDIT3 SECTION "Compilation des scripts Python" [779-891] -->
+<h2 class="sectionedit4" id="pour_desactiver_selinux">Pour désactiver SELINUX</h2>
+<div class="level2">
+<pre class="code">Check status : sestatus
+
+Dans le fichier /etc/sysconfig/selinux
+Positionner selinux=disabled au lieu de selinux=enforcing
+Rebooter</pre>
+
+</div>
+<!-- EDIT4 SECTION "Pour désactiver SELINUX" [892-1074] -->
+<h2 class="sectionedit5" id="pour_installer_librairie_reportlab_python">Pour installer librairie reportlab Python</h2>
+<div class="level2">
+<pre class="code">easy_install reportlab</pre>
+
+</div>
+<!-- EDIT5 SECTION "Pour installer librairie reportlab Python" [1075-1165] -->
+<h2 class="sectionedit6" id="pour_re-installer_vm_tools">Pour re-installer VM Tools</h2>
+<div class="level2">
+<pre class="code">sudo vmware-config-tools.pl</pre>
+
+<p>
+Si message “Unable to connect to Upstart: Failed to connect to socket /com/ubuntu/upstart: Connection refused”:
+</p>
+<pre class="code">sudo dpkg-divert --local --rename --add /sbin/initctl
+ln -s /bin/true /sbin/initctl</pre>
+
+</div>
+<!-- EDIT6 SECTION "Pour re-installer VM Tools" [1166-1455] -->
+<h2 class="sectionedit7" id="gitmerge_head_existsfusion_manuelle">Git : &quot;MERGE_HEAD exists&quot; / Fusion manuelle</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li">  Undo the merge and pull again.</div>
+</li>
+</ol>
+
+<p>
+To undo a merge:
+</p>
+<pre class="code">git merge --abort [Since git version 1.7.4]
+
+git reset --merge [prior git versions]</pre>
+<ol>
+<li class="level1"><div class="li"> Resolve the conflict.</div>
+</li>
+</ol>
+<ol>
+<li class="level1"><div class="li"> Don&#039;t forget to add and commit the merge.</div>
+</li>
+</ol>
+<ol>
+<li class="level1"><div class="li"> <strong>git pull</strong> now should work fine.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT7 SECTION "Git : MERGE_HEAD exists / Fusion manuelle" [1456-1778] -->
+<h2 class="sectionedit8" id="transfert_owncloud_pour_adama">Transfert OwnCloud pour Adama</h2>
+<div class="level2">
+<pre class="code">rsync -avP --stats --exclude=UTEC07 /mnt/gpfs/pt7/Workspace/* /mnt/gpfs/UsersData/Project_admin/files/</pre>
+
+</div>
+<!-- EDIT8 SECTION "Transfert OwnCloud pour Adama" [1779-1938] -->
+<h2 class="sectionedit9" id="changer_shell_par_defaut_d_un_user">Changer Shell par défaut d&#039;un user</h2>
+<div class="level2">
+<pre class="code">chsh -s /bin/bash USER</pre>
+
+</div>
+<!-- EDIT9 SECTION "Changer Shell par défaut d'un user" [1939-2024] -->
+<h2 class="sectionedit10" id="instancier_vm_centos7_sur_vmware">Instancier VM Centos7 sur VMware</h2>
+<div class="level2">
+
+<p>
+<a href="/noe" class="wikilink1" title="noe">Lien vers Noe</a>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Instancier VM Centos7 sur VMware" [2025-2094] -->
+<h2 class="sectionedit11" id="monter_lecteur_m_sur_ubuntu">Monter lecteur M sur Ubuntu</h2>
+<div class="level2">
+<pre class="code">sudo apt-get install cifs-utils
+sudo mount -t cifs //10.69.2.27/Data /mnt/M_share -o user=USER_AD,password=PASSWD_AD</pre>
+
+</div>
+<!-- EDIT11 SECTION "Monter lecteur M sur Ubuntu" [2095-2266] -->
+<h2 class="sectionedit12" id="ajout_group_freenas_pour_vm">Ajout group Freenas pour VM</h2>
+<div class="level2">
+<pre class="code">sudo usermod -a -G 1002 cauchard</pre>
+
+</div>
+<!-- EDIT12 SECTION "Ajout group Freenas pour VM" [2267-] -->

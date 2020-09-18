@@ -1,0 +1,408 @@
+
+<h1 class="sectionedit1" id="project_realism">Project Realism</h1>
+<div class="level1">
+
+<p>
+transmart installation and data loading : <a href="https://wiki.bioaster.org/bioinformatique/transmart" class="urlextern" title="https://wiki.bioaster.org/bioinformatique/transmart"  rel="nofollow">https://wiki.bioaster.org/bioinformatique/transmart</a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Project Realism" [1-126] -->
+<h1 class="sectionedit2" id="project_metaseq">Project metaseq</h1>
+<div class="level1">
+
+<p>
+airflow guide: <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/af_tutorial" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/af_tutorial"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/af_tutorial</a>
+</p>
+
+<p>
+airflow 16s pipline implementation : <a href="https://gitlab.in2p3.fr/bioaster/metaseq-pipelines/tree/airflow" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/metaseq-pipelines/tree/airflow"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/metaseq-pipelines/tree/airflow</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Project metaseq" [127-347] -->
+<h1 class="sectionedit3" id="project_thor">Project THOR</h1>
+<div class="level1">
+
+<p>
+Possible candidate : IRODS (Dev server on 10.70.3.38)
+</p>
+
+<p>
+irods installation guide : <a href="https://wiki.bioaster.org/informatique/data_management/irods" class="urlextern" title="https://wiki.bioaster.org/informatique/data_management/irods"  rel="nofollow">https://wiki.bioaster.org/informatique/data_management/irods</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Project THOR" [348-519] -->
+<h1 class="sectionedit4" id="data_science">Data Science</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/data_science" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/data_science"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/data_science</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Data Science" [520-621] -->
+<h1 class="sectionedit5" id="grid_computing_and_matlab_support">Grid computing and matlab support</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/grid_computing" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/grid_computing"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/grid_computing</a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Grid computing and matlab support" [622-745] -->
+<h1 class="sectionedit6" id="projet_passport">Projet PASSPORT</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT6 SECTION "Projet PASSPORT" [746-775] -->
+<h2 class="sectionedit7" id="authentication_service">Authentication service</h2>
+<div class="level2">
+
+<p>
+<strong>IDentity provider</strong>
+</p>
+<ol>
+<li class="level1"><div class="li"> Shibboleth (auth-shib.bioaster.org)</div>
+</li>
+<li class="level1"><div class="li"> OPenldap (10.70.3.118)</div>
+</li>
+<li class="level1"><div class="li"> AD</div>
+</li>
+</ol>
+
+<p>
+<strong>admin dashboard</strong>
+</p>
+<ol>
+<li class="level1"><div class="li"> Bioaster User Management Portal (bump.bioaster.org)</div>
+</li>
+<li class="level1"><div class="li"> Admin guide <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/bump_admin_guide" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/bump_admin_guide"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/bump_admin_guide</a></div>
+</li>
+</ol>
+
+<p>
+<strong>Authentication Client</strong>
+</p>
+
+<p>
+sssd-pam-ldap dev VM (10.70.3.117)
+</p>
+
+<p>
+sssd cache user group, so when use change group in ldap, you don&#039;t have the change in your vm right away.
+</p>
+
+<p>
+Admin user needs to refresh sssd cache, if end user wants to see immediately the change.
+</p>
+
+<p>
+<code>sudo sss_cache -E</code>
+</p>
+
+<p>
+To have to change right away, you need to clear sssd cache, and user need to log out and re-login to see the difference.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Authentication service" [776-1483] -->
+<h2 class="sectionedit8" id="authorization_service">Authorization service</h2>
+<div class="level2">
+
+<p>
+<strong>PDP,PIP</strong>
+</p>
+
+<p>
+WSO2-IS 5.3.0 (<a href="https://acc-wso.bioaster.org:9443/carbon/" class="urlextern" title="https://acc-wso.bioaster.org:9443/carbon/"  rel="nofollow">https://acc-wso.bioaster.org:9443/carbon/</a>)
+</p>
+
+<p>
+Doc for wso2 server installation <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/wso2_is_server_install" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/wso2_is_server_install"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/wso2_is_server_install</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Authorization service" [1484-1712] -->
+<h2 class="sectionedit9" id="java_tech_doc">Java tech doc</h2>
+<div class="level2">
+
+<p>
+Java string template : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java/string_template" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java/string_template"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java/string_template</a>
+</p>
+
+<p>
+Java web service : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java_ws" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java_ws"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/java_ws</a>
+</p>
+
+<p>
+Install tomcat7 on centos7 : <a href="https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum" class="urlextern" title="https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum"  rel="nofollow">https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum</a>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Java tech doc" [1713-2061] -->
+<h2 class="sectionedit10" id="http_and_https_proxy">http and https proxy</h2>
+<div class="level2">
+
+<p>
+<code>export http_proxy=<a href="http://134.158.37.239:3128/" class="urlextern" title="http://134.158.37.239:3128/"  rel="nofollow">http://134.158.37.239:3128/</a></code>
+</p>
+
+<p>
+<code>export https_proxy=<a href="https://134.158.37.239:3128/" class="urlextern" title="https://134.158.37.239:3128/"  rel="nofollow">https://134.158.37.239:3128/</a></code>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "http and https proxy" [2062-2199] -->
+<h1 class="sectionedit11" id="install_openldap_and_config_nss-pam-ldapd_for_centos_7">Install openldap and config nss-pam-ldapd for centos 7</h1>
+<div class="level1">
+
+<p>
+Document of how to install openldap on centos 7: <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_openldap" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_openldap"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_openldap</a>
+Document of Ldap server architecture : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/openldap_architecture" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/openldap_architecture"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/openldap_architecture</a>
+Document of how to config nss-pam-ldapd and nscd, pam, sshd for ldap authentication on centos7 : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/configure_nss_pam_ldapd" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/configure_nss_pam_ldapd"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/configure_nss_pam_ldapd</a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Install openldap and config nss-pam-ldapd for centos 7" [2200-2697] -->
+<h1 class="sectionedit12" id="dns_migration">DNS Migration</h1>
+<div class="level1">
+
+<p>
+dns migration report : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/dns_migration" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/dns_migration"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/dns_migration</a>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "DNS Migration" [2698-2822] -->
+<h1 class="sectionedit13" id="httpd_tomcat7_for_war_deployment">Httpd tomcat7 for war deployment</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/httpd_basic_config" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/httpd_basic_config"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/httpd_basic_config</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Httpd tomcat7 for war deployment" [2823-2950] -->
+<h1 class="sectionedit14" id="data_transfer">Data transfer</h1>
+<div class="level1">
+
+<p>
+ rsync -avzhe ssh –progress Data_analyze pliu@10.70.3.18:/tmp/.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Data transfer" [2951-3045] -->
+<h1 class="sectionedit15" id="run_django_with_apache_mode_wsgi">Run django with apache mode_wsgi</h1>
+<div class="level1">
+
+<p>
+Build python with share_lib: <a href="/employes/pengfei.liu_bioaster.org/install_python_3.5_without_pyenv" class="wikilink1" title="employes:pengfei.liu_bioaster.org:install_python_3.5_without_pyenv">Install python without using pyenv</a>
+</p>
+
+<p>
+Compile wsgi : <a href="/employes/pengfei.liu_bioaster.org/django_wsgi" class="wikilink1" title="employes:pengfei.liu_bioaster.org:django_wsgi">Run django python web app with apache</a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Run django with apache mode_wsgi" [3046-3334] -->
+<h1 class="sectionedit16" id="postgresql_database_on_centos_7">Postgresql Database on centos 7</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&amp;#configure_postgresql" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&amp;#configure_postgresql"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos_postgres95?&amp;#configure_postgresql</a>
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Postgresql Database on centos 7" [3335-3483] -->
+<h1 class="sectionedit17" id="firewall_config_for_psql">Firewall config for psql</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos7_firewalld?&amp;#other_usefull_command" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos7_firewalld?&amp;#other_usefull_command"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/centos7_firewalld?&amp;#other_usefull_command</a>
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Firewall config for psql" [3484-3625] -->
+<h1 class="sectionedit18" id="shibbolet">Shibbolet</h1>
+<div class="level1">
+
+<p>
+idp 3.3.0: 10.70.3.18 (/opt/shibbolet, /opt/jetty)
+</p>
+
+<p>
+idp 2.4.4: 10.70.3.11 (/opt/shibbolet, et /opt/jetty)
+</p>
+
+<p>
+sciforma dev : 10.69.2.31 (shib access)
+</p>
+
+<p>
+sciforma test : 10.69.2.41 (postgres access)
+</p>
+
+<p>
+sp_noe: 10.70.3.13
+</p>
+
+<p>
+Shibboleth SP install and configuration doc: <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibbolethsp" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibbolethsp"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibbolethsp</a>
+</p>
+
+<p>
+Shibboleth SP install and configuration playbook : <a href="https://gitlab.in2p3.fr/bioaster/Shibboleth" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/Shibboleth"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/Shibboleth</a>
+</p>
+
+<p>
+Shibboleth IDP 2.4.4 install and configuration doc: <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp</a>
+</p>
+
+<p>
+Shibboleth IDP 3.3.0 install and configuration doc:
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp33" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp33"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/install_shibboleth_idp33</a>
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Shibbolet" [3626-4364] -->
+<h1 class="sectionedit19" id="procedure_for_asking_singed_certificate">Procedure for asking singed certificate</h1>
+<div class="level1">
+
+<p>
+<a href="https://wiki.bioaster.org/ut6/procedure_certificate_geotrust" class="urlextern" title="https://wiki.bioaster.org/ut6/procedure_certificate_geotrust"  rel="nofollow">https://wiki.bioaster.org/ut6/procedure_certificate_geotrust</a>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "Procedure for asking singed certificate" [4365-4481] -->
+<h1 class="sectionedit20" id="create_vm_for_bio">Create vm for bio</h1>
+<div class="level1">
+
+<p>
+<strong>Fabien rol</strong>
+</p>
+
+<p>
+VM Linux : <a href="https://wiki.bioaster.org/vms/vmware/cclincodirap02" class="urlextern" title="https://wiki.bioaster.org/vms/vmware/cclincodirap02"  rel="nofollow">https://wiki.bioaster.org/vms/vmware/cclincodirap02</a>
+</p>
+
+<p>
+<strong>Sophie Dixneuf</strong>
+</p>
+
+<p>
+VM windows: <a href="https://wiki.bioaster.org/vms/vmware/ccwincodirap03" class="urlextern" title="https://wiki.bioaster.org/vms/vmware/ccwincodirap03"  rel="nofollow">https://wiki.bioaster.org/vms/vmware/ccwincodirap03</a>
+</p>
+
+<p>
+<strong>Vedrine Christophe</strong>
+</p>
+
+<p>
+VM windows: <a href="https://wiki.bioaster.org/vms/vmware/ccwinutec03p01" class="urlextern" title="https://wiki.bioaster.org/vms/vmware/ccwinutec03p01"  rel="nofollow">https://wiki.bioaster.org/vms/vmware/ccwinutec03p01</a>
+</p>
+
+<p>
+Install matlab on centos 7
+</p>
+
+<p>
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/matlab" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/matlab"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/matlab</a>
+</p>
+
+</div>
+<!-- EDIT20 SECTION "Create vm for bio" [4482-4867] -->
+<h1 class="sectionedit21" id="sop_for_creating_vm">sop for creating vm</h1>
+<div class="level1">
+
+<p>
+Procedure for creating vm : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/procedure_create_vm" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/procedure_create_vm"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/procedure_create_vm</a>
+</p>
+
+<p>
+Useful command:
+<a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/vm_management" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/vm_management"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/vm_management</a>
+</p>
+
+<p>
+Playbook for creating vm in openstack : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ansible_cloudmanagement" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ansible_cloudmanagement"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ansible_cloudmanagement</a>
+</p>
+
+</div>
+<!-- EDIT21 SECTION "sop for creating vm" [4868-5228] -->
+<h1 class="sectionedit22" id="core_service">Core service</h1>
+<div class="level1">
+
+<p>
+Synchronize server time : <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ntp_setup" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ntp_setup"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/ntp_setup</a>
+</p>
+
+</div>
+<!-- EDIT22 SECTION "Core service" [5229-5352] -->
+<h1 class="sectionedit23" id="mid_term_objectives">Mid term Objectives</h1>
+<div class="level1">
+<ol>
+<li class="level1"><div class="li"> Be able to replace Pierre and Audrey when they are off duty.</div>
+</li>
+<li class="level1"><div class="li"> Continue passport project.</div>
+</li>
+<li class="level1"><div class="li"> Migration from freeBSD to centos7 (More details in redmine : <a href="https://devtools.bioaster.org/redmine/projects/migration-of-vm-from-free-bsd-to-centos-7" class="urlextern" title="https://devtools.bioaster.org/redmine/projects/migration-of-vm-from-free-bsd-to-centos-7"  rel="nofollow">https://devtools.bioaster.org/redmine/projects/migration-of-vm-from-free-bsd-to-centos-7</a>)</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT23 SECTION "Mid term Objectives" [5353-5640] -->
+<h1 class="sectionedit24" id="short_term_objectives">Short term Objectives</h1>
+<div class="level1">
+
+<p>
+For pierre replacement
+</p>
+<ol>
+<li class="level1"><div class="li"> Get account for connecting and managing cloud (openstack and vmware)</div>
+</li>
+<li class="level1"><div class="li"> Be able to creat VM by following the SOP and good pratice of UTEC 6.</div>
+</li>
+<li class="level1"><div class="li"> Be able to manage and maintain VM in cloud(e.g. resize, run playbook, etc.)</div>
+</li>
+<li class="level1"><div class="li"> With green light of Guillaume, develop a web interface for managing vm and playbook.</div>
+</li>
+</ol>
+
+<p>
+    The idea came from Pierre, use ansible dynamic inventory to get all vm info, send them to foreman to make the web interface. Use the foreman ansible plugin to run playbook on all vms.
+</p>
+
+<p>
+For Audrey replacement
+</p>
+<ol>
+<li class="level1"><div class="li">Get account for connectin owncloud, (Owncloud management guide <a href="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud" class="urlextern" title="https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud"  rel="nofollow">https://wiki.bioaster.org/employes/pengfei.liu_bioaster.org/owncloud</a>)</div>
+</li>
+<li class="level1"><div class="li">Learn the basic of bio-data management (e.g. SOP, good practice).    </div>
+</li>
+<li class="level1"><div class="li">Be able to creat dir-tree for projects and utecs for data storage</div>
+</li>
+<li class="level1"><div class="li">Find a solution for large file upload within owncloud, if impossible, search better file managing solutions (Possible candiate: seafile, pydio)</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT24 SECTION "Short term Objectives" [5641-6656] -->
+<h1 class="sectionedit25" id="long_term_objectives">Long term Objectives</h1>
+<div class="level1">
+
+<p>
+To be determined with Guillaume!!!
+</p>
+<ul>
+<li class="level1"><div class="li"> Big data infra for bio data analysis (machine learning, etc.)</div>
+</li>
+</ul>
+
+<p>
+Formatin I want to do in 2017 <a href="http://www.orsys.fr/formation-technologies-big-data.asp" class="urlextern" title="http://www.orsys.fr/formation-technologies-big-data.asp"  rel="nofollow">http://www.orsys.fr/formation-technologies-big-data.asp</a>
+</p>
+
+</div>
+<!-- EDIT25 SECTION "Long term Objectives" [6657-] -->

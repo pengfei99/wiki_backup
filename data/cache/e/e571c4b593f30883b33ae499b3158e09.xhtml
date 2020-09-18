@@ -1,0 +1,63 @@
+
+<h1 class="sectionedit1" id="install_anaconda">Install anaconda</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install anaconda&quot;,&quot;hid&quot;:&quot;install_anaconda&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-32&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Anaconda is the most popular python data science and machine learning platform, used for large-scale data processing, predictive analytics, and scientific computing. Anaconda distribution ships with more than 1,000 data packages, the conda command-line tool and with a desktop graphical user interface called Anaconda Navigator.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;33-388&quot;} -->
+<h3 class="sectionedit3" id="anaconda_vs_pip">Anaconda vs Pip</h3>
+<div class="level3">
+
+<p>
+Having been involved in the python world for so long, we are all aware of pip, easy_install, and virtualenv, but these tools did not meet all of our specific requirements. The main problem is that they are focused around Python, neglecting non-Python library dependencies, such as HDF5, MKL, LLVM, etc., which do not have a setup.py in their source code and also do not install files into Python’s site-packages directory.
+</p>
+
+<p>
+So Conda is a packaging tool and installer that aims to do more than what pip does; handle library dependencies outside of the Python packages as well as the Python packages themselves. Conda also creates a virtual environment, like virtualenv does.
+</p>
+
+<p>
+Because Conda introduces a new packaging format, you cannot use pip and Conda interchangeably;  pip cannot install the Conda package format. You can use the two tools side by side (by installing pip with conda install pip) but they do not interoperate either.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Anaconda vs Pip&quot;,&quot;hid&quot;:&quot;anaconda_vs_pip&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;389-1354&quot;} -->
+<h2 class="sectionedit4" id="step1_get_the_conda_installer">Step1. Get the conda installer</h2>
+<div class="level2">
+
+<p>
+You can get all available conda version at <a href="https://www.anaconda.com/distribution/#download-section" class="urlextern" title="https://www.anaconda.com/distribution/#download-section" rel="nofollow">https://www.anaconda.com/distribution/#download-section</a>. In this tutorial we choose the current latest version Anaconda3-2018.12. The following code will download the installer 
+</p>
+<pre class="code">cd /tmp
+curl -O https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
+
+# check the script checksum
+sha256sum Anaconda3-2018.12-Linux-x86_64.sh 
+1019d0857e5865f8a6861eaf15bfe535b87e92b72ce4f531000dc672be7fce00  Anaconda3-2018.12-Linux-x86_64.sh
+
+# compare the above checksums with the checksum of the anaconda web site </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step1. Get the conda installer&quot;,&quot;hid&quot;:&quot;step1_get_the_conda_installer&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1355-1969&quot;} -->
+<h2 class="sectionedit5" id="step2_run_the_anaconda_installer">Step2. Run the anaconda installer</h2>
+<div class="level2">
+
+<p>
+Before you run the installer, you need to know, anaconda will download and install a python 3.7.0 which will you overwrite all your python3.7 installation.
+</p>
+
+<p>
+Anaconda installer needs some system dependencies to do the install, install the following dependencies
+</p>
+<pre class="code">yum install -y bzip2 </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Step2. Run the anaconda installer&quot;,&quot;hid&quot;:&quot;step2_run_the_anaconda_installer&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1970-&quot;} -->

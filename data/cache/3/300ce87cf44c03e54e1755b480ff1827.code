@@ -1,0 +1,10 @@
+$ aptitude update
+$ aptitude dist-upgrade
+$ aptitude install --without-recommends sudo vim
+$ adduser bioaster sudo
+$ locale-gen en_GB.UTF-8
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail &quot;root&quot;;

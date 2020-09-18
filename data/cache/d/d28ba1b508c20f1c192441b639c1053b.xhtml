@@ -1,0 +1,100 @@
+
+<h1 class="sectionedit1" id="gnu_bazaar">GNU Bazaar</h1>
+<div class="level1">
+
+<p>
+<strong>GNU Bazaar</strong>, abrégé <em><strong>bzr</strong></em>, est un outil de versionnement qui permet de garder une trace de toutes les modifications apportées à un ensemble de fichiers. Ce <a href="https://fr.wikipedia.org/wiki/Gestion_de_versions" class="urlextern" title="https://fr.wikipedia.org/wiki/Gestion_de_versions" rel="nofollow">genre d&#039;outils</a> est particulièrement utilisé en informatique pour le développement collaboratif, mais il peut être utilisé pour n&#039;importe quel type de document. GNU Bazaar est loin d&#039;être le seul, mais il a été choisi <a href="/doku.php?id=informatique:outils:bazaar:pourquoi" class="wikilink2" title="informatique:outils:bazaar:pourquoi" rel="nofollow">pour des raisons précises</a>.
+</p>
+
+<p>
+Il existe plusieurs clients, graphiques ou en ligne de commande, sous GNU/Linux et Windows. Une fois installés, ils permettent d&#039;effectuer les mêmes opérations assez facilement. Les concepts de base importants à saisir seront illustrés en utilisant le client en ligne de commande disponible sous tous les systèmes GNU.
+</p>
+
+<p>
+La <a href="http://wiki.bazaar.canonical.com/WindowsDownloads" class="urlextern" title="http://wiki.bazaar.canonical.com/WindowsDownloads" rel="nofollow">version pour Windows</a> inclus, en plus de bazaar lui-même, les extensions pour l&#039;explorateur de fichiers et l&#039;outil <a href="/doku.php?id=informatique:outils:bioinformatique_outils_bzr-explorer" class="wikilink2" title="informatique:outils:bioinformatique_outils_bzr-explorer" rel="nofollow">bazaar explorer</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;GNU Bazaar&quot;,&quot;hid&quot;:&quot;gnu_bazaar&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1100&quot;} -->
+<h2 class="sectionedit2" id="introduction_aux_concepts_de_base">Introduction aux concepts de base</h2>
+<div class="level2">
+
+<p>
+La première chose à faire est de se présenter auprès de bazaar. En effet, chaque <em>version</em> (aussi appelée <em>révision</em>) est attribuée à un auteur.
+</p>
+<pre class="code">  $ bzr whoami &quot;Tanguy LE CARROUR &lt;tanguy.lecarrour@bioaster.org&gt;&quot;</pre>
+
+<p>
+On peut dès lors créer un dossier dans lequel on travaillera. Sauf exception, tous les fichiers et sous dossiers seront versionnés.
+</p>
+<pre class="code">  $ mkdir mon_projet &amp;&amp; cd mon_projet
+  $ bzr init</pre>
+
+<p>
+Un dossier initialisé est aussi appelé une <em>branche</em>. La notion de branche sera abordée un peu plus tard.
+</p>
+
+<p>
+On peut maintenant créer des fichiers et les ajouter à la liste des fichiers suivis par bazaar.
+</p>
+<pre class="code">  $ touch mon_fichier.txt
+  $ bzr add mon_fichier.txt</pre>
+
+<p>
+On peut maintenant enregistrer (<em>commit</em>) la première version du travail.
+</p>
+<pre class="code">  $ bzr ci -m &quot;Ajout d&#039;un nouveau fichier au projet.&quot;</pre>
+
+<p>
+Par défaut, la commande <code>commit</code> (abrégée en <code>ci</code>) enregistre les modifications de tous les fichiers surveillés. Les noms de fichier peuvent être passés en argument pour n&#039;enregistrer que certains d&#039;en eux. Pour voir les fichiers modifiés pouvant être enregistrés, il suffit d&#039;utiliser la commande <code>bzr status</code>.
+</p>
+
+<p>
+On peut voir toutes les modifications enregistrées dans l&#039;historique.
+</p>
+<pre class="code">  $ bzr log
+  ---------
+  revno: 1
+  commiter: Tanguy LE CARROUR &lt;tanguy.lecarrour@bioaster.org&gt;
+  timestamp: Tue 2014-05-06 15:16:04 +0100
+  message:
+    Ajout d&#039;un nouveau fichier au projet.</pre>
+
+<p>
+Si au lieu d&#039;enregistrer les modifications on veut les annuler, il suffit d&#039;utiliser la commande <code>revert</code>.
+</p>
+<pre class="code">  $ vim mon_fichier.txt
+  $ bzr st
+  modified:
+    mon_fichier.txt
+  $ bzr revert mon_fichier.txt</pre>
+
+<p>
+Sans rentrer dans les détails du <a href="/doku.php?id=informatique:developpement:developpement_de_projet" class="wikilink1" title="informatique:developpement:developpement_de_projet">travail collaboratif sur un projet</a> tout de suite, on peut présenter la commande <code>branch</code> qui permet, associée à une connexion SSH, de sauvegarder son travail sur un serveur distant.
+</p>
+<pre class="code">  # Commande pour créer une branche, à utiliser uniquement si le projet n&#039;existe pas
+  $ bzr branch . bzr+ssh://mon.serveur.fr/~tanguy/repo/mon_projet
+  # Commande à exécuter si la branche existe déjà 
+  $ bzr push bzr+ssh://mon.serveur.fr/~tanguy/repo/mon_projet</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction aux concepts de base&quot;,&quot;hid&quot;:&quot;introduction_aux_concepts_de_base&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1101-3356&quot;} -->
+<h2 class="sectionedit3" id="pour_aller_plus_loin">Pour aller plus loin...</h2>
+<div class="level2">
+
+<p>
+Pour mieux comprendre les concepts et les commandes abordés, on pourra se référer à la page traitant du <a href="/doku.php?id=informatique:developpement:developpement_de_projet" class="wikilink1" title="informatique:developpement:developpement_de_projet">travail collaboratif sur un projet</a> et à la <a href="http://doc.bazaar.canonical.com/bzr.2.6/en/" class="urlextern" title="http://doc.bazaar.canonical.com/bzr.2.6/en/" rel="nofollow">documentation officielle</a>.
+</p>
+
+<p>
+Certains concepts nécessitent des pages dédiées :
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=bioinformatique:outils:outils:bazaar:fusion_de_branches" class="wikilink2" title="bioinformatique:outils:outils:bazaar:fusion_de_branches" rel="nofollow">bonnes pratiques de fusion de branches</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=bioinformatique:outils:outils:bazaar:utilisation_avancee" class="wikilink2" title="bioinformatique:outils:outils:bazaar:utilisation_avancee" rel="nofollow">utilisation avancée</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pour aller plus loin...&quot;,&quot;hid&quot;:&quot;pour_aller_plus_loin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;3357-&quot;} -->

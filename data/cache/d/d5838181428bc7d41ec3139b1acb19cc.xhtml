@@ -1,0 +1,111 @@
+
+<h1 class="sectionedit1" id="hadoop_common_trouble_shooting">Hadoop common trouble shooting</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Hadoop common trouble shooting" [1-48] -->
+<h2 class="sectionedit2" id="incompatible_clusterids">1. Incompatible clusterIDs</h2>
+<div class="level2">
+
+<p>
+<code>Incompatible clusterIDs in /opt/hadoop/dfs/name/data: namenode clusterID = CID-43fc68af-0c43-4d06-8165-e582f23b0bc7; datanode clusterID = CID-925c7a06-e065-4b11-b4cd-3c84c19e0ef5</code>
+</p>
+
+<p>
+This error is caused by the reformatting of the name node and the data node still has the old name node data.
+</p>
+
+<p>
+There are two solutions:
+</p>
+<ol>
+<li class="level1"><div class="li"> Copy the clusterIDs of the name node to data node</div>
+</li>
+<li class="level1"><div class="li"> remove the data node data</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT2 SECTION "1. Incompatible clusterIDs" [49-495] -->
+<h3 class="sectionedit3" id="st_solution">1st solution</h3>
+<div class="level3">
+
+<p>
+The 1st solution is useful when you want to restore the namenode and you are sure that the metadata in your name node correspond the data in your data node.
+</p>
+
+<p>
+You can find the cluster id of your name node in the error message.
+</p>
+
+<p>
+Copy the NameNode ClusterID to the VERSION file in the $HADOOP_DATA_DIR/data/current directory. In our case the path is /opt/hadoop/dfs/name/data/current
+</p>
+<pre class="code">vim /opt/hadoop/dfs/name/data/current
+
+#Tue Jan 02 11:16:54 CET 2018
+storageID=DS-a9fb2197-10ca-4424-a2f0-c1bc83ca77ae
+clusterID=CID-43fc68af-0c43-4d06-8165-e582f23b0bc7
+cTime=0
+datanodeUuid=4e3d5d37-ac07-4700-ba7f-991ce4884953
+storageType=DATA_NODE
+layoutVersion=-57
+</pre>
+
+</div>
+<!-- EDIT3 SECTION "1st solution" [496-1185] -->
+<h3 class="sectionedit4" id="nd_solution">2nd solution</h3>
+<div class="level3">
+
+<p>
+The 2nd solution is useful when you want to have a new hadoop cluster.
+</p>
+
+<p>
+Just delete the $HADOOP_DATA_DIR/data/current directory. In our case, the path is /opt/hadoop/dfs/name/data/current
+</p>
+<pre class="code">rm -rf /opt/hadoop/dfs/name/data/current</pre>
+
+</div>
+<!-- EDIT4 SECTION "2nd solution" [1186-1455] -->
+<h2 class="sectionedit5" id="port_in_use_or_bind_exception">Port in use or Bind exception</h2>
+<div class="level2">
+<pre class="code">java.net.BindException: Port in use: 0.0.0.0:50070
+        at org.apache.hadoop.http.HttpServer2.openListeners(HttpServer2.java:998)
+        at org.apache.hadoop.http.HttpServer2.start(HttpServer2.java:935)
+        at org.apache.hadoop.hdfs.server.namenode.NameNodeHttpServer.start(NameNodeHttpServer.java:171)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.startHttpServer(NameNode.java:841)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.initialize(NameNode.java:692)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.&lt;init&gt;(NameNode.java:905)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.&lt;init&gt;(NameNode.java:884)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.createNameNode(NameNode.java:1610)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.main(NameNode.java:1678)
+Caused by: java.net.BindException: Address already in use
+        at sun.nio.ch.Net.bind0(Native Method)
+        at sun.nio.ch.Net.bind(Net.java:433)
+        at sun.nio.ch.Net.bind(Net.java:425)
+        at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:223)
+        at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+        at org.mortbay.jetty.nio.SelectChannelConnector.open(SelectChannelConnector.java:216)
+        at org.apache.hadoop.http.HttpServer2.openListeners(HttpServer2.java:993)
+        ... 8 more
+</pre>
+
+<p>
+This error is occured because of the hadoop daemon is not properly shut down. 
+</p>
+
+<p>
+First close all hadoop services, even jps shows nothing
+</p>
+
+<p>
+&lt;code&gt;
+sh stop-yarn.sh
+sh stop-dfs.sh
+&lt;code&gt;
+After this, you need to use top htop to kill all hadoop zombie processes.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Port in use or Bind exception" [1456-] -->

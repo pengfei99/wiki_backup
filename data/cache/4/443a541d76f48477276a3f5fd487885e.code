@@ -1,0 +1,3 @@
+$ groupadd -g 1072 bioaster
+$ useradd -u 40639 -g 1072 pveyre
+$ usermod -d /sps/bioaster pveyre

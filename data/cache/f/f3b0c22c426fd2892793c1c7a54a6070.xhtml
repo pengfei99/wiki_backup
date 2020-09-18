@@ -1,0 +1,65 @@
+
+<h1 class="sectionedit1" id="tophat">TopHat</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "TopHat" [1-22] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2.0.10</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : Artistic License</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://tophat.cbcb.umd.edu/" class="urlextern" title="http://tophat.cbcb.umd.edu/"  rel="nofollow">http://tophat.cbcb.umd.edu/</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : TopHat is a fast splice junction mapper for RNA-Seq reads. It aligns RNA-Seq reads to mammalian-sized genomes using the ultra high-throughput short read aligner Bowtie, and then analyzes the mapping results to identify splice junctions between exons.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [23-433] -->
+<h2 class="sectionedit3" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+<strong>Note</strong> : Nécessite la présence de <a href="/in2p3/logiciels/boost" class="wikilink1" title="in2p3:logiciels:boost">Boost</a> et de <a href="/in2p3/logiciels/samtools" class="wikilink1" title="in2p3:logiciels:samtools">SAMTools</a>.
+</p>
+<pre class="code">export SOFTWARE=/afs/in2p3.fr/throng/bioaster/
+cd $SOFTWARE/src
+#wget
+tar xvzf tophat-2.0.10.tar.gz
+cd tar xvzf tophat-2.0.10.tar.gz
+./configure --prefix=$SOFTWARE/apps/gcc-RedHat_4.4.7-3/tophat/2.0.10 --with-boost-thread=-lboost_thread
+make &amp;&amp; make install</pre>
+
+</div>
+<!-- EDIT3 SECTION "Installation" [434-849] -->
+<h2 class="sectionedit4" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;A spliced read mapper for RNA-Seq.\n&quot;
+}
+
+module load boost samtools
+
+set version &quot;2.0.10&quot;
+
+set gcc_version &quot;RedHat_4.4.7-3&quot;
+set bin_dir &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-${gcc_version}/tophat/${version}/bin&quot;
+
+prepend-path PATH $bin_dir</pre>
+
+</div>
+<!-- EDIT4 SECTION "Intégration" [850-1190] -->
+<h2 class="sectionedit5" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.04 (tlc)</strong> Version 2.0.10 installée
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Log" [1191-] -->

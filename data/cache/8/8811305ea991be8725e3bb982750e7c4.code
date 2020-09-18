@@ -1,0 +1,28 @@
+&lt;VirtualHost _default_:443&gt;
+    ServerName wiki.bioaster.local
+    DocumentRoot /usr/local/www/data/vhosts/dokuwiki/
+&nbsp;
+    &lt;Directory /usr/local/www/data/vhosts/dokuwiki/&gt;
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&nbsp;
+    ErrorLog &quot;/var/log/httpd-error-wiki.bioaster.local.log&quot;
+    CustomLog &quot;/var/log/httpd-acces-wiki.bioaster.local.log&quot; combined
+&nbsp;
+    SSLEngine       on
+    SSLProtocol all -SSLv2 -SSLv3
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+    SSLVerifyClient require
+    SSLVerifyDepth  1
+    SSLOptions +StdEnvVars
+&nbsp;
+    SSLCertificateFile /etc/ssl/crt/wiki.bioaster.local-cert.pem
+    SSLCertificateKeyFile /etc/ssl/key/wiki.bioaster.local-key.pem
+    SSLCACertificatePath   /etc/ssl/crt/
+    SSLCACertificateFile   /etc/ssl/crt/ca_for_wiki.pem
+&nbsp;
+    #CustomLog &quot;/var/log/httpd-ssl_request-wiki.bioaster.local.log&quot; \
+    #      &quot;%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \&quot;%r\&quot; %b&quot;
+&lt;/VirtualHost&gt;

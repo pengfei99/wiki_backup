@@ -1,0 +1,3 @@
+$ bzr branch bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt; \
+             bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt;/&lt;LOGIN&gt;
+$ bzr remove-branch bzr+ssh://forge.bioaster.org/code/&lt;PROJECT&gt;/&lt;LOGIN&gt;          

@@ -1,0 +1,98 @@
+
+<h1 class="sectionedit1" id="reunion_du_23_mars_2017">Réunion du 23 Mars 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 23 Mars 2017" [1-41] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Guillaume Boissy">GB</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [42-95] -->
+<h3 class="sectionedit3" id="avancees">Avancées</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Checkbox enlevée quand pas de mails associés à l&#039;étape.</div>
+</li>
+<li class="level1"><div class="li"> Des bugs résolus (cf redmine)</div>
+</li>
+<li class="level1"><div class="li"> Discussion autour de l&#039;<a href="/biospecimens/import_donnees" class="wikilink1" title="biospecimens:import_donnees">import des données</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Avancées" [96-297] -->
+<h3 class="sectionedit4" id="reste_a_faire">Reste à faire</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Mettre à jour la base de données sur sql designer.</div>
+</li>
+<li class="level1"><div class="li"> PB sur le routing après être loggé : on a modifié la config pour que lorsque l&#039;on se log ça arrive sur la page demandé (ex si je vais sur /en/admin ça redirige vers /login puis vers /en/admin si mon login et pwd est bon) seulement si on fait ça on ne peut pas forcer l&#039;utilisateur à atterrir sur son tableau de bord si il se log à partir de la page d&#039;accueil. Idée : faire ça à partir d&#039;un listener ?</div>
+</li>
+<li class="level1"><div class="li"> Bug spotted : Quand on MàJ un échantillon et qu&#039;on rajoute un fichier joint ça ne fait rien en BDD. Rien n&#039;a été mit dans le controller. Il faut appeler le manager qui gère ça. Cf la gestion des projets en backoffice où là ça fonctionne.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Reste à faire" [298-1051] -->
+<h3 class="sectionedit5" id="a_faire_pour_la_prochaine_reunion">À faire pour la prochaine réunion</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT5 SECTION "À faire pour la prochaine réunion" [1052-1099] -->
+<h3 class="sectionedit6" id="choix">Choix</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> PB sur le routing après être loggé : on a modifié la config pour que lorsque l&#039;on se log ça arrive sur la page demandé (ex si je vais sur /en/admin ça redirige vers /login puis vers /en/admin si mon login et pwd est bon) seulement si on fait ça on ne peut pas forcer l&#039;utilisateur à atterrir sur son tableau de bord si il se log à partir de la page d&#039;accueil. Idée : faire ça à partir d&#039;un listener ?</div>
+</li>
+</ul>
+
+<p>
+<strong>Concernant le point ci-dessus il a été décidé de rester isofonctionnel : la page post login est la page demandée dans l&#039;<abbr title="Uniform Resource Locator">URL</abbr>.</strong>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Choix" [1100-1667] -->
+<h3 class="sectionedit7" id="discussion_import_donnees">Discussion import données</h3>
+<div class="level3">
+
+<p>
+Résumé de la discussion autour de l&#039;<a href="/biospecimens/import_donnees" class="wikilink1" title="biospecimens:import_donnees">import des données</a> :
+</p>
+
+<p>
+Il a été décidé de :
+</p>
+<ul>
+<li class="level1"><div class="li"> Ajouter les champs (ainsi que la table Collection) manquant afin de pouvoir importer des données dans biospecimens V1.5. Donc création de la partie catalogue en base de données. Cela revient à faire les migrations prévues à la fois dans les scenarii 4 &amp; 5</div>
+</li>
+<li class="level1"><div class="li"> Aspirer la base de données de biospecimens V1 et la mapper aux champs de la version 1.5 → reprise de l&#039;existant</div>
+</li>
+<li class="level1"><div class="li"> Mettre en place les listes finies comme c&#039;est le cas dans biospecimens V1 (pour les genre de bactéries par exemple)</div>
+</li>
+</ul>
+
+<p>
+Ceci laissera le temps à <abbr title="Guillaume Boissy">GB</abbr> d&#039;en discuter avec Alain/Régis etc. afin de statuer si on part sur le scenario 4 ou le 5. En fonction de la réponse soit :
+</p>
+<ul>
+<li class="level1"><div class="li"> <span style='color:#ed1c24; '>Solution 4 </span> : On implémente un parseur de fichiers aux formats .csv pour nourrir les tables <em>Collection/Sample/Strain</em>. Dans ce cas là l&#039;UTEC 06 n&#039;aura pas à réaliser des scripts pour importer des catalogues provenant d&#039;un organisme externe (typiquement un fichier excel téléchargé sur internet). Possibilités de code redondant par rapport à la reprise de l&#039;existant…</div>
+</li>
+<li class="level1"><div class="li"> <span style='color:#ed1c24; '>Solution 5 </span> : On migre les formulaires de <abbr title="Karen Louis">KL</abbr> (réalisés sous access) dans la partie <em>backoffice</em> de biospecimens V1.5, en reprenant les mêmes validateurs et un rendu visuel acceptable. Dans ce cas là l&#039;UTEC 06 devra réaliser des scripts pour importer des catalogues provenant d&#039;un organisme externe (typiquement un fichier excel téléchargé sur internet).</div>
+</li>
+</ul>
+
+<p>
+Les tests quant à eux seront effectués dans un premier temps par l&#039;UTEC 06 pour filtrer les bugs les plus importants, puis par l&#039;UTEC 01.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Discussion import données" [1668-] -->

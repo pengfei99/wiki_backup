@@ -1,0 +1,184 @@
+
+<h1 class="sectionedit1" id="migrations_noe_depuis_fevrier_2017">Migrations NoE depuis février 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Migrations NoE depuis février 2017" [1-51] -->
+<h2 class="sectionedit2" id="table_bioentity_supprimee_le_240317_par_ym_migration_0005">table Bioentity (Supprimée le 24/03/17 par YM (migration 0005))</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <del>Supprimer la table Bioentity et la remplacer par une FK dans Sample vers Classification (de type bioentity, le filtre se fera au niveau du controller)</del> <span style='color:#22b14c; '><strong>Fait le 24/03/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0005)</strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "table Bioentity (Supprimée le 24/03/17 par YM (migration 0005))" [52-363] -->
+<h2 class="sectionedit3" id="table_provider">Table Provider</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <del>Ajouter champs : city, country, phone et web</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+<li class="level1"><div class="li"> <del>Changer relation Provider ↔ Sample (MtM a MtO)</del> <span style='color:#22b14c; '><strong>Fait le 24/03/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0005)</strong></span></div>
+</li>
+<li class="level1"><div class="li"> <del>Supprimer la relation Provider</del> ↔ Bioentity <span style='color:#22b14c; '><strong>Fait le 24/03/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0005)</strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Table Provider" [364-762] -->
+<h2 class="sectionedit4" id="table_unit">Table Unit</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <del>Changer IntergerField en FloatField</del> <span style='color:#22b14c; '><strong>Fait le 20/02/2017 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Table Unit" [763-891] -->
+<h2 class="sectionedit5" id="table_sample">Table Sample</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <span style='color:#ed1c24; '>Ajouter le “consentement” de partage. Juste relier à un fichier PDF ? Ou une table à part ? –&gt; A DISCUTER</span></div>
+</li>
+<li class="level1"><div class="li"> <del>Ajouter champs “lab_condition” (valeurs possibles : P2, P3, P4)</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+<li class="level1"><div class="li"> Relations :</div>
+<ul>
+<li class="level2"><div class="li"> <del>Changer relation par rapport à provider : ManyToMany</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+<li class="level2"><div class="li"> <del>Faire une relation ManyToMany avec nouvelle table Pathogen</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+<li class="level2"><div class="li"> <span style='color:#ed1c24; '>Faire une relation ManyToMany avec la table File –&gt; A DISCUTER</span></div>
+</li>
+<li class="level2"><div class="li"> <del>Changer la relation Sample ↔ Wp (passer de MtO à MtM)</del> <span style='color:#22b14c; '><strong>Fait le 24/03/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0005)</strong></span></div>
+</li>
+<li class="level2"><div class="li"> <del> Ajouter un champs booléen “is_<abbr title="Genetically Modified Organism">GMO</abbr>” </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Table Sample" [892-1809] -->
+<h2 class="sectionedit6" id="table_sampletmp">Table SampleTMP</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <del>Un champ qui décrit l&#039;échantillon, encodé en base 64</del></div>
+</li>
+<li class="level1"><div class="li"> <del>Un utilisateur est lié à plusieurs SampleTMP</del></div>
+</li>
+</ul>
+
+<p>
+<span style='color:#22b14c; '>
+<strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Table SampleTMP" [1810-2024] -->
+<h2 class="sectionedit7" id="table_bioagent_ex-pathogen_depuis_la_migration_0008">Table Bioagent (ex-Pathogen depuis la migration 0008)</h2>
+<div class="level2">
+
+<p>
+ * <del>Champs :</del>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>id</del></div>
+</li>
+<li class="level3"><div class="li"> <del>Groupe (1, 2, 3, 4)</del></div>
+</li>
+<li class="level3"><div class="li"> <del>Symbole (V, A, T, spp, etc.)</del></div>
+</li>
+<li class="level3"><div class="li"> <del>ManyToMany à Sample</del></div>
+</li>
+<li class="level3"><div class="li"> <del>ManyToMany à Classification Bioentity correspondant aux virus, parasites, bactéries et champignons présents dans la liste des pathogènes</del> <span style='color:#22b14c; '><strong>Fait le 20/02 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span></div>
+</li>
+<li class="level3"><div class="li"> <del> Passer la relation MtM vers Sample en OtM avec une fk sample_id </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+<li class="level3"><div class="li"> <del> Passer la relation MtM vers Classification de type Bioentity en OtM avec une fk “bioentity_id” </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Table Bioagent (ex-Pathogen depuis la migration 0008)" [2025-2798] -->
+<h2 class="sectionedit8" id="table_mappinggmo">Table MappingGMO</h2>
+<div class="level2">
+
+<p>
+cf <a href="/noe/noe_gmo" class="wikilink1" title="noe:noe_gmo">noe_gmo</a>
+<del>
+Table contenant</del>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>id</del></div>
+</li>
+<li class="level1"><div class="li"> <del>bacteria_id (qui pointe vers classification)</del></div>
+</li>
+<li class="level1"><div class="li"> <del>plasmid_id (qui pointe vers classification)</del></div>
+</li>
+<li class="level1"><div class="li"> <del>demand_id (integer) → le numéro de l&#039;ID qui pourra être répété</del></div>
+</li>
+<li class="level1"><div class="li"> <del>is_declaration (boolean) → un <abbr title="Genetically Modified Organism">GMO</abbr> peut être “très” dangereux ou non, si oui alors c&#039;est un agrément et non une déclaration</del></div>
+</li>
+</ul>
+
+<p>
+<del>Table de relation ManyToMany avec Users et avec Sample.</del>
+</p>
+
+<p>
+<span style='color:#22b14c; '><strong>Fait le 20/02 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del> bacteria_id est supprimé </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+<li class="level1"><div class="li"> <del> Ajout d&#039;une fk “bioagent_id” </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+<li class="level1"><div class="li"> <del> Remplacement de la fk “plasmid_id” vers Classification de type plasmid par une fk ext_material_id vers une Classification de type “biotools”</del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Table MappingGMO" [2799-3818] -->
+<h2 class="sectionedit9" id="table_mot">Table MOT</h2>
+<div class="level2">
+
+<p>
+cf <a href="/noe/noe_mot" class="wikilink1" title="noe:noe_mot">noe_mot</a>
+</p>
+<ul>
+<li class="level1"><div class="li"> <del>id</del></div>
+</li>
+<li class="level1"><div class="li"> <del>admin_id (relation Many To One avec Employee) pour gérer le demandeur</del></div>
+</li>
+<li class="level1"><div class="li"> <del>group (groupe A ou B, ou autre a compléter avec précisions de <abbr title="Karen Louis">KL</abbr>)</del></div>
+</li>
+<li class="level1"><div class="li"> <del>classification_id (a voir si on fait une classification “<abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr>” ou si on arrive a connaitre les <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> depuis une classification déjà existante (Bioentity)).</del></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <del>Relation Many to many avec Employee pour les utilisateurs autorisés du <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> (users)</del></div>
+</li>
+</ul>
+
+<p>
+<span style='color:#22b14c; '><strong>Fait le 20/02 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Table MOT" [3819-4367] -->
+<h2 class="sectionedit10" id="autres">Autres</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <del>Enlever la partie Coordinate et Matrix.</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span> </div>
+</li>
+<li class="level1"><div class="li"> <del>Mettre les coordonnés dans Mapping et les limites (table Matrix) dans Storage.</del> <span style='color:#22b14c; '><strong>Fait le 20/02/17 par <abbr title="Yoann Mouscaz">YM</abbr></strong></span> </div>
+</li>
+<li class="level1"><div class="li"> <span style='color:#ed1c24; '>Enlever champ “status” de Mapping ? –&gt; A DISCUTER</span></div>
+</li>
+<li class="level1"><div class="li"> <del> Ajout de la table Demand pour les <abbr title="Genetically Modified Organism">GMO</abbr> </del> <span style='color:#22b14c; '><strong>Fait le 04/04/17 par <abbr title="Yoann Mouscaz">YM</abbr> (migration 0008)</strong></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Autres" [4368-] -->

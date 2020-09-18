@@ -1,0 +1,25 @@
+====== Unité Technologique no 6 ======
+
+  * Les [[in2p3/logiciels|logiciels disponibles]] sur la [[in2p3/scheduler|ferme]] et le [[in2p3/cloud|nuage]] du [[in2p3|Centre de Calcul de l'IN2P3]] ;
+  * Le réseaux et les machines virtuelles disponibles sur le //[[/ordinateurs/mini_serveur|mini serveur]]// de Paris, sur les [[/pt6/vmware|VMware]] du CC et sur l'[[/pt6/openstack|OpenStack]] du CC ;
+  * Le [[wiki|wiki]] des équipes système.
+  * Les [[/pt6/reunions/|réunions d'équipe]]
+  * Les fiches de présentation des [[/pt6/projets_internes/|projets internes]]
+  * Le [[/pt6/ccin2p3/|partenariat avec le CCIN2P3]]
+
+
+====== Proposition de réorganisation des activités ======
+|       ^Pôle d'activité                                                            ^site                               ^Responsable ^Equipe ^Fonctions ^
+^ Pôle 1| Déploiement d'applications, de services et de plateformes applicatives    | CCIN2P3                           |            |       | Installation de la boîte à outils bio-informatiques, déploiement de Galaxy, TranSMART et autres services Web, déploiement de Pegasus, etc. |
+
+^ Pôle 2| Récolte, centralisation et sauvegarde des données expérimentales          | CCIN2P3, Lyon, Paris, Partenaires |            |       | Partage des données avec OwnCloud, centralisation des données a BIOASTER (socle informatique) puis au CCIN2P3 (GPFS), tiering sur bande magnétique, organisation des sauvegardes |
+
+
+^ Pôle 2| Suivi des demandes et de l'exploitation, support à l'UTech 06             | CCIN2P3                           |            |       | Cloud OpenStack, Ferme de calcul, Base de données, GPFS, Compte utilisateurs, Tickets OTRS interne au CCIN2P3|
+^ 1| Suivi des demandes et de l'exploitation, support aux utilisateur          | Lyon, Paris, Partenaires          |            |       | Tickets OTRS internes à BIOASTER |
+^ 1| Création, déploiement et maintenance des environnements virtuels          | CCIN2P3, Lyon                     |            |       | Création, configuration et maintenance des images disques  sur OpenStack et VMware    |
+^ 1| Gestion du traitement automatique des données                         | CCIN2P3, Lyon                     |            |       | Intégration des scripts bioinfo dans Pegasus, déploiement d'HTcondor, développement, TranSMART, etc. |
+^ 1| Suivi des échantillons, des métadonnées et des résultats (LIMS)           | CCIN2P3, Lyon, Paris, Partenaires |            |       | Gestion, traitement automatique, analyse et visualisation des données expérimentales et phénotypiques, développement LIMS, data warehouse, etc. |
+^ 1| Suivi des partenariats                                                    | CCIN2P3, Paris                    |            |       | Suivi des conventions et des contrats avec le CCIN2P3 et l'Institut Pasteur  |
+^ 1| Déploiement, suivi et maintenance des outils internes                     | CCIN2P3, Lyon, Paris              |            |       | Wiki, Forge, Bazaar, etc.  |
+^ 1| Montage, gestion et suivi des projets                                     | Lyon                              |            |       | Gestion des portefeuilles projets |                 

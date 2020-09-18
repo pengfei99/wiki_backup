@@ -1,0 +1,26 @@
+====== CAS ======
+
+<WRAP round todo>\\
+**Travail en cours !!**
+</WRAP>
+
+Déployé avec Maven en suivant la documentation : http://jasig.github.io/cas/4.0.x/installation/Maven-Overlay-Installation.html
+
+La VM est déployée comme d'habitude :
+
+    $ nova boot --key-name=cloudkey --image=official-centos-7x-x86_64 --flavor=m1.tiny --security-groups=default test-cas
+
+Le dépôt temporaire d'orchestration peut-être (pour le moment) récupéré comme ceci :
+
+    $ bzr branch bzr+ssh://LOGIN@ccage.in2p3.fr/~tlecarro/repo/orchestration
+
+On peut ensuite vérifier l'inventaire et lancer le ''playbook'' :
+
+    $ ansible-playbook -i inventory cas.yml
+
+===== Problèmes =====
+
+Le déploiement de CAS se passe bien, mais la configurations des ''beans'' est plus problématique !
+La syntaxe du fichier ''deployerConfigContext.xml'' n'est apparemment pas la bonne même si c'est celle donnée dans les exemples ([[http://jasig.github.io/cas/4.0.x/installation/Database-Authentication.html|ici]] et [[https://github.com/UniconLabs/simple-cas4-overlay-template/blob/master/src/main/webapp/WEB-INF/spring-configuration/propertyFileConfigurer.xml|là]])…
+
+Ceci est dépendant du framework Spring ([[http://www.springbyexample.org/examples/intro-to-ioc-creating-a-spring-application.html|1]], [[http://www.springbyexample.org/examples/contact-webapp-spring-config.html|2]]), à creuser…

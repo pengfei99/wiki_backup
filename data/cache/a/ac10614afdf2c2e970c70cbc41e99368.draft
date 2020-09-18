@@ -1,0 +1,181 @@
+a:6:{s:2:"id";s:35:"ut6:reunions:reunion_ut6_08.02.2017";s:6:"prefix";s:0:"";s:4:"text";s:12869:"
+**Date : 08/02/2017  **
+
+**Participants** :  AC, YM, PLU, CD, PDU, NS, PV, AZ, GB  +AB    //(excusés : )//
+
+**Précédente réunion le [[reunion_ut6_25.01.2017|25/01/2017]]**
+
+==== IT/IS (AB) & UTEC06  ====
+  * [GB] Présentation projet infra@IP @CoDir jeudi 7/02
+  * [CD] Serait-il possible d'avoir un laptop "back up" sous windows ? Pour ordinateur en panne et pour faire de la bureautique pour les linuxiens. ==> [IT&IS]: mouais....
+  * [YM] Pourrait-on avoir un [[https://framapad.org/|framapad]] BIOASTER ?  ==>  [IT&IS] : oui, et IT&IS s'en occupe 
+  * [PV] Infra Metagenomic va utiliser plusieurs vms vmware@cc ( >= 8 ) sur deux vlans (dont un ouvert vers l'extérieur avec reverse proxy) => à valider avec vous
+
+
+==== POINTS URGENTS UTEC6 à traiter IMPERATIVEMENT  ====
+  * [YM] Accès wiki : only UTEC06 ? All BIOASTER ?  ==> [GB] : OK pour remettre en lecture seule pour tous (MERCI à vos commentaires en conséquence...)
+  * [YM] Questionnement : c'est pour quand le nouveau format de réunion d'équipe ? C'est juste quand Arnaud s'en va ou il y a autre chose qui va venir ?  ==> [GB] après la fin des entretiens annuels où je demande à chacun de s'exprimer sur ce sujet et d'être force de proposition.
+
+ 
+==== BIOASTER Corp. ====
+  * [GB] Fin ANR..
+     
+=== Vie de l'équipe / point RH ===
+  * [GB] Entretien annuel + évaluation objectifs 2016 : en cours...
+  * [GB] MBTI  : préparation avec Julie... : l'inviter à en présenter le but au prochain meeting...
+  * [YM] Stage JHA :
+    * Fiche badge faite et transmise
+    * Fiche laptop faite et transmise (Windows Boosté + VMWare et VirtualBOX + droit admin)
+    * Fiche sécurité ok
+    * Macro gantt ok
+  * [CD] Quand est-ce qu'on change les bureaux ?   ==>  [GB] Quand nouveaux bureaux + travaux d'électricité seront réalisés...fin Fevrier/Mars?
+
+=== Points Généraux (Veille technique, Idéations, idéations UTEC6, stratégies,... ) ===
+  * [CD] On (~ moitié de l'équipe dev) veut des IDE !
+    * [NS] je propose [[https://fr.wikipedia.org/wiki/Gaston_Ide|Gaston Ide]]
+    * Quelle licence prendre ? Attention par exemple si on code //via// netBeans on est //obligé// de produire du code open source. (Comment quelqu'un pourra prouver que l'on a utilisé netBeans ?!).
+      * [YM] J'en profite pour rerererereposer la question du coup : On utilise quelle licence pour ... NoE (au hasard :) ) ?
+    *  Wing IDE (Python) validé par AC -> Peut-on prendre d'autres licence ? Est-ce que l'on cherche un IDE multi-langage ? Ou on part sur un IDE/langage ?
+      * [YM] Avis perso : je pense que vos laptop vont ramer avec un "vrai" IDE.
+      * [PLU] Pengfei wants **IntelliJ**!!!. UN License de tout produit jetbrain qui incluse tout produit JetBrains (i.e. Intllij,PHP storm, Pycharm) 23 IDE ou tools 649 euros (License entreprise). Intellij tout seul 449 euros.
+  * [PLU] The tranSMART 16.2 is released. Some intresting features : genomics-based cohort selection, GWAS enhancements, GWAS PLINK integration, XNAT image database integration. 
+  * [PV] [[http://www.irt-systemx.fr/evenements/future-systemx-2017/ | Futur @systemX ]] Occasion de discuter avec eux en marge du forum
+
+
+=== Interaction avec les autres Unités / Services  / CC  /  PASTEUR  ===
+  * CC-IN2P3
+    * [GB, PV]  Demande ressources 2016 @CC  => devis signé et envoyé.
+    * [PV] Réunion 2017 des expériences
+      * Nouveauté BDD : [[https://indico.in2p3.fr/event/14040/session/18/material/0/0.pdf | bientôt Spark (machine learning ?!) ]]
+      * GPU@CC : [[https://indico.in2p3.fr/event/14040/session/21/material/0/0.pdf | Bioinfo use cases]]
+      * [[https://indico.in2p3.fr/event/14040/session/16/material/0/0.pptx|Migration AFS]] : arrivée de NFS V4
+    * [PV] Ouverture ports réseaux scientifiques vmware@CC (10.70.3.*) => serveurs NFS (ccdtli94 & ccdtli95)
+    * [PV] Reliquat 10 To GPFS tjs en attente, relance faite ya 3 semaines, pas de nouvelle, je vais relancer (on est large)
+
+  * Bioinfo
+    * [YM] [[http://jobim2017.lille.inria.fr|JOBIM 2017]] :
+      * Fin des soumissions le 24/03/17
+      * Inscription du 03/04/17 au 02/06/17
+    * [TLM] Réunions bioinfo@BIOASTER ?
+  
+  * UTECx
+      * [UTEC01][NS][AC] Mise en place d'un vrai backup VEEAM des données biomédicales, en plus et à côté de l'UTECstore01 => il y a un risque de perte de données en cas de corruption du système de fichier, si nous n'utilisons que les snapshot 
+      * [UTEC01][NS][AC][PLU] La seule option possible pour le chiffrement de fichier par mot de passe reste 7z + AES. l'utilisation de GPG+win4GPG est trop compliqué pour l'utilisation en routine avec des personnes non formées (e.g. les partenaires)
+      * [UTEC01][NS] Support et conseil pour la constitution d'une base de données type CRM.
+      * [UTEC03][NS] Nous n'aurons probablement pas de stagiaire cette année pour travailler sur les données de cytométrie... Quel plan B est envisageable?
+      * [UTEC02][PV] Genostar suite installé
+      * [UTEC02][PV] Pb d'Alban de construction de bdd refseq avec Centrifuge résolu
+
+  * UTHEMx
+    * []
+
+  * PMO
+    * []
+  * Juridique
+  * Com
+  * QSI
+    * []
+  * DAF :
+    * []
+  * Pasteur-IP :
+    * [] sur Paris
+  * Achat : 
+    * []
+
+==== Partnerships / BD ====
+  * []
+
+
+====== PROJETs ======
+
+^Question ^Quoi?                  ^Qui?          ^Avancement / Action   ^
+^1 |Passport | [PLU] | [PLU] Modifier le python/django shibboleth module pour adapter les nouveaux norms AD. \\ [PLU] Developement de library pour lecture et ecriture OpenLdap et lecture AD \\ [PLU] Developement de BIOASTER User management system \\ [PLU] Droit de lecture password crypte AD ? |
+^2 |Biospecimens |[YM + CD]| [Biospecimens V1.5][CD] Datafixtures implémenté pour peupler la BDD avec un grand nombre de données aléatoires. \\ [Biospecimens V1.5][CD] Moteur de recherche fini, tout beau tout propre et ça utilise [[:datatables|datatables]] \\ [Biospecimens V1.5][CD] Partie gestion société et entités à terminer (formulaire dynamique)  \\ [Biospecimens V1.5][CD] Bug qu'avait recensé Amila à résoudre (75%) |
+^3 |NoE +eSample +FLEMS |YM + CD | [YM] eSAMPLES : formulaire statique fonctionnel. formulaire dynamique en cours d'implémentation. PENDING : gestion de sample.JSON et bioentity.JSON, affichage dynamique, récupération après post et sauvegarde dans Sample.sample_json et Sample.bioentity_json \\ [YM] Présentation de l'avancée et du mode de fonctionnement des formulaires en Django \\ [CD + YM] Identification des changements à faire passer dans la prochaine grosse migration. \\ [CD + YM] Relance prévue de la NET le 16 février. \\ [CD + YM] Point AQ : Obtention de la liste des agents pathogènes. Participation à la formation "Risque Biologique" prochainement \\ [PLU + YM] Discussion autour de Shibboleth 3.3 et app Django. Merge au master prévu pour dans 2 semaines maximum. \\ [CD] Appli déployée sur mon laptop (psql+django notamment) \\ [CD] Premiers pas dans le code, un bug rapide résolu + commence à implémenter une commande pour peupler la BDD. \\ [CD + YM] PENDING : travail en cours sur le worflow de création des models entourant le model Sample. Réajustements mineurs sur db --> tout grouper pour la prochaine migration prévue |
+^4 |REALISM + tranSMART |NS |[NS] Réunion jeudi pour débroussailler le terrain sur la constitution du datamart pour l'analyse finale. Il va falloir écrire un cahier des charges à 3 mains: BA, BMX, Sanofi  |
+^5 |eCRF |YM| [YM + KL] eCRF en test chez les HCL. HV annonce une fin des test pour fin de semaine prochaine.|
+^6 |MOSAIC|GB + NS + AZ| [GB] Nouvelle date cible : fin Mars ; TC avec EmileChautard@SP concernant la gestion des données pendant/après projet.. \\ [NS] Préparation de l'appel à Nitin Baliga avec Jérémie et Arnaud => Argumentaire a envoyer à Laurent d'ici mardi prochain \\ [AZ] Revue de littérature sur la taille d'échantillons minimale pour études omics => probablement nécessaire de diminuer le nb de variables/omics "candidates" initiales pour les études pré-cliniques \\ [AZ] Trouvé une proposition de définition de VIP pour la MB-PLS dans la littérature. Pourrait présenter beaucoup d'avantages par rapport à la méthode de sélection de variables actuellement utilisée dans mixOmics ("Lasso")| 
+^7 |bMx Metagenomics MetaSeq \\ [[https://gitlab.in2p3.fr/bioaster/metaseq/blob/master/CHANGELOG.md|CHANGELOG]] |GB + PV + PDU | [GB] debrief ComTech du 30/01 \\ [PV] Achat de Rserve sur budget du projet (pourra être utile pour BIOASTER en interne) \\ [PDU, PV] Journée de W collaboratif le 16/02 ? (cf mail Ghislaine) \\ [PV] Début déploiement infra pre-prod imminente \\ [PDU] Implémentation de l'import de metadonnées via fichier excel \\ [PDU] Implémentation d'un tableur pour l'update |
+^8 |TBAGS|NS + AZ |{{:ut6:reunions:nothing.jpg?100|}} |
+^9 |Schéma Directeur Data Science|NS|[NS] Rédaction du plan d'action en cours => une passe de compression du texte sera nécessaire un fois toute les idées fixées sur le papier \\ [NS] Je dois faire passer les autres sujet avant celui-ci, malheureusement |
+^10 |Infra + DM|AC + PLU + PV|[AC] VM B1WinBiomedic : en attente intégration dans le DNS \\ [AC] Stats données UTEC07 pour Tatiana => ANR \\  [AC, PLU, GB, PV] Stats and clean up GPFS \\ [AC, PLU, NS, PV] Questionnaire rapport calcul & stockage [[http://survey.in2p3.fr/index.php/survey/index/sid/255867/ | à remplir ici ]]|
+
+
+====== Archives ======
+  - [[reunion_pt6_06.06.2014|06/06/2014]]
+  - [[reunion_pt6_10.06.2014|10/06/2014]]
+  - [[reunion_pt6_25.06.2014|25/06/2014]]
+  - [[reunion_pt6_19.09.2014|19/09/2014]]
+  - [[reunion_pt6_30.09.2014|30/09/2014]]
+  - [[reunion_pt6_14.10.2014|14/10/2014]]
+  - [[reunion_pt6_28.10.2014|28/10/2014]]
+  - [[reunion_pt6_19.11.2014|19/11/2014]]
+  - [[reunion_pt6_25.11.2014|25/11/2014]]
+  - [[reunion_pt6_12.12.2014|12/12/2014]]
+  - [[reunion_pt6_18.12.2014|18/12/2014]]
+  - [[reunion_pt6_06.01.2015|06/01/2015]]
+  - [[reunion_ut6_20.01.2015|20/01/2015]]
+  - [[reunion_ut6_03.02.2015|03/02/2015]]
+  - [[reunion_ut6_17.02.2015|17/02/2015]]
+  - [[reunion_ut6_03.03.2015|03/03/2015]]
+  - [[reunion_ut6_20.03.2015|20/03/2015]]
+  - [[reunion_ut6_31.03.2015|31/03/2015]]
+  - [[reunion_ut6_14.04.2015|14/04/2015]]
+  - [[reunion_ut6_28.04.2015|28/04/2015]]
+  - [[reunion_ut6_12.05.2015|12/05/2015]]
+  - [[reunion_ut6_26.05.2015|26/05/2015]]
+  - [[reunion_ut6_09.06.2015|09/06/2015]]
+  - [[reunion_ut6_30.07.2015|30/07/2015]]
+  - [[reunion_ut6_18.08.2015|18/08/2015]]
+  - [[reunion_ut6_08.09.2015|08/09/2015]]
+  - [[reunion_ut6_22.09.2015|22/09/2015]]
+  - [[reunion_ut6_29.09.2015|29/09/2015]]
+  - [[reunion_ut6_06.10.2015|06/10/2015]]
+  - [[reunion_ut6_13.10.2015|13/10/2015]]
+  - [[reunion_ut6_28.10.2015|28/10/2015]]
+  - [[reunion_ut6_03.11.2015|03/11/2015]]
+  - [[reunion_ut6_10.11.2015|10/11/2015]]
+  - 24/11/2015
+  - [[reunion_ut6_08.12.2015|08/12/2015]]
+  - [[reunion_ut6_22.12.2015|22/12/2015 & 05/01/2016]]
+  - [[reunion_ut6_13.01.2016|13/01/2016 & 19/01/2016]]
+  - [[reunion_ut6_26.01.2016|26/01/2016]]
+  - [[reunion_ut6_10.02.2016|10/02/2016]]
+  - [[reunion_ut6_16.02.2016|16/02/2016]]
+  - [[reunion_ut6_23.02.2016|23/02/2016]]
+  - [[reunion_ut6_01.03.2016|01/03/2016]]
+  - [[reunion_ut6_08.03.2016|08/03/2016]]
+  - [[reunion_ut6_15.03.2016|15/03/2016]]
+  - [[reunion_ut6_22.03.2016|22/03/2016]]
+  - [[reunion_ut6_30.03.2016|30/03/2016]]
+  - [[reunion_ut6_05.04.2016|05/04/2016]]
+  - [[reunion_ut6_12.04.2016|12/04/2016]]
+  - [[reunion_ut6_27.04.2016|27/04/2016]]
+  - [[reunion_ut6_11.05.2016|11/05/2016]]
+  - [[reunion_ut6_18.05.2016|18/05/2016]]
+  - [[reunion_ut6_25.05.2016|25/05/2016]]
+  - [[reunion_ut6_01.06.2016|01/06/2016]]
+  - [[reunion_ut6_08.06.2016|08/06/2016]]
+  - [[reunion_ut6_15.06.2016|15/06/2016]]
+  - [[reunion_ut6_22.06.2016|22/06/2016]]
+  - [[reunion_ut6_06.07.2016|06/07/2016]]
+  - [[reunion_ut6_13.07.2016|13/07/2016]]
+  - [[reunion_ut6_26.07.2016|26/07/2016]]
+  - [[reunion_ut6_24.08.2016|24/08/2016]]
+  - [[reunion_ut6_01.09.2016|01/09/2016]]
+  - [[reunion_ut6_07.09.2016|07/09/2016]]
+  - [[reunion_ut6_21.09.2016|21/09/2016]]
+  - [[reunion_ut6_05.10.2016|05/10/2016]]
+  - [[reunion_ut6_12.10.2016|12/10/2016]]
+  - [[reunion_ut6_19.10.2016|19/10/2016]]
+  - [[reunion_ut6_26.10.2016|26/10/2016]]
+  - [[reunion_ut6_09.11.2016|09/11/2016]]
+  - [[reunion_ut6_22.11.2016|22/11/2016]]
+  - [[reunion_ut6_30.11.2016|30/11/2016]]
+  - [[reunion_ut6_07.12.2016|07/12/2016]]
+  - [[reunion_ut6_14.12.2016|14/12/2016]]
+  - [[reunion_ut6_21.12.2016|21/12/2016]]
+  - [[reunion_ut6_04.01.2017|04/01/2017]]
+  - [[reunion_ut6_11.01.2017|11/01/2017]]
+  - [[reunion_ut6_18.01.2017|18/01/2017]]
+  - [[reunion_ut6_25.01.2017|25/01/2017]]";s:6:"suffix";s:0:"";s:4:"date";i:1486976531;s:6:"client";s:7:"gboissy";}

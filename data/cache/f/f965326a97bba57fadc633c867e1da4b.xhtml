@@ -1,0 +1,42 @@
+
+<h1 class="sectionedit1" id="install_scala_on_centos">Install scala on centos</h1>
+<div class="level1">
+
+<p>
+Get the scala binary from <a href="https://www.scala-lang.org/download/" class="urlextern" title="https://www.scala-lang.org/download/" rel="nofollow">https://www.scala-lang.org/download/</a>
+</p>
+
+<p>
+For example, I choose version 2.10.1 (<a href="https://www.scala-lang.org/download/2.10.1.html" class="urlextern" title="https://www.scala-lang.org/download/2.10.1.html" rel="nofollow">https://www.scala-lang.org/download/2.10.1.html</a>).
+</p>
+<pre class="code">cd /tmp
+
+wget https://www.scala-lang.org/files/archive/scala-2.10.1.tgz
+
+mkdir -p /opt/SCALA/
+
+cp scala-2.10.1 /opt/SCALA/
+
+cd /opt/SCALA
+ 
+tar -xzvf scala-2.10.1.tgz</pre>
+
+<p>
+Now add scala to path
+</p>
+<pre class="code">vim /etc/profile.d/scala.sh
+
+#add the following lines
+export SCALA_HOME=/opt/SCALA/scala-2.10.1
+export PATH=$PATH:$SCALA_HOME/bin
+</pre>
+
+<p>
+Beware that, scala needs jdk to run, so make sure you have jdk and has &#039;JAVA_HOME&#039;
+</p>
+<pre class="code">#check scala version
+[hadoop@CCLinDataWHD01 hadoop]$ cat /etc/profile.d/scala.sh 
+export SCALA_HOME=/opt/SCALA/scala-2.10.1
+export PATH=$PATH:$SCALA_HOME/bin</pre>
+
+</div>

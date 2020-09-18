@@ -1,0 +1,92 @@
+
+<h1 class="sectionedit1" id="use_ansible_to_create_vm_in_openstack">Use ansible to create vm in openstack</h1>
+<div class="level1">
+
+<p>
+1. Pre-requisites
+</p>
+<ul>
+<li class="level1"><div class="li"> Openstack client (To see your current version nova –version)</div>
+</li>
+</ul>
+
+<p>
+2. Configure your hosts or your inventory
+</p>
+<pre class="code">You need to connect to a server which has openstack client and can connect to your hyperviser openstack.
+
+For example we have a server, we will call it ansible_master</pre>
+<pre class="prettyprint">  
+[ansible_master]
+134.158.37.4 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=&lt;keyPath&gt;
+</pre>
+<p>
+You should have a line in your hosts or inventory like this.
+</p>
+
+<p>
+PS. check before if you can ssh to the server
+</p>
+
+<p>
+3. Get the playbook
+</p>
+
+<p>
+The playbook is available in <a href="https://gitlab.in2p3.fr/bioaster/VM_Management" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/VM_Management"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/VM_Management</a>
+</p>
+
+<p>
+Download playbook-openstack.
+</p>
+
+<p>
+4. run the playbook
+</p>
+
+<p>
+<code>$ ansible-playbook site.yml</code>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Use ansible to create vm in openstack" [1-783] -->
+<h1 class="sectionedit2" id="use_ansible_to_create_vm_in_vmware">Use ansible to create vm in vmware</h1>
+<div class="level1">
+
+<p>
+1. Pre-requisites
+</p>
+<ul>
+<li class="level1"><div class="li"> Make sure your server can connect to vcenter.bioaster.local.</div>
+</li>
+<li class="level1"><div class="li"> Install pysphere 0.1.7 or higher</div>
+</li>
+</ul>
+
+<p>
+2. Configure your hosts or your inventory
+</p>
+<pre class="code">See the section above</pre>
+
+<p>
+3. Get the playbook
+</p>
+
+<p>
+The playbook is available in <a href="https://gitlab.in2p3.fr/bioaster/VM_Management" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/VM_Management"  rel="nofollow">https://gitlab.in2p3.fr/bioaster/VM_Management</a>
+</p>
+
+<p>
+Download playbook-vmware.
+</p>
+
+<p>
+4. run the playbook
+</p>
+
+<p>
+<code>$ ansible-playbook site.yml</code>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Use ansible to create vm in vmware" [784-] -->

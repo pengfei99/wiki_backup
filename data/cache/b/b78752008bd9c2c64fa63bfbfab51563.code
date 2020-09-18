@@ -1,0 +1,4 @@
+<span class="co2"># Alias to switch between Open Stack tenants
+</span>alias os_htc setenv OS_TENANT_NAME <span class="st0">&quot;htc-bioaster&quot;</span>
+alias os_bioaster setenv OS_TENANT_NAME <span class="st0">&quot;bioaster&quot;</span>
+alias os_cc setenv OS_TENANT_NAME <span class="st0">&quot;ccin2p3&quot;</span>

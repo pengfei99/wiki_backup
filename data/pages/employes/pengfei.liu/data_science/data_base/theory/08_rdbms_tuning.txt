@@ -1,0 +1,360 @@
+====== Lesson08 RDBMS Tuning ======
+
+In Lesson08, we will cover the following points:
+  * Understand what happens in an RDBMS when you run a SQL query
+  * Describe how the RDBMS compiles your SQL query
+  * Introducing the optimizer
+  * Influencing optimizer choices
+
+===== 8.1 Introduction =====
+
+RDBMS tuning involves many experts in different domains. In this lesson, I will only focus on three different kinds of experts(e.g. db_users, db_admin, system_admin)
+
+{{:employes:pengfei.liu:data_science:data_base:theory:db_tuning.png?400|}}
+
+The above figure shows us how many layers and people can be involved in RDBMS tuning. Let's start from the hardware layer. The speed of your server CPU and memory can dramatically change the performance of your RDBMS, the IO speed of your server's hard drive is also an important factor.
+
+The os and file system layer must not only support your hardware requirements but also your RDBMS requirements. Normally, the system administrators will take care of these three layers.
+
+===== 8.2 RDBMS configuration tuning =====
+
+A better configured RDBMS(with right memory/connection ratio, etc.) can perform better. But we will not discuss how to configure an RDBMS in detail, because it varies a lot for the different database servers. I will show you just only a few examples. 
+
+==== MySQL server configuration tuning ====
+In general, after installation of mysql, you need to change some default values in the configuration. Below are some configuration you should look at:
+  * Allocate a minimal amount for max_connections – too many connections can use up your RAM and lock up your MySQL server.
+  * Keep thread_cache at a relatively high number, about 16 – to prevent slowness when opening connections.
+  * Use  skip-name-resolve – to remove dns lookups.
+  * Use query cache if your queries are repetitive and your data does not change often – however using query cache on data that changes often will give you a performance hit.
+  * Increase temp_table_size – to prevent disk writes.
+  * Increase max_heap_table_size – to prevent disk writes.
+  * Do not set your sort_buffer_size too high – this is per connection and can use up memory fast.
+  * Monitor key_read_requests and key_reads to determine your key_buffer size – the key read requests should be higher than your key_reads, otherwise you are not efficiently using your key_buffer.
+  * Have a test environment where you can test your configs and restart often, without affecting production.
+
+=== Use the InnoDB storage engine ===
+
+If you are using MyISAM as storage engine, change it to InnoDB. Because, MyISAM only stores indexes in memory, but InnoDB stores indexes and data in memory. 
+
+<code>
+# change your table's storage engine to InnoDB
+ALTER TABLE table_name ENGINE=InnoDB;
+</code>
+
+Once you are using InnoDB, below are some configuration tips for InnoDB
+
+  - Let InnoDB use all that memory, You can edit your MySQL configuration in your my.cnf file. The amount of memory that InnoDB is allowed to use on your server is configured with the innodb_buffer_pool_size parameter. In general case, we set InnoDB memory to 80% of your server’s physical memory. So, if your server has 32GB memory, set innodb_buffer_pool_size = 25600M
+  - For servers where innodb_buffer_pool_size is greater than 1GB, innodb_buffer_pool_instances divides the InnoDB buffer pool into this many instances. The benefit to having more than 1 buffer pool is to avoid bottlenecks from multiple threads trying to access the only buffer pool at once. Having multiple buffer pools can minimize contention. But each buffer pool instance must have at least 1 gigabyte of memory. If we have 25GB memory, we can have at max 24 pool(innodb_buffer_pool_instances = 24).
+  - Use innodb_flush_method=O_DIRECT to avoid a double buffer when writing. But avoid O_DIRECT and EXT3 filesystem – you will serialize all your writes.
+  - Do not make innodb_log_file_size too big, with faster and more disks – flushing more often is good and lowers the recovery time during crashes.
+  - Do not mix innodb_thread_concurrency and thread_concurrency variables – these two values are not compatible.
+  - Set innodb_flush_log_at_trx_commit = 0 will improve performance, but leaving it to default (1), you will ensure data integrity, you will also ensure replication is not lagging.
+
+=== Some advice before you change your server configurations ===
+
+  * Change one setting at a time! This is the only way to estimate if a change is beneficial.
+  * Most settings can be changed at runtime with SET GLOBAL. It is very handy and it allows you to quickly revert the change if it creates any problem. But in the end, you want the setting to be adjusted permanently in the configuration file.
+  * A change in the configuration is not visible even after a MySQL restart? Did you use the correct configuration file? Did you put the setting in the right section? (all settings in this post belong to the [mysqld] section)
+  * The server refuses to start after a change: did you use the correct unit? For instance, innodb_buffer_pool_size should be set in bytes while max_connection is dimensionless.
+  * Do not allow duplicate settings in the configuration file. If you want to keep track of the changes, use version control.
+
+
+===== 8.3 Schema Tuning =====
+
+  * Keep your database trim.
+  * Archive old data – to remove excessive row returns or searches on queries.
+  * Put indexes on your data. But do not overuse indexes, compare with your queries.
+  * Compress text and blob data types – to save space and reduce number of disk reads.
+  * UTF 8 and UTF16 is slower than latin1.
+  * Use Triggers sparingly.
+  * Keep redundant data to a minimum – do not duplicate data unnecessarily.
+  * Use linking tables rather than extending rows.
+  * Pay attention to your data types, use the smallest one possible for your real data.
+  * Separate blob/text data from other data if other data is often used for queries when blob/text are not.
+  * Check and optimize tables often.
+  * Rewrite InnoDB tables often to optimize.
+  * Sometimes, it is faster to drop indexes when adding columns and then add indexes back.
+  * Use different storage engines for different needs.
+  * Use ARCHIVE storage engine for Logging tables or Auditing tables – this is much more efficient for writes.
+  * Store session data in memcache rather than MySQL – memcache allows for auto-expiring values and prevents you from having to create costly reads and writes to MySQL for temporal data.
+  * Use VARCHAR instead CHAR when storing variable length strings – to save space since CHAR is fixed length and VARCHAR is not (utf8 is not affected by this).
+  * Make schema changes incrementally – a small change can have drastic effects.
+  * Test all schema changes in a development environment that mirrors production.
+  * Do NOT arbitrarily change values in your config file, it can have disastrous affects.
+  * Sometimes less is more in MySQL configs.
+  * When in doubt use a generic MySQL config file.
+
+===== 8.4 Query Optimization =====
+
+==== Internal mechanism ====
+
+As we explain before, the RDBMS use a buffer for storing sql queries execution plan. All queries and Pl/SQL programs are kept in memory in order to be ready for immediate execution.
+
+  - When reading a table or index page(select), a backend process sends a request.
+  - The buffer manager returns the buffer_ID of the slot that stores the requested page. If the requested page is not stored in the buffer pool, the buffer manager loads the page from persistent storage to one of the buffer pool slots and then returns the buffer_ID's slot.
+  - The backend process accesses the buffer_ID's slot (to read the desired page).
+
+When all buffer pool slots are occupied in the buffer manager, many dbms uses a Least Recently Used algorithm to
+free up space for new pages. The bigger your data cache is, the faster the data access is. 
+
+==== Query process phases ====
+
+Running a sql query is not only a compilation operation, RDBMS need to process it through many phases:
+  * Parser: Checks the statement for syntactic and semantic validity. Determines whether the process issuing the statement has privileges to run it 
+  * Rewriter: Rewrite the sql statement if required. For example, replace the view definition and apply rules.
+  * Planner: Generates a set of execution plans and computes their cost, then select the best execution plan.
+  * Executor: Runs the execution plan and request locks
+
+{{:employes:pengfei.liu:data_science:data_base:theory:sql_request_processing.png?600|}}
+
+Note:
+  * The **execution plan** is a set of operations that are performed in sequence to execute the statement.
+  * For some queries, the query processing time may be longer than the query execution time. So caching execution plan can save time.
+  * The executor step is very CPU intensive. In Oracle, there is a mechanism of bind variables which allows sharing the same execution plan to similar statements have the potential of being shared.
+  * Note that DDL (CREATE, DROP …) statements are only parsed and executed.
+  * Usually, running a SQL statement spend much time in planner and executor phases.
+
+==== Optimizer ====
+
+The query optimizer determines the most efficient execution plan and is the most important step in the processing of any SQL statement.
+
+The optimizer considers many factors related to the objects referenced and the conditions specified in the query when making optimization decisions:
+  * **Statistics** gathered for the system (I/O, CPU, and so on) as well as schema objects (number of rows, index, and so on)
+  * **WHERE clause qualifiers**
+  * **Hints** supplied by the developer
+
+The optimizer estimates execution plans from three types of measures:
+  * **Selectivity of a predicate**
+  * **Cardinality**
+  * **Cost**
+
+=== Selectivity of a predicate ===
+
+A predicate is a condition after the WHERE clause. It indicates how many rows from a table will satisfy the predicate. For example,
+<code>
+# The condition last_name='foo' AND salary > 2000 is the predicate of the select statement
+Select * from employee where last_name='foo' AND salary > 2000
+</code>
+
+Selectivity = (number of rows satisfying the predicate) / (total row number), it lies in a value range from 0.0 to 1.0. 
+
+For example, suppose we have a table 'emp', and in total it contains 180 rows
+
+<code>
+Select * from emp;
+# It has a selectivity 180(returned rows)/180(total rows)=1
+
+Select * from emp where id_dpt="COMPUTING";
+# Suppose the above query returns 10 rows, It has a selectivity = 10/180=0,05
+</code>
+
+=== Cardinality ===
+
+Cardinality is the number of rows returned or accessed by an operation. Cardinality = Selectivity * Total Number Of Rows. For an equality predicate
+
+We reuse the example of the selectivity section:
+<code>
+Select * from emp;
+# It has a selectivity 180(returned rows)/180(total rows)=1
+# It has Cardinality 1(selectivity)*180(total row numbers)=180
+
+Select * from emp where id_dpt="COMPUTING";
+# Suppose the above query returns 10 rows, It has a selectivity = 10/180=0.05
+# It has Cardinality 0.05*180=10
+</code>
+
+=== Cost ===
+
+The **Cost** of a query represents the number of units of resource that are used. The query optimizer uses disk I/O, CPU usage, and memory usage as units of work. The cost of a query plan is the number of work units that are expected to be incurred when the query is executed and its result is produced.
+
+**Work units** varies from different SQL servers. 
+For example, in the PostgreSQL server, they are session variables;
+  * seq_page_cost estimates the cost of a disk page fetches from sequential access. ( default 1)
+  * random_page_cost estimates the cost of a non-sequentially-fetched disk page. ( default 4)
+  * cpu_operator_cost estimates the cost of processing each operator or function executed during a query
+  * ......
+
+In Oracle, it is automatically set up from hardware performances.
+
+=== Statistics ===
+
+The optimizer estimates cardinality depending on **statistics**. Below are some examples of how we calculate the cost statistics. 
+
+Distinct values: For a single equality predicate, the optimizer assumes a uniform distribution and calculates the cardinality for the query by dividing the total number of rows in the table by the number of distinct values.
+
+The distribution of values in the column:
+  * The most common values in the column (< 250)
+  * The frequencies of the most common values
+  * The number of occurrences of each divided by the total number of rows.
+
+Histogram: A histogram is a special type of column statistic that sorts values into buckets. The equal widths bucket are well adapted for uniform data. **Bucket width** = [max(col_value)-min(col_value)]/number of bucket. For example, we create a five buckets histogram for column salary, the value range is (70,000~140,000). With the above formula, we can determine the width of a bucket is 14,000. Then we can distribute all rows into the five buckets of rows.
+
+Note: 
+  * Data may constantly change, statistics must be regularly gathered so that they are/keep relevant.
+  * Collecting statistics is not free. The system needs CPU and memory for computing statistics.
+  * More the sampling size is high and more your statistics should be accurate.
+  * Some RDBMS provide some tools for extending statistics: For example, all statistics on Postgres are on a single column but it is possible to extend the default statistics with the command CREATE STATISTICS.
+
+Index Clustering Factor: is a measure between the physical order and the logical order for column values. It range from 0 to 1. For example, if the logical block of data points to 3 different physical data block. The clustering factor is high(better for the indexed scan) and approaches to 1. If it points to only 1 physical data block. The clustering factor is low(better for the sequential scan) and approaches to 0.
+
+==== Access path ====
+
+An access path is a way used by a query to retrieve rows from the database. The access path takes into account the data structures that are used in the database. The optimizer then generates a set of possible execution plans using available access paths and estimates the cost of each plan, using the statistics for the index, columns, and tables accessible to the statement. The access path determines the way your data will be physically scanned
+
+=== Data scan algorithm ===
+
+Depending on RDBMS, the list of scan algorithm may be different.
+
+The most common methods are:
+  * Sequential scan: reads all rows from a table and filters out those that do not meet the selection criteria. It's the first method considered by the planner and usually expensive. It reads data block sequentially. It's used often in tables without indexes, tables of high selectivity(1), or small tables (few blocks).
+  * Btree index scan: reads all rows from an index and filters out those that do not meet the selection criteria. It reads an index block and data block randomly (an expensive operation ). It's often used on the table with clustering factor close to 1 and low selectivity (<0.1)
+  * Index-only scan
+  * Bitmap index scan: Bitmap indexes are appropriate for highly repetitive data and high selectivity (Categorical columns like sex.). It's recommended for read-only operations. It's Very efficient for operator AND / OR. For example, Select … where REGION = ’EAST’ OR REGION = ’WEST’
+  * Bitmap Heap scan: A bitmap scan fetches all the tuple-pointers from the index in one go, sorts them using an in-memory "bitmap" data structure, and then visits the table tuples in physical tuple-location order.
+
+=== Data join method ===
+
+A join is a binary operation that joins only two rows of source data. A **multi-way join** consists of joining two tables together and then joining the resultant row source to another table or row source until all the joins are complete. 
+
+For each join, the optimizer determines (in sequence) the:
+  * Order in which to join the tables
+  * Best join method to apply for each join
+  * Access path for each row source
+
+The join order is affected by the following built-in rules:
+  * A single-row predicate forces its row source to be placed first in the join order.
+  * For outer joins, the table with the outer-joined table must come after the other table in the join order for
+processing the join.
+
+The costs of various join methods are compared, for each join order.
+  * Nested Loop: Used for small tables. Both tables are selectively indexed. The indexes are on the joining columns
+  * Hash join: Hash joins can only be performed for equijoins. It performs a full scan of the smaller table and builds a hash table(in memory). Then it performs a full table scan of the other table and checks possible collision. 
+  * Merge join: Rows from each source table are sorted on the join predicate columns. It's recommended for Non-equijoin
+
+Note that some methods cannot be used with some operations. For example, a hash join cannot be used for a non-equijoin.
+
+==== Hints ====
+
+As a developer, we can influence the behavior of the query optimizer by providing hints. In Oracle, we can give hints inside a query.  For example, in the following select query, we can specify which index we want to use when we execute the select query.
+
+<code>
+SELECT /*+ INDEX(idx_test) */ * FROM test;
+</code>
+
+In Postgres, we can use system variables to enable or disable some scan method:
+  * enable_bitmapscan
+  * enable_hashjoin
+  * enable_indexscan
+  * enable_seqscan
+  * ...
+
+===== Understand what is the actual cost and estimate cost of a query =====
+
+To better understand the cost of a query, we can use **EXPLAIN** command to display the execution plan that query optimizer generates for the query.
+
+Note: when you use the **EXPLAIN** command on a query, the query is actually executed. If you want to see the execution plan for an insert or delete query, it's recommended to run the query in a transaction with rollback statement. Following code snippet is an example
+<code>
+BEGIN
+  EXPLAIN INSERT INTO COPY_EMP select * from EMP ;
+ROLLBACK
+</code> 
+
+There are different options for EXPLAIN command:
+  * **ANALYZE**: Carry out the command and show actual run times and other statistics
+  * **COSTS**: Display additional information about estimated startup and total cost
+  * **TIMING**: Include actual startup time and time spent in each node in the output
+
+The full doc can be found here: https://www.postgresql.org/docs/11/sql-explain.html
+
+==== Some explain examples on different scan ====
+
+Let's create a simple table test
+<code>
+CREATE TABLE test (i integer not null, t text);
+INSERT INTO test SELECT i, md5(i::text) FROM generate_series(1, 10000000) i;
+</code>
+
+Let's analyse a select query
+<code>
+# we run a select query with explain analyse
+explain analyse select * from test where i=54;
+
+# The first line shows that the planner uses a seq scan on the table, the first part shows the estimated cost
+# of the query, the second part shows the actual time consumed to run the query
+# The filter shows the predicate in the where clause, rows removed shows the selectivity of the query
+# Planning time is the time which query optimize spent on making on the execution plan
+# Execution time is the actual time to run the query  
+Seq Scan on test  (cost=0.00..20834.00 rows=1001 width=37) (actual time=7.049..228.115 rows=1000 loops=1)
+  Filter: (i = 54)
+  Rows Removed by Filter: 999000
+Planning time: 0.649 ms
+Execution time: 228.172 ms
+
+# now we create a index(b-tree) on the column i of the table test and rerun the select query.
+create index test_i_idx on test (i);
+explain analyse select * from test where i=54;
+
+# we can notice, the planner use index scan instead of the seq scan
+# There is on filter with condition, only a index condtion. 
+# Also the time is reduced significantly
+Index Scan using test_i_idx on test  (cost=0.42..41.94 rows=1001 width=37) (actual time=0.095..0.370 rows=1000 loops=1)
+  Index Cond: (i = 54)
+Planning time: 0.192 ms
+Execution time: 0.433 ms
+
+</code>
+
+In the above example, we've seen if you only select a handful of rows, PostgreSQL will decide on an index scan – if you select a majority of the rows, PostgreSQL will decide to read the table completely. But what if you read too much for an index scan to be efficient but too little for a sequential scan? The solution to the problem is to use a bitmap scan. The idea behind a bitmap scan is that a single block is only used once during a scan. It can also be very helpful if you want to use more than one index to scan a single table.
+
+<code>
+# The query optimizer will choose the scan which it thinks the best, so to force it to use the bitmap scan. We need to type the following command. This is only for demonstration purpose, don't use it in the prod environment
+
+SET enable_indexscan = OFF;
+SET enable_seqscan = OFF;
+SET enable_bitmapscan  = ON;
+
+explain analyse select * from test where i<492;
+
+# output
+Bitmap Heap Scan on test  (cost=9273.02..23795.07 rows=495044 width=37) (actual time=63.472..113.688 rows=491999 loops=1)
+  Recheck Cond: (i < 492)
+  Heap Blocks: exact=4100
+  ->  Bitmap Index Scan on test_i_idx  (cost=0.00..9149.25 rows=495044 width=0) (actual time=62.408..62.408 rows=491999 loops=1)
+      Index Cond: (i<492)
+Planning time: 0.068 ms
+Execution time: 129.859 ms
+</code>
+
+==== Some explain examples on different joins ====
+
+**Hash Join**
+
+<code sql>
+EXPLAIN (ANALYSE , TIMING ON , COSTS ON) select C.customerid,C.firstname,C.lastname,O.orderdate,O.tax,O.orderid
+from customers C INNER JOIN orders O on C.customerid = O.customerid;
+
+# Output
+# The execution planner decide to do a hash join, it hashes the order table and join it with customer table
+Hash Join  (cost=1849.00..7281.93 rows=59996 width=36) (actual time=49.448..158.163 rows=59998 loops=1)
+  Hash Cond: (c.customerid = o.customerid)
+  ->  Seq Scan on customers c  (cost=0.00..3332.99 rows=99999 width=22) (actual time=0.005..48.189 rows=99999 loops=1)
+  ->  Hash  (cost=1099.00..1099.00 rows=60000 width=18) (actual time=49.104..49.104 rows=59998 loops=1)
+        Buckets: 65536  Batches: 1  Memory Usage: 3559kB
+        ->  Seq Scan on orders o  (cost=0.00..1099.00 rows=60000 width=18) (actual time=0.990..19.554 rows=60000 loops=1)
+Planning time: 20.773 ms
+Execution time: 160.567 ms
+</code>
+
+**Merge join**
+
+<code>
+EXPLAIN (ANALYSE , TIMING ON , COSTS ON) select C.customerid,C.firstname,C.lastname,O.orderdate,O.tax,O.orderid
+from customers C LEFT JOIN orders O on C.customerid = O.customerid order by C.customerid;
+
+Merge Left Join  (cost=0.58..9500.21 rows=99999 width=36) (actual time=0.023..129.006 rows=114955 loops=1)
+  Merge Cond: (c.customerid = o.customerid)
+  ->  Index Scan using customers_pkey on customers c  (cost=0.29..4940.28 rows=99999 width=22) (actual time=0.011..36.267 rows=99999 loops=1)
+  ->  Index Scan using ix_order_custid on orders o  (cost=0.29..3560.22 rows=60000 width=18) (actual time=0.006..56.600 rows=59999 loops=1)
+Planning time: 0.308 ms
+Execution time: 133.247 ms
+</code>

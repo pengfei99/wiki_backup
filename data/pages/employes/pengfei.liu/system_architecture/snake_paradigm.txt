@@ -1,0 +1,124 @@
+====== Snake System Design Principles ======
+
+In this article, we will use the snake System Design Principles to design a video streaming system like Netflix.
+
+
+
+===== What is the system design? =====
+
+The system design is the process of defining the architecture, components, modules, interfaces, and data model for the system to satisfy the specified requirements.
+
+
+===== 1. Scenario: case/interface =====
+
+The first letter S stands for Scenarios, in this step, we will find all scenarios which can happen in the system. 
+In other word, we need to find out what are the typical use cases? What kind of abstraction do you provide?
+What do the APIs look like?
+
+==== Example ====
+
+
+In our simple Netflix example, We will have the following scenarios:
+  * User management (registration, login/logout, reset/recover password)
+  * Play a video
+  * Video recommendation for a User
+
+Of course, you can have more than these three above scenarios in your system. You need to list them one by one.
+
+For each scenario, we need to list all detail actions. For example, to play a video, you may :
+  * get the channel list
+  * get into the channel
+  * get video list of a channel
+  * play a video
+
+You can consider this step as the functional requirements gathering.
+
+===== 2. Necessary: constrain/hypothesis =====
+
+In this step, we need to find out the non-functional requirements such as:
+  * How many total users and daily active users do you have?
+  * How many transactions do you have?
+  * How many concurrencies or parallel executions does it require?
+  * How much is the peak load?
+  * How fast does it have to be? Or how much latency can it endure
+
+Based on these requirements, we need to design the system with enough cpu, memory, storage, database connections.
+
+==== Example ====
+
+Let's reuse the netflix example, the PM told us we will have the following user load:
+
+Total User connection per day : 5,000,000
+
+The Average connection duration is: 30 mins
+
+The average concurrent user connection(= Total user connection per day/ 24h (in seconds) * connection duration (in seconds)): 5000000/(24*60*60)*(30*60) = 104167
+
+Max concurrent user connection(The average * 6) = 625000
+
+We estimate, six months later, we will double this number = 1,250,000
+
+**Band width** : 
+per user = 3 mbps
+
+max = 3 * 1,250,000 (max concurrent user connection)
+
+**Memory** :
+
+per user = 10 kb
+
+now max= total user number * 10kb = 
+
+6 month later max = total user number * 2 * 10kb
+
+** Hard drive **
+
+Movie number = 1000
+
+Each movie takes 50 GB
+
+Total: 1000* 50 = 50 TB
+
+
+===== 3. Application: service/algorithm =====
+
+Design the architecture of each service in the application, and evaluate the Complexity(Big O analysis) of each service.
+
+Simulate use cases step by step by using the given service (find out all possible service chaining combination)
+
+==== Example ====
+
+In our Netflix example, we can think of three basic services:
+
+  * user service
+  * channel service
+  * movie service
+
+
+===== 4. Kilobit: data =====
+
+In this step, we need to identify all services which need to persist data and evaluate the following questions:
+  * How much is the generated data?
+  * How much space does it need to persist?
+  * Where to store the data. File system? SQL database? NoSQL database?
+
+==== Example ====
+
+**User service**
+
+The user service will persist user data, such as user name, age, and role, etc. With a SQL database, we can reduce the storage, because of the user role table will be reused by all users.
+
+**Channel service**
+It depends on how we design a channel, if a movie can be in multiple channels, SQL database is better, otherwise, 
+NoSql is better
+
+**Movie service**
+It requires both sql database and file storage.
+
+===== 5. Evolve: =====
+
+In this step, we need to analyze the architecture and answer the following question:
+  * Is there still Optimization possible
+  * Is it Extensibable(adding new features)
+  * Is it Scalabable(support more user)
+  * Does it support high Availability

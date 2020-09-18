@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+&nbsp;
+{% block title %}
+Books
+{% endblock %}
+&nbsp;
+{% block body %}
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>Books<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h1.html"><span class="kw2">h1</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;table table-striped&quot;</span>&gt;</span>
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/thead.html"><span class="kw2">thead</span></a>&gt;&lt;<a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;</span>Title<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;&lt;<a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;</span>Author<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/th.html"><span class="kw2">th</span></a>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/thead.html"><span class="kw2">thead</span></a>&gt;</span>
+    {% for book in books %}
+    <span class="sc2">&lt;<a href="http://december.com/html/4/element/tr.html"><span class="kw2">tr</span></a>&gt;&lt;<a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>{{ book.title }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>
+        <span class="sc2">&lt;<a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>{{ book.author }}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/tr.html"><span class="kw2">tr</span></a>&gt;</span>
+    {% endfor %}
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a>&gt;</span>
+{% endblock %}

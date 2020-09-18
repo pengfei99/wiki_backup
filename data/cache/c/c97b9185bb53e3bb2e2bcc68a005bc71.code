@@ -1,0 +1,12 @@
+<span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;?xml-stylesheet</span> <span class="re0">type</span>=<span class="st0">&quot;text/xsl&quot;</span> <span class="re0">href</span>=<span class="st0">&quot;configuration.xsl&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;configuration<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.hosts<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>lin01.udl.org:10000<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;property<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>beeline.hs2.connection.principal<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;value<span class="re2">&gt;</span></span></span>hive/dummy-hostname@domain.com<span class="sc3"><span class="re1">&lt;/value<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/property<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/configuration<span class="re2">&gt;</span></span></span>

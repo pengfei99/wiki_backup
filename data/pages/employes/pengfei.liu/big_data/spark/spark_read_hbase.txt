@@ -1,0 +1,49 @@
+====== Spark read and write data from HBase ======
+
+===== Create table in Hbase =====
+
+If you don't have Hbase, follow this to install Hbase [[employes:pengfei.liu:big_data:hbase:install_hbase|Install Hbase]]
+
+To do this tutorial, you need to create a table student as followed
+
+<code>
++------+----------+--------+------+
+| id   | name     | gender | age  |
++------+----------+--------+------+
+|    1 | Xueqian  | F      |   23 |
+|    2 | Weiliang | M      |   24 |
++------+----------+--------+------+
+</code>
+
+The following commands can create this table
+<code>
+#check your data base tables
+hbase(main):008:0> list
+TABLE                                                                                                  
+student                                                                                                
+teacher                                                                                                
+2 row(s) in 0.0630 seconds
+
+=> ["student", "teacher"]
+
+#if you already have table student, delete the table
+hbase> disable 'student'
+hbase> drop 'student'
+
+#create table student
+hbase>  create 'student','info'
+
+#insert student 1 into the table
+hbase(main):009:0> put 'student','1','info:name','pengfei'
+hbase(main):010:0> put 'student','1','info:gender','M'
+hbase(main):011:0> put 'student','1','info:age','33'
+
+
+#insert student 2 into the table
+hbase(main):012:0> put 'student','2','info:name','toto'
+hbase(main):013:0> put 'student','2','info:gender','F'
+hbase(main):015:0> put 'student','2','info:age','23'
+
+</code>
+
+After this, you should see this 

@@ -1,0 +1,46 @@
+a:6:{s:2:"id";s:30:"vms:openstack:fluxomique_utec7";s:6:"prefix";s:0:"";s:4:"text";s:1343:"====== VM fluxomique UTEC07 ======
+
+**Adresses IP :** 134.158.37.3
+
+**Infrastructure :** Open Stack CC, tenant bioaster
+
+**Nom :** CCLinFluxUTEC07
+
+**Image de base :** CentOS7
+
+**Point de montage GPFS :** /mnt/gpfs
+
+**Serveur NFS :** ccdtli95
+
+**Flavor :** (4 VCPUs, RAM 4 GB, Disk root 40 GB, Disk ephemeral: 40 GB)
+
+**Utilisateurs créés et mode d'accès :** 
+
+Ndeye-Fatou Diallo => uid=42801(ndiallo) gid=1072(bioaster) groups=1072(bioaster)
+
+Adama Ouattara =>  uid=42286(ouattara) gid=1072(bioaster) groups=1072(bioaster)
+
+bioaster (pwd habituel)
+
+centos (avec clé ssh de pierre)
+
+**Remarques :**
+
+sudo yum autorisé au groupe bioaster via sudoers
+
+Accès en ssh avec password
+
+**Logiciels installés :**
+
+  * x2go server (pour l'accès distant)
+  * Scilab (/opt/scilab-5.5.2/)
+  * influx_s, influx_i (http://metasys.insa-toulouse.fr/software/influx/) ajouté au PATH de ndiallo et ouattara
+  * sysmetab (/home/ndiallo/SYSMETAB-5.0/ et j'ai ensuite suivi la procédure suivante http://forge.scilab.org/index.php/p/sysmetab/page/2-Installation/) ajouté au PATH de ndiallo et ouattara
+
+
+===== Journal =====
+
+  * **2016.05.18 (pv)** Instanciation & installation
+  * **2016.05.26 (pv)** Ajout de l'utilisateur ouattara
+  * **2016.05.27 (pv)** Snapshot de la machine (CCLinFluxUTEC07_27-05-2016)
+";s:6:"suffix";s:0:"";s:4:"date";i:1464365551;s:6:"client";s:25:"pierre.veyre@bioaster.org";}

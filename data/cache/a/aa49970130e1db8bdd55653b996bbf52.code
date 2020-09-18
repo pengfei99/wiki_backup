@@ -1,0 +1,7 @@
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span>
+<span class="kw1">FROM</span> Customers
+   <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales 
+   <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+<span class="kw1">WHERE</span> Sales<span class="sy0">.</span>LastSaleDate <span class="kw1">BETWEEN</span> #<span class="nu0">1</span><span class="sy0">/</span><span class="nu0">1</span><span class="sy0">/</span><span class="nu0">2016</span># <span class="kw1">AND</span> #<span class="nu0">12</span><span class="sy0">/</span><span class="nu0">31</span><span class="sy0">/</span><span class="nu0">2016</span>#
+<span class="kw1">GROUP</span> <span class="kw1">BY</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name
+<span class="kw1">HAVING</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu0">5</span>

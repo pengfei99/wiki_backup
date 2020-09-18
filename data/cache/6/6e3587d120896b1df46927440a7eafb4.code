@@ -1,0 +1,2 @@
+$ update-grub
+$ chmod o-rwx /etc/grub.d/40_custom

@@ -1,0 +1,12 @@
+# To reuse connections
+ControlMaster auto
+ControlPath /home/&lt;LOGIN&gt;/.ssh/tmp/%h_%p_%r
+&nbsp;
+Host ccage
+  User &lt;LOGIN&gt;
+  HostName ccage.in2p3.fr
+&nbsp;
+Host redmine.bioaster.org
+  User esamples
+  ProxyCommand ssh -q ccage nc 134.158.37.8 22
+  IdentityFile /home/&lt;LOGIN&gt;/.ssh/id_rsa

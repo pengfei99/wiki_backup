@@ -1,0 +1,4 @@
+cd /var/www
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/wwwblast-2.2.26-x64-linux.tar.gz
+tar xvzf wwwblast-2.2.26-x64-linux.tar.gz
+mv blast wwwblast

@@ -1,0 +1,71 @@
+
+<h4 id="principes">Principes</h4>
+<div class="level4">
+
+<p>
+Tentakel est un outil d&#039;administration de cluster du type sans agent.<br/>
+
+Il s&#039;appuie sur le package tentakel installé sur le serveur d&#039;administration et sur les clés ssh distribuées sur les machines à administrer.<br/>
+
+L&#039;outil permet de passer, en parallèle la même commande sur un groupe de serveurs.<br/>
+
+Le fichier de configuration est /etc/tentakel.conf<br/>
+
+Le serveurs d&#039;administration est ccbioappl05.in2p3.fr. Notez qu&#039;il n&#039;est pas accessible directement mais uniquement par rebond à partir d&#039;un autre serveur.<br/>
+
+</p>
+
+</div>
+
+<h4 id="exemples">Exemples</h4>
+<div class="level4">
+
+<p>
+# donne le uptime de tous les serveurs configurés<br/>
+
+</p>
+<pre class="code">tentakel uptime
+
+ccbiopt701(0):  10:38:15 up 103 days, 16:47,  1 user,  load average: 0.00, 0.00, 0.00
+ccbioappl04.in2p3.fr(0): 10:38AM  up 18 days, 22:56, 0 users, load averages: 0.19, 0.25, 0.19
+ccbioappl05.in2p3.fr(0): 10:38AM  up 2 days, 19:13, 1 user, load averages: 0.31, 0.18, 0.16
+ccbiopt301(0):  10:39:53 up 20 days,  1:59,  1 user,  load average: 0.00, 0.00, 0.00
+ccbiowiki1.in2p3.fr(0): 10:38AM  up 18 days, 23:40, 0 users, load averages: 0.38, 0.42, 0.36
+ccbioappl01(0):  10:45:19 up 83 days, 22:53,  1 user,  load average: 0.00, 0.01, 0.05
+ccbiopt201(0):  10:38:16 up 72 days, 11:33,  1 user,  load average: 3.31, 3.33, 3.30</pre>
+
+<p>
+# liste les vulnérabilités sur les serveurs BSD avec la derniere liste connue<br/>
+
+</p>
+<pre class="code">tentakel -g FreeBSD pkg audit -F
+
+ccbioappl04.in2p3.fr(0): pkg: vulnxml file up-to-date
+0 problem(s) in the installed packages found.
+ccbioappl05.in2p3.fr(0): pkg: vulnxml file up-to-date
+0 problem(s) in the installed packages found.
+ccbiowiki1.in2p3.fr(0): pkg: vulnxml file up-to-date
+0 problem(s) in the installed packages found.</pre>
+
+<p>
+# liste les sessions ouvertes sur les linux de PT<br/>
+
+</p>
+<pre class="code">tentakel -g LinuxPT who
+ 
+ccbiopt301(0): bioaster pts/0        2014-09-29 09:14 (ccjaga2.in2p3.fr)
+ccbiopt701(0): jgarnier pts/0        Sep 29 09:15 (ccjaga2.in2p3.fr)
+ccbiopt201(0): bioaster pts/3        2014-09-29 09:12 (ccjaga2.in2p3.fr)</pre>
+
+<p>
+# vérifie la version de perl installée sur l&#039;ensemble des linux<br/>
+
+</p>
+<pre class="code">tentakel -g Linux &quot;perl -v | grep built&quot;
+
+ccbiopt301(0): This is perl, v5.10.1 (*) built for x86_64-linux-thread-multi
+ccbiopt701(0): This is perl 5, version 16, subversion 1 (v5.16.1) built for x86_64-linux-thread-multi
+ccbioappl01(0): This is perl 5, version 14, subversion 2 (v5.14.2) built for x86_64-linux-gnu-thread-multi
+ccbiopt201(0): This is perl, v5.10.1 (*) built for x86_64-linux-thread-multi</pre>
+
+</div>

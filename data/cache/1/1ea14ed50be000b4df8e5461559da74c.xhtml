@@ -1,0 +1,134 @@
+
+<h1 class="sectionedit1" id="install_shibboleth_idp">Install shibboleth IDP</h1>
+<div class="level1">
+
+<p>
+1. Pre-requise
+</p>
+
+<p>
+Java,
+</p>
+
+<p>
+web server (apache)
+</p>
+
+<p>
+application server (Jetty)
+</p>
+
+<p>
+2. Download Shibboleth installer
+</p>
+
+<p>
+3. Install shibboleth
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Install shibboleth IDP" [1-168] -->
+<h1 class="sectionedit2" id="configure_shibboleth_idp">Configure shibboleth IDP</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT2 SECTION "Configure shibboleth IDP" [169-209] -->
+<h1 class="sectionedit3" id="add_new_shibboleth_sp_to_idp">Add new shibboleth SP to IDP</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT3 SECTION "Add new shibboleth SP to IDP" [210-253] -->
+<h1 class="sectionedit4" id="add_new_user_attribute">Add new user attribute</h1>
+<div class="level1">
+
+<p>
+1. Get user attribute from data source (e.g. ldap, db, etc.)
+</p>
+
+<p>
+LDAP example:
+</p>
+<pre class="prettyprint lang-class linenums:1">
+ &lt;resolver:DataConnector xsi:type=&quot;LDAPDirectory&quot; xmlns=&quot;urn:mace:shibboleth:2.0:resolver:dc&quot;
+                        id=&quot;LocalLdap&quot;
+                        ldapURL=&quot;ldap://ldap.bioaster.org:389&quot;
+                        baseDN=&quot;OU=UTILISATEURS,dc=bioaster,dc=local&quot;
+                        principal=&quot;CN=admin,dc=bioaster,DC=org&quot;
+                        principalCredential=&quot;pwd&quot;
+                        useStartTLS=&quot;false&quot;&gt;
+        &lt;FilterTemplate&gt;
+            &lt;![CDATA[
+                (sAMAccountName=${requestContext.principalName})
+            ]]&gt;
+        &lt;/FilterTemplate&gt;
+        
+        &lt;ReturnAttributes&gt;cn uid mail department title&lt;/ReturnAttributes&gt;
+    &lt;/resolver:DataConnector&gt;
+</pre>
+<p>
+The return attributes are the attribute name of user in the ldap server
+</p>
+
+<p>
+The database example:
+</p>
+<pre class="prettyprint lang-class linenums:1">
+&lt;resolver:DataConnector id=&quot;SciformaUserDb&quot; xsi:type=&quot;RelationalDatabase&quot; xmlns=&quot;urn:mace:shibboleth:2.0:resolver:dc&quot; queryTimeout=&quot;PT0.000S&quot;&gt;
+        &lt;dc:ApplicationManagedConnection jdbcDriver=&quot;org.postgresql.Driver&quot;
+                                         poolAcquireRetryAttempts=&quot;1&quot;
+                                         poolAcquireRetryDelay=&quot;1&quot;
+                                         poolBreakAfterAcquireFailure=&quot;false&quot;
+                                         jdbcURL=&quot;jdbc:postgresql://100.169.12.131:5432/sciforma&quot;
+                                         jdbcUserName=&quot;shibbolteh&quot;
+                                         jdbcPassword=&quot;pwd&quot;/&gt;
+
+        &lt;dc:QueryTemplate&gt;
+            &lt;![CDATA[
+                SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+                FROM 
+                    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+                    FROM sciforma.&quot;BA_shib_LaborAsgn&quot; a INNER JOIN sciforma.&quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                    ORDER BY a.&quot;AD_ID&quot;) t 
+                WHERE t.&quot;AD_ID&quot;=&#039;${requestContext.principalName}&#039;    
+                GROUP BY t.&quot;AD_ID&quot;
+            ]]&gt;
+        &lt;/dc:QueryTemplate&gt;
+
+
+        &lt;dc:Column columnName=&quot;wps&quot; attributeID=&quot;wps&quot; /&gt;
+         &lt;/resolver:DataConnector&gt;
+
+</pre>
+<p>
+2. Define attributes in xml format
+</p>
+<pre class="prettyprint lang-class linenums:1">
+&lt;resolver:AttributeDefinition xsi:type=&quot;ad:Simple&quot; id=&quot;title&quot; sourceAttributeID=&quot;title&quot;&gt;
+        &lt;resolver:Dependency ref=&quot;LocalLdap&quot; /&gt;
+        &lt;resolver:AttributeEncoder xsi:type=&quot;enc:SAML1String&quot; name=&quot;title&quot; /&gt;
+        &lt;resolver:AttributeEncoder xsi:type=&quot;enc:SAML2String&quot; name=&quot;title&quot; /&gt;
+    &lt;/resolver:AttributeDefinition&gt;
+</pre>
+<p>
+The sourceAttributeID=“title” is the attribute name return by the ldap 
+</p>
+
+<p>
+3. Define Autorization  IDP_HOME/conf/attribute-filter.xml and in the AttributeFilterPolicyGroup section add a new AttributeFilterPolicy. There is an example:
+</p>
+<pre class="prettyprint lang-class linenums:1">
+&lt;afp:AttributeRule attributeID=&quot;title&quot;&gt;
+&lt;afp:PermitValueRule xsi:type=&quot;basic:ANY&quot;/&gt;
+&lt;/afp:AttributeRule&gt;
+</pre>
+</div>
+<!-- EDIT4 SECTION "Add new user attribute" [254-3405] -->
+<h1 class="sectionedit5" id="test_your_idp_attributes_availabilities">Test your IDP attributes availabilities</h1>
+<div class="level1">
+<pre class="prettyprint">
+$ su - jetty
+$ cd /opt/shibboleth-idp/
+$ ./bin/aacli.sh --requester=http://www.bioaster.org/secure --configDir=conf/ --principal=&quot;ymouscaz&quot;
+</pre>
+</div>
+<!-- EDIT5 SECTION "Test your IDP attributes availabilities" [3406-] -->

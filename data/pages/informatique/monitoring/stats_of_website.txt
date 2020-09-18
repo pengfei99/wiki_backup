@@ -1,0 +1,10 @@
+Suite à la réunion du 12 Juillet entre PLU GB et CD il a été demandé à PLU de dimensionner les solution possibles pour monitor les stats de biospecimens et autre applications web (e.g. NoE)
+
+^# ^Description?                  ^Points forts          ^Points faibles  ^Isofonctionnel ^Temps ^
+^1 | Install server awstats, copy log files and analyze log files manually. | * solution rapid.  | * No log update     | Yes  | ~3 days |
+^2 | Use Rsync to copy log files from web application servers to awstats server, \\ edit daily cron job to analyze log files and do the log rotation | * Log files transfer  and log analysis is done automatically  | * Log files are transfered as plain text data no log curation or filter possible | Yes | 5 days|
+^3 | Install syslog-ng server on awstats server, and syslog-ng client on biospecimens. \\ Edit daily cron job to analyze log files and do the log rotation. \\ Edit ansible play book to deploy syslog-ng client | * The syslog-ng server can be our centralize log server. This server can make us respect the data center log saving law. \\ * Log files can be parsed into structrued data (e.g. xml, json), can be applied to all kinds of log files | * Take a long time to do | Yes | Hard to say, 10-15 days maybe|
+
+
+Other comments and suggestions:
+

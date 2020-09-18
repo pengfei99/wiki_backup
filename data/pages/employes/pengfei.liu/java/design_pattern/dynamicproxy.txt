@@ -1,0 +1,147 @@
+====== Dynamic Proxy design pattern ======
+
+Dynamic proxies allow one single class with one single method to service multiple method calls to arbitrary classes with an arbitrary number of methods. A dynamic proxy can be thought of as a kind of Facade, but one that can pretend to be an implementation of any interface. Under the cover, it routes all method invocations to a single handler  the invoke() method.
+
+This is used for framework writers, the concrete class implementations won't be know until run-time.
+
+This feature is built into the standard JDK, hence no additional dependencies are required.
+
+
+======2. Invocation Handler ======
+
+Invocation Handler is the heart of the proxy pattern. It allows you to get all methods of any classes. Th
+e following is an example of InvocationHander
+
+<file java>
+
+ackage org.pengfei.dynamic_proxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+public class HelloWorldHandler implements InvocationHandler{
+
+    private Object targetObj;
+    private final Map<String, Method> methods= new HashMap<>();
+
+    public HelloWorldHandler(Object obj){
+        super();
+        this.targetObj = obj;
+        for(Method method: targetObj.getClass().getDeclaredMethods()){
+            this.methods.put(method.getName(),method);
+        }
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Object result = null;
+        doBefore();
+        result=methods.get(method.getName()).invoke(targetObj,args);
+        doAfter();
+        return result;
+    }
+
+    public void doBefore(){
+        System.out.println("Before method invoke");
+
+    }
+
+    public void doAfter(){
+        System.out.println("After method invoke");
+    }
+
+}
+</file>
+
+
+======3. Creating a dynamic Proxy instance ======
+
+Suppose we have an Object HelloWord which we want to invoke in the proxy
+
+First we define a interface
+
+<file java>
+package org.pengfei.dynamic_proxy;
+
+public interface HelloWorld {
+    public void sayHello();
+    public void sayShit();
+}
+
+</file>
+
+Then we implement the interface
+
+<file java>
+package org.pengfei.dynamic_proxy;
+
+public class HelloWorldImpl implements HelloWorld{
+    @Override
+    public void sayHello() {
+        System.out.println("This is pengfei, hello");
+
+    }
+
+    @Override
+    public void sayShit() {
+        System.out.println("Oh shit!!");
+    }
+}
+</file>
+
+Now we could build our proxy to invoke the helloWorld object by using the invocation handler. The proxy use always the same interface which the real object implements to ensure the integrity of the logic of the object.
+
+<file java>
+package org.pengfei.dynamic_proxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class test {
+
+    public static void main(String[] args){
+        //Creat an object(instance of HelloWorld) helloWorld 
+        HelloWorld helloWorld = new HelloWorldImpl();
+        //Build an invocation handler which invoke object helloWorld
+        InvocationHandler handler = new HelloWorldHandler(helloWorld);
+        //Build an proxy based on the helloWorld object and invocation handler
+        HelloWorld proxy=(HelloWorld)Proxy.newProxyInstance(
+                helloWorld.getClass().getClassLoader(),
+                helloWorld.getClass().getInterfaces(),
+                handler
+        );
+
+        proxy.sayHello();
+        proxy.sayShit();
+    }
+}
+
+</file>
+
+====== Conclusion ======
+
+There are four main steps to build a dynamic proxy object
+
+  - Create your own invocation handler by implementing the InvocationHandler interface
+  - Create a proxy Class based on the given classloader and interface (Class clazz = Proxy.getProxyClass(classLoader,new Class[]{...});)
+  - Use java reflection mechanism to get the proxy object constructor. (Constructor constructor = clazz.getConstructor(new Class[]{InvocationHandler.class});)
+  - Use the proxy constructor to build a proxy object, here we also need to provide the invocation handler which we created at step 1 to the constructor (Interface Proxy = (Interface)constructor.newInstance(new Object[] (handler));)
+
+
+
+To simplyfy the proxy object construction, the step 2~4 is embeded in the constructor
+
+so we only need 2 step : 1. create invocation handler, create proxy object based on the target interface and invocation handler 
+
+<file java>
+InvocationHandler handler = new HelloWorldHandler(helloWorld);
+
+HelloWorld proxy=(HelloWorld)Proxy.newProxyInstance(
+                helloWorld.getClass().getClassLoader(),
+                helloWorld.getClass().getInterfaces(),
+                handler
+        );
+
+</file>

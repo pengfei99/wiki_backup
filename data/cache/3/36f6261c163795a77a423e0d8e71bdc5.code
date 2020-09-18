@@ -1,0 +1,63 @@
+<span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+<span class="kw1">import</span> fuzzywuzzy
+<span class="kw1">from</span> fuzzywuzzy <span class="kw1">import</span> process
+<span class="kw1">from</span> utils <span class="kw1">import</span> *
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># read in our data</span>
+suicide_attacks <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day4_clean_inconsistent_data_entry/PakistanSuicideAttacks_v11.csv&quot;</span><span class="sy0">,</span>encoding<span class="sy0">=</span><span class="st0">'Windows-1252'</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1"># print (suicide_attacks.sample(5))</span>
+<span class="co1">#######################################</span>
+<span class="co1">####Clean column city #################</span>
+<span class="co1">#####################################</span>
+cities <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="me1">unique</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+cities.<span class="me1">sort</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>cities.<span class="me1">size</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># convert all to lower case</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span> <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">lower</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove trailing white spaces</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span> <span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'City'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">strip</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span><span class="st0">'City'</span><span class="br0">&#41;</span>
+<span class="co1"># cities = suicide_attacks['City'].unique()</span>
+<span class="co1"># cities.sort()</span>
+&nbsp;
+&nbsp;
+<span class="co1"># find 10 first matches which looks like d.i khan</span>
+<span class="co1">#matches = fuzzywuzzy.process.extract(&quot;d.i khan&quot;,cities,limit=10,scorer=fuzzywuzzy.fuzz.token_sort_ratio)</span>
+&nbsp;
+<span class="co1">#print(matches)</span>
+&nbsp;
+<span class="co1"># use the following function to replace close matches to &quot;d.i khan&quot; with &quot;d.i khan&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span> column<span class="sy0">=</span><span class="st0">'City'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;d.i khan&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span><span class="st0">'City'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># use the following function to replace close matches to &quot;Kuram agency&quot; with &quot;Kuram agency&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span> column<span class="sy0">=</span><span class="st0">'City'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;Kuram agency&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+cities<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'City'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">####################################################################</span>
+<span class="co1">#### clean the province column #####################################</span>
+<span class="co1">###################################################################</span>
+province<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'Province'</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>province<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># convert all to lower case</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span><span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">lower</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># remove trailling space</span>
+suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span><span class="sy0">=</span> suicide_attacks<span class="br0">&#91;</span><span class="st0">'Province'</span><span class="br0">&#93;</span>.<span class="kw2">str</span>.<span class="me1">strip</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># replace all matches &quot;Baluchistan&quot; to &quot;Baluchistan&quot;</span>
+replace_matches_in_column<span class="br0">&#40;</span>df<span class="sy0">=</span>suicide_attacks<span class="sy0">,</span>column<span class="sy0">=</span><span class="st0">'Province'</span><span class="sy0">,</span> string_to_match<span class="sy0">=</span><span class="st0">&quot;baluchistan&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+province<span class="sy0">=</span>get_column_unique_entry_size<span class="br0">&#40;</span>suicide_attacks<span class="sy0">,</span> <span class="st0">'Province'</span><span class="br0">&#41;</span>
+<span class="kw1">print</span><span class="br0">&#40;</span>province<span class="br0">&#41;</span>

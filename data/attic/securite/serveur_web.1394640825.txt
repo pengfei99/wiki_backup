@@ -1,0 +1,26 @@
+====== Configurer un serveur web ======
+
+[[http://www.lighttpd.net|Lighttpd]] est utilisé pour servir du contenu sur le réseau. Il est configuré pour utilisé le protocole **HTTPS** avec les [[securite:certification|certificats émis par le CA de BIOASTER]].
+
+    ##/etc/lighttpd/lighttpd.conf
+    ssl.engine = "enable"
+    ssl.pemfile = "/path/to/certificate+key-combined.pem"
+
+    ##/etc/lighttpd/conf-enabled/20-server.tld.conf
+    $SERVEUR["socket"] == ":443" {
+        server.name = "serveur.tld"
+        server.document-root = "/var/www"
+        ssl.engine = "enable"
+        ssl.pemfile = "/path/to/certificate+key-combined.pem"
+        
+        ssl.verifyclient.exportcert = "enable"
+        ssl.verifyclient.activate   = "enable"
+        ssl.verifyclient.username   = "SSL_CLIENT_S_DN_CN" # PHP: $_SERVER['SSL_CLIENT_S_DN_EMAILADDRESS']
+        ssl.verifyclient.enforce    = "enable"
+        ssl.verifyclient.depth      = 3
+        ssl.ca-file                 = "/etc/ssl/crt/trusted_certificates.pem"
+    }
+
+**Attention :** Le fichier ''trusted_certificate.pem'' doit contenir tous les certificats de confiance pour la vérification des certificats clients !
+
+{{tag>todo}}

@@ -1,0 +1,2 @@
+$ sudo su - postgres
+$ psql &lt; /tmp/dump.sql

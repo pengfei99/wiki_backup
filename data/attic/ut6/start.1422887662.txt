@@ -1,0 +1,44 @@
+====== Unité Technologique no 6 ======
+
+  * Les [[in2p3/logiciels|logiciels disponibles]] sur la [[ccin2p3:scheduler|ferme]] et le [[ccin2p3:cloud|nuage]] du [[ut6:ccin2p3|Centre de Calcul de l'IN2P3]] ;
+  * Le réseaux et [[/vms|les machines virtuelles]] disponibles sur le //[[/ordinateurs/mini_serveur|mini serveur]]// de Paris, sur les [[ut6:vmware|VMware]] du CC et sur l'[[/ut6/openstack|OpenStack]] du CC ;
+  * Le [[:wiki|wiki]] des équipes système.
+  * Les [[ut6:reunions:|réunions d'équipe]]
+  * Les fiches de présentation des [[ut6:projets_internes:|projets internes]]
+  * Le [[ccin2p3/partenariat|partenariat avec le CCIN2P3]]
+  * Liste des [[:conférences|congrès en 2015]]
+
+
+====== Proposition de réorganisation des activités ======
+|       ^Pôle d'activité                                                            ^Site                               ^Responsable ^Equipe ^Fonctions ^
+^Pôle 1 | Déploiement d'applications, de services et de plateformes applicatives    | CCIN2P3                           |            |       | Installation de la boîte à outils bio-informatiques, déploiement de Galaxy, TranSMART et autres services Web, déploiement de Pegasus et HTcondor, création, déploiement et maintenance des environnements virtuels |
+^Pôle 2 | Récolte, centralisation et sauvegarde des données expérimentales          | CCIN2P3, Lyon, Paris, Partenaires |            |       | Partage des données avec OwnCloud, centralisation des données a BIOASTER (socle informatique) puis au CCIN2P3 (GPFS), tiering sur bande magnétique, organisation des sauvegardes |
+^Pôle 3 | Gestion des analyses de données                                           | CCIN2P3, Lyon                     |            |       | Exploitation de Pegasus (conception des flux d'analyse automatique, intégration des scripts bio-info dans Pegasus, etc), wrapper OpenStack, développement d'une plateforme Web d'accès aux analyses et aux résultats (p.ex. pour un partenaire) |
+^Pôle 4 | Gestion et visualisation des données expérimentales et phénotypiques      | CCIN2P3, Lyon, Paris, Partenaires |            |       | Développement d'une solution des suivi des échantillons à BIOASTER, développement d'un LIMS orienté omique, déploiement d'un eCRF,  déploiement de TranSMART/eTRIKS, développement d'un LIMS orienté études préclinique et modèles animaux |
+^Pôle 5 | Intégration des données et analyses multi-omiques                         | CCIN2P3, Lyon, Paris              |            |       | Conception d'un data warehouse (p.ex. iRODS), recherche de biomarqueurs dans des données omiques, veille scientifique et technologique, curation des données (Récolte, nettoyage réconciliation et chargement des données) |
+^Pôle 6 | Exploitation, documentation, maintenance et support aux utilisateurs      | CCIN2P3, Lyon, Paris, Partenaires |            |       | Suivi des tickets, Wiki, Forge, Bazaar, suivi de la consommation des ressources    |
+^Pôle 7 | Gestion de l'unité technologique                                          | CCIN2P3, Lyon, Paris, Partenaires |            |       | Suivi des conventions avec le CCIN2P3 et l'Institut Pasteur, gestion des portefeuilles projets, prospection, veille technologique, animation de la communauté bio-informatique, prospective |                 
+^Pôle 8 | Gestion et conduite de projets d'informatique scientifique               | CCIN2P3, Lyon, Paris, Partenaires |            |       | Encadrement de prestataires, recettage, revue de code, mise en place des environnements de développement, choix et intégration des solutions extérieures, formation aux bonnes pratiques |  
+
+<WRAP hide>
+===== Interaction IT/UT06 =====
+Exemples de projets ou une interaction forte entre IT et UTech06 est, ou a été, nécessaire:
+   - __Intégration de stations de pilotage d'équipement et récoltes des données brutes :__  Les stations d’acquisition ont besoin d'être normalisées pour être intégrées au réseau BIOASTER afin que l'UT06 puisse organiser la récolte et la sauvegarde des données brutes. Le travail a commencé avec l'UT02.
+   - __SEARCH :__  Revue de code du projet SEARCH mobilisant 5 jour de FTE de l'UT06. Comment organiser l'ajout de fonctionnalité et la maintenance ?
+   - __Socle informatique :__ Mise en place et exploitation du socle à Gerland, au CCIN2P3 et à Paris
+   - __Intégration à l'AD :__ Utilisation d'Active Directory comme base d'identification aux services mis en place par l'UT06
+
+Exemples de projets menés ou initiés par l'UT6, mais n'appartenant pas à sont domaine de compétence:
+   - __Liaison Internet et LAN2LAN :__  Initié par l'UT06 et pleinement repris en main par l'IT.
+   - __Jitsi/Jabber :__  Initié et mis en préproduction par l'UT06.
+   - __OwnCloud pour échanger les données hors projet :__ Initié et mis en préproduction par l'UT06. Par ailleurs, OwnCloud sera la solution privilégié pour récolter les données des projets. 
+
+Exemples de projets dont l'UT6 a ou aura besoin mais qui n'appartient pas à sont domaine de compétence:
+   - __Authentification sécurisée par certificat :__ l'UT06 a besoin d'un framework permettant de sécuriser les échanges et les accès dans BIOASTER et avec les partenaires, autant au niveau des personnes que des machines.
+   - __Socle informatique @ CCIN2P3/Pasteur :__  Initié et mis en préproduction par l'UT06.
+
+Exemples de projets ou l'IT a besoin de l'expertise de l'UT06 :
+   - __Promise :__ L'IT a besoin que l'UT06 package et déploie la solution dur le socle, l'IT a besoin de l'expertise de l'UT06 pour définir les prérequis techniques de la solution
+   - __SEARCH :__  l'IT a besoin de l'expertise de l'UT06 pour valider la livraison.
+
+</WRAP>

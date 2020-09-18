@@ -1,0 +1,65 @@
+====== What a distributed system is and its characteristics ======
+
+===== Defining a distributed system =====
+
+A distributed system is defined as a software system that is composed of independent computing entities linked together by a computer network whose components communicate and coordinate with each other to achieve a common goal.
+
+===== Key characteristics of a distributed system =====
+
+In order to identify a distributed system, here are the key characteristics that you need to look out for:
+  * **Resource sharing**: This refers to the possibility of using the resources in the system, such as storage space, computing power, data, and services from anywhere, and so on.
+  * **Extendibility**: This refers to the possibility of extending and improving the system incrementally, both from hardware and software perspectives.
+  * **Concurrency**: This refers to the system's capability to be used by multiple users at the same time to accomplish the same task or different tasks
+  * **Performance and scalability**: This ensures that the response time of the system doesn't degrade as the overall load increases
+  * **Fault tolerance**: This ensures that the system is always available even if some of the components fail or operate in a degraded mode
+  * **Abstraction through APIs**: This ensures that the system's individual components are concealed from the end-users, revealing only the end services to them
+
+===== Key problems in a distributed system =====
+
+The below list shows the key problems in a distributed system. But the most important problem is to make **the participating computing entities, or independent programs, coordinate their actions**.
+
+^Assumptions ^ Reality ^
+| The network is reliable| In reality, the network or the interconnection among the components can fail due to internal errors in the system or due to external factors such as power failure. |
+|Latency is zero | Users of a distributed system can connect to it from anywhere in the globe, and it takes time to move data from one place to another. The network's quality of service also influences the latency of an application.|
+| Bandwidth is infinite | Network bandwidth has improved many folds in the recent past, but this is not uniform across the world. Bandwidth depends on the type of the network (T1, LAN, WAN, mobile network, and so on).|
+| The network is secure | The network is never secure. Often, systems face denial of-service attacks for not taking the security aspects of an application seriously during their design.|
+| Topology doesn't change | In reality, the topology is never constant. Components get removed/added with time, and the system should have the ability to tolerate such changes. |
+| There is one administrator | Distributed systems never function in isolation. They interact with other external systems for their functioning; this can be beyond administrative control. |
+| Transport cost is zero | This is far from being true, as there is cost involved everywhere, from setting up the network to sending network packets from source to destination. The cost can be in the form of CPU cycles spent to actual dollars being paid to network service providers. |
+| The network is homogeneous | A network is composed of a plethora of different entities. Thus, for an application to function correctly, it needs to be interoperable with various components, be it the type of network, operating system, or even the implementation languages.|
+
+===== Why zookeeper is useful for a distributed system =====
+
+Apache ZooKeeper is an effort to develop a highly scalable, reliable, and robust centralized service to implement coordination in distributed systems that developers can straightaway use in their applications through a very simple interface to a centralized coordination service. It enables application developers to concentrate on the core business logic of their applications and rely entirely on the ZooKeeper service to get the coordination part correct and help them get going with their applications. It simplifies the development process, thus making it more nimble.
+
+With ZooKeeper, developers can implement common distributed coordination tasks, such as the following:
+  * **Configuration management**
+  * **Naming service**
+  * **Distributed synchronization, such as locks and barriers**
+  * **Cluster membership operations, such as detection of node leave/node join**
+
+Any distributed application needs these kinds of services one way or another, and implementing them from scratch often leads to bugs that cause the application to behave erratically. Zookeeper mitigates the need to implement coordination and synchronization services in distributed applications from scratch by providing simple and elegant primitives through a rich set of APIs.
+
+===== Challenges of distributed applicatioins =====
+
+  - **Race condition**: Sometimes there are two or more machines that are trying to perform a particular task, even when that task actually needs to be done only by a single machine at any given time.
+  - **Deadlock**: In order to complete indefinitely, two or more operations waiting for each other.
+  - **Inconsistency**: It means Partial failure of data.
+
+
+===== Coodination in a distributed system =====
+
+==== Coodinate/synchronize data ====
+
+Let's take the example of doing configuration management for a distributed application that comprises multiple software components running independently and concurrently, spanning across multiple physical servers. 
+
+Now, having a master node where the cluster configuration is stored and other worker nodes that download it from this master node and auto-configure themselves seems to be a simple and elegant solution. However, this solution suffers from a potential problem of **the master node being a single point of failure**. Even if we assume that the master node is designed to be fault-tolerant, designing a system where a change in the configuration is propagated
+to all worker nodes dynamically is not straightforward.
+
+==== Service discovery ====
+Often, to sustain the load and increase the availability of the application, we add more physical servers to the system. The client or worker nodes must know about this change in the cluster memberships and the availability of newer machines that host different services in the cluster. This needs careful design and implementation of logic in the client application itself.
+
+==== Fault-tolerant ====
+
+A horizontally scalable distributed system that spans over hundreds and thousands of physical machines is often prone to failures such as hardware faults, system crashes, communication link failures, and so on. These types of failures don't really follow any pattern, and hence, to handle such failures in the application logic and design
+the system to be **fault-tolerant** is truly a difficult problem.

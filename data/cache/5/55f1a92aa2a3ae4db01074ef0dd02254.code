@@ -1,0 +1,6 @@
+---
+&nbsp;
+- name: Configure my VM
+  hosts: my_group
+  roles:
+    - server

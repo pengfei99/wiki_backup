@@ -1,0 +1,13 @@
+<span class="co4">all</span>:<span class="co4">
+  hosts</span>:<span class="co4">
+    cent8_sql01.pengfei.org</span>:<span class="co4">
+  children</span>:<span class="co4">
+    webservers</span>:<span class="co4">
+      hosts</span>:<span class="co4">
+        foo.example.com</span>:<span class="co4">
+        bar.example.com</span>:<span class="co4">
+    dbservers</span>:<span class="co4">
+      hosts</span>:<span class="co4">
+        one.example.com</span>:<span class="co4">
+        two.example.com</span><span class="sy2">:
+</span>        three.example.com:

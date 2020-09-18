@@ -1,0 +1,105 @@
+
+<h1 class="sectionedit1" id="le_nuage_openstack">Le nuage OpenStack</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Le nuage OpenStack" [1-33] -->
+<h2 class="sectionedit2" id="pourquoi_utiliser_le_cloud">Pourquoi utiliser le cloud ?</h2>
+<div class="level2">
+
+<p>
+Le nuage OpenStack permet d&#039;obtenir des ressources de calcul à la demande pour des configurations spécifiques : beaucoup de mémoire vive, beaucoup de file d’exécution, un système d&#039;exploitation autre que Scientific Linux, disposer d&#039;une machine de test… Sur la plateforme OpenStack du CC-IN2P3, les ressources sont disponibles sous forme de machines virtuelles (<strong>VM, virtual machine</strong>) pour le calcul, et de volumes virtuels (<strong>VV, Virtual Volume</strong>) pour du stockage. Les volumes virtuels de cette plateforme n&#039;étant pas sauvegardés, ils ne sont pas considérés comme fiables. il ne peuvent être utilisés que comme stockage temporaire (p.ex. pour du scratch).
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Pourquoi utiliser le cloud ?" [34-750] -->
+<h2 class="sectionedit3" id="ou_trouver_de_la_documentation">Où trouver de la documentation ?</h2>
+<div class="level2">
+
+<p>
+Une documentation succincte sur l&#039;utilisation et l&#039;administration d&#039;OpenStack est disponible <a href="/doku.php?id=ccin2p3:cloud" class="wikilink1" title="ccin2p3:cloud">sur les page consacrées au CC-IN2P3</a>. <br/>
+
+Le CC-IN2P3 possède également une <a href="https://ccwiki.in2p3.fr/infrastructure:cloud:start" class="urlextern" title="https://ccwiki.in2p3.fr/infrastructure:cloud:start" rel="nofollow">documentation sur l&#039;utilisation de la plateforme</a>.<br/>
+
+ Enfin la documentation exhaustive d&#039;OpenStack est disponible <a href="http://docs.openstack.org/" class="urlextern" title="http://docs.openstack.org/" rel="nofollow">en ligne</a>. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Où trouver de la documentation ?" [751-1196] -->
+<h2 class="sectionedit4" id="comment_demander_des_ressources">Comment demander des ressources ?</h2>
+<div class="level2">
+
+<p>
+Pour obtenir une machine virtuelle, il suffit de <a href="/doku.php?id=bioinformatique:bioinformatique_openstack_instancier" class="wikilink2" title="bioinformatique:bioinformatique_openstack_instancier" rel="nofollow">suivre la procédure</a>. Mais le plus simple est de faire une demande par courriel à l&#039;UTEC 6 en précisant :
+</p>
+<ul>
+<li class="level1"><div class="li"> l&#039;usage : serveur Web, calcul, etc.</div>
+</li>
+<li class="level1"><div class="li"> la quantité de processeurs</div>
+</li>
+<li class="level1"><div class="li"> la quantité de mémoire vive</div>
+</li>
+<li class="level1"><div class="li"> le système d&#039;exploitation (nom et version)</div>
+</li>
+<li class="level1"><div class="li"> les logiciels d&#039;analyses (nom, version et <abbr title="Uniform Resource Locator">URL</abbr> des sources)</div>
+</li>
+<li class="level1"><div class="li"> dans le cas du logiciel R, les packages supplémentaires (nom, version et <abbr title="Uniform Resource Locator">URL</abbr> des sources)</div>
+</li>
+</ul>
+
+<p>
+Selon l&#039;usage, la machine sera mise en place sur le tenant de service ou le tenant de calcul. Les tenants sont des groupes de ressources :
+</p>
+<ul>
+<li class="level1"><div class="li"> le tenant de service est <code>bioaster</code>: il communique avec Internet et permet d&#039;instancier des machines de services (machine de développement, machine de test, tranSMART, Pegasus, etc.)</div>
+</li>
+<li class="level1"><div class="li"> le tenant de calcul est <code>htc-bioaster</code>: il ne communique avec Internet et permet d&#039;instancier des machines de calcul</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Comment demander des ressources ?" [1197-2208] -->
+<h2 class="sectionedit5" id="comment_se_connecter_a_une_machine_virtuelle">Comment se connecter à une machine virtuelle ?</h2>
+<div class="level2">
+
+<p>
+Pour se connecter à un VM, il faut se connecter à la frontale ssh du CC-IN2P3
+</p>
+<pre class="code text">$ ssh &lt;LOGIN&gt;@ccage.in2p3.fr</pre>
+
+<p>
+Pour à la VM en question :
+</p>
+<pre class="code text">$ ssh &lt;LOGIN&gt;@&lt;ADRESSE IP DE LA VM&gt;</pre>
+
+<p>
+Pour connaître l&#039;addresse IP de votre VM, il faut interroger OpenStack avec la commande <code>nova</code>
+</p>
+<pre class="code">$ nova list
++--------------------------------------+--------------------------+--------+------------+-------------+-----------------------------------------+
+| ID                                   | Name                     | Status | Task State | Power State | Networks                                |
++--------------------------------------+--------------------------+--------+------------+-------------+-----------------------------------------+
+| 373dc452-4a5b-4f86-b065-d24f83f45bfc | Pegasus-HTCondor-Manager | ACTIVE | -          | Running     | bioaster=134.158.37.11, 134.158.246.222 |
+| 39410c2e-b8c3-443f-b165-18c43327fd22 | WINGS-PORTAL             | ACTIVE | -          | Running     | bioaster=134.158.37.16, 134.158.246.23  |
+| 013f0546-36ea-482a-a45d-d7bc3c11febc | jbrowse                  | ACTIVE | -          | Running     | bioaster=134.158.37.6                   |
+| 1bee0f00-c46e-4d24-bea5-f4a0a2116277 | job-manager              | ACTIVE | -          | Running     | bioaster=134.158.37.9                   |
+| 901bae59-8b32-4859-8d08-20860963b53f | jtest                    | ACTIVE | -          | Running     | bioaster=134.158.37.12                  |
+| e205f870-6091-4547-9349-42d95bcb17f2 | worker1                  | ACTIVE | -          | Running     | bioaster=134.158.37.4, 134.158.246.241  |
+| b46cfe30-bd68-4b8c-8cb0-b7b0f6b7a5d4 | worker2                  | ACTIVE | -          | Running     | bioaster=134.158.37.3, 134.158.246.242  |
++--------------------------------------+--------------------------+--------+------------+-------------+-----------------------------------------+</pre>
+
+<p>
+En configurant correctement SSH, il est possible de <a href="/doku.php?id=bioinformatique:se_connecter_au_ccin2p3" class="wikilink2" title="bioinformatique:se_connecter_au_ccin2p3" rel="nofollow">se connecter directement à votre VM</a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Comment se connecter à une machine virtuelle ?" [2209-4347] -->
+<h2 class="sectionedit6" id="comment_executer_un_calcul_sur_openstack">Comment exécuter un calcul sur OpenStack</h2>
+<div class="level2">
+
+<p>
+Si vous souhaiter simplement exécuter un calcul, sans avoir besoin de configurer la VM ou de vous y connecter directement, vous pouvez utiliser le <a href="/doku.php?id=bioinformatique:openstack:soumettre_un_calcul" class="wikilink2" title="bioinformatique:openstack:soumettre_un_calcul" rel="nofollow">soumettre_un_calcul</a> pour OpenStack, qui permet d&#039;utiliser Openstack à la façon d&#039;un ferme de calcul. Le wrapper se chargera pour vous de l&#039;instanciation de la VM et de sa désinstanciation à la fin du calcul. . 
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Comment exécuter un calcul sur OpenStack" [4348-] -->

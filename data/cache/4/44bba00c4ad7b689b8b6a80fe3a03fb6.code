@@ -1,0 +1,8 @@
+<span class="co1">//创建ready集合的方法</span>
+<span class="kw4">int</span> readySet <span class="sy0">=</span> selectionKey.<span class="me1">readyOps</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//检查这些操作是否就绪的方法</span>
+key.<span class="me1">isAcceptable</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">//是否可读，是返回 true</span>
+<span class="kw4">boolean</span> isWritable<span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可写，是返回 true</span>
+<span class="kw4">boolean</span> isConnectable<span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可连接，是返回 true</span>
+<span class="kw4">boolean</span> isAcceptable <span class="br0">&#40;</span><span class="br0">&#41;</span>：<span class="co1">//是否可接收，是返回 true</span>

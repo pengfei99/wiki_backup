@@ -1,0 +1,178 @@
+====== Setup Flexible Disk Storage with Logical Volume Management (LVM) in Linux ======
+
+
+Logical Volume Management (LVM) makes it easier to manage disk space. If a file system needs more space, it can be added to its logical volumes from the free spaces in its volume group and the file system can be re-sized as we wish. If a disk starts to fail, replacement disk can be registered as a physical volume with the volume group and the logical volumes extents can be migrated to the new disk without data loss.
+
+In a modern world, every Server needs more space day by day for that we need to expand depending on our needs. Logical volumes can be used in RAID, SAN. A Physical Disk will be grouped to create a volume group. Inside the volume group, we need to slice the space to create Logical Volumes. While using logical volumes we can extend across multiple disks, logical volumes or reduce logical volumes in size with some commands without reformatting and re-partitioning the current disk. Volumes can stripes data across multiple disks this can increase the I/O stats.
+
+LVM Features
+  * It is flexible to expand the space at any time.
+  * Any file systems can be installed and handle.
+  * Migration can be used to recover faulty disk.
+  * Restore the file system using Snapshot features to an earlier stage. etc…
+
+{{:employes:pengfei.liu:admin_system:vm_administration:lvm.jpeg?200|}}
+
+In Linux, to create **Logic Volumes (LV)**, we need to follow the following steps:
+  - Create one or more **Physical Volume (PV)** for each hard drive. In Linux, each hard drive is represented as a device in /dev/sda, /dev/sdb, etc
+  - Create one or more **Volume Group (VG)** which regroup one or more PV
+  - Inside the volume group, we need to slice the space to create one or more Logical Volumes
+
+In this example, we have a VM with two disks /dev/sda, /dev/sdb. The /dev/sda is the VM OS disk, so we will work with the second disk /dev/sdb
+
+===== 1. Create Physical Volumes =====
+
+Before doing anything, you can check your system current situation
+
+<code>
+# check all phisycal volumes
+[root@localhost pliu]# pvs
+  PV         VG     Fmt  Attr PSize    PFree
+  /dev/sda2  centos lvm2 a--  <199.00g 4.00m
+# check all volume groups
+[root@localhost pliu]# vgs
+  VG     #PV #LV #SN Attr   VSize    VFree
+  centos   1   2   0 wz--n- <199.00g 4.00m
+# check all logical volumes
+[root@localhost pliu]# lvs
+  LV   VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root centos -wi-ao---- 196.99g                                                    
+  swap centos -wi-ao----   2.00g    
+  
+# Check all your disks status
+fdisk -l   
+
+</code>
+
+==== 1.1 Partition the disk ====
+
+<code>
+# 
+fdisk /dev/sdb
+
+# 1. Issue n to create a new second partition. Choose primary partition and partition number
+# 2. Issue t followed by partition number followed by 8e to toggle the partition type of your new second partition to 8e (Linux LVM, In Linux , LVM(Logical Volume Manager) provides the facility to increase and reduce the file system size.).
+# 3. Issue p to review your new partition layout. If everything looks right, 
+# 4. Issue w to write the partition table to disk. 
+
+# check the new partition
+Disk /dev/sdb: 214.7 GB, 214748364800 bytes, 419430400 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x17af8c82
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048   419430399   209714176   8e  Linux LVM
+
+</code>
+
+===== 2. Creating physical volumes =====
+
+<code>
+# create the new physical volume based on the partition /dev/sdb1 
+$ pvcreate /dev/sdb1
+
+# If you have more partitions to add into the PV (e.g. /dev/sdc1)
+$ pvcreate /dev/sdb1 /dev/sdc1
+</code>
+
+===== 3. Creating Volume Groups =====
+
+Create Volume Group in the name of pengfei_test using available free PV Create using **physical extent (PE)** size 32. The default size is 4M.
+
+Each physical volume is divided chunks of data, known as physical extents, these extents have the same size as the logical extents for the volume group.
+
+<code>
+$ vgcreate -s 32M pengfei_test /dev/sdb1
+
+# check the new VG
+$ vgs 
+[root@localhost pliu]# vgs -v
+  VG           #PV #LV #SN Attr   VSize    VFree   
+  centos         1   2   0 wz--n- <199.00g    4.00m
+  pengfei_test   1   0   0 wz--n- <199.97g <199.97g
+  
+# Get the detail info about pengfei_test
+$ vgdisplay pengfei_test
+</code>
+
+===== 4. Creating logical Volumes =====
+
+We know that we have about 199G free space in VG pengfei_test. Here we will creat lv inside this VG. There are two methods to specify the size of the LV
+  * Use PE number
+  * Use GB number
+
+==== 4.1 Creating Logical Volumes using PE number ====
+
+In our case, 1 PE = 32 MiB, if we assign 575 PE to a LV, then the LV will have 575*32MB=18400MB = 18GB.
+
+<code>
+# The syntax for creating a lv is:
+lvcreate -l (Extend size) -n (name_of_logical_volume) (volume_group)
+
+# For example, a lv pengfei_documents has 575 PE
+lvcreate -l 575 -n pengfei_documents pengfei_test
+
+#  
+$ lvcreate -l 575 -n pengfei_manager pengfei_test
+
+
+</code>
+
+==== 4.1 Creating Logical Volumes using GB number ====
+
+<code>
+# Create lv with GB number
+$ lvcreate -L 18G -n pengfei_public pengfei_test
+
+# check the LV
+lvs
+</code>
+
+===== 5. Creating File system =====
+
+<code>
+# To use the lv, we need to creat file system on them
+mkfs.ext4 /dev/pengfei_test/pengfei_documents
+mkfs.ext4 /dev/pengfei_test/pengfei_public
+mkfs.ext4 /dev/pengfei_test/pengfei_manager
+
+</code>
+
+===== 6. Mount the file system =====
+
+<code>
+mount /dev/pengfei_test/pengfei_documents /mnt/documents/
+mount /dev/pengfei_test/pengfei_public /mnt/public/
+mount /dev/pengfei_test/pengfei_manager /mnt/manager/
+
+# check new filesystem
+df -h
+</code>
+
+===== 7. Permanent Mounting =====
+It’s now temporarily mounted, for permanent mount we need to add the entry in fstab.
+
+<code>
+# let us get the mount entry from mtab
+$ cat /etc/mtab
+
+/dev/mapper/pengfei_test-pengfei_documents /mnt/documents ext4 rw,seclabel,relatime,data=ordered 0 0
+/dev/mapper/pengfei_test-pengfei_public /mnt/public ext4 rw,seclabel,relatime,data=ordered 0 0
+/dev/mapper/pengfei_test-pengfei_manager /mnt/manager ext4 rw,seclabel,relatime,data=ordered 0 0
+
+# edit /etc/fstab, the mount entry contents copies from mtab, we need to change the rw to defaults
+$ vim /etc/fstab
+
+# put the following lines
+/dev/mapper/pengfei_test-pengfei_documents /mnt/documents ext4 default 0 0
+/dev/mapper/pengfei_test-pengfei_public /mnt/public ext4 default 0 0
+/dev/mapper/pengfei_test-pengfei_manager /mnt/manager ext4 default 0 0
+
+# Execute the command mount -a to check for the fstab entry before restart.
+$ mount -av
+</code>
+
+**Note, if you have errors after mount -av, don't restart your Pc. Because it will never boot again.**

@@ -1,0 +1,62 @@
+====== Samba sur CentOS ======
+
+===== Introduction =====
+
+[[https://en.wikipedia.org/wiki/Samba_%28software%29|Samba]] permet de partager des dossiers et des fichiers avec des postes Windows.
+
+Il est normalement simple d'utilisation. La difficulté sous CentOS vient de l'utilisation de [[https://en.wikipedia.org/wiki/Selinux|SELinux]]. Cette page est inspirée du [[http://wiki.centos.org/HowTos/SetUpSamba|manuel de CentOS]].
+
+===== Installation =====
+
+**???**
+
+<code>
+</code>
+
+===== Configuration =====
+
+==== SELinux ====
+
+<code>
+sudo yum -y install policycoreutils-python
+
+# Puis, pour chaque dossier à partager
+sudo semanage fcontext -a -t samba_share_t '/DOSSIER(/.*)?'
+sudo restorecon -R /DOSSIER
+</code>
+
+==== Samba ====
+
+Voici un exemple de configuration :
+
+<code samba /etc/samba/smb.conf>
+[global]
+workgroup = BIOASTER
+netbios name = LILIA
+interfaces = 127.0.0.1, 10.69.1.214
+bind interfaces only = yes
+; hosts allow = 127.0.0.1, 10.69.1.214
+; hosts deny = 0.0.0.0/0
+; log level = 3
+
+[sequencing]
+path = /Sequencing
+comment = Sequencing Data
+browsable = yes
+read only = no
+writable = yes
+valid users = tanguy
+</code>
+
+Après chaque modification il faut relancer le service :
+
+<code shell>
+sudo /etc/init.d/smb restart
+</code>
+
+Il peut alors être testé avec les commandes suivantes :
+
+<code shell>
+smbclient -L \\localhost -U tanguy -W BIOASTER
+smbclient //localhost/sequencing -U tanguy -W BIOASTER
+</code>

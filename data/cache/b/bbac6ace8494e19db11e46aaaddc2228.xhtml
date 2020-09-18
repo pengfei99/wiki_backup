@@ -1,0 +1,187 @@
+
+<h1 class="sectionedit1" id="fusion_de_branches">Fusion de branches</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Fusion de branches" [1-34] -->
+<h2 class="sectionedit2" id="debutants">Débutants</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Débutants" [35-58] -->
+<h3 class="sectionedit3" id="fusion_sans_conflit">Fusion sans conflit</h3>
+<div class="level3">
+
+<p>
+Voici à quoi ressemble l&#039;historique de révisions (<code>log</code>) basique d&#039;un <em>tronc</em> (la branche principale du développement) :
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/1-initial_trunk.png" class="media" title="si:outils:bazaar:fusion_de_branches:1-initial_trunk.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/1-initial_trunk.png" class="media" alt="" /></a>
+</p>
+
+<p>
+Des modifications dans la branche de <em>dev</em>, si elles été poussées (<code>push</code>) directement dans le <em>tronc</em> donneraient ceci :
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/2-changes_pushed_to_trunk.png" class="media" title="si:outils:bazaar:fusion_de_branches:2-changes_pushed_to_trunk.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/2-changes_pushed_to_trunk.png" class="media" alt="" /></a>
+</p>
+
+<p>
+Ceci est appelé <em>fast-foward history</em>.
+</p>
+
+<p>
+Si, au lieu de pousser (<code>push</code>) les révisions de <em>dev</em>, on les fusionne (<code>merge</code>) dans le <em>tronc</em>, on obtient une <em>branched history</em>…
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/3-merge_waiting_for_commit.png" class="media" title="si:outils:bazaar:fusion_de_branches:3-merge_waiting_for_commit.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/3-merge_waiting_for_commit.png" class="media" alt="" /></a>
+</p>
+
+<p>
+… qu&#039;il suffit alors d&#039;enregistrer (<code>commit</code>) dans le <code>tronc</code> :
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/4.1-merge_has_been_commited.png" class="media" title="si:outils:bazaar:fusion_de_branches:4.1-merge_has_been_commited.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/4.1-merge_has_been_commited.png" class="media" alt="" /></a>
+</p>
+
+<p>
+Si le <em>tronc</em> avait été modifié avant l&#039;intégration de <em>dev</em>, on obtiendrait l&#039;historique suivant :
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/4.2-merge_has_been_commited_on_changed_trunk.png" class="media" title="si:outils:bazaar:fusion_de_branches:4.2-merge_has_been_commited_on_changed_trunk.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/4.2-merge_has_been_commited_on_changed_trunk.png" class="media" alt="" /></a>
+</p>
+
+<p>
+<strong>Attention :</strong> voici ce qui se passe quand le <em>tronc</em> est fusionné dans <em>dev</em>, et que <em>dev</em> est ensuite poussé (<code>push</code>) dans le <em>tronc</em> :
+</p>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/5-merged_in_dev_then_push_to_trunk.png" class="media" title="si:outils:bazaar:fusion_de_branches:5-merged_in_dev_then_push_to_trunk.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/5-merged_in_dev_then_push_to_trunk.png" class="media" alt="" /></a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Fusion sans conflit" [59-1374] -->
+<h3 class="sectionedit4" id="fusion_avec_un_ou_plusieurs_conflits">Fusion avec un ou plusieurs conflits</h3>
+<div class="level3">
+
+<p>
+Des conflits peuvent apparaitre quand les modifications de <em>dev</em> sont intégrées dans le <em>tronc</em>. Dans ce cas, la bonne chose à faire est d&#039;appliquer le <em>double-merge pattern</em>.
+</p>
+
+<p>
+La marche à suivre pour résoudre un “conflit de fusion” est :
+</p>
+<ul>
+<li class="level1"><div class="li"> annuler (<code>revert</code>) les modifications dans le <em>tronc</em> (introduits par la fusion qui se finie en conflit) ;</div>
+</li>
+<li class="level1"><div class="li"> fusionner (<code>merge</code>) le <em>tronc</em> dans <em>dev</em> ;</div>
+</li>
+<li class="level1"><div class="li"> résoudre les conflits dans <em>dev</em> ;</div>
+</li>
+<li class="level1"><div class="li"> enregistrer (<code>commit</code>) les modifications dans <em>dev</em> ;</div>
+</li>
+<li class="level1"><div class="li"> fusionner (<code>merge</code>) <em>dev</em> dans le <em>tronc</em> ;</div>
+</li>
+<li class="level1"><div class="li"> enregistrer (<code>commit</code>) les modifications dans le <em>tronc</em>.</div>
+</li>
+</ul>
+
+<p>
+<a href="/_media/si/outils/bazaar/fusion_de_branches/6-double_merge.png" class="media" title="si:outils:bazaar:fusion_de_branches:6-double_merge.png"><img src="/_media/si/outils/bazaar/fusion_de_branches/6-double_merge.png" class="media" alt="" /></a>
+</p>
+
+<p>
+Ceci est appelé <em>double-merge pattern</em>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Fusion avec un ou plusieurs conflits" [1375-2178] -->
+<h3 class="sectionedit5" id="pas_envie_de_verifier_la_presence_de_conflits">Pas envie de vérifier la présence de conflits...</h3>
+<div class="level3">
+
+<p>
+Au lieu de toujours essayer de fusionner au <em>tronc</em>, il est possible d&#039;évaluer les options disponibles depuis <em>dev</em>.
+</p>
+<ul>
+<li class="level1"><div class="li"> Se déplacer dans <em>dev</em> et s&#039;assurer que le <em>tronc</em> est à jour :</div>
+</li>
+</ul>
+<pre class="code">  cd dev
+  bzr pull -d ../tronc</pre>
+<ul>
+<li class="level1"><div class="li"> Lister les différences entre <em>dev</em> et le <em>tronc</em> :</div>
+</li>
+</ul>
+<pre class="code">  bzr missing</pre>
+<ul>
+<li class="level1"><div class="li"> <strong>Cas 1 - <em>dev</em> contient une révision supplémentaire :</strong> Vous pouvez simplement pousser la révision vers le <em>tronc</em> si le message de la révision est sensé… et il devrait toujours l&#039;être !</div>
+</li>
+</ul>
+<pre class="code">  bzr push</pre>
+<ul>
+<li class="level1"><div class="li"> <strong>Cas 2 - Vous avez plusieurs révisions supplémentaires :</strong> Pour les intégrer proprement au <em>tronc</em>, ces changements doivent être fusionnés dans le <em>tronc</em>, puis enregistrés. L&#039;historique résultant montrera une seule révision contenant des sous-révisions.</div>
+</li>
+</ul>
+<pre class="code">  cd ../tronc
+  bzr merge ../dev
+  bzr ci -m &quot;Message global pour les révisions supplémentaires de dev&quot;</pre>
+<ul>
+<li class="level1"><div class="li"> <strong>Cas 3 - Les branches ont divergé : </strong> Les modifications du <em>tronc</em> doivent d&#039;abord être fusionnées dans <em>dev</em>, enregistrées, puis fusionnées dans le <em>tronc</em> <strong>=</strong> <em>double-merge pattern</em> :</div>
+</li>
+</ul>
+<pre class="code">  cd dev
+  bzr merge ../tronc
+  # si nécessaire, résoudre les conflits
+  bzr ci -m &quot;Intégration des modifications du tronc&quot;
+  cd ../tronc
+  bzr merge ../dev
+  bzr ci -m &quot;Message global pour les révisions supplémentaires de dev&quot;</pre>
+
+<p>
+<strong>Remarques :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Dans le doute, appliquez la procédure décrite dans le <strong>Cas 3</strong>. Si vous étiez en fait dans le <strong>Cas 2</strong>, il n&#039;y aura rien dans le <em>tronc</em> à intégrer et à enregistrer. Si vous étiez dans le <strong>Cas 1</strong>, l&#039;historique contiendra une révision contenant elle même une sous-révision ; ce n&#039;est pas très joli, mais pas dramatique.</div>
+</li>
+<li class="level1"><div class="li"> Pour fusionner le <em>tronc</em> dans une branche ou tous les changements n&#039;ont pas encore été enregistrés, il suffit de la mettre de côté (<code>shelve</code>) le temps de fusionner les branches, puis de les réintroduire (<code>unshelve</code>).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Pas envie de vérifier la présence de conflits..." [2179-4208] -->
+<h2 class="sectionedit6" id="experts">Experts</h2>
+<div class="level2">
+
+<p>
+Voici les conseils originaux tels qu&#039;ils apparaissent sur <a href="http://toykeeper.net/tutorials/bzr-vs-git/" class="urlextern" title="http://toykeeper.net/tutorials/bzr-vs-git/"  rel="nofollow">http://toykeeper.net/tutorials/bzr-vs-git/</a> :
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Don&#039;t merge trunk into your branch and then push over trunk</strong>. This results in a fast-forward merge, which causes problems. It hijacks trunk, reshapes the history graph, renumbers revisions, and interferes with bisect tools.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Make sure merges to trunk are just merges</strong>, with no additional changes.</div>
+</li>
+<li class="level1"><div class="li"> If your branch doesn&#039;t merge cleanly with trunk, be sure to use the <em>double-merge pattern</em> explained below. Merge from trunk, fix the conflicts, and then merge back to trunk. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Never push to trunk unless you are the owner</strong> and you are pushing a locally-updated copy of trunk.</div>
+</li>
+<li class="level1"><div class="li"> If you combine the above tips, all merges to trunk will end up being trivial… so why not let a bot do it?</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Experts" [4209-5048] -->
+<h2 class="sectionedit7" id="autre_approche_a_considerer">Autre approche à considérer</h2>
+<div class="level2">
+
+<p>
+Dans sont <a href="http://bzrinit.com/" class="urlextern" title="http://bzrinit.com/"  rel="nofollow">excellent tutoriel</a>, Duck ROWING montre comment <a href="http://bzrinit.com/03.html" class="urlextern" title="http://bzrinit.com/03.html"  rel="nofollow">utiliser (un)bind</a> pour simplifier la dernière étape du “double merge”.<br/>
+Une branche liée se comporte en effet comme si le dépôt utilisé était celui distant. Il n&#039;y a donc pas à utiliser <code>push</code> et le <code>merge</code> ne marchera pas si les branches ont divergé.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Autre approche à considérer" [5049-] -->

@@ -1,0 +1,30 @@
+====== Ambari bleuprints ======
+
+The confluence doc:
+https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-APIResourcesandSyntax
+
+
+Ambari Blueprints are a declarative definition of a cluster. With a Blueprint, you specify a Stack, the Component layout and the Configurations to materialize a Hadoop cluster instance (via a REST API) without having to use the Ambari Cluster Install Wizard.
+
+
+===== API Resources and Syntax =====
+
+
+The following table lists the basic Blueprints API resources.
+^Resource^ Description^
+|GET /blueprints| Returns the available blueprints.|
+|POST /blueprints/:name| Creates a blueprint.|
+|POST /clusters/:name| Creates a cluster.|
+|GET /clusters/:name?format=blueprint	| Export the current cluster layout as a blueprint.|
+
+Api call example
+<code>
+# Get all available bleuprints
+curl -H "X-Requested-By: ambari" -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/blueprints
+
+# Get the bleuprint of cluster HyperThesau
+curl -H "X-Requested-By: ambari" -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/clusters/HyperThesau?format=blueprint > blueprint.json
+
+# Get the cluster 
+curl -H "X-Requested-By: ambari" -X GET -u admin:GlMSFoDpRtXwMGmHvHfu http://lin01.udl.org:8080/api/v1/clusters/HyperThesau/configurations > configuration.json
+</code>

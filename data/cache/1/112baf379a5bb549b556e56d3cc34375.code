@@ -1,0 +1,2 @@
+outputDir = <span class="st_h">'$OWNCLOUD/Projet_Biospecimens/exportDataFromV1/'</span>
+php app<span class="sy0">/</span>console biospecimens:populate <span class="co1">${outputDir}</span>

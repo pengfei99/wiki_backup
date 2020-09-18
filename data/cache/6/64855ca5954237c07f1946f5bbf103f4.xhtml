@@ -1,0 +1,293 @@
+
+<h1 class="sectionedit1" id="foscommentbundle">FOSCommentBundle</h1>
+<div class="level1">
+
+<p>
+Bundle permettant de gérer les flux de commentaires.
+</p>
+
+<p>
+La documentation est disponible <a href="https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/1-setting_up_the_bundle.md" class="urlextern" title="https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/1-setting_up_the_bundle.md"  rel="nofollow">ici</a>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "FOSCommentBundle" [1-235] -->
+<h3 class="sectionedit2" id="etape_1">Étape 1</h3>
+<div class="level3">
+
+</div>
+
+<h5 id="telechargement_et_installation_du_bundle">Téléchargement et installation du bundle</h5>
+<div class="level5">
+<pre class="code">  $ php composer.phar require friendsofsymfony/comment-bundle</pre>
+
+</div>
+
+<h5 id="activation_du_bundle">Activation du bundle</h5>
+<div class="level5">
+<pre class="code">  &lt;?php
+  // app/AppKernel.php
+  
+  public function registerBundles()
+  {
+      $bundles = array(
+         // ...
+         new FOS\RestBundle\FOSRestBundle(),
+         new FOS\CommentBundle\FOSCommentBundle(),
+         new JMS\SerializerBundle\JMSSerializerBundle($this),
+      );
+  }</pre>
+
+</div>
+
+<h5 id="activation_de_la_traduction_en_langue_francaise">Activation de la traduction en langue française</h5>
+<div class="level5">
+<pre class="code">  #app/config/config.yml
+  
+  parameters:
+      locale: fr
+      
+  //...
+  
+  framework:
+       #esi:    ~
+       translator: {fallbacks: fr}</pre>
+
+</div>
+<!-- EDIT2 SECTION "Étape 1" [236-921] -->
+<h3 class="sectionedit3" id="etape_2">Étape 2</h3>
+<div class="level3">
+
+<p>
+<a href="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle" class="urlextern" title="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle"  rel="nofollow">Créer un bundle</a> qui va contenir les entités : Comment et Thread.
+</p>
+
+<p>
+Par exemple pour l&#039;entité Comment : 
+</p>
+<pre class="code">  &lt;?php
+  // src/MyProject/MyBundle/Entity/Comment.php
+  
+  namespace MyProject\MyBundle\Entity;
+  
+  use Doctrine\ORM\Mapping as ORM;
+  use FOS\CommentBundle\Entity\Comment as BaseComment;
+  
+  /**
+   * @ORM\Entity
+   * @ORM\ChangeTrackingPolicy(&quot;DEFERRED_EXPLICIT&quot;)
+   */
+  class Comment extends BaseComment
+  {
+      /**
+       * @ORM\Id
+       * @ORM\Column(type=&quot;integer&quot;)
+       * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)
+       */
+      protected $id;
+      
+      /**
+       * Thread of this comment
+       *
+       * @var Thread
+       * @ORM\ManyToOne(targetEntity=&quot;MyProject\MyBundle\Entity\Thread&quot;)
+       */
+      protected $thread;
+  }</pre>
+
+<p>
+et pour Thread : 
+</p>
+<pre class="code">  &lt;?php
+  // src/MyProject/MyBundle/Entity/Thread.php
+  
+  namespace MyProject\MyBundle\Entity;
+  use Doctrine\ORM\Mapping as ORM;
+  use FOS\CommentBundle\Entity\Thread as BaseThread;
+  
+  /**
+  * @ORM\Entity
+  * 
+  * @ORM\ChangeTrackingPolicy(&quot;DEFERRED_EXPLICIT&quot;)
+  */
+  
+  class Thread extends BaseThread
+  {
+      /**
+       * @var string $id
+       *
+       * @ORM\Id
+       * @ORM\Column(type=&quot;string&quot;)
+       */
+      protected $id;
+   }</pre>
+
+<p>
+On n&#039;oublie pas de déclarer Comment et Thread comme ci-dessous:
+</p>
+<pre class="code">  # app/config/config.yml
+  
+  fos_comment:
+      db_driver: orm
+      class:
+          model:
+              comment: MyProject\MyBundle\Entity\Comment
+              thread: MyProject\MyBundle\Entity\Thread
+              
+  assetic:
+      bundles: [ &quot;FOSCommentBundle&quot; ]    </pre>
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention :</strong> Ne pas oublier de télécharger le assetic-bundle, qui n&#039;est pas installé par défaut depuis la version 2.8 de Symfony!!<br/>
+Suivre les instructions sur ce <a href="http://symfony.com/doc/2.8/cookbook/assetic/asset_management.html" class="urlextern" title="http://symfony.com/doc/2.8/cookbook/assetic/asset_management.html"  rel="nofollow">lien</a>.
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT3 SECTION "Étape 2" [922-2986] -->
+<h3 class="sectionedit6" id="etape_3">Étape 3</h3>
+<div class="level3">
+
+</div>
+
+<h5 id="importation_des_routing">Importation des routing</h5>
+<div class="level5">
+<pre class="code">  fos_comment_api:
+      type: rest
+      resource: &quot;@FOSCommentBundle/Resources/config/routing.yml&quot;
+      prefix: /api
+      defaults: { _format: html }</pre>
+<!-- EDIT7 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention :</strong> Bien mettre ces instructions dans cet ordre-là.
+</p>
+</div><!-- EDIT8 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT6 SECTION "Étape 3" [2987-3296] -->
+<h3 class="sectionedit9" id="etape_4">Étape 4</h3>
+<div class="level3">
+
+<p>
+Insérer ces lignes pour avoir le file de commentaire : 
+</p>
+<pre class="code">  &lt;div&gt;
+      {% block javascripts %}
+          &lt;script src=&quot;//code.jquery.com/jquery-1.8.2.min.js&quot;&gt;&lt;/script&gt;
+          &lt;script src=&quot;//code.jquery.com/jquery-migrate-1.2.1.min.js&quot;&gt;&lt;/script&gt;
+      {% endblock %}
+  
+      {% stylesheets &#039;@FOSCommentBundle/Resources/assets/css/comments.css&#039; %}
+          &lt;link rel=&quot;stylesheet&quot; href=&quot;{{ asset_url }}&quot; type=&quot;text/css&quot; /&gt;
+      {% endstylesheets %}
+      
+      {% include &#039;FOSCommentBundle:Thread:async.html.twig&#039; with {&#039;id&#039;: &#039;foo&#039;} %}
+  &lt;/div&gt;</pre>
+
+</div>
+<!-- EDIT9 SECTION "Étape 4" [3297-3889] -->
+<h1 class="sectionedit10" id="bonus">Bonus</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT10 SECTION "Bonus" [3890-3910] -->
+<h3 class="sectionedit11" id="un_exemple">Un exemple ?</h3>
+<div class="level3">
+
+<p>
+Le seul exemple disponible en ligne <a href="https://github.com/pierres/FOSCommentBundle-Demo" class="urlextern" title="https://github.com/pierres/FOSCommentBundle-Demo"  rel="nofollow">ici</a>.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Un exemple ?" [3911-4027] -->
+<h3 class="sectionedit12" id="integration_avec_fosuserbundle">Intégration avec FOSUserBundle</h3>
+<div class="level3">
+
+<p>
+Par défaut les commentaires sont faits anonymement.<br/>
+
+Pour que les commentaires puissent être associés à un utilisateur, suivez les étapes ci-dessous : 
+</p>
+
+</div>
+
+<h5 id="avoir_fosuserbundle">Avoir FOSUserBundle</h5>
+<div class="level5">
+
+<p>
+Assurez vous d&#039;avoir FOSUserBundle dans votre projet.<br/>
+
+Aller sur ce <a href="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/fosuserbundle" class="urlextern" title="https://wiki.bioaster.org/informatique/developpement/symfony/ajouter_un_bundle/fosuserbundle"  rel="nofollow">lien</a> pour installer le bundle.
+</p>
+
+</div>
+
+<h5 id="modifier_l_entite_comment">Modifier l&#039;entité Comment</h5>
+<div class="level5">
+
+<p>
+Compléter l&#039;entité Comment avec les lignes ci-dessous: 
+</p>
+<pre class="code">  &lt;?php
+  // src/MyProject/MyBundle/Entity/Comment.php
+  
+  namespace MyProject\MyBundle\Entity;
+  
+  use Doctrine\ORM\Mapping as ORM;
+  use FOS\CommentBundle\Entity\Comment as BaseComment;
+  use FOS\CommentBundle\Model\SignedCommentInterface;
+  use Symfony\Component\Security\Core\User\UserInterface;
+  
+  /**
+   * @ORM\Entity
+   */
+  class Comment extends BaseComment implements SignedCommentInterface
+  {
+      // .. fields
+      
+      /**
+       * Author of the comment
+       *
+       * @ORM\ManyToOne(targetEntity=&quot;MyProject\MyBundle\Entity\User&quot;)
+       * @var User
+       */
+      protected $author;
+         
+      public function setAuthor(UserInterface $author)
+      {
+          $this-&gt;author = $author;
+      }
+  
+      public function getAuthor()
+      {
+          return $this-&gt;author;
+      }
+   
+      public function getAuthorName()
+      {
+          if (null === $this-&gt;getAuthor()) {
+              return &#039;Anonymous&#039;;
+          }
+  
+          return $this-&gt;getAuthor()-&gt;getUsername();
+      }
+  }</pre>
+<!-- EDIT13 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>Attention :</strong> Ne pas oublier de modifier l&#039;entité User.php comme dans ce <a href="http://symfony.com/doc/current/bundles/FOSUserBundle/index.html" class="urlextern" title="http://symfony.com/doc/current/bundles/FOSUserBundle/index.html"  rel="nofollow">lien</a>.
+</p>
+</div><!-- EDIT14 PLUGIN_WRAP_END [0-] -->
+<p>
+Modifier l&#039;entité User en ajoutant ces lignes : 
+</p>
+<pre class="code">  public function __construct()
+  {
+      prarent::__construct();
+  }</pre>
+
+<p>
+Mettre à jour l&#039;entité doctrine en faisant : 
+</p>
+<pre class="code">  php app/console doctrine:schema:update
+  </pre>
+
+</div>
+<!-- EDIT12 SECTION "Intégration avec FOSUserBundle" [4028-] -->

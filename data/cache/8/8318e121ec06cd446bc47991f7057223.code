@@ -1,0 +1,7 @@
+sciforma=&gt; CREATE ROLE shibboleth LOGIN PASSWORD 'password';
+sciforma=&gt; GRANT CONNECT ON DATABASE sciforma TO shibboleth;
+sciforma=&gt; GRANT USAGE ON SCHEMA sciforma TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_IDM&quot; TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_shib_projWPtask&quot; TO shibboleth;
+sciforma=&gt; GRANT SELECT ON sciforma.&quot;BA_shib_LaborAsgn&quot; TO shibboleth;
+sciforma=# grant select on sciforma.&quot;Project&quot; to shibboleth;

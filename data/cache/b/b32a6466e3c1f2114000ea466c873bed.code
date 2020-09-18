@@ -1,0 +1,4 @@
+# Device                Mountpoint      FStype  Options         Dump    Pass#
+/dev/gpt/swap0          none    swap    sw              0       0
+fdesc   /dev/fd         fdescfs         rw      0       0
+ccdtli94.in2p3.fr:/sps/bioaster /gpfs   nfs     rw      u=42158,g=1072,nosuid,tcp,nfsv3,hard,intr,m=770,M=770   0       0

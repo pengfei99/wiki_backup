@@ -1,0 +1,15 @@
+====== Listes des certificats de confiance ======
+
+Tous les systèmes font par défaut confiance à une liste de CA. Tous les certificats sont ajoutés à une liste. La mise à jour de cette liste dépend de l'OS.
+
+===== Debian =====
+
+La gestion des certificats racines dépend du paquet **ca-certificates**.
+
+Les nouveaux certificats doivent être installés dans le dossier ''/usr/share/ca-certificates'' (ou dans un sous-dossier) et avoir l'extension ''.crt''.
+
+Une fois installé, il suffit de sélectionner les nouveaux certificats à activer dans la liste proposée en lançant la commande ''sudo dpkg-reconfigure ca-certificates''.
+
+{{securite/dpkg-reconfigure_ca-certificates.png?direct&500|}}
+
+Tous les certificats sont dès lors disponibles dans un unique fichier : ''/etc/ssl/certs/ca-certificates.crt''.

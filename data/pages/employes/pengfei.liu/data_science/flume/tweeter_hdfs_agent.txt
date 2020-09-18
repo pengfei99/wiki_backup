@@ -1,0 +1,72 @@
+====== Flume agent with tweeter source, hdfs sink ======
+
+In this tutorial, we will use a tweeter source which can retrieve data from the tweeter, and stores the data in hdfs
+
+===== tweeter source =====
+
+==== check tweeter source dependenices ====
+
+In some older version of the flume, the tweeter source dependencies are not present by default, you need to copy them in your flume lib directory. The version which is newer than 1.8.0 has all the dependencies for tweeter source. To be sure, you need to check the following 4 dependencies in /path/to/flume/lib
+
+<code>
+twitter4j-core-3.0.3.jar
+twitter4j-media-support-3.0.3.jar
+flume-twitter-source-1.9.0.jar                            
+twitter4j-stream-3.0.3.jar
+</code>
+
+==== Get an tweeter developer account to connect to the tweeter api ====
+
+Please check this site to get more details on creating account https://acadgild.com/blog/streaming-twitter-data-using-flume
+
+When your account is created, you should see a page like the following figure. {{:employes:pengfei.liu:data_science:flume:twitter_flume.png?600|}}
+
+There are important lines
+
+  * API Key = Your OAuth consumer api key
+  * API Key Secret = Your OAuth consumer api key secret 
+  * API accessToken = Your OAuth consumer key access token 
+  * API accessTokenSecret = Your OAuth consumer key access token secret 
+
+===== Flume agent config =====
+
+Do not copy entirely the below config, the api key and secret are not right, it won't work, you need to get your own api key and secret.
+<code>
+# This agent gets data from Twitter and store it in the hdfs
+
+################################ Flume Agent ##################################
+TwitterAgent.sources = Twitter
+TwitterAgent.channels = MemChannel
+TwitterAgent.sinks = HDFS
+
+#################################### Source ################################# 
+TwitterAgent.sources.Twitter.type = org.apache.flume.source.twitter.TwitterSource
+TwitterAgent.sources.Twitter.consumerKey = 9F2cDP6mtFyLybWGqT
+TwitterAgent.sources.Twitter.consumerSecret = czoiPDtFaNrUbogW7WB6bZYxpBljy2Ozqrqc
+TwitterAgent.sources.Twitter.accessToken = 207529473-WHBQShBPtmyvOwmSN7JueREPgDPT9
+TwitterAgent.sources.Twitter.accessTokenSecret = P6A1I5lCbJWEAL1ynm3nOcyGfYrZkUd1la
+TwitterAgent.sources.Twitter.keywords = TRUMP, tradewar, china
+ 
+################## SINK #################################
+#TwitterAgent.sinks.HDFS.channel = MemChannel
+TwitterAgent.sinks.HDFS.type = hdfs
+TwitterAgent.sinks.HDFS.hdfs.path = hdfs://localhost:9000/tmp/tweets
+TwitterAgent.sinks.HDFS.hdfs.fileType = DataStream
+TwitterAgent.sinks.HDFS.hdfs.writeFormat = Text
+ 
+TwitterAgent.sinks.HDFS.hdfs.batchSize = 1000
+TwitterAgent.sinks.HDFS.hdfs.rollSize = 0
+TwitterAgent.sinks.HDFS.hdfs.rollInterval = 600
+TwitterAgent.sinks.HDFS.hdfs.rollCount = 10000
+ 
+#################### CHANNEL #########################
+TwitterAgent.channels.MemChannel.type = memory
+TwitterAgent.channels.MemChannel.capacity = 3000
+TwitterAgent.channels.MemChannel.transactionCapacity = 3000
+
+################Link source to channel, channel to sink########################
+# Good practice, get the link out of the sink, or source connection, make the config more readable
+TwitterAgent.sources.Twitter.channels = MemChannel
+TwitterAgent.sinks.HDFS.channel = MemChannel
+
+</code>

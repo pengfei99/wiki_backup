@@ -1,0 +1,26 @@
+
+<h1 class="sectionedit1" id="deploiement_de_freebsd">Déploiement de FreeBSD</h1>
+<div class="level1">
+
+<p>
+Fichier IP Plan
+VLAN dans vmware
+</p>
+<pre class="code">edit /etc/rc.conf
+#IP et router
+
+/etc/rc.d/netif restart
+/etc/rc.d/router restart
+
+freebsd-update fetch install
+pkg update
+pkg upgrade
+pkg audit -F
+
+shutdown -p</pre>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> : ticket à DEUZZI
+</p>
+
+</div>

@@ -1,0 +1,72 @@
+====== Certification ======
+
+Pour les chiffrements des courriels et la connexion par certificats.
+
+===== Mise en place de l'environnement =====
+
+    cd /path/to/CA/dir
+    cp /etc/.../openssl.cnf .
+    vim openssl.cnf
+    ## Edit
+    # [ ca ]
+    # default_ca = CA_BIOASTER
+    #
+    # [ CA_BIOASTER ]
+    # dir = /path/to/CA/dir
+    # certificate = $dir/public/root_ca.crt
+    # private_key = $dir/private/root_ca.key
+    # new_certs_dir = $dir/certs
+    #
+    # [ req_distinguished_name ]
+    # # *_default
+    mkdir public private certs
+    echo "01\n" > serial
+    touch index.txt
+    perl -e 'print int(rand(90)+10); print "\n"' > private/.rand
+
+===== Créer un CA (adapter pour multilevel CA) =====
+
+    openssl genrsa -des3 -out private/root_ca.key 2048
+    openssl req -new -x509 -days 3650 -key private/root_ca.key -out public/root_ca.crt -config openssl.cnf
+    openssl x509 -noout -text -in public/root_ca.crt
+
+===== Créer un certificat serveur =====
+
+    openssl req -config openssl.cnf -newkey rsa:2048 -keyout private/Bioaster2.lan.key \
+                -out public/Bioaster2.lan.req
+    openssl req -noout -text -in public/Bioaster2.lan.req
+    openssl ca -config openssl.conf -in public/Bioaster2.lan.req -out public/Bioaster2.lan.crt
+
+===== Tester le certificat serveur =====
+
+    openssl s_server -cert public/Bioaster2.lan.crt -key private/Bioaster2.lan -www
+    # Or
+    cat private/Bioaster2.lan.key public/Bioaster2.lan.crt > private/Bioaster2.lan-combined.pem
+    openssl s_server -cert private/Bioaster2.lan-combined.pem -www
+
+===== Créer un certificat client =====
+
+    openssl req -config openssl.cnf -newkey rsa:2048 -keyout private/tlecarrour.key \
+                -out public/tlecarrour.req
+    openssl req -noout -text -in public/tlecarrour.req
+    openssl ca -config openssl.conf -in public/tlecarrour.req -out public/tlecarrour.crt
+
+===== Tester le certificat client =====
+
+===== Révoquer le certificat client =====
+
+===== Tester le certificat client révoqué =====
+
+===== Liens =====
+
+  * [[http://pages.cs.wisc.edu/~zmiller/ca-howto/]]
+  * [[https://www.bioneland.org/dokuwiki/doku.php?id=perso:generer_un_certificat]]
+  * [[http://www.ipsec-howto.org/x595.html]]
+  * [[http://www.madboa.com/geek/openssl/#cert-self]]
+  * [[http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/x160.html]]
+  * [[http://www.flatmtn.com/article/setting-openssl-create-certificates]]
+  * [[http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php]]
+  * [[http://advancedhomeserver.com/openssl-and-your-root-certificate/]]
+  * [[http://cweiske.de/tagebuch/ssl-client-certificates.htm]]
+
+{{tag>todo}}

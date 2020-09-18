@@ -1,0 +1,4 @@
+&lt;<span class="kw3">VirtualHost</span> *:<span class="nu0">80</span>&gt;
+    <span class="kw1">ServerName</span> presentations.bioaster.org
+    <span class="kw1">DocumentRoot</span> /var/www/remark
+&lt;/<span class="kw3">VirtualHost</span>&gt;

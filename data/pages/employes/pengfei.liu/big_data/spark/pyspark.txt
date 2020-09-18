@@ -1,0 +1,36 @@
+====== Install pyspark and use pycharm ======
+
+
+
+
+===== pycharm =====
+
+By default, when you create a pycharm project, it will automatically create a virtual env. You can install pyspark in the dedicated virtual env with the following steps(Only works for Spark 2.2.0 and later).
+
+
+Go to File -> Settings -> Project Interpreter -> Click on the + button (top right) and search for PySpark
+
+
+==== Manually with user-provided Spark installation ====
+
+Create Run configuration:
+
+Go to Run -> Edit configurations
+Add new Python configuration
+Set Script path so it points to the script you want to execute
+Edit Environment variables field so it contains at least:
+
+SPARK_HOME - it should point to the directory with Spark installation. It should contain directories such as bin (with spark-submit, spark-shell, etc.) and conf (with spark-defaults.conf, spark-env.sh, etc.)
+PYTHONPATH - it should contain $SPARK_HOME/python and optionally $SPARK_HOME/python/lib/py4j-some-version.src.zip if not available otherwise. some-version should match Py4J version used by a given Spark installation (0.8.2.1 - 1.5, 0.9 - 1.6, 0.10.3 - 2.0, 0.10.4 - 2.1, 0.10.4 - 2.2, 0.10.6 - 2.3)
+
+Apply the settings
+
+Add PySpark library to the interpreter path (required for code completion):
+
+Go to File -> Settings -> Project Interpreter
+Open settings for an interpreter you want to use with Spark
+Edit interpreter paths so it contains path to $SPARK_HOME/python (an Py4J if required)
+Save the settings
+Optionally
+Install or add to path type annotations matching installed Spark version to get better completion and static error detection (Disclaimer - I am an author of the project).
+

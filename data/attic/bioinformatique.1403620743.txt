@@ -1,0 +1,29 @@
+====== Bioinformatique ======
+
+{{map>/bioinformatique/pt6.png?nolink&882x705 |PT6}}
+**Les différentes services offerts par le PT6 sont :**
+
+  * [[/bioinformatique/outils|Outils @ 511,24,661,70]]
+  * [[/bioinformatique/vmware|VMWare @ 667,369,842,623]]
+  * [[/bioinformatique/openstack|OpenStack @ 356,367,531,621]]
+  * [[/bioinformatique/univage|UnivaGE @ 47,367,217,620]]
+  * [[/in2p3/logiciels#en_ligne_de_commande|Logiciels @ 57,648,212,691]]
+  * [[/in2p3/logiciels#services|Services @ 358,648,530,694]]
+  * [[/bioinformatique/services_critiques|Services Critiques @ 664,648,854,692]]
+{{<map}}
+
+{{tag>todo}}
+
+====== Groupe de travail "gestion des données scientifiques" ======
+
+Les objectifs de ce groupe de travail sont de participer à la conception du système d'information scientifique de BIOASTER et de définir les bonnes pratiques du calcul scientifique. Ces bonnes pratiques doivent permettre de faciliter l'échange de données entre plateaux techniques. Ceci concerne :
+  - le versionnage des scripts et du code;
+  - l'organisation des flux d'analyses avec [[https://www.knime.org/|KNIME]], [[http://www.pentaho.fr/|Pentaho]] ou autre;
+  - l'organisation des répertoires et des fichiers;
+  - l'utilisation des ressources de stockage et de calcul;
+  - le benchmarking des applications;
+  - la documentation;
+  - la création d'un entrepôt de données permettant de croisées les données entre plateaux;
+  - Toute autre suggestion est la bienvenue.
+
+Les réunions du groupe de travail sont [[bioinformatique\gestion_des_données\réunion|ici]]

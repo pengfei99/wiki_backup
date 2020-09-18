@@ -1,0 +1,399 @@
+
+<h1 class="sectionedit1" id="java_memory_model">Java Memory Model</h1>
+<div class="level1">
+
+<p>
+Understanding the Java Memory Model is essential for learning how to develop, deploy, monitor, test, and tune the performance of a Java application.
+</p>
+
+<p>
+JVM consumes the available space on your host <abbr title="Operating System">OS</abbr> memory just like any other software. See the below figure.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:jvm_memory.png" class="media" title="employes:pengfei.liu:java:jvm_memory.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=9f2e9f&amp;media=employes:pengfei.liu:java:jvm_memory.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+Java Memory Model(JMM) is a specification which guarantees visibilities of fields(aka. happens before) amidst reordering of instructions 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Java Memory Model&quot;,&quot;hid&quot;:&quot;java_memory_model&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-483&quot;} -->
+<h2 class="sectionedit2" id="summary_of_jvm_memory_configurations">Summary of JVM memory configurations</h2>
+<div class="level2">
+
+<p>
+Pay attention to the permanent generation setting. Because since Java 8, the permanent generation is replaced by the Metaspace.
+</p>
+<pre class="code">-XmsSetting — initial Heap size
+-XmxSetting — maximum Heap size
+-XX:NewSizeSetting — new generation heap size
+-XX:MaxNewSizeSetting — maximum New generation heap size
+-XX:SurvivorRatioSetting — new heap size ratios (e.g. if Young Gen size is 10m and memory switch is –XX:SurvivorRatio=2, then 5m will be reserved for Eden space and 2.5m each for both Survivor spaces, default value = 8)
+-XX:NewRatio — providing ratio of Old/New Gen sizes (default value = 2)
+
+# Before Java 8, 
+-XX:PermSize -- initial size of Permanent generation
+-XX:MaxPermGenSetting — maximum size of Permanent generation
+
+# Since Java 8, the permanent generation is replaced by the Metaspace.
+-XX:MetaspaceSize -- It defines the initial size of metaspace. If you don’t specify this flag, the Metaspace will dynamically re-size depending on the application demand at runtime. 
+-XX:MaxMetaspaceSize -- It defines the maximum size of metaspace. If you don’t specify this flag, the default is unlimited, which means that only your system memory is the limit.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Summary of JVM memory configurations&quot;,&quot;hid&quot;:&quot;summary_of_jvm_memory_configurations&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;484-1723&quot;} -->
+<h2 class="sectionedit3" id="jvm_memory_spaces">1. JVM memory spaces</h2>
+<div class="level2">
+
+<p>
+Inside JVM, there exist separate memory spaces:
+</p>
+<ul>
+<li class="level1"><div class="li"> Heap</div>
+</li>
+<li class="level1"><div class="li"> Non-Heap</div>
+</li>
+<li class="level1"><div class="li"> Cache</div>
+</li>
+<li class="level1"><div class="li"> Stack</div>
+</li>
+</ul>
+
+<p>
+The below figure shows an overview of all JVM memory key components.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:jvm_memory_key_components.png" class="media" title="employes:pengfei.liu:java:jvm_memory_key_components.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=e195c3&amp;media=employes:pengfei.liu:java:jvm_memory_key_components.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. JVM memory spaces&quot;,&quot;hid&quot;:&quot;jvm_memory_spaces&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1724-1985&quot;} -->
+<h3 class="sectionedit4" id="heap_memory">1.1 Heap Memory</h3>
+<div class="level3">
+
+<p>
+The heap contains all objects created in your Java application, regardless of what thread created the object. This includes the object versions of the primitive types (e.g. Byte, Integer, Long etc.). It does not matter if an object was created and assigned to a local variable, or created as a member variable of another object, the object is still stored on the heap.
+</p>
+
+<p>
+Static class variables are also stored on the heap along with the class definition.
+</p>
+
+<p>
+Objects on the heap can be accessed by all threads that have a reference to the object. When a thread has access to an object, it can also get access to that object&#039;s member variables. If two threads call a method on the same object at the same time, they will both have access to the object&#039;s member variables, but each thread will have its own copy of the local variables.
+</p>
+
+<p>
+The heap memory is divided into two parts:
+</p>
+<ul>
+<li class="level1"><div class="li"> Young Generation</div>
+</li>
+<li class="level1"><div class="li"> Old Generation</div>
+</li>
+</ul>
+
+<p>
+The heap memory is allocated when JVM starts up. Its initial size can be configured by using <strong>“-Xms”</strong> flag. Its maximum size can be configured by using <strong>“-Xmx”</strong>. Runtime Heap size increases/decreases while the application is running. 
+</p>
+
+</div>
+
+<h4 id="young_generation">1.1.1 Young Generation</h4>
+<div class="level4">
+
+<p>
+The young Generation is reserved for containing newly-allocated objects. It contains three parts:
+</p>
+<ul>
+<li class="level1"><div class="li"> Eden memory: It stores most of the newly-created objects.</div>
+</li>
+<li class="level1"><div class="li"> Survivor memory S0: It stores the objects which are survived the young collection GC </div>
+</li>
+<li class="level1"><div class="li"> Survivor memory S1: idem to S0</div>
+</li>
+</ul>
+
+<p>
+Most of the newly-created objects are stored in Eden space. When Eden space is filled with objects, a <strong>Minor GC</strong> (a.k.a. <strong>Young Collection</strong>) is performed and all the survivor objects are moved to the survivor spaces S0. Minor GC also checks the survivor objects and move them to the other survivor space. It always keeps one of the survivor space empty.
+</p>
+
+<p>
+Objects that are survived after many cycles of GC are moved to the <strong>Old generation memory</strong> space. Usually, it’s done by setting a threshold for the age of the young generation objects before they become eligible to promote to Old generation.
+</p>
+
+</div>
+
+<h4 id="old_generation">1.1.2 Old Generation</h4>
+<div class="level4">
+
+<p>
+Old generation memory stores long-lived objects that survived after many rounds of Minor GC. When Old Gen space is full, <strong>Major GC</strong> (a.k.a. <strong>Old Collection</strong>) is performed (usually takes more time than a minor GC).
+</p>
+
+<p>
+Below figure shows an overview of heap memory and the minor GC, major GC move objects from young to old generation memory 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:heap_memory.png" class="media" title="employes:pengfei.liu:java:heap_memory.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=dac4a9&amp;media=employes:pengfei.liu:java:heap_memory.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 Heap Memory&quot;,&quot;hid&quot;:&quot;heap_memory&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1986-4519&quot;} -->
+<h3 class="sectionedit5" id="non-heap_memory">1.2 Non-Heap memory</h3>
+<div class="level3">
+
+<p>
+Non-Heap memory A.K.A  <strong>Permanent Generation(“Replaced” by Metaspace since Java 8)</strong>. It includes a method area shared by all threads. It includes also memory required for the internal processing and optimization for the JVM. Perm Gen stores per-class structures such as runtime constant pool, field and method data, and the code for methods and constructors, as well as interned Strings(e.g. “John”). Since Java 8, these data will be stored in metaspace.
+</p>
+
+</div>
+
+<h4 id="permgen_vs_metaspace">PermGen vs Metaspace</h4>
+<div class="level4">
+
+<p>
+The key difference is that PermGen is part of JVM memory, <strong>Metaspace is NOT part of JVM memory</strong>. Rather Metaspace is part of Native Memory (jvm process memory) which is only limited by the Host Operating System.
+</p>
+
+<p>
+The advantages of metaspace are:
+</p>
+<ul>
+<li class="level1"><div class="li"> Take advantage of Java Language Specification property: Classes and associated metadata lifetimes match class loader’s</div>
+</li>
+<li class="level1"><div class="li"> Per loader storage area – Metaspace</div>
+</li>
+<li class="level1"><div class="li"> Linear allocation only</div>
+</li>
+<li class="level1"><div class="li"> No individual reclamation (except for RedefineClasses and class loading failure)</div>
+</li>
+<li class="level1"><div class="li"> No GC scan or compaction</div>
+</li>
+<li class="level1"><div class="li"> No relocation for metaspace objects </div>
+</li>
+</ul>
+
+<p>
+You will NOT run out of PermGen space anymore (since there is NO PermGen), you may consume excessive Native memory making the total process size large. The issue is, if your application loads lots of classes (and/or interned strings), you may actually bring down the Entire Server (not just your application). Why ? Because the native memory is only limited by the Operating System. This means you can literally take up all the memory on the Server. Not good.
+</p>
+
+<p>
+Another issue for java application memory monitoring. Such as “jmap -permstat &lt;PID&gt;” will not work anymore. Because metaspace is process memory not part of Heap. You need to keep an eye on the ‘process size’ using your Operating System utilities (Example: ‘top’ in Unix/Linux, ‘Task Manager’ in Windows).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 Non-Heap memory&quot;,&quot;hid&quot;:&quot;non-heap_memory&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;4520-6418&quot;} -->
+<h3 class="sectionedit6" id="cache_memory">1.3 Cache Memory</h3>
+<div class="level3">
+
+<p>
+Cache Memory includes <strong>Code Cache</strong>, which stores compiled code (i.e. native code) generated by JIT compiler, JVM internal structures, loaded profiler agent code and data, etc. When Code Cache exceeds a threshold, it gets flushed (and objects are not relocated by the GC, so objects are deleted).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.3 Cache Memory&quot;,&quot;hid&quot;:&quot;cache_memory&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;6419-6746&quot;} -->
+<h3 class="sectionedit7" id="stack_memory">1.4 Stack Memory</h3>
+<div class="level3">
+
+<p>
+Java Stack memory is used for the execution of a thread. It contains information about what methods the thread has called to reach the current point of execution. It also contains all local variables for each method being executed (all methods on the call stack). A thread can only access its own thread stack. Local variables created by a thread are invisible to all other threads than the thread who created it. Even if two threads are executing the exact same code, the two threads will still create the local variables of that code in each their own thread stack. Thus, each thread has its own version of each local variable.
+</p>
+
+<p>
+All local variables of primitive types ( boolean, byte, short, char, int, long, float, double) are fully stored on the thread stack and are thus not visible to other threads. One thread may pass a copy of a primitive variable to another thread, but it cannot share the primitive local variable itself.
+</p>
+
+<p>
+The heap contains all objects created in your Java application, regardless of what thread created the object. This includes the object versions of the primitive types (e.g. Byte, Integer, Long etc.). It does not matter if an object was created and assigned to a local variable, or created as a member variable of another object, the object is still stored on the heap.
+</p>
+
+<p>
+So If a local variable is a reference of an object, the reference is stored in the stack, the object is stored in the Heap. 
+</p>
+
+</div>
+
+<h4 id="stack_vs_heap">1.4.1 Stack vs Heap</h4>
+<div class="level4">
+
+<p>
+The below figure shows the differences between Stack and Heap.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:stack_vs_heap.png" class="media" title="employes:pengfei.liu:java:stack_vs_heap.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=6b5158&amp;media=employes:pengfei.liu:java:stack_vs_heap.png" class="media" alt="" width="600" /></a>
+</p>
+
+</div>
+
+<h4 id="an_example_of_stack_and_heap">1.4.2 An example of stack and heap</h4>
+<div class="level4">
+
+<p>
+So for a java application to run, stack and heap work together. For example, for
+the following code. You will have a stack and heap memory in the below figure.
+</p>
+<pre class="code">class Person {
+    int pid;
+    String name;
+     
+    // constructor, setters/getters
+}
+ 
+public class Driver {
+    public static void main(String[] args) {
+        int id = 23;
+        String pName = &quot;Jon&quot;;
+        Person p = null;
+        p = new Person(id, pName);
+    }
+}</pre>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:stack_heap_example.jpg" class="media" title="employes:pengfei.liu:java:stack_heap_example.jpg"><img src="/lib/exe/fetch.php?w=600&amp;tok=d0248a&amp;media=employes:pengfei.liu:java:stack_heap_example.jpg" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+Let&#039;s analyze the code step by step:
+</p>
+
+<p>
+1. Entering the main() method, a space in stack memory would be created to store primitives and references of this method. The primitive value of integer id will be stored directly in stack memory. The reference variable p of type Person will also be created in stack memory which will point to the actual object in the heap
+</p>
+
+<p>
+2. The call to the parameterized constructor Person(int, String) from main() will allocate further memory on top of the previous stack. This will store:
+</p>
+<ul>
+<li class="level1"><div class="li"> The “this” object reference of the calling object in stack memory</div>
+</li>
+<li class="level1"><div class="li"> The primitive value id in the stack memory</div>
+</li>
+<li class="level1"><div class="li"> The reference variable of String argument personName which will point to the actual string from string pool in heap memory</div>
+</li>
+</ul>
+
+<p>
+3. This default constructor is further calling setPersonName() method, for which further allocation will take place in stack memory on top of previous one. This will again store variables in the manner described above.
+</p>
+
+<p>
+4. However, for the newly created object p of type Person, all instance variables will be stored in heap memory.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.4 Stack Memory&quot;,&quot;hid&quot;:&quot;stack_memory&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;6747-10009&quot;} -->
+<h2 class="sectionedit8" id="hardware_memory_architecture">2. Hardware memory architecture</h2>
+<div class="level2">
+
+<p>
+Modern hardware memory architecture is somewhat different from the internal Java memory model. It is important to understand the hardware memory architecture too, to understand how the Java memory model works with it. 
+</p>
+
+<p>
+The below figure shows a simplified diagram of modern computer hardware architecture.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:hardware_memory_model.png" class="media" title="employes:pengfei.liu:java:hardware_memory_model.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=844ca0&amp;media=employes:pengfei.liu:java:hardware_memory_model.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+A modern computer often has 2 or more CPUs in it. Some of these CPUs may have multiple cores too. The point is, that on a modern computer with 2 or more CPUs it is possible to have more than one thread running simultaneously. Each CPU is capable of running one thread at any given time. That means that if your Java application is multithreaded, one thread per CPU may be running simultaneously (concurrently) inside your Java application.
+</p>
+
+<p>
+Each CPU contains a set of registers which are essentially in-CPU memory. The CPU can perform operations much faster on these registers than it can perform on variables in main memory. That is because the CPU can access these registers much faster than it can access main memory.
+</p>
+
+<p>
+Each CPU may also have a CPU cache memory layer. In fact, most modern CPUs have a cache memory layer of some size. The CPU can access its cache memory much faster than main memory, but typically not as fast as it can access its internal registers. So, the CPU cache memory is somewhere in between the speed of the internal registers and main memory.
+</p>
+
+<p>
+A computer also contains the main memory area (RAM). All CPUs can access the main memory. The main memory area is typically much bigger than the cache memories of the CPUs.
+</p>
+
+<p>
+Typically, when a CPU needs to access the main memory it will read part of the main memory into its CPU cache. It may even read part of the cache into its internal registers and then perform operations on it. When the CPU needs to write the result back to the main memory it will flush the value from its internal register to the cache memory, and at some point flush the value back to the main memory.
+</p>
+
+<p>
+The values stored in the cache memory is typically flushed back to main memory when the CPU needs to store something else in the cache memory. The CPU cache can have data written to part of its memory at a time and flush part of its memory at a time. It does not have to read/write the full cache each time it is updated. Typically the cache is updated in smaller memory blocks called “cache lines”. One or more cache lines may be read into the cache memory, and one or more cache lines may be flushed back to main memory again.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Hardware memory architecture&quot;,&quot;hid&quot;:&quot;hardware_memory_architecture&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;10010-12606&quot;} -->
+<h2 class="sectionedit9" id="bridging_the_gap_between_the_java_memory_model_and_the_hardware_memory_architecture">3. Bridging The Gap Between The Java Memory Model And The Hardware Memory Architecture</h2>
+<div class="level2">
+
+<p>
+The hardware memory architecture does not distinguish between thread stacks and heap. On the hardware, both the thread stack and the heap are located in the main memory. Parts of the thread stacks and heap may sometimes be present in CPU caches and in internal CPU registers.
+</p>
+
+<p>
+When objects and variables can be stored in various different memory areas in the computer, certain problems may occur. The two main problems are:
+</p>
+<ol>
+<li class="level1"><div class="li"> Visibility of thread updates (writes) to shared variables.</div>
+</li>
+<li class="level1"><div class="li"> Race conditions when reading, checking and writing shared variables.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Bridging The Gap Between The Java Memory Model And The Hardware Memory Architecture&quot;,&quot;hid&quot;:&quot;bridging_the_gap_between_the_java_memory_model_and_the_hardware_memory_architecture&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;12607-13269&quot;} -->
+<h3 class="sectionedit10" id="visibility_of_shared_objects">3.1 Visibility of Shared Objects</h3>
+<div class="level3">
+
+<p>
+If two or more threads are sharing an object, without the proper use of either volatile declarations or synchronization, updates to the shared object made by one thread may not be visible to other threads.
+</p>
+
+<p>
+Imagine that the shared object is initially stored in the main memory. A thread running on CPU one then reads the shared object into its CPU cache. There it makes a change to the shared object. As long as the CPU cache has not been flushed back to main memory, the changed version of the shared object is not visible to threads running on other CPUs. This way each thread may end up with its own copy of the shared object, each copy sitting in a different CPU cache.
+</p>
+
+<p>
+The following diagram illustrates the sketched situation. One thread running on the left CPU copies the shared object into its CPU cache and changes its count variable to 2. This change is not visible to other threads running on the right CPU, because the update to count has not been flushed back to main memory yet.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Ajava%3Ajava_memory_model&amp;media=employes:pengfei.liu:java:variable_visibility.png" class="media" title="employes:pengfei.liu:java:variable_visibility.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=154a21&amp;media=employes:pengfei.liu:java:variable_visibility.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+To solve this problem you can use Java&#039;s volatile keyword. The volatile keyword can make sure that a given variable is read directly from the main memory, and always written back to main memory when updated.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.1 Visibility of Shared Objects&quot;,&quot;hid&quot;:&quot;visibility_of_shared_objects&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:10,&quot;range&quot;:&quot;13270-14577&quot;} -->
+<h3 class="sectionedit11" id="race_conditions">3.2 Race Conditions</h3>
+<div class="level3">
+
+<p>
+if two or more threads share an object, and more than one thread updates variables in that shared object, race conditions may occur.
+</p>
+
+<p>
+Imagine if thread A reads the variable count of a shared object into its CPU cache. Imagine too, that thread B does the same, but into a different CPU cache. Now thread A adds one to count, and thread B does the same. Now var1 has been incremented two times, once in each CPU cache.
+</p>
+
+<p>
+If these increments had been carried out sequentially, the variable count would be been incremented twice and had the original value + 2 written back to main memory.
+</p>
+
+<p>
+However, the two increments have been carried out concurrently without proper synchronization. Regardless of which of thread A and B that writes its updated version of count back to main memory, the updated value will only be 1 higher than the original value, despite the two increments.
+</p>
+
+<p>
+To solve this problem you can use a <strong>Java synchronized block</strong>. A synchronized block guarantees that only one thread can enter a given critical section of the code at any given time. Synchronized blocks also guarantee that all variables accessed inside the synchronized block will be read in from main memory, and when the thread exits the synchronized block, all updated variables will be flushed back to main memory again, regardless of whether the variable is declared volatile or not.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3.2 Race Conditions&quot;,&quot;hid&quot;:&quot;race_conditions&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:11,&quot;range&quot;:&quot;14578-&quot;} -->

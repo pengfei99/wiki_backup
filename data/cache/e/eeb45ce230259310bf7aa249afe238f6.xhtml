@@ -1,0 +1,105 @@
+
+<h1 class="sectionedit1" id="reunion_du_27_juillet_2017">Réunion du 27 Juillet 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9union du 27 Juillet 2017&quot;,&quot;hid&quot;:&quot;reunion_du_27_juillet_2017&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-44&quot;} -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> CD</div>
+</li>
+<li class="level1"><div class="li"> JHA</div>
+</li>
+<li class="level1"><div class="li"> YM</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Personnes pr\u00e9sentes&quot;,&quot;hid&quot;:&quot;personnes_presentes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;45-102&quot;} -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Champs dynamiques</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ordre du jour :&quot;,&quot;hid&quot;:&quot;ordre_du_jour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;103-152&quot;} -->
+<h3 class="sectionedit4" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Champs dynamiques</em>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> Partie JHA :</div>
+<ul>
+<li class="level2 node"><div class="li"> Dans le mapping.json de JHA pour le cas d&#039;un champs dynamique on retrouvera les clés suivantes ainsi que des valeurs associées pour l&#039;exemple (clé == à <code>Groupe sanguin</code> dans le template) :</div>
+<ul>
+<li class="level3"><div class="li"> <code>attribute_sample</code> : <code>dyn_json</code></div>
+</li>
+<li class="level3"><div class="li"> <code>object</code> : <code>Sample</code></div>
+</li>
+<li class="level3"><div class="li"> <code>attribute</code>: null</div>
+</li>
+<li class="level3"><div class="li"> <code>is_dynamic_sample</code>: <code>true</code></div>
+</li>
+<li class="level3"><div class="li"> <code>is_dynamic_bioentity</code>:<code>false</code></div>
+</li>
+<li class="level3"><div class="li"> <code>is_foreign_key</code>: <code>false</code></div>
+</li>
+<li class="level3"><div class="li"> <code>called_by</code>:<code>blood</code></div>
+</li>
+<li class="level3"><div class="li"> <code>dyn_key</code> : <code>dyn_sample_Blood group</code></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Partie NoE :</div>
+<ul>
+<li class="level2 node"><div class="li"> dans sample.json et bioentity.json un schéma de JSON suivant :</div>
+<ul>
+<li class="level3"><div class="li"> <code>widget</code></div>
+</li>
+<li class="level3"><div class="li"> <code>keyfield</code></div>
+</li>
+<li class="level3"><div class="li"> <code>choices</code></div>
+</li>
+<li class="level3"><div class="li"> <code>mandatory</code></div>
+</li>
+<li class="level3"><div class="li"> <code>min</code></div>
+</li>
+<li class="level3"><div class="li"> <code>max</code></div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> viendra s&#039;ajouter à ces clés quand un champs dynamique est soumis la clé <code>value</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+TODO : Migration base de donnée –&gt; <code>Sample.sample_json</code> et <code>Sample.bioentity_json</code> vont devenir <code>Sample.dyn_json</code>
+</p>
+
+<p>
+un Sample.dyn_json ressemblera à ça (les champs sont volontairement identiques dans l&#039;exemple, en réalité ils seront tous différents) :
+</p>
+<pre class="code">{
+&#039;sample&#039;: [
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;},
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;},
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;}
+],
+&#039;bioentity&#039;: [
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;},
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;},
+            {&#039;widget&#039;: &#039;Charfield&#039;, &#039;keyfield&#039;: &#039;dyn_sample_Group blood&#039;, &#039;choices&#039;: [&#039;O+&#039;,&#039;A+&#039;, &#039;B+&#039;], &#039;mandatory&#039;:true, &#039;min&#039;:null, &#039;max&#039;:null, &#039;value&#039;: &#039;O+&#039;}  
+]
+} </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;R\u00e9sum\u00e9&quot;,&quot;hid&quot;:&quot;resume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;153-&quot;} -->

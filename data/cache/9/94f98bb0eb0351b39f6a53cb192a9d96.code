@@ -1,0 +1,3 @@
+groupadd bioaster
+useradd pveyre
+usermod -g bioaster pveyre

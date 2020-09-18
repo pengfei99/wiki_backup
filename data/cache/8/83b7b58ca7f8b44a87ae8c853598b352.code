@@ -1,0 +1,4 @@
+# Alias to switch between Open Stack tenants
+alias os_htc setenv OS_TENANT_NAME &quot;htc-bioaster&quot;
+alias os_bioaster setenv OS_TENANT_NAME &quot;bioaster&quot;
+alias os_cc setenv OS_TENANT_NAME &quot;ccin2p3&quot;

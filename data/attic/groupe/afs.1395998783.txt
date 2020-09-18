@@ -1,0 +1,25 @@
+===== Installation d'AFS =====
+
+==== installation ====
+
+<code>
+yum install -y open-afs-client
+</code>
+
+==== Configuration ====
+
+<code>
+cd /usr/vice/etc
+echo in2p3.fr > ThisCell
+echo "in2p3.fr in" > CellAlias
+echo "test.in2p3.fr tin" >> CellAlias
+echo "in2p3.fr" > SuidCells
+echo "/afs:/var/cache/afs:200000" > cacheinfo
+</code>
+
+==== Démarrage et enregistrement ====
+
+<code>
+service afs start
+chkconfig --level 2345 afs on
+</code>

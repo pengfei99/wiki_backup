@@ -1,0 +1,42 @@
+====== FastQC ======
+
+===== Informations =====
+
+  * **Version** : 0.10.1
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[http://www.bioinformatics.babraham.ac.uk/projects/fastqc/]]
+  * **Description** : FastQC aims to provide a simple way to do some quality control checks on raw sequence data coming from high throughput sequencing pipelines. It provides a modular set of analyses which you can use to give a quick impression of whether your data has any problems of which you should be aware before doing any further analysis.
+
+===== Installation =====
+
+**Note** : Cette application est en JAVA mais n'étant pas recompilée par nos soins elle est installée comme une application non-compilée.
+
+<code>
+export APPS="/afs/in2p3.fr/throng/bioaster/apps"
+wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
+unzip fastqc_v0.10.1.zip
+mkdir -p $APPS/fastqc/0.10.1
+chmod +x FastQC/fastqc
+cp -r FastQC/* $APPS/fastqc/0.10.1/
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "A quality control tool for high throughput sequence data.\n"
+}
+
+set version "0.10.1"
+
+set base_dir "/afs/in2p3.fr/throng/bioaster/apps/fastqc/${version}"
+
+prepend-path PATH $base_dir
+prepend-path CLASSPATH $base_dir
+</code>
+
+===== Log =====
+
+* **2014.02.04 (tlc)** Version 0.10.1 installée

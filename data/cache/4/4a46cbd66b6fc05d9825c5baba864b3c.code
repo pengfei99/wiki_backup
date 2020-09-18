@@ -1,0 +1,26 @@
+<span class="co1">//The method in a class called MailMessage which returns the text after replace the variable.</span>
+<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getMessageFromTemplate<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> fileName, Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>,String<span class="sy0">&gt;</span> valuesMap<span class="br0">&#41;</span><span class="br0">&#123;</span>
+       <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> filePath<span class="sy0">=</span>templatePath<span class="sy0">+</span>fileName<span class="sy0">;</span>
+       <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> content <span class="sy0">=</span> <span class="st0">&quot;&quot;</span><span class="sy0">;</span>
+       <span class="kw1">try</span>
+       <span class="br0">&#123;</span>
+           content <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> <span class="br0">&#40;</span> Files.<span class="me1">readAllBytes</span><span class="br0">&#40;</span> Paths.<span class="me1">get</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span> <span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="br0">&#125;</span>
+       <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span>
+       <span class="br0">&#123;</span>
+           log.<span class="me1">error</span><span class="br0">&#40;</span><span class="st0">&quot;Email template file is missing. Java exception: &quot;</span><span class="sy0">+</span>e.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="br0">&#125;</span>
+&nbsp;
+       StrSubstitutor sub <span class="sy0">=</span> <span class="kw1">new</span> StrSubstitutor<span class="br0">&#40;</span>valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw1">return</span> sub.<span class="me1">replace</span><span class="br0">&#40;</span>content<span class="br0">&#41;</span><span class="sy0">;</span>
+   <span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//The code in main for test</span>
+<span class="co1">//Suppose we have a file called helloWorld.stemp and it contains the template</span>
+&nbsp;
+MailMessage mailMess<span class="sy0">=</span>MailMessage.<span class="me1">getInstance</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+Map<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span> valuesMap <span class="sy0">=</span> <span class="kw1">new</span> HashMap<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, String<span class="sy0">&gt;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userName&quot;</span>, <span class="st0">&quot;pengfei&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+valuesMap.<span class="me1">put</span><span class="br0">&#40;</span><span class="st0">&quot;userMail&quot;</span>, <span class="st0">&quot;haha@pengfei.org&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> text <span class="sy0">=</span> mailMess.<span class="me1">getMessageFromTemplate</span><span class="br0">&#40;</span><span class="st0">&quot;helloWorld.stemp&quot;</span>,valuesMap<span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>text<span class="br0">&#41;</span><span class="sy0">;</span>

@@ -1,0 +1,917 @@
+
+<h1 class="sectionedit1" id="zookeeper_cli_and_api">Zookeeper CLI and api</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper CLI and api&quot;,&quot;hid&quot;:&quot;zookeeper_cli_and_api&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-37&quot;} -->
+<h2 class="sectionedit2" id="zookeeper_key_concept">Zookeeper key concept</h2>
+<div class="level2">
+
+<p>
+Before typing any command, we need to know some key concept of zookeeper,
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper key concept&quot;,&quot;hid&quot;:&quot;zookeeper_key_concept&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;38-147&quot;} -->
+<h3 class="sectionedit3" id="what_is_zookeeper">What is zooKeeper</h3>
+<div class="level3">
+
+<p>
+Apache ZooKeeper is a service used by a cluster (group of nodes) to coordinate between
+themselves and maintain shared data with robust synchronization techniques. ZooKeeper is itself
+a distributed application providing services for writing a distributed application. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is zooKeeper&quot;,&quot;hid&quot;:&quot;what_is_zookeeper&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;148-445&quot;} -->
+<h3 class="sectionedit4" id="zookeeper_common_application">ZooKeeper common application</h3>
+<div class="level3">
+
+<p>
+The common services provided by ZooKeeper are as follows:
+</p>
+<ul>
+<li class="level1"><div class="li"> Naming service Identifying the nodes in a cluster by name. It is similar to <abbr title="Domain Name System">DNS</abbr>, but for nodes.</div>
+</li>
+<li class="level1"><div class="li"> Configuration management  Latest and up-to-date configuration information of the system for a joining node.</div>
+</li>
+<li class="level1"><div class="li"> Cluster management  Joining / leaving of a node in a cluster and node status at real time.</div>
+</li>
+<li class="level1"><div class="li"> Leader election  Electing a node as leader for coordination purpose.</div>
+</li>
+<li class="level1"><div class="li"> Locking and synchronization service  Locking the data while modifying it. This mechanism helps you in automatic fail recovery while connecting other distributed applications like Apache HBase.</div>
+</li>
+<li class="level1"><div class="li"> Highly reliable data registry  Availability of data even when one or a few nodes are down.</div>
+</li>
+</ul>
+
+<p>
+Distributed applications offer a lot of benefits, but they throw a few complex and hard-to-crack
+challenges as well. ZooKeeper framework provides a complete mechanism to overcome all the
+challenges. Race condition and deadlock are handled using fail-safe synchronization
+approach. Another main drawback is inconsistency of data, which ZooKeeper resolves with
+atomicity.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper common application&quot;,&quot;hid&quot;:&quot;zookeeper_common_application&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;446-1588&quot;} -->
+<h2 class="sectionedit5" id="command_line_interface">Command line interface</h2>
+<div class="level2">
+
+<p>
+After installation and configuration, To perform ZooKeeper CLI operations, first turn on your ZooKeeper server and then, ZooKeeper client. Once the client starts, you can perform the
+following operation:
+</p>
+<ol>
+<li class="level1"><div class="li"> Create znodes</div>
+</li>
+<li class="level1"><div class="li"> Get data</div>
+</li>
+<li class="level1"><div class="li"> Watch znode for changes</div>
+</li>
+<li class="level1"><div class="li"> Set data</div>
+</li>
+<li class="level1"><div class="li"> Create children of a znode</div>
+</li>
+<li class="level1"><div class="li"> List children of a znode</div>
+</li>
+<li class="level1"><div class="li"> Check Status</div>
+</li>
+<li class="level1"><div class="li"> Remove / Delete a znode</div>
+</li>
+</ol>
+
+<p>
+Now let us see above command one by one with an example.
+</p>
+
+<p>
+Assuming that you are running Zookeeper in multi-node mode. First connect to the Zookeeper server. To know all the available commands, type help.
+</p>
+<pre class="code">bin/zkCli.sh -server hadoop-nn.pengfei.org:2181
+
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 0] help
+ZooKeeper -server host:port cmd args
+	stat path [watch]
+	set path data [version]
+	ls path [watch]
+	delquota [-n|-b] path
+	ls2 path [watch]
+	setAcl path acl
+	setquota -n|-b val path
+	history 
+	redo cmdno
+	printwatches on|off
+	delete path [version]
+	sync path
+	listquota path
+	rmr path
+	get path [watch]
+	create [-s] [-e] path data acl
+	addauth scheme auth
+	quit 
+	getAcl path
+	close 
+	connect host:port
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 1] 
+</pre>
+
+<p>
+Let us create a znode ‘NodeOne’ and write ‘ValueOne’ using the ‘create’ command. After that issue the ‘get’ command to get the details of the node. You can then update the ZNode using ‘set’ command. See the commands and their results below.
+</p>
+<pre class="code">[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 1] create /NodeOne ValueOne
+Created /NodeOne
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 2] get /NodeOne
+ValueOne
+cZxid = 0x100000002
+ctime = Mon Dec 18 11:39:43 CET 2017
+mZxid = 0x100000002
+mtime = Mon Dec 18 11:39:43 CET 2017
+pZxid = 0x100000002
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 0
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 3] set /NodeOne ValueTwo
+cZxid = 0x100000002
+ctime = Mon Dec 18 11:39:43 CET 2017
+mZxid = 0x100000003
+mtime = Mon Dec 18 11:40:23 CET 2017
+pZxid = 0x100000002
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 0
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 4] get /NodeOne
+ValueTwo
+cZxid = 0x100000002
+ctime = Mon Dec 18 11:39:43 CET 2017
+mZxid = 0x100000003
+mtime = Mon Dec 18 11:40:23 CET 2017
+pZxid = 0x100000002
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 0
+</pre>
+
+<p>
+Now open a new client which connects to another zookeeper server and get the value of nodeone
+</p>
+<pre class="code">sh zkCli.sh -server hadoop-dn1.pengfei.org:2181
+
+[zk: hadoop-dn1.pengfei.org:2181(CONNECTED) 0] get /NodeOne
+ValueTwo
+cZxid = 0x100000002
+ctime = Mon Dec 18 11:39:43 CET 2017
+mZxid = 0x100000003
+mtime = Mon Dec 18 11:40:23 CET 2017
+pZxid = 0x100000002
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 0
+</pre>
+
+<p>
+You could see we get the value two from another client which connects to anohter zookeeper server
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command line interface&quot;,&quot;hid&quot;:&quot;command_line_interface&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1589-4598&quot;} -->
+<h3 class="sectionedit6" id="ephemeral_znodes_sequential_znodes_and_persistent_znodes">Ephemeral znodes, sequential znodes and persistent znodes</h3>
+<div class="level3">
+
+<p>
+By default, all znodes are <strong>persistent znodes</strong>,
+</p>
+<ul>
+<li class="level1"><div class="li"> With flag e , we create <strong>Ephemeral znodes</strong>, which will be automatically deleted when a session expires or when the client disonnects.</div>
+</li>
+<li class="level1"><div class="li"> With flag s, we create <strong>Sequential znodes</strong>, it guaranty that the znode path will be unique. ZooKeeper will add sequence number along with 10 digit padding to the znode path. For example, the znode path /myapp will be converted to /myapp0000000001 and the next sequence number will be /myapp0000000001.</div>
+</li>
+<li class="level1"><div class="li"> If no flags are specified, then the znode is considered as <strong>persistent znode</strong>.</div>
+</li>
+</ul>
+<pre class="code">#create a sequential znode
+create -s /znodePath /data
+[zk: hadoop-nn.bioaster.org:2181(CONNECTED) 4] create -s /seq_test &quot;this is a sequential znode&quot;
+
+#The name of znode has changed
+Created /seq_test0000000002
+[zk: hadoop-nn.bioaster.org:2181(CONNECTED) 7] get /seq_test0000000002                 
+this is a sequential znode
+cZxid = 0x10000000d
+ctime = Mon Dec 18 14:39:32 CET 2017
+mZxid = 0x10000000d
+mtime = Mon Dec 18 14:39:32 CET 2017
+pZxid = 0x10000000d
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 26
+numChildren = 0
+
+
+
+#create a ephemeral znode
+create -e /znodePath /data
+
+[zk: hadoop-nn.bioaster.org:2181(CONNECTED) 0] get /config_test
+pengfei_test
+cZxid = 0x100000008
+ctime = Mon Dec 18 14:33:31 CET 2017
+mZxid = 0x100000008
+mtime = Mon Dec 18 14:33:31 CET 2017
+pZxid = 0x100000008
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+
+#this shows who is the owner of this ephemeral znode
+ephemeralOwner = 0x26068f954f30001
+dataLength = 12
+numChildren = 0
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ephemeral znodes, sequential znodes and persistent znodes&quot;,&quot;hid&quot;:&quot;ephemeral_znodes_sequential_znodes_and_persistent_znodes&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;4599-6259&quot;} -->
+<h3 class="sectionedit7" id="watch_a_znode">Watch a znode</h3>
+<div class="level3">
+
+<p>
+Watches show a notification when the specified znode or znode’s children data changes. You can
+set a watch only in get command.
+</p>
+<pre class="code">[zk: hadoop-nn.bioaster.org:2181(CONNECTED) 11] get /seq_test0000000002 1
+pengfei changed data value again
+cZxid = 0x10000000d
+ctime = Mon Dec 18 14:39:32 CET 2017
+mZxid = 0x100000010
+mtime = Mon Dec 18 15:21:32 CET 2017
+pZxid = 0x10000000d
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 32
+numChildren = 0
+
+#Use another client to change the value of seq_test,
+[zk: hadoop-dn1.pengfei.org:2181(CONNECTED) 5] set /seq_test0000000002 &quot;pengfei&quot;
+
+#YOU will receive a notification as followed
+[zk: hadoop-nn.pengfei.org:2181(CONNECTED) 12] 
+WATCHER::
+
+WatchedEvent state:SyncConnected type:NodeDataChanged path:/seq_test0000000002
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Watch a znode&quot;,&quot;hid&quot;:&quot;watch_a_znode&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;6260-7088&quot;} -->
+<h3 class="sectionedit8" id="create_children_sub-znode">Create children/sub-znode</h3>
+<div class="level3">
+
+<p>
+Creating children is similar to creating new znodes. The only difference is that the path of the
+child znode will have the parent path as well.
+</p>
+<pre class="code">#create a child under znode seq_test0000000002
+[zk: hadoop-nn.bioaster.org:2181(CONNECTED) 12] create -e /seq_test0000000002/child1 &quot;pengfei_test ch&quot;&quot;
+Created /seq_test0000000002/child1
+
+
+#list all the child of one znode
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 6] ls /seq_test0000000002 
+[child1]
+
+
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 9] stat /seq_test0000000002
+cZxid = 0x10000000d
+ctime = Mon Dec 18 14:39:32 CET 2017
+mZxid = 0x100000014
+mtime = Mon Dec 18 15:23:34 CET 2017
+pZxid = 0x100000015
+cversion = 1
+dataVersion = 6
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 7
+numChildren = 1
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 10] stat /seq_test0000000002/child1
+cZxid = 0x100000015
+ctime = Mon Dec 18 15:29:41 CET 2017
+mZxid = 0x100000015
+mtime = Mon Dec 18 15:29:41 CET 2017
+pZxid = 0x100000015
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+#ephemeral znode
+ephemeralOwner = 0x160690cb6f00001
+dataLength = 22
+numChildren = 0
+
+#You can notice that , I can create a ephemeral znode under a sequential parent</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create children\/sub-znode&quot;,&quot;hid&quot;:&quot;create_children_sub-znode&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;7089-8317&quot;} -->
+<h3 class="sectionedit9" id="remove_a_znode">Remove a Znode</h3>
+<div class="level3">
+
+<p>
+Removes a specified znode and recursively all its children. This would happen only if such a
+znode is available.
+</p>
+<pre class="code"># has three znode
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 11] ls /
+[seq_test0000000002, zookeeper, NodeOne]
+#delete NodeOne znode
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 12] rmr /NodeOne
+[zk: hadoop-dn1.bioaster.org:2181(CONNECTED) 13] ls /
+[seq_test0000000002, zookeeper]
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Remove a Znode&quot;,&quot;hid&quot;:&quot;remove_a_znode&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;8318-8756&quot;} -->
+<h2 class="sectionedit10" id="zookeeper_java_api">Zookeeper Java API</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Java API&quot;,&quot;hid&quot;:&quot;zookeeper_java_api&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;8757-8789&quot;} -->
+<h3 class="sectionedit11" id="zookeeper_connection_classzkconnectionjava">ZooKeeper Connection Class:ZKConnection.java</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:zookeeper:command_line_interface&amp;codeblock=7" title="Download Snippet" class="mediafile mf_java">ZKConnection.java</a></dt>
+<dd><pre class="code file java"><span class="coMULTI">/*
+ * @(#)ZKConnection.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.util.concurrent.CountDownLatch</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.WatchedEvent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher.Event.KeeperState</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.ZooKeeper</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKConnection Class. Class that initialize connection to Ensemble
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0
+ * http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKConnection <span class="br0">&#123;</span>
+&nbsp;
+	<span class="co1">// Local Zookeeper object to access ZooKeeper ensemble</span>
+	<span class="kw1">private</span> ZooKeeper zoo<span class="sy0">;</span>
+	<span class="kw1">final</span> CountDownLatch connectionLatch <span class="sy0">=</span> <span class="kw1">new</span> CountDownLatch<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * 
+	 */</span>
+	<span class="kw1">public</span> ZKConnection<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// TODO Auto-generated constructor stub</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Initialize the Zookeeper connection
+	 * @param host
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> ZooKeeper connect<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> host<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a>,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+&nbsp;
+		zoo <span class="sy0">=</span> <span class="kw1">new</span> ZooKeeper<span class="br0">&#40;</span>host, <span class="nu0">2000</span>, <span class="kw1">new</span> Watcher<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+			<span class="kw1">public</span> <span class="kw4">void</span> process<span class="br0">&#40;</span>WatchedEvent we<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+				<span class="kw1">if</span> <span class="br0">&#40;</span>we.<span class="me1">getState</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">==</span> KeeperState.<span class="me1">SyncConnected</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+					connectionLatch.<span class="me1">countDown</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+				<span class="br0">&#125;</span>
+			<span class="br0">&#125;</span>
+		<span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+		connectionLatch.<span class="me1">await</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">return</span> zoo<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Method to disconnect from zookeeper server</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> close<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zoo.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper Connection Class:ZKConnection.java&quot;,&quot;hid&quot;:&quot;zookeeper_connection_classzkconnectionjava&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:11,&quot;range&quot;:&quot;8790-10333&quot;} -->
+<h3 class="sectionedit12" id="zookeeper_client_operation_interfacezkmanagerjava">Zookeeper Client Operation Interface: ZKManager.java</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:zookeeper:command_line_interface&amp;codeblock=8" title="Download Snippet" class="mediafile mf_java">ZKManager.java</a></dt>
+<dd><pre class="code file java"><span class="coMULTI">/*
+ * @(#)ZKManager.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.List</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.KeeperException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKManager Interface. Defines the methods to manipulate znodes
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0
+ * http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">interface</span> ZKManager <span class="br0">&#123;</span>
+	<span class="co3">/**
+	 * Create a Znode and save some data
+	 * 
+	 * @param path
+	 * @param data
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> create<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Get the ZNode Stats
+	 * 
+	 * @param path
+	 * @return Stat
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> Stat getZNodeStats<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Get ZNode Data
+	 * 
+	 * @param path
+	 * @param boolean watchFlag
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> getZNodeData<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path,<span class="kw4">boolean</span> watchFlag<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Update the ZNode Data
+	 * 
+	 * @param path
+	 * @param data
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> update<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Get ZNode children
+	 * 
+	 * @param path
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 * return List&lt;String&gt;
+	 */</span>
+	<span class="kw1">public</span> List<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> getZNodeChildren<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Delete the znode
+	 * 
+	 * @param path
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> delete<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Client Operation Interface: ZKManager.java&quot;,&quot;hid&quot;:&quot;zookeeper_client_operation_interfacezkmanagerjava&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;10334-12302&quot;} -->
+<h3 class="sectionedit13" id="zookeeper_client_operation_classzkclientmanagerimpljava">Zookeeper Client Operation class: ZKClientManagerImpl.java</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:zookeeper:command_line_interface&amp;codeblock=9" title="Download Snippet" class="mediafile mf_java">ZKClientManagerImpl.java</a></dt>
+<dd><pre class="code file java"><span class="coMULTI">/*
+ * @(#)ZKClientManagerImpl.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.List</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.CreateMode</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.KeeperException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.ZooDefs</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.ZooKeeper</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKClientManagerImpl class. Implements the methods to manipulate znodes.
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0 http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKClientManagerImpl <span class="kw1">implements</span> ZKManager <span class="br0">&#123;</span>
+&nbsp;
+	<span class="kw1">private</span> <span class="kw1">static</span> ZooKeeper zkeeper<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">private</span> <span class="kw1">static</span> ZKConnection zkConnection<span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * 
+	 */</span>
+	<span class="kw1">public</span> ZKClientManagerImpl<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		initialize<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Initialize connection
+	 */</span>
+	<span class="kw1">private</span> <span class="kw4">void</span> initialize<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">try</span> <span class="br0">&#123;</span>
+			zkConnection <span class="sy0">=</span> <span class="kw1">new</span> ZKConnection<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+			zkeeper <span class="sy0">=</span> zkConnection.<span class="me1">connect</span><span class="br0">&#40;</span><span class="st0">&quot;localhost&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+		<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>e.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Close the zookeeper connection
+	 */</span>
+	<span class="kw1">public</span> <span class="kw4">void</span> closeConnection<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">try</span> <span class="br0">&#123;</span>
+			zkConnection.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>e.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> create<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkeeper.<span class="me1">create</span><span class="br0">&#40;</span>path, data, ZooDefs.<span class="me1">Ids</span>.<span class="me1">OPEN_ACL_UNSAFE</span>,
+				CreateMode.<span class="me1">PERSISTENT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> Stat getZNodeStats<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		Stat stat <span class="sy0">=</span> zkeeper.<span class="me1">exists</span><span class="br0">&#40;</span>path, <span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span>stat <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Node exists and the node version is &quot;</span>
+					<span class="sy0">+</span> stat.<span class="me1">getVersion</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Node does not exists&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> stat<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> getZNodeData<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <span class="kw4">boolean</span> watchFlag<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+&nbsp;
+&nbsp;
+		<span class="kw1">try</span> <span class="br0">&#123;</span>
+&nbsp;
+			Stat stat <span class="sy0">=</span> getZNodeStats<span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+			<span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> b <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+			<span class="kw1">if</span> <span class="br0">&#40;</span>stat <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+				<span class="kw1">if</span><span class="br0">&#40;</span>watchFlag<span class="br0">&#41;</span><span class="br0">&#123;</span>
+					ZKWatcher watch <span class="sy0">=</span> <span class="kw1">new</span> ZKWatcher<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+					 b <span class="sy0">=</span> zkeeper.<span class="me1">getData</span><span class="br0">&#40;</span>path, watch,<span class="kw2">null</span><span class="br0">&#41;</span><span class="sy0">;</span>
+					 watch.<span class="me1">await</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+				<span class="br0">&#125;</span><span class="kw1">else</span><span class="br0">&#123;</span>
+					 b <span class="sy0">=</span> zkeeper.<span class="me1">getData</span><span class="br0">&#40;</span>path, <span class="kw2">null</span>,<span class="kw2">null</span><span class="br0">&#41;</span><span class="sy0">;</span>
+				<span class="br0">&#125;</span>
+				<span class="coMULTI">/*byte[] b = zkeeper.getData(path, new Watcher() {
+&nbsp;
+					public void process(WatchedEvent we) {
+&nbsp;
+						if (we.getType() == Event.EventType.None) {
+							switch (we.getState()) {
+							case Expired:
+								connectedSignal.countDown();
+								break;
+							}
+&nbsp;
+						} else {
+&nbsp;
+							try {
+								byte[] bn = zkeeper.getData(path, false, null);
+								String data = new String(bn, &quot;UTF-8&quot;);
+								System.out.println(data);
+								connectedSignal.countDown();
+&nbsp;
+							} catch (Exception ex) {
+								System.out.println(ex.getMessage());
+							}
+						}
+					}
+				}, null);*/</span>
+&nbsp;
+				<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>b, <span class="st0">&quot;UTF-8&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+				<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>data<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+				<span class="kw1">return</span> data<span class="sy0">;</span>
+			<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+				<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Node does not exists&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+			<span class="br0">&#125;</span>
+		<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>e.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> <span class="kw2">null</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> update<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		<span class="kw4">int</span> version <span class="sy0">=</span> zkeeper.<span class="me1">exists</span><span class="br0">&#40;</span>path, <span class="kw2">true</span><span class="br0">&#41;</span>.<span class="me1">getVersion</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkeeper.<span class="me1">setData</span><span class="br0">&#40;</span>path, data, version<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> List<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> getZNodeChildren<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		Stat stat <span class="sy0">=</span> getZNodeStats<span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		List<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> children  <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+		<span class="kw1">if</span> <span class="br0">&#40;</span>stat <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			children <span class="sy0">=</span> zkeeper.<span class="me1">getChildren</span><span class="br0">&#40;</span>path, <span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+			<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> children.<span class="me1">size</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+				<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>children.<span class="me1">get</span><span class="br0">&#40;</span>i<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+		<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Node does not exists&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> children<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> delete<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path<span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		<span class="kw4">int</span> version <span class="sy0">=</span> zkeeper.<span class="me1">exists</span><span class="br0">&#40;</span>path, <span class="kw2">true</span><span class="br0">&#41;</span>.<span class="me1">getVersion</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkeeper.<span class="me1">delete</span><span class="br0">&#40;</span>path, version<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * @param args
+	 */</span>
+	<span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// TODO Auto-generated method stub</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Client Operation class: ZKClientManagerImpl.java&quot;,&quot;hid&quot;:&quot;zookeeper_client_operation_classzkclientmanagerimpljava&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;12303-16345&quot;} -->
+<h3 class="sectionedit14" id="zookeeper_watcherzkwatcherjava">Zookeeper Watcher: ZKWatcher.java</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:zookeeper:command_line_interface&amp;codeblock=10" title="Download Snippet" class="mediafile mf_java">ZKWatcher.java</a></dt>
+<dd><pre class="code file java"><span class="co3">/**
+ * 
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.concurrent.CountDownLatch</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.AsyncCallback.StatCallback</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.WatchedEvent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.Watcher</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * @author bpaikay
+ *
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKWatcher <span class="kw1">implements</span> Watcher, StatCallback <span class="br0">&#123;</span>
+	CountDownLatch latch<span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * 
+	 */</span>
+	<span class="kw1">public</span> ZKWatcher<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		latch <span class="sy0">=</span> <span class="kw1">new</span> CountDownLatch<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> processResult<span class="br0">&#40;</span><span class="kw4">int</span> rc, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a> ctx, Stat stat<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// TODO Auto-generated method stub</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	@Override
+	<span class="kw1">public</span> <span class="kw4">void</span> process<span class="br0">&#40;</span>WatchedEvent event<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		 <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Watcher fired on path: &quot;</span> <span class="sy0">+</span> event.<span class="me1">getPath</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; state: &quot;</span> <span class="sy0">+</span> 
+                 event.<span class="me1">getState</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; type &quot;</span> <span class="sy0">+</span> event.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         latch.<span class="me1">countDown</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">public</span> <span class="kw4">void</span> await<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+         latch.<span class="me1">await</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+     <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Watcher: ZKWatcher.java&quot;,&quot;hid&quot;:&quot;zookeeper_watcherzkwatcherjava&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:14,&quot;range&quot;:&quot;16346-17327&quot;} -->
+<h3 class="sectionedit15" id="zookeeper_client_test_classzkclienttestjava">Zookeeper Client test class: ZKClientTest.java</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:data_science:zookeeper:command_line_interface&amp;codeblock=11" title="Download Snippet" class="mediafile mf_java">ZKClientTest.java</a></dt>
+<dd><pre class="code file java"><span class="coMULTI">/*
+ * @(#)ZKClientTest.java
+ * @author Binu George
+ * Globinch.com
+ * copyright http://www.java.globinch.com. All rights reserved.
+ */</span>
+<span class="kw1">package</span> <span class="co2">com.globinch.zoo.client.test</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">static</span> org.<span class="me1">junit</span>.<span class="kw1">Assert</span>.<span class="sy0">*;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.util.List</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.KeeperException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.zookeeper.data.Stat</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.After</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.Before</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.junit.Test</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">com.globinch.zoo.client.ZKClientManagerImpl</span><span class="sy0">;</span>
+&nbsp;
+<span class="co3">/**
+ * ZKClientTest Test Class
+ * 
+ * @author Binu George
+ * @since 2016
+ * @version 1.0
+ * http://www.java.globinch.com. All rights reserved
+ */</span>
+<span class="kw1">public</span> <span class="kw1">class</span> ZKClientTest <span class="br0">&#123;</span>
+&nbsp;
+	<span class="kw1">private</span> <span class="kw1">static</span> ZKClientManagerImpl zkmanager <span class="sy0">=</span> <span class="kw1">new</span> ZKClientManagerImpl<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="co1">// ZNode Path</span>
+	<span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> path <span class="sy0">=</span> <span class="st0">&quot;/QN-GBZnode&quot;</span><span class="sy0">;</span>
+	<span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> data <span class="sy0">=</span> <span class="st0">&quot;www.java.globinch.com ZK Client Data&quot;</span>.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="co3">/**
+	 * @throws java.lang.Exception
+	 */</span>
+	@Before
+	<span class="kw1">public</span> <span class="kw4">void</span> setUp<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> <span class="br0">&#123;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * @throws java.lang.Exception
+	 */</span>
+	@After
+	<span class="kw1">public</span> <span class="kw4">void</span> tearDown<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> <span class="br0">&#123;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#create(java.lang.String, byte[])}
+	 * .
+	 * 
+	 * @throws InterruptedException
+	 * @throws KeeperException
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		<span class="co1">// data in byte array</span>
+&nbsp;
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeStats(java.lang.String)}
+	 * .
+	 * 
+	 * @throws InterruptedException
+	 * @throws KeeperException
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeStats<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException,
+			<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>stat.<span class="me1">getVersion</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeData(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeData<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#41;</span>zkmanager.<span class="me1">getZNodeData</span><span class="br0">&#40;</span>path,<span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>data<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#update(java.lang.String, byte[])}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testUpdate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="st0">&quot;www.java.globinch.com Updated Data&quot;</span><span class="sy0">;</span>
+		<span class="kw4">byte</span><span class="br0">&#91;</span><span class="br0">&#93;</span> dataBytes <span class="sy0">=</span> data.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">update</span><span class="br0">&#40;</span>path, dataBytes<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> retrivedData <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#41;</span>zkmanager.<span class="me1">getZNodeData</span><span class="br0">&#40;</span>path,<span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>retrivedData<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#getZNodeChildren(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testGetZNodeChildren<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		List<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> children<span class="sy0">=</span> zkmanager.<span class="me1">getZNodeChildren</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNotNull<span class="br0">&#40;</span>children<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co3">/**
+	 * Test method for
+	 * {@link com.globinch.zoo.client.ZKClientManagerImpl#delete(java.lang.String)}
+	 * .
+	 * @throws InterruptedException 
+	 * @throws KeeperException 
+	 */</span>
+	@Test
+	<span class="kw1">public</span> <span class="kw4">void</span> testDelete<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> KeeperException, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> <span class="br0">&#123;</span>
+		zkmanager.<span class="me1">create</span><span class="br0">&#40;</span>path, data<span class="br0">&#41;</span><span class="sy0">;</span>
+		zkmanager.<span class="me1">delete</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		Stat stat <span class="sy0">=</span> zkmanager.<span class="me1">getZNodeStats</span><span class="br0">&#40;</span>path<span class="br0">&#41;</span><span class="sy0">;</span>
+		assertNull<span class="br0">&#40;</span>stat<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Client test class: ZKClientTest.java&quot;,&quot;hid&quot;:&quot;zookeeper_client_test_classzkclienttestjava&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:15,&quot;range&quot;:&quot;17328-&quot;} -->

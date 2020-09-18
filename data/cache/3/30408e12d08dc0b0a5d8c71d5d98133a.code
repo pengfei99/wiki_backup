@@ -1,0 +1,33 @@
+car = new Car();
+&nbsp;
+Class Car{
+   public:
+     method Car(){
+       this-&gt;_buildWheels()
+       this-&gt;_buildGlasses()
+       this-&gt;_mountPieces();
+     }
+&nbsp;
+     method run(){}
+&nbsp;
+   private:
+     method _mountPieces{ 
+       //...
+     }
+&nbsp;
+     method _buildWheels{
+       this-&gt;_wheels[1] = new Wheel();
+       ...
+       this-&gt;_wheels[4] = new Wheel();
+     }
+&nbsp;
+     method _buildGlasses{
+       this-&gt;_glassse[1] = new Glass();
+       ...
+     }
+&nbsp;
+   private:
+     list&lt;Wheels&gt; _wheels;
+     list&lt;Glass&gt; _glasses;
+     ...  
+}

@@ -1,0 +1,67 @@
+====== 13th European Conference on Computational Biology ======
+
+
+  * **Site Web :** http://www.eccb14.org/
+  * **Participants :** Lilia BOUCINHA, Nicolas SAPAY et ~1200 autres personnes
+  * **Lieu :** Strasbourg, France
+  * **Data :** 7-10 Sept 2014
+  * **Présentation / Poster :** {{ut6:conferences:eccb_2014_-_v3.pdf|Multi-omics data integration in public-private partnership}}
+  * **Programme :** http://www.eccb14.org/program
+
+
+====== Topics ======
+  - Pathways and molecular networks (applications)
+  - Sequencing and genome analysis
+  - Structural bioinformatics and molecular modelling
+  - System biology
+  - Knowledge discovery from biological assays and chemical compounds
+  - Chemical reaction and network modelling and dynamics (theory and methods)
+  - Gene discovery and cancer calssifications
+  - Databases and ontology
+  - Bioinformatics and biomedical studies (biomarkers, imaging, etc.)
+  - Data mining from text, gene expression, etc.
+  - Evolution and population genetics (non couvert)
+
+====== Impression générale ======
+__**Nicolas**__\\
+  - Les thèmes abordés cette année sont classiques et un large part est données aux analyses génomiques et transcriptomiques, ainsi qu’aux interactions protéine-protéine. Le data mining commence à prendre de l’importance. La bio-informatique structurale est toujours très présente, mais essentiellement dans des études fondamentales. La métabolomique et l’immunomonitoring sont quasiment absents.
+  - La multi-omique est quasiment absente. Il y a quelques études croisant des données phénotypiques à des données de transcriptomiques. En fait, les études de multi-omiques sont toutes des études transcriptomiques que les auteurs aimeraient étendre à la génomique.
+  - La gestion et l’intégration des données sont quasiment absentes, aussi bien du côté laboratoire que du côté clinique. 
+
+__**Lilia**__\\
+{{ut6:conferences:eccb14_-_review_by_lilia.pdf|Le compte-rendu de Lilia.}}
+
+====== Les opportunités pour BIOASTER ======
+__**Nicolas**__
+  - Le data management et l’intégration des données expérimentales et cliniques est très peu couvert, à l’exception des projets [[http://www.iplantcollaborative.org/|iPlant]], [[http://www.garuda-alliance.org/|Garuda]], [[http://www.fgcz.ch/|Sushi]] et [[http://www.breath-analysis.eu/|breath analysis]]. 
+  - La multiomique n’est pas encore d’actualité. Les études semblent surtout limitées par leur capacité à générer des données multi-omiques.
+  - L’intégration de données et l’infrastructure bio-informatique est une préoccupation majeure de l’EMBL-EBI et d’[[http://www.elixir-europe.org/|Elixir]].
+  - Un projet possible de visualisation de données d’immunomonitoring ou d’expression avec l’Institut Pasteur et le CEA. Il faut recontacter Nicolas TCHITCHEK (CEA) et Christophe BECAVIN (IP).
+  - Le Qatar investit (beaucoup) dans l’intégration de données médicales et expérimentales. Il est possible de recontacter Radja MESSAI-BADJI (rbadji@sidra.org), du [[http://www.sidra.org/|Sidra]].
+  - IBM a développé [[http://www.ncbi.nlm.nih.gov/pubmed/17179938|PhyloPythia]], un algorithme de construction d’arbre phylogénétique utilisé pour les études de métagénomique.
+  - Quelques PME à prospecter : [[http://www.biobase-international.com/|Biobase]], [[http://www.anaxomics.com/|Anaxomics]], [[http://www.totalinux.fr|TotaLinuX]]. 
+
+**Conclusion :** ECCB'14 confirme l’idée qu’il faut investir dans la gestion et l’intégration de données. D’une part, c’est encore un spécialité rare. D’autre part, c’est une technologie très demandée par la bio-informatique et la recherche biomédicale. Il y a une réelle demande pour rapprocher les 2 domaines grâce à des outils de partage, de croisement et d’échange de données.
+De ce point de vue, la France (et l’Europe) semble en retard par rapport aux USA (cf. projet iPlant). Il existe une volonté affiche de l’EMBL-EBI et de l’IFB de mettre en place les infrastructures nécessaires pour satisfaire ce besoin. Il souhaitent que les industriels les rejoignent, mais il ne connaissent pas suffisamment leurs besoins et leurs préoccupations. Il est donc pertinent que BIOASTER intervienne dans cet espace-là.   
+Les méthodes de multi-omique et de recherche de signature à partir de données hétérogènes sont très peu présentes dans les débats. BIOASTER peut au moins se positionner en fournisseur de données, dans la mesure où il a accès à des collections biologiques et aux appareils nécessaires pour générer des données multi-omiques. 
+
+
+
+====== La multi-omique ======
+__**Nicolas**__
+
+Il y a très peu d’études multi-omiques qui ont été présentées, ou en tout cas intitulées comme telles. La majorité des travaux portaient sur la mise en correspondance d’interactions protéine-protéine avec des réseaux de gènes, ou la comparaison de réseau (comparaison interespèce par exemple).
+Le lien entre protéines, ARN et ADN passe souvent par [[http://geneontology.org/|Gene Ontology]], c’est-à-dire par une sorte de dictionnaire de gènes de fonctions connus. En parallèle, un effort est fait sur la prédiction de fonction à partir de la séquence protéique par data mining et comparaison de réseau ou d’arbre de classification. 
+
+Quelques études à caractère cliniques ont été présentées. Elles consistent essentiellement à rechercher un marqueur transcriptomique dans des cas de cancer ou d’études sur le cerveau. Il y a très peu de présentations sur les maladies infectieuses, ou même sur les microorganismes.
+
+Les études les plus pertinentes :
+  - [[http://www.eccb14.org/111#H05|Impact of incomplete knowledge on protein-protein interaction]], by yuxiang JIANG (USA, Indiana) : correlation between genotype and phenotype in brain imaging
+  - [[http://www.eccb14.org/111#G03|Transcritpome-guided amyloid imaging genetic analysis via a novel sparse learning alogrithm]], by Jingwen YAN (USA, Indiana) : protein function prediction and data mining.
+  - [[http://www.eccb14.org/program/highlight-papers#HP09|Novel developments in computationnal clinicla breath analysis and biomarker detection]], by Anne-Christin HAUSCHILD (Allemagne, Max Planck) : breathomics, data management, mass spectrometry.
+  - [[http://www.eccb14.org/program/keynotes/doron-lancet|Rational confederation of genes and diseases]], by Doron LANCET (Israël) : classification and compedium of diseases and genes.
+  - [[http://www.eccb14.org/program/keynotes/nada-lavrac|Advances in data minin for biomedical research]], by Nada LAVRAC (Solvenia) : methods and software to better mine GO terms. 
+  - [[http://www.eccb14.org/111#D02|TEMPI probabilistic modeling time-evolving differentila networks with multiple information]], by Yonsoo KIM (Korea). 
+
+On peut également noter des progrès intéressants dans la prédiction de fonction de drogue ou le repositionnement de médicament. Ça n’est pas de la multi-omique, puisque dans ces cas-là, on utilise les bioassays et la chimio-informatique (QSAR, QSAR3D). Les analyses permettent par exemple d’établir des corrélations entre bioassays et de prédire l’association bénéfique de 2 molécules. Le [[http://www.isb-sib.ch/|Swiss Institute of Bioinformatics]] semble être en pointe dans ce domaine. Une étude a retenue mon attention : 
+  - [[http://www.eccb14.org/program/highlight-papers#HP06|Shaping the interaction landscape of bioactive molecules]], by David GFELLER (Switzerland). 

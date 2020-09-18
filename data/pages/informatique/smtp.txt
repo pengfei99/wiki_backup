@@ -1,0 +1,9 @@
+====== Serveur SMTP ======
+
+Le serveur permet à nos machines d'envoyer des e-mails. Il peut être utilisé comme relais depuis les lan 10.69.0.0/16 , 10.70.0.0/16, 134.158.36.0/24 ainsi que le 134.158.37.0/24.
+
+**Nom d'hôte : ** smtp.bioaster.org\\ **Adresse IP : ** 10.69.2.250\\ **Port : ** 25\\ **Authentification : ** Aucune
+
+Les mails à destination de @bioaster sont redirigés vers srvmail.bioaster.local. Le relais externe est configuré sur smtp.completel.fr.
+
+Pour résoudre smtp.bioaster.org, il faut que les DNS des VM soient sur 10.69.1.31 et 10.69.1.32.

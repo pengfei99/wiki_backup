@@ -1,0 +1,17 @@
+<span class="kw1">final</span> <span class="kw4">int</span> x<span class="sy0">=</span><span class="nu0">100</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">try</span><span class="br0">&#123;</span>  
+<span class="kw4">int</span> x<span class="sy0">=</span><span class="nu0">300</span><span class="sy0">;</span>  
+<span class="br0">&#125;</span>
+<span class="kw1">catch</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> e<span class="br0">&#41;</span><span class="br0">&#123;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>e<span class="br0">&#41;</span><span class="sy0">;</span><span class="br0">&#125;</span>  
+<span class="kw1">finally</span><span class="br0">&#123;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;finally block is executed&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">class</span> FinalizeExample<span class="br0">&#123;</span>  
+<span class="kw1">public</span> <span class="kw4">void</span> finalize<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;finalize called&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><span class="br0">&#125;</span>  
+<span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span><span class="br0">&#123;</span>  
+FinalizeExample f1<span class="sy0">=</span><span class="kw1">new</span> FinalizeExample<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+FinalizeExample f2<span class="sy0">=</span><span class="kw1">new</span> FinalizeExample<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+f1<span class="sy0">=</span><span class="kw2">null</span><span class="sy0">;</span>  
+f2<span class="sy0">=</span><span class="kw2">null</span><span class="sy0">;</span>  
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">gc</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+<span class="br0">&#125;</span><span class="br0">&#125;</span>  

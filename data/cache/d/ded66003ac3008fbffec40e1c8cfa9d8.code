@@ -1,0 +1,11 @@
+$ sudo aptitide install postgresql-client postgresql
+$ sudo adduser biomart_user
+&nbsp;
+# Ecouter sur tous les ports
+$ sudo vim /etc/postgresql/9.1/main/postgresql.conf
+  # listen_address = '*'
+&nbsp;
+# Authoriser l'utilisation distante de la base 'transmart'
+$ sudo vim /etc/postgresql/9.1/main/pg_hba.conf
+  # host    transmart    biomart_user    192.168.0.11/32    md5
+$ /etc/init.d/postgresql restart

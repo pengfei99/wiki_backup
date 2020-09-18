@@ -1,0 +1,10 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1594644170;s:8:"modified";i:1594644279;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1594644279;s:2:"ip";s:14:"213.44.168.220";s:4:"type";s:1:"E";s:2:"id";s:66:"employes:pengfei.liu:admin_system:cloud:ansible:playbook_deploy_vm";s:4:"user";s:4:"pliu";s:3:"sum";s:37:"[Use ansible to create vm in vmware] ";s:5:"extra";s:0:"";s:10:"sizechange";i:32;}s:5:"title";s:37:"Use ansible to create vm in openstack";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:37:"use_ansible_to_create_vm_in_openstack";s:5:"title";s:37:"Use ansible to create vm in openstack";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:34:"use_ansible_to_create_vm_in_vmware";s:5:"title";s:34:"Use ansible to create vm in vmware";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:333:"Use ansible to create vm in openstack
+
+1. Pre-requisites
+
+	*  Openstack client (To see your current version nova --version)
+
+2. Configure your hosts or your inventory
+You need to connect to a server which has openstack client and can connect to your hyperviser openstack.
+
+For example we have a server, we will call it ansible_master";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1594644170;s:8:"modified";i:1594644279;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1594644279;s:2:"ip";s:14:"213.44.168.220";s:4:"type";s:1:"E";s:2:"id";s:66:"employes:pengfei.liu:admin_system:cloud:ansible:playbook_deploy_vm";s:4:"user";s:4:"pliu";s:3:"sum";s:37:"[Use ansible to create vm in vmware] ";s:5:"extra";s:0:"";s:10:"sizechange";i:32;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

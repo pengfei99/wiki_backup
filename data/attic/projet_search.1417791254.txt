@@ -1,0 +1,45 @@
+====== Projet SEARCH ======
+
+==== 1) Objectif de la revue de code du mercredi 10 décembre 10h chez Novius : ====
+
+=== Qualité ===
+
+  * Aborder la qualité du code (PSR1, PSR2)
+  * Vérifier que le schéma de la base est en 3ème forme normale et demander la méthode d'analyse (MERISE ?)
+  * Aborder la sécurité de l'application (protection des formulaires, injection SQL, attaques XSS et CSRF)
+  * Demander une copie "officielle" du code source
+  * Tests unitaires ?
+  * Tests fonctionnels ?
+  * Documentation avec PhpDoc (ou autre) ?
+  * Outil de versionning ?
+  * Upgrade automatique de Novius OS ?
+  * Comment est gérée l'internationalisation (ajout d'une langue possible ?)
+  * Détails sur l'authentification (cryptage, cookie ... ?)
+  * Librairie Javascript ?
+
+=== Exploitation ===
+ 
+  * Récupérer les URLs et codes d'accès des environnements PROD/PRE-PROD/TEST
+  * Propriété et renouvellement du nom de domaine
+  * Sauvegarde quotidienne de la base de données ?
+  * Statistiques d'accès ? => URL 
+  * Accès aux logs d'erreur ? => URL
+  * Google analytics (like) ?
+  * Infos sur l'hébergement actuel (lieu, redondance, réseau)
+
+=== Hébergement futur chez Bioaster ===
+
+  * Version de Php
+  * Version de mySQL
+  * Librairie spécifiques ? Versions ?
+  * Gestion/processus de l'envoie d'emails
+  * Routing paramétrable ?
+  * Qui opère le nom de domaine ?
+
+
+==== 2) Après la revue de code====
+
+une fois avoir eu une copie du code source, faire une passe plus approfondie pour :
+
+  * Audit performance et sécurité du code
+  * 

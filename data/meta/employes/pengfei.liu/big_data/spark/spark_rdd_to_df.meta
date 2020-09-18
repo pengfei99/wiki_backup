@@ -1,0 +1,24 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1515659771;s:8:"modified";i:1515667518;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1515667518;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:51:"employes:pengfei.liu:big_data:spark:spark_rdd_to_df";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:757;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:24:"Convert RDD to dataframe";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:24:"convert_rdd_to_dataframe";s:5:"title";s:24:"Convert RDD to dataframe";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:20:"example_of_refection";s:5:"title";s:20:"Example of refection";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:17:"example_of_schema";s:5:"title";s:17:"Example of schema";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:503:"Convert RDD to dataframe
+
+There are many ways to convert rdd to dataframe
+
+	*  From existing RDD using a reflection
+	*  From existing RDD by programmatically specifying the schema
+
+Example of refection
+
+
+#prepare data
+vim /tmp/people.txt
+
+Michael,29
+Andy,30
+Justin,19
+
+#define dependencies
+scala> import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
+scala> import org.apache.spark.sql.Encoder
+scala> import spark.implicits._
+
+#define case class for the rdd (like a schema of the RDD)
+scala…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1515659771;s:8:"modified";i:1515667518;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1515667518;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"E";s:2:"id";s:51:"employes:pengfei.liu:big_data:spark:spark_rdd_to_df";s:4:"user";s:4:"pliu";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:757;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

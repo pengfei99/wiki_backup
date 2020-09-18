@@ -1,0 +1,24 @@
+
+<h1 class="sectionedit1" id="install_matlab_on_centos7_server">Install matlab on centos7 server</h1>
+<div class="level1">
+
+<p>
+If the matlab wont start the gui, install xeyes and see if you can see an eye on your X2go session.
+<code>sudo yum install xeyes</code>
+</p>
+
+<p>
+If you can&#039;t see anything, This is an XWindows issue, not a MATLAB issue. Use the following command to change display config
+</p>
+
+<p>
+<code>export DISPLAY=machine_name:0</code>
+</p>
+
+<p>
+where <strong>machine_name</strong> is the name of the computer being used. 
+Machine_name can be find in /etc/hosts
+Also, the zero at the end of the statement should be the port number of the computer&#039;s display.
+</p>
+
+</div>

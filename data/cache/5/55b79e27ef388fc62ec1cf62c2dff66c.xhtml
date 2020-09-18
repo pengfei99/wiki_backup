@@ -1,0 +1,219 @@
+
+<h1 class="sectionedit1" id="gestion_des_utilisateurs">Gestion des utilisateurs</h1>
+<div class="level1">
+
+<p>
+La plateforme est accessible aussi bien au personnel de Bioaster qu&#039;à des personnes extérieures impliquées dans des projets collaboratifs de Bioaster. En fonction de son appartenance à une UTEC, une UTEM, un partenaire ou un projet, l&#039;utilisateur se voit attribuer des droits sur des ressources/outils de calcul, des données, des modules ou des outils/applications.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap"><ul>
+<li class="level1"><div class="li"> <strong><abbr title="Nicolas Sapay">NS</abbr> <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* J&#039;ai rapidement discuté avec <abbr title="Matthieu Reynaud">MR</abbr>. A priori, on a officiellement le droit d&#039;accéder à l&#039;AD et de créer des groupes. Voir des utilisateurs. En ce qui concerne l&#039;ajout d&#039;attribut, il faut voir lesquels ont besoins d&#039;être ajoutés, si on peut le faire en batch et en discuter avec <abbr title="Matthieu Reynaud">MR</abbr>+LCO avant de se lancer.
+  * </strong><abbr title="Nicolas Sapay">NS</abbr> <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* Il faut vérfier comment ajouter un partenaire extérieur dans l&#039;AD, donc une personne avec une adresse non bioaster.org.</div>
+</li>
+<li class="level1"><div class="li"> <strong><abbr title="Nicolas Sapay">NS</abbr> <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* On part du principe que l&#039;on s&#039;appuie autant que possible sur l&#039;AD, donc d&#039;éviter autant que possible de créer un second annuaire spécifique. 
+&lt;/WRAP&gt;
+
+==== User stories ====
+
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<strong>[TLC]</strong> On va dire que je pinaille, mais je ne pense pas qu&#039;on puisse appeler ces “phrases” des <em>user stories</em>. Celles-ci doivent en effet être de la forme :
+</p>
+<pre class="code">  As a (role), I want (feature), so that (benefit).</pre>
+
+<p>
+Pour prendre un exemple concret, on pourrait écrire :
+</p>
+<pre class="code">  En tant qu&#039;administrateur, je veux pouvoir supprimer un compte utilisateur, de cette manière cette utilisateur ne pourra plus se logguer.</pre>
+
+<p>
+Mais cela n&#039;enlève rien a ton inventaire, c&#039;est juste l&#039;utilisation du terme <em>user stories</em> que je ne trouve pas approprié.
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] -->
+<p>
+
+
+== Authentification ==
+
+^ Story ^ Référent / Vérificateur ^
+|Un utilisateur doit pouvoir s’authentifier avec un login/mot de passe | UTEC6 |
+|Un utilisateur doit pouvoir s’authentifier avec un certificat (StartSSL, CaCert, …)  | UTEC6 |
+|Un utilisateur doit pouvoir réinitialiser son mot de passe avec une confirmation envoyée par email | UTEC6 |
+|Un utilisateur doit être averti de la politique de gestion des cookies appliquée sur la plateforme | UTEC6 |
+|Un utilisateur doit pouvoir consulter les mentions légales applicables sur la plateforme | UTEC6 |
+
+== Gestion des droits, autorisation ==
+
+^ Story ^ Référent / Vérificateur ^
+|Un utilisateur peut avoir accès à 0 ou à plusieurs applications | UTEC6 |
+|Un utilisateur doit pouvoir visualiser ses droits d’accès aux applications | UTEC6 |
+|Un utilisateur doit pouvoir faire une demande d’accès (en ligne) à une application  | UTEC6 |
+|Un utilisateur peut être rattaché à 0 ou plusieurs UTECs | UTEC6 |
+|Un utilisateur peut être rattaché à 0 ou plusieurs UTEMs | UTEC6 |
+|Un utilisateur peut être rattaché à 0 ou plusieurs projets | UTEC6 |
+|Un utilisateur doit pouvoir explorer l’espace GPFS de ses UTECs/UTEMs/projets (lecture seule ?) | UTEC6 |
+|Chaque UTEC/UTEM/projet a au moins un utilisateur référent | UTEC6 |
+
+
+== Administration ==
+
+^ Story ^ Référent / Vérificateur ^
+|Un utilisateur ne choisit pas son mot de passe, il est généré à partir d’algorithme qui en gère la complexité | UTEC6 |
+|Un utilisateur ne peut pas être supprimé. Si un utilisateur doit être supprimé, la date de suppression de son compte et la raison de suppression doivent être renseignées, le champ « actif » de son profil doit être positionné à « False » | UTEC6 |
+|L’utilisateur référant d’une entité est obligatoirement un employé de Bioaster | UTEC6 |
+|Un utilisateur référent à des droits d&#039;administration des utilisateurs sur l&#039;entité qu&#039;il gère | UTEC6 | 
+|Lorsqu’un utilisateur est rattaché ou détaché d’une entité (UTEC/UTEM/projet), l’utilisateur référant de l’entité est notifié par mail | UTEC6 |
+|Un administrateur doit pouvoir allouer/révoquer des droits sur une application à un utilisateur | UTEC6 |
+|Un administrateur doit pouvoir visualiser toutes les demandes de réinitialisation de mot de passe | UTEC6 |
+|Un administrateur doit pouvoir visualiser l’historique des connexions d’un utilisateur donné | UTEC6 |
+|Un administrateur doit pouvoir bloquer l&#039;accès complet ou partiel (à une entité) à un utilisateur | UEC6 |
+
+
+
+==== Dictionnaire et modèle de données ====
+
+<em class="u"><strong>Structure d&#039;un utilisateur <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>*<em class="u">
+
+^ Code ^ Libellé (en français) ^ Description ^ Format/Taille ^ Obligatoire ^ Domaine de valeur / Commentaires ^
+|id | Identifiant | Identifiant unique de l’utilisateur	| Numérique | Oui |
+|first_name | Prénom | Prénom de l’utilisateur | Texte (100) | Oui | Ex : Anatole |	
+|last_name | Nom | Nom de l’utilisateur	| Texte (100) | Oui | Ex : France |
+|email | Email | Email de l’utilisateur. Si utilisateur Bioaster forcément @bioaster.org | Texte (256)	| Oui | Format d’email valide (voir regexp/validator) |
+|dn | Nom distinctif | Distinguished name du certificat de l’utilisateur | Texte (256) | Non |Sensé être unique car contient l’email. Todo : trouver regexp pour validateur |
+|active | Utilisateur actif | Est-ce-que l’utilisateur a le droit de se connecter (ce champ servira à bloquer un utilisateur) | Booléen | Oui | |	
+|password | Mot de passe | Mot de passe d’authentification  de l’utilisateur | Texte (8-12) ? |Oui |Imposer des règles de complexité ? Ne peut être généré que par un algorithme ?|
+|last_update | Date de dernière modification | Date de dernière modification des données du profil de l’utilisateur |Date | Oui | Automatique |
+|creation_date | Date de création | Date de la création du profil de l’utilisateur | Date | Oui | |
+|supression_date | Date de suppression | Date de la suppression du profil de l’utilisateur | Date | Non | |	
+|suppression_reason | Motif de suppression | Motif pour lequel le compte a été supprimé	| Texte (taille ?)| Non |Champ libre ou liste de valeur possible : bannissement, a quitté Bioaster, …|
+|super_user | Super utilisateur	| Donne accès à toutes les applications avec tous les droits (réservé aux administrateurs) | Booléen | Oui | |
+|phone_number | Numéro de téléphone | Numéro de téléphone de l’utilisateur | Texte | Non | Trouvé regexp ou validateur « phone number »|
+|uid |Identifiant AFS | Identifiant AFS (uid) de l’utilisateur | Numérique | Non | Pour le montage à la volée de l’espace AFS. Ex : 1789 |
+|afs_login | Login AFS | Login AFS de l&#039;utilisateur | texte (8 ?) | Non | Ex : pveyre |
+|afs_path | Racine AFS | Répertoire racine de l’utilisateur sur l’espace AFS | Texte | Non | |
+|corporate | Utilisateur Bioaster |L’utilisateur est-il un employé de Bioaster | Booléen | Non | |
+
+
+</em></strong>Structure d&#039;une UTEC <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>*</em>
+
+^ Code ^ Libellé (en français) ^ Description ^ Format/Taille ^ Obligatoire ^ Domaine de valeur / Commentaires ^
+|id | Identifiant | Identifiant unique de l’UTEC | Numérique | Oui | |	
+|code | Code | Code de l’UTEC | Texte | Oui | Exemple : UTEC-1 | 
+|nom | Nom | Nom complet de l’UTEC | Texte | Oui |Exemple : Collections d’échantillons biologiques |
+|gpfs_path | Racine GPFS | Répertoire racine de l’UTEC sur l’espace de stockage GPFS | Texte | Non | Ex : /sps/bioaster/UTEC1 ou juste const racine bioster + /UTEC1 |
+|lyon_volume| Nom du volume sur la baie EMC à BIOASTER1 | texte | non | Le volume sert de stockage temporaire et d&#039;espace de travail |
+|Lyon_path | Racine  sur le volume de l&#039;UTEC | Répertoire racine de l’UTEC sur son volume de travail | Texte | Non | Ex : /UTEC1 |
+|villeurbanne_volume | Nom du volume sur la baie EMC au CCIN2P3 | texte | non | Le volume sert de stockage temporaire et d&#039;espace de travail |
+|villeurbanne_path | Racine  sur le volume de l&#039;UTEC | Répertoire racine de l’UTEC sur son volume de travail | Texte | Non | Ex : /UTEC1 |
+|paris_volume | Nom du volume sur la baie EMC à Paris | texte | non | non disponible à ce jour |
+|Paris_path | Racine  sur le volume de l&#039;UTEC | Répertoire racine de l’UTEC sur son volume de travail | Texte | Non | Ex : /UTEC1 |
+|email	| Email	| Alias mail de l’UTEC	| Texte | Oui |	Validateur mail |
+</p>
+<!-- EDIT6 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap" style="width: 40%;">
+<p>
+<strong><abbr title="Nicolas Sapay">NS</abbr><img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* J&#039;ai rajouté les espaces de travail sur les baies EMC à Lyon, Villeurbanne et Paris. Est-ce une bonne idée? Cette espace n&#039;existe que pour usage interne aux UTECS.
+&lt;/WRAP&gt;
+</p>
+<!-- EDIT8 PLUGIN_WRAP_START [0-] --><div class="wrap_clear plugin_wrap"></div><!-- EDIT9 PLUGIN_WRAP_END [0-] -->
+<p>
+
+
+
+
+<em class="u"><strong>Structure d&#039;une UTEM <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>*<em class="u">
+
+^ Code ^ Libellé (en français) ^ Description ^ Format/Taille ^ Obligatoire ^ Domaine de valeur / Commentaires ^
+| id | Identifiant | Identifiant unique de l’UTEM | Numérique | Oui | |	
+| code | Code | Code de l’UTEM | Texte | Oui | Exemple : | 
+| nom | Nom | Nom complet de l’UTEM | Texte | Oui |Exemple :  |
+| gpfs_path | Racine GPFS | Répertoire racine de l’UTEM sur l’espace de stockage GPFS | Texte | Non | Ex : /sps/bioaster/UTEM1 ou juste const racine bioster + /UTEM1 |
+| email	| Email	| Alias mail de l’UTEM	| Texte | Non | Validateur mail |
+</p>
+<!-- EDIT10 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap"><ul>
+<li class="level1"><div class="li"> <strong><abbr title="Nicolas Sapay">NS</abbr><img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* Un membre d&#039;UTEM n&#039;a pas de path GPFS car il intervient sur des projets et qu&#039;il n&#039;y a pas de recherche interne par UTHEM. Cepndant, et pour anticiper un peut, j&#039;ajouterai quand même cet attribut, même s&#039;il n&#039;existe pas sur GPFS. 
+  * Liste à pucePeut-être faudrait-il penser à une table “Partner” aussi. (id, name, label/code [ex : “bmx_biospecimens”] pour faciliter les permissions car un partenaire peut être présent dans plusieurs projets mais les groupes de personnes du partenaire attachés aux projets ne sont pas forcément les mêmes et ne doivent donc pas forcément avoir accès à tous les projets, mail_referent)
+  * Liste à puce</strong><abbr title="Nicolas Sapay">NS</abbr><img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* Propose une structure de table</div>
+</li>
+</ul>
+</div><!-- EDIT11 PLUGIN_WRAP_END [0-] -->
+<p>
+
+
+
+</em></strong>Structure d&#039;un projet <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>*</em>
+
+^ Code ^ Libellé (en français) ^ Description ^ Format/Taille ^ Obligatoire ^ Domaine de valeur / Commentaires ^
+| id | Identifiant | Identifiant unique d’un projet | Numérique | Oui | |	
+| nom | Nom | Nom du projet | Texte | Oui | Ex : Realism |
+| summary | Résumé | Texte de présentation du projet | Texte (long) |Oui | |	
+| gpfs_path | Racine GPFS | Répertoire racine du projet sur l’espace de stockage GPFS | Texte | ? | Note : cf chemin cahier de laboratoire ?|
+| corporate | Projet interne | Projet interne à Bioaster (sans partenaire extérieur) | Booléen | Oui | |	
+</p>
+<!-- EDIT12 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_help plugin_wrap" style="width: 40%;">
+<p>
+Faut-il descendre jusqu&#039;au Work Package ?<br/>
+
+<strong><abbr title="Nicolas Sapay">NS</abbr> <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* a priori oui!
+&lt;/WRAP&gt;
+
+
+
+==== Qui a besoin de quoi ? ====
+
+</strong>Infos “utilisateur”<strong>
+
+^ Information ^ eSAMPLES (Audrey) ^ Symbiosis (Pierre) ^ FLEMS (Yoann) ^
+| email       | 1        | 1 | 1 |
+| nom         | 1        | 1 | 1 |
+| prénom      | 1        | 1 | 1 |
+| groupes     | 1        | 1 | 1 |
+| afs_path    | 0        | 1 | 0 |
+| uid         | 0        | 1 | 0 |
+| afs_login   | 0        | 1 | 0 |
+| ssh_public_key  | 0    | 1 | 0 |
+
+groupes = UTEC, UTEM, PROJET, WP
+
+</strong>Infos “groupe”<strong>
+
+^ Information ^ eSAMPLES (Audrey) ^ Symbiosis (Pierre) ^ FLEMS (Yoann) ^
+| nom         | 1        | 1 | 1 |
+| gpfs_path    | 0       | 1 | 0 |
+…
+</p>
+<!-- EDIT14 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_tip plugin_wrap"><ul>
+<li class="level1"><div class="li"> L&#039;<strong>email</strong> est l&#039;identifiant unique, il n&#039;a donc pas besoin d&#039;être récupéré !</div>
+</li>
+</ul>
+</div><!-- EDIT15 PLUGIN_WRAP_END [0-] --><!-- EDIT16 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap"><ul>
+<li class="level1"><div class="li"> Les <strong>projets</strong> ne devraient-ils pas être gérés comme des <strong>groupes</strong> ?<br/>
+Dans mon ancienne vie, on faisait comme ça, et ça marchait très bien.</div>
+</li>
+</ul>
+</div><!-- EDIT17 PLUGIN_WRAP_END [0-] --><!-- EDIT18 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_help plugin_wrap">
+<p>
+[<abbr title="Yoann Mouscaz">YM</abbr>] : Serait-il possible d&#039;avoir la liste des champs de l&#039;AD dispo quelquepart, du genre ici ? Je pourrai dire alors ce qui m&#039;intéresse d&#039;avoir dans tout ça
+</p>
+</div><!-- EDIT19 PLUGIN_WRAP_END [0-] -->
+<p>
+
+
+
+
+
+==== Implémentation ====
+
+<em class="u"><strong>Quelques pointeurs <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>*__
+
+<a href="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html" class="urlextern" title="http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html"  rel="nofollow">http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html</a> 
+
+<a href="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle" class="urlextern" title="https://github.com/ztec/ZtecSecurityActiveDirectoryBundle"  rel="nofollow">https://github.com/ztec/ZtecSecurityActiveDirectoryBundle</a> 
+
+<a href="https://auth0.com/docs/server-platforms/symfony" class="urlextern" title="https://auth0.com/docs/server-platforms/symfony"  rel="nofollow">https://auth0.com/docs/server-platforms/symfony</a> 
+
+<a href="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/" class="urlextern" title="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/"  rel="nofollow">http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/</a> 
+</p>
+</div>
+</li>
+</ul>
+
+</div>

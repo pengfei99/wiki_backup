@@ -1,0 +1,58 @@
+a:139:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:6:"LabKey";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"plugin";i:1;a:4:{i:0;s:12:"wrap_divwrap";i:1;a:2:{i:0;i:1;i:1;s:15:"round important";}i:2;i:1;i:3;s:22:"<WRAP round important>";}i:2;i:23;}i:4;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:23;}i:5;a:3:{i:0;s:9:"linebreak";i:1;a:0:{}i:2;i:46;}i:6;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:75:"Le logiciel avait été installé pour évaluation dans le cadre du projet ";}i:2;i:49;}i:7;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:124;}i:8;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:4:"LIMS";}i:2;i:126;}i:9;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:130;}i:10;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:25:" et n'a pas été retenu.";}i:2;i:132;}i:11;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:158;}i:12;a:3:{i:0;s:6:"plugin";i:1;a:4:{i:0;s:12:"wrap_divwrap";i:1;a:2:{i:0;i:4;i:1;s:0:"";}i:2;i:4;i:3;s:7:"</WRAP>";}i:2;i:158;}i:13;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:167;}i:14;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:12:"Informations";i:1;i:2;i:2;i:167;}i:2;i:167;}i:15;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:167;}i:16;a:3:{i:0;s:10:"listu_open";i:1;a:0:{}i:2;i:192;}i:17;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:192;}i:18;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:192;}i:19;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:196;}i:20;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:197;}i:21;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:7:"Version";}i:2;i:199;}i:22;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:206;}i:23;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:7:" : 13.3";}i:2;i:208;}i:24;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:215;}i:25;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:215;}i:26;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:215;}i:27;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:215;}i:28;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:219;}i:29;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:220;}i:30;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:7:"Licence";}i:2;i:222;}i:31;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:229;}i:32;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:26:" : Apache Software License";}i:2;i:231;}i:33;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:257;}i:34;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:257;}i:35;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:257;}i:36;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:257;}i:37;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:261;}i:38;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:262;}i:39;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:8:"Page Web";}i:2;i:264;}i:40;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:272;}i:41;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:3:" : ";}i:2;i:274;}i:42;a:3:{i:0;s:12:"externallink";i:1;a:2:{i:0;s:22:"https://www.labkey.org";i:1;N;}i:2;i:277;}i:43;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:303;}i:44;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:303;}i:45;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:303;}i:46;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:303;}i:47;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:307;}i:48;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:308;}i:49;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:11:"Description";}i:2;i:310;}i:50;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:321;}i:51;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:117:" : LabKey Server is open source software that helps scientists organize, analyze, and share biomedical research data.";}i:2;i:323;}i:52;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:440;}i:53;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:440;}i:54;a:3:{i:0;s:11:"listu_close";i:1;a:0:{}i:2;i:440;}i:55;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:442;}i:56;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:12:"Installation";i:1;i:2;i:2;i:442;}i:2;i:442;}i:57;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:442;}i:58;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:1705:"
+http://labkey.s3.amazonaws.com/downloads/general/r/13.3/LabKey13.3-30648-bin.tar.gz
+http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jre-7u51-linux-x64.rpm
+rpm -Uvh jre-7u51-linux-x64.rpm
+http://wwwftp.ciril.fr/pub/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz
+tar xvfz apache-tomcat-7.0.50.tar.gz
+mv apache-tomcat-7.0.50 /usr/local/
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh
+yum install postgresql postgresql-server
+vim /var/lib/pgsql/data/postgresql.conf
+# join_collapse_limit = 10
+vim /var/lib/pgsql/data/pg_hba.conf
+# local   all         all                               trust
+# host    all         all         127.0.0.1/32          trust
+service postgresql initdb
+/etc/init.d/postgresql start
+su - postgres
+createlang -d template1 PLpgsql
+psql
+# create user labkey that owns db labkey
+ctrl+d
+tar xvzf LabKey13.3-30648-bin.tar.gz
+cd LabKey13.3-30648-bin
+cp tomcat-lib/* /usr/local/apache-tomcat-7.0.50/lib/
+mkdir /usr/local/labkey-13.3-30648
+cp -R bin/ labkeywebapp/ modules/ pipeline-lib/ /usr/local/labkey-13.3-30648
+### https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+mv labkey.xml /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/
+vim /usr/local/apache-tomcat-7.0.50/conf/Catalina/localhost/labkey.xml
+chown -R apache:apache /usr/local/apache-tomcat-7.0.50
+/usr/local/apache-tomcat-7.0.50/conf/server.xml
+#<Connector port="8080" protocol="HTTP/1.1"
+#               connectionTimeout="20000"
+#               redirectPort="8443"
+#               proxyName="tomcat.bioaster.org"
+#               proxyPort="80"/>
+https://www.labkey.org/wiki/home/Documentation/page.view?name=thirdPartyCode
+
+/usr/local/apache-tomcat-7.0.50/bin/startup.sh
+";i:1;N;i:2;N;}i:2;i:473;}i:59;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:473;}i:60;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:23:"Installation du module ";}i:2;i:2188;}i:61;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:2211;}i:62;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:10:"Genotypage";}i:2;i:2213;}i:63;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:2223;}i:64;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:" :";}i:2;i:2225;}i:65;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2227;}i:66;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:73:"
+cd /usr/local/labkey-13.3-30648/modules
+cp /path/to/genotyping.module .
+";i:1;N;i:2;N;}i:2;i:2234;}i:67;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:2234;}i:68;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:32:"Sur la page d'un projet de type ";}i:2;i:2317;}i:69;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:2349;}i:70;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:10:"Genotypage";}i:2;i:2351;}i:71;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:2361;}i:72;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:14:", cliquer sur ";}i:2;i:2363;}i:73;a:3:{i:0;s:14:"monospace_open";i:1;a:0:{}i:2;i:2377;}i:74;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:5:"admin";}i:2;i:2379;}i:75;a:3:{i:0;s:15:"monospace_close";i:1;a:0:{}i:2;i:2384;}i:76;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:39:" et définir les requêtes suivantes : ";}i:2;i:2386;}i:77;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2426;}i:78;a:3:{i:0;s:10:"listu_open";i:1;a:0:{}i:2;i:2426;}i:79;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:2426;}i:80;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:2426;}i:81;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:2430;}i:82;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:2431;}i:83;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:4:"Runs";}i:2;i:2433;}i:84;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:2437;}i:85;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:11:" = exp.Runs";}i:2;i:2439;}i:86;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:2450;}i:87;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:2450;}i:88;a:3:{i:0;s:13:"listitem_open";i:1;a:1:{i:0;i:1;}i:2;i:2450;}i:89;a:3:{i:0;s:16:"listcontent_open";i:1;a:0:{}i:2;i:2450;}i:90;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:1:" ";}i:2;i:2454;}i:91;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:2455;}i:92;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:6:"Sample";}i:2;i:2457;}i:93;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:2463;}i:94;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:17:" = exp.DataInputs";}i:2;i:2465;}i:95;a:3:{i:0;s:17:"listcontent_close";i:1;a:0:{}i:2;i:2482;}i:96;a:3:{i:0;s:14:"listitem_close";i:1;a:0:{}i:2;i:2482;}i:97;a:3:{i:0;s:11:"listu_close";i:1;a:0:{}i:2;i:2482;}i:98;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:2484;}i:99;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:9:"Dégogage";i:1;i:2;i:2;i:2484;}i:2;i:2484;}i:100;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:2484;}i:101;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:2484;}i:102;a:3:{i:0;s:12:"externallink";i:1;a:2:{i:0;s:79:"http://4proc.com/2013/05/12/create-a-debug-log-file-for-your-labkey-server.html";i:1;N;}i:2;i:2507;}i:103;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2590;}i:104;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:2590;}i:105;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:55:"Ajouter la section suivante près de l'appender nommé ";}i:2;i:2592;}i:106;a:3:{i:0;s:14:"monospace_open";i:1;a:0:{}i:2;i:2647;}i:107;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:6:"LABKEY";}i:2;i:2649;}i:108;a:3:{i:0;s:15:"monospace_close";i:1;a:0:{}i:2;i:2655;}i:109;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:" :";}i:2;i:2657;}i:110;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:2659;}i:111;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:402:"
+<appender name="LABKEYDEBUG" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="${labkey.log.home}/labkey-debug.log"/>
+    <param name="Append" value="true"/>
+    <param name="MaxFileSize" value="10MB"/>
+    <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%-5p %-24.24c{1} %d{ISO8601} %24.24t : %m%n"/>
+    </layout>
+</appender>
+";i:1;s:3:"xml";i:2;s:50:"LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml";}i:2;i:2666;}i:112;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:2666;}i:113;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:19:"Modifier le logger ";}i:2;i:3133;}i:114;a:3:{i:0;s:14:"monospace_open";i:1;a:0:{}i:2;i:3152;}i:115;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:10:"org.labkey";}i:2;i:3154;}i:116;a:3:{i:0;s:15:"monospace_close";i:1;a:0:{}i:2;i:3164;}i:117;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:" :";}i:2;i:3166;}i:118;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:3168;}i:119;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:136:"
+<logger name="org.labkey">
+    <level value="debug"/>
+    <appender-ref ref="LABKEY"/>
+    <appender-ref ref="LABKEYDEBUG"/>
+</logger>
+";i:1;s:3:"xml";i:2;s:50:"LABKEY_HOME/labkeywebapp/WEB-INF/classes/log4j.xml";}i:2;i:3175;}i:120;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:3175;}i:121;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:42:"Le fichier de log devrait apparaitre dans ";}i:2;i:3376;}i:122;a:3:{i:0;s:14:"monospace_open";i:1;a:0:{}i:2;i:3418;}i:123;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:33:"TOMCAT_HOME/logs/labkey-debug.log";}i:2;i:3420;}i:124;a:3:{i:0;s:15:"monospace_close";i:1;a:0:{}i:2;i:3453;}i:125;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:32:" après redémarrage du serveur.";}i:2;i:3455;}i:126;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:3488;}i:127;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:3488;}i:128;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:3:"Log";i:1;i:2;i:2;i:3488;}i:2;i:3488;}i:129;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:3488;}i:130;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:3488;}i:131;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:2:"* ";}i:2;i:3505;}i:132;a:3:{i:0;s:11:"strong_open";i:1;a:0:{}i:2;i:3507;}i:133;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:16:"2014.02.17 (tlc)";}i:2;i:3509;}i:134;a:3:{i:0;s:12:"strong_close";i:1;a:0:{}i:2;i:3525;}i:135;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:24:" Version 13.3 installée";}i:2;i:3527;}i:136;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:3551;}i:137;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:3551;}i:138;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:3551;}}

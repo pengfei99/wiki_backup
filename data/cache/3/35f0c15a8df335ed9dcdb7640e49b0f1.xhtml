@@ -1,0 +1,85 @@
+
+<h1 class="sectionedit1" id="use_ssh_proxy_to_connect_to_servers_which_is_not_reachable">Use ssh proxy to connect to servers which is not reachable</h1>
+<div class="level1">
+
+<p>
+In this tutorial we will use the following scenario to illustrate how to enable communications between vlans which is not interconnected directly.
+</p>
+
+<p>
+The Sample Network Architecture (to understand routing)
+</p>
+
+<p>
+We have 3 vlans 10.69.3.*/24 (private vlan3 for user terminals), 134.158.37.*/24 (vlan1 for servers), 172.17.6.*/24 (vlan2 for servers). vlan3 can connect to the vlan1, but not the vlan2, and vlan1 can connect to the vlan2. But the users in vlan3 has to access servers in vlan2.
+</p>
+
+<p>
+To do so, we need to build a gateway server in vlan1, users in vlan3 connect to the gateway vlan1, the gateway in vlan1 redirect the connection to vlan2.
+</p>
+
+<p>
+Suppose user terminal is t1, it use login pliu to login, gateway server <strong>g1</strong> in vlan1 has IP address <strong>134.158.37.11</strong>, the destination server <strong>d1</strong> in vlan2 has IP address <strong>172.17.6.15</strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Use ssh proxy to connect to servers which is not reachable" [1-908] -->
+<h2 class="sectionedit2" id="create_account_and_allow_access_in_g1_and_d1">Create account and allow access in g1 and d1</h2>
+<div class="level2">
+
+<p>
+Do the following commands in both g1 and d1 
+</p>
+<pre class="code"># Create a group for user, to allow ssh access
+groupadd -g 16888 UTEC06_Admin_System
+groupadd -g 1072 bioaster
+
+# create user account and add user group
+useradd pliu --uid 42029 --home /home/pliu --create-home --gid bioaster
+usermod -a -G UTEC06_Admin_System pliu
+
+# generate keypaire, if you don&#039;t have, if you have skip this
+ssh-keygen -t ecdsa
+# you can choose other crypto algo such as rsa
+
+# add generated public key in authorized_keys for ssh access
+cd ~
+mkdir .ssh
+vim authorized_keys
+
+# change the acl
+chmod 0644 authorized_key 
+
+# modify the default allowgroup in sshd_config
+cd /etc/ssh
+vim sshd_config
+# find the allowgroup line, add the group you allow after root
+# in our example, it looks like this
+AllowGroups root bioaster</pre>
+
+<p>
+Test the ssh connection from user terminal to g1 first, then form g1 to d1. If the test pass, we can start to config the client terminal
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Create account and allow access in g1 and d1" [909-1906] -->
+<h2 class="sectionedit3" id="client_ssh_configuration">Client ssh configuration</h2>
+<div class="level2">
+<pre class="code">cd ~/.ssh
+vim config
+# add the following lines
+Host 172.17.6.* 
+    User pliu
+    PasswordAuthentication no 
+    IdentityFile ~/.ssh/id_rsa
+    IdentitiesOnly yes  
+    PubkeyAuthentication yes  
+    Protocol 2 
+    ForwardX11 no 
+    ForwardAgent no 
+    ProxyCommand ssh pliu@134.158.37.11 &quot;nc %h %p&quot;
+#the proxy command line will be interpreted when we do ssh pliu@172.17.6.15 in client terminal
+# The result is Executing proxy command: exec ssh pliu@134.158.37.11 &quot;nc 172.17.6.15 22&quot;</pre>
+
+</div>
+<!-- EDIT3 SECTION "Client ssh configuration" [1907-] -->

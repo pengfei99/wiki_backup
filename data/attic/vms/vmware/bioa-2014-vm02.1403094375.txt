@@ -1,0 +1,48 @@
+====== BIOA-2014-VM02 ======
+
+===== Introduction =====
+
+Machine servant de serveur de fichiers.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : Debian GNU/Linux 7.5 (wheezy)
+  * **Matériel** : 
+    * //RAM//: 1Go
+    * //Disques durs//: 2Go + 10Go
+    * //Adresse MAC// : 00:0C:29:3B:FC:7B
+  * **Adresse IP** : -
+
+===== Installation =====
+
+==== Système de base ====
+
+<code text>
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+</code>
+
+==== Samba ====
+
+<code text>
+$ aptitude install --without-recommends samba
+</code>
+
+<code text /etc/samba/smb.conf>
+[Donnees]
+    comment = Disque Commun Paris
+    read only = no
+    writable = yes
+    path = /mnt/dd2/samba/commun_paris
+    guest ok = yes
+</code>
+===== Journal =====
+
+  * **2014.06.17 (tlc)** Installation

@@ -1,0 +1,5 @@
+$ vim /usr/share/tomcat/.grails/transmartConfig/DataSource.groovy
+  # mettre l'adresse du serveur de BD à la place de &quot;localhost&quot;
+  # url = &quot;jdbc:postgresql://192.168.0.12:5432/transmart&quot;
+$ transmartstop
+$ transmartstart

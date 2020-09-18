@@ -1,0 +1,22 @@
+====== IN2P3 : Institut National de Physique Nucléaire et de Physique des Particules ======
+
+===== Présentation =====
+
+Créé en 1971, l’[[http://in2p3.fr|Institut national de physique nucléaire et de physique des particules (IN2P3)]] du CNRS a pour mission de promouvoir et fédérer les activités de recherche dans les domaines de la physique nucléaire, physique des particules et astroparticules. Il coordonne les programmes dans ces domaines pour le compte du CNRS et des universités, en partenariat avec le CEA.
+Ces recherches ont pour but d’explorer la physique des particules élémentaires, leurs interactions fondamentales ainsi que leurs assemblages en noyaux atomiques, d’étudier les propriétés de ces noyaux et d’explorer les connexions entre l’infiniment petit et l’infiniment grand.
+
+===== Services =====
+
+
+==== Ferme de Calcul ====
+
+Le logiciel [[http://www.univa.com|UNIVA]] fait tourner la [[in2p3/scheduler|ferme de calcul]].
+
+Des taches peuvent être soumisses depuis la ligne de commande et seront exécutées sur un des nœuds de calcul disponible.
+
+==== Nuage ====
+
+Le [[in2p3/cloud|nuage de l'IN2P3]] est supporté par une infrastructure [[http://openstack.org|OpenStack]].
+Une [[in2p3/vmware|autre instance]] est disponible sur les serveurs [[http://www.vmware.com/|VMware]] de BIOASTER.
+
+Des serveurs virtuels peuvent y être instanciés à la demande et remplir différents rôles.

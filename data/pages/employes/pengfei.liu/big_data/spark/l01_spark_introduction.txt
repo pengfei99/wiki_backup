@@ -1,0 +1,472 @@
+====== Lesson01: Spark basics  ======
+
+===== 1.1 Spark core concept =====
+
+Before diving into the details of Spark, it is important to have a high-level understanding of the core concepts and the various core components in Spark. This article will cover the following:
+  * Spark clusters
+  * The resource management system
+  * Spark applications
+  * Spark drivers
+  * Spark executors
+
+==== 1.1.1 Spark cluster and resource management system ====
+
+A **Spark cluster** is a collection of servers that can run spark jobs.
+
+
+To efficiently and intelligently manage a collection of servers, the Spark cluster uses a **resource management system** such as **Apache YARN** or **Apache Mesos** (Spark provides his own cluster manager to manage a set of dedicated machines to perform data processing using Spark if you don't want to use YRAN or Mesos). 
+
+
+The two main components in a typical resource management system are the **cluster manager** and the **worker**. 
+  * The cluster manager knows where the workers are located, how much memory they have, and the number of CPU cores each one has. One of the main responsibilities of the cluster manager is to orchestrate the work by assigning it to each worker.
+  * A worker offers resources (memory, CPU, etc.) to the cluster manager and performs the assigned work.
+
+==== 1.1.2 Spark application ====
+
+A Spark application consists of two parts: 
+  - The application data processing logic expressed by using Spark APIs: A set of instructions that perform data processing operations. It can be as simple as a few lines of code or can be as complex as training a large machine learning model that requires many iterations and could run for many hours to complete.
+  - The Spark driver.
+
+=== 1.1.2.1 Spark driver ===
+
+The Spark driver is the **central coordinator** of a Spark application and **it interacts with a cluster manager** to figure out which machines to run the data processing logic on. 
+
+It has tow important jobs:
+  - Setting up spark application running environment: For each one of those machines, the Spark driver requests that the cluster manager launch a process called the **Spark executor**. 
+  - Parse data processing instructions of the spark application into DAG, then transform DAG into distributed tasks 
+  - Distributing Spark tasks and collect results: The spark driver sends tasks onto each executor on behalf of the application. If the data processing logic requires the Spark driver to display the computed results to a user, then it will coordinate with each Spark executor to collect the computed result and merge them together. 
+  - During the execution of tasks, it also monitors the status of each task. If one task failed, it can retry it on the same or another executor.
+
+=== 1.1.2.2 Spark Executor ===
+
+**Each Spark executor is a JVM process and is exclusively allocated to a specific Spark application.** If a Spark application breaks its JVM process, this application wouldn’t affect other Spark applications that run on other JVMs. **The lifetime of a Spark executor is the duration of a Spark application**. Since Spark applications are running in separate JVM, sharing data between them will require an external system like HDFS, Kafka, etc..
+
+The executor is responsible for:
+  * Executing tasks of the spark application and send results back to the driver. It also sends back intermedia result to signal its status. If one executor failed, the tasks of this executor will be reassigned to other Executors. 
+  * Executor uses BlockManager to store RDDs which the application requires. It means the cached RDDs are in the same JVM memory of the Executor. This can improve computation performance. 
+
+=== 1.1.2.3 SparkSession ===
+
+**The entry point into a Spark application is through a class called SparkSession**, which provides facilities for setting up configurations as well as APIs for expressing data processing logic.
+
+
+===== 1.2 Spark architectures =====
+
+We have two types of architectures :
+  * The spark application architecture
+  * The spark server cluster architecture
+
+They both use master-slave architecture.
+
+==== 1.2.1 Spark application architecture ====
+
+In a spark application, the **Spark driver** is the master and the **Spark executor** is the slave. Each of these components runs as an **independent JVM process** on a Spark cluster. You can run them all on the same (horizontal cluster) or separate machines (vertical cluster) or in a mixed machine configuration. A** Spark application consists of one and only one Spark driver and one or more Spark executors.** 
+
+Each Spark executor does what it is told, which is to execute the data processing logic in the form of **tasks**. Each task is executed on a separate CPU core. This is how Spark can speed up the processing of a large amount of data by processing it in parallel. In addition to executing assigned tasks, each Spark executor has the responsibility of **caching a portion of the data in memory** and/or on disk when it is told to do so by the application logic.
+
+Below figure shows the architecture of a spark application.
+
+{{:employes:pengfei.liu:big_data:spark:sparkapp-sparkcontext-master-slaves.png?400|}}
+
+
+==== 1.2.2 Spark server cluster architecture ====
+
+If you set up a spark cluster that contains multiple nodes/servers, you can divide them into two types of nodes.
+  * Master node
+  * Worker node
+
+=== 1.2.2.1 Master Node ===
+
+Master node runs 
+  - Spark driver(if you use spark-submit or spark-shell on the master node)
+  - Cluster Manager
+
+
+**Cluster manager**: We can have three different types 
+  * standalone(spark default resource manager)
+  * yarn 
+  * mesos 
+Note: Yarn and mesos allow you to run Spark and Hadoop simultaneously on the same worker nodes.
+
+
+The cluster manager provides:
+  * Monitoring existing workers status, accept new worker registration.
+  * Accept application submission and execute them in FIFO via workers.
+  * Low-level scheduling of cluster resources across applications (e.g cpu, memory, etc.). 
+
+It enables multiple applications to share cluster resources and run on the same worker nodes. At the time of launching a Spark application(spark-submit or spark-shell), you can request how many Spark executors an application needs and how much memory and the number of CPU cores each executor should have. Spark driver will coordinate with the cluster manager to make workers respect these specifications.
+
+
+
+=== 1.2.2.2 Worker Node ===
+
+Worker Node provides CPU, memory, and storage to a spark application. It runs :
+  * RegisterWorker process to signal cluster manager he is ready to join the cluster
+  * Send heartbeats to cluster manager to signal its status.
+  * Based on the application requirement send by cluster manager, it creates **one or many Executor**, **an Executor runs one or many Tasks.**
+
+**Executor**: spark executors runs on worker node as distributed process of a Spark application via the driver. An executor is a JVM process that Spark creates on each worker for an application. It executes application code concurrently in multiple threads. It can also cache data in memory or disk. An executor has the same lifespan as the application for which it is created. When a Spark application terminates, all executors created for it also terminate.
+
+**Executor number on a worker**: If you specify the number of executors when invoking spark-submit you should get the amount you ask for.
+<code>
+ --num-executors X
+</code>
+
+If you do not specify the executor number then Spark should use dynamic allocation by default which will start more executors if needed. In this case, you can configure the default behavior of the cluster manager, e.g. max number of executors, see http://spark.apache.org/docs/latest/configuration.html#dynamic-allocation
+
+**Tasks**: A task is the smallest unit of work that Spark sends to an executor. It is executed by a thread in an executor on a worker node. Each task performs some computations to either return a result to a driver program or partition its output for the shuffle.
+
+**Task numbers on an executor**: Spark creates a task per data partition. An executor runs one or more tasks concurrently. **The amount of parallelism is determined by the number of partitions. More partitions mean more tasks processing data in parallel.**
+
+
+===== 1.3. Other important terminology =====
+  * Shuffle: A shuffle redistributes data among a cluster of nodes. It is an expensive operation because it involves moving data across a network. Note that a shuffle does not randomly redistribute data; it groups data elements into buckets based on some criteria. Each bucket forms a new partition.
+  * Job: A job is a set of computations that Spark performs to return results to a driver program. Essentially, it is an execution of a data processing algorithm on a Spark cluster. An application can launch multiple jobs.
+  * Stage: A stage is a collection of tasks. Spark splits a job into a DAG of stages. A stage may depend on another stage. For example, a job may be split into two stages, stage 0 and stage 1, where stage 1 cannot begin until stage 0 is completed. Spark groups tasks into stages using shuffle boundaries. Tasks that do not require a shuffle are grouped into the same stage. A task that requires its input data to be shuffled begins a new stage.
+  * Transformation and Actions: The data processing instruction in spark are divided into two groups Transformation and action.
+
+===== 1.4 How an Spark Applications works =====
+
+The below figure shows the internals of Job execution in spark. 
+{{:employes:pengfei.liu:big_data:spark:internals-of-job-execution-in-spark.jpg?600|}}
+
+With the definitions out of the way, I can now describe how a Spark application processes data in parallel
+across a cluster of nodes: 
+
+  - When a Spark application is submitted, the main() method of the application will be invoked. The driver program inside the main is executed. The drive will register to the cluster manager and provide the application requirements.
+  - Based on the application requirement (e.g executor number, cpu, memory, etc.) of the submission, the cluster manager books the necessary resources and starts the ExecutorBackend.
+  - After the creation of executors, the executors report their status to the cluster manager and get the driver information
+  - Executors register to the driver.
+  - The driver reads the data processing instructions. When it encounters **an action**, it will create a job. The Spark driver splits a job into stages (DAG). When it encounters **a shuffle**, it will create a new stage. It then schedules the execution of these stages on the executors using a low-level scheduler. The executors run the tasks send by the driver in parallel.
+  - The executors process the task and the result sends back to the driver directly. During the execution of tasks, the executors will send tasks status to driver. If tasks failed or run too slow, tasks may be executed on other executors.  
+  - After the driver finishes all his tasks, he will ask the cluster manager to de-register him and liberate the resource. The cluster manager will destroy all executor of this application.
+
+{{:employes:pengfei.liu:big_data:spark:spark_job_submission_execution.png?600|}}
+
+
+===== 1.5 Spark API =====
+Spark makes its cluster computing capabilities available to an application in the form of a library. This
+library is written in Scala, but it provides an application programming interface (API) in multiple languages.
+
+At the current time (08-2018), the Spark API is available in Scala, Java, Python, and R. You can
+develop a Spark application in any of these languages. Unofficial support for additional languages, such as Clojure, is also available.
+
+The Spark API consists of two important abstractions: SparkContext and Resilient Distributed Datasets
+(RDDs).
+
+==== 1.5.1 SparkContext ====
+
+Prior Spark 2.0, Spark Context was the entry point of any spark application. It's used to access all spark features and the spark cluster. It needed a **sparkConf** which had all the cluster configs and parameters to create a Spark Context object. We could primarily create just RDDs using Spark Context and we had to create specific spark contexts for any other spark interactions. For example 
+  * SQL: SQLContext
+  * hive: HiveContext
+  * streaming: Streaming Application.
+
+The **SparkConf** has a configuration parameter that our Spark driver application will pass to SparkContext. Some of these parameter defines properties of Spark driver application. While some are used by Spark to allocate resources on the cluster, like the memory size, and cores used by executor running on the worker nodes. In short, it guides how to access the Spark cluster. 
+
+==== 1.5.2 SparkSession ====
+
+**Spark session is a unified entry point of a spark application from Spark 2.0**. It provides a way to interact with various spark’s functionality with a lesser number of constructs. Instead of having a spark context, hive context, SQL context, now all of it is encapsulated in a Spark session.
+
+<code>
+//no more sparkConf, all configuration is done directly in spark session builder
+import org.apache.spark.sql.SparkSession
+val spark = SparkSession.builder
+.appName("SparkSessionExample") 
+.master("local[4]") //url of the cluster manager. 
+.config("spark.sql.warehouse.dir", "target/spark-warehouse") // spark creates a local warehouse to save data of hiveContext
+.enableHiveSupport() //enables access to Hive metastore, Hive serdes, and Hive udfs.
+.getOrCreate
+</code>
+
+=== 1.5.2.1 hive support ===
+
+Users who do not have an existing Hive deployment can still enable Hive support. Spark creates an internal Derby database named metastore_db with a derby.log in the current directory that the Spark application is started. This database simulates the hive metastore, the spark-warehouse stores the data. 
+
+When not configured by the hive-site.xml, the context automatically:
+
+  * creates metastore_db in the current directory
+  * creates a directory configured by spark.sql.warehouse.dir, which defaults to the directory spark-warehouse in the current directory that the Spark application is started.
+
+=== 1.5.2.2 Spark Session in spark-shell ===
+
+When you start a spark-shell, a spark session is already created for us with the variable name **spark**.
+
+<code>
+scala> spark
+res1: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@2bd158ea
+
+// we can get spark context from spark session
+scala> spark.sparkContext
+res2: org.apache.spark.SparkContext = org.apache.spark.SparkContext@6803b02d
+
+// we can get SQL context 
+scala> spark.sqlContext
+res3: org.apache.spark.sql.SQLContext = org.apache.spark.sql.SQLContext@74037f9b
+</code>
+
+== Multiple Sessions ==
+
+spark.newSession() creates a new spark session object that shares the same spark context. If we look closely at following code example, the hash of the spark and session2 , they both are different. In contrast, the underneath spark context is the same.
+
+<code>
+//The two sessions are different 
+scala> val session2 = spark.newSession()
+session2: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@691fffb9
+
+scala> spark
+res22: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@506bc254
+
+// The underneath context is the same.
+scala> spark.sparkContext
+res26: org.apache.spark.SparkContext = org.apache.spark.SparkContext@715fceaf
+scala> session2.sparkContext
+res27: org.apache.spark.SparkContext = org.apache.spark.SparkContext@715fceaf
+</code>
+
+Spark Session provides also configuration and data isolation. For example, we can reset the configuration of spark, but session2 is not impacted at all. Or if we create a table in spark(default session), this table is not visible by session2. 
+
+<code>
+//change config of spark
+scala> spark.conf.get("spark.sql.crossJoin.enabled")
+res21: String = true
+scala> spark.conf.getAll
+res55: Map[String,String] = Map(spark.driver.host -> 19e0778ea843, spark.driver.port -> 38121, spark.repl.class.uri -> spark://19e0778ea843:38121/classes, spark.jars -> "", spark.repl.class.outputDir -> /tmp/spark-cfe820cd-b2f1-4d23-9c9a-3ee42bc78e01/repl-fae1a516-761a-4f31-b957-f5860882478f, spark.sql.crossJoin.enabled -> true, spark.app.name -> Spark shell, spark.ui.showConsoleProgress -> true, spark.executor.id -> driver, spark.submit.deployMode -> client, spark.master -> local[*], spark.home -> /opt/spark, spark.notebook.name -> SparkSessionSimpleZipExample, spark.sql.catalogImplementation -> hive, spark.app.id -> local-1553489583142, spark.sql.shuffle.partitions -> 100)
+
+
+// session2 is not impacted
+scala>   session2.conf.get("spark.sql.crossJoin.enabled")
+res25: String = false
+
+
+scala> spark.catalog.listTables.show()
++---------------+--------+-----------+---------+-----------+
+|           name|database|description|tableType|isTemporary|
++---------------+--------+-----------+---------+-----------+
+|people_session1|    null|       null|TEMPORARY|       true|
++---------------+--------+-----------+---------+-----------+
+
+scala> session2.catalog.listTables.show()
++----+--------+-----------+---------+-----------+
+|name|database|description|tableType|isTemporary|
++----+--------+-----------+---------+-----------+
++----+--------+-----------+---------+-----------+
+</code>
+
+==== 1.5.3 Spark Context vs Spark Session ====
+
+Compare to spark context, spark session has two major advantages:
+    - Spark session unifies all the different contexts in spark and avoids the developer to worry about creating different contexts.
+    - Spark session provides isolated environments sharing the same spark context. Prior to spark 2.0, the solution to this was to create multiple spark contexts. For example, one spark context per isolated environment or user and is an expensive operation(generally 1 per JVM).
+
+
+===== 1.6 Run spark with different mode =====
+
+Based on the cluster manager which the spark driver connects to, you can run a spark application with four different mode 
+
+  - **Local mode**: This mode is for testing purposes, it runs the driver, master, and workers on the same JVM. For example, 
+  - **standalone cluster**: This mode is used when the spark cluster uses the built-in spark cluster manager. 
+  - **spark on yarn**: yarn-client; This mode is used when the spark cluster uses the yarn cluster manager. 
+  - **spark on mesos**:  This mode is used when the spark cluster uses the mesos cluster manager. 
+  - **Spark on K8s**: Starting with version 2.3, spark ships with a Dockerfile that can be used in K8s cluster. For more details (https://spark.apache.org/docs/2.3.0/running-on-kubernetes.html)
+
+Configuration example
+<code>
+Local mode: local[2]. //The number 2 defines how many cores spark will use.
+standalone cluster: spark://master:7077
+yarn: yarn-client
+mesos: mesos://host:5050
+k8s: k8s://HOST:PORT  // This connects to a Kubernetes cluster in cluster mode. Client mode is currently unsupported and will be supported in future releases. The HOST and PORT refer to the Kubernetes API Server. It connects using TLS by default. In order to force it to use an unsecured connection, you can use k8s://http://HOST:PORT.
+</code>
+===== 1.7 Running spark applications=====
+
+For more info, https://spark.apache.org/docs/latest/submitting-applications.html
+
+We have two ways to run spark application on a spark cluster
+  - Spark-shell: It provides an interactive command-line shell. It runs in client mode so that the machine you're running the spark-shell, runs the driver of your application.
+  - spark submit: It launches spark applications on a cluster. It can use all of Spark’s supported cluster managers through a uniform interface so you don’t have to configure your application especially for each one.
+
+==== 1.7.1 Runnig spark application in a Spark shell ====
+
+Spark shell can only use the client mode, because of its interactive nature. Following is an example of how to start a spark-shell in a yarn cluster.
+
+<code>
+# spark shell
+$ ./bin/spark-shell --master yarn --deploy-mode client
+</code>
+==== 1.7.2 Submitting spark applications to a cluster====
+
+There are two deploy modes that can be used when we submit a spark application
+  * cluster mode: In this mode, the cluster manager assigns the driver to a suitable node on the cluster with available resources. The client can disconnect after initiating the application
+  * client mode: In this mode, the driver is launched directly within the spark-submit process which acts as a client to the cluster. The input and output of the application are attached to the console.
+
+Following is the general form of how to submit a spark application
+<code>
+./bin/spark-submit \
+  --class <main-class> \
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key>=<value> \
+  ... # other options
+  --jars JARS                 Comma-separated list of jars to include on the driver
+                              and executor classpaths.
+  --packages                  Comma-separated list of maven coordinates of jars to include
+                              on the driver and executor classpaths. Will search the local
+                              maven repo, then maven central and any additional remote
+                              repositories given by --repositories. The format for the
+                              coordinates should be groupId:artifactId:version.
+  --exclude-packages          Comma-separated list of groupId:artifactId, to exclude while
+                              resolving the dependencies provided in --packages to avoid
+                              dependency conflicts.
+  --repositories              Comma-separated list of additional remote repositories to
+                              search for the maven coordinates given with --packages.
+  --py-files PY_FILES         Comma-separated list of .zip, .egg, or .py files to place
+                              on the PYTHONPATH for Python apps.
+
+</code>
+
+Some of the commonly used options are:
+
+<code>
+--class: The entry point for your application (e.g. org.apache.spark.examples.SparkPi)
+
+--master: The master URL for the cluster (e.g. spark://23.195.26.187:7077)
+
+--deploy-mode: Whether to deploy your driver on the worker nodes (cluster) or locally as an external client (client)
+
+--conf: Arbitrary Spark configuration property in key=value format. For values that contain spaces wrap “key=value” in quotes (as shown). Multiple configurations should be passed as separate arguments. (e.g. --conf <key>=<value> --conf <key2>=<value2>)
+
+application-jar: Path to a bundled jar including your application and all dependencies. The URL must be globally visible inside of your cluster, for instance, an hdfs:// path or a file:// path that is present on all nodes.
+
+application-arguments: Arguments passed to the main method of your main class, if any
+
+</code>
+
+An example of submission. It starts a YARN client program which starts the default Application Master. Then SparkPi will be run as a child thread of Application Master. The client will periodically poll the Application Master for status updates and display them in the console. The client will exit once your application has finished running. Refer to the “Debugging your Application” section below for how to see driver and executor logs.
+ 
+<code>
+$ ./bin/spark-submit --class org.apache.spark.examples.SparkPi \
+    --master yarn \
+    --deploy-mode cluster \
+    --driver-memory 4g \
+    --executor-memory 2g \
+    --executor-cores 1 \
+    --queue thequeue \
+    examples/jars/spark-examples*.jar \
+    10
+</code>
+
+
+More examples:
+
+<code>
+
+# Run application locally on 8 cores
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master local[8] \
+  /opt/spark/spark-2.4.6/examples/jars/spark-examples_2.11-2.4.6.jar \
+  100
+
+# Run on a Spark standalone cluster in client deploy mode
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master spark://207.184.161.138:7077 \
+  --executor-memory 20G \
+  --total-executor-cores 100 \
+  /path/to/examples.jar \
+  1000
+
+# Run on a Spark standalone cluster in cluster deploy mode with supervise
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master spark://207.184.161.138:7077 \
+  --deploy-mode cluster \
+  --supervise \ // It restarts the driver on failure. only works on mesos and standalone mode
+  --executor-memory 20G \
+  --total-executor-cores 100 \
+  /path/to/examples.jar \
+  1000 // Here 1000 is the argument for main method of class SparkPi
+
+# Run on a YARN cluster
+export HADOOP_CONF_DIR=XXX
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master yarn \
+  --deploy-mode cluster \  # can be client for client mode
+  --executor-memory 20G \
+  --num-executors 50 \
+  /path/to/examples.jar \
+  1000
+
+# Run a Python application on a Spark standalone cluster
+./bin/spark-submit \
+  --master spark://207.184.161.138:7077 \
+  examples/src/main/python/pi.py \
+  1000
+
+# Run on a Mesos cluster in cluster deploy mode with supervise
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master mesos://207.184.161.138:7077 \
+  --deploy-mode cluster \
+  --supervise \
+  --executor-memory 20G \
+  --total-executor-cores 100 \
+  http://path/to/examples.jar \
+  1000
+
+# Run on a Kubernetes cluster in cluster deploy mode
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master k8s://xx.yy.zz.ww:443 \
+  --deploy-mode cluster \
+  --executor-memory 20G \
+  --num-executors 50 \
+  http://path/to/examples.jar \
+  1000
+</code>
+
+==== 1.7.2.1 Client mode vs Cluster mode ====
+
+
+The **Client mode** is perfect for the following situations:
+  * Want to get a job result (dynamic analysis)
+  * Easier for developing/debugging
+  * Control where your Driver Program is running
+  * Always up applications: expose your Spark job launcher as REST service or a Web UI
+
+**Important note**, some instruction such as .collect() will send all the data to the driver node, which can cause significant performance differences between whether your driver node is inside the cluster, or on a machine outside the cluster (e.g. a users laptop from another country).
+
+When deploy-mode is the cluster, the cluster manager (master node) is used to find a slave having enough available resources to execute the Driver Program. As a result, the Driver Program would run on one of the slave nodes. As its execution is delegated, you can not get the result from Driver Program, it must store its results in a file, database, etc.
+
+The Cluster mode is for the following situations:
+  * Easier for resource allocation (let the master decide): Fire and forget
+  * Monitor your Driver Program from Master Web UI like other workers
+  * Stop at the end: one job is finished, allocated resources are freed
+
+
+===== FAQ =====
+
+==== F1. Missing the spark yarn jar when run spark shell with yarn ====
+
+When we run a spark application on a yarn cluster. It requires spark jar files available on all worker nodes of the cluster. If we don't do anything then every time when we run the application, spark will copy hundreds of jar files from $SPARK_HOME to each node. You can notice that code's execution pauses for some time before it finishes copying. 
+
+Spark's documentation suggests that we need to set spark.yarn.jars property to avoid the copying. So I set below property in **spark-defaults.conf** file.
+
+<code>
+# The requiring jars are located at ${SPARK_HOME}/jars, in our case, it's /opt/spark/spark-2.2.0/jars. To make it easy to download to the spark workers, We need to zip them and copy them into hdfs.
+$ zip spark-archive.zip /opt/spark/spark-2.2.0/jars/*
+$ hdfs dfs -put spark-archive.zip hdfs://hadoop-nn:9000/user/spark/share/lib/.
+
+# Then we need to set the following line in spark-defaults.conf
+spark.yarn.archive=hdfs://hadoop-nn:9000/user/spark/share/lib/spark-archive.zip
+
+</code>
+
+
+
+==== F1. Spark Shell Error ====
+
+**Error message: Yarn application has already ended! It might have been killed or unable to launch application master.**
+
+This happens when you miss configure the spark.yarn.archive or spark.yarn.jars. Follow the above solution, it will be done.

@@ -1,0 +1,42 @@
+====== BIOA-2014-VM00 ======
+
+===== Introduction =====
+
+Description et //bla bla bla//.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : -
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : - 
+  * **Matériel** : 
+    * //RAM//: -
+    * //Disques durs//: -
+    * //Adresse MAC// : -
+  * **Adresse IP** : -
+
+===== Installation =====
+
+==== Système de base ====
+
+<code text>
+# Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail "root";
+</code>
+
+===== Journal =====
+
+  * **2014.06.18 (//initiales_du_responsable//)** Installation

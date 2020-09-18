@@ -1,0 +1,91 @@
+====== Install python 3 on centos ======
+
+
+===== Step 1 – Requirements =====
+
+To compile python from source, we need the following dependencies
+<code>
+yum install gcc openssl-devel bzip2-devel libffi-devel
+</code>
+
+===== Step 2 – Download Python 3.7 source file =====
+Download Python using the following command from the Python official site. You can find all available version in https://www.python.org/downloads/source/. In this tutorial, we download the current latest version which is 3.7.2.
+
+<code>
+cd /usr/src
+wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz
+
+# extract the tgz file
+tar xzf Python-3.7.2.tgz
+</code>
+
+===== Step 3 – Compile and Install Python 3.7 =====
+
+Use below set of commands to compile Python source code on your system using altinstall.
+
+<code>
+cd Python-3.7.2
+# Check all dependencies before compile
+./configure --enable-optimizations
+# make altinstall is used to prevent replacing the default python binary file /usr/bin/python.
+make altinstall
+</code>
+
+===== Step 4 – Check Python Version =====
+You may need to log out and re login to reload your environment.
+
+<code>
+[pliu@cclinmlp01 tmp]$ python3.7 -V
+Python 3.7.2
+[pliu@cclinmlp01 tmp]$ python3.7
+Python 3.7.2 (default, Mar 20 2019, 09:19:16) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-36)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit()
+</code>
+
+====== Install python3 with yum ======
+
+<code>
+# install ius repo
+sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+
+# install python36
+yum -y install python36u
+
+# check version
+$ python3.6 -V
+Python 3.6.5
+
+# install pip
+yum -y install python36u-pip
+
+# install python36 dev tools
+yum -y install python36u-devel
+
+# use pip36 to install package
+pip3.6 install package_name
+</code>
+
+===== Install virtuel env =====
+
+In the following section, we will create a virtural env with python3.6 for keras and tensorflow
+<code>
+# create a directory which will contains the virtural env
+mkdir -p ~/data_science/tensorflow
+cd ~/data_science/tensorflow
+
+# create virtual env
+python3.6 -m venv my_venv
+
+# check the virtual env
+> ls
+my_venv
+[pliu@template-centos-7-latest-14-08-17 tensorflow]$ source my_venv/bin/activate
+(my_venv) [pliu@template-centos-7-latest-14-08-17 tensorflow]$ python
+Python 3.6.5 (default, Apr 10 2018, 17:08:37) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit()
+
+</code>

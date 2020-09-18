@@ -1,0 +1,58 @@
+====== First normal form ======
+
+First normal form (1NF) is a property of a relation in a relational database. A relation is in first normal form if and only if the table have the following qualities: 
+
+  * The table is two-dimensional with rows and columns.
+  * Each row contains data that pertains to some thing or portion of a thing.
+  * Each column contains data for a single attribute of the thing it’s describing.
+  * Each cell (intersection of a row and a column) of the table must have only a single value.
+  * Entries in any column must all be of the same kind. If, for example, the entry in one row of a column contains an employee name, all the other rows must contain employee names in that column, too.
+  * Each column must have a unique name.
+  * No two rows may be identical (that is, each row must be unique).
+  * The order of the columns and the order of the rows are not significant.
+
+First normal form is an essential property of a relation in a relational database. Database normalization is the process of representing a database in terms of relations in standard normal forms, where first normal is a minimal requirement.
+
+First normal form enforces these criteria:
+
+  * Eliminate repeating groups in individual tables.
+  * Create a separate table for each set of related data.
+  * Identify each set of related data with a primary key.
+
+
+
+
+===== Wrong Example =====
+
+The following table does not respect the 1NF norm, because the phone number column contains multiple values. 
+
+^ID^First_Name^Last_Name^Phone number^
+|1|foo|bar|555-2334-3234, 134-34454-0345|
+|2|toto|zoo|666-2334-3234, 13-34454-0345|
+
+
+The following version respects the 1NF norm.
+
+^ID^First_Name^Last_Name^Phone_number1^Phone_number2^
+|1|foo|bar|555-2334-3234| 134-34454-0345|
+|2|toto|zoo|666-2334-3234| 13-34454-0345|
+
+But this design does not work with users who have 3 phone numbers. 
+
+A better design is to separate the phone number from the custom table
+
+^Customer_ID^First_Name^Last_Name^
+|1|foo|bar|
+|2|toto|zoo|
+
+^Phone_ID^Customer_ID^Phone_number^
+|1|1|555-2334-3234|
+|2|1|134-34454-0345|
+|3|2|666-2334-3234| 
+|4|2|13-34454-0345|
+
+The custom name use Customer_ID to form a one to many relation between customer table and phone number table.
+
+But we can't use Customer ID as primary key, Because it's not unique in the cloumn anymore.
+
+ 

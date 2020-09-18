@@ -1,0 +1,62 @@
+====== Open port for service in Centos firewalld ======
+
+1. Check firewalld status
+
+<code>
+systemctl status firewalld
+</code>
+
+
+2. list all active zone
+
+<code>
+firewall-cmd --get-zones
+</code>
+
+
+3. list all openports and authorize service on one zone
+
+<code>
+firewall-cmd --zone=public --list-ports
+
+firewall-cmd --zone=public --list-services
+
+firewall-cmd --zone=public --list-all
+</code>
+
+4. Open close ports on a zone, add --permanent if you want rule active after restart
+<code>
+firewall-cmd --zone=public --add-port=5432/tcp --permanent
+
+firewall-cmd --zone=public --remove-port=5432/tcp
+</code>
+5. Authorize and deny service on a zone, add --permanent if you want rule active after restart 
+<code>
+firewall-cmd --zone=public --add-service=http --permanent
+
+firewall-cmd --zone=public --remove-service=http
+</code>
+6. Reload rule, after modification
+<code>
+firewall-cmd --reload
+
+</code>
+
+
+===== Other usefull command =====
+
+1. Change zone on different interface
+<code>
+firewall-cmd --zone=test --change-interface=eth0
+</code>
+
+2.Block all incoming or outgoing connections
+
+<code>
+firewall-cmd --panic-on
+</code>
+
+3. Use nmap to see all service which listening on a port
+
+<code>nmap -sT -O localhost</code>
+

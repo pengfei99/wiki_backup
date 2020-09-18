@@ -1,0 +1,51 @@
+//Cette page sert de prise en main de la façon d'écrire dans le wiki.
+//
+
+
+ 
+====== Page de prise en main du wiki ======
+//ceci est le titre principal (on a 5 niveaux de titres)
+//
+
+===== Titre de niveau -1 =====
+
+//On peut mettre des accents (toujours très présents en français!),écrire en italique, en __souligné__ ou en// **gras**
+
+//On peut ajouter des commentaires pour les collaborateurs du wiki :// FIXME ou DELETEME
+
+//On ne peut pas sauter 2 lignes ! ?
+Mettre de la couleur? //
+
+//On peut inclure une ligne verticale //
+----
+
+//on a deux types de façons de faire des listes possibles : juste des tirets ou avec des numéros ://
+
+Les items qu'on pourrait aborder :
+  * les outils bioinformatiques à disposition
+  * les méthodes d'analyses de données multiparamétriques
+  * ...
+
+//En choisissant un ordre ://
+
+  - état de l'art des méthodes d'analyses utilisées
+  - celles que l'on pourrait utiliser au PT03
+  - d'autres en dvp ?
+
+//on peut ajouter une image en la mettant au préalable dans Media manager avec upload//
+{{ :pt3:spade_bendall.png?nolink&500 |}}
+La représentation Spade des données de Bendall //et al//,2011. //On peut faire un lien vers une nouvelle page du wiki : [[pt3:essai_claire:explications_Spade|Spade]] ou vers un site web :[[http://www.sciencemag.org/content/332/6030/687.full|Article de Bendall]] //
+
+
+//La fonction Code Text sert à indiquer une ligne de code , par exemple :// ''print "bonjour"'' 
+
+
+//on peut signer la page, et le lien permet d'envoyer un mail à l'auteur//
+
+ --- //[[claire.delannoy@bioaster.org|Claire]] 2014/06/05 16:23//
+
+
+
+
+
+

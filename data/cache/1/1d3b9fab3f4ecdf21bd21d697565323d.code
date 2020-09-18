@@ -1,0 +1,40 @@
+&lt;VirtualHost *:80&gt;
+    ServerName 104.196.24.4
+    ServerAlias wiki.pengfei.org
+    Redirect permanent / https://35.243.150.190/
+&lt;/VirtualHost&gt;
+&nbsp;
+If you don't have signed certificate, you need to generate an auto-signed certificate
+&lt;code&gt;
+# generate private key and certificate
+openssl req -x509 -nodes -days 965 -newkey rsa:2048 -keyout wiki.pengfei.org.key -out wiki.pengfei.org.crt
+&nbsp;
+# copy them to the standard place
+cp wiki.pengfei.org.key /etc/pki/tls/private/.
+cp wiki.pengfei.org.crt /etc/pki/tls/certs/.
+&lt;/code&gt;
+&nbsp;
+&lt;VirtualHost *:443&gt;
+   ServerName 104.196.24.4
+   ServerAlias wiki.pengfei.org
+   DocumentRoot /var/www/html/dokuwiki
+&nbsp;
+  &lt;Directory /var/www/html/dokuwiki&gt;
+ Options Indexes FollowSymLinks MultiViews
+AllowOverride All
+Require  all granted
+ &lt;/Directory&gt; 
+ServerSignature off
+ErrorLog /var/log/httpd/error_log
+CustomLog /var/log/httpd/access_log combined
+&nbsp;
+&nbsp;
+    SSLEngine       on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+&nbsp;
+    SSLCertificateFile      /etc/pki/tls/certs/wiki.pengfei.org.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/wiki.pengfei.org.key
+    SSLCertificateChainFile /etc/pki/tls/certs/wiki.pengfei.org.crt
+&nbsp;
+&lt;/VirtualHost&gt;

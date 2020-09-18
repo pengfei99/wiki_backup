@@ -1,0 +1,73 @@
+
+<h1 class="sectionedit1" id="vm_resequencing_utec2">VM RESEQUENCING UTEC2</h1>
+<div class="level1">
+
+<p>
+<strong>Demande initiale via <a href="https://helpdesk.bioaster.org/front/ticket.form.php?id=249" class="urlextern" title="https://helpdesk.bioaster.org/front/ticket.form.php?id=249"  rel="nofollow">ce ticket GLPI</a></strong>
+</p>
+
+<p>
+<strong>Adresses IP :</strong>172.17.6.6  <strong>IP Publique :</strong>
+</p>
+
+<p>
+<strong>Infrastructure :</strong> OpenStack CC
+</p>
+
+<p>
+<strong>Image de base :</strong> CentOS7
+</p>
+
+<p>
+<strong>Rôle de déployement Ansible :</strong> server
+</p>
+
+<p>
+<strong>Tenant Open Stack :</strong> htc-bioaster
+</p>
+
+<p>
+<strong>Point de montage GPFS :</strong> /mnt/gpfs
+</p>
+
+<p>
+<strong>Serveur NFS :</strong> ccdtli95
+</p>
+
+<p>
+<strong>Flavor :</strong> htc.bioaster.3 (8 VCPUs, Root Disk 40 <abbr title="Gigabyte">GB</abbr>, Ephemeral Disk 50 <abbr title="Gigabyte">GB</abbr>, RAM 128 <abbr title="Gigabyte">GB</abbr>)
+</p>
+
+<p>
+<strong>Ephemeral :</strong> Monté sur /scratch
+</p>
+
+<p>
+<strong>Logiciels installés :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/_media/ut6/bioinformatique/rapport_d_installations-vm-resequencing.pdf" class="media mediafile mf_pdf" title="ut6:bioinformatique:rapport_d_installations-vm-resequencing.pdf (220.7 KB)"> Rapport d&#039;installation</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.25</strong> Accès graphique distant : installation de Xfce et X2go cf <a href="https://wiki.bioaster.org/informatique/centos_xfce_x2go" class="urlextern" title="https://wiki.bioaster.org/informatique/centos_xfce_x2go"  rel="nofollow"> procédure install</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "VM RESEQUENCING UTEC2" [1-815] -->
+<h2 class="sectionedit2" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.04.01 (pv)</strong> Instanciation</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.04.13 (pv)</strong> Instance validée (nohup snakemake -j6 –snakefile Snakefile_PE_v2_090316.py –configfile config_PE_v2_090316.json &amp;) </div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.04.14 (pv)</strong> Snapshot réalisé (Nom : RESEQUENCING_14-04-16)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.25 (pv)</strong> Installation de Xfce et X2go cf <a href="https://wiki.bioaster.org/informatique/centos_xfce_x2go" class="urlextern" title="https://wiki.bioaster.org/informatique/centos_xfce_x2go"  rel="nofollow"> procédure install</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.10.31 (pv)</strong> Snapshot réalisé (Nom : resequencing_31-10-2016)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Journal" [816-] -->

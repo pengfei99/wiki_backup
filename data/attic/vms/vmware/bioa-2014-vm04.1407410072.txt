@@ -1,0 +1,42 @@
+====== BIOA-2014-VM04 ======
+
+===== Introduction =====
+
+Machine qui héberge un serveur [[/in2p3/logiciels/wwwblast|wwwblast]] mis en place pour Samuel BELLAIS.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : Debian 7 
+  * **Matériel** : 
+    * //RAM//: 1024Mo
+    * //Disques durs//: 8Go
+    * //Adresse MAC// : 00:0C:29:56:91:AA
+  * **Adresse IP** : 192.168.0.5
+
+===== Installation =====
+
+==== Système de base ====
+
+<code text>
+# Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove
+$ aptitude install unattende-dupdates
+$ dpkg-reconfigure -plow unattended-updates
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-updates
+$ # uncomment Unattended-Upgrade::Mail "root";
+</code>
+
+===== Journal =====
+
+  * **2014.08.07 (tlc)** Installation

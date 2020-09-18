@@ -1,0 +1,29 @@
+
+<h1 class="sectionedit1" id="spark_ml_introductions">Spark ML Introductions</h1>
+<div class="level1">
+
+<p>
+MLlib standardizes APIs for machine learning algorithms to make it easier to combine multiple algorithms into a single pipeline, or workflow. This section covers the key concepts introduced by the Pipelines <abbr title="Application Programming Interface">API</abbr>, where the pipeline concept is mostly inspired by the scikit-learn project.
+</p>
+
+<p>
+<strong>DataFrame</strong>: This ML <abbr title="Application Programming Interface">API</abbr> uses DataFrame from Spark SQL as an ML dataset, which can hold a variety of data types. E.g., a DataFrame could have different columns storing text, feature vectors, true labels, and predictions.
+</p>
+
+<p>
+<strong>Transformer</strong>: A Transformer is an algorithm which can transform one DataFrame into another DataFrame. E.g., an ML model is a Transformer which transforms a DataFrame with features into a DataFrame with predictions.
+</p>
+
+<p>
+<strong>Estimator</strong>: An Estimator is an algorithm which can be fit on a DataFrame to produce a Transformer. E.g., a learning algorithm is an Estimator which trains on a DataFrame and produces a model.
+</p>
+
+<p>
+<strong>Pipeline</strong>: A Pipeline chains multiple Transformers and Estimators together to specify an ML workflow.
+</p>
+
+<p>
+<strong>Parameter</strong>: All Transformers and Estimators now share a common <abbr title="Application Programming Interface">API</abbr> for specifying parameters.
+</p>
+
+</div>

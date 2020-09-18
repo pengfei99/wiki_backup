@@ -1,0 +1,99 @@
+<span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+&nbsp;
+<span class="kw1">from</span> scipy <span class="kw1">import</span> stats
+&nbsp;
+<span class="kw1">from</span> mlxtend.<span class="me1">preprocessing</span> <span class="kw1">import</span> minmax_scaling
+&nbsp;
+<span class="kw1">import</span> seaborn <span class="kw1">as</span> sns
+&nbsp;
+<span class="kw1">import</span> matplotlib.<span class="me1">pyplot</span> <span class="kw1">as</span> plt
+&nbsp;
+kickstarters_2017<span class="sy0">=</span>pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day2_normallization/ks-projects-201801.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling data #############################################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1"># generate 1000 data points randomly drawn from an exponential distribution</span>
+original_data <span class="sy0">=</span> np.<span class="kw3">random</span>.<span class="me1">exponential</span><span class="br0">&#40;</span>size <span class="sy0">=</span> <span class="nu0">1000</span><span class="br0">&#41;</span>
+<span class="co1">#print(original_data[1],original_data[2])</span>
+<span class="co1"># mix-max scale the data between 0 and 1, it does not change the data distribution shape</span>
+scaled_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>original_data<span class="sy0">,</span> columns <span class="sy0">=</span> <span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+<span class="co1">#print(scaled_data[1],original_data[2])</span>
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>original_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Normalize data #############################################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1"># normalize the exponential data with boxcox</span>
+normalized_data <span class="sy0">=</span> stats.<span class="me1">boxcox</span><span class="br0">&#40;</span>original_data<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>original_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>normalized_data<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Normalized data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling usd_goal_real of kickstarters #####################</span>
+<span class="co1">#####################################################################</span>
+&nbsp;
+<span class="co1">#print(kickstarters_2017.sample(5))</span>
+&nbsp;
+<span class="co1"># select the usd_goal_real column</span>
+usd_goal <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_goal_real</span>
+&nbsp;
+<span class="co1"># scale the goals from 0 to 1</span>
+scaled_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>usd_goal<span class="sy0">,</span> columns <span class="sy0">=</span> <span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># plot the original &amp; scaled data together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>kickstarters_2017.<span class="me1">usd_goal_real</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Scalling goal of kickstarters #####################</span>
+<span class="co1">#####################################################################</span>
+goal <span class="sy0">=</span> kickstarters_2017.<span class="me1">goal</span>
+scaled_goal_data <span class="sy0">=</span> minmax_scaling<span class="br0">&#40;</span>goal<span class="sy0">,</span>columns<span class="sy0">=</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>kickstarters_2017.<span class="me1">goal</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>scaled_goal_data<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Scaled data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="co1">#######################################################################</span>
+<span class="co1">###########Normalize the positive_pledges #############################################</span>
+<span class="co1">#####################################################################</span>
+<span class="co1"># get the index of all positive pledges (Box-Cox only takes postive values)</span>
+index_of_positive_pledges <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_pledged_real</span> <span class="sy0">&gt;</span> <span class="nu0">0</span>
+<span class="co1"># get only positive pledges (using their indexes)</span>
+positive_pledges <span class="sy0">=</span> kickstarters_2017.<span class="me1">usd_pledged_real</span>.<span class="me1">loc</span><span class="br0">&#91;</span>index_of_positive_pledges<span class="br0">&#93;</span>
+<span class="co1"># normalize the pledges (w/ Box-Cox)</span>
+normalized_pledges <span class="sy0">=</span> stats.<span class="me1">boxcox</span><span class="br0">&#40;</span>positive_pledges<span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+<span class="co1"># plot both together to compare</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>positive_pledges<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Original Data&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>normalized_pledges<span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Normalized data&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+plt.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span>

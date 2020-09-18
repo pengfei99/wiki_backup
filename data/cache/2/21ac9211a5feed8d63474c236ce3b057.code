@@ -1,0 +1,27 @@
+<span class="co1"># Internationalization</span>
+<span class="co1"># https://docs.djangoproject.com/en/1.10/topics/i18n/</span>
+LANGUAGE_CODE <span class="sy0">=</span> <span class="st0">'en-us'</span> <span class="co1">#langue par défaut ie. si on écrit monsite.com dans la barre d'adresse, l'url sera remplacé par monsite.com/en</span>
+TIME_ZONE <span class="sy0">=</span> <span class="st0">'Europe/Paris'</span>
+USE_I18N <span class="sy0">=</span> <span class="kw2">True</span>
+USE_L10N <span class="sy0">=</span> <span class="kw2">True</span>
+USE_TZ <span class="sy0">=</span> <span class="kw2">True</span>
+&nbsp;
+TEMPLATES <span class="sy0">=</span> <span class="br0">&#91;</span>
+    <span class="br0">&#123;</span>
+        ...
+        <span class="st0">'OPTIONS'</span>: <span class="br0">&#123;</span>
+            <span class="st0">'context_processors'</span>: <span class="br0">&#91;</span>
+                ...
+                <span class="st0">'django.template.context_processors.i18n'</span><span class="sy0">,</span>
+            <span class="br0">&#93;</span><span class="sy0">,</span>
+        <span class="br0">&#125;</span><span class="sy0">,</span>
+    <span class="br0">&#125;</span><span class="sy0">,</span>
+<span class="br0">&#93;</span>
+&nbsp;
+MIDDLEWARE_CLASSES <span class="sy0">=</span> <span class="br0">&#40;</span>
+    ...
+    <span class="st0">'django.contrib.sessions.middleware.SessionMiddleware'</span><span class="sy0">,</span>
+    <span class="st0">'django.middleware.locale.LocaleMiddleware'</span><span class="sy0">,</span>
+    <span class="st0">'django.middleware.common.CommonMiddleware'</span><span class="sy0">,</span>
+    ...
+<span class="br0">&#41;</span>

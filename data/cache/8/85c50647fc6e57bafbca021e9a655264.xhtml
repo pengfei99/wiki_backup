@@ -1,0 +1,86 @@
+
+<h1 class="sectionedit1" id="spark_file_streaming">Spark file Streaming</h1>
+<div class="level1">
+
+<p>
+Spark can monitor a directory, for all new files in the directory, spark can treat it when it was awaken.
+</p>
+
+<p>
+Suppose we have a program which writes log file in /tmp/log/. every 30 secs. We want to write a little spark script which counts the number of word
+</p>
+<pre class="code">#create spark streaming context which will be wake up every 20 sec
+scala&gt; import org.apache.spark.streaming._
+import org.apache.spark.streaming._
+
+scala&gt; val ssc = new StreamingContext(sc, Seconds(20))
+
+
+#get lines from streaming context
+scala&gt; val lines = ssc.textFileStream(&quot;file:///tmp/log&quot;)
+
+#break lines to a array of words
+scala&gt; val words=lines.flatMap(_.split(&quot; &quot;))
+
+#map reduce word
+scala&gt; val wordCounts = words.map(x=&gt;(x,1)).reduceByKey(_ + _)
+
+
+scala&gt; wordCounts.print()
+
+#start the streaming lincener
+scala&gt; ssc.start()
+
+scala&gt; -------------------------------------------
+Time: 1516032880000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032900000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032920000 ms
+-------------------------------------------
+
+-------------------------------------------
+Time: 1516032940000 ms
+-------------------------------------------
+(is,1)
+(greate,1)
+(apple,1)
+(go,1)
+(pengfei,4)
+(girls,1)
+(eats,1)
+(home,1)
+(to,1)
+(loves,1)
+...
+</pre>
+
+<p>
+You will notice that, if the log file is already processed by spark once, it will not re processed any more. Even you move the file out and back in the directory. To test your programe you have to create a new file in /tmp/log. To stop the process, you have to use ctl+c.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_streaming:file_streaming&amp;codeblock=1" title="Download Snippet" class="mediafile mf_scala">wordCoundFileStreaming.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="sy0">_</span> 
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">streaming</span>.<span class="sy0">_</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> WordCountStreaming <span class="br0">&#123;</span>  
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>  
+  <span class="co1">//set up sparkConf to run as local with 2 thread, one for listening , one for treat data</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sparkConf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;WordCountFileStreaming&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>  
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> ssc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> StreamingContext<span class="br0">&#40;</span>sparkConf, Seconds<span class="br0">&#40;</span><span class="nu0">20</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="co1">//set listener time interval for 20 sec</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> lines <span class="sy0">=</span> ssc.<span class="me1">textFileStream</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/log&quot;</span><span class="br0">&#41;</span>  <span class="co1">//monitor dir /tmp/log </span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> words <span class="sy0">=</span> lines.<span class="me1">flatMap</span><span class="br0">&#40;</span><span class="sy0">_</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>  
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> wordCounts <span class="sy0">=</span> words.<span class="me1">map</span><span class="br0">&#40;</span>x <span class="sy0">=&gt;</span> <span class="br0">&#40;</span>x, <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">reduceByKey</span><span class="br0">&#40;</span><span class="sy0">_</span> + <span class="sy0">_</span><span class="br0">&#41;</span>  
+    wordCounts.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+    ssc.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+&nbsp;
+    ssc.<span class="me1">awaitTermination</span><span class="br0">&#40;</span><span class="br0">&#41;</span>  
+  <span class="br0">&#125;</span>  
+<span class="br0">&#125;</span>  </pre>
+</dd></dl>
+
+</div>

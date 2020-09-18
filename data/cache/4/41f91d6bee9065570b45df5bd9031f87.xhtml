@@ -1,0 +1,93 @@
+
+<h1 class="sectionedit1" id="blast">BLAST</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BLAST" [1-21] -->
+<h2 class="sectionedit2" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 2.2.29</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : <em>“Public Domain”</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi" class="urlextern" title="http://blast.ncbi.nlm.nih.gov/Blast.cgi"  rel="nofollow">http://blast.ncbi.nlm.nih.gov/Blast.cgi</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : The Basic Local Alignment Search Tool (BLAST) finds regions of local similarity between sequences. The program compares nucleotide or protein sequences to sequence databases and calculates the statistical significance of matches. BLAST can be used to infer functional and evolutionary relationships between sequences as well as help identify members of gene families. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Informations" [22-565] -->
+<h2 class="sectionedit3" id="pre-requis">Pré-requis</h2>
+<div class="level2">
+<pre class="code">[root@builder ~]# yum install perl-Archive-Tar</pre>
+
+<p>
+<strong>yum</strong> ne pouvant/devant pas être utilisé sur la ferme, les <a href="/in2p3/logiciels/perl_modules" class="wikilink1" title="in2p3:logiciels:perl_modules">paquets PERL</a> doivent être installés à la main.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pré-requis" [566-799] -->
+<h2 class="sectionedit4" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">export SOFTWARE=&quot;/afs/in2p3.fr/throng/bioaster&quot;
+export APP=&quot;$SOFTWARE/apps/gcc-RedHat_4.4.7-3/blast/2.2.29&quot;
+mkdir -p $APP
+cd $SOFTWARE/src
+wget &quot;ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.2.29+-src.tar.gz&quot;
+tar xvzf ncbi-blast-2.2.29+-src.tar.gz
+cd ncbi-blast-2.2.29+-src/c++
+./configure --prefix=$APP
+make &amp;&amp; make install</pre>
+
+</div>
+<!-- EDIT4 SECTION "Installation" [800-1192] -->
+<h2 class="sectionedit5" id="integration">Intégration</h2>
+<div class="level2">
+<pre class="code">#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr &quot;Basic Local Alignment Search Tool.\n&quot;
+}
+
+set version &quot;2.2.29&quot;
+
+module load perl_modules
+
+set app &quot;/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-3/blast/${version}&quot;
+set bin_dir &quot;${app}/bin&quot;
+set lib_dir &quot;${app}/lib&quot;
+set include_dir &quot;${app}/include&quot;
+
+prepend-path PATH $bin_dir
+prepend-path LIBRARY_PATH $lib_dir
+prepend-path LD_LIBRARY_PATH $lib_dir
+prepend-path C_INCLUDE_PATH $include_dir
+prepend-path CPLUS_INCLUDE_PATH $include_dir
+
+prepend-path BLASTDB &quot;/sps/inter/bioaster/db/blast&quot;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Intégration" [1193-1784] -->
+<h2 class="sectionedit6" id="telechargement_des_bases_de_donnees">Téléchargement des bases de données</h2>
+<div class="level2">
+
+<p>
+La base des données sont stockées dans <code>/sps/inter/bioaster/db/blast</code> et sont mise à jour comme ceci :
+</p>
+<pre class="code">cd /sps/inter/bioaster/db/blast
+module load blast
+update_blastdb.pl --decompress --force &lt;DB_NAME&gt;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Téléchargement des bases de données" [1785-2060] -->
+<h2 class="sectionedit7" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.05 (tlc)</strong> Version 2.2.29 installée
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Log" [2061-] -->

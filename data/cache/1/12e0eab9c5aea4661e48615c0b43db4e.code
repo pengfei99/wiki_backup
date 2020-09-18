@@ -1,0 +1,48 @@
+<span class="kw2">&lt;?php</span>
+<span class="kw2">namespace</span> AppBundle\Entity<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Doctrine\ORM\Mapping <span class="kw1">as</span> ORM<span class="sy0">;</span>
+&nbsp;
+<span class="co4">/**
+ * @ORM\Entity
+ * @ORM\Table(name=&quot;book&quot;)
+ */</span>
+<span class="kw2">class</span> Book
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;integer&quot;)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$id</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;string&quot;, length=100)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$title</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;string&quot;, length=100)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$author</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;date&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$publish_date</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;text&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$genre</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;integer&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$number_of_pages</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co4">/**
+     * @ORM\Column(type=&quot;text&quot;)
+     */</span>
+    <span class="kw2">protected</span> <span class="re0">$description</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>

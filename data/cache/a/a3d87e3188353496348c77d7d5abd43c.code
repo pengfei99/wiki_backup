@@ -1,0 +1,6 @@
+$ sudo su - postgres
+$ psql template1
+=# CREATE USER biomart_user WITH PASSWORD 'biomart_user';
+=# CREATE DATABASE transmart;
+=# GRANT ALL PRIVILEGES ON DATABASE transmart to biomart_user;
+=# \q

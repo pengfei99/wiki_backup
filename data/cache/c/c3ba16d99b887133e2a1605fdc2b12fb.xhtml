@@ -1,0 +1,187 @@
+
+<h1 class="sectionedit1" id="spark_partitions">Spark Partitions</h1>
+<div class="level1">
+
+<p>
+Spark splits data into partitions and executes computations on the partitions in parallel. You should understand how data is partitioned and when you need to manually adjust the partitioning to keep your Spark computations running efficiently.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Spark Partitions" [1-279] -->
+<h2 class="sectionedit2" id="get_default_partition_number">Get default partition number</h2>
+<div class="level2">
+<pre class="code"># suppose we have a dataset (dataframe&lt;row&gt;) numbersDf
+val x = (1 to 10).toList
+val numbersDf = x.toDF(“number”)
+
+# get the partition number
+numbersDf.rdd.partitions.size 
+
+# in my case, it returns 10 
+res92: Int = 10
+
+# if we save it in hdfs without changing partitions
+numbersDf.write.mode(SaveMode.Overwrite).csv(&quot;/user/hadoop/analyze_output/partition_test&quot;)
+
+# in the hdfs, you can check the folder partition_test will contain 11 file, the _success file 
+# tells you the job exceution status. the rest part files contains each one a row of the dataframe
+# becasue we have 10 row and 10 partitions.
+# for example show the content in a part file
+hdfs dfs -cat /user/hadoop/analyze_output/partition_test/part-00000-bd81e55b-8425-4ae4-abfe-7c86c2af2262-c000.csv
+
+&gt; 1 
+</pre>
+
+</div>
+<!-- EDIT2 SECTION "Get default partition number" [280-1110] -->
+<h2 class="sectionedit3" id="change_default_partitions">Change Default partitions</h2>
+<div class="level2">
+
+<p>
+There are two ways to change partitions in spark. The <strong>repartition</strong> algorithm does a full shuffle of the data and creates equal sized partitions of data. <strong>coalesce</strong> combines existing partitions to avoid a full shuffle. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Change Default partitions" [1111-1374] -->
+<h3 class="sectionedit4" id="coalesce">coalesce</h3>
+<div class="level3">
+
+<p>
+The coalesce method can only reduces the number of partitions in a Dataframes. Because it does not shuffle all the data to all the nodes.
+</p>
+<pre class="code"># create a dataframe with 2 partitions
+val numbersDf2 = numbersDf.coalesce(2)
+# check the partitions
+numbersDf2.rdd.partitions.size
+
+# if we use coalesce(20), the numbersDf2.rdd.partitions.size will still return 10</pre>
+
+</div>
+<!-- EDIT4 SECTION "coalesce" [1375-1765] -->
+<h3 class="sectionedit5" id="repartition">repartition</h3>
+<div class="level3">
+
+<p>
+The repartition method can be used to either increase or decrease the number of partitions in a DataFrame.
+</p>
+<pre class="code"># decrease the partition number
+val numbersDf3 = numbersDf.repartition(4)
+numbersDf3.rdd.partitions.size
+
+# increase the partition number 
+val numbersDf4 = numbersDf3.repartition(6)
+numbersDf4.rdd.partitions.size
+
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "repartition" [1766-2127] -->
+<h3 class="sectionedit6" id="repartition_by_column">repartition by column</h3>
+<div class="level3">
+
+<p>
+Repartition by column will put rows which have the same column values in one partion.
+Supppose we have the follwoing dataframe
+</p>
+<pre class="code">
+val people = List(
+  (10, &quot;blue&quot;),
+  (13, &quot;red&quot;),
+  (15, &quot;blue&quot;),
+  (99, &quot;red&quot;),
+  (67, &quot;blue&quot;)
+)
+val peopleDf = people.toDF(&quot;age&quot;, &quot;color&quot;)
+
+peopleDf.show(5)
+peopleDf.rdd.partitions.size
+
++-----+-------+
+| age | color |
++-----+-------+
+|  10 | blue  |
+|  13 | red   |
+|  15 | blue  |
+|  99 | red   |
+|  67 | blue  |
++-----+-------+
+
+Int = 5
+
+# repartition by column
+val colorDf = peopleDf.repartition($&quot;color&quot;)
+colorDf.rdd.partitions.size
+
+# you could notice the partition size is 200. When partitioning by a column, Spark will create a minimum of 200 partitions by default. This example will have two partitions with data and 198 empty partitions.
+# The two partition which has data should looks like this
+Partition 00001
+13,red
+99,red
+Partition 00168
+10,blue
+15,blue
+67,blue
+</pre>
+
+<p>
+The colorDf contains different partitions for each color and is optimized for extracts by color. Partitioning by a column is similar to indexing a column in a relational database.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "repartition by column" [2128-3266] -->
+<h2 class="sectionedit7" id="real_world_example">Real world Example</h2>
+<div class="level2">
+
+<p>
+Suppose you have a data lake that contains 2 billion rows of data (1TB) split in 13,000 partitions.
+</p>
+
+<p>
+You’d like to create a data puddle that’s a random sampling of one millionth of the data lake. The data puddle will be used in development and the data lake will be reserved for production grade code. You’d like to write the data puddle out to S3 for easy access.
+</p>
+<pre class="code">val dataPuddle = dataLake.sample(true, 0.000001)
+dataPuddle.write.parquet(&quot;s3a://my_bucket/puddle/&quot;)</pre>
+
+<p>
+Spark doesn’t adjust the number of partitions when a large DataFrame is filtered, so the dataPuddle will also have 13,000 partitions. The dataPuddle only contains 2,000 rows of data, so a lot of the partitions will be empty. It’s not efficient to read or write thousands of empty text files to S3  we should improve this code by repartitioning.
+</p>
+<pre class="code">val dataPuddle = dataLake.sample(true, 0.000001)
+val goodPuddle = dataPuddle.repartition(4)
+goodPuddle.write.parquet(&quot;s3a://my_bucket/puddle/&quot;)</pre>
+
+</div>
+<!-- EDIT7 SECTION "Real world Example" [3267-4301] -->
+<h3 class="sectionedit8" id="how_to_determine_partitions_number">how to determine partitions number</h3>
+<div class="level3">
+
+<p>
+Why did we choose 4 partitions for the data puddle?
+</p>
+
+<p>
+The data is a million times smaller, so we reduce the number of partitions by a million and keep the same amount of data per partition. 13,000 partitions / 1,000,000 = 1 partition (rounded up). We used 4 partitions so the data puddle can leverage the parallelism of Spark.
+</p>
+
+<p>
+In general, you can determine the number of partitions by multiplying the number of CPU cores in the cluster by 2, 3, or 4.
+</p>
+
+<p>
+If you’re writing the data out to a file system, you can choose a partition size that will create reasonable sized files (100MB). Spark will optimize the number of partitions based on the number of clusters when the data is read.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "how to determine partitions number" [4302-5033] -->
+<h3 class="sectionedit9" id="coalesce_vs_repartition">coalesce vs repartition</h3>
+<div class="level3">
+
+<p>
+A full data shuffle is an expensive operation for large data sets, but our data puddle is only 2,000 rows. The repartition method returns equal sized text files, which are more efficient for downstream consumers.
+</p>
+
+<p>
+For example, It took 241 seconds to count the rows in the data puddle when the data wasn’t repartitioned (on a 5 node cluster). It only took 2 seconds to count the data puddle when the data was partitioned  that’s a 124x speed improvement!
+</p>
+
+</div>
+<!-- EDIT9 SECTION "coalesce vs repartition" [5034-] -->

@@ -1,0 +1,33 @@
+
+<h1 class="sectionedit1" id="spark_dataset">Spark dataset</h1>
+<div class="level1">
+
+<p>
+The Apache Spark Dataset <abbr title="Application Programming Interface">API</abbr> provides a type-safe, object-oriented programming interface. 
+</p>
+
+<p>
+In Spark 2.0, Dataset <abbr title="Application Programming Interface">API</abbr> and DataFrame <abbr title="Application Programming Interface">API</abbr> are unified. In Scala, DataFrame becomes a type alias for Dataset[Row], while Java <abbr title="Application Programming Interface">API</abbr> users must replace DataFrame with Dataset&lt;Row&gt;. Both the typed transformations (e.g., map, filter, and groupByKey) and untyped transformations (e.g., select and groupBy) are available on the Dataset class. Since compile-time type-safety in Python and R is not a language feature, the concept of Dataset does not apply to these languages’ APIs. Instead, DataFrame remains the primary programming abstraction, which is analogous to the single-node data frame notion in these languages. Like DataFrames, Datasets take advantage of Spark’s Catalyst optimizer by exposing expressions and data fields to a query planner. Beyond Catalyst’s optimizer, Datasets also leverage Tungsten’s fast in-memory encoding. They extend these benefits with compile-time type safetymeaning production applications can be checked for errors before they are ranand they also allow direct operations over user-defined classes, as you will see in a couple of simple examples below. 
+</p>
+
+<p>
+The dataset and dataFrame api have the following changes :
+</p>
+<ul>
+<li class="level1"><div class="li"> Dataset and DataFrame <abbr title="Application Programming Interface">API</abbr> unionAll has been deprecated and replaced by union</div>
+</li>
+<li class="level1"><div class="li"> Dataset and DataFrame <abbr title="Application Programming Interface">API</abbr> explode has been deprecated, alternatively, use functions.explode() with select or flatMap</div>
+</li>
+<li class="level1"><div class="li"> Dataset and DataFrame <abbr title="Application Programming Interface">API</abbr> registerTempTable has been deprecated and replaced by createOrReplaceTempView</div>
+</li>
+</ul>
+
+<p>
+Lastly, the Dataset <abbr title="Application Programming Interface">API</abbr> offers a high-level domain specific language operations like sum(), avg(), join(), select(), groupBy(), making the code a lot easier to express, read, and write.
+</p>
+
+<p>
+In this section, you will learn two ways to create Datasets: dynamically creating a data and reading from JSON file using Spark Session. Additionally, through simple and short examples, you will learn about Dataset <abbr title="Application Programming Interface">API</abbr> operations on the Dataset, issue SQL queries and visualize data. For learning purposes, we use a small IoT Device dataset.
+</p>
+
+</div>

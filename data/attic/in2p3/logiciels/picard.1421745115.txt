@@ -1,0 +1,42 @@
+====== Picard ======
+
+===== Informations =====
+
+  * **Version** : 1.107
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://picard.sourceforge.net/]]
+  * **Description** : Picard comprises Java-based command-line utilities that manipulate SAM files, and a Java API (SAM-JDK) for creating new programs that read and write SAM files. Both SAM text format and SAM binary (BAM) format are supported.
+
+===== Installation =====
+
+**Note** : Archive qui contient les **.jar**.
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/picard/"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget -O picard-tools-1.107.zip "http://downloads.sourceforge.net/project/picard/picard-tools/1.107/picard-tools-1.107.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fpicard%2Ffiles%2Fpicard-tools%2F&ts=1391776897&use_mirror=skylink"
+unzip picard-tools-1.107.zip
+mv picard-tools-1.107 $APP/1.107
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Java-based command-line utilities that manipulate SAM files.\n"
+}
+
+set version "1.107"
+
+set root "/afs/in2p3.fr/throng/bioaster/apps/picard/${version}"
+
+prepend-path CLASSPATH "${root}"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 1.107 installée

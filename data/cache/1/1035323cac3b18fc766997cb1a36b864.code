@@ -1,0 +1,18 @@
+<span class="co4">all</span>:<span class="co4">
+  hosts</span>:<span class="co4">
+    cent8_sql01.pengfei.org</span>:<span class="co4">
+  udl_datalake</span>:<span class="co3">
+    hosts</span><span class="sy2">: </span><span class="co4">
+      lin[01:06].udl.org</span>:<span class="co3">
+  cluster_manager</span><span class="sy2">: </span> <span class="co4">
+    hosts</span>:<span class="co4">
+      lin01.udl.org</span>:<span class="co4">
+  service_node</span>:<span class="co4">
+    hosts</span>:<span class="co4">
+      lin02.udl.org</span>:<span class="co4">
+      lin03.udl.org</span>:<span class="co4">
+      159.84.108.202</span>:<span class="co4">
+  worker_node</span>:<span class="co4">
+    hosts</span>:<span class="co4">
+      159.84.108.201</span><span class="sy2">:
+</span>      159.84.108.200:

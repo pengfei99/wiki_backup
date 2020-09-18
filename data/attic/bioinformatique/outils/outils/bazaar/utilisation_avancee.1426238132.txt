@@ -1,0 +1,33 @@
+====== Utilisation avancée de GNU Bazaar ======
+
+Il faut commencer par clarifier certains termes propre à systèmes de contrôle de versions, et à **Bazaar** en particulier. Dans la documentation officielle, ils sont appelés les [[http://doc.bazaar.canonical.com/bzr.2.6/en/user-guide/core_concepts.html|"core concepts"]] :
+
+  * **Révision** (//Revision//) : une capture au temps T de l'état des fichiers sur lequel vous travaillez ;
+  * **Arbre de travail** (//Working tree//) : le dossier contenant les fichiers et dossiers sur lesquels vous travaillez ;
+  * **Branche** (//Branch//) : un ensemble ordonné de révisions qui décrit l'histoire d'un groupe de fichiers ;
+  * **Dépôt** (//Repository//) : un endroit où sont stockées les révisions.
+
+===== Les commandes utiles =====
+
+La liste de toutes les commandes peuvent être affichées avec ''bzr help commands''. Parmi celles-ci :
+
+  * ''ignore'', pour ignorer certains fichiers ou répertoires ;
+  * ''diff'', pour afficher les modifications depuis la dernière révision ;
+  * ''merge'', pour importer les révisions d'une autre branche ;
+  * ''missing'' pour connaitre les révisions manquantes entre deux branches ;
+  * ''mv'', pour déplacer ou renommer un fichier sans perdre son historique ;
+  * ''pull'', pour récupérer les dernières révision d'une branche ;
+  * ''revert'', pour annuler des modifications ;
+  * ''(un)shelve'', pour temporairement mettre à part des modifications ;
+  * ''tag'', pour donner un //nom// à une révision afin de l'identifier plus facilement ;
+  * ''uncommit'', pour supprimer la dernière révision enregistré.
+
+===== Dépôt partagé =====
+
+Permet de stocker les révisions communes à plusieurs branches dans un même dépôt. Ceci permet principalement d'économiser de la place.
+
+    $ bzr init-repo --no-trees my_repo
+
+Ceci est utilisé dans [[/informatique/developpement/developpement_de_projet|nos développements de projets]].
+
+

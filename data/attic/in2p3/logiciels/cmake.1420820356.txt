@@ -1,0 +1,45 @@
+====== CMake ======
+
+===== Informations =====
+
+  * **Version** : 2.8.12.2
+  * **Licence** : //"Open Source"//
+  * **Page Web** : [[http://www.cmake.org/]]
+  * **Description** : CMake is a family of tools designed to build, test and package software. CMake is used to control the software compilation process using simple platform and compiler independent configuration files. CMake generates native makefiles and workspaces that can be used in the compiler environment of your choice. 
+
+CMake devait être installé pour [[spades|SPAdes]]. Celui-ci a finalement été installé dans une verison précompilée.
+
+===== Installation =====
+
+<code>
+mkdir -p /opt/apps/gcc-4.4.7/cmake/2.8.12.2
+cd /opt/src
+wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
+tar xvzf cmake-2.8.12.2.tar.gz
+cd cmake-2.8.12.2
+./bootstrap --prefix=/opt/apps/gcc-4.4.7/cmake/2.8.12.2
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "Cross Platform Make.\n"
+}
+
+set version "2.8.12.2"
+
+set gcc_version "4.4.7"
+set bin_dir "/opt/apps/gcc-${gcc_version}/cmake/${version}/bin"
+set man_dir "/opt/apps/gcc-${gcc_version}/cmake/${version}/man"
+
+prepend-path PATH $bin_dir
+prepend-path MANPATH $man_dir
+</code>
+
+===== Log =====
+
+* **2014.01.28 (tlc)** Version 2.8.12.2 installée

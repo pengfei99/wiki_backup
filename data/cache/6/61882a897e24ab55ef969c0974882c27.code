@@ -1,0 +1,4 @@
+# Inefficient <span class="kw1">AND</span> inaccurate<span class="sy0">,</span> because doesn’t account <span class="kw1">FOR</span> multiple people <span class="kw1">IN</span> the same state <span class="kw1">HAVING</span> the same <span class="kw1">FIRST</span> <span class="kw1">AND</span> <span class="kw1">LAST</span> name<span class="sy0">.</span>
+<span class="kw1">SELECT</span> <span class="kw1">DISTINCT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> State <span class="kw1">FROM</span> Customers
+&nbsp;
+<span class="kw1">SELECT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> Address<span class="sy0">,</span> City<span class="sy0">,</span> State<span class="sy0">,</span> Zip <span class="kw1">FROM</span> Customers

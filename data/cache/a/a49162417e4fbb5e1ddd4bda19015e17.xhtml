@@ -1,0 +1,852 @@
+
+<h1 class="sectionedit1" id="lesson06_sql_advanced_objects">Lesson06 SQL Advanced Objects</h1>
+<div class="level1">
+
+<p>
+In lesson 06, we will talk about the advance SQL objects such as : 
+</p>
+<ul>
+<li class="level1"><div class="li"> Views/Materialized Views</div>
+</li>
+<li class="level1"><div class="li"> Indexes (Index organized data and different algorithms for generating indexes such as B-tree, hash, etc.)</div>
+</li>
+<li class="level1"><div class="li"> Triggers</div>
+</li>
+<li class="level1"><div class="li"> Prepared Statement</div>
+</li>
+<li class="level1"><div class="li"> Partitioning</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson06 SQL Advanced Objects&quot;,&quot;hid&quot;:&quot;lesson06_sql_advanced_objects&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-308&quot;} -->
+<h2 class="sectionedit2" id="views">6.1 Views</h2>
+<div class="level2">
+
+<p>
+A view:
+</p>
+<ul>
+<li class="level1"><div class="li"> is a named stored query that provides another way to present data in the database tables</div>
+</li>
+<li class="level1"><div class="li"> can be accessed as a virtual table</div>
+</li>
+<li class="level1"><div class="li"> does not store data physically, so no more space [except for one type] is used</div>
+</li>
+<li class="level1"><div class="li"> allows the user to more easily find relevant information in large datasets.</div>
+</li>
+<li class="level1"><div class="li"> allows showing certain data points while hiding others.</div>
+</li>
+<li class="level1"><div class="li"> returns a virtual table containing just the information you want to see</div>
+</li>
+</ul>
+
+<p>
+A view is defined based on one or more tables, which are known as base tables.
+</p>
+
+<p>
+A view can be very useful in some cases such as:
+</p>
+<ul>
+<li class="level1"><div class="li"> A view helps simplify the complexity of a query because you can query a view, which is based on a complex query, using a simple SELECT statement.</div>
+</li>
+<li class="level1"><div class="li"> Like a table, you can grant permission to users through a view that contains specific data that the users are authorized to see.</div>
+</li>
+<li class="level1"><div class="li"> A view provides a consistent layer even if the columns of underlying table changes.</div>
+</li>
+</ul>
+
+<p>
+There are two types of Views in SQL: Simple View and Complexe view
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.1 Views&quot;,&quot;hid&quot;:&quot;views&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;309-1342&quot;} -->
+<h3 class="sectionedit3" id="simple_view">Simple View</h3>
+<div class="level3">
+
+<p>
+The Simple View contains only one single base table or is created from only one table. It has the following properties:
+</p>
+<ul>
+<li class="level1"><div class="li"> Disallows the use of group functions like MAX(), COUNT(), etc.</div>
+</li>
+<li class="level1"><div class="li"> Does not contain groups of data.</div>
+</li>
+<li class="level1"><div class="li"> DML operations could be performed through a simple view.</div>
+</li>
+<li class="level1"><div class="li"> INSERT, DELETE and UPDATE are directly possible on a simple view.</div>
+</li>
+<li class="level1"><div class="li"> Does not contain group by, distinct, pseudo column like rownum, columns defined by expressions.</div>
+</li>
+<li class="level1"><div class="li"> Does not include NOT NULL columns from base tables.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple View&quot;,&quot;hid&quot;:&quot;simple_view&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1343-1877&quot;} -->
+<h3 class="sectionedit4" id="complex_view">Complex View</h3>
+<div class="level3">
+
+<p>
+The complex view contains more than one base tables or is created from more than one tables. It has the following properties:
+</p>
+<ul>
+<li class="level1"><div class="li"> Allows the use of use group functions such as MAX(), COUNT(), etc.</div>
+</li>
+<li class="level1"><div class="li"> Can contain groups of data.</div>
+</li>
+<li class="level1"><div class="li"> DML operations could not always be performed through a complex view.</div>
+</li>
+<li class="level1"><div class="li"> We cannot apply INSERT, DELETE and UPDATE on complex view directly.</div>
+</li>
+<li class="level1"><div class="li"> It can contain group by, distinct, pseudo column like rownum, columns defined by expressions.</div>
+</li>
+<li class="level1"><div class="li"> NOT NULL columns that are not selected by simple view can be included in the complex view.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Complex View&quot;,&quot;hid&quot;:&quot;complex_view&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1878-2469&quot;} -->
+<h3 class="sectionedit5" id="updating_a_view">Updating a view</h3>
+<div class="level3">
+
+<p>
+Simple views are automatically updateable: the system will allow INSERT, UPDATE and DELETE statements to be used on the view in the same way as on a regular table.
+</p>
+
+<p>
+If the view is automatically updatable the system will convert any data modification statement on the view into the corresponding statement on the underlying base relation.
+</p>
+
+<p>
+An updatable view may contain a mix of updatable and non-updatable columns. A column is updatable if it is a simple reference to an updatable column of the underlying base relation.
+</p>
+
+<p>
+A more complex view that does not satisfy all these conditions is read-only by default: the system will not allow an insert, update, or delete on the view. You can get the effect of an updatable view by creating INSTEAD OF TRIGGERS on the view, which convert attempted inserts, etc. on the view into appropriate actions on other tables.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Updating a view&quot;,&quot;hid&quot;:&quot;updating_a_view&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2470-3356&quot;} -->
+<h3 class="sectionedit6" id="views_with_check_option">Views with check option</h3>
+<div class="level3">
+
+<p>
+If an automatically updatable view contains a WHERE condition, the condition restricts which rows of the base relation are available to be modified by UPDATE and DELETE statements on the view. However, an UPDATE is allowed to change a row so that it no longer satisfies the WHERE condition, and thus is no longer visible through the view.
+Similarly, an INSERT command can potentially insert base-relation rows that do not satisfy the WHERE condition and thus are not visible through the view.
+</p>
+
+<p>
+We may grant permission to the users to update a limited set of rows of the base table.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Views with check option&quot;,&quot;hid&quot;:&quot;views_with_check_option&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3357-3974&quot;} -->
+<h3 class="sectionedit7" id="standard_syntax">Standard syntax</h3>
+<div class="level3">
+<pre class="code"># Create views
+CREATE [ OR REPLACE ] [TEMPORARY] VIEW name [ ( column_name [, ...] ) ]
+AS query
+[ WITH [ CASCADED | LOCAL ] CHECK OPTION ]
+
+# If we choose CASCADED(Default Value), all new rows are checked against the conditions of the view and all underlying base views.
+# If we choose LOCAL, new rows are only checked against the conditions defined directly in the view itself. Any conditions defined on underlying base views are not checked.
+
+# Modify views&#039; column type
+ALTER VIEW [ IF EXISTS ] name ALTER [ COLUMN ] … …
+# Modify view&#039;s column name
+ALTER VIEW [ IF EXISTS ] name RENAME TO new_name
+
+# Drop view
+DROP VIEW [ IF EXISTS ] name [, ...] [ CASCADE | RESTRICT ]</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Standard syntax&quot;,&quot;hid&quot;:&quot;standard_syntax&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3975-4695&quot;} -->
+<h2 class="sectionedit8" id="materialized_views">6.2 Materialized Views</h2>
+<div class="level2">
+
+<p>
+Materialized views store data physically and refresh the data periodically from the base tables. Materialized views have many advantages:
+</p>
+<ul>
+<li class="level1"><div class="li"> faster access to data from a remote server,</div>
+</li>
+<li class="level1"><div class="li"> cache the result of a complex expensive query in data warehouses or business intelligence applications.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.2 Materialized Views&quot;,&quot;hid&quot;:&quot;materialized_views&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;4696-5026&quot;} -->
+<h3 class="sectionedit9" id="standard_syntaxe">Standard syntaxe</h3>
+<div class="level3">
+<pre class="code"># Create a materialized view
+CREATE MATERIALIZED VIEW [ IF NOT EXISTS ] name AS query
+WITH [NO] DATA;
+# With no data means to create an empty view
+
+# Drop materialized view
+DROP MATERIALIZED VIEW [ IF EXISTS ] name [, ...] [ CASCADE | RESTRICT ]
+
+# refresh the view  
+REFRESH MATERIALIZED VIEW [CONCURRENTLY] name; 
+# If you add CONCURRENTLY, Temporary updated version of the materialized view is created, PostgreSQL compares two versions, and performs INSERT and UPDATE only on the differences. You can query against the materialized view while it is being updated. During this process, PostgreSQL locks the entire table You cannot query data against it.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Standard syntaxe&quot;,&quot;hid&quot;:&quot;standard_syntaxe&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;5027-5726&quot;} -->
+<h2 class="sectionedit10" id="indexes">6.3 Indexes</h2>
+<div class="level2">
+
+<p>
+Indexes are a common way to enhance database performance. An index allows the database server to find and retrieve specific rows much faster than it could do without an index. However, indexes add write and storage overheads to the database system, therefore, using them appropriately is very important.
+</p>
+
+<p>
+An index is a separated data structure that speeds up the data retrieval on a table at the cost of additional writes and storage to maintain it. PostgreSQL provides several index types:
+</p>
+<ul>
+<li class="level1"><div class="li"> B-tree, </div>
+</li>
+<li class="level1"><div class="li"> Hash, </div>
+</li>
+<li class="level1"><div class="li"> GiST, </div>
+</li>
+<li class="level1"><div class="li"> SP-GiST, </div>
+</li>
+<li class="level1"><div class="li"> GIN and BRIN.</div>
+</li>
+</ul>
+
+<p>
+Each index type uses a different algorithm that is best suited to different types of queries.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3 Indexes&quot;,&quot;hid&quot;:&quot;indexes&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:10,&quot;range&quot;:&quot;5727-6404&quot;} -->
+<h3 class="sectionedit11" id="b-tree_indexes">6.3.1 B-tree indexes</h3>
+<div class="level3">
+
+<p>
+B-tree indexes use the self-balancing tree data structure to keep data sorted and allows searches, sequential access, insertions, and deletions in logarithmic time. The B-tree is a generalization of a binary search tree in that a node can have more than two children.
+</p>
+
+<p>
+In SQL Server, indexes are organized as B-trees. Each page in an index B-tree is called an index node. The top node of the B-tree is called the root node. The bottom nodes in the index are called the leaf nodes. In a clustered index, the leaf nodes contain the data pages of the underlying table.
+</p>
+
+<p>
+Note that, in a B-tree structure, Child nodes to the left of value “X” have values smaller than X; child nodes to the right of the value “X” have values greater than X.
+</p>
+
+<p>
+Adding and removing values from a B-tree usually does not create new nodes: the number of values in each node can vary. Of course, that means we’ll have some empty space, so a B-tree will require more disk space than a denser tree would.
+</p>
+
+<p>
+After adding a value, the B-tree has to maintain both the order of value and the balance of the tree. First, we’ll find the leaf node where the values should be added. If there is enough space in the leaf node, we’ll simply add the value; the structure and the tree depth won’t change. We would split the parent node in the same manner if an overflow happens there. In extreme cases, we’d have to split the root node and the tree depth would increase.
+</p>
+
+<p>
+To delete a value from the B-Tree, we’ll locate that value and remove it. If that deletion causes underflow (the number of values stored in a node is too low) we’ll have to merge nodes together.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3.1 B-tree indexes&quot;,&quot;hid&quot;:&quot;b-tree_indexes&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:11,&quot;range&quot;:&quot;6405-8083&quot;} -->
+<h3 class="sectionedit12" id="hash_indexes">6.3.2 Hash Indexes</h3>
+<div class="level3">
+
+<p>
+A hash index consists of a collection of buckets organized in an array. A hash function maps index keys to corresponding buckets in the hash index. The following figure shows three index keys that are mapped to three different buckets in the hash index. For illustration purposes, the hash function name is f(x).
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Adata_base%3Atheory%3A06_sql_advanced_objects&amp;media=employes:pengfei.liu:data_science:data_base:theory:hash_index.png" class="media" title="employes:pengfei.liu:data_science:data_base:theory:hash_index.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=242a7a&amp;media=employes:pengfei.liu:data_science:data_base:theory:hash_index.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+When we want to search for a value, we’ll use the hash function to calculate the address where our data could be stored. We’ll look for the data in the bucket. If we find it, we’re done. If we don’t find our value, it means it’s not in the index.
+</p>
+
+<p>
+Adding new values works similarly: we’ll use the hash function to calculate the address where we’ll store our data. If that address is already occupied, we’ll add new buckets and re-compute the hash function. Once again, we’ll use the whole key as an input for our function. The result is the actual address (in disk memory) where we can find the desired data. Updating or deleting values consists of first searching for a value and then applying the desired operation on that memory address.
+</p>
+
+<p>
+Hash table indexes are very fast when testing for equality (= or &lt;&gt;). This is because we’re using the whole key and not just its parts. Individual parts can’t help us when we want to find range (&lt; or &gt;).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3.2 Hash Indexes&quot;,&quot;hid&quot;:&quot;hash_indexes&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:12,&quot;range&quot;:&quot;8084-9473&quot;} -->
+<h3 class="sectionedit13" id="other_index_types">6.3.3 Other index types</h3>
+<div class="level3">
+
+<p>
+1. <strong>GiST indexes</strong> are not a single kind of index, but rather an infrastructure within which many different indexing strategies can be implemented. GiST indexes are also capable of optimizing “nearest-neighbor” searches, such as the following sql query
+</p>
+<pre class="code">SELECT * FROM places ORDER BY location &lt;-&gt; point &#039;(101,456)&#039; LIMIT 10;
+# This will return the ten places closest to a given target point. </pre>
+
+<p>
+The <strong>GiST indexes</strong> are often used in geometric data types and full-text search.
+</p>
+
+<p>
+2. <strong>SP-GiST indexes</strong>, like GiST indexes, offer an infrastructure that supports various kinds of searches. SP-GiST permits implementation of a wide range of different non-balanced data structures, such as quadtrees, k-d trees, and radix trees.
+</p>
+
+<p>
+The <strong>SP-GiST indexes</strong> are often used in multimedia, phone routing, and IP routing
+</p>
+
+<p>
+3. <strong>GIN indexes</strong> are “inverted indexes” which are appropriate for data values that contain multiple component values, such as arrays. An inverted index contains a separate entry for each component value, and can efficiently handle queries that test for the presence of specific component values. It&#039;s often used in indexing hstore, array, jsonb, and range types.
+</p>
+
+<p>
+4. <strong>BRIN indexes</strong> (a shorthand for Block Range INdexes) store summaries about the values stored in consecutive physical block ranges of a table. For data types that have a linear sort order, the indexed data corresponds to the minimum and maximum values of the values in the column for each block range. Brin indexes allow the use of an index on a very large table that would previously be
+impractical using B-tree, It&#039;s often used in indexing created date column of the sales order table.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3.3 Other index types&quot;,&quot;hid&quot;:&quot;other_index_types&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:13,&quot;range&quot;:&quot;9474-11199&quot;} -->
+<h3 class="sectionedit14" id="standard_syntax1">6.3.4 Standard syntax</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="create_index">Create index</h4>
+<div class="level4">
+
+<p>
+The CREATE INDEX statement is used to create indexes in tables. Indexes are used to retrieve data from the database very fast. The users cannot see the indexes, they are just used to speed up searches/queries.
+</p>
+<pre class="code">CREATE [UNIQUE] INDEX index_name
+ON table_name 
+[USING method]
+(
+column1 [ASC | DESC] [NULL {FIRST | LAST }] , 
+column2, 
+...
+);
+
+# If we create a unique index on a table, duplicate values are not allowed. If not unique, duplicate values are allowed 
+# In using method statement, we specify which type of index we want to use (e.g. B-tree, hash, etc.). PostgreSQL uses B-tree by default.
+# The ASC and DESC specify the sort order. ASC is the default.
+# NULLS FIRST or NULLS LAST specifies nulls sort before or after non-nulls. NULLS FIRST is the default when DESC is specified. NULLS LAST is the default when DESC is not specified.
+</pre>
+
+<p>
+Note that, CREATE INDEX Locks out writes but not reads.
+</p>
+
+</div>
+
+<h4 id="drop_index">Drop index</h4>
+<div class="level4">
+<pre class="code">DROP INDEX [ CONCURRENTLY]
+[ IF EXISTS ] index_name
+[ CASCADE | RESTRICT ];</pre>
+
+<p>
+<strong>CONCURRENTLY</strong> means when you execute the DROP INDEX statement, PostgreSQL acquires an
+exclusive lock on the table and blocks other accesses until the index removal completes. To force the command waits until the conflicting transaction completes before removing the index, you can use the CONCURRENTLY option.
+</p>
+
+<p>
+<strong>CASCADE</strong> means if the index has dependent objects, use the CASCADE option to automatically
+drop these objects and all objects that depend on those objects.
+</p>
+
+<p>
+<strong>RESTRICT</strong> option instructs PostgreSQL to refuse to drop the index if any objects depend on it. The DROP INDEX uses RESTRICT by default.
+</p>
+
+<p>
+Note that,  DROP INDEX Exclusive lock on the table (locks both writes and reads of the table)
+</p>
+
+</div>
+
+<h4 id="refresh_index">Refresh index</h4>
+<div class="level4">
+
+<p>
+In practice, an index can become corrupted and no longer contains valid data. To recover the index, you can use the REINDEX statement:
+</p>
+<pre class="code">REINDEX [ ( VERBOSE ) ] { INDEX | TABLE | SCHEMA | DATABASE | SYSTEM } name;
+
+# To recreate a single index, you specify the index name after REINDEX INDEX clause as follows:
+REINDEX INDEX index_name;
+# To recreate all index of a table
+REINDEX TABLE table_name;
+# To recreate all indexes of a database
+REINDEX DATABASE database_name;</pre>
+
+<p>
+Note that, REINDEX Locks writes but not reads of the table. REINDEX Locks reads &amp; write that attempt to use the index.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3.4 Standard syntax&quot;,&quot;hid&quot;:&quot;standard_syntax1&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:14,&quot;range&quot;:&quot;11200-13620&quot;} -->
+<h3 class="sectionedit15" id="cluster_data_based_on_an_index">6.3.5 Cluster data based on an index</h3>
+<div class="level3">
+
+<p>
+To better access data, we can cluster data based on an index. <strong>CLUSTER</strong>  clause instructs PostgreSQL to cluster a table based on an index. The index must already have been defined on the table. The sql query looks like this:
+</p>
+<pre class="code">CLUSTER [VERBOSE] table_name [ USING index_name ]</pre>
+
+<p>
+In oracle db, we need to use Index-Organized Table. In Mysql, we need to use clustered indexes which is only available in InnoDB.
+</p>
+
+<p>
+When a table is clustered, it is physically reordered based on the index information.
+Clustering is a one-time operation: when the table is subsequently updated, the changes are not clustered.
+</p>
+
+<p>
+Note : When a table is being clustered, an ACCESS EXCLUSIVE lock is acquired on it (both reads and writes).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.3.5 Cluster data based on an index&quot;,&quot;hid&quot;:&quot;cluster_data_based_on_an_index&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;13621-14395&quot;} -->
+<h2 class="sectionedit16" id="triggers">6.4 Triggers</h2>
+<div class="level2">
+
+<p>
+A trigger is a function invoked automatically whenever an event associated with a TABLE occurs.
+For example, if you want to keep a history of data without requiring the application to have logic to check for every event.
+</p>
+
+<p>
+You can also use triggers to maintain complex data integrity rules which you cannot implement elsewhere except at the database level.
+</p>
+
+<p>
+<strong>Advantages</strong> of using SQL triggers:
+</p>
+<ul>
+<li class="level1"><div class="li"> SQL triggers provide an alternative way to check the integrity of data.</div>
+</li>
+<li class="level1"><div class="li"> SQL triggers can catch errors in business logic in the database layer.</div>
+</li>
+<li class="level1"><div class="li"> SQL triggers provide an alternative way to run scheduled tasks. By using SQL triggers, you don’t have to wait to run the scheduled tasks because the triggers are invoked automatically before or after a change is made to the data in the tables.</div>
+</li>
+<li class="level1"><div class="li"> SQL triggers are very useful to audit the changes of data in tables.</div>
+</li>
+</ul>
+
+<p>
+<strong>Disadvantages</strong> of using SQL triggers
+</p>
+<ul>
+<li class="level1"><div class="li"> SQL triggers only can provide an extended validation and they cannot replace all the validations. Some simple validations have to be done in the application layer. For example, you can validate user’s inputs in the client side by using JavaScript or on the server side using server-side scripting languages such as JSP, PHP, ASP.NET, Perl.</div>
+</li>
+<li class="level1"><div class="li"> SQL triggers are invoked and executed invisible from the client applications, therefore, it is difficult to figure out what happens in the database layer.</div>
+</li>
+<li class="level1"><div class="li"> SQL triggers may increase the overhead of the database server.</div>
+</li>
+</ul>
+
+<p>
+To create a new trigger :
+</p>
+<ol>
+<li class="level1"><div class="li"> define a trigger function using CREATE FUNCTION statement.</div>
+</li>
+<li class="level1"><div class="li"> bind this trigger function to a table using CREATE TRIGGER statement.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.4 Triggers&quot;,&quot;hid&quot;:&quot;triggers&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:16,&quot;range&quot;:&quot;14396-16068&quot;} -->
+<h3 class="sectionedit17" id="trigger_events">6.4.1 Trigger Events</h3>
+<div class="level3">
+
+<p>
+A trigger can be defined to be invoked either before or after the data is changed by:
+</p>
+<ul>
+<li class="level1"><div class="li"> Insert</div>
+</li>
+<li class="level1"><div class="li"> Update</div>
+</li>
+<li class="level1"><div class="li"> Delete</div>
+</li>
+<li class="level1"><div class="li"> Truncate</div>
+</li>
+</ul>
+
+<p>
+In MySQL, only insert, update, delete can trigger a trigger. the Truncate statement removes all data of a table but does not invoke the trigger associated with the table.
+</p>
+
+<p>
+Based on how you define your trigger, it can work on the row level, or the statement level. This could change the performance of your triggers. For example, we have a sql query which updates 20 rows in a table. If the trigger is at the row level, it will be invoked 20 times. If the trigger is at the statement level, it will be invoked 1 time.
+</p>
+
+<p>
+Trigger before events, can skip rows, modify values, etc. Trigger after events, all changes are available.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.4.1 Trigger Events&quot;,&quot;hid&quot;:&quot;trigger_events&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:17,&quot;range&quot;:&quot;16069-16860&quot;} -->
+<h3 class="sectionedit18" id="standard_syntax2">6.4.2 Standard syntax</h3>
+<div class="level3">
+<pre class="code"># Creating a trigger
+CREATE TRIGGER trigger_name {BEFORE | AFTER | INSTEAD OF} {event [OR ...]}
+ON table_name
+[FOR [EACH] {ROW | STATEMENT}]
+EXECUTE PROCEDURE trigger_function
+
+# Modifying a trigger
+ALTER TRIGGER trigger_name ON table_name RENAME TO new_name
+
+# Disabling a trigger
+ALTER TABLE table_name DISABLE TRIGGER trigger_name | ALL
+
+# Removing a trigger
+DROP TRIGGER [IF EXISTS] trigger_name ON table_name</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.4.2 Standard syntax&quot;,&quot;hid&quot;:&quot;standard_syntax2&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:18,&quot;range&quot;:&quot;16861-17323&quot;} -->
+<h3 class="sectionedit19" id="trigger_on_views">6.4.3 Trigger on Views</h3>
+<div class="level3">
+
+<p>
+On views, <strong>INSTEAD OF triggers</strong> can be defined to replace INSERT, UPDATE or DELETE. <strong>INSTEAD OF triggers</strong> can only be defined on views, and only at the row level. <strong>INSTEAD OF triggers</strong> is fired once for each row that needs to be modified in the view. It is the responsibility of the trigger&#039;s function to perform the necessary modifications to the view&#039;s underlying base table(s) and, where appropriate, return the modified row as it will appear in the view.
+</p>
+
+</div>
+
+<h4 id="examples">Examples</h4>
+<div class="level4">
+
+<p>
+Suppose that dept and emp are tables that list departments and employees:
+</p>
+<pre class="code">CREATE TABLE dept (
+   deptno INTEGER PRIMARY KEY,
+   deptname CHAR(20),
+   manager_num INT
+);
+CREATE TABLE emp (
+   empno INTEGER PRIMARY KEY,
+   empname CHAR(20),
+   deptno INTEGER REFERENCES dept(deptno),
+   startdate DATE
+);
+ALTER TABLE dept ADD CONSTRAINT(FOREIGN KEY (manager_num)
+      REFERENCES emp(empno));
+</pre>
+
+<p>
+The next statement defines manager_info, a view of columns in the dept and emp tables that includes all the managers of each department:
+</p>
+<pre class="code">CREATE VIEW manager_info AS
+   SELECT d.deptno, d.deptname, e.empno, e.empname
+      FROM emp e, dept d WHERE e.empno = d.manager_num;</pre>
+
+<p>
+The following CREATE TRIGGER statement creates manager_info_insert, an INSTEAD OF trigger that is designed to insert rows into the dept and emp tables through the manager_info view:
+</p>
+<pre class="code">CREATE TRIGGER manager_info_insert
+   INSTEAD OF INSERT ON manager_info    --defines trigger event
+      REFERENCING NEW AS n              --new manager data
+   FOR EACH ROW                         --defines trigger action
+      (EXECUTE PROCEDURE instab(n.deptno, n.empno));
+
+CREATE PROCEDURE instab (dno INT, eno INT)
+   INSERT INTO dept(deptno, manager_num) VALUES(dno, eno);
+   INSERT INTO emp (empno, deptno) VALUES (eno, dno);
+END PROCEDURE;</pre>
+
+<p>
+After the tables, view, trigger, and SPL routine have been created, the database server treats the following INSERT statement as a triggering event:
+</p>
+<pre class="code">INSERT INTO manager_info(deptno, empno) VALUES (08, 4232);</pre>
+
+<p>
+This triggering INSERT statement is not executed, but this event causes the trigger action to be executed instead, invoking the instab( ) SPL routine. The INSERT statements in the SPL routine insert new values into both the emp and dept base tables of the manager_info view.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.4.3 Trigger on Views&quot;,&quot;hid&quot;:&quot;trigger_on_views&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:19,&quot;range&quot;:&quot;17324-19690&quot;} -->
+<h2 class="sectionedit20" id="prepared_statements">6.5 Prepared Statements</h2>
+<div class="level2">
+
+<p>
+A PREPARED STATEMENT is a server-side object that can be used to optimize performance. When creating a prepared statement, parameters are referred by position, using $1, $2, etc.
+</p>
+<pre class="code">PREPARE seniorPerCountry (text, bigint) AS
+SELECT country, count(*),avg(age)
+FROM customers WHERE country = $1 and age &gt; $2
+GROUP BY country</pre>
+
+<p>
+When a statement is PREPARED, it is parsed, analyzed, and rewritten according to the compilation phase:
+</p>
+<ol>
+<li class="level1"><div class="li"> Parsing/Normalization Phase: Syntax check, Semantic check, Check existence of tables and columns in the query.</div>
+</li>
+<li class="level1"><div class="li"> Compilation Phase: Convert query into Machine understandable format</div>
+</li>
+<li class="level1"><div class="li"> Query Optimization Phase: Checking possible ways to execute Query, Choosing the best-optimized way to execute the query</div>
+</li>
+<li class="level1"><div class="li"> Cache Phase: Stored the best-optimized way.</div>
+</li>
+</ol>
+
+<p>
+When an <strong>EXECUTE</strong> command is subsequently issued, the prepared statement is planned and executed.
+</p>
+<pre class="code">EXECUTE seniorPerCountry(&#039;France&#039;,60);
+EXECUTE seniorPerCountry(&#039;Australia&#039;,75);</pre>
+
+<p>
+The execution phase:
+</p>
+<ol>
+<li class="level1"><div class="li"> Search cache: Find the stored the best-optimized way in the cache.</div>
+</li>
+<li class="level1"><div class="li"> Placeholder replacement: Initialize the execution plan with specific parameter values.</div>
+</li>
+<li class="level1"><div class="li"> Execution Phase: Run the statement. </div>
+</li>
+</ol>
+
+<p>
+This division of labor avoids repetitive parse analysis work while allowing the execution plan to depend on the specific parameter values supplied.
+</p>
+
+<p>
+Prepared statements only last for the duration of the <strong>current database session</strong>. This also means that a single prepared statement cannot be used by multiple simultaneous database clients; however, each client can create its own prepared statement to use. Prepared statements can be manually cleaned up using the DEALLOCATE command.
+</p>
+<pre class="code">DEALLOCATE [ PREPARE ] { name | ALL }</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.5 Prepared Statements&quot;,&quot;hid&quot;:&quot;prepared_statements&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:20,&quot;range&quot;:&quot;19691-21489&quot;} -->
+<h2 class="sectionedit21" id="partitioning">6.6 Partitioning</h2>
+<div class="level2">
+
+<p>
+“As time goes by, the velocity and volume of the data increase more and more and queries become slower and slower as whole tables need to be scanned.“ But what happens in cases there is no need for a full scan? Imagine the compilation of monthly business intelligence reports. The only data
+that are actually needed are those that were produced during the last month. Before creating any partitions you should try to exhaust all other alternative options including table indexing and revision of queries. The exact point at which a table will benefit from partitioning depends on the application.
+</p>
+
+<p>
+Partitioning can provide several benefits:
+</p>
+<ul>
+<li class="level1"><div class="li"> Query performance can be improved dramatically in certain situations, particularly when most of the heavily accessed rows of the table are in a single partition or a small number of partitions. The partitioning substitutes for leading columns of indexes, reducing index size and making it more likely that the heavily-used parts of the indexes fit in memory.</div>
+</li>
+<li class="level1"><div class="li"> When queries or updates access a large percentage of a single partition, performance can be improved by taking advantage of sequential scan of that partition instead of using an index and random access reads scattered across the whole table.</div>
+</li>
+<li class="level1"><div class="li"> Bulk loads and deletes can be accomplished by adding or removing partitions if that requirement is planned into the partitioning design. ALTER TABLE and DROP TABLE are both far faster than a bulk DELETE operation.</div>
+</li>
+<li class="level1"><div class="li"> Seldom-used data can be migrated to cheaper and slower storage media.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6 Partitioning&quot;,&quot;hid&quot;:&quot;partitioning&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:21,&quot;range&quot;:&quot;21490-23065&quot;} -->
+<h3 class="sectionedit22" id="should_a_table_be_partitioned">6.6.1 Should A Table Be Partitioned?</h3>
+<div class="level3">
+
+<p>
+Partitioning can drastically improve performance on a table when done right, but if done wrong or when not needed, it can make performance worse, even unusable.
+</p>
+
+<p>
+<strong>How big is your target table?</strong>
+There is no real hardline rule for how big a table must be before partitioning is an option, but based on database access trends, database users and administrators will start to see the performance on a specific table start to degrade as it gets bigger. In general, partitioning should only be considered when someone says “I can’t do X because the table is too big.” For some hosts, 200 <abbr title="Gigabyte">GB</abbr> could be the right time to partition, for others, it may be time to partition when it hits 1TB.
+</p>
+
+<p>
+If the table is determined to be “too big”, it’s time to look at the access patterns. Either by knowing the applications that access the database, or by monitoring logs and generating query reports with something like pgBadger, we can see how a table is accessed, and depending on how it’s accessed, we can have options for a good partitioning strategy.
+</p>
+
+<p>
+To learn more about pgBadger and how to use it, please check out this link (<a href="https://severalnines.com/blog/postgresql-log-analysis-pgbadger" class="urlextern" title="https://severalnines.com/blog/postgresql-log-analysis-pgbadger" rel="nofollow">https://severalnines.com/blog/postgresql-log-analysis-pgbadger</a>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.1 Should A Table Be Partitioned?&quot;,&quot;hid&quot;:&quot;should_a_table_be_partitioned&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:22,&quot;range&quot;:&quot;23066-24308&quot;} -->
+<h3 class="sectionedit23" id="different_partitioning_types">6.6.2 Different partitioning types</h3>
+<div class="level3">
+
+<p>
+Postgresql offers built-in support for the following forms of partitioning:
+</p>
+<ul>
+<li class="level1"><div class="li"> List Partitioning - The table is partitioned by explicitly listing which key values appear in each partition.</div>
+</li>
+<li class="level1"><div class="li"> Range Partitioning - The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</div>
+</li>
+<li class="level1"><div class="li"> Hash Partitioning - The table is partitioned by specifying a modulus and a remainder for each partition. Each partition will hold the rows for which the hash value of the partition key divided by the specified modulus will produce the specified remainder.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.2 Different partitioning types&quot;,&quot;hid&quot;:&quot;different_partitioning_types&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:23,&quot;range&quot;:&quot;24309-24995&quot;} -->
+<h3 class="sectionedit24" id="list_partitioning">6.6.3 List Partitioning</h3>
+<div class="level3">
+
+<p>
+We can partition a table(divide a table into sub-tables) by using arbitary value in a list. For example we want to partition sales table by using location(e.g. city list). 
+Sales:  
+* East Region Sales:
+</p>
+<ul>
+<li class="level1"><div class="li"> New York</div>
+</li>
+<li class="level1"><div class="li"> Virginia</div>
+</li>
+<li class="level1"><div class="li"> Florida</div>
+</li>
+</ul>
+
+<p>
+* West Region Sales:
+</p>
+<ul>
+<li class="level1"><div class="li"> California</div>
+</li>
+<li class="level1"><div class="li"> Oregon</div>
+</li>
+<li class="level1"><div class="li"> Havaii</div>
+</li>
+</ul>
+
+<p>
+* Central Region Sales:
+</p>
+<ul>
+<li class="level1"><div class="li"> Illinois</div>
+</li>
+<li class="level1"><div class="li"> Texas</div>
+</li>
+<li class="level1"><div class="li"> Missouri</div>
+</li>
+</ul>
+
+<p>
+Note that you can put any value you want in each list. You can even put Beijin in the Central Region Sales table. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.3 List Partitioning&quot;,&quot;hid&quot;:&quot;list_partitioning&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:24,&quot;range&quot;:&quot;24996-25506&quot;} -->
+<h3 class="sectionedit25" id="range_partitioning">6.6.4 Range Partitioning</h3>
+<div class="level3">
+
+<p>
+We can partition a table by using value ranges of a column. For example, we can partition the sales table by using date, in this example, we divide a year by four quarters(e.g. Q1,Q2,Q3,Q4).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.4 Range Partitioning&quot;,&quot;hid&quot;:&quot;range_partitioning&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:25,&quot;range&quot;:&quot;25507-25735&quot;} -->
+<h3 class="sectionedit26" id="hash_partitioning">6.6.5 Hash Partitioning</h3>
+<div class="level3">
+
+<p>
+The table is partitioned by specifying a modulus and a remainder for each partition. Each partition will hold the rows for which the hash value of the partition key divided by the specified modulus will produce the specified remainder.
+</p>
+
+<p>
+Using this approach, data is randomly distributed across the partitions rather than grouped. This is a good approach for some data, but may not be an effective way to manage historical data. However, hash partitions share some performance characteristics with range partitions. For example, partition pruning is limited to equality predicates. You can also use partition-wise joins, parallel index access, and parallel DML. See “Partition-Wise Joins” for more information.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.5 Hash Partitioning&quot;,&quot;hid&quot;:&quot;hash_partitioning&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:26,&quot;range&quot;:&quot;25736-26481&quot;} -->
+<h3 class="sectionedit27" id="standard_syntax3">6.6.6 Standard syntax</h3>
+<div class="level3">
+
+<p>
+The specification of a partitioned table consists of
+</p>
+<ul>
+<li class="level1"><div class="li"> The partitioning method</div>
+</li>
+<li class="level1"><div class="li"> A list of columns or expressions to be used as the partition key</div>
+</li>
+</ul>
+
+<p>
+Partitions may themselves be defined as partitioned tables, using what is called sub-partitioning. Partitions may have their own indexes, constraints and default values, distinct from those of other partitions.
+</p>
+
+</div>
+
+<h4 id="example">Example</h4>
+<div class="level4">
+<pre class="code"># create main table
+CREATE TABLE measurement (
+logdate date not null,
+peaktemp int,
+humidity int
+) PARTITION BY RANGE (logdate);
+
+# crete sub table
+CREATE TABLE measurement_y2018m1 PARTITION OF measurement
+FOR VALUES FROM (&#039;2018-01-01&#039;) TO (&#039;2018-02-01&#039;);
+CREATE TABLE measurement_y2018m2 PARTITION OF measurement
+FOR VALUES FROM (&#039;2018-02-01&#039;) TO (&#039;2018-03-01&#039;);
+… … …
+CREATE TABLE measurement_y2019m1 PARTITION OF measurement
+FOR VALUES FROM (&#039;2019-01-01&#039;) TO (&#039;2019-02-01&#039;);
+
+# insert the value into the table
+INSERT INTO measurement (logdate, peaktemp, humidity) VALUES (&#039;2018-02-10&#039;, 24, 52);
+
+# note that we insert the value into the main table in the SQL query, but the inseration goes into the sub table measurement_y2018m2. </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.6 Standard syntax&quot;,&quot;hid&quot;:&quot;standard_syntax3&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:27,&quot;range&quot;:&quot;26482-27650&quot;} -->
+<h3 class="sectionedit28" id="partition_maintenance">6.6.7 Partition Maintenance</h3>
+<div class="level3">
+
+<p>
+We can add and remove partitions at any time, for example, we add a new partition into partitioned table measurement.
+</p>
+<pre class="code"># add a new partition (short version)
+CREATE TABLE measurement_y2008m02 PARTITION OF measurement FOR VALUES FROM (&#039;2008-02-01&#039;) TO (&#039;2008-03-01&#039;)
+
+# add a new partition (long version)
+CREATE TABLE measurement_y2008m02(LIKE measurement INCLUDING DEFAULTS INCLUDING CONSTRAINTS) TABLESPACE fasttablespace;
+
+ALTER TABLE measurement_y2008m02 ADD CONSTRAINT y2008m02 CHECK ( logdate &gt;= DATE &#039;2008-02-01&#039; AND logdate &lt; DATE &#039;2008-03-01&#039; );
+
+ALTER TABLE measurement ATTACH PARTITION measurement_y2008m02 FOR VALUES FROM (&#039;2008-02-01&#039;) TO (&#039;2008-03-01&#039; );
+
+# Delete a partition
+ALTER TABLE measurement DETACH PARTITION measurement_y2006m02;
+DROP TABLE measurement_y2006m02;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.7 Partition Maintenance&quot;,&quot;hid&quot;:&quot;partition_maintenance&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:28,&quot;range&quot;:&quot;27651-28489&quot;} -->
+<h3 class="sectionedit29" id="partition_index">6.6.8 Partition index</h3>
+<div class="level3">
+
+<p>
+Create an index on the main table, will automatically create one index on each partition, and any partitions you create or attach later will also contain the index.
+</p>
+<pre class="code"> 
+# index on main table
+CREATE INDEX ON measurement (logdate); </pre>
+
+<p>
+Limitations:
+</p>
+<ul>
+<li class="level1"><div class="li"> Primary keys are supported on partitioned tables.</div>
+</li>
+<li class="level1"><div class="li"> Foreign keys referencing partitioned tables are not supported but foreign key references from a partitioned table to some other table are supported.</div>
+</li>
+<li class="level1"><div class="li"> BEFORE ROW triggers must be defined on individual partitions(sub table), not the partitioned table (main table).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6.6.8 Partition index&quot;,&quot;hid&quot;:&quot;partition_index&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:29,&quot;range&quot;:&quot;28490-&quot;} -->

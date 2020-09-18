@@ -1,0 +1,96 @@
+
+<h1 class="sectionedit1" id="flume_agent_with_netcat_source_logger_sink">Flume agent with netcat source, logger sink</h1>
+<div class="level1">
+
+<p>
+In this tutorial, we explain how you can generate events via a network port and subsequently log them into the console. For this, we are using the NetCat source and the logger sink.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume agent with netcat source, logger sink&quot;,&quot;hid&quot;:&quot;flume_agent_with_netcat_source_logger_sink&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-242&quot;} -->
+<h2 class="sectionedit2" id="source">Source</h2>
+<div class="level2">
+
+<p>
+NetCat Source listens to the given port and receives each line we entered in that port as an individual event and transfers it to the sink through the specified channel.
+</p>
+
+<p>
+While configuring this source, you have to provide values to the following properties −
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>channels</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>Source type</strong>: netcat</div>
+</li>
+<li class="level1"><div class="li"> <strong>bind</strong>: Hostname or IP address to bind.</div>
+</li>
+<li class="level1"><div class="li"> <strong>port</strong>: Port number to which we want the source to listen.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Source&quot;,&quot;hid&quot;:&quot;source&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;243-681&quot;} -->
+<h2 class="sectionedit3" id="sink">Sink</h2>
+<div class="level2">
+
+<p>
+Logger Sink logs all the events passed to it. Generally, it is used for testing or debugging purpose. To configure this sink, you must provide the following details:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Channel</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>type</strong>: logger</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sink&quot;,&quot;hid&quot;:&quot;sink&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;682-904&quot;} -->
+<h2 class="sectionedit4" id="flume_agent_conf">Flume agent conf</h2>
+<div class="level2">
+<pre class="code">############ agent ######################
+NetcatAgent.sources = Netcat
+NetcatAgent.channels = MemChannel
+NetcatAgent.sinks = LoggerSink
+
+###################### source ######################## 
+NetcatAgent.sources.Netcat.type = netcat
+NetcatAgent.sources.Netcat.bind = localhost
+NetcatAgent.sources.Netcat.port = 56565
+
+#################### sink ######################### 
+NetcatAgent.sinks.LoggerSink.type = logger
+
+################### channel ######################## 
+NetcatAgent.channels.MemChannel.type = memory
+NetcatAgent.channels.MemChannel.capacity = 1000
+NetcatAgent.channels.MemChannel.transactionCapacity = 100
+
+### Bind the source and sink to the channel ###
+NetcatAgent.sources.Netcat.channels = MemChannel
+NetcatAgent.sinks.LoggerSink.channel = MemChannel
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume agent conf&quot;,&quot;hid&quot;:&quot;flume_agent_conf&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;905-1721&quot;} -->
+<h2 class="sectionedit5" id="execution">Execution</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Execution&quot;,&quot;hid&quot;:&quot;execution&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1722-1744&quot;} -->
+<h3 class="sectionedit6" id="run_the_flume_agent">Run the flume agent</h3>
+<div class="level3">
+<pre class="code">flume-ng agent -f netcat-log-agent.conf -n NetcatAgent -Dflume.root.logger=INFO,console</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Run the flume agent&quot;,&quot;hid&quot;:&quot;run_the_flume_agent&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;1745-1879&quot;} -->
+<h3 class="sectionedit7" id="passing_data_to_the_source">Passing Data to the source</h3>
+<div class="level3">
+
+<p>
+The following command will open a connexion to localhost on port 8888. After the connexion is established, type anything then enter, the text which you entered will be received by the flume netcat source. You should also see them in the flume logger console
+</p>
+<pre class="code">curl telnet://localhost:8888</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Passing Data to the source&quot;,&quot;hid&quot;:&quot;passing_data_to_the_source&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;1880-&quot;} -->

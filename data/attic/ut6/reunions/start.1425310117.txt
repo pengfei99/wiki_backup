@@ -1,0 +1,57 @@
+**Date** : 17/02/2015
+
+**Participants** : JG, TLC, AC, PV, NS
+
+
+**Précédente réunion le [[reunion_ut6_03.02.2015|03/02/2015]]**
+
+====== Ordre du jour ======
+
+Les sujets <del>barrés</del> sont en attente.\\
+Les sujets <wrap round box>surlignés en gris</wrap> sont traités s'il y a assez de temps\\
+Les sujets <wrap danger>surlignés en rouge</wrap> sont prioritaires.
+
+^Question ^Quoi?                  ^Qui?          ^Avancement    ^
+^1 |<wrap round box>Suivie des tickets</wrap>|NS|Migration en cours. Ouverture du port vers l'extérieur en attente car difficulté côté réseau. Le wiki sera accessible depuis Paris par le VPN|
+^2 |<wrap round box>Projet REALISM</wrap>|NS|Démo de Clinsight le 04/02. Discussion avec bioMerieux le 26/02. Organisation de la réunion tranSMART avec PV, TLC et AC. Réunion interne avec ME, JG et JM sur l'organisation des données|
+^3 |<del>MiniLIMS</del> eSamples|AC+TLC|Réunion de validation avec AT et ME le 04/02. Présentation du portefeuille devant le CPP le 18/02 |
+^4 |Workflow management et plateforme d'accès aux ressources|PV|Rédaction du plan projet en cours. En discuter avec JM.|
+^5 |<wrap round box>OpenStack et prestation SysFera</wrap>|NS+PV+JG|Monitoring/Accounting d'OpenStack, Demande de machines de service en attente d'une réponse du CCIN2P3|
+^6 |<wrap round box>Hébergement au CCIN2P3 et convention</wrap>|JG+PV|depuis le 16/02, il y a 1 backup journalier sur GPFS.|
+^7 |<del>Déploiement de [[http://galaxyproject.org/|Galaxy]], [[http://www.sequenceserver.com/|SequenceServer]], de [[http://c4c.uwc4c.com/express_license_technologies/viroblast|ViroBlast]], de [[http://appmibio.uni-goettingen.de/software/|SecureBlast]] ou de [[http://www.broadinstitute.org/cancer/software/genepattern|Gene Pattern]]</del>|TLC|En attente de la demande de VM au CC |
+^8 |<wrap danger>OBJECTIFS UTEC6</wrap>|NS|Cf. ci-dessous|
+^9 |<wrap danger>Data management</wrap>|JG|L'UT3 a ses données sur OwnCloud+SRVFIC. Ils sont en train de réorganiser selon le système de l'AQ. Il faut remonter le problème de CD, FB et Nouara à l'AQ. Il faut que le responsable du projet valide l'organisation des données de Nouara| 
+^10 |<wrap danger>Tarification UTEC6</wrap>|JG|NS contacte TE et AT au sujet de l'offre tarifaire. L'admin de machine sera un service payant optionnel. |
+^11 |<wrap round box>Congrès 2015</wrap>|NS|Qui veut participer à [[http://www.bio-itworldexpo.com/|BioIT World]]| 
+^12 |Domaine d'expertise de l'UTEC6|NS|La D.S. a besoin de la liste de nos domaines d'expertises| 
+
+====== Activités et Objectifs de l'UTEC6 pour 2015 : hypothèses et propositions ======
+^Thème ^Activité ^No d'idée ^Objectifs mi 2015 ^Objectif fin 2015    ^
+^1     |Intégration des machines d'acquisition et automatisation des sauvegardes | 1 |Intégration de 3 séquenceurs de l'UTEC2 | Intégration de toutes les machines de l'UTEC2 |
+^:::   |:::                                                                      | 2 |Intégration de la spectro de masse de l'UTEC7 | Intégration de l'UTEC7 |
+^2     |CCIN2P3        | 1 |Déploiement du socle au CCIN2P3 | migration complète des services CCIN2P3 sur le socle hébergé |
+^:::   |:::            | 2 |Migration d'OwnCloud sur le socle hébergé | Automatisation de la copie d'OwnCloud sur GPFS |
+^:::   |:::            | 3 | | Mise en place d'un accounting minimal sur OpenStack |
+^:::   |:::            | 4 | | Mise en place du montage NFSv4 sur OpenStack|
+^3     |Récolte des données | 1 |Déploiement de l'eCRF | Mise en place du process d'export de données -> OwCloud GPFS|
+^:::   |:::                 | 2 |Automatisation de la copie d'OwnCloud sur GPFS | |
+^4     |Gestion des flux d'analyse | 1 |Déploiement de Pegasus + HTcondor au CCIN2P3 | Automatisation du pipeline UTEC02 |
+^:::   |:::                        |:::|:::                                          | Maquette de la plateforme Web d'accès aux ressources |
+^5     |Visualisation et partage d'information | 1 |Création d'un lot de données test pour tranSMART à partir de la structure des données de REALISM | Parser tranSMART des données de REASLIM |
+^:::   |:::                                    | 2 |eTRISK : suivi du partenariat | Test de la plateforme d'ETRIKS avec le lot de test |
+====== Archives ======
+  - [[reunion_pt6_06.06.2014|06/06/2014]]
+  - [[reunion_pt6_10.06.2014|10/06/2014]]
+  - [[reunion_pt6_25.06.2014|25/06/2014]]
+  - [[reunion_pt6_19.09.2014|19/09/2014]]
+  - [[reunion_pt6_30.09.2014|30/09/2014]]
+  - [[reunion_pt6_14.10.2014|14/10/2014]]
+  - [[reunion_pt6_28.10.2014|28/10/2014]]
+  - [[reunion_pt6_19.11.2014|19/11/2014]]
+  - [[reunion_pt6_25.11.2014|25/11/2014]]
+  - [[reunion_pt6_12.12.2014|12/12/2014]]
+  - [[reunion_pt6_18.12.2014|18/12/2014]]
+  - [[reunion_pt6_06.01.2015|06/01/2015]]
+  - [[reunion_ut6_20.01.2015|20/01/2015]]
+  - [[reunion_ut6_03.02.2015|03/02/2015]]
+  - [[reunion_ut6_17.02.2015|17/02/2015]]

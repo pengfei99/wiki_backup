@@ -1,0 +1,99 @@
+
+<h1 class="sectionedit1" id="vmware">VMware</h1>
+<div class="level1">
+
+<p>
+<a href="https://www.vmware.com/products/vsphere/" class="urlextern" title="https://www.vmware.com/products/vsphere/" rel="nofollow">vSphere</a> est une suite logiciel fournissant une solution de virtualisation complète.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;VMware&quot;,&quot;hid&quot;:&quot;vmware&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-153&quot;} -->
+<h2 class="sectionedit2" id="hyperviseur_esxi_sur_poweredge_t110_ii">Hyperviseur ESXi sur PowerEdge T110 II</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hyperviseur ESXi sur PowerEdge T110 II&quot;,&quot;hid&quot;:&quot;hyperviseur_esxi_sur_poweredge_t110_ii&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;154-206&quot;} -->
+<h2 class="sectionedit3" id="les_vms_disponibles">Les VMs disponibles</h2>
+<div class="level2">
+
+<p>
+La liste complète peut être consultée directement depuis l&#039;interface de contrôle. Certaines d&#039;entre elles ont une <a href="/doku.php?id=ut6:vms" class="wikilink2" title="ut6:vms" rel="nofollow">page dédiée</a> du wiki.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Les VMs disponibles&quot;,&quot;hid&quot;:&quot;les_vms_disponibles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;207-391&quot;} -->
+<h3 class="sectionedit4" id="installation">Installation</h3>
+<div class="level3">
+
+<p>
+L&#039;installation de l&#039;hyperviseur se fait facilement avec le fichier <code>VMware-VMvisor-Installer-5.5.0.update01-1623387.x86_64.iso</code> installé sur une clé USB grâce à <a href="http://unetbootin.sourceforge.net/" class="urlextern" title="http://unetbootin.sourceforge.net/" rel="nofollow">UNetbootin</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Installation&quot;,&quot;hid&quot;:&quot;installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;392-634&quot;} -->
+<h3 class="sectionedit5" id="application_de_correctifs">Application de correctifs</h3>
+<div class="level3">
+
+<p>
+Même la version la plus récente doit être patchée avec les correctifs les plus récents comme décrit dans <a href="http://www.itadmintools.com/2012/02/howto-patch-vmware-vsphere-esxi-50-free.html" class="urlextern" title="http://www.itadmintools.com/2012/02/howto-patch-vmware-vsphere-esxi-50-free.html" rel="nofollow">cet article</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Application de correctifs&quot;,&quot;hid&quot;:&quot;application_de_correctifs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;635-881&quot;} -->
+<h3 class="sectionedit6" id="attribution_d_une_licence">Attribution d&#039;une licence</h3>
+<div class="level3">
+
+<p>
+L&#039;attribution de la clé de licence (gratuite pour l&#039;hyperviseur seul) se fait comme suit : cliquer sur l&#039;hôte, allez à l&#039;onglet <code>configuration</code>, cliquer <code>Fonctions autorisées</code> puis <code>Modifier…</code>.
+</p>
+
+<p>
+<img src="/lib/exe/fetch.php?w=800&amp;tok=923003&amp;media=ut6:pt6:vmware:attribution_de_licence_vmware.png" class="medialeft" alt="" width="800" />
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Attribution d&#039;une licence&quot;,&quot;hid&quot;:&quot;attribution_d_une_licence&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;882-1192&quot;} -->
+<h2 class="sectionedit7" id="instanciation_d_une_vm_centos_7">Instanciation d&#039;une VM Centos 7</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Choisir un nom qui respecte <a href="/doku.php?id=ut6:groupe_regles_de_nommages_des_serveurs" class="wikilink2" title="ut6:groupe_regles_de_nommages_des_serveurs" rel="nofollow">la convention de nommage</a></div>
+</li>
+<li class="level1"><div class="li"> Choisir une adresse IP disponible dans <a href="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" class="urlextern" title="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" rel="nofollow">le racktable</a></div>
+</li>
+<li class="level1"><div class="li"> Dans <code>Home &gt; Inventory &gt; VMs and Templates</code>, dans l&#039;arborescence <code>Bioaster &gt; Villeurbanne &gt; Templates</code> faire un clic droit sur <code>Template Centos 7</code> et choisir <code>Deploy virtual machine from this template</code></div>
+</li>
+<li class="level1"><div class="li"> Dans le wizard, choisir : un nom et un localisation, un cluster, un stockage et ne pas activer la customization</div>
+</li>
+<li class="level1"><div class="li"> Une fois la machine construite et démarrée, faire clic droit “Edit Settings”, cliquer sur la carte réseau et dans le cadre “Network Connection” du périphérique “Network adapter” mettre <code>dvPortServer-Scientific</code> (ou le réseau correspondant à l&#039;IP choisie).</div>
+</li>
+<li class="level1"><div class="li"> On peut s&#039;y loguer via la console du vCenter avec le l&#039;utilisateur <code>bioaster</code></div>
+</li>
+<li class="level1"><div class="li"> On utilise l&#039;outil <code>nmtui</code> pour définir une adresse IP, une passerelle par défaut, des <abbr title="Domain Name System">DNS</abbr> et un nom de machine</div>
+</li>
+<li class="level1"><div class="li"> On utilise <a href="https://gitlab.in2p3.fr/bioaster/ansible" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible" rel="nofollow">ansible</a> pour continuer la configuration de la machine…</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Instanciation d&#039;une VM Centos 7&quot;,&quot;hid&quot;:&quot;instanciation_d_une_vm_centos_7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1193-2390&quot;} -->
+<h2 class="sectionedit8" id="sauvegarde_des_disques_des_vms">Sauvegarde des disques des VMs</h2>
+<div class="level2">
+
+<p>
+L&#039;option de sauvegarde automatique n&#039;est disponible que depuis le client web de vSphere : <a href="https://vc2.bioaster.local:9443/vsphere-client/" class="urlextern" title="https://vc2.bioaster.local:9443/vsphere-client/" rel="nofollow">https://vc2.bioaster.local:9443/vsphere-client/</a>
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Login</strong> : bioaster.local\&lt;login_windows&gt;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Mdp</strong> : &lt;mdp_windows&gt;</div>
+</li>
+</ul>
+<pre class="code">- Vsphere Data Protection
+- Apliance Vsphere data protection 5.8 &gt; Connect
+- Sauvegarde / Backup
+- Selectionner Sytem Only
+- Actions de la procédure de sauvegarde
+- Modifier et ajouter les disques à sauvegarder à la liste existante</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sauvegarde des disques des VMs&quot;,&quot;hid&quot;:&quot;sauvegarde_des_disques_des_vms&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;2391-&quot;} -->

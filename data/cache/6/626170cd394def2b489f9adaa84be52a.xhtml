@@ -1,0 +1,119 @@
+
+<h1 class="sectionedit1" id="reunion_du_27_avril_2017">Réunion du 27 Avril 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 27 Avril 2017" [1-42] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Julie Hardy">JHA</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Dupuis">PDU</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Pierre Veyre">PV</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Guillaume Boissy">GB</abbr></div>
+</li>
+<li class="level1"><div class="li"> YA</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [43-129] -->
+<h3 class="sectionedit3" id="ordre_du_jour">Ordre du jour :</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Présentation <abbr title="Julie Hardy">JHA</abbr> : Retour sur les récoltes d&#039;échantillons @ BIOASTER</div>
+</li>
+<li class="level1"><div class="li"> Point classification</div>
+</li>
+<li class="level1"><div class="li"> Point préparation NETMeeting3</div>
+</li>
+<li class="level1"><div class="li"> Point Code</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Ordre du jour :" [130-308] -->
+<h3 class="sectionedit4" id="presentation">Présentation</h3>
+<div class="level3">
+
+<p>
+Disponible sur M : 02_DST/04_UTEC/06_UTEC/Projets/En cours/<abbr title="Network Of Experiments">NoE</abbr>/presentations/InternalMeetings/20170427_<abbr title="Network Of Experiments">NoE</abbr>.pdf
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Présentation" [309-445] -->
+<h3 class="sectionedit5" id="resume">Résumé</h3>
+<div class="level3">
+
+<p>
+<em class="u">Présentation <abbr title="Julie Hardy">JHA</abbr></em>
+</p>
+
+<p>
+<abbr title="Julie Hardy">JHA</abbr> a interviewé toutes les UTECs (Lyon + Paris). Un rapide etat de l&#039;art est fait. L&#039;UTEC01, l&#039;UTEC04 et CODIRA semblent être les meilleurs élèves. <br/>
+
+Pour le reste, il y a eu soit un problème au niveau de la récupération des données (sets pas complets, équipe pas dispo/pas prêts, pas prioritaire par rapport à leur autres projets), soit un problème au niveau des templates de fichiers fournis qui ne facilite pas/permette pas leur parsing. <br/>
+
+<abbr title="Julie Hardy">JHA</abbr> a malgré tout réussi a proposer un worflow de traitement des fichiers récoltés pour en extraire les informations d&#039;intérêts dans un premier temps (headers des colonnes des fichiers excel, nombre d&#039;échantillon par UTECs ou par types, …) et nous proposer plusieurs visualisations parlantes à l&#039;aide de Cytoscape. <br/>
+
+Ses prochaines étapes dans un futur proche sont : le mapping des hearders des fichiers avec les champs statiques de la base de données de <abbr title="Network Of Experiments">NoE</abbr>, la création d&#039;un template unique par type d&#039;échantillon, l&#039;inventaire des champs dynamiques pouvant exister par type d&#039;échantillon et par type d&#039;origine (bioentité) et la msie au propre de son workflow d&#039;analyse de manière a proposer un seul script pouvant analyser tout type de fichiers.
+</p>
+
+<p>
+<em class="u">Point sur les classifications</em>
+</p>
+
+<p>
+Les classifications <code>sample</code> et <code>bioentity</code> revenues des experts de la <abbr title="Noe Expert Team">NeT</abbr> ont été curé manuellement par <abbr title="Clément Delestre">CD</abbr>, <abbr title="Julie Hardy">JHA</abbr> et <abbr title="Yoann Mouscaz">YM</abbr> à l&#039;aide de SNOMED CT.<br/>
+
+</p>
+
+<p>
+Un fichier <code>JSON</code> pour chaque type de classification a été généré pour nourrir par la suite la base de données de <abbr title="Network Of Experiments">NoE</abbr> à l&#039;aide de l&#039;algorithme déjà existant. La classifications <code>sample</code> est constituée de 687 noeuds contre 901 pour la classification <code>bioentity</code> <br/>
+
+</p>
+
+<p>
+<abbr title="Yoann Mouscaz">YM</abbr> a implémenté un script python pour traduire les <code>JSON</code> en <code>JSONs</code> lisibles par <em><a href="https://bl.ocks.org/mbostock/4339083" class="urlextern" title="https://bl.ocks.org/mbostock/4339083"  rel="nofollow">collapsible tree</a></em> de <em>d3.js</em> et ainsi pouvoir proposer une visualisation sympathique aux experts de la <abbr title="Noe Expert Team">NeT</abbr>. Ceux-ci doivent présenter ces deux classifications à leurs équipes respectives et les faire valider. La deadline, initialement prévue au <code>4 mai 2017</code>, a été repoussée au <code>29 mai 2017</code> pour que le travail ne soit pas baclé.<br/>
+
+Au moment de la réunion, seul 3 UTECs avaient fait des retours/posé des questions sur les classifications.
+</p>
+
+<p>
+<em class="u">Point préparation NETMeeting3</em>
+</p>
+
+<p>
+Initialement prévu le 5 mai 2017, le NETMeeting3 est reporté au 8 juin 2017 pour plusieurs raisons : experts pas prêts ou pas disponibles, salles de visios pas dispo, difficulté de réunir tout le monde en meme temps…<br/>
+
+</p>
+
+<p>
+La date du 5 mai 2017 est néanmoins gardé pour un atelier de questions/réponses. Y seront abordés plusieurs points cruciaux : classifications, maquette d&#039;ajout d&#039;un échantillon, visualisation de la liste des classifications, champs dynamiques, … <br/>
+
+</p>
+
+<p>
+Un retour de use cases avait été demandé pour le 4 mai initialement, lors de la réunion il y avait 4 experts sur 7 qui avait répondu (dont 2 conjointement, alors que l&#039;exercice était individuel). Il a été décidé d&#039;étendre la deadline pour ce devoir au 29 mai 2017 également.<br/>
+
+</p>
+
+<p>
+<em class="u">Point code</em>
+</p>
+
+<p>
+Zoom rapide sur la construction du chemin complet d&#039;une classification à partir d&#039;un élément donné.<br/>
+
+But : faire le moins de requetes possible en un minimum de temps.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Résumé" [446-] -->

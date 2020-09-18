@@ -1,0 +1,111 @@
+
+<h1 class="sectionedit1" id="ajouter_des_pages">Ajouter des pages</h1>
+<div class="level1">
+
+<p>
+Dans symfony, les contrôlleurs sont rangés dans des modules nommés <em>Bundle</em>. Les modules, s&#039;ils sont bien développés, peuvent être utilisés indépendemment dans d&#039;autres applications.
+</p>
+
+<p>
+Un <strong>bundle par défaut</strong> est disponible, mais d&#039;autres peuvent être créés facilement :
+</p>
+<pre class="code">  $ php app/console generate:bundle --namespace=Bioaster/TestBundle --format=annotation --dir=src --no-interaction</pre>
+
+<p>
+Sauf raison valable, il est conseillé de travailler dans <code>src/AppBundle</code>.
+</p>
+
+<p>
+La première étape est de <strong>router</strong> l&#039;<abbr title="Uniform Resource Locator">URL</abbr> de la page demandée jusqu&#039;au contrôleur. Ceci est fait grâce à 2 variables :
+</p>
+<ul>
+<li class="level1"><div class="li"> le préfix où le bundle est ancré : <dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_une_page?codeblock=0" title="Télécharger un extrait" class="mediafile mf_yml">app/config/routing.yml</a></dt>
+<dd><pre class="code yml">bioaster_test:
+    resource: &quot;@BioasterTestBundle/Controller/&quot;
+    type:     annotation
+    prefix:   /</pre>
+</dd></dl>
+</div>
+</li>
+<li class="level1"><div class="li"> la route définie pour chaque méthode du contrôleur : <dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_une_page?codeblock=1" title="Télécharger un extrait" class="mediafile mf_php">src/Bioaster/TestBundle/Controller/DefaultController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">class</span> DefaultController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(&quot;/hello/{name}&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="re0">$name</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="br0">&#91;</span>…<span class="br0">&#93;</span></pre>
+</dd></dl>
+</div>
+</li>
+</ul>
+
+<p>
+Dans l&#039;exemple ci-dessus, la méthode <code>indexAction</code> est accessible par l&#039;<abbr title="Uniform Resource Locator">URL</abbr> <code>/hello/mon_nom</code>.
+</p>
+
+<p>
+En définissant un préfix a <code>/test </code>, la même action aurait été accessible à <code>/test/hello/mon_nom</code>.
+</p>
+
+<p>
+Les routes disponibles peuvent facilement être retrouvées :
+</p>
+<pre class="code">  $ php app/console router:debug
+  [router] Current routes
+   Name                         Method Scheme Host Path 
+   …                             
+   bioaster_test_default_index  ANY    ANY    ANY  /test/hello/{name}                
+   homepage                     ANY    ANY    ANY  /app/example  </pre>
+
+<p>
+Une <abbr title="Uniform Resource Locator">URL</abbr> peut aussi être testée pour voir quelle action de quel contrôleur est appelée :
+</p>
+<pre class="code">  $ php app/console router:match /test/hello/test
+  Route &quot;bioaster_test_default_index&quot; matches
+  
+  [router] Route &quot;bioaster_test_default_index&quot;
+  Name         bioaster_test_default_index
+  Path         /test/hello/{name}
+  Path Regex   #^/test/hello/(?P&lt;name&gt;[^/]++)$#s
+  …
+  Defaults     _controller: BioasterTestBundle:Default:index</pre>
+
+<p>
+Il reste maintenant à ajoutre de nouvelles routes, de nouveaux contrôleurs, de nouvelles actions et de nouvelles vues.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/ajouter_une_page?codeblock=2" title="Télécharger un extrait" class="mediafile mf_php">src/Bioaster/TestBundle/Controller/TestController.php</a></dt>
+<dd><pre class="code php"><span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> Bioaster\TestBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Symfony\Bundle\FrameworkBundle\Controller\Controller<span class="sy0">;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> TestController <span class="kw2">extends</span> Controller
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(&quot;/hello2/{name}&quot;, name = &quot;test2&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="re0">$name</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'default/index.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'name'</span> <span class="sy0">=&gt;</span> <span class="re0">$name</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Il est important de garder chaque action du contrôleur assez courte (10-20 lignes) et d&#039;implémenter la logique de manipulation de données dans le modèle pour respecter la philosophie de symfony : <em>“thin controllers and fat models”</em>.
+</p>
+
+<p>
+Avec Propel, le code s&#039;ajoute par exemple à <code>src/AppBundle/Model/User.php</code>.
+</p>
+
+</div>

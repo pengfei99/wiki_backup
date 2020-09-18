@@ -1,0 +1,22 @@
+====== Linux bash terminal basics ======
+
+====== Navigate in linux file system ======
+
+<code>
+#pushd will get u to your destination location, it will also remember your previous location
+[pliu@localhost ~]$ pushd /tmp
+/tmp ~
+# popd will get you back to your previous location
+[pliu@localhost tmp]$ popd
+~
+</code>
+
+====== Get file type   ======
+<code>
+# return the type of the target 
+[pliu@localhost ScalaBasicTutorial]$ file ScalaBasicTutorial.iml 
+ScalaBasicTutorial.iml: XML 1.0 document, ASCII text
+[pliu@localhost ScalaBasicTutorial]$ file src
+src: directory
+
+</code>

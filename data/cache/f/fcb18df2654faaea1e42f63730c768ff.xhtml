@@ -1,0 +1,131 @@
+
+<h1 class="sectionedit1" id="first_normal_form">First normal form</h1>
+<div class="level1">
+
+<p>
+First normal form (1NF) is a property of a relation in a relational database. A relation is in first normal form if and only if the table have the following qualities: 
+</p>
+<ul>
+<li class="level1"><div class="li"> The table is two-dimensional with rows and columns.</div>
+</li>
+<li class="level1"><div class="li"> Each row contains data that pertains to some thing or portion of a thing.</div>
+</li>
+<li class="level1"><div class="li"> Each column contains data for a single attribute of the thing it’s describing.</div>
+</li>
+<li class="level1"><div class="li"> Each cell (intersection of a row and a column) of the table must have only a single value.</div>
+</li>
+<li class="level1"><div class="li"> Entries in any column must all be of the same kind. If, for example, the entry in one row of a column contains an employee name, all the other rows must contain employee names in that column, too.</div>
+</li>
+<li class="level1"><div class="li"> Each column must have a unique name.</div>
+</li>
+<li class="level1"><div class="li"> No two rows may be identical (that is, each row must be unique).</div>
+</li>
+<li class="level1"><div class="li"> The order of the columns and the order of the rows are not significant.</div>
+</li>
+</ul>
+
+<p>
+First normal form is an essential property of a relation in a relational database. Database normalization is the process of representing a database in terms of relations in standard normal forms, where first normal is a minimal requirement.
+</p>
+
+<p>
+First normal form enforces these criteria:
+</p>
+<ul>
+<li class="level1"><div class="li"> Eliminate repeating groups in individual tables.</div>
+</li>
+<li class="level1"><div class="li"> Create a separate table for each set of related data.</div>
+</li>
+<li class="level1"><div class="li"> Identify each set of related data with a primary key.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;First normal form&quot;,&quot;hid&quot;:&quot;first_normal_form&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1364&quot;} -->
+<h2 class="sectionedit2" id="wrong_example">Wrong Example</h2>
+<div class="level2">
+
+<p>
+The following table does not respect the 1NF norm, because the phone number column contains multiple values. 
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">ID</th><th class="col1">First_Name</th><th class="col2">Last_Name</th><th class="col3">Phone number</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">foo</td><td class="col2">bar</td><td class="col3">555-2334-3234, 134-34454-0345</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">toto</td><td class="col2">zoo</td><td class="col3">666-2334-3234, 13-34454-0345</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1503-1625&quot;} -->
+<p>
+The following version respects the 1NF norm.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">ID</th><th class="col1">First_Name</th><th class="col2">Last_Name</th><th class="col3">Phone_number1</th><th class="col4">Phone_number2</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">foo</td><td class="col2">bar</td><td class="col3">555-2334-3234</td><td class="col4"> 134-34454-0345</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">toto</td><td class="col2">zoo</td><td class="col3">666-2334-3234</td><td class="col4"> 13-34454-0345</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;1674-1811&quot;} -->
+<p>
+But this design does not work with users who have 3 phone numbers. 
+</p>
+
+<p>
+A better design is to separate the phone number from the custom table
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Customer_ID</th><th class="col1">First_Name</th><th class="col2">Last_Name</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">foo</td><td class="col2">bar</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">toto</td><td class="col2">zoo</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;1953-2012&quot;} --><div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Phone_ID</th><th class="col1">Customer_ID</th><th class="col2">Phone_number</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">1</td><td class="col1">1</td><td class="col2">555-2334-3234</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">2</td><td class="col1">1</td><td class="col2">134-34454-0345</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">3</td><td class="col1">2</td><td class="col2">666-2334-3234</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">4</td><td class="col1">2</td><td class="col2">13-34454-0345</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;2014-2131&quot;} -->
+<p>
+The custom name use Customer_ID to form a one to many relation between customer table and phone number table.
+</p>
+
+<p>
+But we can&#039;t use Customer ID as primary key, Because it&#039;s not unique in the cloumn anymore.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Wrong Example&quot;,&quot;hid&quot;:&quot;wrong_example&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1365-&quot;} -->

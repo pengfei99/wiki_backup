@@ -1,0 +1,311 @@
+====== Inverted index of files of Shakespeare's works ======
+
+Inverted Index is mapping of content like text to the document in which it can be found. Mainly used in search engines, it provides faster lookup on text searches i.e to find the documents where the search text occurs.
+
+Problem Statement:
+  * Dataset contains Shakespeare's works split among many files
+  * The output must contain a list of all words with the file in which it occurs and the number of times it occurs
+
+In this example, we have a folder full of files which contains shake speare's work. We want to know which words in which file has the most word count.
+
+You can find the data set at https://github.com/pengfei99/Spark/tree/master/dataset/shakespeare
+
+===== Objectives =====
+
+Write a spark script which count of word in all the files of dataset shakespeare. Eliminate the empty word.
+transform the result into a dataframe such as
+
+<code>
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|     Ham.|       337|0ws2610.txt|
+|    Iago.|       272|0ws3210.txt|
+</code>
+
+
+Then write the data frame in a parquet file.
+
+===== maven dependencies =====
+
+To archive the above objectives, we need spark core and spark sql. add the following dependencies
+into your pom.xml 
+<file xml pom.xml>
+
+<properties>
+        <spark.version>2.2.0</spark.version>
+        <scala.version>2.11</scala.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+
+<dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+ <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>       
+</file>
+
+===== Count word spark script =====
+
+<file scala InvertedIndexShakespeare.scala>
+package org.pengfei.spark.application.example
+
+import java.io.File
+
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.sql._
+import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+
+
+/*
+*
+* Inverted Index is mapping of content like text to the document in
+* which it can be found. Mainly used in search engines, it provides
+* faster lookup on text searches i.e to find the documents where the
+* search text occurs.
+*
+*
+* Problem Statement:
+* 1. Dataset contains Shakespeare's works split among many files
+* 2. The output must contain a list of all words with the file in which
+*    it occurs and the number of times it occurs
+*
+* */
+object InvertedIndexShakespeare {
+
+  case class wordFile(wordName:String,wordCount:Int,fileName:String)
+  def main(args: Array[String]): Unit = {
+    Logger.getLogger("org").setLevel(Level.OFF)
+    Logger.getLogger("akka").setLevel(Level.OFF)
+
+    val fileDir="/home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare"
+    //get the file list
+    val fileList=getFileList(fileDir)
+    //fileList.foreach(file=>println("file://"+file.getAbsolutePath))
+
+    val spark = SparkSession.builder().master("local").appName("InvertedIndexShakespeare").getOrCreate()
+    import spark.implicits._
+
+    /*******************************************
+    *build wordCound df for all files in the directory and write df to parquet file
+      * *********************************************/
+    /*val wordCountDF=buildFullWordCountDataFrame(fileList,spark)
+    val parquetFilePath="file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/parquet"
+    wordCountDF.write.parquet(parquetFilePath)*/
+
+    /*
+    * WE can use dataframe build in function to transform data
+    *
+    * */
+
+    //wordCountDF.filter($"word_name"=!="/s").orderBy($"word_count".desc).show(10)
+
+    /******************************************
+      * Read parquet file and create  a view for sql query
+      * *****************************/
+   /* val wordCountDF=spark.read.parquet(parquetFilePath)
+    wordCountDF.createOrReplaceTempView("wordCount")
+    val popularWord=spark.sql("select * from wordCount where word_name <> ' ' ORDER BY word_count DESC")
+    popularWord.show(20)*/
+    //wordCountDF.orderBy($"word_count".desc).show(10)
+   // wordCountDF.show(10)
+
+    /*val testfilePath="file:///home/pliu/Downloads/data_set/inverted-index-master/dataset/shakespeare/0ws0110.txt"
+    val testDF=wordCount(testfilePath,spark,"0ws0110.txt")
+    testDF.orderBy($"word_count".desc).show(10)*/
+
+
+  }
+
+  /*
+  * This function takes a list of files and a spark session, count all words in all files
+  * return a dataframe
+  * */
+  def buildFullWordCountDataFrame(fileList:List[File],spark:SparkSession):DataFrame ={
+    import spark.implicits._
+    val sc = spark.sparkContext
+    val sqlC=spark.sqlContext
+
+    val schema = StructType(Array(
+      StructField("word_name",StringType,false),
+      StructField("word_count",IntegerType,false),
+      StructField("file_name",StringType,false)
+    ))
+
+    var fullDf : DataFrame = sqlC.createDataFrame(sc.emptyRDD[Row],schema)
+    var totalColumn:Long = 0
+    for(file<-fileList){
+      val fileName=file.getName
+      val filePath="file://"+file.getAbsolutePath
+      val wordDF=wordCount(filePath,spark,fileName)
+      fullDf=fullDf.union(wordDF)
+      totalColumn=totalColumn+wordDF.count()
+
+    }
+    /*println("Total row :"+totalColumn)
+    println("Data frame row :"+ fullDf.count())*/
+    return fullDf
+  }
+/*
+* This function take a file path, spark session, a file name.
+* it counts all words in this file and return a data frame
+* */
+  def wordCount(filePath:String,spark:SparkSession,fileName:String):DataFrame= {
+    import spark.implicits._
+    val sc = spark.sparkContext
+    val textFile = sc.textFile(filePath)
+    //filter word.isEmpty eliminats white space words
+    val wordCount = textFile.flatMap(line=>line.split(" ")).filter(word => !word.isEmpty).map(word=>(word,1)).reduceByKey((a,b)=>a+b)
+    val wordDF=wordCount.map(atts=>wordFile(atts._1,atts._2.toInt,fileName)).toDF("word_name","word_count","file_name")
+    return wordDF
+  }
+
+  /*
+  * This function take a dir path, return a list of files in this dir*/
+  def getFileList(fileDir:String):List[File]={
+    val dir = new File(fileDir)
+    if(dir.exists() && dir.isDirectory){
+      val fileList=dir.listFiles().filter(file=>file.getName.startsWith("0ws")).toList
+      return fileList
+    }
+    else null
+  }
+
+}
+
+</file>
+
+With this you can write a parquet file which contains the dataframe.
+
+===== Analysis of the dataframe =====
+
+Open a spark shell
+
+<code>
+#load the parquet file
+scala> import spark.implicits._
+import spark.implicits._
+
+scala> val wordCountDF=spark.read.parquet("/tmp/parquet")
+wordCountDF: org.apache.spark.sql.DataFrame = [word_name: string, word_count: int ... 1 more field]
+
+scala> wordCountDF.show(10)
++--------------+----------+-----------+
+|     word_name|word_count|  file_name|
++--------------+----------+-----------+
+|  University".|         1|0ws2610.txt|
+|Beere-barrell?|         1|0ws2610.txt|
+|           Let|        39|0ws2610.txt|
+|        stuck,|         1|0ws2610.txt|
+|         rites|         1|0ws2610.txt|
+|     instance,|         1|0ws2610.txt|
+|     felicitie|         1|0ws2610.txt|
+|    Obseruers,|         1|0ws2610.txt|
+|        Amber,|         1|0ws2610.txt|
+|        secure|         2|0ws2610.txt|
++--------------+----------+-----------+
+only showing top 10 rows
+
+# Get the most popular word
+wordCountDF.orderBy($"word_count".desc).show(10)
++---------+----------+-----------+                                              
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|      the|       997|0ws2310.txt|
+|      the|       952|0ws2610.txt|
+|      the|       939|0ws2110.txt|
+|      the|       935|0ws0210.txt|
+|      the|       933|0ws0410.txt|
+|      the|       865|0ws3610.txt|
+|      the|       854|0ws1910.txt|
+|      and|       849|0ws2310.txt|
+|      the|       831|0ws1210.txt|
+|      the|       831|0ws1810.txt|
++---------+----------+-----------+
+
+</code>
+
+You can notice that, the most used word is the, it did not give you any useful info.
+
+So we want to eliminate this kind of noise word
+
+<code>
+scala> wordCountDF.filter($"word_name"=!="the").orderBy($"word_count".desc).show(10)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|      and|       849|0ws2310.txt|
+|        I|       830|0ws3210.txt|
+|        I|       780|0ws2010.txt|
+|       of|       753|0ws2310.txt|
+|        I|       710|0ws3010.txt|
+|      and|       693|0ws2110.txt|
+|       to|       692|0ws0410.txt|
+|        I|       689|0ws3910.txt|
+|       of|       689|0ws0410.txt|
+|       of|       678|0ws1910.txt|
++---------+----------+-----------+
+only showing top 10 rows
+
+</code>
+
+It's a little bit better, we don't see the anymore.
+
+<code>
+scala> wordCountDF.filter($"word_name"=!="the").filter($"word_name"=!="and").orderBy($"word_count".desc).show(10)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|        I|       830|0ws3210.txt|
+|        I|       780|0ws2010.txt|
+|       of|       753|0ws2310.txt|
+|        I|       710|0ws3010.txt|
+|       to|       692|0ws0410.txt|
+|        I|       689|0ws3910.txt|
+|       of|       689|0ws0410.txt|
+|       of|       678|0ws1910.txt|
+|        I|       676|0ws0410.txt|
+|        I|       674|0ws2210.txt|
++---------+----------+-----------+
+only showing top 10 rows
+
+</code>
+
+It's too hard to filter one word at a time 
+
+<code>
+scala> wordCountDF.filter(! (wordCountDF("word_name") isin ("the","and","I","to","of","a","you","my","in","is","And","that","your","not","his","it","with","this","for","he","be","The","thou","me","as","will"))).orderBy($"word_count".desc).show(20)
++---------+----------+-----------+
+|word_name|word_count|  file_name|
++---------+----------+-----------+
+|     Ham.|       337|0ws2610.txt|
+|    Iago.|       272|0ws3210.txt|
+|    Rich.|       252|0ws0410.txt|
+|     haue|       250|0ws3610.txt|
+|     haue|       212|0ws4010.txt|
+|    Cleo.|       202|0ws3510.txt|
+|     Ros.|       199|0ws2510.txt|
+|      thy|       198|0ws0410.txt|
+|     haue|       196|0ws3510.txt|
+|     Tim.|       195|0ws3710.txt|
+|     haue|       192|0ws3910.txt|
+|      thy|       191|0ws0310.txt|
+|     haue|       190|0ws2010.txt|
+|      thy|       189|0ws0910.txt|
+|     haue|       187|0ws3210.txt|
+|     haue|       186|0ws3010.txt|
+|     Oth.|       182|0ws3210.txt|
+|      our|       179|0ws2310.txt|
+|      thy|       178|0ws0210.txt|
+|    Lear.|       174|0ws3310.txt|
++---------+----------+-----------+
+only showing top 20 rows
+
+</code>
+
+Now we have some name out of the files, these name may be the main characteres of the shake spears work

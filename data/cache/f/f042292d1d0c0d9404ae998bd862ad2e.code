@@ -1,0 +1,5 @@
+# EFFICIENT
+<span class="kw1">SELECT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> Address<span class="sy0">,</span> City<span class="sy0">,</span> State<span class="sy0">,</span> Zip <span class="kw1">FROM</span> Customers
+&nbsp;
+# INEFFICIENT
+<span class="kw1">SELECT</span> <span class="sy0">*</span> <span class="kw1">FROM</span> Customers

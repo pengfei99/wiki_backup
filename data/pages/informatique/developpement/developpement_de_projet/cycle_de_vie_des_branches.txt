@@ -1,0 +1,42 @@
+====== Cycle de vie des branches ======
+
+<WRAP round todo>
+  * Finir de répondre aux questions
+  * Intégrer le script et les images de ''bzr-flow''
+</WRAP>
+
+====== Présupposés ======
+
+Le //flow// décrit ici donnera un meilleur résultat si on accepte les contraintes suivantes :
+
+  * Seul le chef de projet contrôle les branches ''trunk'', ''develop'' et ''release-X.Y.Z''
+  * Il ne peut y avoir qu'une branche ''release-X.Y.Z'' active à la fois
+  * Les branches de ''features'' démarrent toujours de ''develop'' et merge les modifications les plus récentes de celui-ci
+  * Un merge dans ''trunk'' est **toujours** synonyme de nouveau numéro de version
+
+====== Explications ======
+
+  * ''trunk'' et ''develop'' séparées\\ car les fonctionnalités sont incluses au fur et à mesure dans ''develop'' puis d'un coup dans ''trunk''. En les gardant distinctes, on évite d'avoir le cas ou quelqu'un branchant depuis ''trunk'' n'aurait qu'un partie de fonctionnalités, et donc un outil pas utilisable.
+  * merge de ''develop'' dans ''trunk'' (et pas push)\\ car c'est plus joli et logique dans l'historique, et que cela évite le problème de fonctionnalités manquante évoqué ci-dessus.
+  * créer les branches ''feature-X'' à partir de ''develop'' (et pas de ''trunk'')\\ cela permet aux développements commencés après l'intégration d'une feature du sprint de commencer avec le nouveau code, ce qui évitera une possible résolution de conflit ultérieure.
+  * faire un double merge quand on merge les ''features'' dans ''develop''\\ car cela permet d'intégrer le code des features intégrés avant.
+  * mettre à jour (push) ''develop'' après chaque release\\ car si on fait un merge, ben c'est moche dans l'historique !
+
+====== Questions ======
+
+  * Peut-il y avoir plusieurs branches de release en parallèle ?
+  * Pourquoi créer une branche de release ?
+  * Comment intégrer les ''hotfix'' à une ancienne release toujours maintenue ?
+  * Pour corriger un bug, où faire démarrer la branche ?\\ (Cela se fait en branchant de ''master/develop'' en précisant ''-r 1.3.2'' pour atteindre les révisions imbriquées.)
+    * Depuis ''master'', après la release qui introduit le problème ;
+    * Depuis ''develop'', après le merge de la feature problématique ;
+    * Depuis ''feature'', juste après l'introduction du bug.
+    
+
+====== Sources ======
+
+Inspiré de ++ "A successful Git branching model" |\\ 
+{{:informatique:logiciels:git-model_2x.png?nolink&600}}\\ 
+[[http://nvie.com/posts/a-successful-git-branching-model]]++
+
+C'est assez différent de [[https://help.launchpad.net/Projects/SeriesMilestonesReleases|la méthode Launchpad]].

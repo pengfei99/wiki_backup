@@ -1,0 +1,322 @@
+
+<h1 class="sectionedit1" id="lesson09sql_query_optimization">Lesson09: SQL query optimization</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson09: SQL query optimization&quot;,&quot;hid&quot;:&quot;lesson09sql_query_optimization&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-48&quot;} -->
+<h2 class="sectionedit2" id="general_sql_query_optimization">9.1 General sql query optimization</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.1 General sql query optimization&quot;,&quot;hid&quot;:&quot;general_sql_query_optimization&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;49-96&quot;} -->
+<h3 class="sectionedit3" id="select_fields_instead_of_select">9.1.1 Select fields instead of select *</h3>
+<div class="level3">
+<pre class="code sql"># EFFICIENT
+<span class="kw1">SELECT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> Address<span class="sy0">,</span> City<span class="sy0">,</span> State<span class="sy0">,</span> Zip <span class="kw1">FROM</span> Customers
+&nbsp;
+# INEFFICIENT
+<span class="kw1">SELECT</span> <span class="sy0">*</span> <span class="kw1">FROM</span> Customers</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.1.1 Select fields instead of select *&quot;,&quot;hid&quot;:&quot;select_fields_instead_of_select&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;97-287&quot;} -->
+<h3 class="sectionedit4" id="select_more_fields_to_avoid_select_distinct">9.1.2 Select more fields to avoid select distinct</h3>
+<div class="level3">
+<pre class="code sql"># Inefficient <span class="kw1">AND</span> inaccurate<span class="sy0">,</span> because doesn’t account <span class="kw1">FOR</span> multiple people <span class="kw1">IN</span> the same state <span class="kw1">HAVING</span> the same <span class="kw1">FIRST</span> <span class="kw1">AND</span> <span class="kw1">LAST</span> name<span class="sy0">.</span>
+<span class="kw1">SELECT</span> <span class="kw1">DISTINCT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> State <span class="kw1">FROM</span> Customers
+&nbsp;
+<span class="kw1">SELECT</span> FirstName<span class="sy0">,</span> LastName<span class="sy0">,</span> Address<span class="sy0">,</span> City<span class="sy0">,</span> State<span class="sy0">,</span> Zip <span class="kw1">FROM</span> Customers</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.1.2 Select more fields to avoid select distinct&quot;,&quot;hid&quot;:&quot;select_more_fields_to_avoid_select_distinct&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;288-627&quot;} -->
+<h3 class="sectionedit5" id="create_joins_with_inner_join_rather_than_where">9.1.3  Create Joins with INNER JOIN Rather than WHERE</h3>
+<div class="level3">
+<pre class="code sql"># The below query <span class="kw1">CREATE</span> a <span class="kw1">CROSS</span> <span class="kw1">JOIN</span> <span class="br0">&#40;</span>catesian product<span class="br0">&#41;</span> <span class="kw1">ON</span> two <span class="kw1">TABLES</span> <span class="kw1">THEN</span> <span class="kw1">FILTER</span> the <span class="kw1">RESULT</span> <span class="kw1">WITH</span> the <span class="kw1">WHERE</span> clause
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> Sales<span class="sy0">.</span>LastSaleDate
+<span class="kw1">FROM</span> Customers<span class="sy0">,</span> Sales
+<span class="kw1">WHERE</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+&nbsp;
+# The <span class="kw1">INNER</span> <span class="kw1">JOIN</span> will <span class="kw1">FILTER</span> the <span class="kw1">RESULT</span> while doing <span class="kw1">INNER</span> <span class="kw1">JOIN</span>
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> Sales<span class="sy0">.</span>LastSaleDate
+<span class="kw1">FROM</span> Customers
+   <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales
+   <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.1.3  Create Joins with INNER JOIN Rather than WHERE&quot;,&quot;hid&quot;:&quot;create_joins_with_inner_join_rather_than_where&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;628-1169&quot;} -->
+<h3 class="sectionedit6" id="use_where_instead_of_having_to_define_filters">9.1.4 Use WHERE instead of HAVING to Define Filters</h3>
+<div class="level3">
+
+<p>
+Similarly to the above mentioend concept, the goal of an efficient query is to pull only the required records from the database. Per the SQL Order of Operations, HAVING statements are calculated after WHERE statements. If the intent is to filter a query based on conditions, a WHERE statement is more efficient
+</p>
+
+<p>
+For example, let’s assume 200 sales have been made in the year 2016, and we want to query for the number of sales per customer in 2016.
+</p>
+<pre class="code sql"># The below query would pull <span class="nu0">1</span><span class="sy0">,</span>000 sales records <span class="kw1">FROM</span> the Sales <span class="kw1">TABLE</span><span class="sy0">,</span> <span class="kw1">THEN</span> <span class="kw1">FILTER</span> <span class="kw1">FOR</span> the <span class="nu0">200</span> records generated <span class="kw1">IN</span> the <span class="kw1">YEAR</span> <span class="nu0">2016</span><span class="sy0">,</span> <span class="kw1">AND</span> finally <span class="kw1">COUNT</span> the records <span class="kw1">IN</span> the <span class="kw1">DATA</span> <span class="kw1">SET</span>
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span>
+<span class="kw1">FROM</span> Customers
+   <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales
+   <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+<span class="kw1">GROUP</span> <span class="kw1">BY</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name
+<span class="kw1">HAVING</span> Sales<span class="sy0">.</span>LastSaleDate <span class="kw1">BETWEEN</span> #<span class="nu0">1</span><span class="sy0">/</span><span class="nu0">1</span><span class="sy0">/</span><span class="nu0">2016</span># <span class="kw1">AND</span> #<span class="nu0">12</span><span class="sy0">/</span><span class="nu0">31</span><span class="sy0">/</span><span class="nu0">2016</span>#
+&nbsp;
+# <span class="kw1">IN</span> comparison<span class="sy0">,</span> <span class="kw1">WHERE</span> clauses <span class="kw1">LIMIT</span> the <span class="kw1">NUMBER</span> <span class="kw1">OF</span> records pulled<span class="sy0">,</span> it will <span class="kw1">ONLY</span> pull the <span class="nu0">200</span> records <span class="kw1">FROM</span> the <span class="kw1">YEAR</span> <span class="nu0">2016</span>
+<span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span>
+<span class="kw1">FROM</span> Customers 
+  <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales
+  <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+<span class="kw1">WHERE</span> Sales<span class="sy0">.</span>LastSaleDate <span class="kw1">BETWEEN</span> #<span class="nu0">1</span><span class="sy0">/</span><span class="nu0">1</span><span class="sy0">/</span><span class="nu0">2016</span># <span class="kw1">AND</span> #<span class="nu0">12</span><span class="sy0">/</span><span class="nu0">31</span><span class="sy0">/</span><span class="nu0">2016</span>#
+<span class="kw1">GROUP</span> <span class="kw1">BY</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name</pre>
+
+<p>
+<strong>HAVING</strong> should only be used when filtering on an aggregated field. In the query above, we could additionally filter for customers with greater than 5 sales using a HAVING statement.
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name<span class="sy0">,</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span>
+<span class="kw1">FROM</span> Customers
+   <span class="kw1">INNER</span> <span class="kw1">JOIN</span> Sales 
+   <span class="kw1">ON</span> Customers<span class="sy0">.</span>CustomerID <span class="sy0">=</span> Sales<span class="sy0">.</span>CustomerID
+<span class="kw1">WHERE</span> Sales<span class="sy0">.</span>LastSaleDate <span class="kw1">BETWEEN</span> #<span class="nu0">1</span><span class="sy0">/</span><span class="nu0">1</span><span class="sy0">/</span><span class="nu0">2016</span># <span class="kw1">AND</span> #<span class="nu0">12</span><span class="sy0">/</span><span class="nu0">31</span><span class="sy0">/</span><span class="nu0">2016</span>#
+<span class="kw1">GROUP</span> <span class="kw1">BY</span> Customers<span class="sy0">.</span>CustomerID<span class="sy0">,</span> Customers<span class="sy0">.</span>Name
+<span class="kw1">HAVING</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span>Sales<span class="sy0">.</span>SalesID<span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu0">5</span></pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.1.4 Use WHERE instead of HAVING to Define Filters&quot;,&quot;hid&quot;:&quot;use_where_instead_of_having_to_define_filters&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;1170-3002&quot;} -->
+<h2 class="sectionedit7" id="create_indexes_but_do_it_wisely">9.2 Create indexes, but do it wisely</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.2 Create indexes, but do it wisely&quot;,&quot;hid&quot;:&quot;create_indexes_but_do_it_wisely&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;3003-3053&quot;} -->
+<h3 class="sectionedit8" id="one_index_per_table">9.2.1 One Index per table</h3>
+<div class="level3">
+
+<p>
+As a general rule of thumb, MySQL/Postgresql can only use one index for each table in the query. Therefore, there is no point in creating more than one index for each query. Preferably, same indexes should match as many of the queries as possible, as it will reduce the load on the database when inserting or updating data (which requires updating the indexes as well).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.2.1 One Index per table&quot;,&quot;hid&quot;:&quot;one_index_per_table&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;3054-3461&quot;} -->
+<h3 class="sectionedit9" id="create_the_index_on_the_most_often_queried_column">9.2.2 Create the index on the most often queried column</h3>
+<div class="level3">
+
+<p>
+Which column you choose when you create indexes is the first question you need to ask. It depends on which kind of SQL queries and which column it access.
+</p>
+
+<p>
+In general, when creating an index, the most important parts are the <strong>equality conditions</strong> in the <strong>WHERE</strong> and <strong>JOIN</strong> conditions of your SQL queries. In most cases, conditions such as name = ‘John’ will allow the database to filter most of the rows from the table and go through a small amount of rows to return the required results. Therefore, we should start indexing by adding these columns to the index.
+</p>
+
+<p>
+Then, you should look into the <strong>range conditions</strong>, but you should only add one of them – the most selective one, as MySQL can’t handle more of them. In some cases when there are no range conditions, it makes sense to add the GROUP BY / ORDER BY columns, assuming the ordering is done in only one direction (ASC / DESC).
+</p>
+
+<p>
+In some cases, it also makes sense to create a separate index that contains the ORDER BY clause’s columns, as MySQL sometimes chooses to use it. Please note though that for this to happen, the index should contain all columns from the ORDER BY clause and they should all be specified with the same order (ASC / DESC). This doesn’t guarantee that the database’s optimizer will pick this index rather than the other compound indexes, but it’s worth a try.
+</p>
+
+</div>
+
+<h4 id="examples">Examples</h4>
+<div class="level4">
+
+<p>
+Suppose we have the following query as the most frequently used queries
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> id<span class="sy0">,</span> first_name<span class="sy0">,</span> last_name<span class="sy0">,</span> age <span class="kw1">FROM</span> employees <span class="kw1">WHERE</span> first_name <span class="sy0">=</span> ‘John’ <span class="kw1">AND</span> last_name <span class="sy0">=</span> ‘Brack’ <span class="kw1">AND</span> age <span class="sy0">&gt;</span> <span class="nu0">25</span> <span class="kw1">ORDER</span> <span class="kw1">BY</span> age <span class="kw1">ASC</span>;</pre>
+
+<p>
+For this query, we’ll start with adding the columns first_name and last_name, which are compared with an equality operator. Then, we’ll add the age column which is compared with a range condition. No need to have the ORDER BY clause indexed here, as the age column is already in the index. Last but not least, we’ll add id from the SELECT clause to the index to have a covering index.
+</p>
+
+<p>
+So to index this query properly, you should add the index:
+</p>
+<pre class="code">create index pri_index on employees (first_name, last_name, age, id).;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.2.2 Create the index on the most often queried column&quot;,&quot;hid&quot;:&quot;create_the_index_on_the_most_often_queried_column&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:9,&quot;range&quot;:&quot;3462-5684&quot;} -->
+<h3 class="sectionedit10" id="not_to_do_when_indexing">9.2.3 Not to do when indexing</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="indexing_each_and_every_column_in_the_table_separately">Indexing each and every column in the table separately</h4>
+<div class="level4">
+
+<p>
+In most cases, MySQL won’t be able to use more than one index for each table in the query.
+</p>
+
+<p>
+Therefore, when creating a separate index for each column in the table, the database is bound to perform only one of the search operations using an index, and the rest of them will be significantly slower, as the database can’t use an index to execute them.
+</p>
+
+<p>
+We recommend using compound indexes (explained later in this article) rather than single-column indexes.
+</p>
+
+</div>
+
+<h4 id="the_or_operator_in_filtering_conditions">The OR operator in filtering conditions</h4>
+<div class="level4">
+
+<p>
+Consider this query:
+SELECT a, b FROM tbl WHERE a = 3 OR b = 8.
+</p>
+
+<p>
+In many cases, MySQL won’t be able to use an index to apply an OR condition, and as a result, this query is not <strong>indexable</strong>.
+</p>
+
+<p>
+Therefore, we recommend to avoid such OR conditions and consider splitting the query to two parts, combined with a UNION DISTINCT (or even better, UNION ALL, in case you know there won’t be any duplicate results)
+</p>
+
+</div>
+
+<h4 id="adding_redundant_indexes">Adding redundant indexes</h4>
+<div class="level4">
+
+<p>
+Indexes are magnificent when trying to optimize your SQL queries and they can improve performance significantly.
+</p>
+
+<p>
+But, they come with a downside as well. Each index you’re creating should be kept updated and in sync when changes occur in your databases. So for each INSERT / UPDATE / DELETE in your databases, all relevant indexes should be updated. This update can take some time, especially with large tables/indexes.
+</p>
+
+<p>
+Therefore, do not create indexes unless you know you’ll need them.
+</p>
+
+<p>
+Also, we highly recommend analyzing your database once in a while, searching for any redundant indexes that can be removed.
+</p>
+
+</div>
+
+<h4 id="the_order_of_columns_in_an_index_is_important">The order of columns in an index is important</h4>
+<div class="level4">
+
+<p>
+Let’s say I hand you my contacts phone book which is ordered by the contact’s first name and ask you to count how many people are there named “John” in the book. You’ll grab the book in both hands and say “no problem”. You will navigate to the page that holds all names starting with John, and start counting from there.
+</p>
+
+<p>
+Now, let’s say I change the assignment and hand you a phone book that is ordered by the contact’s last name, but ask you to still count all contacts with the first name “John”. How would you approach that? Well, the database scratches his head in this situation as well.
+</p>
+
+<p>
+Now lets look at an SQL query to demonstrate the same behavior with the MySQL optimizer:
+SELECT first_name, last_name FROM contacts WHERE first_name = ‘John’;
+</p>
+
+<p>
+Having the index contacts (first_name, last_name) is ideal here, because the index starts with our filtering condition and ends with another column in the SELECT clause.
+</p>
+
+<p>
+But, having the reverse index contacts (last_name, first_name) is rather useless, as the database can’t use the index for filtering, as the column we need is second in the index and not first.
+</p>
+
+<p>
+The conclusion from this example is that the order of columns in an index is rather important.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.2.3 Not to do when indexing&quot;,&quot;hid&quot;:&quot;not_to_do_when_indexing&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;5685-8659&quot;} -->
+<h2 class="sectionedit11" id="change_your_query_to_use_the_existing_indexes">9.3 Change your query to use the existing indexes</h2>
+<div class="level2">
+
+<p>
+You should use the explain command to see, if your query use the indexes or not. Becuase, in general, a lot of query will make your database don&#039;t use your index. Below are some examples.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.3 Change your query to use the existing indexes&quot;,&quot;hid&quot;:&quot;change_your_query_to_use_the_existing_indexes&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:11,&quot;range&quot;:&quot;8660-8911&quot;} -->
+<h3 class="sectionedit12" id="avoid_wrapping_indexed_columns_with_functions">9.3.1 Avoid wrapping indexed columns with functions</h3>
+<div class="level3">
+
+<p>
+Consider this query, which counts the number of hot dogs purchased in the US on 2018. Just in case you’re curious, 18,000,000,000 hot dogs were sold in the US in 2018.
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#41;</span> <span class="kw1">FROM</span> us_hotdog_purchases <span class="kw1">WHERE</span> <span class="kw1">YEAR</span><span class="br0">&#40;</span>purchase_time<span class="br0">&#41;</span> <span class="sy0">=</span> ‘<span class="nu0">2018</span>’</pre>
+
+<p>
+As you can see, we are using the YEAR function to grab the year part from the purchase_time column. This function call will prevent the database from being able to use an index for the purchase_time column search, because we <strong>indexed the value of purchase_time, but not the return value of YEAR(purchase_time)</strong>.
+</p>
+
+<p>
+The following query will return the same result, but with the help of index
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#41;</span> <span class="kw1">FROM</span> us_hotdog_purchases <span class="kw1">WHERE</span> purchased_at <span class="sy0">&gt;=</span> ‘<span class="nu0">2018</span><span class="sy0">-</span>01<span class="sy0">-</span>01’ <span class="kw1">AND</span> purchased_at <span class="sy0">&lt;</span> ‘<span class="nu0">2019</span><span class="sy0">-</span>01<span class="sy0">-</span>01’</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.3.1 Avoid wrapping indexed columns with functions&quot;,&quot;hid&quot;:&quot;avoid_wrapping_indexed_columns_with_functions&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:12,&quot;range&quot;:&quot;8912-9773&quot;} -->
+<h3 class="sectionedit13" id="avoid_or_conditions">9.3.2 Avoid Or conditions</h3>
+<div class="level3">
+
+<p>
+Consider this query, which selects the amount of posts on Facebook posted after new year’s eve, or posted by a user named Mark.
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> <span class="kw1">COUNT</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#41;</span> <span class="kw1">FROM</span> fb_posts <span class="kw1">WHERE</span> username <span class="sy0">=</span> ‘Mark’ <span class="kw1">OR</span> post_time <span class="sy0">&gt;</span> ‘<span class="nu0">2018</span><span class="sy0">-</span>01<span class="sy0">-</span>01’</pre>
+
+<p>
+Having an index on both the username and post_time columns might sound helpful, but in most cases, the database won’t use it, at least not in full. The reason will be the connection between the two conditions – the OR operator, which makes the database fetch the results of each part of the condition separately.
+</p>
+
+<p>
+An alternative way to look at this query can be to ‘split’ the OR condition and ‘combine’ it using a UNION clause. This alternative will allow you to index each of the conditions separately, so the database will use the indexes to search for the results and then combine the results with the UNION clause.
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> …
+<span class="kw1">FROM</span> …
+<span class="kw1">WHERE</span> username <span class="sy0">=</span> ‘Mark’
+    <span class="kw1">UNION</span>
+<span class="kw1">SELECT</span> …
+<span class="kw1">FROM</span> …
+<span class="kw1">WHERE</span> post_time <span class="sy0">&gt;</span> ‘<span class="nu0">2018</span><span class="sy0">-</span>01<span class="sy0">-</span>01’</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.3.2 Avoid Or conditions&quot;,&quot;hid&quot;:&quot;avoid_or_conditions&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;9774-10817&quot;} -->
+<h3 class="sectionedit14" id="avoid_sorting_with_a_mixed_order">9.3.3 Avoid sorting with a mixed order</h3>
+<div class="level3">
+
+<p>
+Consider this query, which selects all posts from Facebook and sorts them by the username in ascending order, and then by the post date in descending order.
+</p>
+<pre class="code">SELECT username, post_type FROM fb_posts ORDER BY username ASC, post_type DESC</pre>
+
+<p>
+MySQL (and so many other relational databases), cannot use indexes when sorting with a mixed order (both ASC and DESC in the same ORDER BY clause). This changed with the release of the reversed indexes functionality and MySQL 8.x.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.3.3 Avoid sorting with a mixed order&quot;,&quot;hid&quot;:&quot;avoid_sorting_with_a_mixed_order&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:14,&quot;range&quot;:&quot;10818-11352&quot;} -->
+<h3 class="sectionedit15" id="avoid_like_searches_with_prefix_wildcards">9.3.4 Avoid LIKE searches with prefix wildcards</h3>
+<div class="level3">
+
+<p>
+Consider this query, which searches all Facebook posts from a username which includes the string ‘Mar’, so we are searching for all posts written by users named Mark, Marcus, Almar, etc.
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> <span class="sy0">*</span> <span class="kw1">FROM</span> fb_posts <span class="kw1">WHERE</span> username <span class="kw1">LIKE</span> ‘%Mar%’;</pre>
+
+<p>
+Having a wildcard ‘%’ at the beginning of the pattern will prevent the database from using an index for this column’s search. Such searches can take a while.
+</p>
+
+<p>
+In this case, there are two options to improve this query’s performance. The first one is trivial – consider whether the prefix wildcard is important enough. If you can manage without it, get rid of it.
+</p>
+
+<p>
+Another option will be to use full-text indexes(create compound index on all columns). Please note though, that these indexes and the MATCH … AGAINST syntax isn’t free from challenges and has some differences when compared to the familiar LIKE expressions in MySQL.
+</p>
+
+<p>
+Note that: use wildcards at the end of o phrase is acceptable. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9.3.4 Avoid LIKE searches with prefix wildcards&quot;,&quot;hid&quot;:&quot;avoid_like_searches_with_prefix_wildcards&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:15,&quot;range&quot;:&quot;11353-&quot;} -->

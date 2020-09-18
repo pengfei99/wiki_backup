@@ -1,0 +1,132 @@
+
+<h1 class="sectionedit1" id="vm_d_analyse_utec2">VM d&#039;analyse UTEC2</h1>
+<div class="level1">
+
+<p>
+<strong>Adresses IP : </strong> 172.17.6.4 <strong>IP Publique : </strong> 134.158.245.56
+</p>
+
+<p>
+<strong>Infrastructure : </strong> OpenStack CC
+</p>
+
+<p>
+<strong>Image de base : </strong> CentOS7
+</p>
+
+<p>
+<strong>Rôle de déployement Ansible : </strong> server, rnaseq
+</p>
+
+<p>
+<strong>Tenant Open Stack : </strong> htc-bioaster
+</p>
+
+<p>
+<strong>Point de montage GPFS : </strong> /mnt/gpfs
+</p>
+
+<p>
+<strong>Serveur NFS : </strong> ccdtli94
+</p>
+
+<p>
+<strong>Flavor : </strong> htc.bioaster.2 (16 VCPUs,Root Disk 40 <abbr title="Guillaume Boissy">GB</abbr>, Ephemeral Disk 300 <abbr title="Guillaume Boissy">GB</abbr>, RAM 128 <abbr title="Guillaume Boissy">GB</abbr>)
+</p>
+
+<p>
+<strong>Ephemeral : </strong> Monté sur /scratch
+</p>
+
+<p>
+<strong>Configuration du rôle : </strong>
+</p>
+<pre class="code">---
+
+nfs_mount_port: 664
+nfs_server: ccdtli94
+gpfs_path: /sps/bioaster
+nfs_dest_path: /mnt/bioaster
+
+yum_update_option: security
+updater_email: &quot;{{ inventory_hostname }}@bioaster.org&quot;
+admin_email: admin@bioaster.org
+smtp_server: localhost
+
+system_groups:
+  - { name: bioaster, gid: 1072 }
+
+# Only to add those key to ansible_ssh_user
+admins:
+  - pveyre
+  - cauchard
+  - celie
+
+system_users:
+  - { name: &quot;pveyre&quot;, comment: &quot;Pierre VEYRE&quot;, uid: 40639,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - { name: &quot;cauchard&quot;, comment: &quot;Audrey CAUCHARD&quot;, uid: 42158,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - { name: &quot;biodata&quot;, comment: &quot;Utilisateur pour l&#039;acces aux donnees&#039;&quot;, uid: 42605,
+      groups: &quot;bioaster&quot;, password: none }
+  - { name: &quot;celie&quot;, comment: &quot;Celine Elie&quot;, uid: 42555,
+      groups: &quot;adm,wheel,bioaster&quot;, password: none }
+  - { name: &quot;ttran&quot;, comment: &quot;TRAN Trang&quot;, uid: 42236,
+      groups: &quot;wheel,bioaster&quot;, password: none }
+  - { name: &quot;jbecker&quot;, comment: &quot;BECKER Jeremie&quot;, uid: 42530,
+      groups: &quot;wheel,bioaster&quot;, password: none }
+</pre>
+
+<p>
+<strong>Remarques : </strong>
+</p>
+
+<p>
+<strong>Logiciels installés : </strong>
+</p>
+
+<p>
+Cutadapt-1.8.3
+FastQC v0.11.3
+Snakemake v3.4.1
+Qualimap v2.1.1
+Prinseq-lite v0.20.4
+Tophat v2.1.0
+STAR v2.4.2
+Sratoolkit v2.5.2
+Seqtk
+Bedtools v2.17.0
+deepTools
+Samtools 0.1.19 
+Htmldoc 1.8.28 
+Ghostscript 9.07
+Ps2pdf 
+Enscript 1.6.6
+bowtie2 2.2.1
+fastx-toolkit 0.0.13
+subread package v1.4.6
+R 3.2.2
+HTSeq0.6.1
+</p>
+
+</div>
+<!-- EDIT1 SECTION "VM d'analyse UTEC2" [1-1936] -->
+<h2 class="sectionedit2" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2015.11.06 (pv)</strong> Instanciation</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.01.12 (pv)</strong> Augmentation des ressources (coeur + disque)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.01.14 (pv)</strong> Snapshot effectué</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.03.09 (pv)</strong> Ajout de 300 Go de disque ephemeral monté (manuellement) sur /scratch</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.07.25 (pv)</strong> Installation de Xfce et X2go cf <a href="https://wiki.bioaster.org/informatique/centos_xfce_x2go" class="urlextern" title="https://wiki.bioaster.org/informatique/centos_xfce_x2go"  rel="nofollow"> procédure install</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.10.31 (pv)</strong> Snapshot réalisé (Nom : utec02_rnaseq_31-10-2016)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Journal" [1937-] -->

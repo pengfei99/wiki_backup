@@ -1,0 +1,206 @@
+
+<h1 class="sectionedit1" id="run_python_web_app_with_apache_mod_wsgi">Run python web app with apache mod wsgi</h1>
+<div class="level1">
+
+<p>
+0. You need to disable selinux to make this work
+</p>
+
+<p>
+<code>vim /etc/sysconfig/selinux</code>
+</p>
+
+<p>
+and change the line to SELINUX=disabled
+</p>
+
+<p>
+1. Get the wsgi_mod source
+</p>
+<pre class="code">Under centos 7 you have to compile the module by yourself.
+
+You can find the tar ball of wsgi in https://github.com/GrahamDumpleton/mod_wsgi/releases
+
+Download the version you want. Then untar it.
+
+For example, I choose mod_wsgi-4.5.7, it will donwload 4.5.7.tar.gz .</pre>
+<pre class="code">wget https://github.com/GrahamDumpleton/mod_wsgi/archive/4.5.7.tar.gz
+tar -xzvf 4.5.7.tar.gz
+cd mod_wsgi-4.5.7</pre>
+
+<p>
+2. Build the wsgi_mod.so
+</p>
+
+<p>
+Befor you compile it, you need to build the dependencies. 
+</p>
+<pre class="code">$ ./configure --with-apxs=/usr/bin/apxs --with-python=/path/to/your/python
+
+#In my case, it looks like this
+
+./configure --with-apxs=/etc/apache2/bin/apxs --with-python=/home/pliu/.pyenv/versions/3.5.1/bin/python
+
+
+$ make &amp; make install
+
+</pre>
+
+<p>
+If you can&#039;t find apxs , you need to install package httpd-devel
+</p>
+
+<p>
+<code>yum install httpd-devel</code>
+</p>
+
+<p>
+3. Put the generated wsgi_mode.so into /etc/httpd/modules/
+</p>
+<pre class="code"> In folder conf.modules.d, put &#039;&#039;LoadModule wsgi_module modules/mod_wsgi.so&#039;&#039;
+ </pre>
+
+<p>
+4. Add apche conf for your django app, you need to specify not only your app location, but also your virtual env location. You also need to make sure apache has to right to access and execute these files
+</p>
+<pre class="code">WSGIScriptAlias /django /var/www/mysite/mysite/wsgi.py
+WSGIPythonPath /var/www/mysite:/var/www/vir_env/noe_vir_env/lib/python3.5/site-packages
+
+&lt;Directory /var/www/mysite/mysite&gt;
+&lt;Files wsgi.py&gt;
+Require all granted
+&lt;/Files&gt;
+
+    Order allow,deny
+    Allow from all
+
+&lt;/Directory&gt;
+
+&lt;Location /django/polls&gt;
+  AuthType shibboleth
+  Require shibboleth
+&lt;/Location&gt;
+  </pre>
+
+<p>
+If your django run in a gunicorn and use apache as front end
+</p>
+
+<p>
+The apache conf should looks like this
+</p>
+<pre class="code">&lt;VirtualHost *:80&gt;
+    ServerName noe-dev.bioaster.org
+    Redirect permanent / https://noe-dev.bioaster.org/
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:443&gt;
+    ServerName noe-dev.bioaster.org
+    
+    SSLEngine       on
+    #SSLProtocol all -SSLv2
+    #SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+    SSLCertificateFile /etc/pki/tls/certs/noe-dev.bioaster.org.crt
+    SSLCertificateKeyFile /etc/pki/tls/private/noe-dev.bioaster.org.key
+    SSLCertificateChainFile    /etc/pki/tls/certs/intermediate.crt
+
+    Alias /static/ /var/www/NoE/static/
+    Alias /media/ /var/www/NoE/media/
+    ProxyPass /static/ !
+    ProxyPass /media !
+    ProxyPass /Shibboleth.sso/Login !
+    ProxyPass /secure !
+    ProxyPass / http://localhost:8000/
+    ProxyPassReverse / http://localhost:8000/
+
+    &lt;Location /&gt;
+        AuthType shibboleth
+        Require shibboleth
+        ShibUseHeaders On
+        AddDefaultCharset utf-8
+    &lt;/Location&gt;
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>
+5. Clean after Build
+</p>
+
+<p>
+To cleanup after installation, run:
+</p>
+
+<p>
+<code>make clean</code>
+</p>
+
+<p>
+If you need to build the module for a different version of Apache, you should run:
+</p>
+
+<p>
+<code>make distclean</code>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Run python web app with apache mod wsgi" [1-3032] -->
+<h1 class="sectionedit2" id="install_python35u-mod_wsgi_via_repo_ius">Install python35u-mod_wsgi via repo IUS</h1>
+<div class="level1">
+
+<p>
+1. You need to install repo epel first
+</p>
+
+<p>
+2. install repo IUS
+</p>
+<pre class="code">sudo yum install https://$(rpm -E &#039;%{?centos:centos}%{!?centos:rhel}%{rhel}&#039;).iuscommunity.org/ius-release.rpm</pre>
+
+<p>
+3. install the wsgi
+</p>
+<pre class="code">yum install python35u-mod_wsgi</pre>
+
+<p>
+This will use standard filesystem locations to work with stock Apache HTTPD 2.4.
+</p>
+<pre class="code">/etc/httpd/conf.modules.d/10-wsgi-python3.5.conf
+/usr/lib64/httpd/modules/mod_wsgi_python3.5.so</pre>
+
+</div>
+<!-- EDIT2 SECTION "Install python35u-mod_wsgi via repo IUS" [3033-3536] -->
+<h2 class="sectionedit3" id="check_installed_httpd_module">check installed httpd module</h2>
+<div class="level2">
+<pre class="code">#debian
+apache2ctl -M
+
+#centos 7
+httpd -M</pre>
+
+<p>
+It should show something like this
+</p>
+<pre class="code">Loaded Modules:
+ core_module (static)
+ so_module (static)
+ http_module (static)
+ access_compat_module (shared)
+ actions_module (shared)
+  ...</pre>
+
+<p>
+To remove the package and repo
+</p>
+<pre class="code">#remove package
+[root@localhost yum.repos.d]# yum remove python35u-mod_wsgi.x86_64 
+
+#remove ius repo
+[root@localhost yum.repos.d]# rpm -qf /etc/yum.repos.d/ius.repo
+ius-release-1.0-15.ius.centos7.noarch
+[root@localhost yum.repos.d]# rpm -qf /etc/yum.repos.d/ius-archive.repo 
+ius-release-1.0-15.ius.centos7.noarch
+[root@localhost yum.repos.d]# rpm -qf /etc/yum.repos.d/ius-dev.repo 
+ius-release-1.0-15.ius.centos7.noarch</pre>
+
+</div>
+<!-- EDIT3 SECTION "check installed httpd module" [3537-] -->

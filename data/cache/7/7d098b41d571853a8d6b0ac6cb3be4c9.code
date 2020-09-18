@@ -1,0 +1,10 @@
+<span class="kw2">use</span> AppBundle\Entity\Question<span class="sy0">;</span>
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="co4">/**
+ * @Route(&quot;/{id}&quot;)
+ */</span>
+<span class="kw2">public</span> <span class="kw2">function</span> showAction<span class="br0">&#40;</span>Question <span class="re0">$question</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">render</span><span class="br0">&#40;</span><span class="st_h">'post/results.html.twig'</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'question'</span> <span class="sy0">=&gt;</span> <span class="re0">$question</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>

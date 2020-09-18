@@ -1,0 +1,3 @@
+<span class="kw2">mv</span> vendor vendorTMP
+<span class="co0"># ou bien rm -rf vendor si vous êtes un(e) ouf !</span>
+<span class="kw2">scp</span> <span class="re5">-r</span> <span class="re5">-p</span> vendor<span class="sy0">/</span> bioaster<span class="sy0">@</span>biospecimens-<span class="nu0">15</span>.bioaster.org:<span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf <span class="co0"># sur la machine locale !!!</span>

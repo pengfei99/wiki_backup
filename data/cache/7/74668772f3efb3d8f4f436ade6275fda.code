@@ -1,0 +1,4 @@
+$ composer install
+$ php app/console doctrine:migrations:migrate
+$ php app/console assetic:dump
+$ phpunit -c app # ou quelque chose dans le genre

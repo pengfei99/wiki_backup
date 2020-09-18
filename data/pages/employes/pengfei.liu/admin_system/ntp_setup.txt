@@ -1,0 +1,82 @@
+====== Network time protocol (NTP) ======
+
+For many security service, we need to use NTP server to synchronize time. For example shibboleth needs less than 300 ms time difference between IDP and SP.
+
+**1. Install ntp client on your sever**
+
+<code>
+yum install ntp ntpdate ntp-doc
+</code>
+
+  * ntp : ntpd server which continuously adjusts system time and utilities used to query and configure the ntpd daemon.
+  * ntpdate : Utility to set the date and time via NTP.
+  * ntp-doc : NTP documentation
+
+**2. Register ntpd dameon in systemctl**
+
+<code>
+# chkconfig ntpd on
+# systemctl start ntpd
+# systemctl status ntpd
+</code>
+
+Make the ntpd damoen start at the start of the server
+
+<code>
+# systemctl enable ntpd
+</code>
+
+**3. Edit firewall** 
+
+NTP service uses UDP port 123 on OSI transport layer (layer 4). It is designed particularly to resist the effects of variable latency (jitter). To open this port on RHEL/CentOS 7 run the following commands against Firewalld service.
+
+<code>
+# firewall-cmd --add-service=ntp --permanent
+# firewall-cmd --reload
+</code>
+
+**4. Edit /etc/ntp.conf to define ntp server**
+
+You need to choose a ntp server which you want to synchronize your server time with.
+
+The Default server is something like this :
+
+<code>
+server 0.centos.pool.ntp.org iburst
+server 1.centos.pool.ntp.org iburst
+server 2.centos.pool.ntp.org iburst
+server 3.centos.pool.ntp.org iburst
+</code>
+
+For bioaster, we use ntp.bioaster.local
+It should looks like this
+<code>
+server  ntp.bioaster.local
+</code>
+
+**5. Verify ntp config**
+Use this command : ''ntpq -p''
+
+It shows the ntp server which you use for time synchro.
+<code>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*srvadmin.bioast 195.154.41.195   3 u    4   64    1    8.170   -0.565   0.000
+
+</code>
+
+**6 Synchronize with a ntp server manually**
+
+<code>
+#only query the server to see the time difference, don't make changes
+ntpdate -q ntp.bioaster.org
+
+#sync data to the server
+ntpdate ntp.bioaster.org
+</code>
+
+
+timedatectl set-ntp 0
+timedatectl set-ntp 1
+
+timedatectl set-time '2017-09-06 09:30:00'

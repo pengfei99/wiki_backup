@@ -1,0 +1,352 @@
+
+<h1 class="sectionedit1" id="configuration_cote_serveur">Configuration côté serveur</h1>
+<div class="level1">
+
+<p>
+Il s&#039;agit ici de décrire et expliquer les différentes configurations du serveur de Biospecimens.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Configuration côté serveur" [1-144] -->
+<h2 class="sectionedit2" id="https">Https</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Https" [145-163] -->
+<h3 class="sectionedit3" id="generation_certificat">Génération certificat</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="procedure">Procédure</h4>
+<div class="level4">
+
+<p>
+Le certificat a été généré de la manière suivante :
+</p>
+<pre class="code bash">openssl req <span class="re5">-out</span> service.bioaster.org.csr  <span class="re5">-new</span> <span class="re5">-newkey</span> rsa:<span class="nu0">2048</span> <span class="re5">-nodes</span> <span class="re5">-keyout</span> service.bioaster.org.key</pre>
+
+<p>
+<a href="https://helpdesk.bioaster.org/front/knowbaseitem.form.php?id=73" class="urlextern" title="https://helpdesk.bioaster.org/front/knowbaseitem.form.php?id=73"  rel="nofollow">source</a>
+</p>
+
+<p>
+<em class="u">Les infos entrées sont :</em>
+</p>
+
+<p>
+Country:FR
+</p>
+
+<p>
+State or Province Name (full name) []:Rhone
+</p>
+
+<p>
+Locality Name (eg, city) [Default City]:LYON
+</p>
+
+<p>
+Organization Name (eg, company) [Default Company Ltd]:BIOASTER
+</p>
+
+<p>
+Organizational Unit Name (eg, section) []:IS-IT
+</p>
+
+<p>
+Common Name (eg, your name or your server&#039;s hostname) []: *.bioaster.org
+</p>
+
+<p>
+Email Address []:clement.delestre@bioaster.org
+</p>
+
+<p>
+<strong>NB : </strong> aucun <code>extra attribute</code> n&#039;a été ajouté.  
+</p>
+<hr />
+
+</div>
+
+<h4 id="fichiers">Fichiers</h4>
+<div class="level4">
+
+<p>
+Le contenu du fichier <code>service.bioaster.org.csr</code> ainsi généré a été envoyé à l&#039;IT (cf. <a href="https://helpdesk.bioaster.org/front/ticket.form.php?id=2727" class="urlextern" title="https://helpdesk.bioaster.org/front/ticket.form.php?id=2727"  rel="nofollow">ticket associé</a>). L&#039;<strong>IT</strong> a ainsi généré un nouveau certificat qui a été envoyé par mail à <abbr title="Clément Delestre">CD</abbr> ( object “Fwd: Votre certificat SSL GeoTrust True BusinessID d&#039;une durée de 2 an(s) pour *.bioaster.org a été réémis”) contenant 2 pièces jointes :
+</p>
+<ol>
+<li class="level1"><div class="li"> SSL certificate - .bioaster.org</div>
+</li>
+<li class="level1"><div class="li"> Intermediate GeoTrust etc.</div>
+</li>
+</ol>
+
+<p>
+Le contenu du 1er a été copié dans <code>/home/bioaster/biospecimens.crt</code> avant d&#039;être déplacé dans <code>/etc/ssl/certs/biospecimens/</code> cf. ci-dessous.
+</p>
+<pre class="code bash"><span class="kw2">ls</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span> <span class="co0"># Un milliard de trucs là dedans j'ai l'impression que ce sont des &quot;faux&quot; certificats</span>
+<span class="kw2">sudo</span> <span class="kw2">mkdir</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens
+<span class="co0"># Notez que la clé utilisée est celle générée sur le serveur. Elle ne doit pas quitter le serveur.</span>
+<span class="kw2">sudo</span> <span class="kw2">mv</span> <span class="sy0">/</span>home<span class="sy0">/</span>bioaster<span class="sy0">/</span>service.bioaster.org.key  <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span>biospecimens.key
+<span class="kw2">sudo</span> <span class="kw2">mv</span> <span class="sy0">/</span>home<span class="sy0">/</span>bioaster<span class="sy0">/</span>biospecimens.crt <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span></pre>
+
+</div>
+<!-- EDIT3 SECTION "Génération certificat" [164-1997] -->
+<h3 class="sectionedit4" id="config_apache">Config Apache</h3>
+<div class="level3">
+<pre class="code bash"><span class="kw3">cd</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>sites-available
+<span class="kw2">sudo</span> <span class="kw2">cp</span> biospecimens.conf biospecimens.old <span class="co0">#création d'un fichier back up</span>
+<span class="kw2">sudo</span> <span class="kw2">nano</span> biospecimens.conf</pre>
+
+<p>
+Le contenu de <code>biospecimens.conf</code> après modification :
+</p>
+<pre class="code bash"><span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">80</span><span class="sy0">&gt;</span>
+    ServerName 10.70.3.12
+&nbsp;
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+    <span class="sy0">&lt;</span>Directory <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web<span class="sy0">&gt;</span>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+&nbsp;
+        <span class="sy0">&lt;</span>IfModule mod_rewrite.c<span class="sy0">&gt;</span>
+            Options <span class="re5">-MultiViews</span>
+            RewriteEngine On
+            RewriteCond <span class="sy0">%</span><span class="br0">&#123;</span>REQUEST_FILENAME<span class="br0">&#125;</span> <span class="sy0">!</span>-f
+            RewriteRule ^<span class="br0">&#40;</span>.<span class="sy0">*</span><span class="br0">&#41;</span>$ app.php <span class="br0">&#91;</span>QSA,L<span class="br0">&#93;</span>
+        <span class="sy0">&lt;/</span>IfModule<span class="sy0">&gt;</span>
+    <span class="sy0">&lt;/</span>Directory<span class="sy0">&gt;</span>
+&nbsp;
+    <span class="co0"># redirect from http to https	</span>
+    Redirect permanent <span class="sy0">/</span> https:<span class="sy0">//</span>biospecimens-<span class="nu0">15</span>.bioaster.org<span class="sy0">/</span>    
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span>
+&nbsp;
+<span class="co0"># Added by Clement DELESTRE the 19th of September and the 26th of Septembre with Pierre Veyre</span>
+<span class="co0"># https vhost</span>
+<span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">443</span><span class="sy0">&gt;</span>
+    ServerName biospecimens-<span class="nu0">15</span>.bioaster.org
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+&nbsp;
+    <span class="sy0">&lt;</span>Directory <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web<span class="sy0">&gt;</span>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+&nbsp;
+        <span class="sy0">&lt;</span>IfModule mod_rewrite.c<span class="sy0">&gt;</span>
+            Options <span class="re5">-MultiViews</span>
+            RewriteEngine On
+            RewriteCond <span class="sy0">%</span><span class="br0">&#123;</span>REQUEST_FILENAME<span class="br0">&#125;</span> <span class="sy0">!</span>-f
+            RewriteRule ^<span class="br0">&#40;</span>.<span class="sy0">*</span><span class="br0">&#41;</span>$ app.php <span class="br0">&#91;</span>QSA,L<span class="br0">&#93;</span>
+        <span class="sy0">&lt;/</span>IfModule<span class="sy0">&gt;</span>
+    <span class="sy0">&lt;/</span>Directory<span class="sy0">&gt;</span>
+&nbsp;
+&nbsp;
+    ServerSignature Off
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+&nbsp;
+&nbsp;
+    SSLEngine on
+    SSLCertificateFile <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span>biospecimens.crt
+    SSLCertificateKeyFile <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span>biospecimens.key	
+&nbsp;
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span></pre>
+
+<p>
+On redémarre le serveur
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="sy0">/</span>sbin<span class="sy0">/</span>service httpd restart</pre>
+
+<p>
+Pour info la paquet <code>mod_ssl</code> a dû être installé 
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">yum install</span> mod_ssl</pre>
+
+</div>
+<!-- EDIT4 SECTION "Config Apache" [1998-4044] -->
+<h2 class="sectionedit5" id="compresser_les_fichiers_par_apache">Compresser les fichiers par Apache</h2>
+<div class="level2">
+
+<p>
+Partie ajoutée au fichier <code>biospecimens.conf</code> :
+</p>
+<pre class="code">    #COMPRESS FILES. Added by Clément the 27th of October 2017
+    SetOutputFilter DEFLATE
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/x-javascript application/x-htt$
+    #Pour les navigateurs incompatibles
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+    #ne pas compresser si ces fichiers le sont déjà
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(?:pdf|avi|mov|mp3|mp4|rm)$ no-gzip dont-vary
+</pre>
+
+</div>
+<!-- EDIT5 SECTION "Compresser les fichiers par Apache" [4045-4896] -->
+<h2 class="sectionedit6" id="biospecimensconf">biospecimens.conf</h2>
+<div class="level2">
+<pre class="code bash"><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>sites-available<span class="sy0">/</span>biospecimens.conf
+<span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">80</span><span class="sy0">&gt;</span>
+    ServerName 10.70.3.12
+&nbsp;
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+    <span class="sy0">&lt;</span>Directory <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web<span class="sy0">&gt;</span>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+&nbsp;
+        <span class="sy0">&lt;</span>IfModule mod_rewrite.c<span class="sy0">&gt;</span>
+            Options <span class="re5">-MultiViews</span>
+            RewriteEngine On
+            RewriteCond <span class="sy0">%</span><span class="br0">&#123;</span>REQUEST_FILENAME<span class="br0">&#125;</span> <span class="sy0">!</span>-f
+            RewriteRule ^<span class="br0">&#40;</span>.<span class="sy0">*</span><span class="br0">&#41;</span>$ app.php <span class="br0">&#91;</span>QSA,L<span class="br0">&#93;</span>
+        <span class="sy0">&lt;/</span>IfModule<span class="sy0">&gt;</span>
+    <span class="sy0">&lt;/</span>Directory<span class="sy0">&gt;</span>
+&nbsp;
+    <span class="co0"># redirect from http to https	</span>
+    Redirect permanent <span class="sy0">/</span> https:<span class="sy0">//</span>biospecimens-<span class="nu0">15</span>.bioaster.org<span class="sy0">/</span>    
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span>
+&nbsp;
+<span class="co0"># Added by Clement DELESTRE the 19th of September and the 26th of Septembre with Pierre Veyre</span>
+<span class="co0"># https vhost</span>
+<span class="sy0">&lt;</span>VirtualHost <span class="sy0">*</span>:<span class="nu0">443</span><span class="sy0">&gt;</span>
+    ServerName biospecimens-<span class="nu0">15</span>.bioaster.org
+    DocumentRoot <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web
+&nbsp;
+    <span class="sy0">&lt;</span>Directory <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>web<span class="sy0">&gt;</span>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+&nbsp;
+        <span class="sy0">&lt;</span>IfModule mod_rewrite.c<span class="sy0">&gt;</span>
+            Options <span class="re5">-MultiViews</span>
+            RewriteEngine On
+            RewriteCond <span class="sy0">%</span><span class="br0">&#123;</span>REQUEST_FILENAME<span class="br0">&#125;</span> <span class="sy0">!</span>-f
+            RewriteRule ^<span class="br0">&#40;</span>.<span class="sy0">*</span><span class="br0">&#41;</span>$ app.php <span class="br0">&#91;</span>QSA,L<span class="br0">&#93;</span>
+        <span class="sy0">&lt;/</span>IfModule<span class="sy0">&gt;</span>
+    <span class="sy0">&lt;/</span>Directory<span class="sy0">&gt;</span>
+&nbsp;
+&nbsp;
+    ServerSignature Off
+    ErrorLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-error.log
+    LogLevel debug
+    CustomLog <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>httpd<span class="sy0">/</span>biospecimens-access.log combined
+&nbsp;
+&nbsp;
+    SSLEngine on
+    SSLCertificateFile <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span>biospecimens.crt
+    SSLCertificateKeyFile <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>biospecimens<span class="sy0">/</span>biospecimens.key	
+&nbsp;
+&nbsp;
+    <span class="co0">#COMPRESS FILES. Added by Clément the 27th of October 2017</span>
+    SetOutputFilter DEFLATE
+    AddOutputFilterByType DEFLATE text<span class="sy0">/</span>html text<span class="sy0">/</span>css text<span class="sy0">/</span>plain text<span class="sy0">/</span>xml application<span class="sy0">/</span>x-javascript application<span class="sy0">/</span>x-htt$
+    <span class="co0">#Pour les navigateurs incompatibles</span>
+    BrowserMatch ^Mozilla<span class="sy0">/</span><span class="nu0">4</span> gzip-only-text<span class="sy0">/</span>html
+    BrowserMatch ^Mozilla<span class="sy0">/</span><span class="nu0">4</span>\.0<span class="br0">&#91;</span><span class="nu0">678</span><span class="br0">&#93;</span> no-gzip
+    BrowserMatch \bMSIE <span class="sy0">!</span>no-gzip <span class="sy0">!</span>gzip-only-text<span class="sy0">/</span>html
+    BrowserMatch \bMSI<span class="br0">&#91;</span>E<span class="br0">&#93;</span> <span class="sy0">!</span>no-gzip <span class="sy0">!</span>gzip-only-text<span class="sy0">/</span>html
+    <span class="co0">#ne pas compresser si ces fichiers le sont déjà</span>
+    SetEnvIfNoCase Request_URI \.<span class="br0">&#40;</span>?:gif<span class="sy0">|</span>jpe?g<span class="sy0">|</span>png<span class="br0">&#41;</span>$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.<span class="br0">&#40;</span>?:exe<span class="sy0">|</span>t?gz<span class="sy0">|</span><span class="kw2">zip</span><span class="sy0">|</span>bz2<span class="sy0">|</span>sit<span class="sy0">|</span>rar<span class="br0">&#41;</span>$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.<span class="br0">&#40;</span>?:pdf<span class="sy0">|</span>avi<span class="sy0">|</span>mov<span class="sy0">|</span>mp3<span class="sy0">|</span>mp4<span class="sy0">|</span><span class="kw2">rm</span><span class="br0">&#41;</span>$ no-gzip dont-vary
+&nbsp;
+<span class="sy0">&lt;/</span>VirtualHost<span class="sy0">&gt;</span></pre>
+
+</div>
+<!-- EDIT6 SECTION "biospecimens.conf" [4897-7342] -->
+<h2 class="sectionedit7" id="emails">Emails</h2>
+<div class="level2">
+
+<p>
+La procédure suivie est décrite dans la doc de l&#039;applicatif.
+Sur le serveur le répertoire créé pour servir de file d&#039;attente est <code>/var/spool/mail/biospecimens</code> comme indiqué dans le fichier <code>config.yml</code>.
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">mkdir</span> <span class="sy0">/</span>var<span class="sy0">/</span>spool<span class="sy0">/</span>mail<span class="sy0">/</span>biospecimens <span class="sy0">&amp;&amp;</span> <span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="nu0">777</span> <span class="sy0">/</span>var<span class="sy0">/</span>spool<span class="sy0">/</span>mail<span class="sy0">/</span>biospecimens</pre>
+
+</div>
+<!-- EDIT7 SECTION "Emails" [7343-7685] -->
+<h2 class="sectionedit8" id="scheduler_bundle">Scheduler bundle</h2>
+<div class="level2">
+
+<p>
+Création du répertoire :
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">mkdir</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>biospecimens
+<span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>biospecimens</pre>
+
+<p>
+Mise en place du crontab :
+</p>
+<pre class="code bash"><span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="kw3">cd</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf <span class="sy0">&amp;&amp;</span> php app<span class="sy0">/</span>console scheduler:execute</pre>
+
+<p>
+Étant donné que les cron envoient souvent des mails, pour éviter que le fichier mail devienne trop mafflu il va être vidé par… un cron ! <img class="emojione" alt="&#x1f604;" src="//cdn.jsdelivr.net/emojione/assets/png/1F604.png?v=1.2.4"/>
+</p>
+<pre class="code bash"><span class="nu0">0</span> <span class="nu0">0</span> <span class="nu0">1</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="kw2">cat</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&gt;</span> <span class="sy0">/</span>var<span class="sy0">/</span>spool<span class="sy0">/</span>mail<span class="sy0">/</span>bioaster  <span class="co0"># empty emails 1st of month</span></pre>
+
+<p>
+Les commandes qui doivent être exécutées à intervalle réguliers sont défini ci-dessous. Elles ont toutes étaient configurées <em>via</em> l&#039;interface accessible ici : <a href="https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list" class="urlextern" title="https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list"  rel="nofollow">https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list</a> <em>en aucun cas</em> on ne doit utiliser directement <code>crontab -e</code> pour les appeler !
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Scheduler bundle" [7686-8531] -->
+<h3 class="sectionedit9" id="emails1">Emails</h3>
+<div class="level3">
+
+<p>
+Commande pour vider la queue des mails toutes les 3 minutes :
+<a href="/_detail/biospecimens/server/spoolmail1.png?id=biospecimens%3Aserver%3Aconfig" class="media" title="biospecimens:server:spoolmail1.png"><img src="/_media/biospecimens/server/spoolmail1.png" class="mediacenter" alt="" /></a>
+N&#039;oubliez pas –message-limit=50 c&#039;est important !
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Emails" [8532-8704] -->
+<h3 class="sectionedit10" id="crondemand">CronDemand</h3>
+<div class="level3">
+
+<p>
+Commande pour notifier les admins d&#039;une demande qui n&#039;a pas avancé depuis 5 jours :
+<a href="/_detail/biospecimens/server/crondemand.png?id=biospecimens%3Aserver%3Aconfig" class="media" title="biospecimens:server:crondemand.png"><img src="/_media/biospecimens/server/crondemand.png" class="mediacenter" alt="" /></a>
+Aucun argument ajouté (le foobar écrit ci-dessus est le placeholder du formulaire)
+</p>
+
+</div>
+<!-- EDIT10 SECTION "CronDemand" [8705-8939] -->
+<h2 class="sectionedit11" id="reprise_de_l_existant">Reprise de l&#039;existant</h2>
+<div class="level2">
+
+<p>
+À partir de l&#039;ordinateur de developpement ayant accès à ownCloud :
+<code>scp -r prod bioaster@biospecimens-15.bioaster.org:/var/www/biospecimens-sf</code>
+</p>
+
+<p>
+Ainsi les données seront dans <code>/var/www/biospecimens-sf/prod</code> et donc on pourra lancer populateBS comme ça : <code>php app/console biospecimens:populate /var/www/biospecimens-sf/prod -vv</code>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Reprise de l'existant" [8940-9314] -->
+<h2 class="sectionedit12" id="sources">Sources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.vincentliefooghe.net/content/activer-un-acc%C3%A8s-https-sur-apache" class="urlextern" title="https://www.vincentliefooghe.net/content/activer-un-acc%C3%A8s-https-sur-apache"  rel="nofollow">tuto https sur apache</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://technique.arscenic.org/ssl-securisation-des-communications-serveur-client/article/rediriger-http-vers-https-ssl-automatiquement" class="urlextern" title="https://technique.arscenic.org/ssl-securisation-des-communications-serveur-client/article/rediriger-http-vers-https-ssl-automatiquement"  rel="nofollow">tuto pour rediriger les requêtes http en https</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT12 SECTION "Sources" [9315-] -->

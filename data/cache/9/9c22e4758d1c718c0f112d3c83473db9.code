@@ -1,0 +1,50 @@
+<span class="kw1">import</span> pandas <span class="kw1">as</span> pd
+<span class="kw1">import</span> numpy <span class="kw1">as</span> np
+<span class="kw1">from</span> utils <span class="kw1">import</span> getWrongDateFormat
+<span class="kw1">import</span> seaborn <span class="kw1">as</span> sns
+<span class="kw1">import</span> <span class="kw3">datetime</span>
+<span class="kw1">import</span> matplotlib.<span class="me1">pyplot</span> <span class="kw1">as</span> plt
+&nbsp;
+<span class="co1"># read in our data</span>
+earthquakes <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day3_date_format/database.csv&quot;</span><span class="br0">&#41;</span>
+landslides <span class="sy0">=</span> pd.<span class="me1">read_csv</span><span class="br0">&#40;</span><span class="st0">&quot;/home/pliu/Downloads/python_data_cleaning/day3_date_format/catalog.csv&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+np.<span class="kw3">random</span>.<span class="me1">seed</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(landslides['date'].head())</span>
+&nbsp;
+<span class="co1">#print(earthquakes['Date'].head())</span>
+&nbsp;
+<span class="co1"># parse the date with the a given date format</span>
+landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span> <span class="sy0">=</span> pd.<span class="me1">to_datetime</span><span class="br0">&#40;</span>landslides<span class="br0">&#91;</span><span class="st0">'date'</span><span class="br0">&#93;</span><span class="sy0">,</span> format <span class="sy0">=</span> <span class="st0">&quot;%m/%d/%y&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(landslides['date_parsed'].head())</span>
+&nbsp;
+<span class="co1"># parse the date with auto determin format</span>
+earthquakes<span class="br0">&#91;</span><span class="st0">'Date_parsed'</span><span class="br0">&#93;</span> <span class="sy0">=</span> pd.<span class="me1">to_datetime</span><span class="br0">&#40;</span>earthquakes<span class="br0">&#91;</span><span class="st0">'Date'</span><span class="br0">&#93;</span><span class="sy0">,</span> infer_datetime_format<span class="sy0">=</span><span class="kw2">True</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1">#print(earthquakes['Date_parsed'].head())</span>
+&nbsp;
+<span class="co1"># get array of all days in parsed date column</span>
+day_of_month_landslides <span class="sy0">=</span> landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">day</span>
+<span class="co1"># get array of all months in parsed date column</span>
+month_of_year_landslides <span class="sy0">=</span> landslides<span class="br0">&#91;</span><span class="st0">'date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">month</span>
+&nbsp;
+day_of_month_landslides <span class="sy0">=</span> day_of_month_landslides.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+day_of_month_earthquakes <span class="sy0">=</span> earthquakes<span class="br0">&#91;</span><span class="st0">'Date_parsed'</span><span class="br0">&#93;</span>.<span class="me1">dt</span>.<span class="me1">day</span>.<span class="me1">dropna</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># show the days in a plot</span>
+fig<span class="sy0">,</span> ax<span class="sy0">=</span>plt.<span class="me1">subplots</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">2</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>day_of_month_landslides<span class="sy0">,</span>kde<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>bins<span class="sy0">=</span><span class="nu0">31</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Landslides&quot;</span><span class="br0">&#41;</span>
+sns.<span class="me1">distplot</span><span class="br0">&#40;</span>day_of_month_earthquakes<span class="sy0">,</span>kde<span class="sy0">=</span><span class="kw2">False</span><span class="sy0">,</span>bins<span class="sy0">=</span><span class="nu0">31</span><span class="sy0">,</span> ax<span class="sy0">=</span>ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+ax<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">set_title</span><span class="br0">&#40;</span><span class="st0">&quot;Earthquakes&quot;</span><span class="br0">&#41;</span>
+plt.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="co1">#print(month_of_year_landslides)</span>
+&nbsp;
+&nbsp;
+<span class="co1"># find out the bad date format in the column</span>
+dateList<span class="sy0">=</span>earthquakes<span class="br0">&#91;</span><span class="st0">'Date'</span><span class="br0">&#93;</span>.<span class="me1">tolist</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+getWrongDateFormat<span class="br0">&#40;</span>dateList<span class="br0">&#41;</span>

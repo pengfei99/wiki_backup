@@ -1,0 +1,39 @@
+====== PRINSEQ ======
+
+===== Informations =====
+
+  * **Version** : 0.20.4
+  * **Licence** : GPLv3
+  * **Page Web** : [[http://prinseq.sourceforge.net/]]
+  * **Description** : A bioinformatics tool to PRe-process and show INformation of SEQuence data. The tool is written in Perl and can be helpful if you want to filter, reformat, or trim your sequence data. It also generates basic statistics for your sequences.
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/prinseq_lite/0.20.4/bin"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget -O prinseq-lite-0.20.4.tar.gz "http://downloads.sourceforge.net/project/prinseq/standalone/prinseq-lite-0.20.4.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fprinseq%2Ffiles%2Fstandalone%2F&ts=1391766436&use_mirror=skylink"
+tar xvzf prinseq-lite-0.20.4.tar.gz
+cp prinseq-lite-0.20.4/*.pl $APP/
+chmod +x $APP/*
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "PReprocessing and INformation of SEQuence data.\n"
+}
+
+set version "0.20.4"
+
+prepend-path PATH "/afs/in2p3.fr/throng/bioaster/apps/prinseq_lite/${version}/bin"
+</code>
+
+===== Log =====
+
+* **2014.02.07 (tlc)** Version 0.20.4 installée

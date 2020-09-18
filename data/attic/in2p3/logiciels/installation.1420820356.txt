@@ -1,0 +1,124 @@
+====== Installation de nouveaux logiciels ======
+
+===== Introduction =====
+
+La mise en place de logiciels doit tenir compte de plusieurs **contraintes** :
+
+  * Les mêmes logiciels doivent être disponibles depuis différents environnements ([[ccin2p3:in2p3:scheduler|UGS]], [[ccin2p3:in2p3:cloud|OpenStack]], [[galaxy|Galaxy]]...) ;
+  * Différentes versions du même logiciel peuvent être installées en même temps ;
+  * Chaque logiciel peut-être compilé et optimisé pour différentes architectures ;
+  * Le CC met à jour les images [[https://en.wikipedia.org/wiki/Scientific_Linux|Scientific Linux]] quotidiennement, celle-ci ne peuvent donc pas être personnalisées pour nous.
+
+Les **choix** suivants ont donc été faits :
+
+  * Les logiciels sont installés sur un disque partagé ;
+  * <del>Tout packager pour la distro et installer automatiquement à chaque mise à jour ;</del>
+  * [[http://modules.sourceforge.net/|Modules]] est utilisé pour définir les environnements de travail ;
+  * <del>[[https://www.gnu.org/software/guix/|Guix]] pour configurer les environnements.</del>
+
+<WRAP round important>
+**Attention**, pour le moment les logiciels ne sont disponibles que pour la ferme, le disque partagé n'étant pas encore disponible pour le nuage.\\
+Reportez vous pour le moment aux pages [[ccin2p3:in2p3:logiciels|des différents logiciels]] pour avoir des exemples d'installation.
+</WRAP>
+
+===== Créer ou lancer une VM pour la compilation =====
+
+Les compilations se font à partir d'une VM dédiée. Celle-ci peut-être créée comme décrit ci-dessous.
+
+==== Création d'une clé SSH ====
+
+    ssh-keygen -t rsa -f ~/.novacreds/<KEY_NAME>
+    nova keypair-add --pub-key=$HOME/.novacreds/<KEY_NAME>.pub <KEY_NAME>
+    nova keypair-list
+
+==== Création du serveur ====
+
+    nova flavor-list
+    nova image-list
+    nova boot --key-name=<KEY_NAME> --image=official-SL-6x-x86_64 \
+              --flavor=m1.small <VM_NAME>
+    nova floating-ip-list
+    nova floating-ip-create # si besoin
+    nova add-floating-ip <VM_NAME> <AVAILABLE_FLOATING_IP>
+    nova secgroup-list
+    nova secgroup-list-rules default
+
+==== Création d'un volume virtuel ====
+
+    cinder create --display-name <VOLUME_NAME> 10 # Pour 10Go
+    cinder list
+    cinder show software
+    nova volume-attach <VM_NAME> <VOLUME_ID> /dev/vdc # vdc, vdd...
+
+==== Se logguer au serveur virtuel ====
+
+    ssh -i  ~/.novacreds/<KEY_NAME> root@<AVAILABLE_FLOATING_IP>
+
+==== Créer un utilisateur dédié ====
+
+    groupadd software
+    useradd -d /home/softmaster -g software -s /bin/bash softmaster
+    mkpasswd softmaster
+    vim ~/.bashrc
+    # umask 0027
+
+==== Monter (et formatter) le volume ====
+
+    more /proc/partitions
+    mkfs.xfs /dev/vdc # xfs, ext4...
+    mkdir /opt
+    echo -e "/dev/vdc\t/opt\txfs\tdefaults,owner,users\t\t1\t2" >> /etc/fstab
+    mount /opt
+    chown -R softmaster:software /opt
+    chmod -R 770 /opt
+
+===== Préparer la structure pour Module =====
+
+Dans ''/opt'' se trouvent 3 sous-dossiers : ''mods'', ''src'' et ''apps''.
+
+Le dossier ''apps'' est lui-même sous divisé en fonction des [[https://www.tacc.utexas.edu/tacc-projects/lmod/system-administrator-guide/module-hierarchy|recommandations du site de lmod]] :
+
+> We store packages as follows:
+>  - Core packages: /opt/apps/pkgName/version
+>  - Compiler dependent packages: /opt/apps/compilerName-version/pkgName/version
+>  - MPI-Compiler dependent packages: /opt/apps/compilerName-version/mpiName-version/pkgName/version
+
+===== Configurer l'usage de module =====
+
+Pour chaque utilisateur, éditer ''~/.bashrc'' :
+<code>
+export SOFTWARE_ROOT="/opt/apps"
+
+module use "/opt/mods"
+module load gcc # ... other modules to load in the default environment
+</code>
+
+===== Installer les pré-requis =====
+
+Ils sont listés en haut de la page de chaque logiciel... est-ce bien pratique ?!
+
+
+===== Installation du Logiciel =====
+
+  * ''./configure && make && install''
+  * Renseigner le [[ccin2p3:in2p3:logiciels|tableau récapitulatif]]
+  * Créer la page dédiée qui héritera automatiquement du [[i_template|modèle de page par défaut]]
+
+===== Création du fichier Module =====
+
+S'inspirer de la doc officielle : [[http://modules.sourceforge.net/man/modulefile.html]] et de [[https://www.tacc.utexas.edu/tacc-projects/lmod/advanced-user-guide/#usercreated]] (principalement pour Lmod en LUA)
+
+La fichiers modules sont à organiser en sous-dossier dans ''/opt/mods'' :
+
+<code>
+/opt/mods
+|_ bowtie
+.  \_ 1.0.0
+.
+\_ samtools
+   \_ 0.1.19
+</code>
+
+Cette organisation permet de charger la dernière version sans avoir à préciser son numéro. Si la version ''default'' existe (un lien vers une version précise) c'est elle qui sera chargée. Ceci est uniquement dû au tri alphanumérique, et marche aussi avec un lien nommé ''truc''.
+
+

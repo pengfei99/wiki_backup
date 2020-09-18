@@ -1,0 +1,7 @@
+  <span class="kw2">public</span> <span class="kw2">function</span> workflowAction<span class="br0">&#40;</span>Request <span class="re0">$request</span><span class="br0">&#41;</span>
+  <span class="br0">&#123;</span>
+    dump<span class="br0">&#40;</span><span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'toto'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="re0">$id</span> <span class="sy0">=</span> <span class="re0">$request</span><span class="sy0">-&gt;</span><span class="me1">get</span><span class="br0">&#40;</span><span class="st_h">'toto'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    dump<span class="br0">&#40;</span><span class="re0">$request</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="br0">&#125;</span>

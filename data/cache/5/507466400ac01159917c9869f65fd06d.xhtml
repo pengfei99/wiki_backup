@@ -1,0 +1,901 @@
+
+<h1 class="sectionedit1" id="spark_analyse_911_fire_service_call">Spark analyse 911 fire service call</h1>
+<div class="level1">
+
+<p>
+This tutorial will use spark to analyse the SF 911 fire service call. The data set can be download here
+</p>
+
+<p>
+<a href="https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3" class="urlextern" title="https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3" rel="nofollow">https://data.sfgov.org/Public-Safety/Fire-Department-Calls-for-Service/nuek-vuh3</a>
+</p>
+
+<p>
+The SF OpenData project was launched in 2009 and contains hundreds of datasets from the city and county of San Francisco. Open government data has the potential to increase the quality of life for residents, create more efficient government services, better public decisions, and even new local businesses and services.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark analyse 911 fire service call&quot;,&quot;hid&quot;:&quot;spark_analyse_911_fire_service_call&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-559&quot;} -->
+<h2 class="sectionedit2" id="load_data_to_hadoop_cluster">Load data to hadoop cluster</h2>
+<div class="level2">
+<pre class="code">Suppose that your hdfs runs on hdfs://localhost:9000
+
+The downloaded csv file is Fire_Department_Calls_for_Service.csv
+</pre>
+<pre class="code">#Load data
+hdfs dfs -put Fire_Department_Calls_for_Service.csv hdfs://localhost:9000/test_data/.
+
+#test data
+hdfs dfs -tail hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv</pre>
+
+<p>
+Run spark console, load this csv as a data frame
+</p>
+
+<p>
+The Default memory options for spark driver is 512 <abbr title="Megabyte">MB</abbr>, 
+</p>
+
+<p>
+Since we are running Spark in local mode, setting spark.executor.memory won&#039;t have any effect, as you have noticed. The reason for this is that the Worker “lives” within the driver JVM process that you start when you start spark-shell and the default memory used for that is 512M. You can increase that by setting spark.driver.memory to something higher, for example 5g. You can do that by either:
+</p>
+<pre class="code">vim $SPARK_HOME/conf
+# Put the following line
+spark.driver.memory              5g</pre>
+
+<p>
+or 
+</p>
+<pre class="code">#run spark shell on a local master
+spark-shell --master local[*] --driver-memory 8G
+
+#if you have a remote master, for example, hadoop-nn.pengfei.org(10.70.3.48) on port 7077
+#You need to do 
+spark-shell --master=spark://10.70.3.48:7077
+
+#As of Spark version 2.0 and up, spark-csv is part of core Spark functionality and doesn&#039;t require a separate library.
+scala&gt; val fireServiceCallsDF = spark.read.format(&quot;csv&quot;).option(&quot;header&quot;,&quot;true&quot;).load(&quot;hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv&quot;)
+
+#count row numbers in this dataframe
+scala&gt; fireServiceCallsDF.count
+
+# there are 4,5 million rows in the dataframe
+res0: Long = 4514057  
+</pre>
+
+<p>
+Load csv file with data brick spark csv package
+</p>
+<pre class="code">scala&gt; import org.apache.spark.sql.SQLContext
+
+scala&gt; val sqlContext= new SQLContext(sc)
+
+val testDF= sqlContext.read.format(&quot;com.databricks.spark.csv&quot;)
+            .option(&quot;header&quot;,&quot;true&quot;) // Use first line of all files as header
+            .option(&quot;inferSchema&quot;,&quot;true&quot;) //Automatically infer data types
+            .load(&quot;hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv&quot;)
+            
+scala&gt; testDF.count
+res1: Long = 4514057 </pre>
+
+<p>
+Load csv data with a given schema, it&#039;s very usefull to rename header and give good type to csv file
+</p>
+
+<p>
+The following are examples of fire call csv file sechema
+</p>
+<pre class="code">
+# python version 
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, BooleanType
+
+fireSchema = StructType([StructField(&#039;CallNumber&#039;, IntegerType(), True),
+                     StructField(&#039;UnitID&#039;, StringType(), True),
+                     StructField(&#039;IncidentNumber&#039;, IntegerType(), True),
+                     StructField(&#039;CallType&#039;, StringType(), True),                  
+                     StructField(&#039;CallDate&#039;, StringType(), True),       
+                     StructField(&#039;WatchDate&#039;, StringType(), True),       
+                     StructField(&#039;ReceivedDtTm&#039;, StringType(), True),       
+                     StructField(&#039;EntryDtTm&#039;, StringType(), True),       
+                     StructField(&#039;DispatchDtTm&#039;, StringType(), True),       
+                     StructField(&#039;ResponseDtTm&#039;, StringType(), True),       
+                     StructField(&#039;OnSceneDtTm&#039;, StringType(), True),       
+                     StructField(&#039;TransportDtTm&#039;, StringType(), True),                  
+                     StructField(&#039;HospitalDtTm&#039;, StringType(), True),       
+                     StructField(&#039;CallFinalDisposition&#039;, StringType(), True),       
+                     StructField(&#039;AvailableDtTm&#039;, StringType(), True),       
+                     StructField(&#039;Address&#039;, StringType(), True),       
+                     StructField(&#039;City&#039;, StringType(), True),       
+                     StructField(&#039;ZipcodeofIncident&#039;, IntegerType(), True),       
+                     StructField(&#039;Battalion&#039;, StringType(), True),                 
+                     StructField(&#039;StationArea&#039;, StringType(), True),       
+                     StructField(&#039;Box&#039;, StringType(), True),       
+                     StructField(&#039;OriginalPriority&#039;, StringType(), True),       
+                     StructField(&#039;Priority&#039;, StringType(), True),       
+                     StructField(&#039;FinalPriority&#039;, IntegerType(), True),       
+                     StructField(&#039;ALSUnit&#039;, BooleanType(), True),       
+                     StructField(&#039;CallTypeGroup&#039;, StringType(), True),
+                     StructField(&#039;NumberofAlarms&#039;, IntegerType(), True),
+                     StructField(&#039;UnitType&#039;, StringType(), True),
+                     StructField(&#039;Unitsequenceincalldispatch&#039;, IntegerType(), True),
+                     StructField(&#039;FirePreventionDistrict&#039;, StringType(), True),
+                     StructField(&#039;SupervisorDistrict&#039;, StringType(), True),
+                     StructField(&#039;NeighborhoodDistrict&#039;, StringType(), True),
+                     StructField(&#039;Location&#039;, StringType(), True),
+                     StructField(&#039;RowID&#039;, StringType(), True)])
+</pre>
+<pre class="code"># scala version
+
+import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType, BooleanType}
+
+# Note that we are removing all space characters from the col names to prevent errors when writing to Parquet later
+
+val fireSchema = StructType(Array(
+                     StructField(&quot;CallNumber&quot;, IntegerType, true),
+                     StructField(&quot;UnitID&quot;, StringType, true),
+                     StructField(&quot;IncidentNumber&quot;, IntegerType, true),
+                     StructField(&quot;CallType&quot;, StringType, true),                  
+                     StructField(&quot;CallDate&quot;, StringType, true),       
+                     StructField(&quot;WatchDate&quot;, StringType, true),       
+                     StructField(&quot;ReceivedDtTm&quot;, StringType, true),       
+                     StructField(&quot;EntryDtTm&quot;, StringType, true),       
+                     StructField(&quot;DispatchDtTm&quot;, StringType, true),       
+                     StructField(&quot;ResponseDtTm&quot;, StringType, true),       
+                     StructField(&quot;OnSceneDtTm&quot;, StringType, true),       
+                     StructField(&quot;TransportDtTm&quot;, StringType, true),                  
+                     StructField(&quot;HospitalDtTm&quot;, StringType, true),       
+                     StructField(&quot;CallFinalDisposition&quot;, StringType, true),       
+                     StructField(&quot;AvailableDtTm&quot;, StringType, true),       
+                     StructField(&quot;Address&quot;, StringType, true),       
+                     StructField(&quot;City&quot;, StringType, true),       
+                     StructField(&quot;ZipcodeofIncident&quot;, IntegerType, true),       
+                     StructField(&quot;Battalion&quot;, StringType, true),                 
+                     StructField(&quot;StationArea&quot;, StringType, true),       
+                     StructField(&quot;Box&quot;, StringType, true),       
+                     StructField(&quot;OriginalPriority&quot;, StringType, true),       
+                     StructField(&quot;Priority&quot;, StringType, true),       
+                     StructField(&quot;FinalPriority&quot;, IntegerType, true),       
+                     StructField(&quot;ALSUnit&quot;, BooleanType, true),       
+                     StructField(&quot;CallTypeGroup&quot;, StringType, true),
+                     StructField(&quot;NumberofAlarms&quot;, IntegerType, true),
+                     StructField(&quot;UnitType&quot;, StringType, true),
+                     StructField(&quot;Unitsequenceincalldispatch&quot;, IntegerType, true),
+                     StructField(&quot;FirePreventionDistrict&quot;, StringType, true),
+                     StructField(&quot;SupervisorDistrict&quot;, StringType, true),
+                     StructField(&quot;NeighborhoodDistrict&quot;, StringType, true),
+                     StructField(&quot;Location&quot;, StringType, true),
+                     StructField(&quot;RowID&quot;, StringType, true)))
+</pre>
+
+<p>
+Now, load the csv file with the schema fireSchema 
+</p>
+<pre class="code">val fireServiceCallsDF = sqlContext.read.format(&quot;com.databricks.spark.csv&quot;).option(&quot;header&quot;, &quot;true&quot;).schema(fireSchema).load(&quot;hdfs://localhost:9000/test_data/Fire_Department_Calls_for_Service.csv&quot;)
+
+# show the first 5 row of the dataframe
+
+fireServiceCallsDF.limit(5).show()
+
+# select only one row (ROWID)
+fireServiceCallsDF.select($&quot;RowID&quot;).orderBy($&quot;RowID&quot;.desc).limit(5).show()
++-------------+                                                                 
+|        RowID|
++-------------+
+|173394439-E19|
+| 173394439-87|
+|173394437-T10|
+|173394437-E10|
+|173394437-B05|
++-------------+
+
+# get all the row number
+scala &gt; fireServiceCallsDF.columns
+res5: Array[String] = Array(CallNumber, UnitID, IncidentNumber, CallType, CallDate, WatchDate, ReceivedDtTm, EntryDtTm, DispatchDtTm, ResponseDtTm, OnSceneDtTm, TransportDtTm, HospitalDtTm, CallFinalDisposition, AvailableDtTm, Address, City, ZipcodeofIncident, Battalion, StationArea, Box, OriginalPriority, Priority, FinalPriority, ALSUnit, CallTypeGroup, NumberofAlarms, UnitType, Unitsequenceincalldispatch, FirePreventionDistrict, SupervisorDistrict, NeighborhoodDistrict, Location, RowID)
+</pre>
+
+<p>
+If you want to know how your schema looks like, you can type the following line
+</p>
+<pre class="code">fireServiceCallsDF.printSchema()
+root
+ |-- CallNumber: integer (nullable = true)
+ |-- UnitID: string (nullable = true)
+ |-- IncidentNumber: integer (nullable = true)
+ |-- CallType: string (nullable = true)
+ |-- CallDate: string (nullable = true)
+ |-- WatchDate: string (nullable = true)
+ |-- ReceivedDtTm: string (nullable = true)
+ |-- EntryDtTm: string (nullable = true)
+ |-- DispatchDtTm: string (nullable = true)
+ |-- ResponseDtTm: string (nullable = true)
+ |-- OnSceneDtTm: string (nullable = true)
+ |-- TransportDtTm: string (nullable = true)
+ |-- HospitalDtTm: string (nullable = true)
+ |-- CallFinalDisposition: string (nullable = true)
+ |-- AvailableDtTm: string (nullable = true)
+ |-- Address: string (nullable = true)
+ |-- City: string (nullable = true)
+ |-- ZipcodeofIncident: integer (nullable = true)
+ |-- Battalion: string (nullable = true)
+ |-- StationArea: string (nullable = true)
+ |-- Box: string (nullable = true)
+ |-- OriginalPriority: string (nullable = true)
+ |-- Priority: string (nullable = true)
+ |-- FinalPriority: integer (nullable = true)
+ |-- ALSUnit: boolean (nullable = true)
+ |-- CallTypeGroup: string (nullable = true)
+ |-- NumberofAlarms: integer (nullable = true)
+ |-- UnitType: string (nullable = true)
+ |-- Unitsequenceincalldispatch: integer (nullable = true)
+ |-- FirePreventionDistrict: string (nullable = true)
+ |-- SupervisorDistrict: string (nullable = true)
+ |-- NeighborhoodDistrict: string (nullable = true)
+ |-- Location: string (nullable = true)
+ |-- RowID: string (nullable = true)</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Load data to hadoop cluster&quot;,&quot;hid&quot;:&quot;load_data_to_hadoop_cluster&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;560-11228&quot;} -->
+<h2 class="sectionedit3" id="transformation_and_actions">Transformation and actions</h2>
+<div class="level2">
+
+<p>
+Transformations(lazy) : select, distinct, groupBy, sum, orderBy, filter, limit
+Actions: show, count, collect, save
+</p>
+
+<p>
+We will use a list of questions to demonstrate how spark transformation and action works
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Transformation and actions&quot;,&quot;hid&quot;:&quot;transformation_and_actions&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:3,&quot;range&quot;:&quot;11229-11474&quot;} -->
+<h3 class="sectionedit4" id="q1_how_many_different_types_of_calls_were_made_to_the_fire_department">Q1, How many different types of calls were made to the Fire Department?</h3>
+<div class="level3">
+<pre class="code">#only show first 5 rows
+
+fireServiceCallsDF.select($&quot;CallType&quot;).limit(5).show()
+
++----------------+
+|        CallType|
++----------------+
+|Medical Incident|
+|Medical Incident|
+|Medical Incident|
+|          Alarms|
+|Medical Incident|
++----------------+
+
+# Add the .distinct() transformation to keep only distinct rows
+# The False below expands the ASCII column width to fit the full text in the output
+
+fireServiceCallsDF.select($&quot;CallType&quot;).distinct().show(35)
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q1, How many different types of calls were made to the Fire Department?&quot;,&quot;hid&quot;:&quot;q1_how_many_different_types_of_calls_were_made_to_the_fire_department&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:4,&quot;range&quot;:&quot;11475-12037&quot;} -->
+<h3 class="sectionedit5" id="q-2_how_many_incidents_of_each_call_type_were_there">Q-2) How many incidents of each call type were there?</h3>
+<div class="level3">
+<pre class="code">fireServiceCallsDF.select($&quot;CallType&quot;).groupBy($&quot;CallType&quot;).count().orderBy($&quot;count&quot;.desc).show()
++--------------------+-------+                                                  
+|            CallType|  count|
++--------------------+-------+
+|    Medical Incident|2921675|
+|      Structure Fire| 601573|
+|              Alarms| 482109|
+|   Traffic Collision| 184687|
+|               Other|  72896|
+|Citizen Assist / ...|  68392|
+|        Outside Fire|  52541|
+|        Vehicle Fire|  22138|
+|        Water Rescue|  21554|
+|Gas Leak (Natural...|  16543|
+|   Electrical Hazard|  12625|
+|Odor (Strange / U...|  12245|
+|Elevator / Escala...|  11805|
+|Smoke Investigati...|   9886|
+|          Fuel Spill|   5311|
+|              HazMat|   3791|
+|Industrial Accidents|   2779|
+|           Explosion|   2524|
+|  Aircraft Emergency|   1511|
+|       Assist Police|   1305|
++--------------------+-------+
+only showing top 20 rows
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q-2) How many incidents of each call type were there?&quot;,&quot;hid&quot;:&quot;q-2_how_many_incidents_of_each_call_type_were_there&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:5,&quot;range&quot;:&quot;12038-13038&quot;} -->
+<h3 class="sectionedit6" id="q-3_how_many_years_of_fire_service_calls_is_in_the_data_file">Q-3) How many years of Fire Service Calls is in the data file?</h3>
+<div class="level3">
+
+<p>
+Notice that the date or time columns are currently being interpreted as strings, rather than date or time objects
+</p>
+
+<p>
+We need to transform the string type to time stamp type
+</p>
+
+<p>
+We can use unix_timestamp which has been introduced since spark 1.5
+</p>
+
+<p>
+let&#039;s test it on a small DataFrame
+</p>
+<pre class="code"># get a small dataframe
+val testDF=fireServiceCallsDF.select($&quot;CallDate&quot;).limit(10)
+
+# define date formate
+val from_pattern1 = &quot;MM/dd/yyyy&quot;
+
+val to_pattern1 = &quot;yyyy-MM-dd&quot;
+
+
+testDF.show
++----------+
+|  CallDate|
++----------+
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
+|04/12/2000|
++----------+
+
+testDF.withColumn(&quot;CallDateTS&quot;,unix_timestamp($&quot;CallDate&quot;, from_pattern1).cast(&quot;timestamp&quot;)).show
++----------+-------------------+                                                
+|  CallDate|         CallDateTS|
++----------+-------------------+
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
+|04/12/2000|2000-04-12 00:00:00|
++----------+-------------------+
+
+# we can drop the old column
+
+scala&gt; testDF.withColumn(&quot;CallDateTS&quot;,unix_timestamp($&quot;CallDate&quot;, from_pattern1).cast(&quot;timestamp&quot;)).drop(&quot;CallDate&quot;).show
++-------------------+                                                           
+|         CallDateTS|
++-------------------+
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
++-------------------+
+</pre>
+
+<p>
+So the complete code to transforme fireServiceCallsDF to fireServiceCallsTsDF
+</p>
+<pre class="code">val from_pattern1 = &quot;MM/dd/yyyy&quot;
+val to_pattern1 = &quot;yyyy-MM-dd&quot;
+
+val from_pattern2 = &quot;MM/dd/yyyy hh:mm:ss aa&quot;
+val to_pattern2 = &quot;MM/dd/yyyy hh:mm:ss aa&quot;
+
+#creaet a new dataframe with new column name of time stamp
+val fireServiceCallsTsDF = fireServiceCallsDF.withColumn(&quot;CallDateTS&quot;, unix_timestamp($&quot;CallDate&quot;, from_pattern1).cast(&quot;timestamp&quot;)).drop(&quot;CallDate&quot;).withColumn(&quot;WatchDateTS&quot;, unix_timestamp($&quot;WatchDate&quot;, from_pattern1).cast(&quot;timestamp&quot;)).drop(&quot;WatchDate&quot;).withColumn(&quot;ReceivedDtTmTS&quot;, unix_timestamp($&quot;ReceivedDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;ReceivedDtTm&quot;).withColumn(&quot;EntryDtTmTS&quot;, unix_timestamp($&quot;EntryDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;EntryDtTm&quot;).withColumn(&quot;DispatchDtTmTS&quot;, unix_timestamp($&quot;DispatchDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;DispatchDtTm&quot;).withColumn(&quot;ResponseDtTmTS&quot;, unix_timestamp($&quot;ResponseDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;ResponseDtTm&quot;).withColumn(&quot;OnSceneDtTmTS&quot;, unix_timestamp($&quot;OnSceneDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;OnSceneDtTm&quot;).withColumn(&quot;TransportDtTmTS&quot;, unix_timestamp($&quot;TransportDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;TransportDtTm&quot;).withColumn(&quot;HospitalDtTmTS&quot;, unix_timestamp($&quot;HospitalDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;HospitalDtTm&quot;).withColumn(&quot;AvailableDtTmTS&quot;, unix_timestamp($&quot;AvailableDtTm&quot;, from_pattern2).cast(&quot;timestamp&quot;)).drop(&quot;AvailableDtTm&quot;)
+
+
+# test the new dataframe
+
+scala&gt; fireServiceCallsTsDF.select($&quot;CallDateTS&quot;).show(10)
++-------------------+
+|         CallDateTS|
++-------------------+
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
+|2000-04-12 00:00:00|
++-------------------+
+only showing top 10 rows
+
+
+scala&gt; fireServiceCallsTsDF.printSchema()
+root
+ | ....
+
+ |-- CallDateTS: timestamp (nullable = true)
+ |-- WatchDateTS: timestamp (nullable = true)
+ |-- ReceivedDtTmTS: timestamp (nullable = true)
+ |-- EntryDtTmTS: timestamp (nullable = true)
+ |-- DispatchDtTmTS: timestamp (nullable = true)
+ |-- ResponseDtTmTS: timestamp (nullable = true)
+ |-- OnSceneDtTmTS: timestamp (nullable = true)
+ |-- TransportDtTmTS: timestamp (nullable = true)
+ |-- HospitalDtTmTS: timestamp (nullable = true)
+ |-- AvailableDtTmTS: timestamp (nullable = true)
+</pre>
+
+<p>
+Now we have enough element to calculate how many distinct years of data is in the CSV file
+</p>
+<pre class="code">scala&gt; fireServiceCallsTsDF.select(year($&quot;CallDateTS&quot;)).distinct().orderBy(&quot;year(CallDateTS)&quot;).show()
+
++----------------+                                                              
+|year(CallDateTS)|
++----------------+
+|            2000|
+|            2001|
+|            2002|
+|            2003|
+|            2004|
+|            2005|
+|            2006|
+|            2007|
+|            2008|
+|            2009|
+|            2010|
+|            2011|
+|            2012|
+|            2013|
+|            2014|
+|            2015|
+|            2016|
+|            2017|
++----------------+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q-3) How many years of Fire Service Calls is in the data file?&quot;,&quot;hid&quot;:&quot;q-3_how_many_years_of_fire_service_calls_is_in_the_data_file&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:6,&quot;range&quot;:&quot;13039-18040&quot;} -->
+<h3 class="sectionedit7" id="q-4_how_many_service_calls_were_logged_in_the_past_7_days">Q-4) How many service calls were logged in the past 7 days?</h3>
+<div class="level3">
+
+<p>
+Suppose that today is July 6th, is the 187th day of the year.
+Filter the DF down to just 2016 and days of year greater than 180:
+</p>
+<pre class="code">scala&gt; fireServiceCallsTsDF.filter(year($&quot;CallDateTS&quot;) === &quot;2016&quot;).filter(dayofyear($&quot;CallDateTS&quot;) &gt;= 180).select(dayofyear($&quot;CallDateTS&quot;)).distinct().orderBy(&quot;dayofyear(CallDateTS)&quot;).show(10)
++---------------------+                                                         
+|dayofyear(CallDateTS)|
++---------------------+
+|                  180|
+|                  181|
+|                  182|
+|                  183|
+|                  184|
+|                  185|
+|                  186|
+|                  187|
+|                  188|
+|                  189|
++---------------------+
+only showing top 10 rows
+</pre>
+
+<p>
+Now, we can count how many calls for one day
+</p>
+<pre class="code">fireServiceCallsTsDF.filter(year($&quot;CallDateTS&quot;) === &quot;2016&quot;).filter(dayofyear($&quot;CallDateTS&quot;) &gt;= 180).groupBy(dayofyear($&quot;CallDateTS&quot;)).count().orderBy(&quot;dayofyear(CallDateTS)&quot;).show(10)
++---------------------+-----+                                                   
+|dayofyear(CallDateTS)|count|
++---------------------+-----+
+|                  180|  753|
+|                  181|  731|
+|                  182|  797|
+|                  183|  847|
+|                  184|  729|
+|                  185|  797|
+|                  186|  958|
+|                  187|  821|
+|                  188|  769|
+|                  189|  869|
++---------------------+-----+
+only showing top 10 rows
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q-4) How many service calls were logged in the past 7 days?&quot;,&quot;hid&quot;:&quot;q-4_how_many_service_calls_were_logged_in_the_past_7_days&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:7,&quot;range&quot;:&quot;18041-19613&quot;} -->
+<h2 class="sectionedit8" id="optimisation_of_spark">Optimisation of spark</h2>
+<div class="level2">
+
+<p>
+There are three main ways to optimise your spark script
+</p>
+<ul>
+<li class="level1"><div class="li"> Memory</div>
+</li>
+<li class="level1"><div class="li"> Caching</div>
+</li>
+<li class="level1"><div class="li"> write to Parquet</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Optimisation of spark&quot;,&quot;hid&quot;:&quot;optimisation_of_spark&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:8,&quot;range&quot;:&quot;19614-19750&quot;} -->
+<h3 class="sectionedit9" id="memory_partion_and_caching">Memory partion and caching</h3>
+<div class="level3">
+
+<p>
+By default, our dataframe has been cut into 13 pieces.
+Suppose we have 3 worker, these 13 pieces are stored evenly on these 3 worker
+It will save us some overhead time, if we have less pieces on a single worker
+</p>
+<pre class="code">scala&gt; fireServiceCallsTsDF.rdd.partitions.size
+res41: Int = 13
+</pre>
+
+<p>
+To compare the speed of different partitions, we will create a view with less partitions
+</p>
+
+<p>
+The follwoing link explains what is a view
+</p>
+
+<p>
+<a href="/doku.php?id=employes:pengfei.liu:admin_system:data_base_view" class="wikilink1" title="employes:pengfei.liu:admin_system:data_base_view">DataBase view</a>
+</p>
+
+<p>
+&lt;color #ed1c24&gt;createOrReplaceTempView&lt;/color&gt; creates (or replaces if that view name already exists) a lazily evaluated “view” that you can then use like a hive table in Spark SQL. It does not persist to memory unless you cache the dataset that underpins the view.
+</p>
+<pre class="code"># create a view with name fireServiceVIEW (transform lazy)
+fireServiceCallsTsDF.repartition(6).createOrReplaceTempView(&quot;fireServiceVIEW&quot;)
+
+#cache the view in memory (transform lazy)
+spark.catalog.cacheTable(&quot;fireServiceVIEW&quot;)
+
+#count rows in view (action)
+spark.table(&quot;fireServiceVIEW&quot;).count()
+
+#check cash status
+scala&gt; spark.catalog.isCached(&quot;fireServiceVIEW&quot;)
+res47: Boolean = true</pre>
+<pre class="code">In http://localhost:4040/storage/
+
+you can see the 
+
+RDD Name	Storage Level	Cached Partitions	Fraction Cached	Size in Memory	Size on Disk
+In-memory table fireServiceVIEW 	Disk Serialized 1x Replicated 	6 	100% 	207.4 MB 	414.0 MB</pre>
+
+<p>
+If you want to save the cache to disk, in case your memory lost
+You can use &lt;color #ed1c24&gt;Parquet&lt;/color&gt; format
+</p>
+
+<p>
+Apache Parquet is a free and open-source column-oriented data store of the Apache Hadoop ecosystem. It is similar to the other columnar storage file formats available in Hadoop namely RCFile and Optimized RCFile. It is compatible with most of the data processing frameworks in the Hadoop environment. It provides efficient data compression and encoding schemes with enhanced performance to handle complex data in bulk.
+</p>
+
+<p>
+For more information, please go <a href="https://parquet.apache.org/" class="urlextern" title="https://parquet.apache.org/" rel="nofollow">https://parquet.apache.org/</a>
+</p>
+<pre class="code">scala&gt; val fireServiceDF = spark.table(&quot;fireServiceVIEW&quot;)
+fireServiceDF: org.apache.spark.sql.DataFrame = [CallNumber: int, UnitID: string ... 32 more fields]
+
+scala&gt; fireServiceDF.count()
+res5: Long = 4514057
+
+fireServiceDF.write.format(&quot;parquet&quot;).save(&quot;/tmp/fireServiceParquet/&quot;)
+
+# In the file system you can see the parquet file
+
+[root@localhost fireServiceParquet]# ls -lah
+total 371M
+
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00000-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 489K Dec  8 16:34 .part-00000-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00001-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 489K Dec  8 16:34 .part-00001-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00002-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 492K Dec  8 16:34 .part-00002-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00003-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 492K Dec  8 16:34 .part-00003-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00004-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 492K Dec  8 16:34 .part-00004-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+-rw-r--r--.  1 pliu pliu  62M Dec  8 16:34 part-00005-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet
+-rw-r--r--.  1 pliu pliu 492K Dec  8 16:34 .part-00005-55e20303-0853-4f2b-bb9c-1cd43e3d97d2-c000.snappy.parquet.crc
+
+</pre>
+
+<p>
+Create a dataframe by reading Parquet
+</p>
+<pre class="code">scala&gt; val tempDF = spark.read.parquet(&quot;/tmp/fireServiceParquet/&quot;)
+tempDF: org.apache.spark.sql.DataFrame = [CallNumber: int, UnitID: string ... 32 more fields]
+
+scala&gt; tempDF.limit(10).show()
+</pre>
+
+<p>
+Read from paquet is more efficient than ascii file.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Memory partion and caching&quot;,&quot;hid&quot;:&quot;memory_partion_and_caching&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:9,&quot;range&quot;:&quot;19751-23869&quot;} -->
+<h3 class="sectionedit10" id="sql_queries">SQL queries</h3>
+<div class="level3">
+<pre class="code">scala&gt; spark.sql(&quot;SELECT count(*) FROM fireServiceVIEW&quot;).show()
++--------+
+|count(1)|
++--------+
+| 4514057|
++--------+
+</pre>
+
+<p>
+You can use the Spark Stages UI to see the 6 tasks launched in the middle stage(<a href="http://localhost:4040/stages" class="urlextern" title="http://localhost:4040/stages" rel="nofollow">http://localhost:4040/stages</a>), click on the event timeline.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SQL queries&quot;,&quot;hid&quot;:&quot;sql_queries&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:10,&quot;range&quot;:&quot;23870-24170&quot;} -->
+<h3 class="sectionedit11" id="q-5_which_neighborhood_in_sf_generated_the_most_calls_last_year">Q-5) Which neighborhood in SF generated the most calls last year?</h3>
+<div class="level3">
+<pre class="code">
+spark.sql(&quot;SELECT `NeighborhoodDistrict`, count(`NeighborhoodDistrict`) AS Neighborhood_Count FROM fireServiceVIEW WHERE year(`CallDateTS`) == &#039;2015&#039; GROUP BY `NeighborhoodDistrict` ORDER BY Neighborhood_Count DESC LIMIT 15&quot;).show()
+</pre>
+
+<p>
+Expand the Spark Job details in the cell above and notice that the last stage uses 200 partitions! This is default is non-optimal, given that we only have ~1.6 <abbr title="Gigabyte">GB</abbr> of data and 3 slots.
+Change the shuffle.partitions option to 6:
+</p>
+<pre class="code">scala&gt; spark.conf.get(&quot;spark.sql.shuffle.partitions&quot;)
+res14: String = 200
+
+scala&gt; spark.conf.set(&quot;spark.sql.shuffle.partitions&quot;, 6)
+
+scala&gt; spark.conf.get(&quot;spark.sql.shuffle.partitions&quot;)
+res16: String = 6
+
+</pre>
+
+<p>
+Re enter the above sql request, and compare the worker overhead time when runnig the same job.
+</p>
+
+<p>
+SQL also has some handy commands like DESC (describe) to see the schema + data types for the table:
+</p>
+<pre class="code">scala&gt; spark.sql(&quot;DESC fireServiceVIEW&quot;).show()
++--------------------+---------+-------+
+|            col_name|data_type|comment|
++--------------------+---------+-------+
+|          CallNumber|      int|   null|
+|              UnitID|   string|   null|
+|      IncidentNumber|      int|   null|
+|            CallType|   string|   null|
+|CallFinalDisposition|   string|   null|
+|             Address|   string|   null|
+|                City|   string|   null|
+|   ZipcodeofIncident|      int|   null|
+|           Battalion|   string|   null|
+|         StationArea|   string|   null|
+|                 Box|   string|   null|
+|    OriginalPriority|   string|   null|
+|            Priority|   string|   null|
+|       FinalPriority|      int|   null|
+|             ALSUnit|  boolean|   null|
+|       CallTypeGroup|   string|   null|
+|      NumberofAlarms|      int|   null|
+|            UnitType|   string|   null|
+|Unitsequenceincal...|      int|   null|
+|FirePreventionDis...|   string|   null|
++--------------------+---------+-------+
+only showing top 20 rows
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q-5) Which neighborhood in SF generated the most calls last year?&quot;,&quot;hid&quot;:&quot;q-5_which_neighborhood_in_sf_generated_the_most_calls_last_year&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:11,&quot;range&quot;:&quot;24171-26224&quot;} -->
+<h3 class="sectionedit12" id="spark_internals_and_sql_ui">Spark Internals and SQL UI</h3>
+<div class="level3">
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Abig_data%3Aspark%3Aspark_usecase%3Asf_fire_call&amp;media=employes:pengfei.liu:big_data:spark:spark_usecase:spark_sql_ui.png" class="media" title="employes:pengfei.liu:big_data:spark:spark_usecase:spark_sql_ui.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=2cae11&amp;media=employes:pengfei.liu:big_data:spark:spark_usecase:spark_sql_ui.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+Note that a SQL Query just returns back a DataFrame
+</p>
+<pre class="code">#This query shows the neighborhood who call the most at 2015 
+spark.sql(&quot;SELECT `NeighborhoodDistrict`, count(`NeighborhoodDistrict`) AS Neighborhood_Count FROM fireServiceVIEW WHERE year(`CallDateTS`) == &#039;2015&#039; GROUP BY `NeighborhoodDistrict` ORDER BY Neighborhood_Count DESC LIMIT 15&quot;).show()
+
+#This query returns a dataframe
+scala&gt; val neighborHoodCount2015 = spark.sql(&quot;SELECT `NeighborhoodDistrict`, count(`NeighborhoodDistrict`) AS Neighborhood_Count FROM fireServiceVIEW WHERE year(`CallDateTS`) == &#039;2015&#039; GROUP BY `NeighborhoodDistrict` ORDER BY Neighborhood_Count DESC LIMIT 15&quot;)
+
+neighborHoodCount2015: org.apache.spark.sql.DataFrame = [NeighborhoodDistrict: string, Neighborhood_Count: bigint]
+
+scala&gt; neighborHoodCount2015.show()
++--------------------+------------------+
+|NeighborhoodDistrict|Neighborhood_Count|
++--------------------+------------------+
+|          Tenderloin|             39367|
+|     South of Market|             30361|
+|             Mission|             26454|
+|Financial Distric...|             21511|
+|Bayview Hunters P...|             14661|
+|     Sunset/Parkside|             11162|
+|    Western Addition|             10373|
+|            Nob Hill|             10280|
+|      Outer Richmond|              7723|
+|        Hayes Valley|              7501|
+| Castro/Upper Market|              7432|
+|         North Beach|              6900|
+|     Pacific Heights|              6386|
+|  West of Twin Peaks|              6161|
+|           Chinatown|              6129|
++--------------------+------------------+
+
+
+scala&gt; neighborHoodCount2015.count
+res45: Long = 15
+</pre>
+
+<p>
+The explain() method can be called on a DataFrame to understand its logical + physical plans:
+</p>
+<pre class="code">scala&gt; neighborHoodCount2015.explain(true)
+== Parsed Logical Plan ==
+&#039;GlobalLimit 15
++- &#039;LocalLimit 15
+   +- &#039;Sort [&#039;Neighborhood_Count DESC NULLS LAST], true
+      +- &#039;Aggregate [&#039;NeighborhoodDistrict], [&#039;NeighborhoodDistrict, &#039;count(&#039;NeighborhoodDistrict) AS Neighborhood_Count#2901]
+         +- &#039;Filter (&#039;year(&#039;CallDateTS) = 2015)
+            +- &#039;UnresolvedRelation `fireServiceVIEW`
+
+== Analyzed Logical Plan ==
+NeighborhoodDistrict: string, Neighborhood_Count: bigint
+GlobalLimit 15
++- LocalLimit 15
+   +- Sort [Neighborhood_Count#2901L DESC NULLS LAST], true
+   ...........
+   ...........</pre>
+
+<p>
+You can view the visual representation of the SQL Query plan from the Spark UI:
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Spark Internals and SQL UI&quot;,&quot;hid&quot;:&quot;spark_internals_and_sql_ui&quot;,&quot;codeblockOffset&quot;:25,&quot;secid&quot;:12,&quot;range&quot;:&quot;26225-28791&quot;} -->
+<h3 class="sectionedit13" id="dataframe_joins">DataFrame Joins</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="q-6_what_was_the_primary_non-medical_reason_most_people_called_the_fire_department_from_the_tenderloin_last_year">Q-6) What was the primary non-medical reason most people called the fire department from the Tenderloin last year?</h4>
+<div class="level4">
+
+<p>
+The “Fire Incidents” data includes a summary of each (non-medical) incident to which the SF Fire Department responded.
+</p>
+
+<p>
+Download the Fire_Incidents.csv from <a href="https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric" class="urlextern" title="https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric" rel="nofollow">https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric</a>
+</p>
+<pre class="code">#Upload the data to hdfs
+[hadoop@CCLinDataWHD01 tmp]$ hdfs dfs -put Fire_Incidents.csv /test_data/.
+
+#create dataframe in spark console
+scala&gt; val incidentsDF = spark.read.format(&quot;csv&quot;).option(&quot;header&quot;,&quot;true&quot;).load(&quot;/test_data/Fire_Incidents.csv&quot;)
+incidentsDF: org.apache.spark.sql.DataFrame = [Incident Number: string, Exposure Number: string ... 61 more fields]
+
+
+scala&gt; incidentsDF.count
+res48: Long = 450686 
+
+scala&gt; incidentsDF.printSchema
+root
+ |-- Incident Number: string (nullable = true)
+ |-- Exposure Number: string (nullable = true)
+ |-- Address: string (nullable = true)
+</pre>
+
+<p>
+You could notice that incidentsDF column name has spaces. We want to eleminat the space for Incident Number for example.
+</p>
+<pre class="code">#change dataframe column name
+scala&gt; val incidDF=incidentsDF.withColumnRenamed(&quot;Incident Number&quot;,&quot;IncidentNumber&quot;)
+incidDF: org.apache.spark.sql.DataFrame = [IncidentNumber: string, Exposure Number: string ... 61 more fields]
+
+#New schema
+scala&gt; incidDF.printSchema
+root
+ |-- IncidentNumber: string (nullable = true)
+ |-- Exposure Number: string (nullable = true)
+ |-- Address: string (nullable = true)</pre>
+
+<p>
+We try our first join
+</p>
+<pre class="code">scala&gt; val joinedDF = fireServiceCallsTsDF.join(incidDF,fireServiceCallsTsDF.IncidentNumber == incidDF.IncidentNumber)
+&lt;console&gt;:42: error: value IncidentNumber is not a member of org.apache.spark.sql.DataFrame</pre>
+
+<p>
+we noticed that we can&#039;t join two dataframe on IncidentNumber, because in incidDF, IncidentNumber is a string not interger.
+</p>
+
+<p>
+so we need reload the data frame with a correct schema
+</p>
+<pre class="code">val incidentsSchema = StructType(Array(
+                     StructField(&quot;IncidentNumber&quot;, IntegerType, true),
+                     StructField(&quot;ExposureNumber&quot;, IntegerType, true),                  
+                     StructField(&quot;Address&quot;, StringType, true),       
+                     StructField(&quot;IncidentDate&quot;, StringType, true),       
+                     StructField(&quot;CallNumber&quot;, IntegerType, true),       
+                     StructField(&quot;AlarmDtTm&quot;, StringType, true),       
+                     StructField(&quot;ArrivalDtTm&quot;, StringType, true),       
+                     StructField(&quot;CloseDtTm&quot;, StringType, true),       
+                     StructField(&quot;City&quot;, StringType, true),       
+                     StructField(&quot;Zipcode&quot;, IntegerType, true),                  
+                     StructField(&quot;Battalion&quot;, StringType, true),       
+                     StructField(&quot;StationArea&quot;, StringType, true),             
+                     StructField(&quot;Box&quot;, StringType, true),       
+                     StructField(&quot;SuppressionUnits&quot;, IntegerType, true),       
+                     StructField(&quot;SuppressionPersonnel&quot;, IntegerType, true),       
+                     StructField(&quot;EMSUnits&quot;, IntegerType, true),       
+                     StructField(&quot;EMSPersonnel&quot;, IntegerType, true),       
+                     StructField(&quot;OtherUnits&quot;, IntegerType, true),
+                     StructField(&quot;OtherPersonnel&quot;, IntegerType, true),
+                     StructField(&quot;FirstUnitOnScene&quot;, StringType, true),
+                     StructField(&quot;EstimatedProperty Loss&quot;, IntegerType, true),
+                     StructField(&quot;EstimatedContents Loss&quot;, DoubleType, true),
+                     StructField(&quot;FireFatalities&quot;, IntegerType, true),
+                     StructField(&quot;FireInjuries&quot;, IntegerType, true),
+                     StructField(&quot;CivilianFatalities&quot;, IntegerType, true),
+                     StructField(&quot;CivilianInjuries&quot;, IntegerType, true),
+                     StructField(&quot;NumberofAlarms&quot;, StringType, true),
+                     StructField(&quot;PrimarySituation&quot;, StringType, true),
+                     StructField(&quot;MutualAid&quot;, StringType, true),
+                     StructField(&quot;ActionTakenPrimary&quot;, StringType, true),
+                     StructField(&quot;ActionTakenSecondary&quot;, StringType, true),
+                     StructField(&quot;ActionTakenOther&quot;, StringType, true),
+                     StructField(&quot;DetectorAlertedOccupants&quot;, StringType, true),       
+                     StructField(&quot;PropertyUse&quot;, StringType, true),       
+                     StructField(&quot;AreaofFireOrigin&quot;, StringType, true),       
+                     StructField(&quot;IgnitionCause&quot;, StringType, true),       
+                     StructField(&quot;IgnitionFactorPrimary&quot;, StringType, true),
+                     StructField(&quot;IgnitionFactorSecondary&quot;, StringType, true),
+                     StructField(&quot;HeatSource&quot;, StringType, true),
+                     StructField(&quot;ItemFirstIgnited&quot;, StringType, true),
+                     StructField(&quot;HumanFactorsAssociatedwithIgnition&quot;, StringType, true),
+                     StructField(&quot;StructureType&quot;, StringType, true),
+                     StructField(&quot;StructureStatus&quot;, StringType, true),
+                     StructField(&quot;FloorOfFireOrigin&quot;, IntegerType, true),
+                     StructField(&quot;FireSpread&quot;, StringType, true),
+                     StructField(&quot;NoFlameSpead&quot;, StringType, true),
+                     StructField(&quot;NumberOfFloorsWithMinimumDamage&quot;, IntegerType, true),
+                     StructField(&quot;NumberOfFloorsWithSignificantDamage&quot;, IntegerType, true),
+                     StructField(&quot;NumberOfFloorswithHeavyDamage&quot;, IntegerType, true),
+                     StructField(&quot;NumberOfFloorswithExtremeDamage&quot;, IntegerType, true),
+                     StructField(&quot;DetectorsPresent&quot;, StringType, true)
+                     StructField(&quot;DetectorType&quot;, StringType, true),
+                     StructField(&quot;DetectorOperation&quot;, StringType, true),
+                     StructField(&quot;DetectorEffectiveness&quot;, StringType, true),
+                     StructField(&quot;DetectorFailureReason&quot;, StringType, true),
+                     StructField(&quot;AutomaticExtinguishingSystemPresent&quot;, StringType, true),
+                     StructField(&quot;AutomaticExtinguishingSytemType&quot;, StringType, true),
+                     StructField(&quot;AutomaticExtinguishingSytemPerfomance&quot;, StringType, true),
+                     StructField(&quot;AutomaticExtinguishingSytemFailureReason&quot;, StringType, true),
+                     StructField(&quot;NumberofSprinklerHeadsOperating&quot;, IntegerType, true),
+                     StructField(&quot;SupervisorDistrict&quot;, IntegerType, true),
+                     StructField(&quot;NeighborhoodDistrict&quot;, StringType, true),
+                     StructField(&quot;Location&quot;, StringType, true)))</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;DataFrame Joins&quot;,&quot;hid&quot;:&quot;dataframe_joins&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:13,&quot;range&quot;:&quot;28792-&quot;} -->

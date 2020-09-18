@@ -1,0 +1,246 @@
+====== Ansible Install and configuration ======
+
+===== 1. Install ansible on centos 7/8 =====
+
+<code>
+# on centos 8, yum will install ansible 2.9 by default
+sudo yum install ansible
+
+# You can check your ansible version 
+ansible --version
+</code>
+
+
+===== 2. Configuration =====
+
+The full document on ansible configuration:
+
+https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html#getting-the-latest-configuration
+
+
+==== 2.1 Hosts configuration ====
+
+Ansible works against multiple managed nodes or "hosts" in your infrastructure at the same time. We need to specify a list or group of lists of servers (a.k.a inventory), to indicate which servers you want Ansible to run against.
+
+The default location for specify this inventory is a file **/etc/ansible/hosts**. 
+
+=== 2.1.1 Customize inventory files ===
+
+**You can specify a different inventory file at the command line using the -i <path> option**. If you have multiple inventory files, you can use -i as many time as you want. For example, if you have two files a,b you can use the following commmand
+<code>
+ansible-playbook get_logs.yml -i a -i b
+
+</code>
+
+The inventory file can be in INI or YMAL. For example, a basic INI inventory (etc/ansible/hosts) might look like this: 
+<code>
+cent8_sql01.pengfei.org
+
+[udl_datalake]
+lin[01:06].udl.org
+
+
+[cluster_manager]
+lin01.udl.org
+
+[service_node]
+lin02.udl.org
+lin03.udl.org
+159.84.108.202
+
+[worker_node]
+159.84.108.201
+159.84.108.200
+</code>
+
+== Default groups ==
+
+There are two default groups: 
+  * all: It contains every host in the inventory
+  * ungrouped. It contains all hosts that don’t have another group aside from all. For example, in the above inventory, the ungrouped group has one host which is cent8_sql01.pengfei.org.
+
+Every host will always belong to at least 2 groups (all and ungrouped or all and some other group). Though all and ungrouped are always present, they can be implicit and not appear in group listings like group_names.
+
+
+
+We can also write an inventory in YAML format
+
+<code YAML>
+all:
+  hosts:
+    cent8_sql01.pengfei.org:
+  udl_datalake:
+    hosts: 
+      lin[01:06].udl.org:
+  cluster_manager:  
+    hosts:
+      lin01.udl.org:
+  service_node:
+    hosts:
+      lin02.udl.org:
+      lin03.udl.org:
+      159.84.108.202:
+  worker_node:
+    hosts:
+      159.84.108.201:
+      159.84.108.200:
+</code>
+
+There are some important points:
+  * The hosts can be an URL or an IP address.
+  * A host can be in multiple groups.
+  * If you have many servers which have the same pattern you can use a range like www[01:50].example.com to specify them all. It also works for letters db-[a:f].example.com.
+
+
+=== 2.1.2 Group variables ===
+
+You can also set variables in the inventory file
+
+<code>
+lin01.udl.org http_port=80 maxRequestsPerChild=808
+lin02.udl.org http_port=303 maxRequestsPerChild=909
+<code>
+
+If all hosts in a group share a variable value, you can apply that variable to an entire group at once. In INI:
+
+<code>
+[udl_datalake]
+host1
+host2
+
+[udl_datalake:vars]
+ntp_server=ntp.udl.org
+proxy=proxy.udl.org
+</code>
+
+
+=== 2.1.3 Host group hierarchy ===
+
+We can use keyword children to group groups of hosts.
+
+<code>
+[beijing]
+host1
+host2
+
+[shanghai]
+host2
+host3
+
+[southeast:children]
+beijing
+shanghai
+
+[southeast:vars]
+some_server=foo.southeast.example.com
+halon_system_timeout=30
+self_destruct_countdown=60
+escape_pods=2
+
+[china:children]
+southeast
+northeast
+southwest
+northwest
+</code>
+
+
+Here, group china contains all servers of the southeast, ..., northwest region, and southeast region contains all servers of beijing and shanghai. 
+
+The variables in vars will apply to all servers of the southeast region.
+
+===== 3. Ansible playbook Content Organization =====
+
+The Content organization in ansible playbook is very important. You can find all best practices in the following link
+
+https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html
+
+
+I prefer to organize my playbook in the following way.
+
+<code>
+inventories/
+   production/
+      hosts               # inventory file for production servers
+      group_vars/
+         group1.yml       # here we assign variables to particular groups
+         group2.yml
+      host_vars/
+         hostname1.yml    # here we assign variables to particular systems
+         hostname2.yml
+
+   staging/
+      hosts               # inventory file for staging environment
+      group_vars/
+         group1.yml       # here we assign variables to particular groups
+         group2.yml
+      host_vars/
+         stagehost1.yml   # here we assign variables to particular systems
+         stagehost2.yml
+
+library/                  # if any custom modules, put them here (optional)
+module_utils/             # if any custom module_utils to support modules, put them here (optional)
+filter_plugins/           # if any custom filter plugins, put them here (optional)
+
+site.yml                  # master playbook
+webservers.yml            # playbook for webserver tier
+dbservers.yml             # playbook for dbserver tier
+
+roles/
+    common/               # this hierarchy represents a "role"
+        tasks/            #
+            main.yml      #  <-- tasks file can include smaller files if warranted
+        handlers/         #
+            main.yml      #  <-- handlers file
+        templates/        #  <-- files for use with the template resource
+            ntp.conf.j2   #  <------- templates end in .j2
+        files/            #
+            bar.txt       #  <-- files for use with the copy resource
+            foo.sh        #  <-- script files for use with the script resource
+        vars/             #
+            main.yml      #  <-- variables associated with this role
+        defaults/         #
+            main.yml      #  <-- default lower priority variables for this role
+        meta/             #
+            main.yml      #  <-- role dependencies
+        library/          # roles can also include custom modules
+        module_utils/     # roles can also include custom module_utils
+        lookup_plugins/   # or other types of plugins, like lookup in this case
+
+    webtier/              # same kind of structure as "common" was above, done for the webtier role
+    monitoring/           # ""
+    fooapp/               # ""
+</code>
+
+==== 3.1 How variables are merged====
+
+By default, variables are merged/flattened to the specific host before a play is run. This keeps Ansible focused on the Host and Task, so groups don’t really survive outside of inventory and host matching. By default, Ansible overwrites variables including the ones defined for a group and/or host (see https://docs.ansible.com/ansible/latest/reference_appendices/config.html#default-hash-behaviour). The order/precedence is (from lowest to highest):
+
+  * all group (because it is the ‘parent’ of all other groups)
+  * parent group
+  * child group
+  * host
+
+===== 4. Run playbook with options =====
+
+<code>
+# Run your playbook with default inventory
+ansible-playbook site.yml
+
+# Run with customize inventory
+ansible-playbook -i datalake_inventory site.yml
+</code>
+
+You can override the default variables defines in the playbook. Suppose in your playbook, you have two variables (e.g. user_name and user_pwd). You can overwrite them with the following command
+
+<code>
+ansible-playbook site.yml –extra-vars "user_name=toto user_pwd=changeMe"
+</code>
+
+Before you run the playbook on the server, you may want to test which hosts and which task the playbook will run on. You can use the following options. 
+
+<code>
+ansible-playbook --list-hosts --list-tasks site.yml
+</code> 
+
+The full option explanation page is here https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html

@@ -1,0 +1,3 @@
+<span class="kw2">tail</span> <span class="re5">-F</span> app<span class="sy0">/</span>logs<span class="sy0">/</span>prod.log <span class="co0"># logs symfony</span>
+<span class="kw2">tail</span> <span class="re5">-F</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>logs<span class="sy0">/</span>error_log <span class="co0"># logs apache</span>
+<span class="kw2">tail</span> <span class="re5">-F</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>logs<span class="sy0">/</span>biospecimens-access.log <span class="co0"># logs apache</span>

@@ -1,0 +1,702 @@
+
+<h1 class="sectionedit1" id="install_shibboleth_33_on_centos_7">Install shibboleth 3.3 on centos 7</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install shibboleth 3.3 on centos 7&quot;,&quot;hid&quot;:&quot;install_shibboleth_33_on_centos_7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-49&quot;} -->
+<h2 class="sectionedit2" id="warning">Warning</h2>
+<div class="level2">
+
+<p>
+Shibboleth 3.3 removed the feature ./install renewCert.
+</p>
+
+<p>
+So it&#039;s really difficult to change entity ID and domain name of the idp server. 
+</p>
+
+<p>
+So choose well your idp server domain name when you start the idp installation. 
+</p>
+
+<p>
+If you have to change, there are 3 paire of private key and certificate need to be replaced. In /opt/shibboleth-idp/credentials/, you have &lt;color #ed1c24&gt;idp-backchannel.crt  idp-encryption.crt  idp-signing.crt idp-backchannel.p12  idp-encryption.key  idp-signing.key &lt;/color&gt;  You need also update the three new certificate in the idp-metadata.xml.
+</p>
+
+<p>
+I have done it, it&#039;s a real pain in the ass and time-consuming.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Warning&quot;,&quot;hid&quot;:&quot;warning&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;50-706&quot;} -->
+<h2 class="sectionedit3" id="config_jetty_and_apache_for_shibboleth_33">Config jetty and apache for shibboleth 3.3</h2>
+<div class="level2">
+<pre class="code">&lt;VirtualHost *:80&gt;
+    ServerName auth-shib.bioaster.org
+    ServerAlias auth-shib.bioaster.org
+    Redirect permanent / https://auth-shib.bioaster.org/
+&lt;/VirtualHost&gt;
+
+
+
+&lt;VirtualHost *:443&gt;
+ServerName auth-shib.bioaster.org
+ServerAlias auth-shib.bioaster.org
+
+    SSLEngine       on
+    SSLProxyEngine on
+    SSLProxyVerify none
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+ 
+    SSLCertificateFile      /etc/pki/tls/certs/shib.bioaster.org.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/shib.bioaster.org.key
+    SSLCertificateChainFile /etc/pki/tls/certs/intermediate.crt
+
+LimitRequestFieldSize 65536
+
+&lt;IfModule mod_proxy.c&gt;
+    ProxyPreserveHost On
+    RequestHeader set X-Forwarded-Proto &quot;https&quot;
+    ProxyPass /idp http://localhost:8089/idp
+    ProxyPassReverse /idp http://localhost:8089/idp
+&lt;/IfModule&gt;
+
+
+&lt;/VirtualHost&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Config jetty and apache for shibboleth 3.3&quot;,&quot;hid&quot;:&quot;config_jetty_and_apache_for_shibboleth_33&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;707-1659&quot;} -->
+<h2 class="sectionedit4" id="get_the_shibboleth_source">Get the shibboleth source</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Get the shibboleth source&quot;,&quot;hid&quot;:&quot;get_the_shibboleth_source&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1660-1698&quot;} -->
+<h2 class="sectionedit5" id="build_the_shibboleth_environment_with_the_download_source">Build the shibboleth environment with the download source</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Build the shibboleth environment with the download source&quot;,&quot;hid&quot;:&quot;build_the_shibboleth_environment_with_the_download_source&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1699-1769&quot;} -->
+<h2 class="sectionedit6" id="copy_the_generated_war_file_to_the_java_application_container">Copy the generated war file to the java application container</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Copy the generated war file to the java application container&quot;,&quot;hid&quot;:&quot;copy_the_generated_war_file_to_the_java_application_container&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;1770-1844&quot;} -->
+<h2 class="sectionedit7" id="grant_access_to_your_sp_or_your_pc">Grant access to your sp or your Pc</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Grant access to your sp or your Pc&quot;,&quot;hid&quot;:&quot;grant_access_to_your_sp_or_your_pc&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;1845-1891&quot;} -->
+<h3 class="sectionedit8" id="edit_the_conf_access-controlxml_to_authorize_your_pc_to_view_the_shibboleth_idp_tools">1.Edit the conf/access-control.xml to authorize your PC to view the shibboleth idp tools</h3>
+<div class="level3">
+<pre class="code">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+       xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;
+                           
+       default-init-method=&quot;initialize&quot;
+       default-destroy-method=&quot;destroy&quot;&gt;
+
+    &lt;!--
+    Map of access control policies used to limit access to administrative functions.
+    The purpose of the map is to label policies with a key/name so they can be reused.
+    --&gt;
+
+    &lt;!--
+    Use the &quot;shibboleth.IPRangeAccessControl&quot; parent bean for IP-based access control.
+    The ranges provided MUST be CIDR network expressions. To specify a single address,
+    add &quot;/32&quot; or &quot;/128&quot; for IPv4 or IPv6 respectively.
+
+    The additional examples below demonstrate how to control access by username
+    and by attribute(s), in the case of authenticated access to admin functions.
+    --&gt;
+
+    &lt;util:map id=&quot;shibboleth.AccessControlPolicies&quot;&gt;
+    
+        &lt;entry key=&quot;AccessByIPAddress&quot;&gt;
+            &lt;bean id=&quot;AccessByIPAddress&quot; parent=&quot;shibboleth.IPRangeAccessControl&quot;
+                p:allowedRanges=&quot;#{ {&#039;127.0.0.1/32&#039;, &#039;::1/128&#039;, &#039;10.69.11.193/32&#039;,&#039;10.69.10.117/32&#039;,&#039;10.69.11.180/32&#039;,&#039;10.69.0.0/18&#039;} }&quot; /&gt;
+        &lt;/entry&gt;
+        
+        &lt;!--
+        &lt;entry key=&quot;AccessByUser&quot;&gt;
+            &lt;bean parent=&quot;shibboleth.PredicateAccessControl&quot;&gt;
+                &lt;constructor-arg&gt;
+                    &lt;bean parent=&quot;shibboleth.Conditions.SubjectName&quot; c:collection=&quot;#{&#039;jdoe&#039;}&quot; /&gt;
+                &lt;/constructor-arg&gt;
+            &lt;/bean&gt;
+        &lt;/entry&gt;
+        --&gt;
+        
+        &lt;!--
+        &lt;entry key=&quot;AccessByAttribute&quot;&gt;
+            &lt;bean parent=&quot;shibboleth.PredicateAccessControl&quot;&gt;
+                &lt;constructor-arg&gt;
+                    &lt;bean class=&quot;net.shibboleth.idp.profile.logic.SimpleAttributePredicate&quot;&gt;
+                        &lt;property name=&quot;attributeValueMap&quot;&gt;
+                            &lt;map&gt;
+                                &lt;entry key=&quot;eduPersonEntitlement&quot;&gt;
+                                    &lt;list&gt;
+                                        &lt;value&gt;https://example.org/entitlement/idpadmin&lt;/value&gt;
+                                    &lt;/list&gt;
+                                &lt;/entry&gt;
+                            &lt;/map&gt;
+                        &lt;/property&gt;
+                    &lt;/bean&gt;
+                &lt;/constructor-arg&gt;
+            &lt;/bean&gt;
+        &lt;/entry&gt;
+        --&gt;
+    
+    &lt;/util:map&gt;
+
+&lt;/beans&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.Edit the conf\/access-control.xml to authorize your PC to view the shibboleth idp tools&quot;,&quot;hid&quot;:&quot;edit_the_conf_access-controlxml_to_authorize_your_pc_to_view_the_shibboleth_idp_tools&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;1892-5044&quot;} -->
+<h3 class="sectionedit9" id="edit_the_conf_relying-partyxml_to_authorize_your_pc_to_view_the_shibboleth_idp_tools">2.Edit the conf/relying-party.xml to authorize your PC to view the shibboleth idp tools</h3>
+<div class="level3">
+<pre class="code">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+       xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;
+                           
+       default-init-method=&quot;initialize&quot;
+       default-destroy-method=&quot;destroy&quot;&gt;
+
+    &lt;!--
+    Unverified RP configuration, defaults to no support for any profiles. Add &lt;ref&gt; elements to the list
+    to enable specific default profile settings (as below), or create new beans inline to override defaults.
+    
+    &quot;Unverified&quot; typically means the IdP has no metadata, or equivalent way of assuring the identity and
+    legitimacy of a requesting system. To run an &quot;open&quot; IdP, you can enable profiles here.
+    --&gt;
+    &lt;bean id=&quot;shibboleth.UnverifiedRelyingParty&quot; parent=&quot;RelyingParty&quot;&gt;
+        &lt;property name=&quot;profileConfigurations&quot;&gt;
+            &lt;list&gt;
+            &lt;!-- &lt;bean parent=&quot;SAML2.SSO&quot; p:encryptAssertions=&quot;false&quot; /&gt; --&gt;
+            &lt;bean parent=&quot;SAML2.SSO&quot; p:encryptAssertions=&quot;false&quot; /&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--
+    Default configuration, with default settings applied for all profiles, and enables
+    the attribute-release consent flow.
+    --&gt;
+    &lt;bean id=&quot;shibboleth.DefaultRelyingParty&quot; parent=&quot;RelyingParty&quot;&gt;
+        &lt;property name=&quot;profileConfigurations&quot;&gt;
+            &lt;list&gt;
+                &lt;bean parent=&quot;Shibboleth.SSO&quot; p:postAuthenticationFlows=&quot;attribute-release&quot; /&gt;
+                &lt;ref bean=&quot;SAML1.AttributeQuery&quot; /&gt;
+                &lt;ref bean=&quot;SAML1.ArtifactResolution&quot; /&gt;
+                &lt;bean parent=&quot;SAML2.SSO&quot; p:postAuthenticationFlows=&quot;attribute-release&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.ECP&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.Logout&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.AttributeQuery&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.ArtifactResolution&quot; /&gt;
+                &lt;ref bean=&quot;Liberty.SSOS&quot; /&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- Container for any overrides you want to add. --&gt;
+
+    &lt;util:list id=&quot;shibboleth.RelyingPartyOverrides&quot;&gt;
+    
+        &lt;!--
+        Override example that identifies a single RP by name and configures it
+        for SAML 2 SSO without encryption. This is a common &quot;vendor&quot; scenario.
+        --&gt;
+       
+        &lt;bean parent=&quot;RelyingPartyByName&quot; c:relyingPartyIds=&quot;https://auth-shib.bioaster.org&quot;&gt;
+            &lt;property name=&quot;profileConfigurations&quot;&gt;
+                &lt;list&gt;
+                    &lt;bean parent=&quot;SAML2.SSO&quot; p:encryptAssertions=&quot;false&quot; p:postAuthenticationFlows=&quot;attribute-release&quot;/&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;
+
+
+ &lt;bean parent=&quot;RelyingPartyByName&quot; c:relyingPartyIds=&quot;https://pengfei.org&quot;&gt;
+            &lt;property name=&quot;profileConfigurations&quot;&gt;
+                &lt;list&gt;
+               &lt;!--     &lt;bean parent=&quot;SAML2.SSO&quot; p:encryptAssertions=&quot;false&quot; p:postAuthenticationFlows=&quot;attribute-release&quot;/&gt; --&gt;
+                &lt;bean parent=&quot;Shibboleth.SSO&quot; p:postAuthenticationFlows=&quot;attribute-release&quot; /&gt;
+                &lt;ref bean=&quot;SAML1.AttributeQuery&quot; /&gt;
+                &lt;ref bean=&quot;SAML1.ArtifactResolution&quot; /&gt;
+                &lt;bean parent=&quot;SAML2.SSO&quot; p:postAuthenticationFlows=&quot;attribute-release&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.ECP&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.Logout&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.AttributeQuery&quot; /&gt;
+                &lt;ref bean=&quot;SAML2.ArtifactResolution&quot; /&gt;
+                &lt;ref bean=&quot;Liberty.SSOS&quot; /&gt;
+
+                &lt;/list&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;
+        
+        
+    &lt;/util:list&gt;
+
+&lt;/beans&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.Edit the conf\/relying-party.xml to authorize your PC to view the shibboleth idp tools&quot;,&quot;hid&quot;:&quot;edit_the_conf_relying-partyxml_to_authorize_your_pc_to_view_the_shibboleth_idp_tools&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;5045-9292&quot;} -->
+<h2 class="sectionedit10" id="connect_shibboleth_to_a_ldap_or_ldap_like_ie_ad_server">Connect shibboleth to a ldap or ldap like (i.e AD) server</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Connect shibboleth to a ldap or ldap like (i.e AD) server&quot;,&quot;hid&quot;:&quot;connect_shibboleth_to_a_ldap_or_ldap_like_ie_ad_server&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:10,&quot;range&quot;:&quot;9293-9363&quot;} -->
+<h3 class="sectionedit11" id="edit_conf_ldapproperties">Edit conf/ldap.properties</h3>
+<div class="level3">
+<pre class="code"># LDAP authentication configuration, see authn/ldap-authn-config.xml
+# Note, this doesn&#039;t apply to the use of JAAS
+
+## Authenticator strategy, either anonSearchAuthenticator, bindSearchAuthenticator, directAuthenticator, adAuthenticator
+idp.authn.LDAP.authenticator                   = bindSearchAuthenticator
+
+## Connection properties ##
+idp.authn.LDAP.ldapURL                          = ldap://srvadmin.bioaster.local:389
+idp.authn.LDAP.useStartTLS                     = false
+idp.authn.LDAP.useSSL                          = false
+# Time in milliseconds that connects will block
+#idp.authn.LDAP.connectTimeout                  = PT3S
+# Time in milliseconds to wait for responses
+#idp.authn.LDAP.responseTimeout                 = PT3S
+
+## SSL configuration, either jvmTrust, certificateTrust, or keyStoreTrust
+#idp.authn.LDAP.sslConfig                       = certificateTrust
+## If using certificateTrust above, set to the trusted certificate&#039;s path
+idp.authn.LDAP.trustCertificates                = %{idp.home}/credentials/ldap-server.crt
+## If using keyStoreTrust above, set to the truststore path
+idp.authn.LDAP.trustStore                       = %{idp.home}/credentials/ldap-server.truststore
+
+## Return attributes during authentication
+idp.authn.LDAP.returnAttributes                 = passwordExpirationTime,loginGraceRemaining
+
+## DN resolution properties ##
+
+# Search DN resolution, used by anonSearchAuthenticator, bindSearchAuthenticator
+# for AD: CN=Users,DC=example,DC=org
+idp.authn.LDAP.baseDN                           = OU=UTILISATEURS,dc=bioaster,dc=local
+idp.authn.LDAP.subtreeSearch                   = true
+idp.authn.LDAP.userFilter                       = (sAMAccountName={user})
+# bind search configuration
+# for AD: idp.authn.LDAP.bindDN=adminuser@domain.com
+idp.authn.LDAP.bindDN                           = toto
+idp.authn.LDAP.bindDNCredential                 = changeMe
+
+# Format DN resolution, used by directAuthenticator, adAuthenticator
+# for AD use idp.authn.LDAP.dnFormat=%s@domain.com
+#idp.authn.LDAP.dnFormat                         = uid=%s,ou=people,dc=example,dc=org
+
+# LDAP attribute configuration, see attribute-resolver.xml
+# Note, this likely won&#039;t apply to the use of legacy V2 resolver configurations
+idp.attribute.resolver.LDAP.ldapURL             = %{idp.authn.LDAP.ldapURL}
+idp.attribute.resolver.LDAP.connectTimeout      = %{idp.authn.LDAP.connectTimeout:PT3S}
+idp.attribute.resolver.LDAP.responseTimeout     = %{idp.authn.LDAP.responseTimeout:PT3S}
+idp.attribute.resolver.LDAP.baseDN              = %{idp.authn.LDAP.baseDN:undefined}
+idp.attribute.resolver.LDAP.bindDN              = %{idp.authn.LDAP.bindDN:undefined}
+idp.attribute.resolver.LDAP.bindDNCredential    = %{idp.authn.LDAP.bindDNCredential:undefined}
+idp.attribute.resolver.LDAP.useStartTLS         = %{idp.authn.LDAP.useStartTLS:true}
+idp.attribute.resolver.LDAP.trustCertificates   = %{idp.authn.LDAP.trustCertificates:undefined}
+idp.attribute.resolver.LDAP.searchFilter        = (sAMAccountName=$resolutionContext.principal)
+
+# LDAP pool configuration, used for both authn and DN resolution
+#idp.pool.LDAP.minSize                          = 3
+#idp.pool.LDAP.maxSize                          = 10
+#idp.pool.LDAP.validateOnCheckout               = false
+#idp.pool.LDAP.validatePeriodically             = true
+#idp.pool.LDAP.validatePeriod                   = PT5M
+#idp.pool.LDAP.prunePeriod                      = PT5M
+#idp.pool.LDAP.idleTime                         = PT10M
+#idp.pool.LDAP.blockWaitTime                    = PT3S
+#idp.pool.LDAP.failFastInitialize               = false
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit conf\/ldap.properties&quot;,&quot;hid&quot;:&quot;edit_conf_ldapproperties&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:11,&quot;range&quot;:&quot;9364-13016&quot;} -->
+<h2 class="sectionedit12" id="configure_shibboleth_user_data_source">Configure shibboleth user data source</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure shibboleth user data source&quot;,&quot;hid&quot;:&quot;configure_shibboleth_user_data_source&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:12,&quot;range&quot;:&quot;13017-13066&quot;} -->
+<h3 class="sectionedit13" id="edit_attribute-resolverxml">Edit attribute-resolver.xml</h3>
+<div class="level3">
+<pre class="code">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- 
+         This file is an EXAMPLE configuration file. While the configuration
+    presented in this example file is semi-functional, it isn&#039;t very
+    interesting. It is here only as a starting point for your deployment
+    process.
+    
+    Very few attribute definitions and data connectors are demonstrated,
+    and the data is derived statically from the logged-in username and a
+    static example connector.
+
+    Attribute-resolver-full.xml contains more examples of attributes,
+    encoders, and data connectors. Deployers should refer to the Shibboleth
+    documentation for a complete list of components and their options.
+--&gt;
+&lt;AttributeResolver
+        xmlns=&quot;urn:mace:shibboleth:2.0:resolver&quot; 
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+        xsi:schemaLocation=&quot;urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd&quot;&gt;
+
+
+    &lt;!-- ========================================== --&gt;
+    &lt;!--      Attribute Definitions                 --&gt;
+    &lt;!-- ========================================== --&gt;
+
+    &lt;AttributeDefinition id=&quot;mail&quot; xsi:type=&quot;Simple&quot; sourceAttributeID=&quot;mail&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;mail&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;mail&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;cn&quot; sourceAttributeID=&quot;cn&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;cn&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;cn&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;department&quot; sourceAttributeID=&quot;department&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;department&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;department&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;location&quot; sourceAttributeID=&quot;physicalDeliveryOfficeName&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;location&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;location&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;country&quot; sourceAttributeID=&quot;co&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;country&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;counrty&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;city&quot; sourceAttributeID=&quot;l&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;city&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;city&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;dn&quot; sourceAttributeID=&quot;distinguishedName&quot;&gt;
+        &lt;Dependency ref=&quot;AD&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;dn&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;dn&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+
+&lt;AttributeDefinition id=&quot;uid&quot; xsi:type=&quot;PrincipalName&quot;&gt;
+    &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;uid&quot;  /&gt;
+    &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;uid&quot;  /&gt;
+&lt;/AttributeDefinition&gt;
+
+&lt;!-- --&gt;
+&lt;AttributeDefinition xsi:type=&quot;Simple&quot; id=&quot;wps&quot; sourceAttributeID=&quot;wps&quot;&gt;
+        &lt;Dependency ref=&quot;SciformaUserDb&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML1String&quot; name=&quot;wps&quot; /&gt;
+        &lt;AttributeEncoder xsi:type=&quot;SAML2String&quot; name=&quot;wps&quot; /&gt;
+    &lt;/AttributeDefinition&gt;
+
+
+    &lt;!-- ========================================== --&gt;
+    &lt;!--   static  Data Connectors                       --&gt;
+    &lt;!-- ========================================== --&gt;
+
+
+    &lt;!-- ========================================== --&gt;
+    &lt;!--   Ldap  Data Connectors                       --&gt;
+    &lt;!-- ========================================== --&gt;
+   
+
+     &lt;DataConnector id=&quot;AD&quot; xsi:type=&quot;LDAPDirectory&quot;
+        ldapURL=&quot;%{idp.attribute.resolver.LDAP.ldapURL}&quot;
+        baseDN=&quot;%{idp.attribute.resolver.LDAP.baseDN}&quot; 
+        principal=&quot;%{idp.attribute.resolver.LDAP.bindDN}&quot;
+        principalCredential=&quot;%{idp.attribute.resolver.LDAP.bindDNCredential}&quot;
+        connectTimeout=&quot;%{idp.attribute.resolver.LDAP.connectTimeout}&quot;
+        responseTimeout=&quot;%{idp.attribute.resolver.LDAP.responseTimeout}&quot;&gt;
+        &lt;FilterTemplate&gt;
+            &lt;![CDATA[
+                %{idp.attribute.resolver.LDAP.searchFilter}
+            ]]&gt;
+        &lt;/FilterTemplate&gt;
+        &lt;ConnectionPool
+            minPoolSize=&quot;%{idp.pool.LDAP.minSize:3}&quot;
+            maxPoolSize=&quot;%{idp.pool.LDAP.maxSize:10}&quot;
+            blockWaitTime=&quot;%{idp.pool.LDAP.blockWaitTime:PT3S}&quot;
+            validatePeriodically=&quot;%{idp.pool.LDAP.validatePeriodically:true}&quot;
+            validateTimerPeriod=&quot;%{idp.pool.LDAP.validatePeriod:PT5M}&quot;
+            expirationTime=&quot;%{idp.pool.LDAP.idleTime:PT10M}&quot;
+            failFastInitialize=&quot;%{idp.pool.LDAP.failFastInitialize:false}&quot; /&gt;
+    &lt;/DataConnector&gt;
+
+&lt;!--  sciformat db connector --&gt;
+
+         &lt;DataConnector id=&quot;SciformaUserDb&quot; xsi:type=&quot;RelationalDatabase&quot;&gt;
+        &lt;ApplicationManagedConnection jdbcDriver=&quot;org.postgresql.Driver&quot;
+                                         poolAcquireRetryAttempts=&quot;1&quot;
+                                         poolAcquireRetryDelay=&quot;1&quot;
+                                         poolBreakAfterAcquireFailure=&quot;false&quot;
+                                         jdbcURL=&quot;jdbc:postgresql://10.69.2.41:5432/sciforma&quot;
+                                         jdbcUserName=&quot;toto&quot;
+                                         jdbcPassword=&quot;changMe&quot;/&gt;
+        
+&lt;QueryTemplate&gt;
+&lt;![CDATA[
+                 SELECT t.&quot;AD_ID&quot;, string_agg(t.wps,&#039;;&#039;) AS wps 
+                FROM 
+                    (SELECT DISTINCT a.&quot;AD_ID&quot;, CONCAT(b.&quot;Name&quot;,&#039;|&#039;,c.&quot;ID&quot;,&#039;::&#039;, b.&quot;WorkPackageID&quot;) AS wps  
+                    FROM sciforma.&quot;BA_shib_LaborAsgn&quot; a INNER JOIN sciforma.&quot;BA_shib_projWPtask&quot; b ON  a.&quot;_Task_IID&quot; = b.&quot;_Task_IID&quot; AND a.&quot;_Project_IID&quot; = b.&quot;_Project_IID&quot; 
+                    INNER JOIN sciforma.&quot;Project&quot; c ON b.&quot;Name&quot; = c.&quot;Name&quot; ORDER BY a.&quot;AD_ID&quot;) t 
+                WHERE t.&quot;AD_ID&quot;=&#039;${requestContext.principalName}&#039;    
+                GROUP BY t.&quot;AD_ID&quot;;
+
+            ]]&gt;
+        
+&lt;/QueryTemplate&gt;
+
+        &lt;Column columnName=&quot;wps&quot; attributeID=&quot;wps&quot; /&gt;
+    &lt;/DataConnector&gt;
+
+&lt;/AttributeResolver&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit attribute-resolver.xml&quot;,&quot;hid&quot;:&quot;edit_attribute-resolverxml&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:13,&quot;range&quot;:&quot;13067-19446&quot;} -->
+<h3 class="sectionedit14" id="edit_attribute-filterxml">Edit attribute-filter.xml</h3>
+<div class="level3">
+<pre class="code">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- 
+         This file is an EXAMPLE policy file.  While the policy presented in this 
+    example file is illustrative of some simple cases, it relies on the names of
+    non-existent example services and the example attributes demonstrated in the
+    default attribute-resolver.xml file.
+    
+    Deployers should refer to the documentation for a complete list of components
+    and their options.
+--&gt;
+&lt;AttributeFilterPolicyGroup id=&quot;ShibbolethFilterPolicy&quot;
+        xmlns=&quot;urn:mace:shibboleth:2.0:afp&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd&quot;&gt;
+
+    &lt;!-- Release some attributes to an SP.
+             &lt;AttributeFilterPolicy id=&quot;example1&quot;&gt;
+        &lt;PolicyRequirementRule xsi:type=&quot;Requester&quot; value=&quot;https://auth-shib.bioaster.org/shibboleth&quot; /&gt;
+
+        &lt;AttributeRule attributeID=&quot;cn&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+          &lt;AttributeRule attributeID=&quot;dn&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;uid&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;mail&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;department&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;location&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+    
+       &lt;AttributeRule attributeID=&quot;country&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+       &lt;AttributeRule attributeID=&quot;city&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+ 
+       &lt;AttributeRule attributeID=&quot;wps&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+
+    &lt;/AttributeFilterPolicy&gt;
+
+--&gt;
+
+
+&lt;!-- Release some attributes to an SP. --&gt;
+    &lt;AttributeFilterPolicy id=&quot;pengfei.org&quot;&gt;
+        &lt;PolicyRequirementRule xsi:type=&quot;ANY&quot; /&gt;
+
+        &lt;AttributeRule attributeID=&quot;cn&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+          &lt;AttributeRule attributeID=&quot;dn&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;uid&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;mail&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;department&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;location&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+   
+       &lt;AttributeRule attributeID=&quot;country&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+       &lt;AttributeRule attributeID=&quot;city&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+       &lt;AttributeRule attributeID=&quot;wps&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+
+
+    &lt;/AttributeFilterPolicy&gt;
+
+
+    &lt;!-- Release eduPersonAffiliation to two specific SPs. --&gt;
+    &lt;AttributeFilterPolicy id=&quot;example2&quot;&gt;
+        &lt;PolicyRequirementRule xsi:type=&quot;OR&quot;&gt;
+            &lt;Rule xsi:type=&quot;Requester&quot; value=&quot;https://sp.example.org&quot; /&gt;
+            &lt;Rule xsi:type=&quot;Requester&quot; value=&quot;https://another.example.org/shibboleth&quot; /&gt;
+        &lt;/PolicyRequirementRule&gt;
+
+        &lt;AttributeRule attributeID=&quot;eduPersonScopedAffiliation&quot;&gt;
+            &lt;PermitValueRule xsi:type=&quot;ANY&quot; /&gt;
+        &lt;/AttributeRule&gt;
+    &lt;/AttributeFilterPolicy&gt;
+
+&lt;/AttributeFilterPolicyGroup&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit attribute-filter.xml&quot;,&quot;hid&quot;:&quot;edit_attribute-filterxml&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:14,&quot;range&quot;:&quot;19447-23278&quot;} -->
+<h3 class="sectionedit15" id="add_dependence_and_rebuild_idp">Add dependence and rebuild idp</h3>
+<div class="level3">
+
+<p>
+In your attribute-resolver.xml, if you connect to a RMDB, you need to add the related jdbc driver into webapp/WEB-INF/lib (e.g. /opt/shibboleth-idp/webapp/WEB-INF/lib). Then you need to rebuild the idp.war and put the new war into the java application container.
+</p>
+
+<p>
+To rebuild your idp.war file, go to /opt/shibboleth-idp/bin/
+</p>
+
+<p>
+<code>./build.sh</code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Add dependence and rebuild idp&quot;,&quot;hid&quot;:&quot;add_dependence_and_rebuild_idp&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;23279-23661&quot;} -->
+<h2 class="sectionedit16" id="test_your_idp_server">Test your idp server</h2>
+<div class="level2">
+
+<p>
+If everything works well, enter the following url, it should show you the status of your idp server
+<a href="https://auth-shib.bioaster.org/idp/status" class="urlextern" title="https://auth-shib.bioaster.org/idp/status" rel="nofollow">https://auth-shib.bioaster.org/idp/status</a>
+</p>
+
+<p>
+To test your idp data source, use the following url
+<a href="https://auth-shib.bioaster.org/idp/profile/admin/resolvertest?requester=https://auth-shib.bioaster.org/shibboleth&amp;principal=acauchard" class="urlextern" title="https://auth-shib.bioaster.org/idp/profile/admin/resolvertest?requester=https://auth-shib.bioaster.org/shibboleth&amp;principal=acauchard" rel="nofollow">https://auth-shib.bioaster.org/idp/profile/admin/resolvertest?requester=https://auth-shib.bioaster.org/shibboleth&amp;principal=acauchard</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Test your idp server&quot;,&quot;hid&quot;:&quot;test_your_idp_server&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:16,&quot;range&quot;:&quot;23662-24026&quot;} -->
+<h2 class="sectionedit17" id="debug">Debug</h2>
+<div class="level2">
+
+<p>
+If your idp server cannot start, go see log of your java application container log, in my case, it&#039;s in /opt/jetty/logs/
+</p>
+
+<p>
+If your idp server start, but when you try to login or show data, it show errors, go see log of your idp server. In my case, it&#039;s in /opt/shibboleth-idp/logs/
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debug&quot;,&quot;hid&quot;:&quot;debug&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:17,&quot;range&quot;:&quot;24027-24328&quot;} -->
+<h2 class="sectionedit18" id="provide_auth_service_to_a_new_sp">Provide auth service to a new sp</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Provide auth service to a new sp&quot;,&quot;hid&quot;:&quot;provide_auth_service_to_a_new_sp&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:18,&quot;range&quot;:&quot;24329-24375&quot;} -->
+<h2 class="sectionedit19" id="customize_your_idp_login_page">Customize your idp login page</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Customize your idp login page&quot;,&quot;hid&quot;:&quot;customize_your_idp_login_page&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:19,&quot;range&quot;:&quot;24376-24418&quot;} -->
+<h3 class="sectionedit20" id="add_organization_logo">Add organization logo</h3>
+<div class="level3">
+
+<p>
+To add your organization logo to your idp login page, copy the logo image to /opt/shibboleth-idp-good/webapp/images/
+</p>
+
+<p>
+To make it visible in the login page, you can overwrite the default login page by editing the /opt/shibboleth-idp/messages/messages.properties
+</p>
+<pre class="code"># You can define message properties here to override messages defined in
+# system/messages/ or to add your own messages.
+
+
+idp.title = BIOASTER Authentication Server
+idp.logo = /images/logoBioaster.png
+idp.logo.alt-text = BIOASTER logo
+idp.footer = Copyright BIOASTER
+root.footer = Copyright BIOASTER
+
+#Should be in authn-messages.properties
+idp.url.password.reset = https://authentication.bioaster.org/ChangePassword/
+idp.url.helpdesk = https://helpdesk.bioaster.org/index.php
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Add organization logo&quot;,&quot;hid&quot;:&quot;add_organization_logo&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:20,&quot;range&quot;:&quot;24419-25210&quot;} -->
+<h3 class="sectionedit21" id="change_password_url_and_footer">Change password url and footer</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Change password url and footer&quot;,&quot;hid&quot;:&quot;change_password_url_and_footer&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:21,&quot;range&quot;:&quot;25211-&quot;} -->

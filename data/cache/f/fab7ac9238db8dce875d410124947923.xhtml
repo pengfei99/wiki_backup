@@ -1,0 +1,154 @@
+
+<h1 class="sectionedit1" id="creation_d_images_de_machine_virtuelle">Création d&#039;images de machine virtuelle</h1>
+<div class="level1">
+
+<p>
+La création d&#039;une image suit les étapes suivantes :
+</p>
+<ul>
+<li class="level1"><div class="li"> Téléchargement d&#039;un média d&#039;installation (CD, DVD…) ;</div>
+</li>
+<li class="level1"><div class="li"> Création d&#039;une machine virtuelle locale (VirtualBox…) ;</div>
+</li>
+<li class="level1"><div class="li"> Installation du système ;</div>
+</li>
+<li class="level1"><div class="li"> Configuration du système pour supporter les fonctionnalités spécifiques du <em>cloud</em> ;</div>
+</li>
+<li class="level1"><div class="li"> Export de la machine virtuelle ;</div>
+</li>
+<li class="level1"><div class="li"> Ajout à la bibliothèque d&#039;images d&#039;OpenStack.</div>
+</li>
+</ul>
+
+<p>
+La documentation suivante s&#039;inspire du document OpenStack sur la <a href="http://docs.openstack.org/image-guide/content/ch_openstack_images.html" class="urlextern" title="http://docs.openstack.org/image-guide/content/ch_openstack_images.html"  rel="nofollow">création des images</a> et décrit plus en détail la procédure pour certains <abbr title="Operating System">OS</abbr>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Création d'images de machine virtuelle" [1-672] -->
+<h2 class="sectionedit2" id="debian_gnulinux">Debian GNU/Linux</h2>
+<div class="level2">
+
+<p>
+L&#039;image Debian a été créée en utilisant <strong>VirtualBox</strong>, le CD d&#039;installation <strong>debian-7.4.0-amd64-netinst.iso</strong> et un <strong>disque dur virtuel de 2Go</strong> au format <em>vdi</em>.
+</p>
+
+<p>
+Le premier utilisateur après <em>root</em> est <strong>bioaster</strong>. Les paquets de base sont <code>SSH server</code> et <code>system tools</code>. Une fois le système installé et redémarré, les étapes suivantes sont à effectuer.
+</p>
+<blockquote><div class="no">
+ <strong>Remarque concernant les disques :</strong><br/>
+ Pour que le disque principal puisse être redimensionné en fonction de la <em>flavor</em>, il est nécessaire que la partition ”/” soit hébergée sur la dernière partition du disque.<br/>
+ Lors de l&#039;installation il faut donc partitionner manuellement le disque. La configuration la plus simple consiste à n&#039;utiliser qu&#039;une partition et pas de <em>swap</em>.</div></blockquote>
+
+<p>
+Le système est <strong>mis à jour</strong> et les outils de base sont installés : 
+</p>
+<pre class="code text">$ aptitude update
+$ aptitude dist-upgrade
+$ aptitude install --without-recommends sudo vim
+$ adduser bioaster sudo
+$ locale-gen en_GB.UTF-8
+$ locale-gen en_US.UTF-8
+$ dpkg-reconfigure locales
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail &quot;root&quot;;</pre>
+
+<p>
+<strong>Configuration de SSH</strong>
+</p>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/cloud/images/creation?codeblock=1" title="Download Snippet" class="mediafile mf_">/etc/ssh/sshd_config</a></dt>
+<dd><pre class="code text">PermitRootLogin no
+AllowUsers bioaster
+Protocol 2
+PasswordAuthentication no</pre>
+</dd></dl>
+
+<p>
+<strong>Protéger GRUB2</strong>
+</p>
+<dl class="code">
+<dt><a href="/_export/code/in2p3/cloud/images/creation?codeblock=2" title="Download Snippet" class="mediafile mf_d_40_custom">/etc/grub.d/40_custom</a></dt>
+<dd><pre class="code text">set superusers=&quot;root&quot;
+password root YtidDtcr…</pre>
+</dd></dl>
+<pre class="code text">$ update-grub
+$ chmod o-rwx /etc/grub.d/40_custom</pre>
+
+<p>
+<strong>Préparation pour le cloud</strong>
+</p>
+
+<p>
+Les paquets spécifiques au <em>cloud</em> doivent ensuite être installés. Ils ne sont pour le moment pas disponible dans Debian 7. Ils doivent donc être installés depuis les <em>backports</em>.
+</p>
+<pre class="code text">$ vim /etc/apt/sources.list
+deb http://ftp.fr.debian.org/debian/ wheezy-backports main
+deb-src http://ftp.fr.debian.org/debian/ wheezy-backports main
+&nbsp;
+$ aptitude update
+$ aptitude install cloud-init cloud-utils cloud-initramfs-growroot
+$ echo &quot;&quot; &gt; /etc/udev/rules.d/70-persistent-net.rules
+$ echo &quot;&quot; &gt; /lib/udev/rules.d/75-persistent-net-generator.rules
+$ vim /etc/cloud/cloud.cfg
+name: bioaster
+groups: [..., sudo]
+lock_passwd: False # pour autoriser le sudo ?!</pre>
+
+<p>
+Une fois les composants <em>“cloud”</em> activés, le démarrage est plus long, car le système essaie de contacter des services extérieurs normalement fournis par le <em>“cloud”</em>.
+</p>
+
+<p>
+Le système doit ensuite être configuré pour afficher les messages de démarrage sur la bonne sortie.
+</p>
+<pre class="code text">$ vim /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT=&quot;console=ttyS0&quot;
+&nbsp;
+$ update-grub</pre>
+
+<p>
+À partir de cette modification de GRUB, les messages de démarrage ne sont plus visibles dans VirtualBox.
+</p>
+
+<p>
+Il faut maintenant compresser (<strong>7-zip</strong>) l&#039;image et l&#039;envoyer (<strong>FileZilla</strong>) sur une frontale du CC. Une fois décompressée au CC il faut l&#039;importer dans la bibliothèque d&#039;images.
+</p>
+<pre class="code text">bzcat Debian-7.vdi.bz2 | glance image-create --name=&quot;Debian-7&quot; --is-public=False --container-format=bare --disk-format=vdi</pre>
+
+<p>
+Elle peut maintenant être <a href="/ccin2p3/cloud#creer_une_machine_virtuelle" class="wikilink1" title="ccin2p3:cloud">instanciée</a> comme n&#039;importe quelle autre image.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Debian GNU/Linux" [673-3945] -->
+<h2 class="sectionedit3" id="astuces">Astuces</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Astuces" [3946-3966] -->
+<h3 class="sectionedit4" id="redimensionner_un_disque_sous_virtualbox">Redimensionner un disque sous VirtualBox</h3>
+<div class="level3">
+
+<p>
+L&#039;utilitaire <code>VBoxManager</code> ne fonctionne pas sur les <code>.vdi</code> de taille fixe, il faut donc ruser :
+</p>
+<ul>
+<li class="level1"><div class="li"> créer un nouveau <code>.vdi</code> de la taille voulue ;</div>
+</li>
+<li class="level1"><div class="li"> monter le nouveau et l&#039;ancien disque sur une VM GNU/Linux ;</div>
+</li>
+<li class="level1"><div class="li"> utiliser <code>dd</code> pour copier le contenu <code>dd if=/dev/sdb of=/dev/sdc</code> ;</div>
+</li>
+<li class="level1"><div class="li"> redémarrer la VM pour prendre en compte le changement sur le nouveau disque ;</div>
+</li>
+<li class="level1"><div class="li"> utiliser <code>gparted</code> pour redimensionner le système de fichier.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Redimensionner un disque sous VirtualBox" [3967-] -->

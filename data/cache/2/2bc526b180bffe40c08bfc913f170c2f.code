@@ -1,0 +1,8 @@
+<span class="sc3"><span class="re1">&lt;appender</span> <span class="re0">name</span>=<span class="st0">&quot;LABKEYDEBUG&quot;</span> <span class="re0">class</span>=<span class="st0">&quot;org.apache.log4j.RollingFileAppender&quot;</span><span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;File&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;${labkey.log.home}/labkey-debug.log&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;Append&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;true&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;MaxFileSize&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;10MB&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;layout</span> <span class="re0">class</span>=<span class="st0">&quot;org.apache.log4j.PatternLayout&quot;</span><span class="re2">&gt;</span></span>
+        <span class="sc3"><span class="re1">&lt;param</span> <span class="re0">name</span>=<span class="st0">&quot;ConversionPattern&quot;</span> <span class="re0">value</span>=<span class="st0">&quot;%-5p %-24.24c{1} %d{ISO8601} %24.24t : %m%n&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/layout<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/appender<span class="re2">&gt;</span></span></span>

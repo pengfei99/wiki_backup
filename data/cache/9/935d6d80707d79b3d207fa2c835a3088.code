@@ -1,0 +1,2 @@
+<span class="co1">//以ByteBuffer为例子 写入数据到缓冲区（Writing Data to a Buffer）</span>
+ByteBuffer buf <span class="sy0">=</span> ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">28</span><span class="br0">&#41;</span><span class="sy0">;</span> 

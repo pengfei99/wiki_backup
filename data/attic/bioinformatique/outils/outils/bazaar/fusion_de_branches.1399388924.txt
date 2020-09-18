@@ -1,0 +1,100 @@
+====== Fusion de branches ======
+
+===== Débutants =====
+
+==== Fusion sans conflit ====
+
+Here is how the basic revision history of my __trunk__ looks like:
+
+{{/si/outils/bazaar/fusion_de_branches/1-initial_trunk.png?direct|}}
+
+If I modified in __dev__ and pushed the changes to __trunk__, here is what would happen:
+
+{{/si/outils/bazaar/fusion_de_branches/2-changes_pushed_to_trunk.png?direct|}}
+
+This is called __fast-foward__ history.
+
+Instead, when merging __dev__ changes into __trunk__ we get a "branched" history...
+
+{{/si/outils/bazaar/fusion_de_branches/3-merge_waiting_for_commit.png?direct|}}
+
+... that then needs to be committed into __trunk__:
+
+{{/si/outils/bazaar/fusion_de_branches/4.1-merge_has_been_commited.png?direct|}}
+
+Here is what you would see if something had changed in __trunk__ while you were working on __dev__:
+
+{{/si/outils/bazaar/fusion_de_branches/4.2-merge_has_been_commited_on_changed_trunk.png?direct|}}
+
+The following is a ~~#F00:__very bad example__~~ of what a history looks like when __trunk__ is merged from __dev__ and then pushed back to __trunk__:
+
+{{/si/outils/bazaar/fusion_de_branches/5-merged_in_dev_then_push_to_trunk.png?direct|}}
+
+==== Fusion avec un ou plusieurs conflits ====
+
+When you merge your changes into __trunk__ conflicts can be detected. There is pattern to handle this case: the //double-merge//
+The **proper thing to do** when you have to resolve a //merge conflict// is to:
+ * revert the changes in __trunk__ (were introduced by the merge that ended up on a conflict)
+ * merge ''trunk'' into ''dev''
+ * resolve the conflict in ''dev''
+ * commit in ''dev''
+ * merge ''dev'' into ''trunk''
+ * commit into ''trunk''
+
+{{/si/outils/bazaar/fusion_de_branches/6-double_merge.png?direct|}}
+
+This is called //double-merge pattern//.
+
+==== Pas envie de vérifier la présence de conflits... ====
+
+Instead of trying to merge into trunk by default, you can evaluate the available options from the dev branch.
+
+  * Go to the dev branch and make sure __trunk__ is up-to-date
+
+    cd my_dev_branch
+    bzr pull -d ../trunk
+
+  * Take a look a the differences between trunk and your branch
+
+    bzr missing
+
+  * **Case 1:** You have one more revision
+    You can simply push it to trunk if the commit message is meaningful (should always be!).
+
+    bzr push
+
+  * **Case 2:** You have many more revisions
+    To make it look good from trunk those changes should be merged and committed from trunk.
+    In the resulting history you'll see one revision containing your changes as sub-revisions.
+
+    cd ../trunk
+    bzr merge ../my_dev_branch
+    bzr ci -m "This is the new feature description."
+
+  * **Case 3:**  Branches have diverged
+    You should first merge changes from trunk into your branch and then merge your branch into trunk == //double-merge pattern//
+
+    bzr merge ../trunk
+    # resolve conflicts if needed
+    bzr ci -m "Merging changes from trunk."
+    cd ../trunk
+    bzr merge ../my_dev_branch
+    bzr ci -m "This is the new feature description."
+
+
+**Remarks:**
+
+  * The **Case 3** is always the safest one.
+    If your were in case 2 there will be nothing to import and commit from trunk.
+    If you were in case 1 you will end up with a revision containing only one sub-revision... clumsy, but not problematic.
+  * To merge into a branch with uncommitted changes, first ''shelve'' them using the dedicated command.
+
+===== Advanced users =====
+
+  * **Don't merge trunk into your branch and then push over trunk**. This results in a fast-forward merge, which causes problems. It hijacks trunk, reshapes the history graph, renumbers revisions, and interferes with bisect tools.
+  * **Make sure merges to trunk are just merges**, with no additional changes.
+  * If your branch doesn't merge cleanly with trunk, be sure to use the //double-merge pattern// explained below. Merge from trunk, fix the conflicts, and then merge back to trunk. 
+  * **Never push to trunk unless you are the owner** and you are pushing a locally-updated copy of trunk.
+  * If you combine the above tips, all merges to trunk will end up being trivial... so why not let a bot do it?
+
+[[http://toykeeper.net/tutorials/bzr-vs-git/]]

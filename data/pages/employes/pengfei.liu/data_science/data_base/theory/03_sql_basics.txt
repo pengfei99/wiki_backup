@@ -1,0 +1,335 @@
+====== Lesson03 SQL basics ======
+
+===== 3.1 SQL Types =====
+
+Each column in a database table is required to have a name and a data type. The complete types docs of postgresql can be found https://www.postgresql.org/docs/11/datatype.html
+
+==== 3.1.1 SQL General Data Types ====
+
+  * Boolean
+  * Character types such as char, varchar, and text.
+  * Numeric types such as integer and floating-point number.
+  * Temporal types such as date, time, timestamp, and interval
+  * Enumerated Types
+  * Binary Objects (BLOB)
+
+=== Boolean ===
+
+A column of boolean type can have three states: TRUE, FALSE and NULL. In RDBMs, the value of type boolean is quite flexible, TRUE => 't', 'true', 'y', 'yes','1' ; FALSE => 'f','false','n','no','0'; We can use logical operator on them: =,<>(not equal),not,and,or.
+
+=== Character types ===
+
+We have three primary character types:
+  * character(n) or char(n): fixed-length, blank padded
+  * character varying(n) or varchar(n): variable-length with limit
+  * text(varchar): variable unlimited length
+
+Both char(n) and varchar(n) can store up to n characters in length(n is a positive integer), if you try to store a longer string in the column, it will issue an error.
+
+In postgresql server, there is no performance difference among three character types. In most situation, you should use text or varchar. If you want postgresql help you to check the length limit, then use varchar(n).
+
+
+=== Numeric Types ===
+  * Integers: SQL only specifies the integer types integer (or int), smallint, and bigint. The type names int2, int4, and int8 are extensions, which are also used by some RDBMS.
+  * Arbitrary-Precision Numbers: The types decimal and numeric are equivalent. Both types are part of the SQL standard. Calculations with numeric values yield exact results whenever possible.
+  * Floating-Points Types: These types are usually implementations of IEEE Standard 754 for Binary Floating-Point Arithmetic (single and double precision, respectively). The data types real and double precision are inexact.
+  * Serial Types: The data types smallserial, serial and bigserial are not true types, but merely a notational convenience for creating unique identifier columns. They’re similar to the AUTO_INCREMENT property supported by some other RDBMS.
+
+^NAME^ STORAGE SIZE^ DESCRIPTION^ RANGE^
+|Smallint |2 bytes |small-range integer| -32768 to +32767|
+|Integer  |4 bytes |typical choice for integer| -2147483648 to +2147483647|
+|Bigint   |8 bytes |large-range integer |-9223372036854775808 to +9223372036854775807|
+|decimal  |variable| user-specified precision,exact | up to 131072 digits before the decimal point; up to 16383 digits after the decimal point|
+|numeric | variable| user-specified precision,exact | up to 131072 digits before the decimal point;up to 16383 digits after the decimal point|
+|real  | 4 bytes | variable-precision,inexact | 6 decimal digits precision|
+|double precision| 8 bytes | variable-precision,inexact | 15 decimal digits precision|
+|smallserial | 2 bytes | small autoincrementing integer | 1 to 32767|
+|serial | 4 bytes | autoincrementing integer | 1 to 2147483647|
+|bigserial | 8 bytes | large autoincrementing integer |1 to 9223372036854775807|
+
+=== Temporal types ===
+
+Cover SQL date and time type full set.  Dates are counted according to the Gregorian calendar, even in years before
+that calendar was introduced.
+
+^NAME^STORAGE SIZE^DESCRIPTION^LOW VALUE^HIGH VALUE^RESOLUTION
+|timestamp [ (p) ][ without time zone ]|8 bytes | both date and time (no time zone)|4713 BC| 294276 AD | 1 microsecond|
+|timestamp [ (p) ] with time zone |8 bytes| both date and time, with time zone | 4713 BC| 294276 AD | 1 microsecond|
+|date | 4 bytes| date (no time of day) | 4713 BC | 5874897 AD | 1 day|
+|time [ (p) ][ without time zone ] | 8 bytes | time of day (no date)| 00:00:00| 24:00:00 | 1 microsecond|
+|time [ (p) ] with time zone | 12 bytes | time of day (no date), with time zone| 00:00:00+1459 | 24:00:00-1459 | 1 microsecond|
+|interval [ fields ] [ (p) ] | 16 bytes | time interval | -178000000 years | 178000000 years | 1 microsecond |
+
+Value p specifies the number of fractional digits retained in the seconds' field. Any date or time literal input needs to be enclosed in single quotes, like text strings.
+
+=== Enumerated Types ===
+
+Enumerated (enum) types are data types that comprise a static, ordered set of values. For example: ('sad', 'ok', 'happy')
+
+=== BLOB ===
+The SQL standard defines a different binary string type, called BLOB or BINARY LARGE OBJECT. MySQL and ORACLE give the same name. PostgreSQL has type bytea. The input format is different but the provided functions and operators are mostly the same
+
+==== 3.1.2 Other Types ====
+
+  * Monetary Type
+  * Geometric Types
+  * Network address
+  * UUID for storing Universally Unique Identifiers
+  * XML Type
+  * JSON Type
+  * Array for storing array strings, numbers, etc.
+  * Composite Types
+  * Range Types
+
+==== 3.1.3 The Null Value ====
+
+NULL is not a value, it is a special marker to indicate that a data value does not exist in the database. It is used to signify missing or unknown values. The SQL keyword NULL is used to indicate these values. NULL really isn’t a specific value as much as it is an indicator. Don’t think of NULL as similar to zero or blank or false, it isn’t the same.
+
+You must use the IS NULL or IS NOT NULL operators to check for a NULL value. It is not possible to test for NULL values with comparison operators, such as =, <, or <>.
+
+===== 3.2 SQL coding convention =====
+
+The below list is the general sql coding convention
+
+  * Use comments to describe what SQL does
+  * Put each major SQL statement on a new line
+  * Put SQL keywords, built-in function and data types in the uppercase. Use CamelCase capitalization and do not separate name parts with underscores or use lower case and underscores to separate name parts.
+  * Set standard abbreviations for frequently used objects, such as tbl for tables or idx for indexes
+  * Use single quotation for characters, strings, binary and Unicode
+  * Set a rule for naming aliases
+  * Use indenting to align wrapped long lines
+  * Use parentheses in complex mathematical expressions
+  * Be consistent with indentation – use either tab or space
+  * Don’t avoid using line breaks to improve readability
+  * Code grouping – keep the lines that execute a certain task in separate code blocks
+
+**IMPORTANT NOTE**: SQL language is case insensitive (for the keywords).
+
+===== 3.3 Data manipulation language =====
+
+  * SELECT : Retrieve certain records (get data) from a database
+  * INSERT : Creates a record (insert data) into a table
+  * UPDATE : Modifies records (update data) within a table
+  * DELETE : Delete records (remove data) from a database table
+  * MERGE  : (UPSERT) Update a record if it already exists, otherwise, inserts a new row in a table.
+
+===== 3.4 Data definition language  =====
+
+  * CREATE: Create the database or its objects (like table, index, function, views, store procedure and triggers)
+  * DROP: Deletes objects (like an entire table, a view of a table or other objects)
+  * ALTER: Modifies an existing database object, such as a table
+  * RENAME: Rename an object existing in the database
+  * TRUNCATE: Remove all records from a table. All corresponded spaces allocated for them are released
+  * COMMENT: Define or change the comment of an object
+
+==== Create ====
+
+Create is one of the most used command in sql. In postgresql, you can create 42 different objects with create command.
+
+<code>
+# create database
+CREATE DATABASE database_name [parameters]
+# create table
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] table_name [parameters]
+# create view
+CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] view_name [parameters]
+# create index
+CREATE [ CONCURRENTLY ] [ [ IF NOT EXISTS ] INDEX index_name [parameters]
+
+CREATE CAST — define a new cast
+CREATE EVENT TRIGGER — define a new event trigger
+CREATE EXTENSION — install an extension
+CREATE FUNCTION — define a new function
+CREATE GROUP — define a new database role
+CREATE SEQUENCE — define a new sequence generator
+CREATE STATISTICS — define extended statistics
+CREATE TRIGGER — define a new trigger
+CREATE TYPE — define a new data type
+CREATE USER — define a new database role
+CREATE VIEW — define a new view
+</code>
+
+=== Create table ===
+
+The most used CREATE statement in SQL is for tables:
+
+<code>
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] table_name (
+column_name TYPE column_constraint,
+table_constraint table_constraint,
+);
+</code>
+
+List the column names, their data types, and constraints. A table may have multiple columns separated by a comma (,).
+
+We have two types of constraints in create command. Table constraints, that defines rules for the data in the table. Column constraints defines rules for the data in the column. 
+
+The following are the commonly used column constraints in SQL:
+
+  * NOT NULL – the value of the column cannot be NULL.
+  * UNIQUE – the value of the column must be unique across the whole table. SQL standard only allows one NULL value in the column that has the UNIQUE constraint (PostgreSQL treats each NULL value to be unique so such column can have many NULL values)
+  * PRIMARY KEY – this constraint is the combination of NOT NULL and UNIQUE constraints. You can define one column as PRIMARY KEY by using column level constraint. In case the primary key contains multiple columns, you must use the table-level constraint.
+  * CHECK – enables to check a condition when you insert or update data. For example, the values in the price column of the product table must be positive values.
+  * REFERENCES – constrains the value of the column that exists in a column in another table. You use REFERENCES to define the foreign key constraint.
+
+The table constraints are similar to column constraints except that they are applied to the entire table rather than to an individual column.
+
+The following are the table constraints:
+  * UNIQUE (column_list) – to force the value stored in the columns listed inside the parentheses to be unique.
+  * PRIMARY KEY(column_list) – to define the primary key that consists of multiple columns.
+  * CHECK (condition) – to check a condition when inserting or updating data.
+  * REFERENCES – to constrain the value stored in the column that must exist in a column in another table.
+=== Example of create table ===
+Suppose we have a system to manage user account and role. So we need to create three tables: 
+  * account
+  * role
+  * account_role
+
+The account table has the following columns with the corresponding constraints:
+  * user_id – primary key
+  * username – unique and not null
+  * password – not null
+  * email – unique and not null
+  * created_on – not null
+  * last_login – null
+
+The role table has the following columns with the corresponding constraints:
+  * role_id - primary key
+  * role_name - unique and not null
+
+The account_role table is an association table which links an account to 0 or n roles, it has the following columns with the corresponding constraints:
+  * user_id - the foreign key reference to column user_id of account table
+  * role_id - the foreign key reference to column role_id of role table
+  * grant_date - timestamp without time zone
+  * (user_id,role_id) - primary key
+
+
+<code>
+CREATE TABLE account (
+user_id serial PRIMARY KEY,
+username VARCHAR (50) UNIQUE NOT NULL,
+password VARCHAR (50) NOT NULL,
+email VARCHAR (355) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL,
+last_login TIMESTAMP
+);
+
+CREATE TABLE role(
+role_id serial PRIMARY KEY,
+role_name VARCHAR (255)
+UNIQUE NOT NULL
+);
+
+CREATE TABLE account_role (
+user_id integer NOT NULL,
+role_id integer NOT NULL,
+grant_date timestamp without time zone,
+PRIMARY KEY (user_id, role_id),
+CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+REFERENCES role (role_id) MATCH SIMPLE
+ON UPDATE NO ACTION ON DELETE NO ACTION,
+CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+REFERENCES account (user_id) MATCH SIMPLE
+ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+</code>
+
+==== Drop ====
+
+The drop statement in SQL is used to delete created database objects. You can use the drop statement in SQL to delete databases, tables, indexes, etc. In PostgreSQL, we have 43 commands to delete existing objects. The Below list contains some of the most common used drop commands: 
+
+<code>
+# delete database
+DROP DATABASE [ IF EXISTS ] database_name
+# delete table, add cascade if 
+DROP TABLE [ IF EXISTS ] table_name [ CASCADE ]
+# delete view
+DROP VIEW [ IF EXISTS ] table_name [ CASCADE ]
+# delete index
+DROP INDEX [ IF EXISTS ] index_name [ CASCADE ]
+DROP CAST — remove a cast
+DROP EXTENSION — remove an extension
+DROP FOREIGN TABLE — remove a foreign table
+DROP FUNCTION — remove a function
+DROP LANGUAGE — remove a procedural language
+DROP OPERATOR — remove an operator
+DROP OWNED — remove database objects owned by a database role
+DROP SCHEMA — remove a schema
+DROP SEQUENCE — remove a sequence
+DROP TRIGGER — remove a trigger
+DROP TYPE — remove a data type
+</code>
+
+=== drop table ===
+
+The most used drop statement in sql is for tables. If you drop a table, all the rows in the table are deleted and the table structure is removed from the database. We can also use the drop statement in alter table statement to remove columns from tables.
+
+According to the sql standard, specifying either RESTRICT or **CASCADE** is required in a drop command.
+When cascade is specified in a drop command, it will automatically drop objects that depend on the table (e.g. views, constraints or any other objects)
+
+In a complex database, many tables have foreign key constraints, or views, triggers, functions, etc. When you do drop table toto, you will often receive errors such as "unique/primary keys in table referenced by foreign keys". So we have to use **CASCADE** to remove the table. But keep in mind when you do "drop table toto cascad;", all the dependent objects will be removed, as will any objects that depend on them, recursively.
+
+=== Drop example ===
+
+We retake the example of create table, suppose the table of account, role, account_role are already created. Now we want to drop table account
+
+==== Alter ====
+
+Modifies the definition of an existing database object, such as a table. There are 42 different ALTER commands in PostgreSQL. ALTER TABLE changes the definition of an existing table. There are several subforms. Note that the lock level required may differ for each subform.
+
+Examples of alter table columns
+<code>
+ALTER TABLE table_name ADD COLUMN column_name data_type;
+ALTER TABLE table_name DROP COLUMN [IF EXISTS] column_name [RESTRICT | CASCADE];
+</code>
+
+We can also modify table constraints with alter
+
+<code>
+# Create a new constraint
+ALTER TABLE table_name ADD table_constraint [ NOT VALID ]
+
+# Apply the newly created constraints on the table which was previously created as NOT VALID, by scanning the table to ensure there are no rows for which the constraint is not satisfied.
+ALTER TABLE table_name VALIDATE CONSTRAINT constraint_name
+
+# drop constraint 
+ALTER TABLE table_name DROP CONSTRAINT [IF EXISTS] constraint_name [RESTRICT | CASCADE]
+</code>
+
+Note: ALTER TABLE that acts on a single table can be combined into a list of multiple alterations to be applied together. For example, it is possible to add several columns and/or alter the type of
+several columns in a single command.
+
+==== Rename ====
+
+Only three rename commands in postgresql 
+
+<code>
+# Rename a column
+ALTER TABLE [ IF EXISTS ] [ ONLY ] table_name RENAME [ COLUMN ] column_name TO new_column_name
+# Rename a constraint
+ALTER TABLE [ IF EXISTS ] [ ONLY ] table_name RENAME CONSTRAINT constraint_name TO new_constraint_name
+# Rename a table
+ALTER TABLE [ IF EXISTS ] name RENAME TO new_name
+</code>
+
+Note: When renaming a constraint that has an underlying index, the index is renamed as well
+
+==== TRUNCATE ====
+
+You can use SQL TRUNCATE TABLE statement to remove all data from large tables quickly. To remove all data from a table, you use the DELETE statement. However, for a large table, it is more efficient to use the TRUNCATE TABLE statement. The TRUNCATE TABLE statement removes all rows from a table without scanning it.
+
+<code>
+TRUNCATE TABLE table_name1, table_name2,
+</code>
+
+The advantage of truncate compare to drop table:
+  * Reclaim Space immediately
+  * No impact on transaction logs
+
+==== Comment ====
+
+There is no COMMENT command in the SQL standard. You can use a SQL COMMENT statement to store a comment about a database object. Only one comment string is stored for each object, so to modify a comment, issue a new COMMENT command for the same object. To remove a comment, write NULL in place of the text string.
+
+<code>
+COMMENT ON object_name IS 'text'
+</code>

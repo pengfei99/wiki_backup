@@ -1,0 +1,85 @@
+
+<p>
+<code>populateNoE</code> est une commande appelable <em>via</em> la commande <code>manage.py</code> de Django et permettant de charger des données dans la base de données. Il s&#039;agit d&#039;un loader, implémenté sur le branche <code>feature-2</code> de <a href="/noe" class="wikilink1" title="noe">NoE</a>
+</p>
+
+<h1 class="sectionedit1" id="utilisation">Utilisation</h1>
+<div class="level1">
+
+<p>
+La commande s&#039;utilise de la façon suivante :
+</p>
+<pre class="code bash">python manage.py populateNoE table <span class="br0">&#91;</span>--clear-table<span class="br0">&#93;</span> <span class="re5">--data-dir</span> <span class="kw2">dir</span></pre>
+<ul>
+<li class="level1"><div class="li"> table : Le nom de la table. Pour peupler toutes les tables vous pouvez utiliser “all”.</div>
+</li>
+<li class="level1"><div class="li"> -data-dir : Le repertoire contenant les différents fichiers de configuration</div>
+</li>
+<li class="level1"><div class="li"> -clear-table : Argument optionnel pour vider la table choisie avant de la peupler.</div>
+</li>
+</ul>
+
+<p>
+Pour plus d&#039;informations merci de regarder l&#039;aide :
+</p>
+<pre class="code bash">python manage.py populateNoE <span class="re5">--help</span></pre>
+
+</div>
+<!-- EDIT1 SECTION "Utilisation" [234-762] -->
+<h1 class="sectionedit2" id="implementation">Implémentation</h1>
+<div class="level1">
+
+<p>
+Le fichier contenant le code source se nomme <code>populateNoE.py</code> et est placé dans <code><abbr title="Network Of Experiments">NoE</abbr>/core/management/commands</code>.
+</p>
+
+<p>
+Il contient une classe <code>Command</code> qui hérite de <code>BaseCommand</code>. Cette dernière implémente la méthode <code>add_arguments</code> pour gérer les options et <code>handle</code> qui est la méthode appelée lors de l’exécution du programme. 
+</p>
+
+<p>
+Pour plus d&#039;informations sur l&#039;écriture de commandes personnalisées, merci de se reporter à la <a href="https://docs.djangoproject.com/fr/1.10/howto/custom-management-commands/" class="urlextern" title="https://docs.djangoproject.com/fr/1.10/howto/custom-management-commands/"  rel="nofollow">doc de Django</a>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Implémentation" [763-1333] -->
+<h1 class="sectionedit3" id="remplissage_de_la_bdd">Remplissage de la BDD</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT3 SECTION "Remplissage de la BDD" [1334-1369] -->
+<h2 class="sectionedit4" id="repertoire_data-dir">Répertoire data-dir</h2>
+<div class="level2">
+
+<p>
+On utilise normalement le répertoire 
+</p>
+<pre class="code bash"> <span class="re1">$OWNCLOUD</span><span class="sy0">/</span>NoE<span class="sy0">/</span>Data</pre>
+
+<p>
+Ce répertoire contient des fichiers (généralement au format .csv) qui vont être parsées afin de peupler la base de données.
+</p>
+
+</div>
+
+<h4 id="storages">Storages</h4>
+<div class="level4">
+
+<p>
+La partie stockage est composée de plusieurs fichiers :
+</p>
+<ul>
+<li class="level1"><div class="li"> Q00-11-V01_Equipement_BIOASTER1.csv : L&#039;équivalent du fichier Q00-11-V01_Equipement_BIOASTER1.xlsx se trouvant dans <code>M:/ Partage → 15 QSI → 03 Metrologie Maintenance</code> ou <code>/run/user/1001/gvfs/smb-share:server=b1winficp01.bioaster.local,share=data/01_Partage/15_QSI/03_Metrologie_Maintenance</code> pour les linuxiens</div>
+</li>
+<li class="level1"><div class="li"> laboPhysiques.csv : Une liste de laboratoires avec leur BSL et leur étage. Ce fichier contient les informations présentes sur la page <a href="/noe/laboratoires_physiques" class="wikilink1" title="noe:laboratoires_physiques">Laboratoires physiques</a> mise à jour par la <abbr title="Noe Expert Team">NeT</abbr>.</div>
+</li>
+<li class="level1"><div class="li"> final_storages_drawers.csv : Fichier contenant les éventuels tiroirs des frigos. Il résulte de la concaténation (et curation manuelle) de chaque fichier envoyé par chaque expert de la <abbr title="Noe Expert Team">NeT</abbr>. Les fichiers individuels sont dans le sous répertoire <code>NETStorages</code></div>
+</li>
+</ul>
+<!-- EDIT5 PLUGIN_WRAP_START [0-] --><div class="wrap_center wrap_round wrap_important plugin_wrap" style="width: 60%;">
+<p>
+Si un frigo n&#039;est pas dans le même laboratoire entre le fichier Q00-11-V01_Equipement_BIOASTER1.csv et final_storages_drawers.csv, l&#039;algorithme prendra le laboratoire indiqué dans final_storages_drawers.csv
+</p>
+</div><!-- EDIT6 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT4 SECTION "Répertoire data-dir" [1370-] -->

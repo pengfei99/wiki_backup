@@ -1,0 +1,20 @@
+====== Choix d'un e-CRF pour la gestion des études cliniques ======
+
+<WRAP info>
+**Pondération :** exprimée de 1 à 4 en fonction de l'importance \\
+**Solutions :** pour chaque fonctionnalité, 0 = absente, 1 = présente
+</WRAP>
+
+^Critère^^Solutions^^^^
+^Fonctionnalité ^Pondération ^Clean Web\\ http://cleanweb.tentelemed.com^Clin File\\ http://www.clinfile.com^Voozanoo\\ https://portal.voozanoo.net/^MedSharing\\ http://www.medsharing.fr/^
+^Obligatoire pour le PT1^^^^^^
+|Sécurité des données|1|1|1|1|1|
+|Multi OS|1|1|1|1|1|
+^Optionnel pour le PT1^^^^^^
+|A définir|1|1|1|1|1|
+^Obligatoire pour le PT6^^^^^^
+|Export txt ou csv|?|?|?|?|?|
+|Export XML|?|?|?|?|?|
+|Export SQL|?|?|?|?|?|
+^Optionnel pour le PT6^^^^^^
+|API REST|2| | | | |

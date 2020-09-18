@@ -1,0 +1,53 @@
+====== Tanguy ======
+
+===== Objectifs 2014 =====
+
+  * **Convention** Pasteur
+    * rediger l'annexe technique
+  * **Infrastructure Informatique** à Pasteur
+    * Installation
+    * Formation VMware
+  * **OpenStack** au CC
+    * <del>Mise en place de l'[[/in2p3/logiciels|environnement bioinformatique]] avec le //PT2//</del>
+    * Créer des images personnalisées
+    * Faciliter/Automatiser le lancement
+    * Continuous Improvement
+  * [[formations|Documentation et Formation]]
+    * <del>Installer [[in2p3/logiciels/remark|remark]] pour servir les présentations</del>
+    * <del>[[/in2p3/cloud|OpenStack]]</del>
+    * <del>[[/in2p3/scheduler|Ferme de calcul]]</del>
+
+===== Importants =====
+
+  * Installation de **TranSMART** (OpenStack + DB du CC)
+  * Installer **Galaxy** (w/w/o LIMS)
+    * Mettre derrière HTTPS et authentifier par certificat
+  * Installer BioMAJ
+  * Installer un serveur pour **Blast**
+    * <del>[[http://openwetware.org/wiki/Wwwblast|wwwblast]] serveur</del> et [[in2p3/logiciels/wwwblast|documenter la procédure]]
+  * Mettre en place les [[in2p3/bases_de_donnees|bases de données]] sur SPS :
+    * NCBI-tRNA bactériens
+    * les données MetaHIT (http://gutmeta.genomics.org.cn/ ) gènes et contigs. 
+    * M5rrn
+
+===== Autres =====
+
+  * Mettre en place **Dokuwiki**
+    * <del>Installer avec les plugins tag, templatepagename...</del>
+    * <del>Mettre derrière HTTPS et authentifier par certificat</del>
+    * <del>Mettre en place un backup (on se repose sur ZFS et le backup du CC)</del>
+    * Ecrire la [[in2p3/logiciels/dokuwiki|documentation]]
+    * Mettre à disposition et documenter le plugin d'authentification par certificat.
+    * Lier le plugin à l'AD (en attente de DEUZZI #347100)
+  * <del>Installer des **LIMS** pour les tester (annulé ?!)</del>
+    * <del>[[https://www.labkey.org/wiki/home/Documentation/page.view?name=manualInstall|LabKey]]</del> et [[in2p3/logiciels/labkey|documenter la procédure]]
+    * [[http://hci-scrum.hci.utah.edu/gnomexdoc/?page_id=102|GnomEx]] et [[in2p3/logiciels/gnomex|documenter la procédure]]
+    * <del>[[https://wiki.galaxyproject.org/Admin/Sample%20Tracking/Next%20Gen|Galaxy LIMS]]</del> et [[in2p3/logiciels/galaxy|documenter la procédure]]
+  * **Certification**
+    * <del>[[securite/certification|Créer un CA]] pour pouvoir sécuriser dès à présent</del>
+    * [[securite/certification/cacert|CAcert]] pour BIOASTER (en attente de l'assureur)
+    * Pour l’intégrer à nos services il faut authentifier avec X509 *et* autoriser avec l'AD/LDAP (voir avec MR et JG) 
+  * Signer "remise de materiel informatique" @Emilie
+  * Mon poste
+    * Theme [[http://xfce-look.org/content/show.php?content=155043]]
+    * Free Laptotp [[http://www.fsf.org/news/gluglug-x60-laptop-now-certified-to-respect-your-freedom]]

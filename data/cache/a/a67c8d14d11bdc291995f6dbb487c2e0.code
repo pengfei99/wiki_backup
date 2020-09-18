@@ -1,0 +1,6 @@
+<span class="co1"># Translation tests</span>
+<span class="kw1">from</span> django.<span class="me1">http</span> <span class="kw1">import</span> HttpResponse
+<span class="kw1">from</span> django.<span class="me1">utils</span>.<span class="me1">translation</span> <span class="kw1">import</span> ugettext
+<span class="kw1">def</span> translation_test<span class="br0">&#40;</span>request<span class="br0">&#41;</span>:
+    output <span class="sy0">=</span> ugettext<span class="br0">&#40;</span><span class="st0">&quot;Welcome to my site.&quot;</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> HttpResponse<span class="br0">&#40;</span>output<span class="br0">&#41;</span>

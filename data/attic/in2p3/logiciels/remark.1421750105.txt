@@ -1,0 +1,38 @@
+====== Remark ======
+
+===== Informations =====
+
+  * **Version** : 0.6.0
+  * **Licence** : //Libre//
+  * **Page Web** : [[https://github.com/gnab/remark]]
+  * **Description** : A simple, in-browser, markdown-driven slideshow tool targeted at people who know their way around HTML and CSS.
+
+===== Présentation =====
+
+**Remark** permet de transformer un document markdown assez simple en présentation visible directement dans un navigateur web. Contrairement à ses concurrents il intègre : 
+
+  * Un mode **C**lone
+  * Un mode **P**résentation
+
+Les deux fonctionnalités combinées en font une alternative crédible à de nombreux logiciels de présentation.
+
+{{ut6:in2p3:logiciels:remark.png?direct&400|}}
+
+===== Installation =====
+
+Le code source est récupéré de [[http://gnab.github.io/remark/]]. Il est **//PHPisé//** afin de pouvoir servir plusieurs présentation à partir de la même arborescence.
+
+La version test pour BIOASTER est disponible ici : [[http://presentations.bioaster.org]]
+ 
+===== Intégration =====
+
+<code apache /etc/httpd/conf.d/welcome.conf>
+<VirtualHost *:80>
+    ServerName presentations.bioaster.org
+    DocumentRoot /var/www/remark
+</VirtualHost>
+</code>
+
+===== Log =====
+
+  * **2014.02.26 (tlc)** Version 0.6.0 installée

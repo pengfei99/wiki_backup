@@ -1,0 +1,76 @@
+
+<h1 class="sectionedit1" id="apache_kafka_spark_streaming">Apache Kafka spark streaming</h1>
+<div class="level1">
+
+<p>
+Kafka is a very popular message broker system. In this tutorial, we use kafka as data stream source.
+</p>
+
+<p>
+To do this, we must have a kafka cluster. To install a kafka cluster, see this <a href="/doku.php?id=employes:pengfei.liu:data_science:kafka:installation_configuration" class="wikilink1" title="employes:pengfei.liu:data_science:kafka:installation_configuration">Kafka installation and configuration</a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Apache Kafka spark streaming" [1-334] -->
+<h2 class="sectionedit2" id="kafka_preparation">Kafka preparation</h2>
+<div class="level2">
+
+<p>
+Suppose we have a kafka cluster installed, we have 3 broker in the cluster:
+</p>
+<ul>
+<li class="level1"><div class="li"> hadoop-nn.pengfei.org</div>
+</li>
+<li class="level1"><div class="li"> hadoop-dn1.pengfei.org</div>
+</li>
+<li class="level1"><div class="li"> hadoop-dn2.pengfei.org</div>
+</li>
+</ul>
+
+<p>
+The election of key broker and follower is automatic.
+</p>
+
+<p>
+Now,we need to create a topic and a message producer.
+</p>
+<pre class="code">#create a topic
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --create --zookeeper hadoop-nn.bioaster.org --replication-factor 3 --partitions 3 --topic Hello-Kafka
+
+#check topic status
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-topics.sh --describe --zookeeper hadoop-nn.bioaster.org --topic Hello-Kafka
+Topic:Hello-Kafka       PartitionCount:3        ReplicationFactor:3     Configs:
+        Topic: Hello-Kafka      Partition: 0    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3
+        Topic: Hello-Kafka      Partition: 1    Leader: 2       Replicas: 2,3,1 Isr: 1,2,3
+        Topic: Hello-Kafka      Partition: 2    Leader: 3       Replicas: 3,1,2 Isr: 1,2,3
+        
+# As kafka use zookeepr as backend, so we use --zookeeper hadoop-nn.bioaster.org:2181, 2181 is the default port number. if you don&#039;t change it, you can leave it empty.
+
+# --replication-factor 3 means the message in the topic has three copies --partitions 3 the topic has 3 partitions</pre>
+<pre class="code"># create a producer
+[hadoop@CCLinDataWHD01 bin]$ sh kafka-console-producer.sh --broker-list hadoop-nn.bioaster.org:9092 --topic Hello-Kafka
+&gt;hello kafka
+# broker-list can have one or many brokers, in this example, we use broker hadoop-nn.bioaster.org, the 9092 is the defaut kafka broker port. You can use any broker in the cluster. It will be the same.
+
+
+# create a consumer for testing 
+[hadoop@CCLinDataWHD02 bin]$ sh kafka-console-consumer.sh --zookeeper hadoop-nn.bioaster.org:2181 --topic Hello-Kafka --from-beginning
+&gt;hello kafka
+# the consumer use zookeeper to get message. --from-beginning means this consumer will get all message of the topic from beginnig.
+#In the consumer side, if you see hello kafka, it means the kafka cluster is working</pre>
+
+<p>
+Our spark script will be also a consumer of topic Hello-Kafka
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Kafka preparation" [335-2428] -->
+<h2 class="sectionedit3" id="prepare_your_spark">Prepare your spark</h2>
+<div class="level2">
+
+<p>
+The api for kafka and flume is not included in the default jar file. You need to download it 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Prepare your spark" [2429-] -->

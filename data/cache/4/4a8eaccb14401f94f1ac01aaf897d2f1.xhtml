@@ -1,0 +1,43 @@
+
+<p>
+1. Generation of private key and csr with the following format
+</p>
+
+<p>
+origin url <a href="https://helpdesk.bioaster.org/front/knowbaseitem.form.php?id=73" class="urlextern" title="https://helpdesk.bioaster.org/front/knowbaseitem.form.php?id=73"  rel="nofollow">https://helpdesk.bioaster.org/front/knowbaseitem.form.php?id=73</a>
+</p>
+
+<p>
+ CSR	
+Nom de domaine (Common Name):	*.bioaster.org	
+Organisation (O):	BIOASTER	
+Unité d&#039;organisation (OU):	IS-IT	
+Ville (L):	LYON	
+Etat ou Région (ST):	Rhone-Alpes	
+Pays (C):	FR	
+Key Size:	2048	
+</p>
+
+<p>
+1.1 Generate your private key first.
+</p>
+
+<p>
+<code>openssl genrsa -out service-name.bioaster.org.key 2048</code>
+</p>
+
+<p>
+1.2 Generate your csr with the private key
+</p>
+
+<p>
+<code>openssl req -new -key service-name.bioaster.org.key -out service-name.bioaster.org.csr</code>
+</p>
+
+<p>
+2. Send the csr to IT/IS via <a href="https://helpdesk.bioaster.org" class="urlextern" title="https://helpdesk.bioaster.org"  rel="nofollow">https://helpdesk.bioaster.org</a>.
+</p>
+
+<p>
+They will send you back the signed certificate and the intermediate certification (trust chain)
+</p>

@@ -1,0 +1,23 @@
+===== Fixed Bug Eclipse (Kepler) après MàJ SL6 =====
+<code>sudo vi /opt/eclipse/eclipse.ini
+Add "-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false"
+</code>
+
+===== Building des genomes pour Bowtie2 =====
+<code>/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build <FASTA> <NOM>
+Exemple :
+/home/BIOASTER/lboucinha/local/usr/bin/bowtie2-build hg19.fa hg19.fa
+</code>
+
+===== Compilation des scripts Python =====
+<code>python -m compileall /home/cauchard/Sources/Bioaster/
+</code>
+
+
+===== Pour désactiver SELINUX =====
+<code>Dans le fichier /etc/sysconfig/selinux
+Positionner selinux=disabled au lieu de selinux=enforcing
+</code>
+
+
+

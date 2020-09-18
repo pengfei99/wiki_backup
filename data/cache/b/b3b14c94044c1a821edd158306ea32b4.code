@@ -1,0 +1,17 @@
+sciforma-&gt; \d+ sciforma.&quot;BA_shib_projWPtask&quot;
+                                      Table &quot;sciforma.BA_shib_projWPtask&quot;
+       Column       |            Type             |     Modifiers      | Storage  | Stats target | Description 
+--------------------+-----------------------------+--------------------+----------+--------------+-------------
+ _Project_IID       | double precision            | not null default 0 | plain    |              | 
+ _Task_IID          | double precision            | not null default 0 | plain    |              | 
+ Name               | character varying(255)      |                    | extended |              | 
+ WorkPackageID      | character varying(255)      |                    | extended |              | 
+ WorkPackage__Start | timestamp without time zone |                    | plain    |              | 
+ WorkPackage__Finis | timestamp without time zone |                    | plain    |              | 
+ Type               | character varying(255)      |                    | extended |              | 
+ Start              | timestamp without time zone |                    | plain    |              | 
+ Finish             | timestamp without time zone |                    | plain    |              | 
+ TaskName           | character varying(255)      |                    | extended |              | 
+ WorkPackage__Name  | character varying(255)      |                    | extended |              | 
+Indexes:
+    &quot;BA_shib_projWPtask_pkey&quot; PRIMARY KEY, btree (&quot;_Project_IID&quot;, &quot;_Task_IID&quot;)

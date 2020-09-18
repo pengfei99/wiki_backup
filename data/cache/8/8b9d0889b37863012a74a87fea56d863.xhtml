@@ -1,0 +1,171 @@
+
+<h1 class="sectionedit1" id="install_postgresql_on_centos_7">Install postgresql on centos 7</h1>
+<div class="level1">
+
+<p>
+1. Get rpm source
+You can find all rpm sources at this link <a href="https://yum.postgresql.org/repopackages.php" class="urlextern" title="https://yum.postgresql.org/repopackages.php"  rel="nofollow">https://yum.postgresql.org/repopackages.php</a>
+</p>
+
+<p>
+For example, I choose 9.5.2 .
+</p>
+
+<p>
+<code>rpm -Uvh <a href="http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm" class="urlextern" title="http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm"  rel="nofollow">http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm</a></code>
+</p>
+
+<p>
+Now we can run <code>yum install postgresql95-server postgresql95</code>
+</p>
+
+<p>
+2. Initialize your postgresql db
+</p>
+
+<p>
+<code>/usr/pgsql-9.5/bin/postgresql95-setup initdb</code>
+</p>
+
+<p>
+3. Start, stop, status de postgresql service
+</p>
+
+<p>
+<code>systemctl start/stop/status postgresql-9.5</code>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Install postgresql on centos 7" [1-520] -->
+<h1 class="sectionedit2" id="configure_postgresql">Configure postgresql</h1>
+<div class="level1">
+
+<p>
+1. Configure pg_hba to allow remote access to postgresql server
+</p>
+
+<p>
+The pg_hba file can be find in /var/lib/pgsql/9.5/data/
+</p>
+
+<p>
+<code>vim pg_hba.conf</code>
+</p>
+
+<p>
+You should see lines like this
+</p>
+<pre class="prettyprint">
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# &quot;local&quot; is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     postgres                                peer
+#host    replication     postgres        127.0.0.1/32            ident
+#host    replication     postgres        ::1/128                 ident
+</pre>
+<p>
+You need to change the first line auth method from peer to md5.
+</p>
+
+<p>
+So you can get access with login and password.
+</p>
+
+<p>
+If I want to allow a machine with IP 134.188.88.8 to access on my base toto with login titi
+</p>
+
+<p>
+I should add a line like this
+</p>
+
+<p>
+<code>host  toto    titi   134.188.88.8/32     md5</code>
+</p>
+
+<p>
+2. Add user 
+</p>
+
+<p>
+CREATE USER pliu WITH PASSWORD &#039;toto&#039;;
+</p>
+
+<p>
+3. Add database
+</p>
+
+<p>
+CREATE DATABASE mysite ;
+</p>
+
+<p>
+4. Grant privilege on database
+</p>
+
+<p>
+GRANT ALL PRIVILEGES ON DATABASE mysite TO pliu;
+</p>
+
+<p>
+5. Test your database
+</p>
+
+<p>
+psql -U pliu -h localhost -d mysite -W
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Configure postgresql" [521-1966] -->
+<h1 class="sectionedit3" id="install_psycopg2_in_virtual_env_to_allow_django_to_connect_to_postgres_db">Install psycopg2 in virtual env to allow django to connect to postgres db</h1>
+<div class="level1">
+
+<p>
+1. Install dependencies
+</p>
+
+<p>
+psycopy needs postgresql developpement tool package to compile. As we use postgres9.5
+</p>
+
+<p>
+So, <code>sudo yum install postgresql95-devel</code>
+</p>
+
+<p>
+2. Try <code>pip install psycopg2</code>
+</p>
+
+<p>
+If it fails, and says <strong>Error: pg_config executable not found.</strong>
+</p>
+
+<p>
+You need to add pg_config to your path.
+</p>
+
+<p>
+Use <code>find / -name pg_config  2&gt;/dev/null</code> to find where is your pg_config
+</p>
+
+<p>
+For example, if it shows /usr/pgsql-9.5/bin/pg_config
+</p>
+
+<p>
+<code>export PATH=$PATH:/usr/pgsql-9.5/bin/</code>
+</p>
+
+<p>
+Now you can do <code> pip install psycopg2</code>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Install psycopg2 in virtual env to allow django to connect to postgres db" [1967-] -->

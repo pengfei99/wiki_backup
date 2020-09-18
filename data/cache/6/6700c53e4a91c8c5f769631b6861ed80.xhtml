@@ -1,0 +1,65 @@
+
+<h1 class="sectionedit1" id="third_normal_form">Third normal form</h1>
+<div class="level1">
+
+<p>
+Third normal form (3NF) is a normal form that is used in normalizing a database design to reduce the duplication of data and ensure referential integrity by ensuring that (1) the entity is in second normal form, and (2) all the attributes in a table are determined only by the candidate keys of that relation and not by any non-prime attributes. 3NF was designed to improve database processing while minimizing storage costs. 3NF data modeling was ideal for online transaction processing (OLTP) applications with heavy order entry type of needs.
+</p>
+
+<p>
+The third normal form (3NF) is a normal form used in database normalization. 3NF was originally defined by E.F. Codd in 1971.[2] Codd&#039;s definition states that a table is in 3NF if and only if both of the following conditions hold:
+</p>
+<ul>
+<li class="level1"><div class="li"> The relation R (table) is in second normal form (2NF)</div>
+</li>
+<li class="level1"><div class="li"> Every non-prime attribute of R is non-transitively dependent on every key of R. (In a simple way, all candidate keys only depend on the primary key)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Third normal form&quot;,&quot;hid&quot;:&quot;third_normal_form&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1025&quot;} -->
+<h2 class="sectionedit2" id="example_1">Example 1</h2>
+<div class="level2">
+
+<p>
+For example, the following table is 2nf, but not 3nf. Because of the total = unit_price * quantity, which means the Total depends not only the order number but also the Unit Price and Quantity.
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Order Number </th><th class="col1">Customer Name </th><th class="col2">Unit Price </th><th class="col3">Quantity </th><th class="col4">Total</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">1000	</td><td class="col1 leftalign">David	</td><td class="col2 leftalign">$35.00	</td><td class="col3 leftalign">3	</td><td class="col4">$105.00</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">1001	</td><td class="col1 leftalign">Jim	</td><td class="col2 leftalign">$25.00	</td><td class="col3 leftalign">2	</td><td class="col4">$50.00</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">1002	</td><td class="col1 leftalign">Bob	</td><td class="col2 leftalign">$25.00	</td><td class="col3 leftalign">3	</td><td class="col4">$75.00</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1244-1398&quot;} -->
+<p>
+To transform this table into 3nf, We need to delete the Total column
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Order Number </th><th class="col1">Customer Name </th><th class="col2">Unit Price </th><th class="col3">Quantity </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">1000	</td><td class="col1 leftalign">David	</td><td class="col2 leftalign">$35.00	</td><td class="col3 leftalign">3	</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">1001	</td><td class="col1 leftalign">Jim	</td><td class="col2 leftalign">$25.00	</td><td class="col3 leftalign">2	</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">1002	</td><td class="col1 leftalign">Bob	</td><td class="col2 leftalign">$25.00	</td><td class="col3 leftalign">3	</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;1470-1596&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example 1&quot;,&quot;hid&quot;:&quot;example_1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1026-&quot;} -->

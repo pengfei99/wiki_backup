@@ -1,0 +1,11 @@
+====== Obtention d'un certificat client ======
+
+L'obtention d'un certificat client **x509** peut se faire par différentes manières, listées ici dans l'ordre de préférence :
+
+  - Par **CAcert** à l'aide d'un compte organisation ;
+  - Par le propre **Root CA** de BIOASTER ;
+  - Par **CAcert** mais avec un compte séparé et géré individuellement pour chaque utilisateur.
+
+La [[securite:certification:cacert|solution 1]] est à l'étude et sera favorisée si elle est réalisable. La [[securite:certification|solution 2]] est la solution de remplacement car elle peut-être mise en place assez rapidement. La **solution 3** n'est pas maintenable mais est utilisée pour commencer à utiliser les certificats au plus vite.
+
+La {{:procedure_d_acces_au_wiki.odt|procédure d'accès au Wiki}} (et dans la {{:procedure_d_acces_au_wiki.pdf|version PDF}}) doit être mise à jour pour refléter la solution utilisée.

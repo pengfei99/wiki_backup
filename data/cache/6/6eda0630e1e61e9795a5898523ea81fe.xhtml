@@ -1,0 +1,38 @@
+
+<h1 class="sectionedit1" id="close_window_without_killing_the_process">Close window without killing the process</h1>
+<div class="level1">
+
+<p>
+The best way to do it is using screen.
+</p>
+
+<p>
+The below script works too
+</p>
+<pre class="code">nohup sh myexe.sh &amp;</pre>
+<pre class="code">sh myexe.sh &amp;
+disown</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Close window without killing the process&quot;,&quot;hid&quot;:&quot;close_window_without_killing_the_process&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-197&quot;} -->
+<h1 class="sectionedit2" id="background_forground_process">Background/Forground process</h1>
+<div class="level1">
+<pre class="code"># When you run a process with &amp; at the end, the process will run at the background
+# fg will bring the last process back to foreground 
+fg
+# if you have more than one process running in the background, use jobs to list all your back ground process
+jobs
+[1]   Stopped                 vim
+[2]-  Stopped                 bash
+[3]+  Stopped                 vim 23
+# for example if you want to bring process 2 (bash) to forground
+fg %2
+
+# ctrl+z will suspend the process and send it to background
+# bg will resume the process in the background
+# if you have many process in background, you can use 
+bg %2
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Background\/Forground process&quot;,&quot;hid&quot;:&quot;background_forground_process&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:2,&quot;range&quot;:&quot;198-&quot;} -->

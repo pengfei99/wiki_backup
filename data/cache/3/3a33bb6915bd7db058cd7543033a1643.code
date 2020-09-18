@@ -1,0 +1,8 @@
+Listen 443
+…
+LoadModule ssl_module     libexec/apache24/mod_ssl.so
+LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+LoadModule php5_module    libexec/apache24/libphp5.so
+…
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps

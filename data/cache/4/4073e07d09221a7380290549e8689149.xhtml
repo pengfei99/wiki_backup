@@ -1,0 +1,322 @@
+
+<h1 class="sectionedit1" id="deploiement_de_l_application_biospecimens">Déploiement de l&#039;application biospecimens</h1>
+<div class="level1">
+
+<p>
+Petit guide à l&#039;usage de ceux et celle voulant déployer biospecimens sur un serveur.
+</p>
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_center wrap_round wrap_important plugin_wrap" style="width: 60%;">
+<p>
+<strong>GARE AUX DUMPS !!!</strong>
+</p>
+
+<p>
+Les “dump” vont tout péter en prod&#039; alors que tout fonctionnera bien en dev.
+Soyez sûrs que vos controller ne possèdent aucun dump (ou qu&#039;ils soient commentés)
+</p>
+
+<p>
+<code>grep -R “dump” src/</code>
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Déploiement de l'application biospecimens" [1-404] -->
+<h2 class="sectionedit4" id="annuler_les_modifications_locales_et_recuperer_les_dernieres_modifications">Annuler les modifications locales et récupérer les dernières modifications</h2>
+<div class="level2">
+<pre class="code bash"><span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php web<span class="sy0">/</span>app_dev.php.bk
+<span class="kw2">git stash</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">git pull</span>
+<span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php.bk web<span class="sy0">/</span>app_dev.php</pre>
+
+</div>
+<!-- EDIT4 SECTION "Annuler les modifications locales et récupérer les dernières modifications" [405-612] -->
+<h2 class="sectionedit5" id="garder_la_possibilite_de_faire_appel_a_l_environnement_dev">Garder la possibilité de faire appel à l’environnement dev</h2>
+<div class="level2">
+
+<p>
+Si vous voulez vous garder la possibilité de faire appel à l’environnement de dev en préfixant vos route par <code>app_dev.php</code> c&#039;est-à-dire avec des urls du style : <code><a href="http://biospecimens-15.bioaster.org/app_dev.php/fr/admin/enregistrement/" class="urlextern" title="http://biospecimens-15.bioaster.org/app_dev.php/fr/admin/enregistrement/"  rel="nofollow">http://biospecimens-15.bioaster.org/app_dev.php/fr/admin/enregistrement/</a></code> vous devez commenter ou supprimer le <em>if</em> suivant :
+</p>
+<pre class="code php"><span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.php.net/isset"><span class="kw3">isset</span></a><span class="br0">&#40;</span><span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st_h">'HTTP_CLIENT_IP'</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+    <span class="sy0">||</span> <a href="http://www.php.net/isset"><span class="kw3">isset</span></a><span class="br0">&#40;</span><span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st_h">'HTTP_X_FORWARDED_FOR'</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+    <span class="sy0">||</span> <span class="sy0">!</span><span class="br0">&#40;</span><a href="http://www.php.net/in_array"><span class="kw3">in_array</span></a><span class="br0">&#40;</span><span class="sy0">@</span><span class="re0">$_SERVER</span><span class="br0">&#91;</span><span class="st_h">'REMOTE_ADDR'</span><span class="br0">&#93;</span><span class="sy0">,</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'127.0.0.1'</span><span class="sy0">,</span> <span class="st_h">'fe80::1'</span><span class="sy0">,</span> <span class="st_h">'::1'</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">||</span> <a href="http://www.php.net/php_sapi_name"><span class="kw3">php_sapi_name</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">===</span> <span class="st_h">'cli-server'</span><span class="br0">&#41;</span>
+<span class="br0">&#41;</span></pre>
+
+</div>
+<!-- EDIT5 SECTION "Garder la possibilité de faire appel à l’environnement dev" [613-1213] -->
+<h2 class="sectionedit6" id="configurer_php">Configurer php</h2>
+<div class="level2">
+
+<p>
+Configurer votre PHP comme vous le souhaitez <em>via</em> la commande suivante :
+</p>
+<pre class="code bash"><span class="kw2">nano</span> <span class="sy0">/</span>etc<span class="sy0">/</span>php.ini</pre>
+
+<p>
+Les variables à mettre à jour sont (liste non exhaustive) :
+</p>
+<ul>
+<li class="level1"><div class="li"> memory_limit = 4G</div>
+</li>
+<li class="level1"><div class="li"> post_max_size = 100M</div>
+</li>
+<li class="level1"><div class="li"> upload_max_filesize = 100M</div>
+</li>
+<li class="level1"><div class="li"> max_file_uploads = 20</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Configurer php" [1214-1523] -->
+<h2 class="sectionedit7" id="mettre_a_jour_les_dependances">Mettre à jour les dépendances</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Mettre à jour les dépendances" [1524-1567] -->
+<h3 class="sectionedit8" id="cote_back-end">Côté back-end</h3>
+<div class="level3">
+<pre class="code bash">composer update</pre>
+
+</div>
+
+<h4 id="probleme_parefeu">Problème parefeu</h4>
+<div class="level4">
+
+<p>
+Si on ne peut rien télécharger à cause du parefeu on peut exécuter <code>composer update</code> sur la machine locale puis faire sur le serveur :
+</p>
+<pre class="code bash"><span class="kw2">mv</span> vendor vendorTMP
+<span class="co0"># ou bien rm -rf vendor si vous êtes un(e) ouf !</span>
+<span class="kw2">scp</span> <span class="re5">-r</span> <span class="re5">-p</span> vendor<span class="sy0">/</span> bioaster<span class="sy0">@</span>biospecimens-<span class="nu0">15</span>.bioaster.org:<span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf <span class="co0"># sur la machine locale !!!</span></pre>
+
+<p>
+Côté front-end les dépendances sont dans <code>web/package.json</code> et devraient s&#039;installer comme ça :
+</p>
+<pre class="code bash"><span class="kw3">cd</span> web<span class="sy0">/</span> ; npm <span class="kw2">install</span></pre>
+
+<p>
+Pour l&#039;instant elles sont versionnées car npm n&#039;a jamais été utilisé sur le serveur.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Côté back-end" [1568-2234] -->
+<h2 class="sectionedit9" id="vider_le_cache_et_passer_en_environnement_de_prod">Vider le cache et passer en environnement de prod</h2>
+<div class="level2">
+<pre class="code bash">php app<span class="sy0">/</span>console cache:clear <span class="re5">--env</span>=prod <span class="sy0">||</span> <span class="br0">&#40;</span><span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> app<span class="sy0">/</span>cache; php app<span class="sy0">/</span>console cache:clear <span class="re5">--env</span>=prod;<span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> app<span class="sy0">/</span>cache<span class="br0">&#41;</span></pre>
+
+<p>
+Si il y a des problèmes de droits, passez en root !
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">rm</span> <span class="re5">-rf</span> app<span class="sy0">/</span>cache<span class="sy0">/</span>prod <span class="sy0">&amp;&amp;</span> <span class="kw2">sudo</span> <span class="kw2">rm</span> <span class="re5">-rf</span> app<span class="sy0">/</span>cache<span class="sy0">/</span>dev <span class="sy0">&amp;&amp;</span> <span class="kw2">sudo</span> php app<span class="sy0">/</span>console cache:clear <span class="re5">--env</span>=prod</pre>
+
+</div>
+<!-- EDIT9 SECTION "Vider le cache et passer en environnement de prod" [2235-2633] -->
+<h2 class="sectionedit10" id="doctrine">Doctrine</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT10 SECTION "Doctrine" [2634-2654] -->
+<h3 class="sectionedit11" id="cas_simple">Cas simple</h3>
+<div class="level3">
+
+<p>
+Le serveur a déjà une base de données et il faut juste faire les dernières migrations.
+</p>
+
+<p>
+Vérifiez que toutes les migrations ont été effectuées
+</p>
+<pre class="code">php app/console doctrine:migrations:status</pre>
+
+<p>
+Si il reste des migrations à faire faites : <code>php app/console doctrine:migrations:migrate</code>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Cas simple" [2655-2977] -->
+<h3 class="sectionedit12" id="cas_complexe">Cas complexe</h3>
+<div class="level3">
+
+<p>
+On doit repartir de zéro, voir supprimer la base existante.
+</p>
+<pre class="code bash"><span class="kw2">mkdir</span> app<span class="sy0">/</span>DoctrineMigrationsBackUp
+<span class="kw2">mv</span> app<span class="sy0">/</span>DoctrineMigrations<span class="sy0">/</span> app<span class="sy0">/</span>DoctrineMigrationsBackUp<span class="sy0">/</span> <span class="co0"># on garde les migrations au cas où</span>
+<span class="co0">#Supprimez et recréez la BDD si besoin est :</span>
+php app<span class="sy0">/</span>console doctrine:database:drop  <span class="re5">--force</span>
+php app<span class="sy0">/</span>console doctrine:database:create <span class="re5">-e</span> prod
+<span class="co0"># Repartez de zéro avec un seul gros fichier de migrations :</span>
+php app<span class="sy0">/</span>console doctrine:migrations:diff
+php app<span class="sy0">/</span>console doctrine:migrations:status
+php app<span class="sy0">/</span>console doctrine:migrations:migrate</pre>
+
+</div>
+<!-- EDIT12 SECTION "Cas complexe" [2978-3544] -->
+<h3 class="sectionedit13" id="cas_tres_complexe">Cas très complexe</h3>
+<div class="level3">
+
+<p>
+Si il faut supprimer une <code>Executed Unavailable Migrations</code> tapez la commande suivante :
+</p>
+<pre class="code">php app/console doctrine:migrations:status --show-versions -vvv</pre>
+
+<p>
+pour connaître la version de la migration. Ensuite connectez-vous à la base de données et faites :
+</p>
+<pre class="code">delete from migration_versions where version=&#039;YYYYDDMM&#039;;</pre>
+
+<p>
+En remplaçant YYYYDDMM par le numéro de la version.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Cas très complexe" [3545-3971] -->
+<h2 class="sectionedit14" id="assetics">Assetics</h2>
+<div class="level2">
+
+<p>
+Dumper les assetics
+</p>
+<pre class="code bash">php app<span class="sy0">/</span>console assetic:dump <span class="re5">--env</span>=prod <span class="re5">--no-debug</span></pre>
+
+</div>
+<!-- EDIT14 SECTION "Assetics" [3972-4083] -->
+<h2 class="sectionedit15" id="configurer_l_application">Configurer l&#039;application</h2>
+<div class="level2">
+
+<p>
+Modifier les fichiers parameters.yml et config.yml pour être sûr qu&#039;ils vous conviennent. Notamment le log path du scheduler bundle et la configuration du serveur mail. Voir la <a href="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/blob/master/doc/CONFIGURATION.md" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/biospecimens-sf/blob/master/doc/CONFIGURATION.md"  rel="nofollow">Doc de biospecimens</a> pour avoir de plus amples informations. 
+Exemple de parameters.yml <a href="/biospecimens/parameters.yml" class="wikilink1" title="biospecimens:parameters.yml">ici</a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Configurer l'application" [4084-4508] -->
+<h3 class="sectionedit16" id="emails">Emails</h3>
+<div class="level3">
+
+<p>
+Reportez-vous à la documentation de l&#039;applicatif.
+Pour résumer les étapes à réaliser sont :
+</p>
+<ol>
+<li class="level1"><div class="li"> Crééer un repertoire qui servira de file d&#039;attente aux mails et le mettre dans <code>config.yml</code> (swiftmailer.spool.path)</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assurer que ce répertoire peut être écrit par symfony</div>
+</li>
+<li class="level1"><div class="li"> Définir un crontab pour vider la queue</div>
+</li>
+</ol>
+
+<p>
+Les détails sur comment ça a été fait pour le serveur de dev sont dans <a href="/biospecimens/server/config" class="wikilink1" title="biospecimens:server:config">la configuration côté serveur</a>
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Emails" [4509-4994] -->
+<h3 class="sectionedit17" id="scheduler_bundle">Scheduler bundle</h3>
+<div class="level3">
+
+<p>
+Assurez-vous que le scheduler bundle va écrire dans un répertoire qui
+</p>
+<ol>
+<li class="level1"><div class="li"> Existe</div>
+</li>
+<li class="level1"><div class="li"> Peut être écrit par syfony</div>
+</li>
+</ol>
+
+<p>
+Définissez un cron qui va appeler ce bundle, par exemple :
+</p>
+<pre class="code bash"><span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="kw3">cd</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf <span class="sy0">&amp;&amp;</span> php app<span class="sy0">/</span>console scheduler:execute <span class="re5">--env</span>=prod</pre>
+
+<p>
+Les différentes commandes à appeler dans un cron ne doivent plus être appelée en faisant <code>cron -e</code> mais bien en allant sur <a href="https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list" class="urlextern" title="https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list"  rel="nofollow">https://biospecimens-15.bioaster.org/fr/admin/command-scheduler/list</a> et en passant par le <abbr title="Graphical User Interface">GUI</abbr>.
+</p>
+
+<p>
+Les détails sur les commandes programmées sur le serveur dev sont dans <a href="/biospecimens/server/config" class="wikilink1" title="biospecimens:server:config">la configuration côté serveur</a>
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Scheduler bundle" [4995-5667] -->
+<h3 class="sectionedit18" id="fichier_uploades">Fichier uploadés</h3>
+<div class="level3">
+
+<p>
+Assurez-vous que les fichiers uploadés vont être enregistrés dans un répertoire qui <strong>1</strong> existe <strong>2</strong> peut être écrit.
+</p>
+<pre class="code bash"><span class="kw2">mkdir</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>Entity<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>web<span class="sy0">/</span>media<span class="sy0">/</span>uploadedFiles<span class="sy0">/</span>
+<span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span>  <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>Entity<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>..<span class="sy0">/</span>web<span class="sy0">/</span>media<span class="sy0">/</span>uploadedFiles<span class="sy0">/</span></pre>
+
+</div>
+<!-- EDIT18 SECTION "Fichier uploadés" [5668-6056] -->
+<h2 class="sectionedit19" id="migrations">Migrations</h2>
+<div class="level2">
+
+<p>
+C&#039;est la partie <em>tricky</em> du déploiement, essayer de passer toutes les migrations, sinon faites en qu&#039;une seule d&#039;un coup en faisant ceci :
+</p>
+<pre class="code bash"><span class="kw2">rm</span> app<span class="sy0">/</span>DoctrineMigrations<span class="sy0">/*</span>
+php app<span class="sy0">/</span>console doctrine:migrations:diff
+php app<span class="sy0">/</span>console doctrine:migrations:status
+php app<span class="sy0">/</span>console doctrine:migrations:migrate</pre>
+
+</div>
+<!-- EDIT19 SECTION "Migrations" [6057-6400] -->
+<h2 class="sectionedit20" id="data_fixtures">Data Fixtures</h2>
+<div class="level2">
+
+<p>
+Loader les data fixtures, au moins pour les utilisateurs.
+</p>
+<pre class="code bash">php app<span class="sy0">/</span>console doctrine:fixtures:load <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>UserBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadUserData.php</pre>
+
+</div>
+<!-- EDIT20 SECTION "Data Fixtures" [6401-6607] -->
+<h3 class="sectionedit21" id="dev">Dev</h3>
+<div class="level3">
+
+<p>
+D&#039;autres données doivent être enregistrées en dev, telles que les ressources biologiques liés à des suppliers par exemple :
+</p>
+<pre class="code bash">php app<span class="sy0">/</span>console doctrine:fixtures:load <span class="re5">--append</span> <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadStrainData.php <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadSampleData.php <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadBacteria_abData.php <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>BiospecimensBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadSuppliersData.php</pre>
+
+</div>
+<!-- EDIT21 SECTION "Dev" [6608-7119] -->
+<h2 class="sectionedit22" id="observer_les_logs">Observer les logs</h2>
+<div class="level2">
+
+<p>
+C&#039;est ce qu&#039;il y a de plus utile pour débugger.
+</p>
+<pre class="code bash"><span class="kw2">tail</span> <span class="re5">-F</span> app<span class="sy0">/</span>logs<span class="sy0">/</span>prod.log <span class="co0"># logs symfony</span>
+<span class="kw2">tail</span> <span class="re5">-F</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>logs<span class="sy0">/</span>error_log <span class="co0"># logs apache</span>
+<span class="kw2">tail</span> <span class="re5">-F</span> <span class="sy0">/</span>etc<span class="sy0">/</span>httpd<span class="sy0">/</span>logs<span class="sy0">/</span>biospecimens-access.log <span class="co0"># logs apache</span></pre>
+
+</div>
+<!-- EDIT22 SECTION "Observer les logs" [7120-7370] -->
+<h3 class="sectionedit23" id="c_est_tout">C&#039;est tout ?</h3>
+<div class="level3">
+
+<p>
+N&#039;hésitez pas à aller sur <a href="http://symfony.com/doc/current/deployment.html" class="urlextern" title="http://symfony.com/doc/current/deployment.html"  rel="nofollow">cette liste</a> et <a href="http://www.symfony2-checklist.com/fr" class="urlextern" title="http://www.symfony2-checklist.com/fr"  rel="nofollow">celle là</a> afin de régler les derniers détails et voir ce que vous aurez éventuellement pu oublier.
+</p>
+
+</div>
+<!-- EDIT23 SECTION "C'est tout ?" [7371-7631] -->
+<h2 class="sectionedit24" id="script_de_deploiement">Script de déploiement</h2>
+<div class="level2">
+<pre class="code bash"><span class="kw3">cd</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>biospecimens-sf<span class="sy0">/</span>
+<span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php web<span class="sy0">/</span>app_dev.php.bk
+<span class="kw2">git stash</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">git pull</span>
+<span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php.bk web<span class="sy0">/</span>app_dev.php
+<span class="kw2">mv</span> app<span class="sy0">/</span>DoctrineMigrations<span class="sy0">/</span> app<span class="sy0">/</span>DoctrineMigrationsBackUp<span class="sy0">/</span> 
+php app<span class="sy0">/</span>console doctrine:migrations:diff
+php app<span class="sy0">/</span>console doctrine:migrations:status
+php app<span class="sy0">/</span>console doctrine:migrations:migrate
+php app<span class="sy0">/</span>console cache:clear <span class="re5">--env</span>=prod <span class="sy0">||</span> <span class="br0">&#40;</span><span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> app<span class="sy0">/</span>cache; php app<span class="sy0">/</span>console cache:clear <span class="re5">--env</span>=prod;<span class="kw2">sudo</span> <span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">777</span> app<span class="sy0">/</span>cache<span class="br0">&#41;</span>
+<span class="kw2">sudo</span> <span class="kw2">rm</span> <span class="re5">-rf</span> web<span class="sy0">/</span>media<span class="sy0">/</span>uploadedFiles<span class="sy0">/*</span>
+php app<span class="sy0">/</span>console doctrine:fixtures:load <span class="re5">--append</span> <span class="re5">--fixtures</span>=src<span class="sy0">/</span>BS<span class="sy0">/</span>UserBundle<span class="sy0">/</span>DataFixtures<span class="sy0">/</span>ORM<span class="sy0">/</span>LoadUserData.php</pre>
+
+</div>
+<!-- EDIT24 SECTION "Script de déploiement" [7632-] -->

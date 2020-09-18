@@ -1,0 +1,10 @@
+server.modules = (
+  &quot;mod_access&quot;,
+#  &quot;mod_alias&quot;,
+#  &quot;mod_auth&quot;,
+#  &quot;mod_evasive&quot;,
+#  &quot;mod_redirect&quot;,
+  &quot;mod_rewrite&quot;,
+#  &quot;mod_setenv&quot;,
+#  &quot;mod_usertrack&quot;,
+)

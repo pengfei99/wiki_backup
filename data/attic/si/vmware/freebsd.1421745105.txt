@@ -1,0 +1,20 @@
+====== Déploiement de FreeBSD ======
+
+Fichier IP Plan
+VLAN dans vmware
+
+<code>
+edit /etc/rc.conf
+#IP et router
+
+/etc/rc.d/netif restart
+/etc/rc.d/router restart
+
+freebsd-update fetch install
+pkg update
+pkg upgrade
+pkg audit -F
+
+shutdown -p
+</code>
+DNS : ticket à DEUZZI

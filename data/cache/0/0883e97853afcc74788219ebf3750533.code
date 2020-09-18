@@ -1,0 +1,15 @@
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> testShow<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">loadFixtures</span><span class="br0">&#40;</span><a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <span class="st_h">'AppBundle\DataFixtures\ORM\LoadBookData'</span>
+        <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$client</span> <span class="sy0">=</span> static<span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$crawler</span> <span class="sy0">=</span> <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="st_h">'/books/1234567890ABC'</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertCount</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="re0">$crawler</span><span class="sy0">-&gt;</span><span class="me1">filter</span><span class="br0">&#40;</span><span class="st_h">'html:contains(&quot;This is my title&quot;)'</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#91;</span>…<span class="br0">&#93;</span>

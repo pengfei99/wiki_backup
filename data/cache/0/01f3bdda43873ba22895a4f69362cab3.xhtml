@@ -1,0 +1,128 @@
+
+<h1 class="sectionedit1" id="infos_utiles_concernant_gpfs">Infos utiles concernant GPFS</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_left wrap_round wrap_todo plugin_wrap" style="width: 30%;">
+<p>
+@TODO ⇒ PV : à MAJ 
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] --><!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_clear plugin_wrap"></div><!-- EDIT5 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Infos utiles concernant GPFS" [1-123] -->
+<h2 class="sectionedit6" id="presentation">Présentation</h2>
+<div class="level2">
+
+<p>
+<a href="https://fr.wikipedia.org/wiki/General_Parallel_File_System" class="urlextern" title="https://fr.wikipedia.org/wiki/General_Parallel_File_System"  rel="nofollow"> Généralité</a>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Présentation" [124-233] -->
+<h2 class="sectionedit7" id="acces_interactif">Accès interactif</h2>
+<div class="level2">
+
+<p>
+Avec votre compte afs depuis une machine interactive du CC 
+</p>
+<pre class="prettyprint">
+$ ssh pveyre@ccage.in2p3.fr
+$ cd  /sps/bioaster
+</pre>
+</div>
+<!-- EDIT7 SECTION "Accès interactif" [234-389] -->
+<h2 class="sectionedit8" id="acces_via_un_montage_nfs">Accès via un montage NFS</h2>
+<div class="level2">
+
+<p>
+ <a href="/ccin2p3/cloud/gpfs-nfs" class="wikilink1" title="ccin2p3:cloud:gpfs-nfs">Montage de l&#039;espace GPFS dans une VM via NFS</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Accès via un montage NFS" [390-501] -->
+<h2 class="sectionedit9" id="monitoring">Monitoring</h2>
+<div class="level2">
+
+<p>
+Utilisation : <a href="http://cctools.in2p3.fr/mrtguser/mrtguser/bioaster/bioaster_nfs.html" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/mrtguser/bioaster/bioaster_nfs.html"  rel="nofollow">http://cctools.in2p3.fr/mrtguser/mrtguser/bioaster/bioaster_nfs.html</a>
+</p>
+
+<p>
+Accueil : <a href="https://ccspsmon.in2p3.fr/" class="urlextern" title="https://ccspsmon.in2p3.fr/"  rel="nofollow">https://ccspsmon.in2p3.fr/</a>
+</p>
+
+<p>
+Par user : <a href="https://ccspsmon.in2p3.fr/users/bioaster.html" class="urlextern" title="https://ccspsmon.in2p3.fr/users/bioaster.html"  rel="nofollow">https://ccspsmon.in2p3.fr/users/bioaster.html</a>
+</p>
+
+<p>
+Par top-level directory :  <a href="https://ccspsmon.in2p3.fr/dush/bioaster.html" class="urlextern" title="https://ccspsmon.in2p3.fr/dush/bioaster.html"  rel="nofollow">https://ccspsmon.in2p3.fr/dush/bioaster.html</a>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Monitoring" [502-777] -->
+<h2 class="sectionedit10" id="cleanup">Cleanup</h2>
+<div class="level2">
+
+<p>
+Un script générant la liste des fichiers non accédés depuis un an (par propriétaire) a été mis en place le 1er décembre 2016. 
+</p>
+
+<p>
+Ce script ne supprime aucun fichier.
+</p>
+
+<p>
+Les listes de résultats sont consultables ici : <a href="https://ccspsmon.in2p3.fr/cleanup/bioaster.html" class="urlextern" title="https://ccspsmon.in2p3.fr/cleanup/bioaster.html"  rel="nofollow">https://ccspsmon.in2p3.fr/cleanup/bioaster.html</a> (cette page est “cachée”, elle n&#039;est pas référencée sur <a href="https://ccspsmon.in2p3.fr/cleanup/" class="urlextern" title="https://ccspsmon.in2p3.fr/cleanup/"  rel="nofollow">https://ccspsmon.in2p3.fr/cleanup/</a> et les moteurs de recherche ne peuvent l&#039;indexer)
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Cleanup" [778-1216] -->
+<h2 class="sectionedit11" id="volumetrie_au_23-06-2016">Volumétrie (au 23-06-2016)</h2>
+<div class="level2">
+
+<p>
+<a href="/_detail/ut6/bioaster_nfs-year-23-06-16.png?id=ut6%3Agpfs" class="media" title="ut6:bioaster_nfs-year-23-06-16.png"><img src="/_media/ut6/bioaster_nfs-year-23-06-16.png" class="media" alt="" /></a>
+</p>
+<pre class="prettyprint">
+ 	        Max 	    Average 	Current
+space used: 	25.8 TiB    6445.0 GiB 	23.1 TiB
+space max: 	58.2 TiB    49.5 TiB 	58.2 TiB
+Percentage 	44.0 % 	    13.0 % 	40.0 % 
+
+</pre>
+</div>
+<!-- EDIT11 SECTION "Volumétrie (au 23-06-2016)" [1217-1481] -->
+<h2 class="sectionedit12" id="snapshots_restauration">Snapshots &amp; restauration</h2>
+<div class="level2">
+
+<p>
+Un snapshot de l&#039;espace GPFS est fait toutes les heures de 8h à 20h sur une semaine glissante, soit 13 * 7 = 91 snapshots
+</p>
+
+<p>
+Les snapshots sont stockés dans /sps/bioaster/.snapshots/
+</p>
+<pre class="prettyprint lang-class">
+[pveyre@ccage013 ~]$ ll /sps/bioaster/.snapshots/
+total 2688
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-0900
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1000
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1100
+drwxrws--- 14 root bioaster 32768 Jun 16 15:36 17-06-2016-1200
+...
+...
+</pre>
+<p>
+La configuration des snapshots est faite par le CC, l&#039;interlocuteur privilégié est Loïc Tortay ( <a href="mailto:&#x74;&#x6f;&#x72;&#x74;&#x61;&#x79;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;" class="mail" title="&#x74;&#x6f;&#x72;&#x74;&#x61;&#x79;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;">&#x74;&#x6f;&#x72;&#x74;&#x61;&#x79;&#x40;&#x63;&#x63;&#x2e;&#x69;&#x6e;&#x32;&#x70;&#x33;&#x2e;&#x66;&#x72;</a> )
+</p>
+
+<p>
+Documentation : <a href="http://www.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.adv.doc/bl1adv_logcopy.htm" class="urlextern" title="http://www.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.adv.doc/bl1adv_logcopy.htm"  rel="nofollow">http://www.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.adv.doc/bl1adv_logcopy.htm</a>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Snapshots & restauration" [1482-2317] -->
+<h2 class="sectionedit13" id="sauvegarde_tsm">Sauvegarde TSM</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT13 SECTION "Sauvegarde TSM" [2318-] -->

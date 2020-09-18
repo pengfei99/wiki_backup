@@ -1,0 +1,7 @@
+$ git checkout master
+$ git pull
+$ git checkout votreBranche      
+$ git fetch origin    #facultatif        
+$ git merge origin/master
+#remplir le commit et sauver
+$ git push

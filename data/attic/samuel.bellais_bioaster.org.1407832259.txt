@@ -1,0 +1,8 @@
+====== Page de Samuel ======
+
+===== Trouver une séquence peptidique identifiant Streptococcus agalactiae =====
+
+<color blue>**BUT :**</color> Trouver une séquence peptide de + de 50 aa commune aux [[http://www.ncbi.nlm.nih.gov/assembly/?term=Streptococcus%20agalactiae|310 souches]] de //Streptococcus agalactiae//.\\
+<color gray>**ALTERNATIVE :**</color> Trouver le plus petit ensemble de séquences peptidiques permettant de "couvrir" la totalité des souches (ex : Séquence A commune à 80% des souches + séquence B commune au 20% restants).\\
+<color orange>**CONTRAINTE 1 :**</color> La séquence ne doit pas être retrouvée dans les autres espèces de //Streptococcus//.\\
+<color orange>**CONTRAINTE 2 :**</color> De préférence, la séquence est retrouvée dans une des 35 protéines identifiées comme cibles potentielles sur une souche étudiée et dont les résultats sont déjà disponible.

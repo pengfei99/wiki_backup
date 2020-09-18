@@ -1,0 +1,310 @@
+
+<h1 class="sectionedit1" id="sqoop_introduction_installation">Sqoop Introduction Installation</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sqoop Introduction Installation&quot;,&quot;hid&quot;:&quot;sqoop_introduction_installation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-47&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Sqoop − “SQL to Hadoop and Hadoop to SQL”
+</p>
+
+<p>
+Sqoop is a tool designed to transfer data between Hadoop and relational database servers. It is used to import data from relational databases such as MySQL, Oracle to Hadoop HDFS, and export from Hadoop file system to relational databases. It is provided by the Apache Software Foundation.
+</p>
+
+<p>
+Sqoop Import
+</p>
+
+<p>
+The import tool imports individual tables from RDBMS to HDFS. Each row in a table is treated as a record in HDFS. All records are stored as text data in text files or as binary data in Avro and Sequence files.
+</p>
+
+<p>
+Sqoop Export
+</p>
+
+<p>
+The export tool exports a set of files from HDFS back to an RDBMS. The files given as input to Sqoop contain records, which are called as rows in table. Those are read and parsed into a set of records and delimited with user-specified delimiter.
+</p>
+
+<p>
+The offical doc can be found : <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html" class="urlextern" title="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html" rel="nofollow">https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html</a>
+</p>
+
+<p>
+See this tutorial for more information : <a href="https://www.tutorialspoint.com/sqoop/sqoop_introduction.htm" class="urlextern" title="https://www.tutorialspoint.com/sqoop/sqoop_introduction.htm" rel="nofollow">https://www.tutorialspoint.com/sqoop/sqoop_introduction.htm</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;48-1089&quot;} -->
+<h2 class="sectionedit3" id="install_sqoop">Install sqoop</h2>
+<div class="level2">
+
+<p>
+Sqoop needs hdfs to run. So you need to install hdfs first. Follow this doc<a href="/doku.php?id=employes:pengfei.liu:big_data:hadoop:install_config_hadoop" class="wikilink1" title="employes:pengfei.liu:big_data:hadoop:install_config_hadoop">Install hdfs on multi node cluster</a>
+</p>
+
+<p>
+Downloud the latest stable version from here : <a href="http://sqoop.apache.org/" class="urlextern" title="http://sqoop.apache.org/" rel="nofollow">http://sqoop.apache.org/</a>
+</p>
+
+<p>
+In our case, the stable version is 1.4.6.
+</p>
+<pre class="code">#Download the sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz.
+#put the sqoop bin in your chosen place
+mkdir -p /opt/sqoop
+mv sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz /opt/sqoop/.
+cd /opt/sqoop/
+tar -xzvf sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz 
+mv sqoop-1.4.6.bin__hadoop-2.0.4-alpha sqoop-1.4.6
+
+#add sqoop bin path in path
+vim /etc/profile.d/sqoop.sh
+
+#add the following lines
+#!/bin/bash
+
+export SQOOP_HOME=/opt/sqoop/sqoop-1.4.6
+export PATH=$PATH:$SQOOP_HOME/bin
+
+[hadoop@localhost sqoop-1.4.6]$ source /etc/profile.d/sqoop.sh 
+[hadoop@localhost sqoop-1.4.6]$ echo $SQOOP_HOME
+/opt/sqoop/sqoop-1.4.6
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install sqoop&quot;,&quot;hid&quot;:&quot;install_sqoop&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1090-2029&quot;} -->
+<h2 class="sectionedit4" id="configure_sqoop">Configure sqoop</h2>
+<div class="level2">
+
+<p>
+To make sqoop works with hdfs, you need to modify the sqoop-env.sh
+</p>
+<pre class="code">cp sqoop-env-template.sh sqoop-env.sh
+
+vim sqoop-env.sh
+
+# add follwoing line 
+
+#Set path to where bin/hadoop is available
+export HADOOP_COMMON_HOME=/opt/hadoop/hadoop
+
+#Set path to where hadoop-*-core.jar is available
+export HADOOP_MAPRED_HOME=/opt/hadoop/hadoop
+
+#set the path to where bin/hbase is available
+export HBASE_HOME=/opt/hbase/hbase-1.2.6
+
+#Set the path to where bin/hive is available
+export HIVE_HOME=/opt/hive/hive-2.3.2
+</pre>
+
+<p>
+Only the the HADOOP_COMMON_HOME and HADOOP_MAPRED_HOME is essential. others can be omitted if you don&#039;t have them.
+</p>
+
+<p>
+Test your sqoop
+</p>
+<pre class="code">[hadoop@localhost lib]$ sqoop-version
+Warning: /opt/sqoop/sqoop-1.4.6/../hcatalog does not exist! HCatalog jobs will fail.
+Please set $HCAT_HOME to the root of your HCatalog installation.
+Warning: /opt/sqoop/sqoop-1.4.6/../accumulo does not exist! Accumulo imports will fail.
+Please set $ACCUMULO_HOME to the root of your Accumulo installation.
+Warning: /opt/sqoop/sqoop-1.4.6/../zookeeper does not exist! Accumulo imports will fail.
+Please set $ZOOKEEPER_HOME to the root of your Zookeeper installation.
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hadoop/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hbase/hbase-1.2.6/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+18/01/31 11:56:03 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6
+Sqoop 1.4.6
+git commit id c0c5a81723759fa575844a0a1eae8f510fa32c25
+Compiled by root on Mon Apr 27 14:38:36 CST 2015
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure sqoop&quot;,&quot;hid&quot;:&quot;configure_sqoop&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2030-3888&quot;} -->
+<h2 class="sectionedit5" id="add_jdbc_connector">Add jdbc connector</h2>
+<div class="level2">
+
+<p>
+If you want to use sqoop to connect to mysql/mariadb, you need to download the appropriate driver.
+</p>
+
+<p>
+For example, for mysql,plz go to <a href="https://www.mysql.com/products/connector/" class="urlextern" title="https://www.mysql.com/products/connector/" rel="nofollow">https://www.mysql.com/products/connector/</a>.
+</p>
+
+<p>
+for postgresql plz go to <a href="https://jdbc.postgresql.org/download.html" class="urlextern" title="https://jdbc.postgresql.org/download.html" rel="nofollow">https://jdbc.postgresql.org/download.html</a>
+</p>
+
+<p>
+for mariadb, plz go to <a href="https://mariadb.com/kb/en/library/about-mariadb-connector-j/" class="urlextern" title="https://mariadb.com/kb/en/library/about-mariadb-connector-j/" rel="nofollow">https://mariadb.com/kb/en/library/about-mariadb-connector-j/</a>
+</p>
+
+<p>
+After download the .jar file, you need to put it in /opt/sqoop/sqoop-1.4.6/lib
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Add jdbc connector&quot;,&quot;hid&quot;:&quot;add_jdbc_connector&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;3889-4332&quot;} -->
+<h1 class="sectionedit6" id="install_sqoop_via_hortonworks_ambari_yum_repo">Install sqoop via hortonworks ambari yum repo</h1>
+<div class="level1">
+<pre class="code"># 1. check your ambari yum repo
+&gt; yum list sqoop
+# The output should list at least one Sqoop package similar to the following:
+# sqoop.noarch &lt;version&gt;
+# If yum responds with &quot;Error: then you need to follow the ambari installation guid to install the ambari yum repo.
+
+# 2. Install the sqoop
+&gt; yum install sqoop
+
+# 3. After the install, you can find your sqoop under /usr/hdp/current/sqoop-client and /usr/hdp/current/sqoop-server.
+# They are just soft symbolic link to /usr/hdp/3.0.1.0-187/sqoop. Based on different version of hdp you installed, the 3.0.1.0 will be replaced by other versions numbers.
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install sqoop via hortonworks ambari yum repo&quot;,&quot;hid&quot;:&quot;install_sqoop_via_hortonworks_ambari_yum_repo&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;4333-5014&quot;} -->
+<h1 class="sectionedit7" id="configure_sqoop_to_adapte_hortonworks_ambari_evironment">Configure sqoop to adapte hortonworks ambari evironment</h1>
+<div class="level1">
+
+<p>
+All the conf file of sqoop for hortonworks distribution is located at /etc/sqoop/conf, you can also find a symbolic link of it in /usr/hdp/current/sqoop-client/conf.
+</p>
+<pre class="code"># content of my sqoop/conf
+
+# atlas server connection properties
+atlas-application.properties  
+
+# sqoop reqired enviroment variable properties
+sqoop-env.sh            
+sqoop-env-template.sh    
+sqoop-env-template.cmd
+
+# sqoop component settings
+sqoop-site.xml
+sqoop-site-template.xml
+
+# Data connector between oracle and hadoop
+oraoop-site-template.xml
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure sqoop to adapte hortonworks ambari evironment&quot;,&quot;hid&quot;:&quot;configure_sqoop_to_adapte_hortonworks_ambari_evironment&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;5015-5623&quot;} -->
+<h2 class="sectionedit8" id="configure_sqoop-envsh">Configure sqoop-env.sh</h2>
+<div class="level2">
+<pre class="code"># add the following config to sqoop-env.sh, you can notice that I mixed the real file location and soft symbolic file location. The recommended way is to use the symbolic location, after update to a new version, you don&#039;t need to change your conf file, you only need to point current/.. to the new version. 
+
+# Set Hadoop-specific environment variables here.
+
+#Set path to where bin/hadoop is available
+export HADOOP_HOME=${HADOOP_HOME:-/usr/hdp/3.0.1.0-187/hadoop}
+
+#set the path to where bin/hbase is available
+export HBASE_HOME=${HBASE_HOME:-/usr/hdp/current/hbase-client}
+
+#Set the path to where bin/hive is available
+export HIVE_HOME=${HIVE_HOME:-/usr/hdp/current/hive-client}
+
+#Set the path for where zookeper config dir is
+export ZOOCFGDIR=${ZOOCFGDIR:-/etc/zookeeper/conf}
+
+# add libthrift in hive to sqoop class path first so hive imports work
+export SQOOP_USER_CLASSPATH=&quot;`ls ${HIVE_HOME}/lib/libthrift-*.jar 2&gt; /dev/null`:${SQOOP_USER_CLASSPATH}&quot;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure sqoop-env.sh&quot;,&quot;hid&quot;:&quot;configure_sqoop-envsh&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;5624-6633&quot;} -->
+<h3 class="sectionedit9" id="configure_sqoop-sitexml">Configure sqoop-site.xml</h3>
+<div class="level3">
+
+<p>
+Put Sqoop-specific properties in this file. In our case, we just put a atlas sqoop hook. This hook will upload all sqoop jobs to atlas for data governance operations.
+</p>
+<pre class="code">&lt;configuration  xmlns:xi=&quot;http://www.w3.org/2001/XInclude&quot;&gt;
+    
+    &lt;property&gt;
+      &lt;name&gt;sqoop.job.data.publish.class&lt;/name&gt;
+      &lt;value&gt;org.apache.atlas.sqoop.hook.SqoopHook&lt;/value&gt;
+    &lt;/property&gt;
+    
+  &lt;/configuration&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure sqoop-site.xml&quot;,&quot;hid&quot;:&quot;configure_sqoop-sitexml&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;6634-7081&quot;} -->
+<h3 class="sectionedit10" id="configure_atlas-applicationproperties">Configure atlas-application.properties</h3>
+<div class="level3">
+<pre class="code">atlas.authentication.method.kerberos=False
+atlas.cluster.name=Pengfei_Data_Warehouse
+atlas.jaas.KafkaClient.option.renewTicket=true
+atlas.jaas.KafkaClient.option.useTicketCache=true
+atlas.kafka.bootstrap.servers=cclindw01.in2p3.fr:6667
+atlas.kafka.hook.group.id=atlas
+atlas.kafka.zookeeper.connect=cclindw03.in2p3.fr:2181,cclindw02.in2p3.fr:2181,cclindw01.in2p3.fr:2181
+atlas.kafka.zookeeper.connection.timeout.ms=30000
+atlas.kafka.zookeeper.session.timeout.ms=60000
+atlas.kafka.zookeeper.sync.time.ms=20
+atlas.notification.create.topics=True
+atlas.notification.replicas=1
+atlas.notification.topics=ATLAS_HOOK,ATLAS_ENTITIES
+atlas.rest.address=http://cclindw03.in2p3.fr:21000
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure atlas-application.properties&quot;,&quot;hid&quot;:&quot;configure_atlas-applicationproperties&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;7082-7823&quot;} -->
+<h2 class="sectionedit11" id="validate_sqoop_installation">Validate sqoop installation</h2>
+<div class="level2">
+<pre class="code"># check the sqoop version
+sqoop version | grep &#039;Sqoop&#039;
+
+# You should see something like
+Sqoop 1.4.7.3.0.1.0-187</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Validate sqoop installation&quot;,&quot;hid&quot;:&quot;validate_sqoop_installation&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:11,&quot;range&quot;:&quot;7824-7991&quot;} -->
+<h1 class="sectionedit12" id="know_bugs">Know bugs</h1>
+<div class="level1">
+
+<p>
+You can find the full list here: <a href="https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.0.0/release-notes/content/known_issues.html" class="urlextern" title="https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.0.0/release-notes/content/known_issues.html" rel="nofollow">https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.0.0/release-notes/content/known_issues.html</a>
+</p>
+
+<p>
+The below bugs are the bugs which I encountered.
+</p>
+
+<p>
+1. The table is marked as a managed table but is not transactional.
+</p>
+
+<p>
+In HDP 3, managed Hive tables must be transactional (hive.strict.managed.tables=true). Transactional tables with Parquet format are not supported by Hive. Hive imports with –as-parquetfile must use external tables by specifying –external-table-dir.
+</p>
+<pre class="code"># The simplest solution is not use --hive-import and --as-parquetfile togethor
+
+# our you can give the table path 
+
+sqoop import-all-tables \
+    -m 1 \
+    --driver com.mysql.jdbc.Driver \
+    -libjars=&quot;/usr/hdp/current/sqoop-server/lib/*.jar&quot; \
+    --connect jdbc:mysql://localhost:3306/retail_db \
+    --username=retail_dba \
+    --password=retail_dba_pwd \
+    --compression-codec=snappy \
+    --as-parquetfile \
+    --warehouse-dir=/user/hive/warehouse \
+    --hive-import
+    --external-table-dir hdfs:///path/to/table</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Know bugs&quot;,&quot;hid&quot;:&quot;know_bugs&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;7992-&quot;} -->

@@ -1,0 +1,144 @@
+====== Installation =====
+
+Here is a short list of some features available in Zabbix:\\
+
+auto-discovery of servers and network devices\\
+low-level discovery\\
+distributed monitoring with centralized web administration\\
+support for both polling and trapping mechanisms\\
+agent-less monitoring\\
+secure user authentication\\
+flexible user permissions\\
+web-based interface\\
+flexible e-mail notification of predefined events\\
+high-level (business) view of monitored resources\\
+audit log\\
+
+==== Install Zabbix Server ====
+<code>
+pkg install zabbix22-server-2.2.2
+rehash
+</code>
+
+==== Configure snmp ====
+
+Zabbix package install snmpd but does not start it by default\\
+<code>
+cp /usr/local/share/snmp/snmpd.conf.example /usr/local/share/snmp/snmpd.conf
+
+echo 'snmpd_enable="YES"' >> /etc/rc.conf
+echo 'snmpd_flags="-a"' >> /etc/rc.conf
+echo 'snmpd_conffile="/usr/local/share/snmp/snmpd.conf /etc/snmpd.config"' >> /etc/rc.conf
+echo 'snmptrapd_enable="YES"' >> /etc/rc.conf
+echo 'snmptrapd_flags="-a -p /var/run/snmptrapd.pid"' >> /etc/rc.conf
+</code>
+==== Install Zabbix Database ====
+
+The Zabbix server needs a database to save the statistics and settings.\\
+
+<code>
+pkg install mysql55-server
+
+mysql -u root
+
+mysql> SET PASSWORD FOR ''@'localhost' = PASSWORD('nouveau_mot');
+mysql> SET PASSWORD FOR ''@'ccbiowiki1.in2p3.fr' = PASSWORD('nouveau_mot');
+mysql> create database zabbix character set utf8;
+mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'PASSWORD';
+mysql> flush privileges;
+mysql> quit;
+
+passwd zabbix
+
+cd /usr/local/share/zabbix22/server/database/mysql/
+mysql -u zabbix -p <password> zabbix < schema.sql
+mysql -u zabbix -p <password> zabbix < images.sql
+mysql -u zabbix -p <password> zabbix < data.sql
+
+</code>
+
+==== configure zabbix ====
+<code>
+cd /usr/local/etc/zabbix22
+cp zabbix_server.conf.sample zabbix_server.conf
+</code>
+
+Change in zabbix_server.conf :
+<code>
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=PASSWORD
+</code>
+
+==== configure system for zabbix ====
+
+sysctl kern.ipc.shmall=409600\\
+sysctl kern.ipc.shmmax=204800000
+
+<code>
+echo 'kern.ipc.shmall=409600' >> /etc/sysctl.conf
+echo 'kern.ipc.shmmax=204800000' >> /etc/sysctl.conf
+echo 'zabbix_server_enable="YES"' >> /etc/rc.conf
+</code>
+
+==== Install Zabbix Agent ====
+
+Now install the Zabbix agent on every client you want to track with the server.\\
+Again I have choosen the default installation options without IPV6.\\
+
+<code>
+pkg install zabbix22-agent-2.2.2_1
+</code>
+==== Configure Zabbix Agent ====
+<code>
+cd /usr/local/etc/zabbix22
+cp zabbix_agentd.conf.sample zabbix_agentd.conf
+</code>
+
+In the zabbix_agentd.conf you need to change the server value. \\
+Replace the IP address with the IP address of your Zabbix server.\\
+
+Server=134.158.36.5
+
+Add the startup value to the rc.conf and start the agent.\\
+<code>
+echo 'zabbix_agentd_enable="YES"' >> /etc/rc.conf
+service zabbix_agentd start
+</code>
+
+==== Install Zabbix Frontend ====
+After the installation of the Zabbix server and the Zabbix agents we will install the frontend on the same backend we used for the Zabbix server.
+<code>
+pkg install zabbix22-frontend-2.2.2_1
+</code>
+
+==== Configure lighttpd and PHP for zabbix ====
+<code>
+cat /usr/local/etc/lighttpd/vhosts.d/zabbix
+
+$SERVER["socket"] == ":80" {
+
+  server.name = "ccbiowiki1.in2p3.fr"
+  server.document-root = vhosts_dir + "/zabbix/"
+  alias.url = (
+    "/Zabbix/" => "/usr/local/www/zabbix22/"
+  )
+}
+</code>
+
+<code>
+cd /usr/local/etc
+cp php.ini-production php.ini
+
+max_execution_time = 300
+max_input_time = 300
+post_max_size = 16M
+date.timezone = "Europe/Paris"
+
+</code>
+
+Finally you can access the Zabbix frontend and start the setup.\\
+Follow the installation and make the required changes in your php.ini.\\
+
+====== Administration =====

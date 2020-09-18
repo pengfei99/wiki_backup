@@ -1,0 +1,47 @@
+====== Logiciels Installés ======
+
+__**Note**__ : Si votre logiciel ne figure pas dans la liste, merci de vous référer à la [[in2p3/logiciels/installation|procédure d'installation]].
+
+^Logiciels ^Responsable ^Description ^
+|[[in2p3/logiciels/blast|BLAST]] |Tanguy |Basic Local Alignment Search Tool. |
+|[[in2p3/logiciels/bowtie|Bowtie]] |Tanguy |An ultrafast memory-efficient short read aligner. |
+|[[in2p3/logiciels/bowtie2|Bowtie2]] |Tanguy |Fast and sensitive read alignment. |
+|[[in2p3/logiciels/bwa|BWA]] |Tanguy |Burrows-Wheeler Aligner. |
+|[[in2p3/logiciels/cufflinks|Cufflinks]] |Tanguy |Transcript assembly, differential expression, and differential regulation for RNA-Seq. |
+|[[in2p3/logiciels/eigen|Eigen]] |Tanguy |C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms. |
+|[[in2p3/logiciels/fastqc|FastQC]] |Tanguy |A quality control tool for high throughput sequence data. |
+|[[in2p3/logiciels/fastx_toolkit|FASTX-Toolkit]] |Tanguy |The FASTX-Toolkit is a collection of command line tools for Short-Reads FASTA/FASTQ files preprocessing. |
+|[[in2p3/logiciels/freebayes|FreeBayes]] |Lilia | Bayesian genetic variant detector. |
+|[[in2p3/logiciels/gatk|GATK]] |Tanguy |A software package to analyse next-generation resequencing data. |
+|[[in2p3/logiciels/htseq|HTSeq]] |Tanguy |Analysing high-throughput sequencing data with Python. |
+|[[in2p3/logiciels/jellyfish|JELLYFISH]] |Tanguy |Fast, Parallel k-mer Counting for DNA. |
+|[[in2p3/logiciels/masurca|MaSuRCA]] |Tanguy |MaSuRCA assembler. |
+|[[in2p3/logiciels/mothur|Mothur]] |Lilia |Fills the bioinformatics needs of the microbial ecology community. |
+|[[in2p3/logiciels/phylosift|PhyloSift]] |Tanguy |Phylogenetic and taxonomic analysis for genomes and metagenomes. |
+|[[in2p3/logiciels/picard|Picard]] |Tanguy |Java-based command-line utilities that manipulate SAM files. |
+|[[in2p3/logiciels/prinseq|PRINSEQ]] |Tanguy |PReprocessing and INformation of SEQuence data. |
+|[[in2p3/logiciels/rna-seqc|RNA-SeQC]] |Tanguy |A java program which computes a series of quality control metrics for RNA-seq data. |
+|[[in2p3/logiciels/samtools|SAMTools]] |Tanguy |Provides various utilities for manipulating alignments in the SAM format. |
+|[[in2p3/logiciels/soapdenovo2|SOAPdenovo2]] |Tanguy | Short Oligonucleotide Analysis Package. |
+|[[in2p3/logiciels/sortmerna|SortMeRNA]] |Tanguy |A software designed to rapidly filter ribosomal RNA fragments from metatranscriptomic data.  |
+|[[in2p3/logiciels/spades|SPAdes]] |Tanguy |Genome Assembler. |
+|[[in2p3/logiciels/star|STAR]] |Tanguy |Spliced Transcripts Alignment to a Reference. |
+|[[in2p3/logiciels/tophat|TopHat]] |Tanguy |A spliced read mapper for RNA-Seq. |
+|[[in2p3/logiciels/velvet|Velvet]] |Tanguy |Sequence assembler for very short reads. |
+
+
+^Librairies ^Responsable ^Description ^
+|[[in2p3/logiciels/boost|Boost]] |Tanguy |Free peer-reviewed portable C++ source libraries. |
+|[[in2p3/logiciels/perl_modules|PERL modules]] |Tanguy |Une collection de modules PERL.|
+
+^Compilateurs & Co ^Responsable ^Description ^
+|:!: [[in2p3/logiciels/cmake|CMake]]|Tanguy |Cross Platform Make. |
+|:!: [[in2p3/logiciels/gcc|GCC]]|Tanguy|The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Java, Ada, and Go |
+
+^Services ^Responsable ^Description ^
+|[[in2p3/logiciels/galaxy|Galaxy]] |Tanguy |An open, web-based platform for data intensive biomedical research.  |
+|[[in2p3/logiciels/qiime|QIIME]] |Lilia |An open source software package for comparison and analysis of microbial communities. |
+|[[in2p3/logiciels/etherpad|Etherpad]]|Tanguy |A highly customizable Open Source online editor providing collaborative editing in really real-time. |
+|[[in2p3/logiciels/dokuwiki|DokuWiki]]|Tanguy |A simple to use and highly versatile Open Source wiki software that doesn't require a database. |
+|[[in2p3/logiciels/wwwblast|wwwblast]]|Tanguy|A wwwblast installation allows a researcher to use BLAST to search a sequence database using a graphical user interface.|
+{{tag>todo}}

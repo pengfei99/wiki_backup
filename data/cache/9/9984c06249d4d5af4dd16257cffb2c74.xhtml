@@ -1,0 +1,165 @@
+
+<h1 class="sectionedit1" id="bioa-2014-vm03">BIOA-2014-VM03</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "BIOA-2014-VM03" [1-30] -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Machine servant de serveur web.
+</p>
+
+<p>
+Pour savoir où tourne cette machine virtuelle, merci d&#039;utiliser la de <span class="curid"><a href="/vms/vmware/bioa-2014-vm03?do=backlink" class="wikilink1" title="vms:vmware:bioa-2014-vm03">liens inversés</a></span>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Introduction" [31-195] -->
+<h2 class="sectionedit3" id="contacts">Contacts</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Responsable</strong> : Tanguy</div>
+</li>
+<li class="level1"><div class="li"> <strong>Support</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Contacts" [196-267] -->
+<h2 class="sectionedit4" id="informations_techniques">Informations Techniques</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Système d&#039;Exploitation</strong> : Debian GNU/Linux 7.5 (wheezy)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Matériel</strong> : </div>
+<ul>
+<li class="level2"><div class="li"> <em>RAM</em>: 1Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Disques durs</em>: 2Go</div>
+</li>
+<li class="level2"><div class="li"> <em>Adresse MAC</em> : 00:0C:29:2E:77:C5</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Adresse IP</strong> : -</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Informations Techniques" [268-502] -->
+<h2 class="sectionedit5" id="installation">Installation</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Installation" [503-528] -->
+<h3 class="sectionedit6" id="systeme_de_base">Système de base</h3>
+<div class="level3">
+<pre class="code text">$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo</pre>
+
+</div>
+<!-- EDIT6 SECTION "Système de base" [529-668] -->
+<h3 class="sectionedit7" id="lighttpd">Lighttpd</h3>
+<div class="level3">
+
+<p>
+Avec PHP5 activé par défaut.
+</p>
+<pre class="code text">$ aptitude install --without-recommends lighttpd php5-cgi php5</pre>
+<dl class="code">
+<dt><a href="/_export/code/vms/vmware/bioa-2014-vm03?codeblock=2" title="Télécharger un extrait" class="mediafile mf_conf">/etc/lighttpd/lighttpd.conf</a></dt>
+<dd><pre class="code text">server.modules = (
+	&quot;mod_access&quot;,
+	&quot;mod_alias&quot;,
+	&quot;mod_compress&quot;,
+ 	&quot;mod_redirect&quot;,
+        &quot;mod_rewrite&quot;,
+)
+&nbsp;
+server.document-root        = &quot;/var/www/default/&quot;
+server.upload-dirs          = ( &quot;/var/cache/lighttpd/uploads&quot; )
+server.errorlog             = &quot;/var/log/lighttpd/error.log&quot;
+server.pid-file             = &quot;/var/run/lighttpd.pid&quot;
+server.username             = &quot;www-data&quot;
+server.groupname            = &quot;www-data&quot;
+server.port                 = 80
+&nbsp;
+var.vhost_dir               = &quot;/var/www/&quot;
+var.log_dir                 = &quot;/var/log/lighttpd/&quot;
+#debug.log-request-handling  = &quot;enable&quot;
+&nbsp;
+index-file.names            = ( &quot;index.php&quot;, &quot;index.html&quot;, &quot;index.lighttpd.html&quot; )
+url.access-deny             = ( &quot;~&quot;, &quot;.inc&quot; )
+static-file.exclude-extensions = ( &quot;.php&quot;, &quot;.pl&quot;, &quot;.fcgi&quot; )
+&nbsp;
+compress.cache-dir          = &quot;/var/cache/lighttpd/compress/&quot;
+compress.filetype           = ( &quot;application/javascript&quot;, &quot;text/css&quot;, &quot;text/html&quot;, &quot;text/plain&quot; )
+&nbsp;
+# default listening port for IPv6 falls back to the IPv4 port
+include_shell &quot;/usr/share/lighttpd/use-ipv6.pl &quot; + server.port
+include_shell &quot;/usr/share/lighttpd/create-mime.assign.pl&quot;
+include_shell &quot;/usr/share/lighttpd/include-conf-enabled.pl&quot;</pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/vms/vmware/bioa-2014-vm03?codeblock=3" title="Télécharger un extrait" class="mediafile mf_conf">/etc/lighttpd/conf-available/10-fastcgi.conf</a></dt>
+<dd><pre class="code text"># /usr/share/doc/lighttpd/fastcgi.txt.gz
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs:ConfigurationOptions#mod_fastcgi-fastcgi
+&nbsp;
+server.modules += ( &quot;mod_fastcgi&quot; )
+&nbsp;
+fastcgi.server = ( &quot;.php&quot; =&gt; ((
+                             &quot;bin-path&quot; =&gt; &quot;/usr/bin/php5-cgi&quot;,
+                             &quot;socket&quot; =&gt; &quot;/tmp/php.socket&quot;
+                 )))</pre>
+</dd></dl>
+<pre class="code text">$ lighttpd-enable-mod accesslog fastcgi
+$ service lighttpd force-reload</pre>
+
+</div>
+<!-- EDIT7 SECTION "Lighttpd" [669-2547] -->
+<h3 class="sectionedit8" id="porpro">PorPro</h3>
+<div class="level3">
+
+<p>
+<strong>Dépend de :</strong> Lighttpd
+</p>
+
+<p>
+Projet de GG pour le suivi des projets.
+</p>
+<pre class="code text">$ aptitude install --without-recommends php5-sqlite python-pip
+$ pip install yoyo-migrations</pre>
+<dl class="code">
+<dt><a href="/_export/code/vms/vmware/bioa-2014-vm03?codeblock=6" title="Télécharger un extrait" class="mediafile mf_conf">/etc/lighttpd/conf-available/20-porpro.conf</a></dt>
+<dd><pre class="code text">$HTTP[&quot;host&quot;] == &quot;porpro.paris.bioaster.org&quot; {
+    server.document-root = vhost_dir + &quot;/porpro/app/webroot/&quot;
+    url.rewrite-if-not-file = ( 
+	&quot;^([^\?]*)(\?(.+))?$&quot; =&gt; &quot;/index.php?url=$1&amp;$3&quot; 
+    )
+    server.errorlog  = log_dir + &quot;porpro-error.log&quot;
+    accesslog.filename = log_dir + &quot;porpro-access.log&quot;
+    accesslog.format = &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot;
+}</pre>
+</dd></dl>
+<pre class="code text">$ lighttpd-enable-mod porpro
+$ service lighttpd force-reload</pre>
+<pre class="code text">$ mkdir /var/www
+$ cd /var/www
+$ bzr branch bzr+ssh://USER@ccage.in2p3.fr/~tlecarro/repo/porpro
+$ cd porpro
+$ chown -R www-data:www-data app/tmp
+$ yoyo-migrate apply app/Database/Schema sqlite://./Database/Data/prod.sql3</pre>
+
+</div>
+<!-- EDIT8 SECTION "PorPro" [2548-3530] -->
+<h2 class="sectionedit9" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2014.06.17 (tlc)</strong> Installation</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Journal" [3531-] -->

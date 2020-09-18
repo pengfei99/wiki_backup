@@ -1,0 +1,344 @@
+
+<h1 class="sectionedit1" id="install_apache_zeppelin_on_centos_7">Install Apache Zeppelin on Centos 7</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install Apache Zeppelin on Centos 7&quot;,&quot;hid&quot;:&quot;install_apache_zeppelin_on_centos_7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-51&quot;} -->
+<h2 class="sectionedit2" id="what_is_zeppelin">What is Zeppelin</h2>
+<div class="level2">
+
+<p>
+Apache Zeppelin is a web-based open source notebook and collaborative tool for interactive data ingestion, discovery, analytics, and visualization. Zeppelin supports 20+ languages including Apache Spark, SQL, R, Elasticsearch and many more. Apache Zeppelin allows you to create beautiful data-driven documents and see the results of your analytics.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is Zeppelin&quot;,&quot;hid&quot;:&quot;what_is_zeppelin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;52-432&quot;} -->
+<h2 class="sectionedit3" id="before_install_zeppelin">Before install Zeppelin</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Install jdk: Zeppelin is written in Java, so it requires JDK</div>
+</li>
+<li class="level1"><div class="li"> Set JAVA_HOME and JRE_HOME </div>
+</li>
+<li class="level1"><div class="li"> check java with java -version and echo $JAVA_HOME.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Before install Zeppelin&quot;,&quot;hid&quot;:&quot;before_install_zeppelin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;433-621&quot;} -->
+<h2 class="sectionedit4" id="install_zeppelin">Install Zeppelin</h2>
+<div class="level2">
+
+<p>
+Get the latest Zeppelin from their site (<a href="https://zeppelin.apache.org/download.html" class="urlextern" title="https://zeppelin.apache.org/download.html" rel="nofollow">https://zeppelin.apache.org/download.html</a>).
+</p>
+
+<p>
+In our example, we use the Zeppelin-0.7.3. I didn&#039;t create user zeppelin, I use user hadoop to run the zepplin daemon
+</p>
+
+<p>
+The following command download unzip, then put zeppelin under /opt/zeppelin
+</p>
+<pre class="code">sudo mkdir -p /opt/zeppelin/
+cd /opt/zeppelin
+wget &lt;download-url&gt;
+tar -xzvf zeppelin-0.7.3-bin-all.tgz
+mv zeppelin-0.7.3-bin-all zeppelin-0.7.3
+chown -R hadoop:hadoop zeppelin-0.7.3
+
+# after the above command, you should see the below info
+[hadoop@CCLinDataWHD01 zeppelin-0.7.3]$ pwd
+/opt/zeppelin/zeppelin-0.7.3
+
+[hadoop@CCLinDataWHD01 zeppelin-0.7.3]$ ls
+bin   interpreter  LICENSE   local-repo  notebook  README.md  zeppelin-web-0.7.3.war
+conf  lib          licenses  logs        NOTICE    run
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install Zeppelin&quot;,&quot;hid&quot;:&quot;install_zeppelin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;622-1449&quot;} -->
+<h2 class="sectionedit5" id="configure_systemd_service">Configure systemd service</h2>
+<div class="level2">
+
+<p>
+Create a new systemd service unit file
+</p>
+
+<p>
+Then put the following lines in it.
+</p>
+<pre class="code">[Unit]
+Description=Zeppelin service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh start
+ExecStop=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh stop
+ExecReload=/opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh reload
+User=hadoop
+Group=hadoop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure systemd service&quot;,&quot;hid&quot;:&quot;configure_systemd_service&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1450-1958&quot;} -->
+<h2 class="sectionedit6" id="configure_zepplin_spark_interpreter">Configure zepplin spark interpreter</h2>
+<div class="level2">
+
+<p>
+They are four mode for zepplin spark interpreter master configuration.
+</p>
+<pre class="code">  * local[*] in local mode
+  * spark://master:7077 in standalone cluster
+  * yarn-client in Yarn client mode
+  * mesos://host:5050 in Mesos cluster</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configure zepplin spark interpreter&quot;,&quot;hid&quot;:&quot;configure_zepplin_spark_interpreter&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;1959-2242&quot;} -->
+<h3 class="sectionedit7" id="local_mode">Local mode</h3>
+<div class="level3">
+
+<p>
+If you run your zeppelin on your local pc and you don&#039;t have a spark cluster in place. It&#039;s better you use the local mode. Zeppelin has embedded spark which will be used in this mode.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Local mode&quot;,&quot;hid&quot;:&quot;local_mode&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;2243-2449&quot;} -->
+<h3 class="sectionedit8" id="standalone_spark_cluster">standalone spark cluster</h3>
+<div class="level3">
+
+<p>
+If you have a spark cluster in place, and this cluster does not use yarn or mesos as resource manager. Then we call your spark cluster as a standalone spark cluster.
+</p>
+
+<p>
+In your spark config spark-defaults.conf, you should find a line like this 
+</p>
+<pre class="code">spark.master spark://hadoop-nn.bioaster.org:7077</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;standalone spark cluster&quot;,&quot;hid&quot;:&quot;standalone_spark_cluster&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:8,&quot;range&quot;:&quot;2450-2793&quot;} -->
+<h3 class="sectionedit9" id="spark_yarn_cluster">spark yarn cluster</h3>
+<div class="level3">
+
+<p>
+If you have a spark cluster, and it uses yarn as resource manager. We cloud say you have a spark yarn cluster
+</p>
+
+<p>
+In your spark config spark-defaults.conf, you should find a line like this <strong>spark.master yarn</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;spark yarn cluster&quot;,&quot;hid&quot;:&quot;spark_yarn_cluster&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;2794-3032&quot;} -->
+<h3 class="sectionedit10" id="spark_mesos_cluster">spark mesos cluster</h3>
+<div class="level3">
+
+<p>
+If you have a spark cluster, and it uses mesos as resource manager. We could say you have a spark mesos cluster.
+</p>
+
+<p>
+In your spark config spark-defaults.conf, you should find a line like this
+</p>
+<pre class="code"> spark.master  mesos://host:5050.  
+# The mesos://host:5050 is the mesos master location.</pre>
+
+<p>
+In our example, we use spark standalone cluster.
+</p>
+
+<p>
+To configure it, we need to do the following
+</p>
+<pre class="code">cd /opt/zeppelin/zeppelin-0.7.3/conf
+cp zeppelin-env.sh.template zeppelin-env.sh
+
+vim zeppelin-env.sh
+# add the following lines
+# define java home
+export JAVA_HOME=/opt/JAVA/jdk1.8.0_151
+# define spark master location for the interpreter
+export MASTER=spark://hadoop-nn.bioaster.org:7077
+# define spark_home to avoid using zeppelin embedded spark
+export SPARK_HOME=/opt/spark/spark-2.2.0</pre>
+
+<p>
+The above is the minimun setting to run spark standalone cluster via zeppelin. There are many options you can configure inside to tune the zeppelin performance. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;spark mesos cluster&quot;,&quot;hid&quot;:&quot;spark_mesos_cluster&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:10,&quot;range&quot;:&quot;3033-4021&quot;} -->
+<h2 class="sectionedit11" id="disable_anonymous_access">Disable Anonymous Access</h2>
+<div class="level2">
+
+<p>
+The other important configuration file is zeppelin-site.xml
+</p>
+<pre class="code"># if it doesnot exist yet
+cp conf/zeppelin-site.xml.template conf/zeppelin-site.xml
+
+# find the line in zeppelin-site.xml
+&lt;property&gt;
+  &lt;name&gt;zeppelin.anonymous.allowed&lt;/name&gt;
+  &lt;value&gt;true&lt;/value&gt;
+  &lt;description&gt;Anonymous user allowed by default&lt;/description&gt;
+&lt;/property&gt;
+
+# change the value from true to false</pre>
+
+<p>
+Then your have many choice, you can use a ldap or a local file to do the authentication
+</p>
+
+<p>
+In this example, I will only show the local file authentication
+</p>
+
+<p>
+Shiro Authentication, The complete doc is here <a href="https://shiro.apache.org/authorization.html" class="urlextern" title="https://shiro.apache.org/authorization.html" rel="nofollow">https://shiro.apache.org/authorization.html</a>
+</p>
+<pre class="code">cp conf/shiro.ini.template conf/shiro.ini
+
+vim shiro.ini
+
+# modifier the user login and password line
+[users]
+
+admin = password1, admin
+user1 = password2, role1, role2
+user2 = password3, role3
+user3 = password4, role2
+</pre>
+
+<p>
+user1 is the login, password2 is the password. The password can be plain text or a hash.
+Shiro provides a password generator to generate the hash. You can get the tool from maven repo. Note it has many problems, so it may not work
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:zeppelin:install_and_configure&amp;codeblock=8" title="Download Snippet" class="mediafile mf_xml">shiro.xml</a></dt>
+<dd><pre class="code file xml"> <span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+      <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.shiro.tools<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+      <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>shiro-tools-hasher<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+      <span class="sc3"><span class="re1">&lt;classifier<span class="re2">&gt;</span></span></span>cli<span class="sc3"><span class="re1">&lt;/classifier<span class="re2">&gt;</span></span></span>
+      <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>1.4.1<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+You can also use directly the mvn cli
+</p>
+<pre class="code">$ mvn dependency:get -DgroupId=org.apache.shiro.tools -DartifactId=shiro-tools-hasher -Dclassifier=cli -Dversion=X.X.X
+
+# After this, you should get the jar file in ~/.m2/repository/org/apache/shiro/tools/shiro-tools-hasher/X.X.X/shiro-tools-hasher-X.X.X-cli.jar
+
+# To generate the password hash
+java -jar shiro-tools-hasher-X.X.X-cli.jar -p</pre>
+
+<p>
+For more info on pwd generation, go check <a href="https://shiro.apache.org/command-line-hasher.html" class="urlextern" title="https://shiro.apache.org/command-line-hasher.html" rel="nofollow">https://shiro.apache.org/command-line-hasher.html</a>
+</p>
+
+<p>
+You can also use ldap for authentications, below is an example of ldap configuration in shiro.ini
+</p>
+<pre class="code">### A sample for configuring LDAP Directory Realm
+ldapRealm = org.apache.zeppelin.realm.LdapGroupRealm
+## search base for ldap groups (only relevant for LdapGroupRealm):
+ldapRealm.contextFactory.environment[ldap.searchBase] = dc=bioaster,dc=org
+ldapRealm.contextFactory.url = ldap://10.70.3.118:389
+ldapRealm.userDnTemplate = uid={0},ou=Users,dc=bioaster,dc=org
+ldapRealm.contextFactory.authenticationMechanism = simple
+
+
+# tell shiro to use ldapRealm
+securityManager.realms = $ldapRealm
+
+sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+
+### If caching of user is required then uncomment below lines
+cacheManager = org.apache.shiro.cache.MemoryConstrainedCacheManager
+securityManager.cacheManager = $cacheManager
+
+securityManager.sessionManager = $sessionManager
+# 86,400,000 milliseconds = 24 hour
+securityManager.sessionManager.globalSessionTimeout = 86400000
+shiro.loginUrl = /api/login
+
+# comment anon to 
+#/** = anon
+/** = authc</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Disable Anonymous Access&quot;,&quot;hid&quot;:&quot;disable_anonymous_access&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;4022-6950&quot;} -->
+<h2 class="sectionedit12" id="run_zeppelin">Run Zeppelin</h2>
+<div class="level2">
+
+<p>
+If you did not set up the systemd service unit as I showed above, you can start the daemon directly.
+</p>
+<pre class="code"># we suppose the zeppelin installation path is /opt/zeppelin/zeppelin-0.7.3
+sh /opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh start
+sh /opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh stop
+sh /opt/zeppelin/zeppelin-0.7.3/bin/zeppelin-daemon.sh reload</pre>
+
+<p>
+By default zeppelin runs on a jetty web server. 
+You can access zeppelin via a web browser, for example if the server is located at 10.70.3.48 and zeppeling runs on port 8888. Enter <a href="http://10.70.3.48:8888/#/" class="urlextern" title="http://10.70.3.48:8888/#/" rel="nofollow">http://10.70.3.48:8888/#/</a> in your browser. You should see a welcome page of zeppelin
+</p>
+
+<p>
+The zeppelin port is defined at {zeppelin-path}/conf/zeppelin-site.xml
+</p>
+<pre class="code">&lt;property&gt;
+  &lt;name&gt;zeppelin.server.port&lt;/name&gt;
+  &lt;value&gt;8888&lt;/value&gt;
+  &lt;description&gt;Server port.&lt;/description&gt;
+&lt;/property&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Run Zeppelin&quot;,&quot;hid&quot;:&quot;run_zeppelin&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:12,&quot;range&quot;:&quot;6951-7836&quot;} -->
+<h2 class="sectionedit13" id="official_doc">Official doc</h2>
+<div class="level2">
+
+<p>
+<a href="https://zeppelin.apache.org/docs/0.5.0-incubating/install/install.html" class="urlextern" title="https://zeppelin.apache.org/docs/0.5.0-incubating/install/install.html" rel="nofollow">https://zeppelin.apache.org/docs/0.5.0-incubating/install/install.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Official doc&quot;,&quot;hid&quot;:&quot;official_doc&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:13,&quot;range&quot;:&quot;7837-7934&quot;} -->
+<h2 class="sectionedit14" id="trouble_shoot">Trouble Shoot</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Trouble Shoot&quot;,&quot;hid&quot;:&quot;trouble_shoot&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:14,&quot;range&quot;:&quot;7935-7961&quot;} -->
+<h3 class="sectionedit15" id="q1_nullpointerexception_on_spark_context">Q1 NullPointerException on spark context</h3>
+<div class="level3">
+
+<p>
+Getting NullPointerException when running Spark Code in Zeppelin 0.7.1
+</p>
+
+<p>
+Cause of this error
+</p>
+<pre class="code">Root Cause is : Spark trying to setup Hive context, but hdfs services is not running, that&#039;s why HiveContext become null and throwing null pointer exception.</pre>
+
+<p>
+Solution
+</p>
+<pre class="code">1. Setup Saprk Home [optional] and HDFS.
+2. Run HDFS service
+3. Restart zeppelin server
+OR
+1. Go to Zeppelin&#039;s Interpreter settings.
+2. Select Spark Interpreter
+3. zeppelin.spark.useHiveContext = false // I tested this, it works</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Q1 NullPointerException on spark context&quot;,&quot;hid&quot;:&quot;q1_nullpointerexception_on_spark_context&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:15,&quot;range&quot;:&quot;7962-&quot;} -->

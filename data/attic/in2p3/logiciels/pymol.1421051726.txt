@@ -1,0 +1,22 @@
+====== PyMOL ======
+
+===== Informations =====
+
+  * **Version** : 1.7.1.4
+  * **Licence** : //Open Source//
+  * **Page Web** : [[http://www.pymol.org/]]
+  * **Description** : A molecular visualization system on an open source foundation, maintained and distributed by Schrödinger.
+
+===== Installation =====
+
+Bien que les sources soient disponibles, la compilation sous Windows n'est pas officiellement supportée. La solution la plus simple est donc d'utiliser une version pré-compilée.
+
+  * Le logiciel dépend de Python 2.7 : [[http://www.python.org/ftp/python/2.7.6/python-2.7.6.amd64.msi|python-2.7.6.amd64.msi]]
+  * Des instructions sont disponibles ici : [[http://www.pymolwiki.org/index.php/Windows_Install#Binary|PyMOL wiki]]
+  * Le logiciel peut-être téléchargé ici : [[http://www.lfd.uci.edu/~gohlke/pythonlibs/5hgp4h3m/pymol-1.7.1.4.win-amd64-py2.7.exe|pymol-1.7.1.4.win-amd64-py2.7.exe]] ([[http://www.lfd.uci.edu/~gohlke/pythonlibs/#pymol|autres versions disponibles]])
+
+Une fois installé, le logiciel ''PyMOL.exe'' peut être trouvé dans le répertoire ''C:\Program Files\Python2.7\PyMOL''.
+
+===== Log =====
+
+  * **2014.06.20 (tlc)** Installation et test de la version 1.7.1.4 sur un poste Windows 7 Pro

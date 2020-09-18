@@ -1,0 +1,94 @@
+====== Flume Agent configuration ======
+
+===== Basic architecture of a flume agent configuration file =====
+
+There are five main components in a flume agent:
+  * Define agent names (can have multiple agents in a configuration file)
+  * Configure agent sources (can have multiple sources in one agent)
+  * Configure agent channels
+  * Configure agent sinks
+  * Connect sources, channels and sinks to the agents 
+
+The follown code fragment is an example of how we define an agent.
+
+<code>
+#Define names
+agent1.sources = source1
+agent1.sinks = sink1
+agent1.channels = channel1
+ 
+#Connect components
+agent1.sources.source1.channels = channel1
+agent1.sinks.sink1.channel = channel1
+ 
+#Config source
+agent1.sources.source1.type = spooldir
+agent1.sources.source1.spoolDir = spoolDirectory
+ 
+#Config sink
+agent1.sinks.sink1.type = logger
+ 
+#Config channel
+agent1.channels.channel1.type = file
+</code>
+
+You could notice that all lines in the configuration file have the following structures
+
+<code>
+[agent].[component-type].[component-name].[configuration-property] = [list-of-values]
+</code> 
+
+The above code fragment will generate a data pipeline shows in the figure below
+
+{{:employes:pengfei.liu:data_science:flume:flume_spooldir_agent.png?400|}}
+
+===== Available sources in flume agent =====
+
+Below is the list of sources which are supported by flume:
+
+  * **Avro Source**: it often used to link flume agents. For example, one agent ends with avro sinks, the next agent which connect to the avro sinks needs to use an avro source.
+  * **Thrift Source**: Similar to avro
+  * **Exec Source**: The exec source provides a mechanism to run a command outside Flume and then turn the output into Flume events.
+  * **JMS Source**: Sometimes, data can originate from asynchronous message queues. For these cases, you can use Flume's JMS source to create events read from a JMS Queue or Topic. While it is theoretically possible to use any Java Message Service (JMS) implementation, Flume has only been tested with ActiveMQ, so be sure to test thoroughly if you use a different provider.
+  * **Spooling Directory Source**: monitors a directory for new files. It is assumed that files copied to the directory are complete. It also assumes that filenames never changes.
+  * **Twitter 1% firehose Source**: can read data from twitter web services.
+  * **Kafka Source**: read data from kafka topics
+  * **NetCat Source**: read data from network connections using TCP or UDP.
+  * **Sequence Generator Source**: It is used for testing purpose. It generates the events continuously by using a counter that starts from 0 and increments 1 for each event generated.
+  * **Syslog Sources**: used to receive remote syslog events
+  * **Syslog TCP Source**: 
+  * **Multiport Syslog TCP Source**:
+  * **Syslog UDP Source**:
+  * **HTTP Source**:
+  * **Stress Source**:
+  * **Legacy Sources**:
+  * **Thrift Legacy Source**:
+  * **Custom Source**:
+  * **Scribe Source**:
+
+===== Available flume channels =====
+
+Below is the list of channels which are supported by flume:
+  * **Memory Channel**: is a channel where in-flight events are stored in memory. As memory is (usually) orders of magnitude faster than the disk, events can be ingested much more quickly, resulting in reduced hardware needs. The downside of using this channel is that an agent failure (hardware problem, power outage, JVM crash, Flume restart, and so on) results in the loss of data.
+  * **JDBC Channel**: is a channel where all the Flume events here are stored in a persistent storage that’s backed by a database. Moreover, only embedded derby is supported by the JDBC channel currently. Also, we can say it is a very durable channel that’s ideal for flows where recoverability is important.
+  * **Kafka Channel**: is a channel which allows you to write to sinks directly from Kafka without using a source. It can also write to Kafka topics directly from Flume sources without additional buffering. As all the events are stored in a Kafka cluster (that must be installed separately), it offers high availability and replication. Hence, in case an agent or a Flume kafka broker crashes, the events are immediately available to other sinks.
+  * **File Channel**: is a channel that stores events to the local filesystem of the agent. Though it's slower than the memory channel, it provides a durable storage path that can survive most issues and should be used in use cases where a gap in your data flow is undesirable.
+  * **Spillable Memory Channel**: is a channel that acts as a memory channel until it is full. At that point, it acts like a file channel that is configured with a much larger capacity than its memory counterpart but runs at the speed of your disks
+  * **Pseudo Transaction Channel**: is a channel only used for unit testing purposes. Do not use it in a production environment.
+
+===== Available flume sinks =====
+
+  * **HDFS Sink**:
+  * **Hive Sink**:
+  * **Logger Sink**:
+  * **Avro Sink**:
+  * **Thrift Sink**:
+  * **IRC Sink**:
+  * **File Roll Sink**:
+  * **Null Sink**:
+  * **HBaseSink**:
+  * **AsyncHBaseSink**:
+  * **MorphlineSolrSink**:
+  * **ElasticSearchSink**:
+  * **Kite Dataset Sink**:
+  * **Kafka Sink**:

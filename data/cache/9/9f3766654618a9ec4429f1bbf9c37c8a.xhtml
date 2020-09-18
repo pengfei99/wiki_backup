@@ -1,0 +1,197 @@
+
+<h1 class="sectionedit1" id="reunion_ccin2p3-bioaster_du_03062015">Réunion CCIN2P3-BIOASTER du 03/06/2015</h1>
+<div class="level1">
+
+<p>
+<strong>Date</strong> : 03/06/2015<br/>
+
+<strong>Lieu</strong> : CCIN2P3<br/>
+
+<strong>Participants</strong> : Jacques GARNIER, Nicolas SAPAY, Pierre VEYRE, Ghita RAHAL, Mattieu PUEL, Julien CARPENTIER
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Réunion CCIN2P3-BIOASTER du 03/06/2015" [1-211] -->
+<h1 class="sectionedit2" id="open_stack">Open Stack</h1>
+<div class="level1">
+
+<p>
+<strong>Utilisation des tenants bioaster et htc-bioaster :</strong>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Open Stack" [212-293] -->
+<h2 class="sectionedit3" id="tenant_bioaster">Tenant bioaster</h2>
+<div class="level2">
+<pre class="code">+--------------------------------------+-------------------------+--------+------------+-------------+-----------------------------------------+
+| ID                                   | Name                    | Status | Task State | Power State | Networks                                |
++--------------------------------------+-------------------------+--------+------------+-------------+-----------------------------------------+
+| f0820cd4-178e-4229-9008-6f4bd887bc53 | Galaxy                  | ACTIVE | -          | Running     | bioaster=134.158.37.7                   |
+| 9ec57e81-6cce-4d2f-8131-62fc2dc1761d | Galaxy_SL7              | ACTIVE | -          | Running     | bioaster=134.158.37.12                  |
+| 378cf134-9000-4408-9784-d020e41c16fa | IDM                     | ACTIVE | -          | Running     | bioaster=134.158.37.14                  |
+| 20553e95-f831-412c-88ca-3850b57bf74a | Pegasus                 | ACTIVE | -          | Running     | bioaster=134.158.37.3                   |
+| a0ef33c2-70cc-4bfb-940e-b2dbcbbeb231 | Webdev                  | ACTIVE | -          | Running     | bioaster=134.158.37.8                   |
+| b2737da4-698c-4c1f-ab79-c976a223f037 | Wings                   | ACTIVE | -          | Running     | bioaster=134.158.37.13, 134.158.246.222 |
+| 675c32d5-b27f-4e4b-9ab1-2c85215869bf | htcondor_execute_node_1 | ACTIVE | -          | Running     | bioaster=134.158.37.9                   |
+| 34483a89-6f06-46b8-98dd-0515bd372b21 | htcondor_execute_node_2 | ACTIVE | -          | Running     | bioaster=134.158.37.11                  |
+| 013f0546-36ea-482a-a45d-d7bc3c11febc | jbrowse                 | ACTIVE | -          | Running     | bioaster=134.158.37.6                   |
+| 7247d247-d442-4285-abbb-d15faa81edc6 | minilims                | ACTIVE | -          | Running     | bioaster=134.158.37.5, 134.158.246.26   |
+| e73c8d82-8bc2-49a2-b740-55bbbe26b803 | shiny                   | ACTIVE | -          | Running     | bioaster=134.158.37.10                  |
+| 34c95e4e-1fe3-4281-98bb-e680cb08fb21 | test_debian-8           | ACTIVE | -          | Running     | bioaster=134.158.37.4                   |
++--------------------------------------+-------------------------+--------+------------+-------------+-----------------------------------------+</pre>
+
+<p>
+<strong>Le tenant est utilisé à la fois par les développeurs, par des machines de services  et pour l&#039;intégration d&#039;outils de visualisation</strong>
+</p>
+
+<p>
+<strong>Hébergement et mises en production d&#039;eSample la gestion d&#039;échantillons et SYMBIOSIS la plateforme de bioinformatique de Bioaster en Septembre 2015</strong>
+</p>
+
+<p>
+<strong>Début du développement et de l&#039;hébergement de l&#039;application web FLEMS (Full Laboratory Experiment Management System) à partir de l&#039;été 2015</strong>
+</p>
+
+<p>
+<strong> UTEC Genomics &amp; Transcriptomics : service QIIME</strong>
+</p>
+<!-- EDIT4 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_todo plugin_wrap">
+<p>
+A compléter …
+</p>
+
+<p>
+<strong>[TLC]</strong> La VM pour la nouvelle version est prête, mais je dois voir avec Lilia, car je ne sais pas encore sur quel tenant la déployer pour qu&#039;elle soit facile d&#039;accès !
+</p>
+</div><!-- EDIT5 PLUGIN_WRAP_END [0-] --><!-- EDIT6 PLUGIN_WRAP_START [0-] --><div class="wrap_clear plugin_wrap"></div><!-- EDIT7 PLUGIN_WRAP_END [0-] -->
+<p>
+<strong>Nouveaux besoins identifiés pour Q3 &amp; Q4 2015</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>UTEC Metabolomics &amp; Proteomics</strong> :</div>
+<ul>
+<li class="level2"><div class="li"> MoA ⇒ 1 VM</div>
+</li>
+<li class="level2"><div class="li"> Fingerprinting ⇒ 1 VM</div>
+</li>
+<li class="level2"><div class="li"> MS Spectra library ⇒ 1 VM</div>
+</li>
+<li class="level2"><div class="li"> LipidSearch ⇒ 1 VM </div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<strong>NB : les machines de test sont déployées sur ce tenant car le tenant htc-bioaster est complétement cloisonné niveau réseau</strong>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Tenant bioaster" [294-3732] -->
+<h2 class="sectionedit8" id="tenant_htc_bioaster">Tenant htc_bioaster</h2>
+<div class="level2">
+<pre class="code">+--------------------------------------+-----------------------+--------+------------+-------------+-------------------------+
+| ID                                   | Name                  | Status | Task State | Power State | Networks                |
++--------------------------------------+-----------------------+--------+------------+-------------+-------------------------+
+| 6ba32052-1bca-4fb5-8b6c-1dee64f36a8f | htcondor_execute_node | ACTIVE | -          | Running     | htc-bioaster=172.17.6.3 |
+| 1c226f86-4bb6-40f7-8394-9189627a5ff7 | htcondor_manager      | ACTIVE | -          | Running     | htc-bioaster=172.17.6.5 |
+| a97299af-ca9f-4c45-b4bc-42ed7012ee0e | htcondor_submit_node  | ACTIVE | -          | Running     | htc-bioaster=172.17.6.4 |
++--------------------------------------+-----------------------+--------+------------+-------------+-------------------------+</pre>
+
+<p>
+<strong>Les solutions HTC (Wings/Pegasus/HTCondor et Galaxy/CloudMan) sont en cours de déploiement et de test pour à terme être intégrées dans SYMBIOSIS la plateforme de bioinformatique de Bioaster (Septembre 2015)</strong>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Tenant htc_bioaster" [3733-4887] -->
+<h2 class="sectionedit9" id="points_a_aborder">Points à aborder</h2>
+<div class="level2">
+
+<p>
+<strong>Avoir plus de droits sur le tenant htc_bioaster (ie création de flavor perso, debug de vm)</strong> piste rem-tcl ??!!
+</p>
+
+<p>
+<strong>Expliquer l&#039;architecture htcondor_manager qui spawne des vms depuis le tenant bioaster sur le tenant htc_bioaster, idem avec galaxy et cloud_man</strong>
+</p>
+
+<p>
+<strong>Localisation et paramétrage des 2 serveurs du tenant htc-bioaster (noms, salle machine, hyperviseurs, …)</strong>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Points à aborder" [4888-5297] -->
+<h1 class="sectionedit10" id="vmware">VMWARE</h1>
+<div class="level1">
+
+<p>
+<strong>Utilisation de l&#039;infrastructure VMWARE :</strong>
+</p>
+
+<p>
+3 serveurs Bioaster installés depuis 45 jours dans Vil1 
+–&gt; problèmes de configuration réseau coté Bioaster 
+Stockage Isilon prêté par le CC en commun avec les serveurs Blade prêtés par le CC 
+</p>
+
+<p>
+le 19 réunion d&#039;initiation Telindus 
+avant la fin du mois installation des équipement réseau et stockage
+</p>
+
+</div>
+<!-- EDIT10 SECTION "VMWARE" [5298-5678] -->
+<h1 class="sectionedit11" id="base_de_donnees">Base de données</h1>
+<div class="level1">
+
+<p>
+<strong>BDD utilisées :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> bioaster_lims (pour eSAMPLES)</div>
+</li>
+</ul>
+
+<p>
+<strong>Nouveaux besoins identifiés pour Q3 &amp; Q4 2015</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>UTEC Metabolomics &amp; Proteomics</strong> :</div>
+<ul>
+<li class="level2"><div class="li"> MoA ⇒ 1 DB</div>
+</li>
+<li class="level2"><div class="li"> Fingerprinting ⇒ 1 DB </div>
+</li>
+<li class="level2"><div class="li"> MS Spectra library ⇒ 1 DB</div>
+</li>
+<li class="level2"><div class="li"> LipidSearch ⇒ 1 DB</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Base de données" [5679-5967] -->
+<h1 class="sectionedit12" id="gpfs">GPFS</h1>
+<div class="level1">
+
+<p>
+La sauvegarde des fichiers sous GPFS a mis du temps à se faire. Actuellement, la politique est le standard du CCIN2P3. Comment peut-on la faire évoluer? 
+</p>
+
+</div>
+<!-- EDIT12 SECTION "GPFS" [5968-6143] -->
+<h1 class="sectionedit13" id="gitlab">GitLab</h1>
+<div class="level1">
+
+<p>
+<strong>[TLC]</strong> Modalités d&#039;accès ?
+</p>
+
+</div>
+<!-- EDIT13 SECTION "GitLab" [6144-6198] -->
+<h1 class="sectionedit14" id="syntheseevolution_des_besoins_pour_q3_q4_2015">Synthèse : évolution des besoins pour Q3 &amp; Q4 2015</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT14 SECTION "Synthèse : évolution des besoins pour Q3 & Q4 2015" [6199-] -->

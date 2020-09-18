@@ -1,0 +1,101 @@
+
+<h1 class="sectionedit1" id="docker">Docker</h1>
+<div class="level1">
+
+<p>
+Docker is one of the most popular container solutions. We will learn how to use a docker with the following steps.
+</p>
+<ol>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:1setup" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:1setup">Part1 : Orientation and setup</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:2containers" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:2containers">Part 2: Containers</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:3services" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:3services">Part 3: Services</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:4swarms" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:4swarms">Part 4: Swarms</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=employes:pengfei.liu:admin_system:container:docker:5stack" class="wikilink1" title="employes:pengfei.liu:admin_system:container:docker:5stack">Part 5: Stacks</a></div>
+</li>
+<li class="level1"><div class="li"> Deploy your app to production</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Docker&quot;,&quot;hid&quot;:&quot;docker&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-608&quot;} -->
+<h2 class="sectionedit2" id="docker_concepts">Docker concepts</h2>
+<div class="level2">
+
+<p>
+Docker is a platform for developers and sysadmins to develop, deploy, and run applications with containers. The use of Linux containers to deploy applications is called containerization. Containers are not new, but their use for easily deploying applications is.
+</p>
+
+<p>
+Containerization is increasingly popular because containers are:
+</p>
+
+<p>
+Flexible: Even the most complex applications can be containerized.
+Lightweight: Containers leverage and share the host kernel.
+Interchangeable: You can deploy updates and upgrades on-the-fly.
+Portable: You can build locally, deploy to the cloud, and run anywhere.
+Scalable: You can increase and automatically distribute container replicas.
+Stackable: You can stack services vertically and on-the-fly.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Docker concepts&quot;,&quot;hid&quot;:&quot;docker_concepts&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;609-1369&quot;} -->
+<h3 class="sectionedit3" id="images_and_containers">Images and containers</h3>
+<div class="level3">
+
+<p>
+A container is launched by running an image. An image is an executable package that includes everything needed to run an application–the code, a runtime, libraries, environment variables, and configuration files.
+</p>
+
+<p>
+A container is a runtime instance of an image–what the image becomes in memory when executed (that is, an image with a state, or a user process). You can see a list of your running containers with the command, docker ps, just as you would in Linux.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Images and containers&quot;,&quot;hid&quot;:&quot;images_and_containers&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1370-1868&quot;} -->
+<h3 class="sectionedit4" id="containers_and_virtual_machines">Containers and virtual machines</h3>
+<div class="level3">
+
+<p>
+A container runs natively on Linux and shares the kernel of the host machine with other containers. It runs a discrete process, taking no more memory than any other executable, making it lightweight.
+</p>
+
+<p>
+By contrast, a virtual machine (VM) runs a full-blown “guest” operating system with virtual access to host resources through a hypervisor. In general, VMs provide an environment with more resources than most applications need.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Aadmin_system%3Acontainer%3Adocker%3Astart&amp;media=employes:pengfei.liu:admin_system:container:docker:container2.png" class="media" title="employes:pengfei.liu:admin_system:container:docker:container2.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=1938fd&amp;media=employes:pengfei.liu:admin_system:container:docker:container2.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Aadmin_system%3Acontainer%3Adocker%3Astart&amp;media=employes:pengfei.liu:admin_system:container:docker:vm2.png" class="media" title="employes:pengfei.liu:admin_system:container:docker:vm2.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=5da5a2&amp;media=employes:pengfei.liu:admin_system:container:docker:vm2.png" class="media" alt="" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Containers and virtual machines&quot;,&quot;hid&quot;:&quot;containers_and_virtual_machines&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1869-2491&quot;} -->
+<h3 class="sectionedit5" id="docker_advantage">Docker advantage</h3>
+<div class="level3">
+
+<p>
+Containerization makes CI/CD seamless. For example:
+</p>
+<ul>
+<li class="level1"><div class="li"> applications have no system dependencies</div>
+</li>
+<li class="level1"><div class="li"> updates can be pushed to any part of a distributed application</div>
+</li>
+<li class="level1"><div class="li"> resource density can be optimized.</div>
+</li>
+</ul>
+
+<p>
+With Docker, scaling your application is a matter of spinning up new executables, not running heavy VM hosts.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Docker advantage&quot;,&quot;hid&quot;:&quot;docker_advantage&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2492-&quot;} -->

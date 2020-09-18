@@ -1,0 +1,271 @@
+
+<h1 class="sectionedit1" id="standard_operation_procedure_for_creating_centos_7_vm_in_vm_ware">Standard operation Procedure for creating centos 7 vm in VM ware</h1>
+<div class="level1">
+
+<p>
+<strong>1 Gathor inforamtion:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> VM stats (e.g. cpu, memory, disk)</div>
+</li>
+<li class="level1"><div class="li"> network stats (i.e. Ip address)</div>
+</li>
+<li class="level1"><div class="li"> user stats (i.e. who will be allowed to connect to this vm with what rights)</div>
+</li>
+</ul>
+
+<p>
+<strong>2 Register ip address in racktables</strong>
+</p>
+
+<p>
+To avoid conflict, you must go to the following site(<a href="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" class="urlextern" title="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" rel="nofollow">http://racktables.bioaster.local/racktables/index.php?page=ipv4space</a>). You will need a login and pwd to connect, You can find it in keypass
+</p>
+
+<p>
+<strong>3 Create vm</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Use existing template to deployer the vm (If no template, go ask vm ware admin)</div>
+</li>
+<li class="level1"><div class="li"> Deactive the network connection before power on your vm (vm may keep the old ip of the template, possible network conflict)</div>
+</li>
+<li class="level1"><div class="li"> Open a terminal in vsphere of your vm, configure your network with right IP and dns (two dns 10.69.1.31, 10.70.2.21, two search domains in2p3.fr, bioaster.org, bioaster.local ).</div>
+</li>
+<li class="level1"><div class="li"> Restart your vm</div>
+</li>
+<li class="level1"><div class="li"> Test ssh connection with default user (e.g. bioaster)   </div>
+</li>
+<li class="level1"><div class="li"> Create custom user account and group which can access this vm </div>
+</li>
+<li class="level1"><div class="li"> Test ssh connection with custom user account.</div>
+</li>
+<li class="level1"><div class="li"> edit /etc/sudoers to give appropiate right to custom user through group (Give right direct to a user is not recommended).</div>
+</li>
+</ul>
+
+<p>
+<strong>4 Create <abbr title="Graphical User Interface">GUI</abbr> and make it avaialbe via ssh</strong>
+</p>
+<pre class="code"> #Install EPEL and X window
+ shell&gt; sudo yum install epel-release
+        sudo yum groupinstall &quot;X Window system&quot;
+# Install xfce 
+ shell&gt; sudo yum groupinstall xfce
+
+#hange target graphique : 
+ shell&gt; sudo systemctl isolate graphical.target
+
+#Launch the xfce gui at the start of the vm. 
+shell &gt; sudo systemctl set-default graphical.target
+        sudo rm &#039;/etc/systemd/system/default.target&#039;
+        sudo ln -s &#039;/usr/lib/systemd/system/graphical.target&#039; &#039;/etc/systemd/system/default.target&#039;
+
+#Install x2go on the server side: 
+shell&gt; sudo yum -y install x2goserver-xsession
+</pre>
+
+<p>
+Ps: x2go use nx protocol which wrapped ssh. So make sure the ssh access is open on the server side.
+</p>
+
+<p>
+<strong>4bis, install x2go on ubuntu 16.04</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Install x2go server package and gui xfce4</div>
+</li>
+</ul>
+
+<p>
+code&gt;
+sudo apt-get -y install software-properties-common
+sudo add-apt-repository ppa:x2go/stable -y 
+sudo apt-get update
+sudo apt-get -y install x2goserver x2goserver-xsession
+</p>
+
+<p>
+sudo apt-get install xfce4 
+&lt;/code&gt;
+</p>
+
+<p>
+<strong>5 Install x2go client</strong>
+X2go client is available for windows, Mac and Linux. You can download these clients from <a href="http://wiki.x2go.org/doku.php/download:start" class="urlextern" title="http://wiki.x2go.org/doku.php/download:start" rel="nofollow">http://wiki.x2go.org/doku.php/download:start</a>
+</p>
+
+<p>
+For windows you can go here directly: <a href="http://code.x2go.org/releases/binary-win32/x2goclient/releases/4.0.5.0-2015.07.31/x2goclient-4.0.5.0-2015.07.31-setup.exe" class="urlextern" title="http://code.x2go.org/releases/binary-win32/x2goclient/releases/4.0.5.0-2015.07.31/x2goclient-4.0.5.0-2015.07.31-setup.exe" rel="nofollow">http://code.x2go.org/releases/binary-win32/x2goclient/releases/4.0.5.0-2015.07.31/x2goclient-4.0.5.0-2015.07.31-setup.exe</a>
+</p>
+
+<p>
+When you start your client, you need to give Ip address, user login and password. For gui, you must choose xfce
+</p>
+
+<p>
+6 Mount extra hard drive to vm
+</p>
+<ul>
+<li class="level1"><div class="li"> Add disk to vm (In Vsphere, right click on target vm, then choose modifier les parameter, click on ajoute, then choose disk ) </div>
+</li>
+<li class="level1"><div class="li"> Creating Linux Partitions. First find the new disk <code>fdisk -l</code></div>
+</li>
+</ul>
+<pre class="code">Disk /dev/sda: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00003ac8
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     1026047      512000   83  Linux
+/dev/sda2         1026048    41943039    20458496   8e  Linux LVM</pre>
+
+<p>
+The above info is an example of existing partition
+</p>
+<pre class="code">Disk /dev/sdb: 10.7 GB, 10737418240 bytes, 20971520 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes</pre>
+
+<p>
+The above info ia an example of disk without parttion
+</p>
+
+<p>
+Now we know, we need to create patition for /dev/sdb, type <code>fdisk /dev/sdb</code>
+</p>
+
+<p>
+You will have following info
+</p>
+<pre class="code">Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
+Building a new DOS disklabel. Changes will remain in memory only,
+until you decide to write them. After that, of course, the previous
+content won&#039;t be recoverable.
+
+The number of cylinders for this disk is set to 47536.
+There is nothing wrong with that, but this is larger than 1024,
+and could in certain setups cause problems with:
+1) software that runs at boot time (e.g., old versions of LILO)
+2) booting and partitioning software from other OSs
+   (e.g., DOS FDISK, OS/2 FDISK)
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help):</pre>
+
+<p>
+Enter <strong>p</strong> for viewing current partition, if none exist. 
+</p>
+
+<p>
+Enter <strong>n</strong> for creating new partition.
+</p>
+
+<p>
+Enter <strong>p</strong> for premary partition.
+</p>
+
+<p>
+Enter <strong>1</strong> for partition number
+</p>
+
+<p>
+Enter <strong>w</strong> for writing the partion on disk
+</p>
+
+<p>
+Now do <code>ls /dev/sd*</code>, You should see <code>…  /dev/sdb  <strong>/dev/sdb1</strong></code>
+</p>
+<ul>
+<li class="level1"><div class="li"> Creating a File System on Disk Partition, Enter <code>mkfs.ext4 /dev/sdb1</code></div>
+</li>
+<li class="level1"><div class="li"> Mount the partition as /userdata <code>mkdir /userdata</code> <code>mount /dev/sdb1 /userdata</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Standard operation Procedure for creating centos 7 vm in VM ware&quot;,&quot;hid&quot;:&quot;standard_operation_procedure_for_creating_centos_7_vm_in_vm_ware&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-4972&quot;} -->
+<h1 class="sectionedit2" id="standard_operation_procedure_for_creating_windows_vm_in_vm_ware">Standard operation Procedure for creating windows vm in VM ware</h1>
+<div class="level1">
+
+<p>
+<strong>1 Gathor inforamtion:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> VM stats (e.g. cpu, memory, disk)</div>
+</li>
+<li class="level1"><div class="li"> network stats (i.e. Ip address)</div>
+</li>
+<li class="level1"><div class="li"> user stats (i.e. who will be allowed to connect to this vm with what rights)</div>
+</li>
+</ul>
+
+<p>
+<strong>2 Register ip address in racktables</strong>
+</p>
+
+<p>
+To avoid conflict, you must go to the following site(<a href="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" class="urlextern" title="http://racktables.bioaster.local/racktables/index.php?page=ipv4space" rel="nofollow">http://racktables.bioaster.local/racktables/index.php?page=ipv4space</a>). You will need a login and pwd to connect, You can find it in keypass
+</p>
+
+<p>
+<strong>3 Create vm</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Use existing template to deployer the vm (If no template, go ask vm ware admin)</div>
+</li>
+<li class="level1"><div class="li"> Deactive the network connection before power on your vm (vm may keep the old ip of the template, possible network conflict)</div>
+</li>
+<li class="level1"><div class="li"> Open a terminal in vsphere of your vm, configure your network with right IP and dns (two dns 10.69.1.31 (vpn b1), 10.70.2.21 (vpn cc), two search domains in2p3.fr, bioaster.org, bioaster.local ).</div>
+</li>
+</ul>
+
+<p>
+<strong>4 Put windows vm into bioaster domain</strong>
+</p>
+<pre class="code">In this step we need IT/IS master key (must ask Antoney or Mathieu to add windows vm to domain)</pre>
+
+<p>
+<strong>5 Add user to vm</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> click on ce pc → propiete → Page d&#039;acceuil du panneau de configuration → comptes d&#039;utilisateurs, In this page, you have two tabs: utilisateur and options avancee</div>
+</li>
+<li class="level1"><div class="li"> To add user, stay in tab utilisateur click on → ajouter. After this, you will find a popup window which ask you nom and domain. In nom, you need to put the uid of the user in the AD(Active directory)of Bioaster. In domain, you need to put bioaster. Then click on ok, If the uid exists, it will be added to the vm, otherwise, it will say no such user find.</div>
+</li>
+<li class="level1"><div class="li"> Now we need to add this user to admin group(admin of the vm locally), otherwise use can&#039;t install anything. To do this, go to tab options avance. Click on → gestion avancee des utilisateur → groups → Admininstrateurs → Ajouter, then you enter the AD uid of user (e.g. pliu, sdixneuf)</div>
+</li>
+</ul>
+
+<p>
+<strong>6 Add user to remote desktop access list</strong>
+ To allow user to connect to server with rdp (windows ssh -x), we need to add user to the remote desktop access list. Click on ce Pc → propietes → parametres system avances, there is a window with 4 tab, click on tab Utilisation a distance → selectionez des utilisateurs. Click on Ajouter, enter the bioaster AD uid of the user.  
+</p>
+
+<p>
+<strong>7 Configuer client to connect to the server with rdp</strong>
+Click on start, in the search bar, tap mstsc, then open the mstsc.exe.
+The host name is <em>pc_name.bioaster.local</em>, for example if I have a vm called CCWinCodiraP03, then you should put CCWinCodiraP03.bioaster.local as host name.
+the username, you should put BIOASTER\Ad_uid (e.g. BIOASTER\pliuadm). And this uid must be added to the server side rdp list (see section 6)
+</p>
+
+<p>
+<strong>8 Add extra hard drive</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Add disk to vm (In Vsphere, right click on target vm, then choose modifier les parameter, click on ajoute, then choose disk ) </div>
+</li>
+<li class="level2"><div class="li"> Mount disk to windows as volume. Go to Gestionnaire de serveur → outils → Gestion de l&#039;ordinateur → stockage → gestion des disques</div>
+</li>
+<li class="level2"><div class="li"> If the disk is not connected, right click on the left side of the disk, then choose connect. </div>
+</li>
+<li class="level2"><div class="li"> If disk is connected, right click on the right side of the disk, then chose new simple volume, </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Standard operation Procedure for creating windows vm in VM ware&quot;,&quot;hid&quot;:&quot;standard_operation_procedure_for_creating_windows_vm_in_vm_ware&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:2,&quot;range&quot;:&quot;4973-&quot;} -->

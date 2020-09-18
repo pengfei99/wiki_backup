@@ -1,0 +1,200 @@
+
+<h1 class="sectionedit1" id="univa_scheduler">UNIVA Scheduler</h1>
+<div class="level1">
+
+<p>
+La procédure BIOASTER est basée sur le <a href="http://cc.in2p3.fr/docenligne/362/fr" class="urlextern" title="http://cc.in2p3.fr/docenligne/362/fr" rel="nofollow">guide de l&#039;utilisateur</a> du CC-IN2P3.
+Ce dernier sert de document de base pour toutes les bonnes pratiques concernant la ferme mise à disposition à l&#039;IN2P3. 
+</p>
+
+<p>
+Les ressources du centre de calcul sont mises à disposition au travers d&#039;un <em>système de gestion des tâches</em> : <a href="http://www.univa.com/products/grid-engine" class="urlextern" title="http://www.univa.com/products/grid-engine" rel="nofollow">UGE</a>.
+Chaque tâche est ajoutée à une file d&#039;attente puis exécutée en fonction des ressources nécessaires et de celles disponibles.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;UNIVA Scheduler&quot;,&quot;hid&quot;:&quot;univa_scheduler&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-570&quot;} -->
+<h2 class="sectionedit2" id="se_connecter">Se connecter</h2>
+<div class="level2">
+
+<p>
+Pour soumettre une tâche il faut se connecter à une <em>frontale</em> du centre de calcul.
+</p>
+<pre class="code text">$ ssh &lt;LOGIN&gt;@ccage.in2p3.fr</pre>
+
+<p>
+Le <em>login</em> est défini lors de la création de compte.
+Le <em>mot de passe</em> est donné par le CC et doit être changé au bout de 6 mois.
+Utilisez la commande <code>passwd_check</code> pour vérifier le temps restant avant le prochain changement.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Se connecter&quot;,&quot;hid&quot;:&quot;se_connecter&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;571-975&quot;} -->
+<h2 class="sectionedit3" id="soumettre_une_tache">Soumettre une tâche</h2>
+<div class="level2">
+
+<p>
+La soumission de job se fait grâce à l&#039;outil <code>qsub</code>.
+De nombreuses options, bien que non requises, sont très utiles à connaitre et il est recommandé de les utiliser systématiquement :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-N &lt;NOM&gt;</code> : donne un nom à la tâche et ainsi l&#039;identifier plus facilement par la suite ;</div>
+</li>
+<li class="level1"><div class="li"> <code>-P &lt;PROJET&gt;</code> : <em>“facture”</em> la tâche à un projet particulier (défaut : <em>P_bioaster</em>) ;</div>
+</li>
+<li class="level1"><div class="li"> <code>-q &lt;FILE_D_ATTENTE&gt;</code> : assigne la tâche à une file d&#039;attente particulière (défaut : <em>short</em>) ;</div>
+</li>
+<li class="level1"><div class="li"> <code>-l &lt;RESSOURCES&gt;</code> : définit les ressources nécessaires à l&#039;exécution de la tâche ;</div>
+</li>
+<li class="level1"><div class="li"> <code>-v &lt;VARIABLES&gt;</code> : définit les variables d&#039;environnement qui seront passées à la tâche lors de son exécution ;</div>
+</li>
+<li class="level1"><div class="li"> <code>-o &lt;SORTIE&gt;</code> : écrit le <em>journal des évènements</em> dans le fichier donné.</div>
+</li>
+</ul>
+
+<p>
+La tâche en elle-même est un fichier exécutable, la plupart du temps un simple script <em>shell</em>.
+Un exemple de soumission pourrait être :
+</p>
+<pre class="code text">$ qsub -P P_bioaster -N JOB123 mon_script.sh
+Your job 1323896 (&quot;JOB123&quot;) has been submitted</pre>
+
+<p>
+Le numéro de la tâche (<em>job</em>) doit être conservé afin de pouvoir interagir avec celle-ci par la suite.
+</p>
+
+<p>
+&lt;WRAP left round important 60%&gt;
+<strong>Depuis le 20/09/2016 : </strong> Suite aux modifications des limites des queues batch  (voir <a href="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_queue.php</a>) 
+vous pouvez dorénavant utiliser la queue “long“ au lieu de la queue “huge”. Vous n’aurez plus accès à la queue “huge”.
+</p>
+
+<p>
+&lt;/WRAP&gt;
+&lt;WRAP clear&gt;&lt;/WRAP&gt;
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Soumettre une t\u00e2che&quot;,&quot;hid&quot;:&quot;soumettre_une_tache&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;976-2515&quot;} -->
+<h2 class="sectionedit4" id="specifier_la_memoire_requise_par_les_jobs">Spécifier la mémoire requise par les jobs</h2>
+<div class="level2">
+
+<p>
+<strong>Communication du CC du 20/09/2016 : </strong>
+</p>
+
+<p>
+Suite aux modifications des limites des queues batch  (voir <a href="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_queue.php</a>) nous préconisons d&#039;utiliser “s_rss” au lieu de “s_vmem” pour spécifier la mémoire requise par les jobs.
+</p>
+
+<p>
+Vous pouvez trouver le “maxrss” utilisé par les jobs terminés en fin de l’output ou avec la commande qacct.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Sp\u00e9cifier la m\u00e9moire requise par les jobs&quot;,&quot;hid&quot;:&quot;specifier_la_memoire_requise_par_les_jobs&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2516-2963&quot;} -->
+<h2 class="sectionedit5" id="verifier_l_avancement">Vérifier l&#039;avancement</h2>
+<div class="level2">
+
+<p>
+Une fois une tâche soumise, son avancement peut être affiché avec la commande <code>qstat</code>.
+La colonne la plus importante est le <em>state</em> qui permet de connaitre l&#039;avancement de la tâche :
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>qw</code> : en attente d&#039;exécution ;</div>
+</li>
+<li class="level1"><div class="li"> <code>r</code> : en cours d&#039;exécution sur la machine précisée dans la colonne <em>queue</em> ;</div>
+</li>
+<li class="level1"><div class="li"> <code>e</code> : une erreur a été détectée ! Une intervention manuelle est nécessaire.</div>
+</li>
+</ul>
+
+<p>
+La commande <code>qstat</code> seule liste toutes les tâches de l&#039;utilisateur. Pour visualiser uniquement une tâche, il faut utiliser l&#039;option <code>-j</code> avec le numéro de tâche affiché lors de la soumission.
+</p>
+<pre class="code text">$ qstat -j 1323896
+job-ID  prior   name       user         state submit/start at     queue                          jclass                         slots ja-task-ID
+------------------------------------------------------------------------------------------------------------------------------------------------
+1324422 0.00000 uge_test_j tlecarro     qw    04/10/2014 16:36:21                                                                   1</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;V\u00e9rifier l&#039;avancement&quot;,&quot;hid&quot;:&quot;verifier_l_avancement&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;2964-4072&quot;} -->
+<h2 class="sectionedit6" id="pour_aller_plus_loin">Pour aller plus loin...</h2>
+<div class="level2">
+
+<p>
+Pour consulter les quotas (RQS : Resource Quota Set) de Bioaster :
+</p>
+
+<p>
+<a href="http://cctools.in2p3.fr/mrtguser/info_sge_rqs.php?group=bioaster" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_rqs.php?group=bioaster" rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_rqs.php?group=bioaster</a>
+</p>
+
+<p>
+Pour voir les différentes queues de soumission disponibles et leurs caractéristiques : <a href="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" rel="nofollow">http://cctools.in2p3.fr/mrtguser/info_sge_queue.php</a>
+</p>
+
+<p>
+Pour afficher en ligne de commande toutes les queues de soumission disponibles :
+</p>
+<pre class="code text">$ qconf -sql
+admin
+admin_test
+demon
+huge
+interactive
+long
+[...]</pre>
+
+<p>
+Pour lister les propriétés d&#039;une queue de soumission (ressources disponibles…) :
+</p>
+<pre class="code text">$ qconf -sq short
+qname                 short
+hostlist              @sequentials
+[...]
+tmpdir                /scratch
+shell                 /bin/sh
+prolog                NONE
+epilog                NONE
+[...]
+s_rt                  01:00:00
+h_rt                  06:00:00
+s_cpu                 00:06:00
+h_cpu                 00:12:00
+s_fsize               5G
+h_fsize               5.01G
+s_data                5G
+h_data                5.01G
+s_stack               INFINITY
+h_stack               INFINITY
+s_core                2.5G
+h_core                3G
+s_rss                 INFINITY
+h_rss                 INFINITY
+s_vmem                512M
+h_vmem                600M</pre>
+
+<p>
+Il est parfois nécessaire de <strong>modifier les paramètres</strong> passés lors de la soumission d&#039;une tâche. Ceci se fait avec la commande <code>qalter</code> qui accepte la plupart des options de <code>qsub</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pour aller plus loin...&quot;,&quot;hid&quot;:&quot;pour_aller_plus_loin&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;4073-5523&quot;} -->
+<h2 class="sectionedit7" id="journal">Journal</h2>
+<div class="level2">
+
+<p>
+<strong>13-05-2016</strong> : Autorisation donnée à l&#039;utilisateur pveyre de lancer des jobs sur la queue huge
+</p>
+
+<p>
+<strong>26-05-2016</strong> : Augmentation du RQS slots sps : 10 ⇒ 40
+</p>
+
+<p>
+<strong>13-09-2016</strong> : Augmentation des RQS sps : 40 ⇒ 100 et slots 40 ⇒ 100 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Journal&quot;,&quot;hid&quot;:&quot;journal&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;5524-&quot;} -->

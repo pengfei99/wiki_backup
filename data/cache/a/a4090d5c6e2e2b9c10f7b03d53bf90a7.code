@@ -1,0 +1,5 @@
+<span class="kw1">from</span> django.<span class="me1">shortcuts</span> <span class="kw1">import</span> get_object_or_404<span class="sy0">,</span> render
+&nbsp;
+<span class="kw1">def</span> results<span class="br0">&#40;</span>request<span class="sy0">,</span> question_id<span class="br0">&#41;</span>:
+    question <span class="sy0">=</span> get_object_or_404<span class="br0">&#40;</span>Question<span class="sy0">,</span> pk<span class="sy0">=</span>question_id<span class="br0">&#41;</span>
+    <span class="kw1">return</span> render<span class="br0">&#40;</span>request<span class="sy0">,</span> <span class="st0">'polls/results.html'</span><span class="sy0">,</span> <span class="br0">&#123;</span><span class="st0">'question'</span>: question<span class="br0">&#125;</span><span class="br0">&#41;</span>

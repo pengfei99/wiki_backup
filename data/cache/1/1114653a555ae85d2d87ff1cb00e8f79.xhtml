@@ -1,0 +1,128 @@
+
+<h1 class="sectionedit1" id="spark_file_input_and_output">Spark file input and output</h1>
+<div class="level1">
+
+<p>
+Spark can read text, json, SequenceFile, from local file system, HDFS and Amazon S3. It can also read data from data base (e.g. MySql, HBase, Hive). In this tutorial, we only show how to read file from file system (local, remote).
+</p>
+
+<p>
+Read data from Hbae<a href="/doku.php?id=employes:pengfei.liu:big_data:spark:spark_hbase_io" class="wikilink1" title="employes:pengfei.liu:big_data:spark:spark_hbase_io">Use spark to get and set data in HBase</a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Spark file input and output" [1-391] -->
+<h2 class="sectionedit2" id="read_write_file_from_file_system_without_format">Read write file from file system without format</h2>
+<div class="level2">
+
+<p>
+The command for read file from file system (local or remote) is the same 
+</p>
+<pre class="code">vim /tmp/test.json
+#put the following lines
+{&quot;name&quot;:&quot;Michael&quot;}
+{&quot;name&quot;:&quot;Andy&quot;, &quot;age&quot;:30}
+{&quot;name&quot;:&quot;Justin&quot;, &quot;age&quot;:19}
+
+# read from local file system, read is not an action, so it will do nothing
+scala&gt; val textFile = sc.textFile(&quot;file:///tmp/test.json&quot;)
+
+#read from hdfs. 
+scala&gt; val textFile = sc.textFile(&quot;hdfs://pengfei.org:9000/test_data/test.json&quot;)
+
+#reade from aws s3
+scala&gt; val textFile = sc.textFile(&quot;s3a://yourAccessKey:yourSecretKey@/test_data/sonnets.txt&quot;)
+
+# first is an action, it shows the first line of the file
+scala&gt; textFile.first
+res0: String = {&quot;name&quot;:&quot;Michael&quot;}
+
+# write to antoher file
+scala&gt; textFile.saveAsTextFile(&quot;file:///tmp/copy_of_test.json&quot;)
+
+[pliu@localhost tmp]$ cd copy_of_test.json/
+[pliu@localhost copy_of_test.json]$ ls
+part-00000  part-00001  _SUCCESS
+
+[pliu@localhost copy_of_test.json]$ cat part-00000 
+{&quot;name&quot;:&quot;Michael&quot;}
+{&quot;name&quot;:&quot;Andy&quot;, &quot;age&quot;:30}
+[pliu@localhost copy_of_test.json]$ cat part-00001
+{&quot;name&quot;:&quot;Justin&quot;, &quot;age&quot;:19}</pre>
+
+<p>
+You could notice, the output is not a simple file, is a directory. And the file has been spit into two files part-00000 and part-00001.
+</p>
+
+<p>
+Don&#039;t panic, spark can read it really easy
+</p>
+<pre class="code">scala&gt; val copyFile=sc.textFile(&quot;file:///tmp/copy_of_test.json&quot;)
+copyFile: org.apache.spark.rdd.RDD[String] = file:///tmp/copy_of_test.json MapPartitionsRDD[4] at textFile at &lt;console&gt;:24
+
+scala&gt; copyFile.collect
+res4: Array[String] = Array({&quot;name&quot;:&quot;Justin&quot;, &quot;age&quot;:19}, {&quot;name&quot;:&quot;Michael&quot;}, {&quot;name&quot;:&quot;Andy&quot;, &quot;age&quot;:30})
+</pre>
+
+<p>
+Ps s3a is the amazon hdfs, s3n is the native hdfs.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Read write file from file system without format" [392-2071] -->
+<h2 class="sectionedit3" id="read_write_file_from_file_system_with_format">Read write file from file system with format</h2>
+<div class="level2">
+<pre class="code">val dataFrame = spark.read.json(&quot;example.json&quot;)
+val dataFrame = spark.read.csv(&quot;example.csv&quot;)
+val dataFrame = spark.read.parquet(&quot;example.parquet&quot;)</pre>
+
+</div>
+<!-- EDIT3 SECTION "Read write file from file system with format" [2072-2293] -->
+<h2 class="sectionedit4" id="parse_json_in_spark">Parse json in spark</h2>
+<div class="level2">
+<pre class="code">#import the spark json lib
+scala&gt; import scala.util.parsing.json.JSON
+import scala.util.parsing.json.JSON
+
+#parsing to json, not an action
+scala&gt; val result= textFile.map(s=&gt;JSON.parseFull(s))
+result: org.apache.spark.rdd.RDD[Option[Any]] = MapPartitionsRDD[5] at map at &lt;console&gt;:27
+
+#check the result
+scala&gt; result.foreach({r=&gt; r match {case Some (map: Map[String,Any])=&gt;println(map) case None =&gt; println(&quot;Parsing failed&quot;) case other =&gt; println(&quot;Other structure&quot;+other)}})                                                  
+Map(name -&gt; Michael)
+Map(name -&gt; Andy, age -&gt; 30.0)
+Map(name -&gt; Justin, age -&gt; 19.0)
+</pre>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:spark:spark_file_io&amp;codeblock=4" title="Download Snippet" class="mediafile mf_scala">SparkFileIO.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="br0">&#123;</span>SparkConf, SparkContext<span class="br0">&#125;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> scala.<span class="me1">util</span>.<span class="me1">parsing</span>.<span class="me1">json</span>.<span class="me1">JSON</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> SparkFileIO <span class="br0">&#123;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span> <span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> conf <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkConf<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">setAppName</span><span class="br0">&#40;</span><span class="st0">&quot;SparkFileIO&quot;</span><span class="br0">&#41;</span>.<span class="me1">setMaster</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sc <span class="sy0">=</span> <a href="http://scala-lang.org"><span class="kw1">new</span></a> SparkContext<span class="br0">&#40;</span>conf<span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> inputFile<span class="sy0">=</span> <span class="st0">&quot;file:///tmp/test.json&quot;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> textFile<span class="sy0">=</span> sc.<span class="me1">textFile</span><span class="br0">&#40;</span>inputFile<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> result<span class="sy0">=</span> textFile.<span class="me1">map</span><span class="br0">&#40;</span>s<span class="sy0">=&gt;</span>JSON.<span class="me1">parseFull</span><span class="br0">&#40;</span>s<span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+    result.<span class="me1">foreach</span><span class="br0">&#40;</span> <span class="br0">&#123;</span>r <span class="sy0">=&gt;</span> r <a href="http://scala-lang.org"><span class="kw1">match</span></a> <span class="br0">&#123;</span>
+      <a href="http://scala-lang.org"><span class="kw1">case</span></a> Some<span class="br0">&#40;</span>map<span class="sy0">:</span> Map<span class="br0">&#91;</span>String, Any<span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="sy0">=&gt;</span> println<span class="br0">&#40;</span>map<span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">case</span></a> None <span class="sy0">=&gt;</span> println<span class="br0">&#40;</span><span class="st0">&quot;Parsing failed&quot;</span><span class="br0">&#41;</span>
+      <a href="http://scala-lang.org"><span class="kw1">case</span></a> other <span class="sy0">=&gt;</span> println<span class="br0">&#40;</span><span class="st0">&quot;Unknown data structure: &quot;</span> + other<span class="br0">&#41;</span>
+    <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+    <span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT4 SECTION "Parse json in spark" [2294-] -->

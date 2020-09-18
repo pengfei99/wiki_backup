@@ -1,0 +1,41 @@
+
+<h1 class="sectionedit1" id="utiliser_un_gestionnaire_de_parametres">Utiliser un gestionnaire de paramètres</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_info plugin_wrap">
+<p>
+Déjà présent dans certaines distribution de Symfony.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+<p>
+Il suffit d&#039;utiliser <a href="https://github.com/Incenteev/ParameterHandler" class="urlextern" title="https://github.com/Incenteev/ParameterHandler"  rel="nofollow">ParameterHandler</a>.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/informatique/developpement/symfony/utiliser_un_gestionnaire_de_parametres?codeblock=0" title="Télécharger un extrait" class="mediafile mf_json">composer.json</a></dt>
+<dd><pre class="code json">{
+    &quot;require&quot;: {
+        […]
+        &quot;incenteev/composer-parameter-handler&quot;: &quot;~2.0&quot;
+    },
+    &quot;scripts&quot;: {
+        &quot;post-install-cmd&quot;: [
+            […]
+            &quot;Incenteev\\ParameterHandler\\ScriptHandler::buildParameters&quot;
+        ],
+        &quot;post-update-cmd&quot;: [
+            […]
+            &quot;Incenteev\\ParameterHandler\\ScriptHandler::buildParameters&quot;
+        ]
+    },
+    &quot;extra&quot;: {
+        […]
+        &quot;incenteev-parameters&quot;: {
+            &quot;file&quot;: &quot;app/config/parameters.yml&quot;
+        }
+    }
+}</pre>
+</dd></dl>
+<pre class="code">  $ composer update
+  […]
+  $ bzr ci -m &quot;Mise en place de Incenteev/ParameterHandler&quot;</pre>
+
+</div>

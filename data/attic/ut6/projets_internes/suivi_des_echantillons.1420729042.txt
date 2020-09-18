@@ -1,0 +1,122 @@
+====== Suivi des échantillons biologique à BIOASTER : du producteur au consommateur ======
+
+>Le projet été présenté le 07 janvier 2015 à A.T. C.G. et M.E. : {{pt6:projets_internes:suivi_des_echantillons:sample_tracking_at_BIOASTER.pptx|"Sample Tracking at BIOASTER"}}.
+>A la suite de cette réunion, il a été décidé de poursuivre le projet par al rédaction du plan qualité projet ci-dessous.
+><wrap alert>Le plan qualité projet est en travaux</wrap>
+
+===== Résumé =====
+==== Contexte ====
+=== Contexte 1 ===
+Dès la mise en place des unités technologiques de BIOASTER, il a été discuté de l'intérêt de s'équiper d'un système de gestion des données de laboratoire, ou LIMS ("Lab Information Management System"). Ce LIMS permettrait de suivre les échantillons tout au long de leur durée de vie à BIOASTER. De fait, la gestion de échantillons serait :
+  * simplifiée, avec un gain de productivité certain pour les équipes;
+  * traçable, permettant de valider notre travail auprès des partenaires ou des institutions (p.ex. Etablissement Français du Sang);
+  * harmonisée, permettant de retrouver toute les informations liées à un échantillon facilement.
+Toutefois, les discussions préliminaires sur ce projets ont révélées une disparités sur les fonctionnalités, les enjeux et les périmètres du LIMS selon les personnes, les dispositifs expérimentaux (technologie d'acquisition des résultats, organisation des expériences, etc.) ou les projets.
+
+=== Contexte 2 ===
+Parmi les 7 unités technologique de BIOASTER figure l'unité 6 "Gestion et Analyse des Données". Initialement, cette unité s'intitulait "stockage et analyse intensive des données". Elle sa mission était alors de fournir les ressources nécessaires aux traitements des données par les projets ou les autres unités technologiques (bio-informaticiens et statisticiens) . Depuis fin 2014/début 2015, l'unité 6 se destine désormais à organiser le traitement des données à BIOASTER de façon transversale, donc de coordonner et de structurer les projets de type LIMS. 
+
+=== Contexte 3 ===
+Qu'en est-il des solutions commerciales ?
+
+{{tag>à_compléter}}
+==== Enjeux ====
+=== Enjeux 1 ===
+A la suites des discussions préliminaires sur le LIMS, les réflexions internes de l'unités 6 ont rapidement abouti à la conclusion que l'enjeux principale du LIMS est le suivi des échantillons. D'une part, il est nécessaire que les unités technologiques de BIOASTER utilise le même identifiant, donc la même méthode d'identification. D'autre part, il est nécessaire d'utiliser un support commun et centralisé afin de garantir l'intégrité et la validité des informations liées à un échantillon entre les unités. Ainsi, si une personne de l'unité A ajoute ou modifie un échantillon, cette information doit être propagée aux autres unités. Enfin, le suivi rigoureux des échantillons est une obligation dans le cas des échantillons humain, des études cliniques. C'est aussi un engagement vis à vis des partenaires de BIOASTER qui garantit la validité des résultats obtenus dans un projet.
+
+===  Enjeux 2 ===
+Un développement interne démontre notre savoir-faire à nos partenaires.
+{{tag>à_compléter}}
+
+==== Risques ====
+=== Risques liés à la mise en oeuvre du projet ===
+  * Manque de disponibilité des autres plateaux pour participer aux discussions.
+  * Sous estimation de la quantité de travail nécessaire à définir un cahier des charges.
+  * Impossibilité de trouver une façon commune d'identifier les échantillons entre les collections biologiques (UT1) et l'assurance qualité, aboutissant à un double système.
+  * Concurrence avec des projets en cours où à venir (Cahier de laboratoire électroniques, gestion des données au niveau d'une unité particulière, etc.).
+
+=== Risques liés à la mise en oeuvre du projet ===
+  * Absence de suivi harmonisé entre plateau et multiplication des supports (fichier excel, base de données) et des versions.
+  * Mauvaise identification aboutissant à un pertes de données, ou à données non exploitables.
+  * Diminution de la productivité des équipes par nécessité de curer manuellement les données issues des échantillons.
+
+====  Facteurs de succès ====
+  * Appropriation du système par les personnes travaillant à la paillasse dans les unités 2, 3 et 7.
+  * Appropriation du système par les bio-informaticiens et les statisticiens des unités 2 et 7.
+  * Utilisation d'un modèle commun d'identification entre les collections biologiques (unités 1, 4 et 5) et l'assurance qualité.
+  * Utilisation du système par le projet de LIMS de l'unité 1.
+
+===== Objectif =====
+  - Établir un système garantissant que chaque échantillon à un identifiant unique.
+  - Établir les métadonnées (date de création, créateur, origine, etc.) et les données (protocole utilisé, résultat obtenu, etc.) qui sont impérativement liées à un échantillon.
+  - Centraliser les informations liée à un échantillon dans une seul base de données interne à BIOASTER.
+  - Rendre la base de données utilisable et consultable grâce à une interface Web.
+  - Rendre la base de données utilisable et consultable grâce à un interface de programmation applicative, ou API ("Application Programming Interface").
+===== Périmètre =====
+  - Périmètre géographique : LyonBiopôle, Accinov, ISA, Institut Pasteur, CCIN2P3
+  - Périmètre organisationnel : Initiation -> Cahier des charges -> Conception -> Construction -> Validation -> Mise en production
+  - Périmètre fonctionnel : <wrap alert>???</wrap>
+  - Interface avec d'autres projets : futur LIMS UT1, data management des UT2, UT3 et UT7
+  - Hors périmètre : gestion des analyses bio-informatique et statisitique, traitement massif de données, visualisation de données complexe, <wrap help>visualisation de résultat (a discuter en priorité avec M.E.)</wrap>
+===== Organisation =====
+==== Acteurs ====
+^Management |Unité 6|
+|:::        |Unité 1|
+|:::        |Assurance Qualité |
+^Expert     |Développeur |
+|:::        |Data manager des données expérimentales |
+|:::        |Data manager des données phénotypiques |
+|:::        |Référent Assurance Qualité |
+^Pilotage   |Chef de projet |
+|:::        |Chef de projet développement logiciel |
+|:::        |Référent unité 1 |
+|:::        |Référent assurance qualité |
+
+==== Equipe ====
+^Sponsor           |Cyril GUYARD|
+|:::               |Mathieu EGLINGER|
+^Chef de projet    |Nicolas SAPAY|
+|:::               |Pierre VEYRE|
+^Expert            |Audrey CAUCHARD|
+|:::               |Tanguy LE CARROUR|
+|:::               |Yohan MOUSCAZ|
+|:::               |<wrap help>Mathieu EGLINGER</wrap>|
+|:::               |<wrap help>Blandine RIMBAUD</wrap>|
+^Ressource externe |Néant|
+^Pilotage          |Alain TROESCH|
+|:::               |Cyril GUYARD|
+|:::               |Mathieu EGLINGER|
+|:::               |Nicolas SAPAY|
+
+==== Étapes, livrables et planning prévisionnel ====
+^Etape       ^Livrable                                                                      ^Durée
+^Initiation            |Plan qualité projet                                                 |2 mois|
+^<wrap alert>Validation de la DAF</wrap>|||
+^Définition des besoins|Modèle de données pour les collections biologiques                  |4 mois|
+|:::                   |Modèle de données pour l'assurance qualité                          |:::|
+|:::                   |Modèle de données pour l'UT2,3 et 7 <wrap help> et de l'UT4?</wrap> |:::|
+|:::                   |Méthode d'identification des échantillons                           |:::|
+|:::                   |Méthode d'organisation des processus                                |:::|
+|:::                   |<wrap help>Principe de visualisation des résultats</wrap>           |:::|
+^<wrap alert>Validation du comité de pilotage</wrap>                                        ||
+^Conception            |Architecture de la base de données                                  ||
+|:::                   |Spécifications de l'interface Web                                   ||
+|:::                   |Spécification de l'infrastructure                                   ||
+|:::                   |Plan de test                                                        ||
+^Développement et Test |Base de donné mySQL                                                 ||
+|:::                   |Interface Web implentée dans un framework PHP                       ||
+^Mise en production    |Documentation utilisateur                                           ||
+|:::                   |Déploiement                                                         ||
+|:::                   |Plan de maintenance                                                 ||
+|:::                   |Outils de communication                                             ||
+
+==== Indicateurs de suivi ====
+  - Charge de travail des développeurs
+  - Fonctionnalités
+  - Planning
+
+===== Estimation budgétaire =====
+  - Enveloppe budgétaire
+  - Ressources
+
+{{tag>travail_en_cours}}

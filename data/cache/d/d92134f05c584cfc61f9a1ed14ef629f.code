@@ -1,0 +1,2 @@
+glance add name=TranSMART_1.1 is_public=true container_format=bare disk_format=qcow2 \
+       &lt; tranSMART_1.1_Virtual_Appliance.x86_64-1.0.0.vmdk

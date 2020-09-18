@@ -1,0 +1,32 @@
+
+<h1 class="sectionedit1" id="ssh_debug">SSH debug</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "SSH debug" [1-25] -->
+<h2 class="sectionedit2" id="can_t_login_after_adding_authorized_keys">Can&#039;t login after adding authorized_keys</h2>
+<div class="level2">
+<pre class="code"># For example, if you already create a user with name pliu
+mkdir -p /home/pliu/.ssh/
+vim authorized_keys
+# Then copy the public key of pliu in it. if you can&#039;t login, check first in sshd_config
+# if pliu is in the AllowUsers or his group in AllowGroups
+
+# If it still don&#039;t work, check the right of .ssh and authorized_keys
+chmod -R 0700 .ssh 
+chmod 0600 authorized_keys
+
+# you can run sshd on debug mode
+systemctl stop sshd
+
+# The following command start openssh daemon in standalone debug mode and messages will be displayed on the screen. You may specify up to three -d for increased output verbosity.
+
+/sbin/sshd -p &lt;listening port&gt; -D -d -e
+
+# if you want sshd still runs on 22, you can just skip -p &lt;listening port&gt;
+# 
+
+# Be careful, when u do this, don&#039;t deconnect, because you will not be able to reconnect.</pre>
+
+</div>
+<!-- EDIT2 SECTION "Can't login after adding authorized_keys" [26-] -->

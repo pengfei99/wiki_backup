@@ -1,0 +1,72 @@
+
+<h1 class="sectionedit1" id="rest_api_of_atlas">Rest Api of atlas</h1>
+<div class="level1">
+
+<p>
+Atlas provide a rest api for all his features.
+</p>
+<ul>
+<li class="level1"><div class="li"> Discovery (search query for finding data)</div>
+</li>
+<li class="level1"><div class="li"> Entity (list entity with or without filter)</div>
+</li>
+<li class="level1"><div class="li"> Glossary (list glossary with or without filter)</div>
+</li>
+<li class="level1"><div class="li"> Lineage</div>
+</li>
+<li class="level1"><div class="li"> Relationship</div>
+</li>
+<li class="level1"><div class="li"> Types</div>
+</li>
+</ul>
+
+<p>
+You can find the latest (1.10) atlas rest api doc (<a href="https://atlas.apache.org/1.1.0/api/v2/index.html" class="urlextern" title="https://atlas.apache.org/1.1.0/api/v2/index.html" rel="nofollow">https://atlas.apache.org/1.1.0/api/v2/index.html</a>)
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Rest Api of atlas" [1-372] -->
+<h2 class="sectionedit2" id="api_for_discovery">Api for discovery</h2>
+<div class="level2">
+
+<p>
+For the purpose of simplicity, all the rest query which we use to demonstrate is done with curl. The query 
+authentication can be different if atlas uses different authentication mode. For example, if atlas uses ldap/file for authentication, you should use curl -u &lt;login&gt;:&lt;password&gt; &lt;restURI&gt;. If atlas uses kerberos for authentication, you should use curl -negotiate -u &lt;login&gt; &lt;restURI&gt;. All the following code example will omit the authentication part in the curl code by assuming you are doing -u &lt;login&gt;:&lt;password&gt;.
+</p>
+
+<p>
+All the url for search activity starts with /v2/search, the full list is
+</p>
+<ul>
+<li class="level1"><div class="li"> (GET) /v2/search/attribute : Retrieve data for the specified attribute search query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/basic : Retrieve data for the specified fulltext query</div>
+</li>
+<li class="level1"><div class="li"> (POST) /v2/search/basic : Attribute based search for entities satisfying the search parameters</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/dsl : Retrieve data for the specified DSL</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/fulltext : Retrieve data for the specified fulltext query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/relationship : Relationship search to search for related entities satisfying the search parameters</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/saved : Retrieve saved search query for given user</div>
+</li>
+<li class="level1"><div class="li"> (POST) /v2/search/saved : Save the search query in the post payload</div>
+</li>
+<li class="level1"><div class="li"> /v2/search/saved/{guid}</div>
+</li>
+<li class="level1"><div class="li"> /v2/search/saved/{name}</div>
+</li>
+<li class="level1"><div class="li"> /v2/search/saved/execute/{name}</div>
+</li>
+<li class="level1"><div class="li"> /v2/search/saved/execute/guid/{guid}</div>
+</li>
+</ul>
+<pre class="code"># 
+
+# basic search on all data with typeName hive_db
+curl http://localhost:21000/api/atlas/v2/search/basic?typeName=hive_db</pre>
+
+</div>
+<!-- EDIT2 SECTION "Api for discovery" [373-] -->

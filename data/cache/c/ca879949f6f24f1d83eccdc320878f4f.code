@@ -1,0 +1,9 @@
+<span class="kw2">mkdir</span> app<span class="sy0">/</span>DoctrineMigrationsBackUp
+<span class="kw2">mv</span> app<span class="sy0">/</span>DoctrineMigrations<span class="sy0">/</span> app<span class="sy0">/</span>DoctrineMigrationsBackUp<span class="sy0">/</span> <span class="co0"># on garde les migrations au cas où</span>
+<span class="co0">#Supprimez et recréez la BDD si besoin est :</span>
+php app<span class="sy0">/</span>console doctrine:database:drop  <span class="re5">--force</span>
+php app<span class="sy0">/</span>console doctrine:database:create <span class="re5">-e</span> prod
+<span class="co0"># Repartez de zéro avec un seul gros fichier de migrations :</span>
+php app<span class="sy0">/</span>console doctrine:migrations:diff
+php app<span class="sy0">/</span>console doctrine:migrations:status
+php app<span class="sy0">/</span>console doctrine:migrations:migrate

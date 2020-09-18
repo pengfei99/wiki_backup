@@ -1,0 +1,6 @@
+$ bzr push :parent
+$ cd ../master
+$ bzr merge ../release-1.2
+$ bzr ci -m &quot;Intégration de la branche release-1.2&quot;
+$ bzr tag 1.2
+$ bzr push :parent

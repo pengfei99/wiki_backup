@@ -1,0 +1,26 @@
+<span class="kw2">&lt;?php</span>
+&nbsp;
+<span class="kw2">namespace</span> AppBundle\Tests<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Symfony\Bundle\FrameworkBundle\Test\WebTestCase<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> ApplicationAvailabilityFunctionalTest <span class="kw2">extends</span> WebTestCase
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @dataProvider urlProvider
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> testPageIsSuccessful<span class="br0">&#40;</span><span class="re0">$url</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="re0">$client</span> <span class="sy0">=</span> <span class="kw2">self</span><span class="sy0">::</span><span class="me2">createClient</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">request</span><span class="br0">&#40;</span><span class="st_h">'GET'</span><span class="sy0">,</span> <span class="re0">$url</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">assertTrue</span><span class="br0">&#40;</span><span class="re0">$client</span><span class="sy0">-&gt;</span><span class="me1">getResponse</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">-&gt;</span><span class="me1">isSuccessful</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw2">public</span> <span class="kw2">function</span> urlProvider<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+            <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'/persons'</span><span class="br0">&#41;</span>
+        <span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

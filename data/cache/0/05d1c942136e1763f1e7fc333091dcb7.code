@@ -1,0 +1,10 @@
+    cd ~/Téléchargements/
+    wget https://download.sublimetext.com/sublime_text_3_build_3114_x64.tar.bz2
+    tar -vxjf sublime_text_3_build_3114_x64.tar.bz2 -C ~/bin
+    ln -s $PWD/sublime_text ~/bin/sublime_text3114
+    #add configuration
+    sudo echo &quot;Exec=/home/cdelestre/bin/sublime_text3114&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Terminal=false&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Icon=/home/cdelestre/bin/sublime_text_3/Icon/48x48/sublime-text.png&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Categories=TextEditor;IDE;Development&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Add to Programmation subfolder&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop

@@ -1,0 +1,159 @@
+====== Stream Processing Introduction ======
+
+According to a recent report by IBM Marketing cloud, “90 percent of the data in the world today has been created in the last two years alone, creating 2.5 quintillion bytes of data every day — and with new devices, sensors and technologies emerging, the data growth rate will likely accelerate even more”. 
+
+Technically this means our Big Data Processing world is going to be more complex and more challenging. And a lot of use cases (e.g. mobile app ads, fraud detection, cab booking, patient monitoring,etc) need data processing in real-time, as and when data arrives, to make quick actionable decisions. This is why Distributed Stream Processing has become very popular in Big Data world.
+
+===== What is Streaming/Stream Processing =====
+
+The most elegant definition I found is : a type of data processing engine that is designed with infinite data sets in mind. 
+
+Unlike Batch processing where data is bounded with a start and an end in a job and the job finishes after processing that finite data, Streaming is meant for processing unbounded data coming in realtime continuously for days, months, years and forever. As such, were always meant for up and running, a streaming application is hard to implement and harder to maintain.
+
+
+===== Important Aspects of Stream Processing =====
+
+There are some important characteristics and terms associated with Stream processing which we should be aware of in order to understand the strengths and limitations of any Streaming framework :
+
+  * **Delivery Guarantees **: It means what is the guarantee that no matter what, a particular incoming record in a streaming engine will be processed. It can be either At least-once (will be processed at least one time even in case of failures), Almost-once (may not be processed in case of failures) or Exactly-once (will be processed one and exactly one time even in case of failures). Obviously, Exactly-once is desirable but is hard to achieve in distributed systems and comes in tradeoffs with performance.
+  * **Fault Tolerance**: In case of failures like node failures, network failures, etc, the framework should be able to recover and should start processing again from the point where it left. This is achieved through checkpointing the state of streaming to some persistent storage from time to time. e.g. checkpointing kafka offsets to zookeeper after getting record from Kafka and processing it.
+  * **State Management**: In case of stateful processing requirements where we need to maintain some state (e.g. counts of each distinct word seen in records), the framework should be able to provide some mechanism to preserve and update state information.
+  * **Performance** : This includes latency(how soon a record can be processed), throughput (records processed/second) and scalability. Latency should be as minimum as possible while throughput should be as much as possible. It is difficult to get both at the same time.
+  * **Advanced Features**: Event Time Processing, Watermarks, Windowing
+These are features needed if stream processing requirements are complex. For example, processing records based on the time when it was generated at the source (event time processing). To know more in detail, please read these must-read posts by Google guy Tyler Akidau: https://www.oreilly.com/ideas/the-world-beyond-batch-streaming-101 and https://www.oreilly.com/ideas/the-world-beyond-batch-streaming-102.
+
+===== Two Types of Stream Processing: =====
+
+Now being aware of the terms we just discussed, it is now easy to understand that there are 2 approaches to implement a Streaming framework:
+  * **Native Streaming**: Also known as Native Streaming. It means every incoming record is processed as soon as it arrives, without waiting for others. There are some continuous running processes (which we call as operators/tasks/bolts depending upon the framework) which run forever and every record passes through these processes to get processed. Examples: Storm, Flink, Kafka Streams, Samza.
+  * **Micro-batching**: Also known as Fast Batching. It means incoming records in every few seconds are batched together and then processed in a single mini batch with the delay of a few seconds. Examples: Spark Streaming, Storm-Trident.
+
+
+==== Native Streaming advantages and disadvantages ====
+Native Streaming feels natural as every record is processed as soon as it arrives, allowing the framework to achieve the minimum latency possible. But it also means that it is hard to achieve fault tolerance without compromising on throughput as for each record, we need to track and checkpoint once processed. Also, state management is easy as there are long running processes which can maintain the required state easily.
+
+==== Micro-batching advantages and disadvantges ====
+
+Micro-batching, on the other hand, is quite the opposite. Fault tolerance comes for free as it is essentially a batch and throughput is also high as processing and checkpointing will be done in one shot for a group of records. But it will be at some cost of latency and it will not feel like natural streaming. Also, efficient state management will be a challenge to maintain.
+
+===== Streaming Frameworks One By One =====
+
+==== Storm ====
+
+Storm is the Hadoop of Streaming world. It is the oldest open source streaming framework and one of the most mature and reliable one. It is true streaming and is good for simple event-based use cases. I have shared details about Storm at length in these posts: http://why-not-learn-something.blogspot.com/2015/12/apache-storm-introduction.html and http://why-not-learn-something.blogspot.com/2016/01/apache-storm-architecture-overview.html.
+
+**Advantages**:
+  * Very low latency, true streaming, mature and high throughput
+  * Excellent for non-complicated streaming use cases
+
+**Disadvantages**:
+  * No state management
+  * No advanced features like Event time processing, aggregation, windowing, sessions, watermarks, etc
+  * At least-once guarantee
+
+==== Spark Streaming ====
+
+Spark has emerged as the true successor of Hadoop in Batch processing and the first framework to fully support the Lambda Architecture (where both Batch and Streaming are implemented; Batch for correctness, Streaming for Speed). It is immensely popular, matured and widely adopted. Spark Streaming comes for free with Spark and it uses micro batching for streaming. Before 2.0 release, Spark Streaming had some serious performance limitations but with new release 2.0+, it is called structured streaming and is equipped with many good features like custom memory management (like flink) called tungsten, watermarks, event time processing support, etc. Also, Structured Streaming is much more abstract and there is an option to switch between micro-batching and continuous streaming mode in 2.3.0 release. Continuous Streaming mode promises to give sub latency like Storm and Flink, but it is still in infancy stage with many limitations in operations.
+
+**Advantages**:
+  * Supports Lambda architecture, comes free with Spark
+  * High throughput, good for many use cases where sub-latency is not required
+  * Fault tolerance by default due to micro-batch nature
+  * Simple to use higher-level APIs
+  * Big community and aggressive improvements
+  * Exactly Once
+
+**Disadvantages**:
+  * Not true streaming, not suitable for low latency requirements
+  * Too many parameters to tune. Hard to get it right. Have written a post on my personal experience while tuning Spark Streaming. http://why-not-learn-something.blogspot.com/2016/06/spark-streaming-performance-tuning-on.html
+  * Stateless by nature
+  * Lags behind Flink in many advanced features
+
+==== Flink ====
+
+Flink is also from a similar academic background like Spark. While Spark came from UC Berkley, Flink came from Berlin TU University. Like Spark, it also supports Lambda architecture. But the implementation is quite opposite to that of Spark. While Spark is essentially a batch with Spark streaming as micro-batching and the special case of Spark Batch, Flink is essentially a true streaming engine treating batch as a special case of streaming with bounded data. Though APIs in both frameworks are similar, they don’t have any similarity in implementations. In Flink, each function like map, filter, reduce, etc is implemented as a long-running operator (similar to Bolt in Storm)
+
+Flink looks like a true successor to Storm like Spark succeeded Hadoop in batch.
+
+**Advantages**:
+  * Leader of innovation in open source Streaming landscape.
+  * First True streaming framework with all advanced features like event time processing, watermarks, etc
+  * Low latency with high throughput, configurable according to requirements
+  * Auto-adjusting, not too many parameters to tune
+  * Exactly Once
+  * Getting widely accepted by big companies at scale like Uber, Alibaba.
+
+**Disadvantages**: 
+  * Little late in the game, there was lack of adoption initially
+  * Community is not as big as Spark but growing at a fast pace now
+  * No known adoption of the Flink Batch as of now, only popular for streaming.
+
+==== Kafka Streams ====
+
+Kafka Streams, unlike other streaming frameworks, is a lightweight library. It is useful for streaming data from Kafka, doing transformation and then sending back to Kafka. We can understand it as a library similar to Java Executor Service Thread pool, but with inbuilt support for Kafka. It can be integrated well with any application and will work out of the box.
+
+Due to its lightweight nature, can be used in microservices type architecture. There is no match in terms of performance with Flink but also does not need a separate cluster to run, is very handy and easy to deploy and start working. Internally uses Kafka Consumer group and works on the Kafka log philosophy.
+
+This post (https://www.confluent.io/blog/apache-flink-apache-kafka-streams-comparison-guideline-users/) thoroughly explains the use cases of Kafka Streams vs Flink Streaming.
+
+One major advantage of Kafka Streams is that its processing is Exactly Once end to end. It is possible because the source as well as the destination, both are Kafka and from Kafka 0.11 version released around June 2017, Exactly once is supported. For enabling this feature, we just need to enable a flag and it will work out of the box. For more details shared https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/ and https://www.confluent.io/blog/enabling-exactly-once-kafka-streams/.
+
+
+**Advantages**:
+  * Very lightweight library, good for microservices, IOT applications
+  * Does not need a dedicated cluster
+  * Inherits all Kafka good characteristics
+  * Supports Stream joins, internally uses rocksDb for maintaining state.
+  * Exactly Once ( Kafka 0.11 onwards).
+
+**Disadvantages**: 
+  * Tightly coupled with Kafka, cannot use without Kafka in picture
+  * Quite new in the infancy stage, yet to be tested in big companies
+  * Not for heavy lifting work like Spark Streaming, Flink.
+
+==== Samza ====
+
+Will cover Samza in short. Samza from 100 feet looks like similar to Kafka Streams in approach. There are many similarities. Both of these frameworks have been developed from the same developers who implemented Samza at LinkedIn and then founded Confluent where they wrote Kafka Streams. Both these technologies are tightly coupled with Kafka, take raw data from Kafka and then put back processed data back to Kafka. Use the same Kafka Log philosophy. Samza is kind of scaled version of Kafka Streams. While Kafka Streams is a library intended for microservices, Samza is full fledge cluster processing which runs on Yarn.
+
+**Advantages**:
+  * Very good in maintaining large states of information (good for the use case of joining streams) using rocksDb and kafka log.
+  * Fault-Tolerant and High performant using Kafka properties
+  * One of the options to consider if already using Yarn and Kafka in the processing pipeline.
+  * Good Yarn citizen
+  * Low latency, High throughput, mature and tested at scale
+
+**Disadvantages**: 
+  * Tightly coupled with Kafka and Yarn. Not easy to use if either of these not in your processing pipeline.
+  * At least-Once processing guarantee. I am not sure if it supports exactly once now like Kafka Streams after Kafka 0.11
+  * Lack of advanced streaming features like Watermarks, Sessions, triggers, etc.
+
+===== Comparison of Streaming Framework =====
+
+==== Spark Streaming Vs Flink ====
+
+Benchmarking is a good way to compare only when it has been done by third parties. But, recently benchmarking has kind of become open catfight between Spark and Flink. It is better not to believe benchmarking these days because even a small tweaking can completely change the numbers. Nothing is better than trying and testing ourselves before deciding. 
+
+As of today, it is quite obvious Flink is leading the Streaming Analytics space, with most of the desired aspects like exactly once, throughput, latency, state management, fault tolerance, advanced features, etc.
+
+These have been possible because of some of the true innovations of Flink like light weighted snapshots and off-heap custom memory management.
+
+One important concern with Flink was maturity and adoption level till sometime back but now companies like Uber, Alibaba, CapitalOne are using Flink streaming at massive scale certifying the potential of Flink Streaming.
+
+Recently, Uber open sourced their latest Streaming analytics framework called AthenaX which is built on top of Flink engine. In this post (https://eng.uber.com/athenax/), they have discussed how they moved their streaming analytics from STorm to Apache Samza to now Flink.
+
+
+One important point to note, if you have already noticed, is that all native streaming frameworks like Flink, Kafka Streams, Samza which support state management uses RocksDb internally. RocksDb is unique in the sense it maintains persistent state locally on each node and is highly performant. It has become a crucial part of new streaming systems. I have shared detailed info on RocksDb in one of the previous posts(http://why-not-learn-something.blogspot.com/2016/12/why-and-when-distributed-stream.html).
+
+===== How to choose the best Streaming Framework =====
+
+This is the most important part. And the honest answer is: it depends
+
+It is important to keep in mind that no single processing framework can be a silver bullet for every use case. Every framework has some strengths and some limitations too. Still, with some experience, will share a few pointers to help in making decisions:
+
+  * Depends on the use cases: If the use case is simple, there is no need to go for the latest and greatest framework if it is complicated to learn and implement. A lot depends on how much we are willing to invest in, and how much we want in return. For example, if it is simple IOT kind of event-based alerting system, Storm or Kafka Streams is perfectly fine to work with.
+  * Future Considerations: At the same time, we also need to have a conscious consideration over what will be the possible future use cases? Is it possible that demands of advanced features like event time processing, aggregation, stream joins, etc can come in future? If the answer is yes or maybe, then it is better to go ahead with advanced streaming frameworks like Spark Streaming or Flink. Once invested and implemented in one technology, it's difficult and cost a lot to change later. For example, In previous company we were having a Storm pipeline up and running from last 2 years and it was working perfectly fine until a requirement came for uniquifying incoming events and only report unique events. Now, this demanded state management which is not inherently supported by Storm. Although I implemented using time-based in-memory hashmap, the limitation is that the state will go away on the restart. The point I am trying to make is, if we try to implement something on our own which the framework does not explicitly provide, we are bound to hit unknown issues.
+  * Existing Tech Stack: One more important point is to consider the existing tech stack. If the existing stack has Kafka in place end to end, then Kafka Streams or Samza might be an easier fit. Similarly, if the processing pipeline is based on Lambda architecture and Spark Batch or Flink Batch is already in place then it makes sense to consider Spark Streaming or Flink Streaming. For example, in my one of previous projects, I already had Spark Batch in the pipeline and so when the streaming requirement came, it was quite easy to pick Spark Streaming which required almost the same skill set and code base.
+
+In short, If we understand the strengths and limitations of the frameworks along with our use cases well, then it is easier to pick or at least filtering down the available options. Lastly, it is always good to have POCs once a couple of options have been selected. Everyone has different taste bud after all.
+
+Apache Streaming space is evolving at so fast pace that this post might be outdated in terms of information in a couple of years. Currently, Spark and Flink are the heavyweights leading from the front in terms of developments but some new kid can still come and join the race. Apache Apex is one of them. Also, there are proprietary streaming solutions as well which I did not cover like Google Dataflow. My objective of this post was to help someone who is new to streaming to understand, with minimum jargons, some core concepts of Streaming along with strengths, limitations and use cases of popular open source streaming frameworks. Hope the post was helpful in some way.

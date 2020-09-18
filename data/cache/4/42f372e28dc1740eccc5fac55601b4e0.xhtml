@@ -1,0 +1,94 @@
+
+<h1 class="sectionedit1" id="zookeeper">Zookeeper</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Zookeeper" [1-26] -->
+<h2 class="sectionedit2" id="installation_and_configuration">Installation and configuration</h2>
+<div class="level2">
+
+<p>
+Suppose we have zookeeper installed under /opt/zookeeper/zookeeper-3.4.10
+</p>
+
+<p>
+and we have three server in the zookeeper cluster.
+</p>
+
+<p>
+hadoop-nn.pengfei.org
+</p>
+
+<p>
+hadoop-dn1.pengfei.org
+</p>
+
+<p>
+hadoop-dn2.pengfei.org
+</p>
+<pre class="code">vim /opt/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+
+#put the following config
+
+tickTime=2000
+dataDir=/tmp/zoo_data
+clientPort=2181
+initLimit=5
+syncLimit=2
+server.1=hadoop-nn.pengfei.org:2888:3888
+server.2=hadoop-dn1.pengfei.org:2888:3888
+server.3=hadoop-dn2.pengfei.org:2888:3888</pre>
+<ul>
+<li class="level1"><div class="li"> The <strong>dataDir</strong> is the directory used by Zookeeper to store data. </div>
+</li>
+<li class="level1"><div class="li"> The <strong>initLimit</strong> property is used to specify the maximum amount of time Zookeeper servers have to connect to the leader. When you are processing large amounts of data just increase this value as required. </div>
+</li>
+<li class="level1"><div class="li"> The property <strong>syncLimit</strong> is used to fix allowable amount of time a server can be out of sync with leader. </div>
+</li>
+<li class="level1"><div class="li"> The properties <strong>server.1</strong>, <strong>server.2</strong> and <strong>server.3</strong> specify the servers that form the Zookeeper service. Then you specify the host name of each of the servers followed by the port numbers 2888 and 3888. These ports are used for peer to peer communication. The first (2888) followers use to connect to the leader, and the second (3888) is for leader election. </div>
+</li>
+</ul>
+
+<p>
+To make each server aware of the other servers in the ensemble you use a myid file that is placed in the data directory of each server. This file contains only a unique value between 1 and 255 which corresponds to the value specified in zoo.cfg file. For example for server.1 the myid file only contains the value 1.
+</p>
+
+<p>
+In our example, the <strong>myid</strong> file should be under <strong>/tmp/zoo_data</strong>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installation and configuration" [27-1718] -->
+<h2 class="sectionedit3" id="starting_stoping_zookeeper_service">Starting/stoping zookeeper service</h2>
+<div class="level2">
+<pre class="code">#start the zookeeper service daemon
+sh /opt/zookeeper/zookeeper-3.4.10/bin/zkServer.sh start
+
+#check the daemon status
+sh /opt/zookeeper/zookeeper-3.4.10/bin/zkServer.sh status
+
+#for a follower, the output is like this
+ZooKeeper JMX enabled by default
+Using config: /opt/zookeeper/zookeeper-3.4.10/bin/../conf/zoo.cfg
+Mode: follower
+
+#for a leader, the output is like this
+ZooKeeper JMX enabled by default
+Using config: /opt/zookeeper/zookeeper-3.4.10/bin/../conf/zoo.cfg
+Mode: leader
+
+#stop the daemon
+sh /opt/zookeeper/zookeeper-3.4.10/bin/zkServer.sh stop</pre>
+
+<p>
+Now we are all set for the zookeeper service, in order to stop or start the zookeeper daemon, you need to execute the shell command on all nodes.
+</p>
+
+<p>
+A CLI is available to connect to the server and issue commands. To start it use the command below
+</p>
+<pre class="code"># this starts a zookeeper client connect to a zookeeper server
+sh /opt/zookeeper/zookeeper-3.4.10/bin/zkCli.sh -server 127.0.0.1:2181</pre>
+
+</div>
+<!-- EDIT3 SECTION "Starting/stoping zookeeper service" [1719-] -->

@@ -1,0 +1,215 @@
+
+<h1 class="sectionedit1" id="page_de_connexion">Page de connexion</h1>
+<div class="level1">
+<pre class="code">Logo BIOASTER/LIMS
+bouton Connexion
+check Rester connecté
+info légales | crédits | contact&#039;&#039;</pre>
+
+<p>
+Le bouton connexion renvoie à la page de connexion Shibboleth, qui identifie et authentifie avec le login/mdp, puis qui donne un jeton de session
+</p>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_accueil.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_accueil.jpg"><img src="/_media/ut6/projets_internes/lims_accueil.jpg?w=800&amp;tok=8d6c58" class="media" title="lims_accueil.jpg" alt="lims_accueil.jpg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Page de connexion" [1-339] -->
+<h1 class="sectionedit2" id="page_d_accueillayout_general">Page d&#039;accueil / Layout Général</h1>
+<div class="level1">
+<pre class="code">Logo | favoris | barre de recherche | User management (profil, déconnexion, rôle) | aide
+Menu permanent repliable
+ |
+ |
+ v
+Expériences |    ====&gt; Display principal ====&gt; Menu volatile repliable dépendant de la page affichée
+Projets |
+Echantillons |
+Fichiers
+Equipements |
+Logiciels |
+Stockage |
+Recherche avancée |</pre>
+
+</div>
+<!-- EDIT2 SECTION "Page d'accueil / Layout Général" [340-724] -->
+<h1 class="sectionedit3" id="les_experiences">Les expériences</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT3 SECTION "Les expériences" [725-755] -->
+<h3 class="sectionedit4" id="creation">Création</h3>
+<div class="level3">
+<pre class="code">Nom :
+Projet :
+WP :
+Type :
+Widgets dépendant du type
+Bouton Create</pre>
+
+<p>
+Le type est déterminé par la classification. il est nécessaire de trouver un système d&#039;affichage concis et élégant pour ne pas afficher un champ à chaque noeud de l&#039;arbre de classification. Le type d&#039;expérience va déterminer l&#039;affichage de widgets (fichier, réactif, équipement, logiciel)
+</p>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_exp_create.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_exp_create.jpg"><img src="/_media/ut6/projets_internes/lims_exp_create.jpg?w=800&amp;tok=1eb271" class="media" title="lims_exp_create.jpg" alt="lims_exp_create.jpg" width="800" /></a>
+</p>
+
+</div>
+
+<h4 id="edition">Edition</h4>
+<div class="level4">
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_exp_edit.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_exp_edit.jpg"><img src="/_media/ut6/projets_internes/lims_exp_edit.jpg?w=800&amp;tok=2ee164" class="media" title="lims_exp_edit.jpg" alt="lims_exp_edit.jpg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Création" [756-1275] -->
+<h3 class="sectionedit5" id="show">Show</h3>
+<div class="level3">
+
+<p>
+S&#039;affiche après la création 
+</p>
+<pre class="code">Project name | WP | Creator
+Name : nom du process
+Type : classification
+State : état du process
+
+Process
+  * Workflow display : P1 -&gt; P2 -&gt; P3 &lt;---(Info bulle avec le header ci-dessus)
+
+Instruments | Softwares | Files (lien vers le browser de fichier. 
+Few summary data (space occupied, amount, etc.)
+Les 5 premiers et un lien &quot;more&quot;
+Samples : Grille d&#039;affichage des 10 premiers + summary information</pre>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_exp_show.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_exp_show.jpg"><img src="/_media/ut6/projets_internes/lims_exp_show.jpg?w=800&amp;tok=4b61c9" class="media" title="lims_exp_show.jpg" alt="lims_exp_show.jpg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Show" [1276-1787] -->
+<h3 class="sectionedit6" id="list">List</h3>
+<div class="level3">
+
+<p>
+S&#039;affiche en cliquant sur le menu expérience
+</p>
+<pre class="code">Name | Projet | Nb de process | Date de création | State | Action (show, édition, invalidation)
+
+Menu volatile de droite 
+===&gt; Ajouter process
+===&gt; Assigner un process
+===&gt; Comparer les expériences</pre>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_exp_list.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_exp_list.jpg"><img src="/_media/ut6/projets_internes/lims_exp_list.jpg?w=800&amp;tok=64cd76" class="media" title="lims_exp_list.jpg" alt="lims_exp_list.jpg" width="800" /></a>
+</p>
+
+<p>
+Pour assigner les process, on affiche tout les process des WP sur lequel l&#039;utilisateur à un droit de lecture. la désassignation sera traité plus tard (à la mode de Git?)
+</p>
+
+<p>
+<code>State</code> : affichage de l&#039;état du process en cours et le Nb d&#039;échantillon traités sur le Nb d&#039;échantillon assignés. 
+</p>
+
+</div>
+<!-- EDIT6 SECTION "List" [1788-2413] -->
+<h1 class="sectionedit7" id="echantillons">Echantillons</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT7 SECTION "Echantillons" [2414-2440] -->
+<h2 class="sectionedit8" id="creation_d_un_echantillon_unique">Creation d&#039;un échantillon unique</h2>
+<div class="level2">
+
+<p>
+ Il faut créer une table Alias dans la DB. 
+</p>
+<pre class="code">Sample ________________________
+UID temporaire et non modifiable, à valider lors de la création
+Nom : a saisir par l&#039;utilisateur | Projet : (facultatif)
+Provider : liste définie dans un fichier de config. 
+Alias : liste des alias séparé par des &quot;,&quot;
+Date de création : la date du jour par défaut
+Type : classification
+Quantité + liste des unités de mesures
+
+Bioentity _______________________
+Bioentity est-il créé ? oui | non
+Si non =&gt; création d&#039;un formulaire dynamique ne fonction du type. 
+UID du bioentity générée par l&#039;application
+Si oui =&gt; l&#039;utilisateur le retrouve avec l&#039;UID et le nom. 
+
+Storage _______________________
+Storage name: reprendre le principe d&#039;esamples (choix déroulant avec liste hiérarchique). 
+Batch name (a.k.a boite) : facultatif
+Bouton &#039;créer une boite / un batch&#039; ==&gt; une boite est un batch</pre>
+
+<p>
+Les bioentities doivent aussi être identifiées par un UID, comme les échantillons. l&#039;UID pourrait être une sorte d&#039;adresse IP qui permettrait de retrouver facilement le bioentity dans une liste hiérarchique basée sur la classification.
+</p>
+
+<p>
+Les storage sont définis dans un fichier de config. L&#039;utilisateur ne peut pas créer de stockage au dessus du batch. 
+</p>
+
+<p>
+Les storages sont définis dans un fichier de configuration. 
+</p>
+
+<p>
+Les batch doivent être typés : boîte, plaque, virtuel, etc.
+</p>
+
+<p>
+La création multiple (aliquotage, plaques, etc) passera par une sample sheet importée. 
+</p>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_sample_create.jpeg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_sample_create.jpeg"><img src="/_media/ut6/projets_internes/lims_sample_create.jpeg?w=800&amp;tok=cf55fb" class="media" title="lims_sample_create.jpeg" alt="lims_sample_create.jpeg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Creation d'un échantillon unique" [2441-4019] -->
+<h2 class="sectionedit9" id="listing">Listing</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 SECTION "Listing" [4020-4039] -->
+<h2 class="sectionedit10" id="show1">Show</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT10 SECTION "Show" [4040-4056] -->
+<h1 class="sectionedit11" id="profil_utilisateur">Profil utilisateur</h1>
+<div class="level1">
+
+<p>
+Accès restreint au seul utilisateur
+</p>
+<pre class="code">Avatar sur la droite
+Nom Prénom
+Email
+Institution
+Equipe
+Site
+Rôles
+Token
+Project + WP + Cahier de laboratoire associés
+(option) volume occupé sur GPFS
+(option) Nb d&#039;échantillon créés
+(option) Badge / succès
+
+</pre>
+
+<p>
+<a href="/_detail/ut6/projets_internes/lims_profile.jpg?id=ut6%3Aprojets_internes%3Alims%3Areunion_01122015" class="media" title="ut6:projets_internes:lims_profile.jpg"><img src="/_media/ut6/projets_internes/lims_profile.jpg?w=800&amp;tok=08709b" class="media" title="lims_profile.jpg" alt="lims_profile.jpg" width="800" /></a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Profil utilisateur" [4057-] -->

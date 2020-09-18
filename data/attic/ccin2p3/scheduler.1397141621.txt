@@ -1,0 +1,99 @@
+====== UNIVA Scheduler ======
+
+La procédure BIOASTER est basée sur le [[http://cc.in2p3.fr/docenligne/362/fr|guide de l'utilisateur de l'IN2P3]] du CC-IN2P3. Ce dernier sert de document de base pour toutes bonnes pratiques concernant la ferme mise à disposition à l'IN2P3. 
+
+Les ressources du centre de calcul sont mises à disposition au travers d'un //système de gestion des tâches// : [[http://www.univa.com/products/grid-engine|UGE]]. Chaque tâche est ajoutée à une file d'attente puis exécutée en fonction des ressources nécessaires et de celles disponibles.
+
+===== Se connecter =====
+
+Pour soumettre une tâche il faut se connecter à une //frontale// du centre de calcul.
+
+<code text>
+$ ssh <LOGIN>@ccage.in2p3.fr
+</code>
+
+Le //login// est défini lors de la création de compte. Le //mot de passe// est donné par le CC et doit être changé au bout de 6 mois. Utiliser la commande ''passwd_check'' pour vérifier le temps restant.
+
+===== Soumettre une tâche =====
+
+La soumission de job se fait grâce à l'outil ''qsub''. De nombreuses options, bien que non requises, sont très utiles à connaitre et il est recommandé de les utiliser systématiquement.
+
+  * ''-N <NOM>'' : donne un nom à la tâche et d'ainsi plus facilement l'identifier par la suite.
+  * ''-P <PROJET>'' : //"facture"// la tâche un projet particulier (défaut : //p_bioaster//).
+  * ''-q <FILE_D_ATTENTE>'' : assigne la tâche à une file d'attente particulière (défaut : //short//).
+  * ''-l <RESSOURCES>'' : définit les ressources nécessaires à l'exécution de la tâche.
+  * ''-v <VARIABLES>'' : définit les variables d'environnement qui seront passées à la tâche lors de son exécution.
+  * ''-o <SORTIE>'' : écrit le //journal des évènements// dans le fichier donné.
+
+La tâche en elle-même est un fichier exécutable, la plupart du temps un simple script //shell//. Un exemple de soumission pourrait être :
+
+<code text>
+$ qsub -P p_bioaster -N JOB123 mon_script.sh
+Your job 1323896 ("JOB123") has been submitted
+</code>
+
+Le numéro de la tâche (//job//) doit être conservé afin de pouvoir interagir avec celle-ci par la suite.
+
+===== Vérifier l'avancement =====
+
+Une fois une tâche soumise, son avancement peut être affiché avec la commande ''qstat''. La colonne la plus importante est le //state// qui permet de connaitre l'avancement de la tâche.
+
+  * ''qw'' : en attente d'exécution.
+  * ''r'' : en cours d'exécution sur la machine précisée dans la colonne //queue//.
+  * ''e'' : une erreur a été détectée ! Une intervention manuelle est nécessaire.
+
+La commande ''qstat'' seule liste toutes les tâches de l'utilisateur. Pour visualiser uniquement une tâche il faut utiliser l'option ''-j'' avec le numéro de tâche affiché lors de la soumission.
+
+<code text>
+$ qstat -j 1323896
+job-ID  prior   name       user         state submit/start at     queue                          jclass                         slots ja-task-ID
+------------------------------------------------------------------------------------------------------------------------------------------------
+1324422 0.00000 uge_test_j tlecarro     qw    04/10/2014 16:36:21                                                                   1
+</code>
+
+===== Pour aller plus loin... =====
+
+Pour afficher toutes les files d'attente disponibles :
+
+<code text>
+$ qconf -sql
+admin
+admin_test
+demon
+huge
+interactive
+long
+[...]
+</code>
+
+Pour lister les propriétés d'une file d'attente (ressources disponibles...) :
+
+<code text>
+$ qconf -sq short
+qname                 short
+hostlist              @sequentials
+[...]
+tmpdir                /scratch
+shell                 /bin/sh
+prolog                NONE
+epilog                NONE
+[...]
+s_rt                  01:00:00
+h_rt                  06:00:00
+s_cpu                 00:06:00
+h_cpu                 00:12:00
+s_fsize               5G
+h_fsize               5.01G
+s_data                5G
+h_data                5.01G
+s_stack               INFINITY
+h_stack               INFINITY
+s_core                2.5G
+h_core                3G
+s_rss                 INFINITY
+h_rss                 INFINITY
+s_vmem                512M
+h_vmem                600M
+</code>
+
+Il est parfois nécessaire de **modifier les paramètres** passés lors de la soumission d'une tâche. Ceci se fait avec la commande ''qalter'' qui accepte la plupart des options de ''qsub''.

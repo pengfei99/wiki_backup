@@ -1,0 +1,4 @@
+$ aptitude update
+$ aptitude dist-upgrade
+$ aptitude install --without-recommends sudo vim
+$ adduser bioaster sudo

@@ -1,0 +1,36 @@
+
+<h1 class="sectionedit1" id="use_ncdu_for_disk_usage_monitoring">Use ncdu for disk usage monitoring</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use ncdu for disk usage monitoring&quot;,&quot;hid&quot;:&quot;use_ncdu_for_disk_usage_monitoring&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-50&quot;} -->
+<h2 class="sectionedit2" id="what_is_ncdu">What is ncdu?</h2>
+<div class="level2">
+
+<p>
+ncdu (NCurses Disk Usage) is an ncurses-based disk usage tool. It provides a disk usage summary in a TUI (text user interface), and also allows you to navigate between directories.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is ncdu?&quot;,&quot;hid&quot;:&quot;what_is_ncdu&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;51-259&quot;} -->
+<h2 class="sectionedit3" id="install_ncdu">Install ncdu</h2>
+<div class="level2">
+<pre class="code">1. Enable epel repo
+yum install -y epel
+2. Install ncdu
+yum install ncdu</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install ncdu&quot;,&quot;hid&quot;:&quot;install_ncdu&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;260-374&quot;} -->
+<h2 class="sectionedit4" id="use_ncdu">Use ncdu</h2>
+<div class="level2">
+<pre class="code"># ncdu will analyse all the files and dirs in your current location, you can only navigate to child dir
+# and cant to parent dir of the current dir.
+# You also have to make sure you have the right to visit the dir, otherwise it will show noting
+&gt; ncdu
+
+#By default, the rows are sorted by size, you can sort them by typing n.
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use ncdu&quot;,&quot;hid&quot;:&quot;use_ncdu&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;375-&quot;} -->

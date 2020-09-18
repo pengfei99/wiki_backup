@@ -1,0 +1,197 @@
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.conf.Configuration</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">org.apache.hadoop.hbase.client.*</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> ExampleForHbase <span class="br0">&#123;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Configuration configuration<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+connection"><span class="kw3">Connection</span></a> connect<span class="sy0">;</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> Admin admin<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        <span class="co1">//equivalent shell command: create 'Score','sname','course'</span>
+        <span class="co1">//createTable(&quot;Score&quot;,new String[]{&quot;sname&quot;,&quot;course&quot;});</span>
+        <span class="co1">//Insert a row into table Score with row key value 95001, the column family is sname, the value is Mary</span>
+        <span class="co1">//Because sname column family does not have any child, so col parameter is empty</span>
+        <span class="co1">// equivalent shell command put 'Score','95001','sname','Mary'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;sname&quot;</span>, <span class="st0">&quot;&quot;</span>, <span class="st0">&quot;Mary&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Insert a row with row key 95001, column Math of column family course (course:Math), the row value is 88</span>
+        <span class="co1">//equivalent shell command put 'Score','95001','score:Math','88'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;Math&quot;</span>, <span class="st0">&quot;88&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//Insert another row as put 'Score','95001','score:English','85'</span>
+        insertRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95001&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;English&quot;</span>, <span class="st0">&quot;85&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//1 delete row of column score:Math with rowkey 95001</span>
+        <span class="co1">//equivalent shell command delete 'Score','95001','score:Math'</span>
+        deleteRow<span class="br0">&#40;</span><span class="st0">&quot;Score&quot;</span>, <span class="st0">&quot;95002&quot;</span>, <span class="st0">&quot;course&quot;</span>, <span class="st0">&quot;Math&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="co1">//2 delete row of column family course, the column(e.g. math, english) under column family course will be all deleted</span>
+        <span class="co1">//equivalent shell command delete 'Score','95001','course'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//3 delete row with row key 95001 (all column family data will be removed)</span>
+        <span class="co1">//eqivalent command in shell deleteall 'Score','95001'</span>
+        <span class="co1">//deleteRow(&quot;Score&quot;, &quot;95001&quot;, &quot;&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//get data of row with row key 95001 of the column course:Math</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;course&quot;, &quot;Math&quot;);</span>
+        <span class="co1">//get data of row with row key 95001 of column family sname</span>
+        <span class="co1">//getData(&quot;Score&quot;, &quot;95001&quot;, &quot;sname&quot;, &quot;&quot;);</span>
+&nbsp;
+        <span class="co1">//delete table</span>
+        <span class="co1">//deleteTable(&quot;Score&quot;);</span>
+&nbsp;
+&nbsp;
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+* Create a table in the HBase server
+* @param tableName is the name of the table you are creating
+* @param colFamily is a list of column families names
+* @throws IOException
+* */</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> createTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> colFamily<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tabName <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tabName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Table name already exists&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span><span class="kw1">else</span><span class="br0">&#123;</span>
+            <span class="co1">//The constructor with String as table name is deprecated</span>
+            HTableDescriptor hTableDescriptor <span class="sy0">=</span> <span class="kw1">new</span> HTableDescriptor<span class="br0">&#40;</span>tabName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> str<span class="sy0">:</span>colFamily<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            HColumnDescriptor hColumnDescriptor<span class="sy0">=</span><span class="kw1">new</span> HColumnDescriptor<span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+            hTableDescriptor.<span class="me1">addFamily</span><span class="br0">&#40;</span>hColumnDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        admin.<span class="me1">createTable</span><span class="br0">&#40;</span>hTableDescriptor<span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Create table success&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//This method set up a connection to Hbase server</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        configuration <span class="sy0">=</span> HBaseConfiguration.<span class="me1">create</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        configuration.<span class="me1">set</span><span class="br0">&#40;</span><span class="st0">&quot;hbase.rootdir&quot;</span>,<span class="st0">&quot;hdfs://localhost:9000/hbase&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+            connect<span class="sy0">=</span>ConnectionFactory.<span class="me1">createConnection</span><span class="br0">&#40;</span>configuration<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin <span class="sy0">=</span> connect.<span class="me1">getAdmin</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//This method close the connection to Hbase server</span>
+    <span class="kw1">private</span> <span class="kw1">static</span> <span class="kw4">void</span> close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="kw1">try</span><span class="br0">&#123;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span>admin <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                admin.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+            <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw2">null</span> <span class="sy0">!=</span> connect<span class="br0">&#41;</span><span class="br0">&#123;</span>
+                connect.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span><span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * This method deletes a table with the given name
+     * @param tableName
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteTable<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        TableName tn <span class="sy0">=</span> TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>admin.<span class="me1">tableExists</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            admin.<span class="me1">disableTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+            admin.<span class="me1">deleteTable</span><span class="br0">&#40;</span>tn<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * show existing table
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> listTables<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        HTableDescriptor hTableDescriptors<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> admin.<span class="me1">listTables</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>HTableDescriptor hTableDescriptor <span class="sy0">:</span>hTableDescriptors<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span>hTableDescriptor.<span class="me1">getNameAsString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * insert a row into a column of a columnFamily with given table name
+     * @param tableName specify which table you want to insert the row
+     * @param rowKey specify the key id of a row
+     * @param colFamily column family name
+     * @param col column name, it can be empty if the colFamily doesn't have any column
+     * @param val row value which we want to insert.
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> insertRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> val<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Put put <span class="sy0">=</span> <span class="kw1">new</span> Put<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        put.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, val.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">put</span><span class="br0">&#40;</span>put<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co3">/**
+     * delete a row value of a column in a column family
+     * @param tableName
+     * @param rowKey
+     * @param colFamily
+     * @param col
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> deleteRow<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Delete delete <span class="sy0">=</span> <span class="kw1">new</span> Delete<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//delete all data in one column family</span>
+        delete.<span class="me1">addFamily</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//delete all data in one column of one column family</span>
+        delete.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        table.<span class="me1">delete</span><span class="br0">&#40;</span>delete<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     * get value of one row based on its row key
+     * @param tableName
+     * @param rowKey
+     * @param colFamily
+     * @param col
+     * @throws IOException
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> getData<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> tableName,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> rowKey,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> colFamily,<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> col<span class="br0">&#41;</span><span class="kw1">throws</span>  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a><span class="br0">&#123;</span>
+        init<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Table table <span class="sy0">=</span> connect.<span class="me1">getTable</span><span class="br0">&#40;</span>TableName.<span class="me1">valueOf</span><span class="br0">&#40;</span>tableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Get get <span class="sy0">=</span> <span class="kw1">new</span> Get<span class="br0">&#40;</span>rowKey.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        get.<span class="me1">addColumn</span><span class="br0">&#40;</span>colFamily.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,col.<span class="me1">getBytes</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Result result <span class="sy0">=</span> table.<span class="me1">get</span><span class="br0">&#40;</span>get<span class="br0">&#41;</span><span class="sy0">;</span>
+        showCell<span class="br0">&#40;</span>result<span class="br0">&#41;</span><span class="sy0">;</span>
+        table.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        close<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co3">/**
+     *
+     * @param result
+     */</span>
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> showCell<span class="br0">&#40;</span>Result result<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        Cell<span class="br0">&#91;</span><span class="br0">&#93;</span> cells <span class="sy0">=</span> result.<span class="me1">rawCells</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>Cell cell<span class="sy0">:</span>cells<span class="br0">&#41;</span><span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;RowName:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneRow</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Timetamp:&quot;</span><span class="sy0">+</span>cell.<span class="me1">getTimestamp</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;column Family:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneFamily</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;column Name:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneQualifier</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;value:&quot;</span><span class="sy0">+</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span>CellUtil.<span class="me1">cloneValue</span><span class="br0">&#40;</span>cell<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

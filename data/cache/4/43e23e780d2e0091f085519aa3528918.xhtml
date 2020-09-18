@@ -1,0 +1,156 @@
+
+<h1 class="sectionedit1" id="what_a_distributed_system_is_and_its_characteristics">What a distributed system is and its characteristics</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What a distributed system is and its characteristics&quot;,&quot;hid&quot;:&quot;what_a_distributed_system_is_and_its_characteristics&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-68&quot;} -->
+<h2 class="sectionedit2" id="defining_a_distributed_system">Defining a distributed system</h2>
+<div class="level2">
+
+<p>
+A distributed system is defined as a software system that is composed of independent computing entities linked together by a computer network whose components communicate and coordinate with each other to achieve a common goal.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Defining a distributed system&quot;,&quot;hid&quot;:&quot;defining_a_distributed_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;69-340&quot;} -->
+<h2 class="sectionedit3" id="key_characteristics_of_a_distributed_system">Key characteristics of a distributed system</h2>
+<div class="level2">
+
+<p>
+In order to identify a distributed system, here are the key characteristics that you need to look out for:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Resource sharing</strong>: This refers to the possibility of using the resources in the system, such as storage space, computing power, data, and services from anywhere, and so on.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Extendibility</strong>: This refers to the possibility of extending and improving the system incrementally, both from hardware and software perspectives.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Concurrency</strong>: This refers to the system&#039;s capability to be used by multiple users at the same time to accomplish the same task or different tasks</div>
+</li>
+<li class="level1"><div class="li"> <strong>Performance and scalability</strong>: This ensures that the response time of the system doesn&#039;t degrade as the overall load increases</div>
+</li>
+<li class="level1"><div class="li"> <strong>Fault tolerance</strong>: This ensures that the system is always available even if some of the components fail or operate in a degraded mode</div>
+</li>
+<li class="level1"><div class="li"> <strong>Abstraction through APIs</strong>: This ensures that the system&#039;s individual components are concealed from the end-users, revealing only the end services to them</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Key characteristics of a distributed system&quot;,&quot;hid&quot;:&quot;key_characteristics_of_a_distributed_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;341-1425&quot;} -->
+<h2 class="sectionedit4" id="key_problems_in_a_distributed_system">Key problems in a distributed system</h2>
+<div class="level2">
+
+<p>
+The below list shows the key problems in a distributed system. But the most important problem is to make <strong>the participating computing entities, or independent programs, coordinate their actions</strong>.
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Assumptions </th><th class="col1"> Reality </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> The network is reliable</td><td class="col1"> In reality, the network or the interconnection among the components can fail due to internal errors in the system or due to external factors such as power failure. </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Latency is zero </td><td class="col1"> Users of a distributed system can connect to it from anywhere in the globe, and it takes time to move data from one place to another. The network&#039;s quality of service also influences the latency of an application.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Bandwidth is infinite </td><td class="col1"> Network bandwidth has improved many folds in the recent past, but this is not uniform across the world. Bandwidth depends on the type of the network (T1, <abbr title="Local Area Network">LAN</abbr>, WAN, mobile network, and so on).</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> The network is secure </td><td class="col1"> The network is never secure. Often, systems face denial of-service attacks for not taking the security aspects of an application seriously during their design.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> Topology doesn&#039;t change </td><td class="col1"> In reality, the topology is never constant. Components get removed/added with time, and the system should have the ability to tolerate such changes. </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> There is one administrator </td><td class="col1"> Distributed systems never function in isolation. They interact with other external systems for their functioning; this can be beyond administrative control. </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> Transport cost is zero </td><td class="col1"> This is far from being true, as there is cost involved everywhere, from setting up the network to sending network packets from source to destination. The cost can be in the form of CPU cycles spent to actual dollars being paid to network service providers. </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> The network is homogeneous </td><td class="col1"> A network is composed of a plethora of different entities. Thus, for an application to function correctly, it needs to be interoperable with various components, be it the type of network, operating system, or even the implementation languages.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;1675-3463&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Key problems in a distributed system&quot;,&quot;hid&quot;:&quot;key_problems_in_a_distributed_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1426-3464&quot;} -->
+<h2 class="sectionedit6" id="why_zookeeper_is_useful_for_a_distributed_system">Why zookeeper is useful for a distributed system</h2>
+<div class="level2">
+
+<p>
+Apache ZooKeeper is an effort to develop a highly scalable, reliable, and robust centralized service to implement coordination in distributed systems that developers can straightaway use in their applications through a very simple interface to a centralized coordination service. It enables application developers to concentrate on the core business logic of their applications and rely entirely on the ZooKeeper service to get the coordination part correct and help them get going with their applications. It simplifies the development process, thus making it more nimble.
+</p>
+
+<p>
+With ZooKeeper, developers can implement common distributed coordination tasks, such as the following:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Configuration management</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>Naming service</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>Distributed synchronization, such as locks and barriers</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>Cluster membership operations, such as detection of node leave/node join</strong></div>
+</li>
+</ul>
+
+<p>
+Any distributed application needs these kinds of services one way or another, and implementing them from scratch often leads to bugs that cause the application to behave erratically. Zookeeper mitigates the need to implement coordination and synchronization services in distributed applications from scratch by providing simple and elegant primitives through a rich set of APIs.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Why zookeeper is useful for a distributed system&quot;,&quot;hid&quot;:&quot;why_zookeeper_is_useful_for_a_distributed_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3465-4786&quot;} -->
+<h2 class="sectionedit7" id="challenges_of_distributed_applicatioins">Challenges of distributed applicatioins</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> <strong>Race condition</strong>: Sometimes there are two or more machines that are trying to perform a particular task, even when that task actually needs to be done only by a single machine at any given time.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Deadlock</strong>: In order to complete indefinitely, two or more operations waiting for each other.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Inconsistency</strong>: It means Partial failure of data.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Challenges of distributed applicatioins&quot;,&quot;hid&quot;:&quot;challenges_of_distributed_applicatioins&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;4787-5199&quot;} -->
+<h2 class="sectionedit8" id="coodination_in_a_distributed_system">Coodination in a distributed system</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Coodination in a distributed system&quot;,&quot;hid&quot;:&quot;coodination_in_a_distributed_system&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;5200-5248&quot;} -->
+<h3 class="sectionedit9" id="coodinate_synchronize_data">Coodinate/synchronize data</h3>
+<div class="level3">
+
+<p>
+Let&#039;s take the example of doing configuration management for a distributed application that comprises multiple software components running independently and concurrently, spanning across multiple physical servers. 
+</p>
+
+<p>
+Now, having a master node where the cluster configuration is stored and other worker nodes that download it from this master node and auto-configure themselves seems to be a simple and elegant solution. However, this solution suffers from a potential problem of <strong>the master node being a single point of failure</strong>. Even if we assume that the master node is designed to be fault-tolerant, designing a system where a change in the configuration is propagated
+to all worker nodes dynamically is not straightforward.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Coodinate\/synchronize data&quot;,&quot;hid&quot;:&quot;coodinate_synchronize_data&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;5249-6016&quot;} -->
+<h3 class="sectionedit10" id="service_discovery">Service discovery</h3>
+<div class="level3">
+
+<p>
+Often, to sustain the load and increase the availability of the application, we add more physical servers to the system. The client or worker nodes must know about this change in the cluster memberships and the availability of newer machines that host different services in the cluster. This needs careful design and implementation of logic in the client application itself.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Service discovery&quot;,&quot;hid&quot;:&quot;service_discovery&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;6017-6420&quot;} -->
+<h3 class="sectionedit11" id="fault-tolerant">Fault-tolerant</h3>
+<div class="level3">
+
+<p>
+A horizontally scalable distributed system that spans over hundreds and thousands of physical machines is often prone to failures such as hardware faults, system crashes, communication link failures, and so on. These types of failures don&#039;t really follow any pattern, and hence, to handle such failures in the application logic and design
+the system to be <strong>fault-tolerant</strong> is truly a difficult problem.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Fault-tolerant&quot;,&quot;hid&quot;:&quot;fault-tolerant&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;6421-&quot;} -->

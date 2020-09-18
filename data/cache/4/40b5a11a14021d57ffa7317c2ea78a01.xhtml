@@ -1,0 +1,117 @@
+
+<h1 class="sectionedit1" id="la_ferme_de_calcul">La ferme de calcul</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_info plugin_wrap">
+<p>
+La ferme de calcul du CC-IN2P3 permet de lancer massivement des analyses indépendantes sur un grand nombre de ressources. Actuellement, vous pouvez exécuter simultanément :
+</p>
+<ul>
+<li class="level1"><div class="li"> 100 tâches sur 1 cœur et 4 Go de mémoire; </div>
+</li>
+<li class="level1"><div class="li"> ou jusqu&#039;à 10 tâches sur 8 cœurs et 3 Go de mémoire par cœur.</div>
+</li>
+</ul>
+
+<p>
+Si le nombre de tâches soumises dépasse le quota, elle seront mise en attente. 
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "La ferme de calcul" [1-436] -->
+<h2 class="sectionedit4" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Les moyens de calcul du CC-IN2P3 sont mutualisés dans une ferme de calcul unique : les machines ne sont donc pas dédiées à une expérience ou un groupe spécifique.
+Ce mode de gestion permet de bénéficier d’un excellent taux de remplissage et d’une optimisation maximale des ressources. Les calculs s’effectuent de façon indépendante sur un processeur d’une machine.
+L&#039;accès aux ressources de la ferme est géré par un ordonnanceur de tâche: <a href="http://www.univa.com/products/grid-engine.php" class="urlextern" title="http://www.univa.com/products/grid-engine.php"  rel="nofollow">Univa Grid Engine</a>.
+</p>
+<!-- EDIT5 PLUGIN_WRAP_START [0-] --><div class="wrap_info plugin_wrap">
+<p>
+La documentation complète sur l&#039;utilisation de la ferme de calcul et de sont ordonnanceur est disponible dans la base de connaissances du CCIN2P3 en <a href="http://cc.in2p3.fr/docenligne/1007" class="urlextern" title="http://cc.in2p3.fr/docenligne/1007"  rel="nofollow">français</a> ou en <a href="http://cc.in2p3.fr/docenligne/969" class="urlextern" title="http://cc.in2p3.fr/docenligne/969"  rel="nofollow">anglais</a>
+</p>
+</div><!-- EDIT6 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT4 SECTION "Introduction" [437-1265] -->
+<h1 class="sectionedit7" id="soumettre_une_tache_monocœur">Soumettre une tâche monocœur</h1>
+<div class="level1">
+
+<p>
+Pour soumettre une tâche, il faut commencer par écrire un script <a href="http://www.gnu.org/software/bash/manual/bash.html" class="urlextern" title="http://www.gnu.org/software/bash/manual/bash.html"  rel="nofollow">Bash</a> regroupant l&#039;ensemble des commandes que vous souhaitez exécuter.
+</p>
+<pre class="code">#! /usr/local/bin/bash
+
+# Go to the bioaster common directory
+# ===================================
+cd /sps/inter/bioaster/
+
+# Run your analysis here ! For example :
+# ======================================
+echo &quot;Current Environment Variable&quot;
+printenv</pre>
+
+<p>
+Il faut ensuite ajouter en début de script les options qui permettront à l&#039;ordonnanceur de tâche de la ferme d&#039;aiguiller votre tâche dans la bonne file.
+</p>
+<pre class="code">#! /usr/local/bin/bash
+#
+#$ -l ct=00:05:00
+#$ -l vmem=1G
+#$ -l fsize=1G
+
+# Go to the bioaster common directory
+# ===================================
+cd /sps/inter/bioaster/
+
+# Run your analysis here ! For example :
+# ======================================
+echo &quot;Current Environment Variable&quot;
+printenv</pre>
+
+<p>
+Où <code>ct</code> désigne le temps de calcul (ici 5 minutes), <code>vmem</code> la quantité de mémoire (ici 1 Go) et <code>fsize</code> le volume de stockage local temporaire (ici 1 Go). Il existe de nombreuses autres options pour définir le nom de la tâche, envoyer des courriel de notification, etc. 
+</p>
+
+<p>
+Enfin, vous pouvez soumettre votre tâche avec la commande suivante
+</p>
+<pre class="code">qsub script.sh</pre>
+
+</div>
+<!-- EDIT7 SECTION "Soumettre une tâche monocœur" [1266-2629] -->
+<h1 class="sectionedit8" id="soumettre_une_tache_multicœur">Soumettre une tâche multicœur</h1>
+<div class="level1">
+
+<p>
+La soumission de job multicœurs suis le même principe qui précédemment. Il faut simplement utiliser les options suivantes :
+</p>
+<pre class="code">#! /usr/local/bin/bash
+#
+#$ -pe multicores &lt;nombre de coeurs&gt;
+#$ -q &lt;mc_short|mc_medium|mc_long&gt;
+
+
+# Go to the bioaster common directory
+# ===================================
+cd /sps/inter/bioaster/
+
+# Run your analysis here ! For example :
+# ======================================
+echo &quot;Current Environment Variable&quot;
+printenv</pre>
+
+<p>
+Où <code>-pe</code> désigne le nombre de cœurs et <code>-q</code> le nom de la queue dédiée aux calculs multicœurs. la configuration des queues multicoeurs <code>mc_xxx</code> est disponible sur <a href="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php" class="urlextern" title="http://cctools.in2p3.fr/mrtguser/info_sge_queue.php"  rel="nofollow">cctools</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Soumettre une tâche multicœur" [2630-3388] -->
+<h1 class="sectionedit9" id="suivre_et_modifier_une_tache">Suivre et modifier une tâche</h1>
+<div class="level1">
+
+<p>
+Pour suivre l&#039;exécution de votre tâche, vous pouvez utiliser la commande <code>qstat</code>. Pour modifier les paramètre de votre tâche, vous pouvez utiliser la commande <code>qalter</code>.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Suivre et modifier une tâche" [3389-] -->

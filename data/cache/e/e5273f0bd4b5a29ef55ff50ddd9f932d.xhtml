@@ -1,0 +1,84 @@
+
+<h1 class="sectionedit1" id="flume_features_and_limitations">Flume Features and limitations</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume Features and limitations&quot;,&quot;hid&quot;:&quot;flume_features_and_limitations&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-46&quot;} -->
+<h2 class="sectionedit2" id="features">Features</h2>
+<div class="level2">
+
+<p>
+Flume is an opensource project and well documented. Below is a list of the flume features
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Latency</strong> Apache Flume offers high throughput with lower latency.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Configuration</strong> Flume has a very declarative configuration for declaring data flow.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Data Flow</strong> In Hadoop environments, Flume works with streaming data sources which are generated continuously. Such as log files.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Routing</strong> Generally, Flume looks at the payload such as stream data or event. Also, construct a routing which is apt.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Inexpensive</strong> While it comes to maintain Flume, we can say less costly to install, operate and maintain.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Fault Tolerance and Scalable</strong> Apache Flume is highly extensible, reliable, available, horizontally scalable as well as customizable for different sources and sinks. However, that helps in collecting, aggregating and moving a large number of datasets. For example Facebook, Twitter and e-commerce websites.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Distributed</strong> It is inherently distributed in nature.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Reliable Message Delivery</strong> It offers reliable message delivery. Basically, in Flume the transactions are channel-based where two transactions (one sender &amp; one receiver) are maintained for each message.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Streaming</strong> It gives us a solution which is reliable and distributed and helps us to ingest online streaming data from various sources (network traffic, social media, email messages, log files etc) in HDFS.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Steady Flow</strong> Flume offers a steady flow of data if the read the write rate, between reading and write operations.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Features&quot;,&quot;hid&quot;:&quot;features&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;47-1609&quot;} -->
+<h2 class="sectionedit3" id="limitations">Limitations</h2>
+<div class="level2">
+
+<p>
+As we know if there are advantages, there are also disadvantages. So let’s discuss disadvantages of Apache Flume which are pulling it down on certain aspects. Such as:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Weak Ordering Guarantee</strong>: While it comes to ordering guarantee, Apache flume is very weak in it.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Duplicacy</strong>: In many scenarios, Flume does not guarantee that message reaching is unique. However, it is a possibility that duplicate messages might pop in at times.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Low Scalability</strong> There is a slight possibility that for an enterprise, sizing the hardware of a typical Flume can be tricky, and in most cases, it’s trial and error. Hence, its scalability aspect is often low.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Reliability issues</strong> When the choice of backing store is not chosen wisely considering all factors, scalability and reliability are under question.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Limitations&quot;,&quot;hid&quot;:&quot;limitations&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1610-2455&quot;} -->
+<h2 class="sectionedit4" id="flume_known_issues">Flume known issues</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume known issues&quot;,&quot;hid&quot;:&quot;flume_known_issues&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;2456-2488&quot;} -->
+<h3 class="sectionedit5" id="handling_agent_failures">Handling Agent Failures</h3>
+<div class="level3">
+
+<p>
+Basically, all the flows hosted on that agent are aborted, if the Flume agent goes down. However, as soon as the agent is restarted, then the flow will resume. By using file channel or other stable channels, the flow will resume processing events where it left off. Also, we have an option to migrate the database to another hardware and set up a new Flume agent that can resume processing the events saved in the DB, if the agent can’t be restarted on the same hardware. In addition, to move the Flume agent to another host database HA futures can be leveraged.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Handling Agent Failures&quot;,&quot;hid&quot;:&quot;handling_agent_failures&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2489-3088&quot;} -->
+<h3 class="sectionedit6" id="flume_compatibility">Flume Compatibility</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume Compatibility&quot;,&quot;hid&quot;:&quot;flume_compatibility&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3089-3119&quot;} -->
+<h2 class="sectionedit7" id="flume_use_case">Flume use case</h2>
+<div class="level2">
+
+<p>
+<a href="https://data-flair.training/blogs/flume-use-cases/" class="urlextern" title="https://data-flair.training/blogs/flume-use-cases/" rel="nofollow">https://data-flair.training/blogs/flume-use-cases/</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Flume use case&quot;,&quot;hid&quot;:&quot;flume_use_case&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3120-&quot;} -->

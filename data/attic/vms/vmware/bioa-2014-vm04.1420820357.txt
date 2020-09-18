@@ -1,0 +1,72 @@
+====== BIOA-2014-VM04 ======
+
+===== Introduction =====
+
+Machine qui héberge un serveur [[ccin2p3:in2p3:logiciels:wwwblast|wwwblast]] mis en place pour Samuel BELLAIS.
+
+Pour savoir où tourne cette machine virtuelle, merci d'utiliser la de [[?do=backlink|liens inversés]].
+
+===== Contacts =====
+
+  * **Responsable** : Tanguy
+  * **Support** : -
+
+===== Informations Techniques =====
+
+  * **Système d'Exploitation** : Debian 7 
+  * **Matériel** : 
+    * //RAM//: 1024Mo
+    * //Disques durs//: 8Go
+    * //Adresse MAC// : 00:0C:29:56:91:AA
+  * **Adresse IP** : 192.168.0.5
+
+===== Installation =====
+
+==== Système de base ====
+
+<code text>
+# Pour Debian
+$ aptitude install --without-recommends sudo vim bzr open-vm-tools
+$ adduser bioaster sudo
+$ /etc/init.d/mpt-statusd stop
+$ update-rc.d -f mpt-statusd remove
+$ aptitude install unattended-upgrades
+$ dpkg-reconfigure -plow unattended-upgrades
+$ # activate in the dialogue
+$ vim /etc/apt/apt.conf.d/50unattended-upgrades
+$ # uncomment Unattended-Upgrade::Mail "root";
+</code>
+
+==== wwwBlast ====
+
+<code text>
+cd /var/www
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/wwwblast-2.2.26-x64-linux.tar.gz
+tar xvzf wwwblast-2.2.26-x64-linux.tar.gz
+mv blast wwwblast
+</code>
+
+<code text>
+$ aptitude install tcsh
+$ aptitude install apache2
+$ vim /etc/apache2/sites-available/wwwblast
+  <VirtualHost *:80>
+      ServerName wwwblast.paris.bioaster.org
+      DocumentRoot /var/www/wwwblast
+   
+      SetEnv BLASTDB /var/www/wwwblast/db
+      
+      # Paths to resources are hardcoded to "../blast/"
+      Alias /blast /var/www/wwwblast 
+      
+      <Directory /var/www/wwwblast>
+          Options FollowSymLinks ExecCGI
+          DirectoryIndex index.html index.cgi
+          AddHandler cgi-script .cgi .pl
+      </Directory>
+  </VirtualHost>
+</code>
+
+===== Journal =====
+
+  * **2014.08.07 (tlc)** Installation

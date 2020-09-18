@@ -1,0 +1,404 @@
+
+<h1 class="sectionedit1" id="owncloud">Owncloud</h1>
+<div class="level1">
+
+<p>
+<a href="https://owncloud.org/" class="urlextern" title="https://owncloud.org/" rel="nofollow">Owncloud</a> est la solution de stockage en place à BIOASTER. La version de production est hébergée sur le socle VMWare : <a href="https://owncloud.bioaster.org" class="urlextern" title="https://owncloud.bioaster.org" rel="nofollow">https://owncloud.bioaster.org</a>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Owncloud" [1-209] -->
+<h2 class="sectionedit2" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+L&#039;installation se fait sur <a href="/doku.php?id=informatique:ut6_vmware#instanciation_d_une_vm_centos_7" class="wikilink2" title="informatique:ut6_vmware" rel="nofollow">une VM Centos 7</a> ayant reçu <a href="https://gitlab.in2p3.fr/bioaster/ansible" class="urlextern" title="https://gitlab.in2p3.fr/bioaster/ansible" rel="nofollow">les rôles Ansible</a> <strong>apache</strong> et <strong>php</strong>.<br/>
+
+Configuration du serveur <a href="/doku.php?id=informatique:informatique_owncloud_cclinowncloudd01" class="wikilink2" title="informatique:informatique_owncloud_cclinowncloudd01" rel="nofollow">CCLinOwncloudD01</a>
+</p>
+
+<p>
+<strong>Attention : </strong><br/>
+En cours d&#039;installation et de rédaction ! <a href="https://download.owncloud.org/download/repositories/8.2/owncloud/" class="urlextern" title="https://download.owncloud.org/download/repositories/8.2/owncloud/" rel="nofollow">https://download.owncloud.org/download/repositories/8.2/owncloud/</a>
+</p>
+
+<p>
+&lt;hidden&gt;
+</p>
+
+<p>
+<strong>Installation des dépendances : </strong> <br/>
+Elles sont listées sur la page de <a href="https://doc.owncloud.org/server/8.2/admin_manual/installation/source_installation.html" class="urlextern" title="https://doc.owncloud.org/server/8.2/admin_manual/installation/source_installation.html" rel="nofollow">la doc ownlcoud</a>, mais pour le moment on installe le paquet <code>owncloud</code> qui installe tout seul les dépendances.
+</p>
+
+<p>
+À installer :
+</p>
+<pre class="code">php-pecl-apcu
+php-curl
+php-dom
+php-exif
+php-fileinfo
+php-gd
+php-iconv
+php-json
+php-ldap
+php-mbstring
+php-openssl
+php-pdo
+php-session
+php-simplexml
+php-xmlwriter
+php-zip
+php-pecl-imagick
+ImageMagick</pre>
+
+<p>
+Quel paquet ?
+</p>
+<pre class="code">ctype
+libxml
+posix
+zlib
+mysql/sqlite
+bz2
+intl
+mcrypt
+gmp</pre>
+
+<p>
+Pas nécessaire ? 
+</p>
+<pre class="code">php-aws-sdk
+php-filter
+php-getid3
+php-google-apiclient
+php-opencloud
+php-opencloud
+php-pcre
+php-sabre-dav
+php-spl
+ 
+php-composer(bantu/ini-get-wrapper)
+php-composer(doctrine/dbal)
+php-composer(doctrine/dbal)
+php-composer(ircmaxell/random-lib)
+php-composer(kriswallsmith/assetic)
+php-composer(kriswallsmith/assetic)
+php-composer(natxet/CssMin)
+php-composer(phpmailer/phpmailer)
+php-composer(pimple/pimple)
+php-composer(pimple/pimple)
+php-composer(symfony/console)
+php-composer(symfony/console)
+php-composer(symfony/routing)
+php-composer(symfony/routing)
+
+php-pear(pear.dropbox-php.com/Dropbox)
+php-pear(pear.sabredav.org/Sabre_VObject)
+php-pear(phpseclib.sourceforge.net/Net_SFTP)</pre>
+
+<p>
+&lt;/hidden&gt;
+</p>
+<ul>
+<li class="level1"><div class="li"> On désactive le vhost SSL par défaut dans <code>ssl.conf</code></div>
+</li>
+<li class="level1"><div class="li"> Voir conf du vhost</div>
+</li>
+</ul>
+
+<p>
+Pour faire tourner owncloud comme <code>biodata</code>, on installe le module <code>mpm-itk</code> et on l&#039;active en décommentant sa conf. Il faut aussi définir un nouveau dossier pour les sessions PHP.
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=informatique:owncloud&amp;codeblock=3" title="Download Snippet" class="mediafile mf_conf_">/etc/httpd/sites-available/owncloud.conf </a></dt>
+<dd><pre class="code text">&lt;VirtualHost *:80&gt;
+    ServerName owncloud.bioaster.org
+    ServerAlias ccbioappl03.in2p3.fr 134.158.36.23
+    Redirect permanent / https://owncloud.bioaster.org/
+&lt;/VirtualHost&gt;
+&nbsp;
+&lt;VirtualHost *:443&gt;
+    ServerName owncloud.bioaster.org
+    ServerAlias ccbioappl03.in2p3.fr 134.158.36.23
+    DocumentRoot /var/www/html/owncloud
+&nbsp;
+    AssignUserId biodata bioaster
+    php_admin_value session.save_path &quot;/var/lib/php/session/biodata&quot;
+&nbsp;
+    SSLEngine       on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+&nbsp;
+    SSLCertificateFile      /etc/pki/tls/certs/owncloud.bioaster.org.crt
+    SSLCertificateKeyFile   /etc/pki/tls/private/owncloud.bioaster.org.key
+&nbsp;
+    #SSLVerifyClient none
+    #
+    #SSLCACertificatePath    configuration/certificates
+    #SSLCACertificateFile    configuration/certificates/cacert.pem
+&nbsp;
+    &lt;IfModule mod_headers.c&gt;
+        Header always set Strict-Transport-Security &quot;max-age=25768000; includeSubDomains; preload&quot;
+    &lt;/IfModule&gt;
+&lt;/VirtualHost&gt;</pre>
+</dd></dl>
+<ul>
+<li class="level1"><div class="li"> Les dossiers d&#039;installation doivent contenir le numéro de version</div>
+</li>
+<li class="level1"><div class="li"> Apache sert <code>owncloud/</code>, qui est un lien vers la bonne version. De cette manière on ne modifie pas la configuration Apache.</div>
+</li>
+<li class="level1"><div class="li"> Le dossier <code>data/</code> est hors du dossier <code>owncloud/</code> pour faciliter les mises à jour.</div>
+</li>
+</ul>
+
+<p>
+Activer APCu pour la ligne de commande <code>apc.enable_cli=1</code> dans <code>/etc/php.d/apcu.ini</code>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installation" [210-3732] -->
+<h2 class="sectionedit3" id="mise_a_jour">Mise à jour</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Faire une sauvegarde de la base de données (la base est au CC et donc déjà sauvegardé, mais un autre dump SQL ne peut pas faire de mal)</div>
+</li>
+</ul>
+<pre class="code">mysqldump -h ccmysql.in2p3.fr -u bio_owncloud -p bio_owncloud | gzip &gt; dump_file.sql.zip</pre>
+<ul>
+<li class="level1"><div class="li"> Faire un snapshot de la VM</div>
+</li>
+<li class="level1"><div class="li"> Télécharger la nouvelle version et l&#039;extraire à côté de l&#039;ancienne :</div>
+</li>
+</ul>
+<pre class="code">tar xvjf ~/owncloud-X.Y.Z.tar.bz2 --transform &#039;s/owncloud/owncloud-X.Y.Z/&#039;</pre>
+<ul>
+<li class="level1"><div class="li"> Déplacer <code>owncloud-X.Y.Z</code> dans <code>/var/www/html/</code></div>
+</li>
+<li class="level1"><div class="li"> Copier le fichier <code>config/config.php</code> vers la nouvelle version</div>
+</li>
+<li class="level1"><div class="li"> <pre class="code">&lt;?php
+$CONFIG = array (
+  &#039;instanceid&#039; =&gt; &#039;oc425bfe681a&#039;,
+  &#039;passwordsalt&#039; =&gt; &#039;7a2ad43dc5d73c429dc7219fcf0c43&#039;,
+  &#039;trusted_domains&#039; =&gt; 
+  array (
+    0 =&gt; &#039;ccbioappl03.in2p3.fr&#039;,
+    1 =&gt; &#039;owncloud.bioaster.org&#039;,
+  ),
+  &#039;datadirectory&#039; =&gt; &#039;/mnt/gpfs/UsersData&#039;,
+  &#039;trashbin_retention_obligation&#039; =&gt; &#039;30, auto&#039;,
+  &#039;dbtype&#039; =&gt; &#039;mysql&#039;,
+  &#039;version&#039; =&gt; &#039;8.2.4.2&#039;,
+  &#039;installed&#039; =&gt; true,
+  &#039;forcessl&#039; =&gt; true,
+  &#039;theme&#039; =&gt; &#039;bioaster&#039;,
+  &#039;maintenance&#039; =&gt; false,
+  &#039;secret&#039; =&gt; &#039;3e83cea4c159c837b20451785c8c7d582ece402805d02a76e1c963b732765a5c70ab495324b6bcfcbdeb7eb13857f52f&#039;,
+  &#039;loglevel&#039; =&gt; 4,
+  &#039;mail_smtpmode&#039; =&gt; &#039;smtp&#039;,
+  &#039;mail_smtphost&#039; =&gt; &#039;10.69.2.250&#039;,
+  &#039;mail_smtpport&#039; =&gt; &#039;25&#039;,
+  &#039;dbname&#039; =&gt; &#039;bio_owncloud&#039;,
+  &#039;dbhost&#039; =&gt; &#039;ccmysql.in2p3.fr&#039;,
+  &#039;dbuser&#039; =&gt; &#039;bio_owncloud&#039;,
+  &#039;dbpassword&#039; =&gt; &#039;qcQRg4z3RKetNbTP&#039;,
+  &#039;knowledgebaseenabled&#039; =&gt; false,
+  &#039;asset-pipeline.enabled&#039; =&gt; true,
+  &#039;enable_previews&#039; =&gt; false,
+  &#039;preview_libreoffice_path&#039; =&gt; &#039;/usr/bin/libreoffice&#039;,
+  &#039;memcache.local&#039; =&gt; &#039;\\OC\\Memcache\\APCu&#039;,
+  &#039;appstore.experimental.enabled&#039; =&gt; true,
+);</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Donner tous les fichiers à biodata</div>
+</li>
+<li class="level1"><div class="li"> Copier le thème <code>bioaster</code></div>
+</li>
+<li class="level1"><div class="li"> Dans le dossier de l&#039;ancienne version faire <pre class="code">php occ maintenance:mode --on</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Dans le nouveau dossier lancer la mise à jour de la bd et des extensions : <pre class="code">php occ upgrade</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Remettre le bon thème dans la configuration</div>
+</li>
+<li class="level1"><div class="li"> Vérifier que les Apps ont été activées (<code>documents</code>, <code>disableremeberlogin</code>, <code>libreonline</code>)</div>
+</li>
+<li class="level1"><div class="li"> Faire pointer le lien <code>owncloud/</code> vers le nouveau dossier (pas besoin d&#039;enlever le mode maintenance ou de relancer Apache)</div>
+</li>
+</ul>
+
+<p>
+<a href="/doku.php?id=informatique:informatique_owncloud_update_9.1.1" class="wikilink2" title="informatique:informatique_owncloud_update_9.1.1" rel="nofollow">Mise à jour 8.2.5 à 9.1.1</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Mise à jour" [3733-6038] -->
+<h2 class="sectionedit4" id="commandes_utiles">Commandes utiles</h2>
+<div class="level2">
+<pre class="code">  $ php console.php files:scan --all
+  
+  $ php occ maintenance:mode --on|--off
+  
+  $ php occ maintenance:repair
+  
+  $ php occ upgrade --skip-migration-test</pre>
+
+</div>
+<!-- EDIT4 SECTION "Commandes utiles" [6039-6243] -->
+<h2 class="sectionedit5" id="transfert_manuel_de_donnees">Transfert manuel de données</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Transférer les données avec rsync<pre class="code">rsync -rltv Doc_Samuel/ biodata@owncloud.bioaster.org:/mnt/gpfs/UsersData/Project_admin/files/ColSGB_BA-P2-04/BA-P2-04-WP2-IPA-01-02/</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> S&#039;assure que les données appartiennent au bon groupe et ont les bonnes permissions</div>
+</li>
+<li class="level1"><div class="li"> Mettre à jour la base de données d&#039;OC<pre class="code">php occ files:scan Project_admin --path Project_admin/files/ColSGB_BA-P2-04</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Transfert manuel de données" [6244-6692] -->
+<h2 class="sectionedit6" id="a_faire">À faire</h2>
+<div class="level2">
+
+<p>
+Utiliser une authentification centrale :
+</p>
+<ol>
+<li class="level1"><div class="li"> <a href="https://doc.owncloud.org/server/7.0/admin_manual/configuration/user_auth_ldap.html" class="urlextern" title="https://doc.owncloud.org/server/7.0/admin_manual/configuration/user_auth_ldap.html" rel="nofollow">LDAP</a>, mais tous les utilisateurs du cloud ne sont pas dans notre LDAP</div>
+</li>
+<li class="level1"><div class="li"> Shibboleth… n&#039;est pas encore prêt… et ne sera pas compatible avec une utilisation de Webdav !</div>
+</li>
+</ol>
+
+<p>
+Utiliser <a href="https://doc.owncloud.org/server/8.1/admin_manual/configuration_server/background_jobs_configuration.html" class="urlextern" title="https://doc.owncloud.org/server/8.1/admin_manual/configuration_server/background_jobs_configuration.html" rel="nofollow">cron</a> plutot qu&#039;ajax
+</p>
+
+</div>
+<!-- EDIT6 SECTION "À faire" [6693-7161] -->
+<h2 class="sectionedit7" id="installation_sous_centos7">Installation sous Centos7</h2>
+<div class="level2">
+<pre class="code">wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+sudo rpm -ivh epel-release-7-8.noarch.rpm
+sudo yum install httpd-itk</pre>
+
+</div>
+<!-- EDIT7 SECTION "Installation sous Centos7" [7162-7366] -->
+<h2 class="sectionedit8" id="transfert_de_fichiers_volumineux">Transfert de fichiers volumineux</h2>
+<div class="level2">
+
+<p>
+<a href="https://doc.owncloud.org/server/7.0/admin_manual/configuration/big_file_upload_configuration.html" class="urlextern" title="https://doc.owncloud.org/server/7.0/admin_manual/configuration/big_file_upload_configuration.html" rel="nofollow">big_file_upload_configuration.html</a>
+</p>
+<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=informatique:owncloud&amp;codeblock=12" title="Download Snippet" class="mediafile mf_htaccess">.htaccess</a></dt>
+<dd><pre class="code text">&lt;IfModule mod_php5.c&gt;
+  php_value upload_max_filesize 200G
+  php_value post_max_size 200G
+  php_value memory_limit 200G
+  php_value mbstring.func_overload 0
+  php_value always_populate_raw_post_data -1
+  php_value default_charset 'UTF-8'
+  php_value output_buffering 0
+  php_value max_input_time 3600
+  php_value max_execution_time 3600
+  &lt;IfModule mod_env.c&gt;
+    SetEnv htaccessWorking true
+  &lt;/IfModule&gt;
+&lt;/IfModule&gt;</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT8 SECTION "Transfert de fichiers volumineux" [7367-7998] -->
+<h2 class="sectionedit9" id="erreurs_diverses">Erreurs diverses</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Messages d&#039;avertissement dans l&#039;interface d&#039;administration : “no internet connection” et “cURL/RSS”</strong> <br/>
+Ceux sont 2 problème liés à cURL. Il faut suivre <a href="http://blog.linuxine.net/?p=3002" class="urlextern" title="http://blog.linuxine.net/?p=3002" rel="nofollow">la procédure donnée ici</a>, même si ce n&#039;est pas très recommandé d&#039;un point de vue de la sécurité.</div>
+</li>
+<li class="level1"><div class="li"> <strong><abbr title="Cascading Style Sheets">CSS</abbr> non pris en charge</strong> <br/>
+Supprimer l&#039;asset correspondant et recharger la page.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Impossible d&#039;ouvrir un dossier sur l&#039;interface Web</strong> <br/>
+Décocher la case “Retenir le mot de passe” au moment de l&#039;authentification.</div>
+</li>
+<li class="level1"><div class="li"> <strong>[UTEC3] Impossible d&#039;accéder aux fichiers sur Owncloud via le logiciel de cytométrie</strong> <br/>
+Bug avec le Webdav, necessite de créer Owncloud.bat dans menu de démarrage.<dl class="code">
+<dt><a href="/doku.php?do=export_code&amp;id=informatique:owncloud&amp;codeblock=13" title="Download Snippet" class="mediafile mf_bat">owncloud.bat</a></dt>
+<dd><pre class="code text">@echo off
+net use O: https://owncloud.bioaster.org/remote.php/webdav /user:LOGIN PASSWORD</pre>
+</dd></dl>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Fermeture inopinée de Word/Excel, impossible de lire le document </strong> <br/>
+Demander à l&#039;IT de mettre Pack Microsoft Office en 32bits.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Cas de transferts buggés de petits fichiers</strong> <br/>
+Allumer un cierge à Fourvière (à Notre-Dame ça marche aussi)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Site web d&#039;OwnCloud inaccessible avec marqué “Connexion…” et chargement qui n&#039;arrête pas de  tourner</strong> <br/>
+Problème de Pare-Feu <pre class="code">bioaster@ccbioappl03:/var/www/html/owncloud$ sudo firewall-cmd --permanent --zone=public --add-service=http
+success
+bioaster@ccbioappl03:/var/www/html/owncloud$ sudo firewall-cmd --permanent --zone=public --add-service=https
+success
+bioaster@ccbioappl03:/var/www/html/owncloud$ sudo firewall-cmd --reload
+success</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Erreurs diverses" [7999-9579] -->
+<h2 class="sectionedit10" id="renouvellement_de_certificate">Renouvellement de certificate</h2>
+<div class="level2">
+
+<p>
+Le certificate est genere par Anthony Berger en utilisant un compte startssl.
+</p>
+
+<p>
+L&#039;ensemble de certificate genere(e.g. csr, certificate, private key) est stocker sur /etc/pki/tls/private/new_cert/
+</p>
+
+<p>
+Le config de vhost /etc/httpd/site_enabled/owncloud.conf va chercher
+</p>
+<ul>
+<li class="level1"><div class="li"> le certificate dans /etc/pki/tls/certs/owncloud.bioaster.org.crt</div>
+</li>
+<li class="level1"><div class="li"> le private key dans /etc/pki/tls/private/owncloud.bioaster.org.key</div>
+</li>
+</ul>
+
+<p>
+Les vieux certficats et file sont tous stoker sous folder /etc/pki/tls/private/old/ et /etc/pki/tls/certs/old/
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Renouvellement de certificate" [9580-10141] -->
+<h2 class="sectionedit11" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.11.14 (ac,plu) :</strong> Renouveller certificate valable jusqu&#039;au 2019-11-10.</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.10.09 (ac,plu) :</strong> Mise à jour CentOs et version 9.1.2</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.06.06 (ac) :</strong> Mise à jour CentOs et version 8.2.5</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.05.10 (ac) :</strong> Installation et configuration de l&#039;App Documents (<a href="/doku.php?id=informatique:informatique_owncloud_documents" class="wikilink2" title="informatique:informatique_owncloud_documents" rel="nofollow">documentation de l&#039;App Documents</a>)</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.01.12 (tlc) :</strong> Mise à jour vers la version 8.2.2</div>
+</li>
+<li class="level1"><div class="li"> <strong>2015.11.25 (tlc) :</strong> Mise à jour de la version 7 à la version 8.1.3 et passage à MySQL (<a href="/doku.php?id=informatique:informatique_owncloud_migration" class="wikilink2" title="informatique:informatique_owncloud_migration" rel="nofollow">documentation de migration</a>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Journal" [10142-] -->

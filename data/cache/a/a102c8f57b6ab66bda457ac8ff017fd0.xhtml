@@ -1,0 +1,137 @@
+
+<h1 class="sectionedit1" id="le_nuage_openstack">Le nuage OpenStack</h1>
+<div class="level1">
+
+<p>
+La procédure BIOASTER est basée sur le <a href="https://ccwiki.in2p3.fr/infrastructure:cloud:start" class="urlextern" title="https://ccwiki.in2p3.fr/infrastructure:cloud:start"  rel="nofollow">guide OpenStack du CCIN2P3</a>.
+Ce dernier sert de document de base pour toutes les bonnes pratiques concernant OpenStack.
+</p>
+
+<p>
+Cette page donne les explications pour déployer des machines virtuelles sur le nuage. La <a href="/ccin2p3/cloud/machines_virtuelles" class="wikilink1" title="ccin2p3:cloud:machines_virtuelles">liste des machines virtuelles</a> ainsi que la <a href="/ccin2p3/cloud/images" class="wikilink1" title="ccin2p3:cloud:images">liste des images disponibles</a> se trouvent sur des pages dédiées.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Le nuage OpenStack" [1-513] -->
+<h2 class="sectionedit2" id="obtenir_un_compte">Obtenir un compte</h2>
+<div class="level2">
+
+<p>
+Un type de compte spécial est nécessaire afin de pouvoir utiliser les fonctionnalités d&#039;OpenStack.
+Une demande doit être faite lors de la création du compte au CC.
+</p>
+
+<p>
+Si la demande n&#039;a pas été faite lors de l&#039;ouverture du compte il est tout de même possible d&#039;obtenir un accès en passant par le <a href="https://cc-usersupport.in2p3.fr/" class="urlextern" title="https://cc-usersupport.in2p3.fr/"  rel="nofollow">système de ticket</a> de l&#039;IN2P3. Dans le nouveau ticket il faut préciser le <em>laboratoire</em> auquel on appartient (BIOASTER) et le <em>service</em> auquel on veut accéder (plateforme de cloud IAAS).
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Obtenir un compte" [514-1077] -->
+<h2 class="sectionedit3" id="se_connecter_au_nuage">Se connecter au nuage</h2>
+<div class="level2">
+
+<p>
+La connexion se fait via <code><a href="/informatique/ssh" class="wikilink1" title="informatique:ssh">SSH</a></code> en utilisant l&#039;identifiant et le mot de passe du compte IN2P3.
+</p>
+<pre class="code text">$ ssh &lt;LOGIN&gt;@ccage.in2p3.fr</pre>
+
+<p>
+Il n&#039;est pas pour le moment possible d&#039;utiliser un mécanisme de <a href="http://presentations.bioaster.org/presentations/PKI/#2" class="urlextern" title="http://presentations.bioaster.org/presentations/PKI/#2"  rel="nofollow">clé</a> pour se connecter.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Se connecter au nuage" [1078-1429] -->
+<h2 class="sectionedit4" id="creer_une_machine_virtuelle">Créer une machine virtuelle</h2>
+<div class="level2">
+
+<p>
+Avant de créer une machine virtuelle (VM) il est nécessaire de répondre à plusieurs questions :
+</p>
+<ul>
+<li class="level1"><div class="li"> quelle quantité de ressources (CPU, RAM, disque) lui sera attribuée ?</div>
+</li>
+<li class="level1"><div class="li"> quelle image servira de modèle à la machine ?</div>
+</li>
+<li class="level1"><div class="li"> quel utilisateur sera autorisé à s&#039;y connecter ?</div>
+</li>
+</ul>
+
+<p>
+Pour faciliter l&#039;allocation de ressources, des <strong>flavors</strong> (tiny, small…) sont prédéfinies.
+Chacune correspond à une quantité différente de CPU, de RAM et d&#039;espace de stockage.
+Il suffit de connaitre l&#039;usage que l&#039;on veut faire de la VM afin de déterminer celle à utiliser.
+La commande pour lister les flavors est <code>nova flavor-list</code>.
+</p>
+
+<p>
+L&#039;<strong>image</strong> de base utilisée correspond au système d&#039;exploitation (<abbr title="Operating System">OS</abbr>) qui sera installé sur la VM.
+Une <a href="/ccin2p3/cloud/images" class="wikilink1" title="ccin2p3:cloud:images">liste complète des images disponibles</a> se trouve dans le wiki.
+Pour l&#039;obtenir depuis la ligne de commande il suffit de faire <code>nova image-list</code>.
+</p>
+
+<p>
+Le choix de l&#039;<strong>utilisateur</strong> se fait par le choix de la clé SSH qui est passée lors de la création de la VM. D&#039;autres pourront être rajoutées au système plus tard. La procédure dépendra de l&#039;<abbr title="Operating System">OS</abbr> disponible sur la VM.
+Pour créer une nouvelle clé, il suffit de faire <code>ssh-keygen</code> et de suivre les instructions.
+La clé peut ensuite être ajoutée à la base de données d&#039;OpenStack avec la commande suivante :
+</p>
+<pre class="code">$ nova keypair-add --pub-key=&lt;FICHIER_CLE&gt;.pub &lt;NOM_DE_LA_CLE&gt;</pre>
+
+<p>
+Une fois les choix faits, on crée et démarre l&#039;image comme ceci :
+</p>
+<pre class="code">$ nova boot --key-name=&lt;NOM_DE_LA_CLE&gt; --image=&lt;NOM_DE_L_IMAGE&gt; --flavor=&lt;NOM_DE_LA_FLAVOR&gt; &lt;NOM_DE_LA_VM&gt;</pre>
+
+<p>
+Après quelques minutes (le temps que la VM démarre) elle peut être utilisée. Ces minutes peuvent être mises à profit pour ajouter la VM nouvellement créée à la <a href="/ccin2p3/cloud/machines_virtuelles" class="wikilink1" title="ccin2p3:cloud:machines_virtuelles">liste des machines virtuelles</a> en production.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Créer une machine virtuelle" [1430-3326] -->
+<h2 class="sectionedit5" id="se_connecter_a_une_machine_virtuelle">Se connecter à une machine virtuelle</h2>
+<div class="level2">
+
+<p>
+Les VM une fois crées se retrouvent sur un réseau indépendant non routé.
+Il est donc nécessaire de passer pour une passerelle pour pouvoir les atteindre.
+Le serveur faisant office de passerelle doit avoir une IP publique.
+La procédure pour créer un tel serveur est <a href="/ccin2p3/cloud/administration#ajouter_une_ip_publique" class="wikilink1" title="ccin2p3:cloud:administration">décrite sur une autre page</a>.
+</p>
+
+<p>
+Afin de faciliter la connexion, et de rendre le rebond transparent, il est nécessaire de configurer le client SSH.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/ccin2p3/cloud?codeblock=3" title="Télécharger un extrait" class="mediafile mf_ssh_config">~/.ssh/config</a></dt>
+<dd><pre class="code SSH">Host proxy
+  HostName &lt;PUBLIC_PROXY_IP&gt;
+  User root
+&nbsp;
+Host private_server
+  HostName &lt;PRIVATE_SERVER_IP&gt;
+  ProxyCommand  ssh proxy nc -w 120 %h %p
+  User root</pre>
+</dd></dl>
+
+<p>
+Il faut ensuite activer l&#039;agent SSH puis lui confier la clé à utiliser pour la connexion. 
+</p>
+<pre class="code text">$ exec ssh-agent bash
+$ ssh-add &lt;FICHIER_CLE&gt;</pre>
+
+<p>
+<strong><em class="u">Remarque</em> <img class="emojione" alt="&#x1f618;" src="//cdn.jsdelivr.net/emojione/assets/png/1F618.png?v=1.2.4"/>* La commande <code>exec ssh-agent bash</code> peut être placée dans le fichier <code>~/.profile</code> afin d&#039;être exécutée à chaque connexion.
+La commande <code>ssh-add</code> quant à elle doit être exécutée manuellement, car la phrase de passe sera demandée pour déverrouiller la clé.
+
+La connexion peut maintenant se faire simplement, comme suit :
+
+&lt;code text&gt;
+$ ssh private_server
+&lt;/code&gt;
+
+===== Pour aller aller plus loin… =====
+
+Pour en savoir plus, consultez la page dédiée à <a href="/ccin2p3/cloud/administration" class="wikilink1" title="ccin2p3:cloud:administration">l&#039;administration des machines virtuelles</a>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Se connecter à une machine virtuelle" [3327-] -->

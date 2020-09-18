@@ -1,0 +1,21 @@
+my_car = new Car();
+&nbsp;
+Class Car{
+   public:
+     method Car(){
+       this-&gt;wheel = new Wheel();  //4x en principe... si on veut 4 roues
+       this-&gt;glass = new Glass();
+       this-&gt;_mountPieces();
+     }
+&nbsp;
+     method run(){}
+&nbsp;
+   private:
+     method _mountPieces{ 
+       //...
+     }
+   private:
+     piece wheel;
+     piece glass;
+     ...  
+}

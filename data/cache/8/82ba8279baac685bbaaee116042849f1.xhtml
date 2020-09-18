@@ -1,0 +1,34 @@
+
+<h1 class="sectionedit1" id="redimensionner_un_disque">Redimensionner un disque</h1>
+<div class="level1">
+
+<p>
+La première étape est de changer la taille à chaud dans les propriétés de la VM. La suite dépend de l&#039;<abbr title="Operating System">OS</abbr>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Redimensionner un disque" [1-153] -->
+<h2 class="sectionedit2" id="sous_gnulinux">Sous GNU/Linux</h2>
+<div class="level2">
+
+<p>
+<strong>Attention</strong>, ici n&#039;est pas traité le redimensionnement de partition.
+</p>
+
+<p>
+1- Rescanner le disque
+</p>
+<pre class="code">  echo &quot;1&quot; &gt; /sys/class/scsi_disk/0:0:X:0/device/rescan</pre>
+
+<p>
+2- Vérifier le disque
+</p>
+<pre class="code">  e2fsck -f /dev/sdX</pre>
+
+<p>
+3- Augmenter le système de fichier au maximum
+</p>
+<pre class="code">  resize2fs /dev/sdX</pre>
+
+</div>
+<!-- EDIT2 SECTION "Sous GNU/Linux" [154-] -->

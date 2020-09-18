@@ -1,0 +1,82 @@
+
+<h1 class="sectionedit1" id="galaxy">Galaxy</h1>
+<div class="level1">
+<!-- EDIT2 PLUGIN_WRAP_START [0-] --><div class="wrap_round wrap_important plugin_wrap">
+<p>
+<br/>
+Le logiciel avait été installé pour évaluation dans le cadre du projet <strong>LIMS</strong> et n&#039;a pas été retenu.
+</p>
+</div><!-- EDIT3 PLUGIN_WRAP_END [0-] -->
+</div>
+<!-- EDIT1 SECTION "Galaxy" [1-166] -->
+<h2 class="sectionedit4" id="informations">Informations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Version</strong> : 1.2.3</div>
+</li>
+<li class="level1"><div class="li"> <strong>Licence</strong> : GPLv3 ou +</div>
+</li>
+<li class="level1"><div class="li"> <strong>Page Web</strong> : <a href="https://wiki.galaxyproject.org/" class="urlextern" title="https://wiki.galaxyproject.org/"  rel="nofollow">https://wiki.galaxyproject.org/</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Description</strong> : Galaxy is an open, web-based platform for accessible, reproducible, and transparent computational biomedical research. </div>
+</li>
+</ul>
+
+<p>
+Galaxy est un portail web qui <em>doit</em> être installé dans une VM dédiée. Il tourne actuellement sur le <a href="/ccin2p3/cloud" class="wikilink1" title="ccin2p3:cloud">cloud OpenStack du CC</a>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Informations" [167-592] -->
+<h2 class="sectionedit5" id="preparation">Préparation</h2>
+<div class="level2">
+
+<p>
+La procédure de mise en place de la VM s&#039;inspire de la page décrivant l&#039;<a href="/in2p3/logiciels/installation" class="wikilink1" title="in2p3:logiciels:installation">installation de nouveau logiciel</a>.
+</p>
+<pre class="code">nova boot --key-name=cloudkey --security-groups=web_server \
+          --image=official-SL-6x-x86_64 --flavor=m1.small Galaxy
+nova floating-ip-list
+nova floating-ip-create # si besoin
+nova add-floating-ip Galaxy &lt;AVAILABLE_FLOATING_IP&gt;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Préparation" [593-1012] -->
+<h2 class="sectionedit6" id="installation">Installation</h2>
+<div class="level2">
+<pre class="code">hg clone https://bitbucket.org/galaxy/galaxy-dist/
+cd galaxy-dist
+hg update stable</pre>
+
+<p>
+Installe apache et l&#039;utilise comme proxy car Galaxy n&#039;ecoute pas ou il faut !!!
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Installation" [1013-1218] -->
+<h2 class="sectionedit7" id="configuration">Configuration</h2>
+<div class="level2">
+
+<p>
+TODO: Voir les liens suivants…
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://wiki.galaxyproject.org/Admin/Config/Performance/ProductionServer" class="urlextern" title="https://wiki.galaxyproject.org/Admin/Config/Performance/ProductionServer"  rel="nofollow">https://wiki.galaxyproject.org/Admin/Config/Performance/ProductionServer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://wiki.galaxyproject.org/Admin/Config/ExternalUserDatbases" class="urlextern" title="https://wiki.galaxyproject.org/Admin/Config/ExternalUserDatbases"  rel="nofollow">https://wiki.galaxyproject.org/Admin/Config/ExternalUserDatbases</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://wiki.galaxyproject.org/Admin/Config/Performance/nginx%20Proxy" class="urlextern" title="https://wiki.galaxyproject.org/Admin/Config/Performance/nginx%20Proxy"  rel="nofollow">https://wiki.galaxyproject.org/Admin/Config/Performance/nginx%20Proxy</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Configuration" [1219-1512] -->
+<h2 class="sectionedit8" id="log">Log</h2>
+<div class="level2">
+
+<p>
+* <strong>2014.02.07 (tlc)</strong> Version 1.2.3 installée
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Log" [1513-] -->

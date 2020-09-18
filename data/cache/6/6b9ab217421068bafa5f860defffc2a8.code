@@ -1,0 +1,23 @@
+<span class="kw1">package</span> <span class="co2">org.pengfei.dynamic_proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.InvocationHandler</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.lang.reflect.Proxy</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> test <span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <span class="co1">//Creat an object(instance of HelloWorld) helloWorld </span>
+        HelloWorld helloWorld <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldImpl<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Build an invocation handler which invoke object helloWorld</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+invocationhandler"><span class="kw3">InvocationHandler</span></a> handler <span class="sy0">=</span> <span class="kw1">new</span> HelloWorldHandler<span class="br0">&#40;</span>helloWorld<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//Build an proxy based on the helloWorld object and invocation handler</span>
+        HelloWorld proxy<span class="sy0">=</span><span class="br0">&#40;</span>HelloWorld<span class="br0">&#41;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+proxy"><span class="kw3">Proxy</span></a>.<span class="me1">newProxyInstance</span><span class="br0">&#40;</span>
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getClassLoader</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                helloWorld.<span class="me1">getClass</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getInterfaces</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+                handler
+        <span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        proxy.<span class="me1">sayHello</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        proxy.<span class="me1">sayShit</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

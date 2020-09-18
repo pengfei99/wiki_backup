@@ -1,0 +1,848 @@
+
+<h1 class="sectionedit1" id="rest_api_of_atlas">Rest Api of atlas</h1>
+<div class="level1">
+
+<p>
+Atlas provides a rest <abbr title="Application Programming Interface">API</abbr> for all features which it supports.
+</p>
+<ul>
+<li class="level1"><div class="li"> Discovery (search query for finding data)</div>
+</li>
+<li class="level1"><div class="li"> Entity (list entity with or without filter)</div>
+</li>
+<li class="level1"><div class="li"> Glossary (list glossary with or without filter)</div>
+</li>
+<li class="level1"><div class="li"> Lineage</div>
+</li>
+<li class="level1"><div class="li"> Relationship</div>
+</li>
+<li class="level1"><div class="li"> Types</div>
+</li>
+</ul>
+
+<p>
+You can find the latest (1.10) atlas rest <abbr title="Application Programming Interface">API</abbr> doc (<a href="https://atlas.apache.org/1.1.0/api/v2/index.html" class="urlextern" title="https://atlas.apache.org/1.1.0/api/v2/index.html" rel="nofollow">https://atlas.apache.org/1.1.0/api/v2/index.html</a>)
+</p>
+
+<p>
+You may also enjoy the interactive interface provided for this <abbr title="Application Programming Interface">API</abbr> by Swagger(<a href="http://swagger.io/" class="urlextern" title="http://swagger.io/" rel="nofollow">http://swagger.io/</a>): <a href="https://atlas.apache.org/api/v2/ui/index.html" class="urlextern" title="https://atlas.apache.org/api/v2/ui/index.html" rel="nofollow">https://atlas.apache.org/api/v2/ui/index.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Rest Api of atlas&quot;,&quot;hid&quot;:&quot;rest_api_of_atlas&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-534&quot;} -->
+<h2 class="sectionedit2" id="api_for_discovery">1.Api for discovery</h2>
+<div class="level2">
+
+<p>
+Atlas exposes search over the metadata in two ways:
+</p>
+<ul>
+<li class="level1"><div class="li"> Basic Search</div>
+</li>
+<li class="level1"><div class="li"> Advanced Search(DSL or full text)</div>
+</li>
+</ul>
+
+<p>
+You can find the full doc on <a href="https://atlas.apache.org/0.8.3/Search.html" class="urlextern" title="https://atlas.apache.org/0.8.3/Search.html" rel="nofollow">https://atlas.apache.org/0.8.3/Search.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.Api for discovery&quot;,&quot;hid&quot;:&quot;api_for_discovery&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;535-749&quot;} -->
+<h3 class="sectionedit3" id="basic_search">1.1 Basic search</h3>
+<div class="level3">
+
+<p>
+The basic search allows you to query using typename of an entity, associated classification/tag and has support for filtering on the entity attributes as well as the classification/tag attributes.
+</p>
+
+<p>
+The basic search query structure can be represented using the following JSON structure(configurable search parameters)
+</p>
+<pre class="code">{
+  &quot;typeName&quot;: &quot;hive_table&quot;,
+  &quot;excludeDeletedEntities&quot;: true,
+  &quot;classification&quot; : &quot;&quot;,
+  &quot;query&quot;: &quot;&quot;,
+  &quot;limit&quot;: 25,
+  &quot;offset&quot;: 0,
+  &quot;entityFilters&quot;: {
+   &quot;attributeName&quot;: &quot;name&quot;,
+   &quot;operator&quot;: &quot;contains&quot;,
+   &quot;attributeValue&quot;: &quot;testtable&quot;
+  },
+  &quot;tagFilters&quot;: null,
+  &quot;attributes&quot;: [&quot;&quot;]
+}
+</pre>
+
+<p>
+Note: The JSON file should be all data, so you don&#039;t put comments in it. If you really want to insert comments, then you can create a designated data element called “_comment”(or whatever you want) that would be ignored by apps that use the JSON data. It&#039;s better having the comment of the JSON file in the processes that generates/receives the JSON, as they are supposed to know what the JSON data will be in advance, or at least the structure of it.
+</p>
+
+<p>
+<strong>Field description</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> typeName: The type of entity to look for</div>
+</li>
+<li class="level1"><div class="li"> excludeDeletedEntities: Should the search include deleted entities too (default: true)</div>
+</li>
+<li class="level1"><div class="li"> classification: Only include entities with given Classification/tag</div>
+</li>
+<li class="level1"><div class="li"> query: Any free text occurrence that the entity should have (generic/wildcard queries might be slow)</div>
+</li>
+<li class="level1"><div class="li"> limit: Max number of results to fetch</div>
+</li>
+<li class="level1"><div class="li"> offset: Starting offset of the result set (useful for pagination)</div>
+</li>
+<li class="level1"><div class="li"> entityFilters: Entity Attribute filter(s)</div>
+</li>
+<li class="level1"><div class="li"> tagFilters: Classification/tag Attribute filter(s)</div>
+</li>
+<li class="level1"><div class="li"> attributes: Attributes to include in the search result (default: include any attribute present in the filter)</div>
+</li>
+</ul>
+
+<p>
+Attribute based filtering can be done on multiple attributes with AND/OR condition.
+</p>
+
+<p>
+For the purpose of simplicity, all the rest query which we use to demonstrate is done with curl. The query 
+authentication can be different if atlas uses different authentication mode. For example, if atlas uses ldap/file for authentication, you should use curl -u &lt;login&gt;:&lt;password&gt; &lt;restURI&gt;. If atlas uses kerberos for authentication, you should use curl -negotiate -u &lt;login&gt; &lt;restURI&gt;. All the following code example will omit the authentication part in the curl code by assuming you are doing -u &lt;login&gt;:&lt;password&gt;.
+</p>
+
+<p>
+All the url for search activity starts with /v2/search, the full list is
+</p>
+<ul>
+<li class="level1"><div class="li"> (GET) /v2/search/attribute : Retrieve data for the specified attribute search query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/basic : Retrieve data for the specified fulltext query</div>
+</li>
+<li class="level1"><div class="li"> (POST) /v2/search/basic : Attribute based search for entities satisfying the search parameters</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/dsl : Retrieve data for the specified DSL</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/fulltext : Retrieve data for the specified fulltext query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/relationship : Relationship search to search for related entities satisfying the search parameters</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/saved : Retrieve saved search query for given user</div>
+</li>
+<li class="level1"><div class="li"> (POST) /v2/search/saved : Add the search query in the post payload to atlas</div>
+</li>
+<li class="level1"><div class="li"> (PUT) /v2/search/saved : Update the existing search query</div>
+</li>
+<li class="level1"><div class="li"> (DELETE) /v2/search/saved/{guid} : Delete the existing search query with the given guid</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/saved/{guid/name} : Retrieve saved search query based on the given  guid or name of the search query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/saved/execute/{name} : Attribute based search for entities satisfying the name of saved-search</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/saved/execute/guid/{guid}</div>
+</li>
+</ul>
+
+<p>
+Note The rest <abbr title="Application Programming Interface">API</abbr> changes with the update of the atlas, so you may encounter errors.
+</p>
+<pre class="code"># basic search on all data with typeName hive_db
+curl http://localhost:21000/api/atlas/v2/search/basic?typeName=hive_db
+
+# a more complete curl command for search basic
+curl -X GET --header &#039;Accept: application/json&#039; -u admin:kdHVNXuo1zMjnM32QqAk &#039;http://localhost:21000/api/atlas/v2/search/basic?typeName=GPFSDataFile&#039;
+
+# if you don&#039;t want pass parameters with &quot;?&quot;, you can also supply a JSON data payload
+# -g means globoff, when you set this option, you can specify URLs that contain the letters {}[] without having 
+# them being interpreted by curl itself. 
+# Note that these letters are not normal legal URL contents but they should be encoded according to the URI standard.
+# -d means data
+# @. means current directory
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/search/basic&quot; -d &quot;@./searchByOwner.json&quot;
+
+# basic search with json payload and multi conditioin (OR)
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/search/basic&quot; -d &quot;@./searchMultiCond.json&quot;</pre>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:data_governance:atlas:rest_api&amp;codeblock=2" title="Download Snippet" class="mediafile mf_json">searchByOwner.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;typeName&quot;: &quot;hive_table&quot;,
+  &quot;excludeDeletedEntities&quot;: true,
+  &quot;classification&quot;: &quot;Mosaic&quot;,
+  &quot;query&quot;: &quot;&quot;,
+  &quot;limit&quot;: 50,
+  &quot;offset&quot;: 0,
+  &quot;entityFilters&quot;: {
+    &quot;attributeName&quot;: &quot;owner&quot;,
+    &quot;operator&quot;: &quot;eq&quot;,
+    &quot;attributeValue&quot;: &quot;hive&quot;
+  },
+  &quot;tagFilters&quot;: null,
+  &quot;attributes&quot;: [
+    &quot;&quot;
+  ]
+}</pre>
+</dd></dl>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:data_governance:atlas:rest_api&amp;codeblock=3" title="Download Snippet" class="mediafile mf_json">searchMultiCond.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;typeName&quot;: &quot;hive_table&quot;,
+  &quot;excludeDeletedEntities&quot;: true,
+  &quot;classification&quot;: &quot;Mosaic&quot;,
+  &quot;query&quot;: &quot;&quot;,
+  &quot;limit&quot;: 50,
+  &quot;offset&quot;: 0,
+  &quot;entityFilters&quot;: {
+    &quot;condition&quot;: &quot;OR&quot;,
+    &quot;criterion&quot;: [
+      {
+        &quot;attributeName&quot;: &quot;columns&quot;,
+        &quot;operator&quot;: &quot;contains&quot;,
+        &quot;attributeValue&quot;: &quot;age&quot;
+      },
+      {
+        &quot;attributeName&quot;: &quot;owner&quot;,
+        &quot;operator&quot;: &quot;eq&quot;,
+        &quot;attributeValue&quot;: &quot;hive&quot;
+      }
+    ]
+  },
+  &quot;tagFilters&quot;: null,
+  &quot;attributes&quot;: [
+    &quot;&quot;
+  ]
+}</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 Basic search&quot;,&quot;hid&quot;:&quot;basic_search&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;750-6458&quot;} -->
+<h3 class="sectionedit4" id="advance_search">1.2 Advance search</h3>
+<div class="level3">
+
+<p>
+In the advance search you need to use the Atlas DSL. See the official doc
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 Advance search&quot;,&quot;hid&quot;:&quot;advance_search&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;6459-6563&quot;} -->
+<h2 class="sectionedit5" id="api_for_type_management">2. Api for type management</h2>
+<div class="level2">
+
+<p>
+The TypesRest <abbr title="Application Programming Interface">API</abbr> of ATLAS supports all CRUD operations on type definitions. You can find the full doc here: <a href="https://atlas.apache.org/api/v2/resource_TypesREST.html" class="urlextern" title="https://atlas.apache.org/api/v2/resource_TypesREST.html" rel="nofollow">https://atlas.apache.org/api/v2/resource_TypesREST.html</a>. 
+</p>
+
+<p>
+The full list of the TypesRest api:
+</p>
+<ul>
+<li class="level1"><div class="li"> (GET) /v2/types/classificationdef/guid/{guid} : Get the classification definition for the given guid.</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/classificationdef/name/{name} : Get the classification definition by it&#039;s name (unique).</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/entitydef/guid/{guid} : Get the Entity definition for the given guid.</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/entitydef/name/{name} : Get the entity definition by it&#039;s name (unique)</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/enumdef/guid/{guid} : Get the enum definition for the given guid. </div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/enumdef/name/{name} : Get the enum definition by it&#039;s name (unique)</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/relationshipdef/guid/{guid} : Get the relationship definition for the given guid</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/relationshipdef/name/{name} : Get the relationship definition by it&#039;s name (unique)</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/structdef/guid/{guid} : Get the struct definition for the given guid.</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/structdef/name/{name} : Get the struct definition by it&#039;s name (unique).</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/typedef/guid/{guid} : Get any type definition (e.g. classification, entity, etc.) by it&#039;s guid</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/typedef/name/{name} : Get type definition by it&#039;s name</div>
+</li>
+<li class="level1"><div class="li"> (DELETE) /v2/types/typedef/name/{typeName} : Delete <abbr title="Application Programming Interface">API</abbr> for type identified by its name.</div>
+</li>
+<li class="level1"><div class="li"> (DELETE) /v2/types/typedefs : Bulk delete <abbr title="Application Programming Interface">API</abbr> for all types.</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/typedefs : Bulk retrieval <abbr title="Application Programming Interface">API</abbr> for retrieving all type definitions in Atlas.</div>
+</li>
+<li class="level1"><div class="li"> (POST) /v2/types/typedefs : Bulk create APIs for all atlas type definitions, only new definitions will be created</div>
+</li>
+<li class="level1"><div class="li"> (PUT) /v2/types/typedefs : Bulk update <abbr title="Application Programming Interface">API</abbr> for all types, changes detected in the type definitions would be persisted</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/types/typedefs/headers : Bulk retrieval <abbr title="Application Programming Interface">API</abbr> for all type definitions returned as a list of minimal information header</div>
+</li>
+</ul>
+<pre class="code"># get classification definition of a classification with name Mosaic
+curl -X GET -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/classificationdef/name/Mosaic
+
+# get entity hive_table definition
+curl -X GET -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/entitydef/name/hive_table
+
+# get type defition with its guid, in this example, the guid is for entity hive_table
+curl -X GET -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedef/guid/ffcb381a-4953-4557-9fb8-4307260a3552
+
+# retrive type definition of DataSet by using name (GET /v2/types/typedef/name/{name})
+curl -X GET -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedef/name/DataSet
+
+# Delete any type definition by its type name
+curl -X DELETE -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedef/name/testEntity
+
+# bulk delete all types (DELETE /v2/types/typedefs + payload). The payload (json/xml) specifies which types needs to be deleted
+curl -X DELETE -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedefs
+
+# bulk create API for all type, only new type definitions will be created. Any changes to the existing definitions will be discarded. (POST /v2/types/typedefs + payload), payload contains type definitions.
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/types/typedefs&quot; -d &quot;@./typeDef_datafile.json&quot;
+
+# bulk update API for all types, changes detected in the new submitted type definition will be updated on the existing atlas types.
+curl -X PUT --header &#039;Content-Type: application/json;charset=UTF-8&#039; --header &#039;Accept: application/json&#039; &#039;http://localhost:21000/api/atlas/v2/types/typedefs&#039; -d &quot;@./typesUpdate.json&quot;
+
+# bulk retrieval for all type definitions returned as a list of minimal information header
+curl -X GET -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedefs/headers
+</pre>
+
+<p>
+To illustrate how to create a new type in atlas, we use the following example. Suppose we store all our data on a network storage which called gpfs.
+</p>
+
+<p>
+We write the following data type definiton 
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:data_governance:atlas:rest_api&amp;codeblock=5" title="Download Snippet" class="mediafile mf_json">typeDef_datafile.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;structDefs&quot;: [
+    {
+      &quot;category&quot;: &quot;STRUCT&quot;,
+      &quot;name&quot;: &quot;schema_col&quot;,
+      &quot;description&quot;: &quot;column definition for schema&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;col&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;data_type&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;required&quot;,
+          &quot;typeName&quot;: &quot;boolean&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ],
+  &quot;entityDefs&quot;: [
+    {
+      &quot;superTypes&quot;: [
+        &quot;DataSet&quot;
+      ],
+      &quot;category&quot;: &quot;ENTITY&quot;,
+      &quot;name&quot;: &quot;GPFSDataFile&quot;,
+      &quot;description&quot;: &quot;a type definition for a file in gpfs which contains data, this could a file that needs to be processed or it can be an output (ex: extracts)&quot;,
+      &quot;typeVersion&quot;: &quot;1.0&quot;,
+      &quot;attributeDefs&quot;: [
+        {
+          &quot;name&quot;: &quot;file_name&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;parent_dir&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: true,
+          &quot;isIndexable&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;user&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;group&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;permission&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;creation_time&quot;,
+          &quot;typeName&quot;: &quot;date&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;format&quot;,
+          &quot;typeName&quot;: &quot;string&quot;,
+          &quot;isOptional&quot;: false,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        },
+        {
+          &quot;name&quot;: &quot;schema&quot;,
+          &quot;typeName&quot;: &quot;array&lt;schema_col&gt;&quot;,
+          &quot;isOptional&quot;: true,
+          &quot;cardinality&quot;: &quot;SINGLE&quot;,
+          &quot;valuesMinCount&quot;: 1,
+          &quot;valuesMaxCount&quot;: 1,
+          &quot;isUnique&quot;: false,
+          &quot;isIndexable&quot;: false
+        }
+      ]
+    }
+  ]
+}</pre>
+</dd></dl>
+
+<p>
+We could notice that the above type definition has two parts. The second part is the main type defnition, It starts with key word “entityDefs” and contains the following information:
+</p>
+<ul>
+<li class="level1"><div class="li"> SuperTypes: Every customer types in Atlas must have one</div>
+</li>
+<li class="level1"><div class="li"> Category: A meta data type definition has the Catefory “ENTITY”,</div>
+</li>
+<li class="level1"><div class="li"> name: Name of the meta data type</div>
+</li>
+<li class="level1"><div class="li"> description: </div>
+</li>
+<li class="level1"><div class="li"> typeVersion: </div>
+</li>
+<li class="level1 node"><div class="li"> attributeDefs: list of the attributes definition, every attributes must have a type. The predefined types almost cover every thing.</div>
+<ul>
+<li class="level2"><div class="li"> Primitive metatypes: boolean, byte, short, int, long, float, double, biginteger, bigdecimal, string, date</div>
+</li>
+<li class="level2"><div class="li"> Enum metatypes</div>
+</li>
+<li class="level2"><div class="li"> Collection metatypes: array, map</div>
+</li>
+<li class="level2"><div class="li"> Composite metatypes: Entity, Struct, Classification, Relationship</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+If you want something special, you can also add new types for attributes. In the above example, I add a new struct type with name schema_col.
+</p>
+
+<p>
+For more informaiton on how to define metadata types in Atlas, please visit 
+ <a href="https://atlas.apache.org/TypeSystem.html" class="urlextern" title="https://atlas.apache.org/TypeSystem.html" rel="nofollow">https://atlas.apache.org/TypeSystem.html</a>
+</p>
+
+<p>
+Now we can use the bulk add typedef api to add the above type definition into Atlas
+</p>
+<pre class="code"># add new type definition (entity)
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/types/typedefs&quot; -d &quot;@./typeDef_datafile.json&quot;
+
+# check the newly added entity
+curl -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/types/typedef/name/GPFSDataFile</pre>
+
+<p>
+We want to manage the metadata of these data in Atlas.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Api for type management&quot;,&quot;hid&quot;:&quot;api_for_type_management&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;6564-15975&quot;} -->
+<h2 class="sectionedit6" id="api_for_entity_management">3. API for entity management</h2>
+<div class="level2">
+
+<p>
+In this section, we will see how to CRUD an entity in Atlas. To see the official doc, please visit <a href="https://atlas.apache.org/api/v2/ui/index.html#/EntityREST" class="urlextern" title="https://atlas.apache.org/api/v2/ui/index.html#/EntityREST" rel="nofollow">https://atlas.apache.org/api/v2/ui/index.html#/EntityREST</a>
+</p>
+
+<p>
+All the url for entity CRUD activity start with /v2/entity, the full list is
+</p>
+<ul>
+<li class="level1"><div class="li"> (POST) /v2/entity : Create new entity or update existing entity in Atlas</div>
+</li>
+<li class="level1"><div class="li"> (DELETE) /v2/entity/bulk : Bulk <abbr title="Application Programming Interface">API</abbr> to delete a list of entities identified by its GUIDs</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/entity/bulk : Bulk <abbr title="Application Programming Interface">API</abbr> to retrieve list of entities identified by its GUIDs.</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/dsl : Retrieve data for the specified DSL</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/fulltext : Retrieve data for the specified fulltext query</div>
+</li>
+<li class="level1"><div class="li"> (GET) /v2/search/relationship : Relationship search to search for related entities satisfying the search parameters</div>
+</li>
+</ul>
+<pre class="code"># Check entity 
+curl -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/entity/bulk
+
+# Get all the entities in a given type
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X GET http://localhost:21000/api/atlas/entities?type=GPFS_Path
+
+# delete an entity based on its guid
+curl -iv -u admin:kdHVNXuo1zMjnM32QqAk -X DELETE http://localhost:21000/api/atlas/entities?guid=b1ed9bc1-e6e7-48f6-ac70-578ecb13ce79</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. API for entity management&quot;,&quot;hid&quot;:&quot;api_for_entity_management&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;15976-17202&quot;} -->
+<h3 class="sectionedit7" id="example">Example</h3>
+<div class="level3">
+
+<p>
+Add a new entity of a specific type
+</p>
+<pre class="code file load_datajson">{
+  &quot;entities&quot;: [
+    {
+      &quot;typeName&quot;: &quot;GPFS_Path&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;it's only a simple attribute&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;file_name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-18T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;csv&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    },
+{
+      &quot;typeName&quot;: &quot;GPFS_Path&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;rabbit tissu image&quot;,
+        &quot;uri&quot;: &quot;pengfei.org&quot;,
+        &quot;name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;file_name&quot;: &quot;rabbit_124_tissu_infection.jpg&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/rabbit&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;2019-08-19T18:49:44.000Z&quot;,
+        &quot;format&quot;:&quot;jpg&quot;,
+        &quot;description&quot;:&quot;test rest api&quot;,
+        &quot;owner&quot;:&quot;pliu&quot;
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    }
+&nbsp;
+]
+}</pre>
+<pre class="code"># The Below command load the above json file into the atlas
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/entity/bulk&quot; -d &quot;@./load_data.json&quot;</pre>
+
+<p>
+We can also add an entity with complex types()
+</p>
+<pre class="code file load_data_with_schemajson">{
+  &quot;entities&quot;: [
+    {
+      &quot;typeName&quot;: &quot;GPFSDataFile&quot;,
+      &quot;createdBy&quot;: &quot;pliu&quot;,
+      &quot;guid&quot;: &quot;-208942807557404&quot;,
+      &quot;status&quot;: &quot;ACTIVE&quot;,
+      &quot;version&quot;: 0,
+      &quot;attributes&quot;: {
+        &quot;qualifiedName&quot;: &quot;data_from_mosaic&quot;,
+        &quot;uri&quot;: &quot;data_from_mosaic&quot;,
+        &quot;name&quot;: &quot;data_from_mosaic&quot;,
+&nbsp;
+        &quot;file_name&quot;: &quot;human_blood_sample.csv&quot;,
+        &quot;parent_dir&quot;: &quot;/sps/bioater/pt6/pliu/mosaic/data/&quot;,
+        &quot;user&quot;:&quot;pliu&quot;,
+        &quot;group&quot;:&quot;bioaster&quot;,
+        &quot;permission&quot;:&quot;650&quot;,
+        &quot;creation_time&quot;:&quot;Fri Nov 16 13:51:21 UTC 2018&quot;,
+        &quot;format&quot;:&quot;csv&quot;,
+        &quot;schema&quot;:[
+          { &quot;col&quot; : &quot;name&quot; ,&quot;data_type&quot; : &quot;string&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;age&quot; ,&quot;data_type&quot; : &quot;int&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;blood_type&quot; ,&quot;data_type&quot; : &quot;string&quot; ,&quot;required&quot; : true },
+          { &quot;col&quot; : &quot;white_cell_num&quot; ,&quot;data_type&quot; : &quot;int&quot; ,&quot;required&quot; : true }
+        ]
+      },
+      &quot;classifications&quot;: [
+        { &quot;typeName&quot;: &quot;Mosaic&quot; }
+      ]
+    }
+]
+}</pre>
+<pre class="code"># I can&#039;t load the above data correctly, 
+curl -u admin:kdHVNXuo1zMjnM32QqAk -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/entity/bulk&quot; -d &quot;@./test2.json&quot;
+
+# error message
+{&quot;errorCode&quot;:&quot;ATLAS-404-00-007&quot;,&quot;errorMessage&quot;:&quot;Invalid instance creation/updation parameters passed : GPFSDataFile.schema[0]={col=name, data_type=string, required=true}: invalid value for type objectid&quot;}</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:7,&quot;range&quot;:&quot;17203-20360&quot;} -->
+<h2 class="sectionedit8" id="api_for_glossary">4. api for Glossary</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. api for Glossary&quot;,&quot;hid&quot;:&quot;api_for_glossary&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:8,&quot;range&quot;:&quot;20361-20393&quot;} -->
+<h3 class="sectionedit9" id="get_information_of_glossary">4.1 get information of Glossary</h3>
+<div class="level3">
+<pre class="code"># get all elements of all Glossaries in the platform which includes categories and terms
+curl -u admin:pwd -X GET -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary&quot;
+
+# get all elements of a Glossary with a given glossary guid,
+curl -u admin:pwd -X GET -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/f96c17d4-13c5-4958-8e76-ffc4c805c97a/detailed&quot;
+
+# The results contains guid, qualifiedName, Name of the glossary, 
+# - a list of terms (only has termGuid and relationGuid)
+# - a list fo termInfo (It contains detailed info of a term, e.g. seeAlso, synonyms, ...)
+# - a list of categories (only has categoryGuid, relationGuid)
+# - a list of categoryInfo (It constains detaild info of a category)
+
+# get all categories of a Glossary with a given glossary guid,
+curl -u admin:pwd -X GET -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/f96c17d4-13c5-4958-8e76-ffc4c805c97a/categories&quot;
+
+# get all terms of a Glossary
+curl -u admin:pwd -X GET -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/f96c17d4-13c5-4958-8e76-ffc4c805c97a/terms&quot;
+
+# get a term description with its guid
+curl -u admin:pwd -X GET -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/term/a610c968-e495-419a-8609-c4deba5790b1&quot;
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 get information of Glossary&quot;,&quot;hid&quot;:&quot;get_information_of_glossary&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:9,&quot;range&quot;:&quot;20394-21955&quot;} -->
+<h3 class="sectionedit10" id="create_terms_and_categories">4.2 Create terms and categories</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="create_a_term">4.2.1 Create a term</h4>
+<div class="level4">
+<pre class="code">curl -u admin:pwd -X POST -H &#039;Content-Type: application/json&#039; -H &#039;Accept: application/json&#039; &quot;http://localhost:21000/api/atlas/v2/glossary/term&quot; -d &quot;@./load_term.json&quot;</pre>
+
+<p>
+The full version of the json template for loading term can be found here <a href="http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST" class="urlextern" title="http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST" rel="nofollow">http://atlas.apache.org/api/v2/resource_GlossaryREST.html#resource_GlossaryREST_createGlossaryTerm_POST</a>.
+Note all attribute names must be in lower case.
+</p>
+<pre class="code file simple_termjson">{
+&quot;anchor&quot;:{
+&quot;displayText&quot; : &quot;Artefacts&quot;,
+&quot;glossaryGuid&quot;:&quot;ee3f05ba-2fe1-4806-a81e-660c777a3403&quot;,
+&quot;relationGuid&quot;:&quot;3be4d5d8-9a98-421c-a3f4-f8279604e50c&quot;},
+&quot;longDescription&quot;:&quot;Pièce ornementale ou de renfort fixée sur une autre (fr)&quot;,
+&quot;name&quot;:&quot;applique&quot;,
+&quot;qualifiedName&quot;:&quot;applique@Artefacts&quot;,
+&quot;shortDescription&quot;:&quot;applique&quot;
+}</pre>
+
+<p>
+The full_HyperThesaurus.json is the full template for hyperThesaurus project. He only needs “see also” and “synonyms” as term relation.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:data_governance:atlas:rest_api&amp;codeblock=15" title="Download Snippet" class="mediafile mf_json">full_HyperThesaurus.json</a></dt>
+<dd><pre class="code file json">{
+  &quot;abbreviation&quot; : &quot;...&quot;,
+  &quot;anchor&quot; : {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;glossaryGuid&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;
+  },
+  &quot;assignedEntities&quot; : [ {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;ACTIVE&quot;,
+    &quot;relationshipAttributes&quot; : {
+      &quot;attributes&quot; : {
+        &quot;property1&quot; : { },
+        &quot;property2&quot; : { }
+      },
+      &quot;typeName&quot; : &quot;...&quot;
+    },
+    &quot;relationshipGuid&quot; : &quot;...&quot;,
+    &quot;relationshipStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipType&quot; : &quot;...&quot;,
+    &quot;guid&quot; : &quot;...&quot;,
+    &quot;typeName&quot; : &quot;...&quot;,
+    &quot;uniqueAttributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    }
+  }, {
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipAttributes&quot; : {
+      &quot;attributes&quot; : {
+        &quot;property1&quot; : { },
+        &quot;property2&quot; : { }
+      },
+      &quot;typeName&quot; : &quot;...&quot;
+    },
+    &quot;relationshipGuid&quot; : &quot;...&quot;,
+    &quot;relationshipStatus&quot; : &quot;DELETED&quot;,
+    &quot;relationshipType&quot; : &quot;...&quot;,
+    &quot;guid&quot; : &quot;...&quot;,
+    &quot;typeName&quot; : &quot;...&quot;,
+    &quot;uniqueAttributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    }
+  } ],
+  &quot;categories&quot; : [ {
+    &quot;categoryGuid&quot; : &quot;...&quot;,
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DEPRECATED&quot;
+  }, {
+    &quot;categoryGuid&quot; : &quot;...&quot;,
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DEPRECATED&quot;
+  } ],
+&nbsp;
+  &quot;seeAlso&quot; : [ {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;ACTIVE&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  }, {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;DRAFT&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  } ],
+  &quot;synonyms&quot; : [ {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;OTHER&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  }, {
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;displayText&quot; : &quot;...&quot;,
+    &quot;expression&quot; : &quot;...&quot;,
+    &quot;relationGuid&quot; : &quot;...&quot;,
+    &quot;source&quot; : &quot;...&quot;,
+    &quot;status&quot; : &quot;ACTIVE&quot;,
+    &quot;steward&quot; : &quot;...&quot;,
+    &quot;termGuid&quot; : &quot;...&quot;
+  } ],
+&nbsp;
+&nbsp;
+&nbsp;
+  &quot;classifications&quot; : [ {
+    &quot;entityGuid&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;DELETED&quot;,
+    &quot;propagate&quot; : true,
+    &quot;removePropagationsOnEntityDelete&quot; : true,
+    &quot;validityPeriods&quot; : [ {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    }, {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    } ],
+    &quot;attributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    },
+    &quot;typeName&quot; : &quot;...&quot;
+  }, {
+    &quot;entityGuid&quot; : &quot;...&quot;,
+    &quot;entityStatus&quot; : &quot;ACTIVE&quot;,
+    &quot;propagate&quot; : true,
+    &quot;removePropagationsOnEntityDelete&quot; : true,
+    &quot;validityPeriods&quot; : [ {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    }, {
+      &quot;endTime&quot; : &quot;...&quot;,
+      &quot;startTime&quot; : &quot;...&quot;,
+      &quot;timeZone&quot; : &quot;...&quot;
+    } ],
+    &quot;attributes&quot; : {
+      &quot;property1&quot; : { },
+      &quot;property2&quot; : { }
+    },
+    &quot;typeName&quot; : &quot;...&quot;
+  } ],
+  &quot;longDescription&quot; : &quot;...&quot;,
+  &quot;name&quot; : &quot;...&quot;,
+  &quot;qualifiedName&quot; : &quot;...&quot;,
+  &quot;shortDescription&quot; : &quot;...&quot;,
+  &quot;guid&quot; : &quot;...&quot;
+}</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 Create terms and categories&quot;,&quot;hid&quot;:&quot;create_terms_and_categories&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:10,&quot;range&quot;:&quot;21956-&quot;} -->

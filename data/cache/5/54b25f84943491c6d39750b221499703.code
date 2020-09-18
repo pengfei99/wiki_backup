@@ -1,0 +1,5 @@
+<span class="co0"># The -f specify which updates you want to do, and -n specify which environment you want to update.</span>
+conda <span class="kw2">env</span> update –f environment.yml –n your_env_name
+&nbsp;
+<span class="co0"># You can also delete your environment, the --all means remove all packages from the environment and is necessary to completely clean the environment.</span>
+conda remove <span class="re5">--name</span> your_env_name <span class="re5">--all</span>

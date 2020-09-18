@@ -1,0 +1,40 @@
+
+<h1 class="sectionedit1" id="create_symbolic_link_in_linux">Create symbolic link in linux</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create symbolic link in linux&quot;,&quot;hid&quot;:&quot;create_symbolic_link_in_linux&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-45&quot;} -->
+<h2 class="sectionedit2" id="create_a_soft_symbolic_link">Create  a soft symbolic link</h2>
+<div class="level2">
+
+<p>
+ln -s source destination
+</p>
+
+<p>
+for example I&#039;m currently at /tmp/.
+</p>
+
+<p>
+I want to creat a symbolic link my_documents of my home /home/pliu/Documents
+</p>
+
+<p>
+I need to do 
+</p>
+<pre class="code">ln -s /home/pliu/Documents my_documents
+
+#this will create my_documents in my current location /tmp
+lrwxrwxrwx.  1 pliu     pliu       21 Feb  2 17:08 my_documents -&gt; /home/pliu/Documents/
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create  a soft symbolic link&quot;,&quot;hid&quot;:&quot;create_a_soft_symbolic_link&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;46-449&quot;} -->
+<h2 class="sectionedit3" id="remove_a_link">Remove a link</h2>
+<div class="level2">
+<pre class="code">unlink my_documents
+
+$this will unlink, you will not see my_documents in /tmp anymore</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Remove a link&quot;,&quot;hid&quot;:&quot;remove_a_link&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;450-&quot;} -->

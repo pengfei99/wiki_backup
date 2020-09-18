@@ -1,0 +1,14 @@
+<span class="kw2">namespace</span> AppBundle\Controller<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">use</span> Sensio\Bundle\FrameworkExtraBundle\Configuration\Route<span class="sy0">;</span>
+&nbsp;
+<span class="kw2">class</span> HelloController
+<span class="br0">&#123;</span>
+    <span class="co4">/**
+     * @Route(&quot;/hello/{name}&quot;, name=&quot;hello&quot;)
+     */</span>
+    <span class="kw2">public</span> <span class="kw2">function</span> indexAction<span class="br0">&#40;</span><span class="re0">$name</span><span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="co2">#…
+</span>    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

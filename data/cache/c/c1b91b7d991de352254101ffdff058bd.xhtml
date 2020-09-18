@@ -1,0 +1,591 @@
+
+<h1 class="sectionedit1" id="lesson04_sql_advanced_information">Lesson04 SQL advanced information</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lesson04 SQL advanced information&quot;,&quot;hid&quot;:&quot;lesson04_sql_advanced_information&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-50&quot;} -->
+<h2 class="sectionedit2" id="alias">4.1 Alias</h2>
+<div class="level2">
+
+<p>
+An alias assigns a table or a column a temporary name in a query. The aliases only exist during the execution of the query.
+</p>
+<pre class="code"># General format
+SELECT column_name/expression AS alias_name FROM table [AS] alias_name
+
+# Example
+# a sql command without alias
+SELECT first_name || &#039; &#039; || last_name FROM customer ORDER BY first_name || &#039; &#039; || last_name;
+# the same command with alias
+SELECT first_name || &#039; &#039; || last_name AS full_name FROM customer AS c ORDER BY full_name;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.1 Alias&quot;,&quot;hid&quot;:&quot;alias&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;51-556&quot;} -->
+<h2 class="sectionedit3" id="data_control_language_dcl">4.2 Data control language (DCL)</h2>
+<div class="level2">
+
+<p>
+DCL commands are used to enforce database security in multiple user database environments. Only Database Administrator&#039;s or owner&#039;s of the database object can provide/remove privileges on a database object.
+</p>
+
+<p>
+There are two commands:
+</p>
+<ul>
+<li class="level1"><div class="li"> Grant → Gives privileges to a user on a database object</div>
+</li>
+<li class="level1"><div class="li"> Revoke → Takes back privileges which are granted to the users</div>
+</li>
+</ul>
+
+<p>
+We have <strong>Roles</strong> in sql, It&#039;s easier to grant or revoke privileges to the users through a role rather than assigning a privilege directly to every user.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2 Data control language (DCL)&quot;,&quot;hid&quot;:&quot;data_control_language_dcl&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;557-1117&quot;} -->
+<h3 class="sectionedit4" id="grant_examples">4.2.1 Grant examples</h3>
+<div class="level3">
+<pre class="code"># General format
+Grant &lt;privilege_name&gt; on &lt;object_name&gt; to {PUBLIC|user_name|role_name} [WITH GRANT OPTION] 
+
+# Example give user jack the select rights on the table employee
+GRANT SELECT ON employee TO jack;</pre>
+
+<p>
+privilege_name could be:
+</p>
+<ul>
+<li class="level1"><div class="li"> select, </div>
+</li>
+<li class="level1"><div class="li"> insert, </div>
+</li>
+<li class="level1"><div class="li"> update, </div>
+</li>
+<li class="level1"><div class="li"> delete, </div>
+</li>
+<li class="level1"><div class="li"> truncate temporary, </div>
+</li>
+<li class="level1"><div class="li"> trigger create, </div>
+</li>
+<li class="level1"><div class="li"> connect, </div>
+</li>
+<li class="level1"><div class="li"> usage, </div>
+</li>
+<li class="level1"><div class="li"> execute,</div>
+</li>
+<li class="level1"><div class="li"> ALL [privileges]</div>
+</li>
+</ul>
+
+<p>
+object_name could be:
+</p>
+<ul>
+<li class="level1"><div class="li"> table,</div>
+</li>
+<li class="level1"><div class="li"> column, </div>
+</li>
+<li class="level1"><div class="li"> view, </div>
+</li>
+<li class="level1"><div class="li"> foreign table,</div>
+</li>
+<li class="level1"><div class="li"> sequence, </div>
+</li>
+<li class="level1"><div class="li"> database, </div>
+</li>
+<li class="level1"><div class="li"> foreign-data wrapper, </div>
+</li>
+<li class="level1"><div class="li"> foreign server, </div>
+</li>
+<li class="level1"><div class="li"> function,</div>
+</li>
+<li class="level1"><div class="li"> procedure, </div>
+</li>
+<li class="level1"><div class="li"> procedural language,</div>
+</li>
+<li class="level1"><div class="li"> schema, </div>
+</li>
+<li class="level1"><div class="li"> tablespace.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2.1 Grant examples&quot;,&quot;hid&quot;:&quot;grant_examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1118-1798&quot;} -->
+<h3 class="sectionedit5" id="revoke_example">4.2.2 Revoke Example</h3>
+<div class="level3">
+<pre class="code">Revoke &lt;privilege_name&gt; on &lt;object_name&gt; from {PUBLIC|user_name|role_name}</pre>
+
+<p>
+For the privilege_name, object_name, see the above Grant Example.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2.2 Revoke Example&quot;,&quot;hid&quot;:&quot;revoke_example&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;1799-1988&quot;} -->
+<h3 class="sectionedit6" id="use_role_to_manage_privilege">4.2.3 Use role to manage privilege</h3>
+<div class="level3">
+
+<p>
+To assign privileges to the user by using a role, we need to follow the following procedure.
+</p>
+<ol>
+<li class="level1"><div class="li"> CREATE ROLE &lt;role_name&gt;</div>
+</li>
+<li class="level1"><div class="li"> GRANT &lt;object_name&gt; TO &lt;role_name&gt;</div>
+</li>
+<li class="level1"><div class="li"> GRANT &lt;role_name&gt; TO &lt;user_name&gt; </div>
+</li>
+</ol>
+
+<p>
+If we want to remove a role, we need to the following procedure.
+</p>
+<ol>
+<li class="level1"><div class="li"> REVOKE &lt;object_name&gt; FROM &lt;role_name&gt;</div>
+</li>
+<li class="level1"><div class="li"> DROP ROLE &lt;role_name&gt;</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.2.3 Use role to manage privilege&quot;,&quot;hid&quot;:&quot;use_role_to_manage_privilege&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;1989-2368&quot;} -->
+<h2 class="sectionedit7" id="transaction_control_language_tcl">4.3 Transaction Control language (TCL)</h2>
+<div class="level2">
+
+<p>
+TCL commands are used to manage transactions in the database. These are used to manage the changes made to the data in a table by DML statements. It also allows statements to be grouped together into logical transactions.
+</p>
+
+<p>
+It has four commands:
+</p>
+<ul>
+<li class="level1"><div class="li"> COMMIT: Perform/Execute a transaction (apply the operations on the objects). All changes made by the transaction become visible to others and are guaranteed to be durable.</div>
+</li>
+<li class="level1"><div class="li"> ROLLBACK: Rollbacks a transaction in case of any error occurs (restore to a previously defined state to recover).</div>
+</li>
+<li class="level1"><div class="li"> SAVEPOINT: Sets a savepoint/restore point within a transaction (selectively discard parts of a transaction).</div>
+</li>
+<li class="level1"><div class="li"> SET TRANSACTION: Specify characteristics for the transaction (isolation level access mode (R/W or R/O), and the deferrable mode).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3 Transaction Control language (TCL)&quot;,&quot;hid&quot;:&quot;transaction_control_language_tcl&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;2369-3207&quot;} -->
+<h2 class="sectionedit8" id="transaction">4.3.1 Transaction</h2>
+<div class="level2">
+
+<p>
+When you execute the following INSERT statement: <em>INSERT INTO accounts(name,balance) VALUES(&#039;Bob&#039;,10000);</em> A new row is inserted into the accounts table immediately. In this case, you did not know when the transaction began and had no chance to intercept the change such as undoing it if something goes wrong.
+</p>
+
+<p>
+A database transaction is a single unit of work which may consist of one or more operations accomplished in a logical order. Each transaction begins with a specific task and ends when all the tasks in the group successfully complete. If any of the tasks fail, the transaction fails. Therefore, a transaction has only two results: <strong>SUCCESS</strong> or <strong>FAILURE</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3.1 Transaction&quot;,&quot;hid&quot;:&quot;transaction&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:8,&quot;range&quot;:&quot;3208-3910&quot;} -->
+<h2 class="sectionedit9" id="commit">4.3.2 COMMIT</h2>
+<div class="level2">
+
+<p>
+<strong>COMMIT</strong> is used to save changes invoked by a transaction to the database. All changes made by the transaction become visible to others and are guaranteed to be durable if a crash occurs. To commit the current transaction and make all changes permanent, we use <strong>COMMIT;</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3.2 COMMIT&quot;,&quot;hid&quot;:&quot;commit&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:9,&quot;range&quot;:&quot;3911-4212&quot;} -->
+<h3 class="sectionedit10" id="example">Example</h3>
+<div class="level3">
+<pre class="code">BEGIN;
+UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+COMMIT;</pre>
+
+<p>
+Note: The sql standard specifies two forms <strong>COMMIT</strong> and <strong>COMMIT WORK</strong>. In some IDE such as pgAdmin, it has autocommit Session Parameter.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:10,&quot;range&quot;:&quot;4213-4463&quot;} -->
+<h2 class="sectionedit11" id="rollback">4.3.2 ROLLBACK</h2>
+<div class="level2">
+
+<p>
+ROLLBACK aborts the current transaction. This command rolls back the current transaction and causes all the updates
+made by the transaction to be discarded. To abort all changes: <strong>ROLLBACK;</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3.2 ROLLBACK&quot;,&quot;hid&quot;:&quot;rollback&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:11,&quot;range&quot;:&quot;4464-4685&quot;} -->
+<h3 class="sectionedit12" id="example1">Example</h3>
+<div class="level3">
+
+<p>
+The following code will not do any changes on the database
+</p>
+<pre class="code">BEGIN;
+UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+ROLLBACK;</pre>
+
+<p>
+Note: The SQL standard specifies two forms ROLLBACK and ROLLBACK WORK.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example1&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:12,&quot;range&quot;:&quot;4686-4927&quot;} -->
+<h2 class="sectionedit13" id="savepoint">4.3.3 SAVEPOINT</h2>
+<div class="level2">
+
+<p>
+SAVEPOINT defines a new savepoint within the current transaction. A savepoint is a special mark inside a transaction that allows all commands that are executed after it was established to be rolled back, restoring the transaction state to what it was at the time of the savepoint. The following code establishes a savepoint:
+</p>
+<pre class="code">BEGIN;
+INSERT INTO table1 VALUES (1);
+SAVEPOINT my_savepoint;
+INSERT INTO table1 VALUES (2);
+ROLLBACK TO SAVEPOINT my_savepoint;
+INSERT INTO table1 VALUES (3);
+RELEASE SAVEPOINT my_savepoint;
+COMMIT;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3.3 SAVEPOINT&quot;,&quot;hid&quot;:&quot;savepoint&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:13,&quot;range&quot;:&quot;4928-5498&quot;} -->
+<h2 class="sectionedit14" id="set_transaction">4.3.4 SET TRANSACTION</h2>
+<div class="level2">
+
+<p>
+SET TRANSACTION set the characteristics of the current transaction. This command sets the characteristics of the current transaction. The available transaction characteristics are:
+</p>
+<ul>
+<li class="level1"><div class="li"> the transaction isolation level</div>
+</li>
+<li class="level1"><div class="li"> the transaction access mode (read/write or read-only)</div>
+</li>
+<li class="level1"><div class="li"> the deferrable mode</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.3.4 SET TRANSACTION&quot;,&quot;hid&quot;:&quot;set_transaction&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;5499-5833&quot;} -->
+<h3 class="sectionedit15" id="set_transaction_isolation_level">SET TRANSACTION ISOLATION LEVEL</h3>
+<div class="level3">
+<pre class="code">SET TRANSACTION ISOLATION LEVEL [SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED];</pre>
+
+<p>
+Note: These commands are defined in the SQL standard, except for the DEFERRABLE transaction mode. In the SQL standard, there is one other transaction characteristic that can be set with these commands: the size of the diagnostics area. This concept is specific to embedded SQL, and therefore is not implemented in standard RDBMS,
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>READ COMMITTED</strong>: A statement can only read rows committed before it began. This is the default.</div>
+</li>
+<li class="level1"><div class="li"> <strong>READ UNCOMMITTED</strong>: Statements can read rows that have been modified by other transactions but not yet committed.</div>
+</li>
+<li class="level1"><div class="li"> <strong>REPEATABLE READ</strong>: All statements of the current transaction can only see rows committed before the first query or data-modification statement was executed in this transaction.</div>
+</li>
+<li class="level1"><div class="li"> <strong>SERIALIZABLE</strong>: 1. Statements cannot read data that has been modified but not yet committed by other transactions. 2. No other transactions can modify data that has been read by the current transaction until the current transaction completes. 3. Other transactions cannot insert new rows with key values that would fall in the range of keys read by any statements in the current transaction until the current transaction completes.</div>
+</li>
+</ul>
+
+<p>
+Note: The transaction isolation level cannot be changed after the first query or data modification
+statement (SELECT, INSERT, DELETE, UPDATE, FETCH, or COPY) of a transaction has been executed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SET TRANSACTION ISOLATION LEVEL&quot;,&quot;hid&quot;:&quot;set_transaction_isolation_level&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;5834-7365&quot;} -->
+<h3 class="sectionedit16" id="set_transaction_access_mode">Set transaction access mode</h3>
+<div class="level3">
+
+<p>
+The transaction access mode determines whether the transaction is <strong>read/write</strong> or <strong>read-only</strong>. Read/write is the default. When a transaction is read-only, the following SQL commands are disallowed: INSERT, UPDATE, DELETE, and COPY FROM if the table they would write to is not a temporary table; all CREATE, ALTER, and DROP commands; COMMENT, GRANT, REVOKE, TRUNCATE; and
+EXPLAIN ANALYZE and EXECUTE if the command they would execute is among those listed. This is a high-level notion of read-only that does not prevent all writes to disk.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Set transaction access mode&quot;,&quot;hid&quot;:&quot;set_transaction_access_mode&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:16,&quot;range&quot;:&quot;7366-7949&quot;} -->
+<h3 class="sectionedit17" id="set_deferrable_mode">Set deferrable mode</h3>
+<div class="level3">
+
+<p>
+The DEFERRABLE transaction property has no effect unless the transaction is also SERIALIZABLE and READ ONLY. When all three of these properties are selected for a transaction, the transaction may block when first acquiring its snapshot, after which it is able to run without the normal overhead of a SERIALIZABLE transaction and without any risk of contributing to or being canceled by a serialization failure. This mode is well suited for long-running reports or backups.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Set deferrable mode&quot;,&quot;hid&quot;:&quot;set_deferrable_mode&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:17,&quot;range&quot;:&quot;7950-8455&quot;} -->
+<h2 class="sectionedit18" id="advanced_types">4.4 Advanced types</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4 Advanced types&quot;,&quot;hid&quot;:&quot;advanced_types&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:18,&quot;range&quot;:&quot;8456-8487&quot;} -->
+<h3 class="sectionedit19" id="integer">4.4.1 Integer</h3>
+<div class="level3">
+
+<p>
+Attempts to store values outside of the allowed range will result in an error.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.1 Integer&quot;,&quot;hid&quot;:&quot;integer&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:19,&quot;range&quot;:&quot;8488-8592&quot;} -->
+<h3 class="sectionedit20" id="numeric_decimal">4.4.2 Numeric/Decimal</h3>
+<div class="level3">
+
+<p>
+The type numeric can store numbers with a very large number of digits. It is especially recommended for storing monetary amounts and other quantities where exactness is required. In addition to ordinary numeric values, the numeric type allows the special value NaN, meaning “not-a-number”. Any operation on NaN yields another NaN.
+</p>
+
+<p>
+When rounding values, the numeric type rounds ties away from zero, while the real and double precision types round ties to the nearest even number (depending on CPU architecture).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.2 Numeric\/Decimal&quot;,&quot;hid&quot;:&quot;numeric_decimal&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:20,&quot;range&quot;:&quot;8593-9142&quot;} -->
+<h3 class="sectionedit21" id="real_double_precision">4.4.3 Real/Double precision</h3>
+<div class="level3">
+
+<p>
+Behaviors depend on the underlying processor, operating system, and compiler. If you require exact storage and calculations (such as for monetary amounts), use the numeric type instead.
+</p>
+
+<p>
+Comparing two floating-point values for equality might not always work as expected. Values that are too large or too small will cause an error:
+</p>
+<ul>
+<li class="level1"><div class="li"> Rounding might take place if the precision of an input number is too high.</div>
+</li>
+<li class="level1"><div class="li"> Numbers too close to zero that are not representable as distinct from zero will cause an underflow error.</div>
+</li>
+</ul>
+
+<p>
+In addition to ordinary numeric values, the floating-point types have several special values:
+</p>
+<ul>
+<li class="level1"><div class="li"> Infinity</div>
+</li>
+<li class="level1"><div class="li"> -Infinity</div>
+</li>
+<li class="level1"><div class="li"> NaN</div>
+</li>
+</ul>
+
+<p>
+IEEE754 specifies that NaN should not compare equal to any other floating point value. PostgreSQL treats NaN values as equal, and greater than all non-NaN values.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.3 Real\/Double precision&quot;,&quot;hid&quot;:&quot;real_double_precision&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:21,&quot;range&quot;:&quot;9143-9996&quot;} -->
+<h3 class="sectionedit22" id="smallserial_serial_bigserial">4.4.4 smallserial, serial, bigserial</h3>
+<div class="level3">
+
+<p>
+A NOT NULL constraint is applied to ensure that a null value cannot be inserted. You would also want to attach a UNIQUE or PRIMARY KEY constraint to prevent duplicate values from being inserted by accident. To insert the next value, this can be done either by excluding the column from the list of columns in the INSERT statement or through the use of the DEFAULT keyword. Another way is to use the SQL-standard identity column feature, described at CREATE TABLE ()
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.4 smallserial, serial, bigserial&quot;,&quot;hid&quot;:&quot;smallserial_serial_bigserial&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:22,&quot;range&quot;:&quot;9997-10511&quot;} -->
+<h3 class="sectionedit23" id="date_time">4.4.5 Date/Time</h3>
+<div class="level3">
+
+<p>
+The doc of date/time of the PostgreSQL <a href="https://www.postgresql.org/docs/current/datatype-datetime.html" class="urlextern" title="https://www.postgresql.org/docs/current/datatype-datetime.html" rel="nofollow">https://www.postgresql.org/docs/current/datatype-datetime.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.5 Date\/Time&quot;,&quot;hid&quot;:&quot;date_time&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:23,&quot;range&quot;:&quot;10512-10641&quot;} -->
+<h3 class="sectionedit24" id="user-defined_data_type_udt">4.4.6 User-defined Data type (UDT)</h3>
+<div class="level3">
+
+<p>
+User-defined Data Type (UDT) is introduced on SQL:1999, then extended on SQL:2011.
+</p>
+
+<p>
+UDT is a data type that derived from an existing data type. You can use UDTs to extend the built-in types already available and create your own customized data types. There are two different types of UDT:
+</p>
+<ul>
+<li class="level1"><div class="li"> Distinct Type: A distinct type is a UDT that shares its internal representation with an existing built-in data type (its “source” type).</div>
+</li>
+<li class="level1"><div class="li"> Structured Type: is a UDT that has a structure that is defined in the database. It contains a sequence of named attributes, each of which has a data type.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="distinct_type_creation_example">Distinct type creation example</h4>
+<div class="level4">
+<pre class="code"># create a distinct type DollarUs with a decimal 9 digit before, and 2 digit after
+CREATE DISTINCT TYPE DollarUS AS DECIMAL (9,2);
+
+# create a table with distinct type
+CREATE TABLE orders (
+OrderID INTEGER PRIMARY KEY,
+CustomerID INTEGER,
+NetAmount DollarUS,
+Tax DollarUS,
+TotalAmount DollarUS,
+);</pre>
+
+</div>
+
+<h4 id="structured_type_creation_example">Structured type creation example</h4>
+<div class="level4">
+<pre class="code"># create a structure type
+CREATE TYPE film_summary AS (
+film_id INT,
+title VARCHAR,
+release_year YEAR
+);
+
+# create a table with structure type
+CREATE TABLE film_box_office (
+film_info film_summary,
+total_income Long,
+);
+
+# Insert a value into the table film_box_office
+INSERT INTO film_box_office(film_info,total_income) VALUES(ROW(1,&#039;Forrest Gump&#039;,1994),9999999);
+
+# Access structure type value
+SELECT film_info.title FORM file_box_office WHERE film_info.release_year&gt;&#039;2000&#039;;
+
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.6 User-defined Data type (UDT)&quot;,&quot;hid&quot;:&quot;user-defined_data_type_udt&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:24,&quot;range&quot;:&quot;10642-12167&quot;} -->
+<h3 class="sectionedit25" id="domain">4.4.7 Domain</h3>
+<div class="level3">
+
+<p>
+A domain is a data type with optional constraints (e.g. NOT NULL, CHECK…)
+</p>
+<ul>
+<li class="level1"><div class="li"> A domain has a unique name within the schema scope.</div>
+</li>
+<li class="level1"><div class="li"> A domain is useful for centralizing management of fields with common constraints.</div>
+</li>
+</ul>
+
+<p>
+For example, some tables might contain the text columns that require a CHECK constraint to ensure values are not null and also do not contain space.
+</p>
+<pre class="code">CREATE DOMAIN contact AS VARCHAR NOT NULL CHECK (value !~ &#039;\s&#039;);
+
+CREATE TABLE mail_list (
+id serial PRIMARY KEY,
+first_name contact,
+last_name contact,
+email VARCHAR NOT NULL
+);</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.7 Domain&quot;,&quot;hid&quot;:&quot;domain&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:25,&quot;range&quot;:&quot;12168-12755&quot;} -->
+<h3 class="sectionedit26" id="sequences">4.4.8 Sequences</h3>
+<div class="level3">
+
+<p>
+A sequence is a special kind of database object that generates a sequence of integers. This involves creating and initializing a new special single-row table. 
+</p>
+<pre class="code"># command for creating a sequence
+CREATE [ TEMPORARY | TEMP ] SEQUENCE [ IF NOT EXISTS ] name
+[ INCREMENT [ BY ] increment ]
+[ MINVALUE minvalue | NO MINVALUE ]
+[ MAXVALUE maxvalue | NO MAXVALUE ]
+[ START [ WITH ] start ]
+
+# command for examining the parameters and the current state of a sequence.
+SELECT * FROM &lt;sequence-name&gt;;
+
+# command for remove a sequence
+DROP SEQUENCE &lt;sequence-name&gt;;</pre>
+
+<p>
+After a sequence is created, functions <strong>nextval</strong>, <strong>currval</strong>, and <strong>setval</strong> are used to operate on the sequence.
+</p>
+
+</div>
+
+<h4 id="postgresql_serial">Postgresql SERIAL</h4>
+<div class="level4">
+
+<p>
+PostgreSQL SERIAL pseudo-type is used to create an auto-increment column in a database table. It is a sequence used as a primary key column.
+</p>
+<pre class="code"># Example of using serial type in a table
+CREATE TABLE test(
+id SERIAL,
+…
+);</pre>
+
+<p>
+When a serial type is used in a table, PostgreSQL will perform the following:
+</p>
+<ul>
+<li class="level1"><div class="li"> Creates a sequence object and set the next value generated by the sequence as the default value for the column.</div>
+</li>
+<li class="level1"><div class="li"> Adds the NOT NULL constraint to the column because a sequence always generates an integer, which is a non-null value.</div>
+</li>
+<li class="level1"><div class="li"> Assigns the owner of the sequence to the id column; as a result, the sequence object is deleted when the id column or table is dropped</div>
+</li>
+</ul>
+
+<p>
+Note: In mysql, we use auto_increment.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.8 Sequences&quot;,&quot;hid&quot;:&quot;sequences&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:26,&quot;range&quot;:&quot;12756-14231&quot;} -->
+<h3 class="sectionedit27" id="null">4.4.9 NULL</h3>
+<div class="level3">
+
+<p>
+NULL is a state not a value. 
+</p>
+<pre class="code"># Because Null is not a data value, but a marker for an absent value, using mathematical operators on Null gives an unknown result
+10 x NULL returns NULL
+&#039;Fish &#039; || NULL || &#039;Chips‘  returns NULL
+SELECT 10 = NULL returns Unknown
+
+# Null can return values if the absent value is not relevant to the outcome of the operation
+SELECT NULL OR TRUE returns TRUE</pre>
+
+<p>
+Common mistakes when dealing with NULL
+</p>
+<pre class="code"># comparison of the i column with Null always returns Unknown, as a result, the following query will always return zero rows.
+SELECT * ZERO FROM t ROWS WHERE i = NULL;
+
+# Rows where num is NULL will not be returned, the following query will not return rows with num is null
+SELECT * FROM sometable WHERE num &lt;&gt; 1;
+
+# Rows where string is NULL will not be returned.
+SELECT * FROM sometable WHERE LENGTH(string) &lt; 20;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.4.9 NULL&quot;,&quot;hid&quot;:&quot;null&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:27,&quot;range&quot;:&quot;14232-15129&quot;} -->
+<h2 class="sectionedit28" id="with_clause">4.5 With Clause</h2>
+<div class="level2">
+
+<p>
+The WITH Clause Provides a way to write auxiliary statements for use in a larger query. It helps in breaking down complicated and large queries into simpler forms, which are easily readable. It can be thought of as defining temporary tables that exist just for one query.
+</p>
+<pre class="code"># The general form looks like:
+With &lt;temporary-tabName&gt;(&lt;column-name&gt;) as (select statement which fills the temporary tables&#039; columns),
+select statement which can use temporary table
+# note that, the temporary table can be used in from or where in the second select statement</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4.5 With Clause&quot;,&quot;hid&quot;:&quot;with_clause&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:28,&quot;range&quot;:&quot;15130-15722&quot;} -->
+<h3 class="sectionedit29" id="with_cluase_example">With cluase example</h3>
+<div class="level3">
+
+<p>
+Suppose we have a table with three columns(e.g. employeeId, name, salary), we want to get all employees whose salary is above average.
+</p>
+<pre class="code"># The following sql query use with the clause to get the average salary first, then do a select by comparing the average salary.
+WITH temporaryTable(averageValue) as
+    (SELECT avg(Salary)
+    from Employee), 
+        SELECT EmployeeID,Name, Salary 
+        FROM Employee, temporaryTable 
+        WHERE Employee.Salary &gt; temporaryTable.averageValue;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;With cluase example&quot;,&quot;hid&quot;:&quot;with_cluase_example&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:29,&quot;range&quot;:&quot;15723-&quot;} -->

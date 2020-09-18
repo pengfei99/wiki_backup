@@ -1,0 +1,3 @@
+ByteBuffer buf <span class="sy0">=</span>ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">48</span><span class="br0">&#41;</span><span class="sy0">;</span>
+buf.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+channel.<span class="me1">receive</span><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>

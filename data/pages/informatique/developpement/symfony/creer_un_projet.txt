@@ -1,0 +1,42 @@
+====== Créer un projet ======
+
+Avant de démarrer un projet, assurez vous de connaitre [[/informatique/developpement/developpement_de_projet|les bonnes pratiques de développement de projet]].
+
+Installer l'outils ''symfony'' :
+
+    $ curl -LsS http://symfony.com/installer > symfony.phar
+    $ mv symfony.phar ~/bin/symfony
+    $ chmod a+x ~/bin/symfony
+
+Installer l'outils ''composer'' qui sert à gérer l'installation des dépendances :
+
+    $ curl -s https://getcomposer.org/installer | php
+    $ mv composer.phar ~/bin/composer
+    $ chmod a+x ~/bin/composer
+
+Créer le squelette de l'application :
+
+    $ symfony new mon_application
+
+Supprimer les tests par défaut.
+
+<code php src/AppBundle/Controller/DefaultController.php>
+<?php
+
+namespace AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class DefaultController extends Controller
+{
+}
+</code> 
+
+Il ne reste plus qu'à définir la licence et le nom du projet dans ''composer.json''.
+
+Si vous voulez versionner votre projet, c'est le moment ou jamais de faire le ''commit'' initial !
+
+    $ git init
+    $ git add .
+    $ git commit -m "Create Symfony project"
+

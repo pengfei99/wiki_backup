@@ -1,0 +1,83 @@
+
+<h1 class="sectionedit1" id="redmine">Redmine</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Redmine" [1-23] -->
+<h2 class="sectionedit2" id="installer">Installer</h2>
+<div class="level2">
+
+<p>
+L&#039;installation de Redmine est assez simple sous Debian : <a href="http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/" class="urlextern" title="http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/"  rel="nofollow">http://privatelittlespace.wordpress.com/2014/05/21/installing-redmine-on-debian-7-5/</a>
+</p>
+<pre class="code">sudo aptitude install redmine redmine-sqlite
+sudo gem install bundler
+cd /usr/share/redmine
+sudo bundle install --without development test
+sudo aptitude install libapache2-mod-passenger
+sudo chown -R www-data:www-data /usr/share/redmine/public/</pre>
+<dl class="code">
+<dt><a href="/_export/code/informatique/logiciels/redmine?codeblock=1" title="Télécharger un extrait" class="mediafile mf_">/etc/apache2/sites-available/redmine</a></dt>
+<dd><pre class="code text">ServerName redmine.paris.bioaster.org
+DocumentRoot /usr/share/redmine/public
+&lt;Directory /usr/share/redmine/public&gt;
+    RailsBaseURI /
+    PassengerResolveSymlinksInDocumentRoot on
+    AllowOverride None
+&lt;/Directory&gt;</pre>
+</dd></dl>
+<pre class="code">sudo a2ensite redmine
+sudo service apache2 reload</pre>
+
+<p>
+Pour la version 2, c&#039;est plus compliqué : <a href="http://www.redmine.org/projects/redmine/wiki/HowTo_Install_Redmine_25x_on_Ubuntu_1404_with_Apache2_Phusion_Passenger_MySQL_and_Subversion" class="urlextern" title="http://www.redmine.org/projects/redmine/wiki/HowTo_Install_Redmine_25x_on_Ubuntu_1404_with_Apache2_Phusion_Passenger_MySQL_and_Subversion"  rel="nofollow">HowTo Install Redmine 2.5.x on Ubuntu 14.04 with Apache2 Phusion Passenger MySQL and Subversion</a>
+</p>
+
+<p>
+Mais ça vaudrait peut-être le coup pour l&#039;auth par certificat : <a href="https://github.com/vitstradal/redmine_remote_user_auth" class="urlextern" title="https://github.com/vitstradal/redmine_remote_user_auth"  rel="nofollow">https://github.com/vitstradal/redmine_remote_user_auth</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installer" [24-1202] -->
+<h2 class="sectionedit3" id="integrer">Intégrer</h2>
+<div class="level2">
+
+<p>
+Redmine n&#039;est pas fait pour s&#039;intégrer à un SSO. Il y a des modules, mais spécifiques à des solutions particulières. <br/>
+
+Il vaut mieux utiliser <a href="http://www.redmine.org/projects/redmine/wiki/FrRedmineLDAP" class="urlextern" title="http://www.redmine.org/projects/redmine/wiki/FrRedmineLDAP"  rel="nofollow">l&#039;intégration à LDAP</a> qui, elle, est assez facile.
+</p>
+
+<p>
+L&#039;intégration de Bazaar à Redmine est faisable, mais la partie authentification dépend d&#039;un vieux module Perl écrit pour SVN. On ne peut donc ni s&#039;authentifier, ni être autorisé ! <br/>
+
+Là encore il faut se rabattre sur <a href="https://httpd.apache.org/docs/2.0/mod/mod_auth_ldap.html" class="urlextern" title="https://httpd.apache.org/docs/2.0/mod/mod_auth_ldap.html"  rel="nofollow">une auth² par LDAP</a>. À essayer !
+</p>
+
+<p>
+Rq/ L&#039;intégration de Git se fait en trafiquant le module `Redmine.pm` utilisé pour SVN. C&#039;est peut-être aussi la solution pour Bazaar…
+</p>
+
+<p>
+Le mieux serait peut-être d&#039;utiliser le GitLab du CC pour tout…
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Intégrer" [1203-2020] -->
+<h2 class="sectionedit4" id="trackers">Trackers</h2>
+<div class="level2">
+
+<p>
+Bugs, Features (User Stories) et Tasks
+</p>
+
+<p>
+Utiliser les tasks comme des sous tickets des 2 autres.
+</p>
+
+<p>
+Pour les catégories, on peut utiliser “site web”, “<abbr title="Application Programming Interface">API</abbr>“… c&#039;est juste pour préfiltrer l&#039;attibution du ticket
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Trackers" [2021-] -->

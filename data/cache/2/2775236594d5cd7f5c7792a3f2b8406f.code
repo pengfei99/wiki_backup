@@ -1,0 +1,3 @@
+<span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php web<span class="sy0">/</span>app_dev.php.bk
+<span class="kw2">git stash</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">git pull</span>
+<span class="kw2">cp</span> web<span class="sy0">/</span>app_dev.php.bk web<span class="sy0">/</span>app_dev.php

@@ -1,0 +1,21 @@
+<span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> writeObject<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+outputstream"><span class="kw3">OutputStream</span></a> outputStream<span class="sy0">=</span><span class="kw2">null</span><span class="sy0">;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedoutputstream"><span class="kw3">BufferedOutputStream</span></a> buf<span class="sy0">=</span><span class="kw2">null</span><span class="sy0">;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+objectoutputstream"><span class="kw3">ObjectOutputStream</span></a> obj<span class="sy0">=</span><span class="kw2">null</span><span class="sy0">;</span>
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+            <span class="co1">//序列化文件輸出流</span>
+            outputStream<span class="sy0">=</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+fileoutputstream"><span class="kw3">FileOutputStream</span></a><span class="br0">&#40;</span><span class="st0">&quot;E:<span class="es0">\\</span>learnproject<span class="es0">\\</span>Iotest<span class="es0">\\</span>lib<span class="es0">\\</span>src<span class="es0">\\</span>main<span class="es0">\\</span>java<span class="es0">\\</span>com<span class="es0">\\</span>myfile.tmp&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="co1">//构建缓冲流</span>
+            buf<span class="sy0">=</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedoutputstream"><span class="kw3">BufferedOutputStream</span></a><span class="br0">&#40;</span>outputStream<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="co1">//构建字符输出的对象流</span>
+            obj<span class="sy0">=</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+objectoutputstream"><span class="kw3">ObjectOutputStream</span></a><span class="br0">&#40;</span>buf<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="co1">//序列化数据写入</span>
+            obj.<span class="me1">writeObject</span><span class="br0">&#40;</span><span class="kw1">new</span> Person<span class="br0">&#40;</span><span class="st0">&quot;A&quot;</span>, <span class="nu0">21</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span><span class="co1">//Person对象</span>
+            <span class="co1">//关闭流</span>
+            obj.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+filenotfoundexception"><span class="kw3">FileNotFoundException</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            e.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>

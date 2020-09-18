@@ -1,0 +1,245 @@
+====== Greps and Regular Expressions ======
+
+A regular expression is a sequence of characters that define a search pattern. Usually, such patterns are used by string searching algorithms for "find" or "find and replace" operations on strings, or for input validation.
+
+===== 1. Regular Expression Overview =====
+
+In this section, I will first outline the basic building blocks of the regular expression, then I will use examples to demonstrate their usage.
+
+  * **. (dot)** - a single character.
+  * **?** - the preceding character matches 0 or 1 times only.
+  * ***** - the preceding character matches 0 or more times.
+  * **+** - the preceding character matches 1 or more times.
+  * **{n}** - the preceding character matches exactly n times.
+  * **{n,m}** - the preceding character matches at least n times and not more than m times.
+  * **[agd]** - the character is one of those included within the square brackets
+  * **[^agd]** - the character is not one of those included within the square brackets.
+  * **[c-f]** - the dash within the square brackets operates as a range. In this case it means either the letters c, d, e or f.
+  * **()** - allows us to group several characters to behave like one.
+  * **|** (pipe symbol) - the logical OR operation.
+  * **^** - matches the beginning of the line.
+  * **$** - matches the end of the line.
+
+==== Examples ====
+
+To illustrate the regular expression, we will use the following document as our data source
+
+<code>
+Fred apples 20
+Susy oranges 5
+Mark watermellons 12
+Robert pears 4
+Terry oranges 9
+Lisa peaches 7
+Susy oranges 12
+Mark grapes 39
+Anne mangoes 7
+Greg pineapples 3
+Oliver rockmellons 2
+Betty limes 14
+</code>
+
+=== EX1. ===
+
+Q: We want to identify any line with two or more vowels in a row. 
+A: To express this pattern, first we need to identify all vowels which is [aeiou], then we want these character to repeat at least two times. {2} means exactly two times, {2,4} means at least 2 times but not more than 4 times, {2,} means at least 2 times but not more than infinity times.
+
+We can test it with the following command
+
+<code>
+# here we need to use egrep instead of grep, because the pattern is complex.
+[pliu@localhost grep_example]$ egrep '[aeiou]{2,}' test.txt
+Robert pears 4
+Lisa peaches 7
+Anne mangoes 7
+Greg pineapples 3
+</code>
+
+=== Ex2 ===
+
+Q: Find all lines with a 2 on it which is not the end of line.
+A: We can reinterpret the question, we want to find 2 followed by at least something. ".*" is not good, because it could be nothing, ".+" is our answer.
+
+<code>
+[pliu@localhost grep_example]$ egrep '2.+' test.txt
+Fred apples 20
+</code>
+
+=== EX3 ===
+
+Q: Find all lines with 2 as the last character
+A: We use $ to indicate the precedent character is the last in the line.
+
+<code>
+[pliu@localhost grep_example]$ grep '2$' test.txt
+Mark watermellons 12
+Susy oranges 12
+Oliver rockmellons 2
+</code>
+
+=== EX4 ===
+
+Q: Find all lines which contain o followed by a character, is, or g followed by at least four characters
+A: We need to use | to express logical or, for o followed by a character, we can use o[a-z], g followed by at least four characters can be expressed as g[a-z]{4,}
+
+<code>
+[pliu@localhost grep_example]$ egrep '(o[a-z])|is|(g[a-z]{4,})' test.txt
+Susy oranges 5
+Mark watermellons 12
+Robert pears 4
+Terry oranges 9
+Lisa peaches 7
+Susy oranges 12
+Mark grapes 39
+Anne mangoes 7
+Oliver rockmellons 2
+</code>
+
+=== EX5 ===
+
+Q: Find all lines starts with A-K
+A: We use ^ to indicates the beginning of the line
+
+<code>
+[pliu@localhost grep_example]$ egrep '^[A-K]' test.txt
+Fred apples 20
+Anne mangoes 7
+Greg pineapples 3
+Betty limes 14
+</code>
+
+===== 2. Grep/EGREP/FGrep =====
+
+==== Grep ====
+The name grep means "general regular expression parser", but you can think of the grep command as a "search" command for Unix and Linux systems. It will search a given set of data and print every line which contains a given pattern.
+
+<code>
+# all grep command follow the below pattern
+grep [command-line-options] <pattern> [search-path]
+
+# some useful options
+-r or -R: is recursive
+-n: show line number
+-w: stands for match the whole word
+-c: show the total number of the matched lines
+-i: case insensitive
+-v: reverse the meaning 
+</code>
+
+The following commands are the grep command examples.
+
+<code>
+search for a string in one or more files
+----------------------------------------
+grep 'fred' /etc/passwd              # search for lines containing 'fred' in /etc/passwd
+grep fred /etc/passwd                # quotes usually not when you don't use regex patterns
+grep null *.scala                    # search multiple files
+
+
+case-insensitive
+----------------
+grep -i joe users.txt                # find joe, Joe, JOe, JOE, etc.
+
+
+regular expressions
+-------------------
+grep '^fred' /etc/passwd             # find 'fred', but only at the start of a line
+grep '[FG]oo' *                      # find Foo or Goo in all files in the current dir
+grep '[0-9][0-9][0-9]' *             # find all lines in all files in the current dir with three numbers in a row
+
+
+display matching filenames, not lines
+-------------------------------------
+grep -l StartInterval *.plist        # show all filenames containing the string 'StartInterval'
+grep -il StartInterval *.plist       # same thing, case-insensitive
+
+
+show matching line numbers
+--------------------------
+grep -n we gettysburg-address.txt    # show line numbers as well as the matching lines
+
+
+lines before and after grep match
+---------------------------------
+grep -B5 "the living" gettysburg-address.txt        # show all matches, and five lines before each match
+grep -A10 "the living" gettysburg-address.txt       # show all matches, and ten lines after each match
+grep -B5 -A5 "the living" gettysburg-address.txt    # five lines before and ten lines after
+
+
+reverse the meaning
+-------------------
+grep -v fred /etc/passwd             # find any line *not* containing 'fred'
+grep -vi fred /etc/passwd            # same thing, case-insensitive
+
+grep in a pipeline
+------------------
+ps auxwww | grep httpd               # all processes containing 'httpd'
+ps auxwww | grep -i java             # all processes containing 'java', ignoring case
+ls -al | grep '^d'                   # list all dirs in the current dir
+
+
+search for multiple patterns
+----------------------------
+egrep 'apple|banana|orange' *                                                         # search for multiple patterns, all files in current dir
+egrep -i 'apple|banana|orange' *                                                      # same thing, case-insensitive
+egrep 'score|nation|liberty|equal' gettysburg-address.txt                             # all lines matching multiple patterns
+locate -i calendar | grep Users | egrep -vi 'twiki|gif|shtml|drupal-7|java|PNG'       # oh yeah
+       (see http://alvinalexander.com/linux-unix/linux-egrep-multiple-regular-expressions-regex)
+
+
+multiple search strings, multiple filename patterns
+---------------------------------------------------
+grep -li "jtable" $(find . -name "*.java,v" -exec grep -li "prevayl" {} \;)           # find all files named "*.java,v" containing both
+                                                                                      # 'prevayl' and 'jtable'
+
+grep + find
+-----------
+find . -type f -exec grep -il 'foo' {} \;     # print all filenames of files under current dir containing 'foo', case-insensitive
+
+
+recursive grep search
+---------------------
+grep -rl 'null' .                             # similar to the previous find command; does a recursive search
+grep -ril 'null' /home/al/sarah /var/www      # search multiple dirs
+egrep -ril 'aja|alvin' .                      # multiple patterns, recursive
+      (see http://alvinalexander.com/linux-unix/recursive-grep-r-searching-egrep-find)
+
+
+grep gzip files
+---------------
+zgrep foo myfile.gz                           # all lines containing the pattern 'foo'
+zgrep 'GET /blog' access_log.gz               # all lines containing 'GET /blog'
+zgrep 'GET /blog' access_log.gz | more        # same thing, case-insensitive
+</code>
+
+==== Egrep, Fgrep ====
+
+Historically egrep and fgrep were provided in separate binaries. On some really old Unix systems you will find that you need to call the separate binaries. But on all modern systems **egrep is 100% equivalent to grep -E**, **fgrep is 100% equivalent to grep -F**. The man page for grep has details about this.
+
+=== Egrep ===
+
+-E switches grep into a special mode so that the expression is evaluated as an ERE (Extended Regular Expression) as opposed to its normal pattern matching. Details of this syntax are on the man page.
+
+-E, --extended-regexp : Interpret PATTERN as an extended regular expression
+
+<code>
+# You want to search using a fancy expression. For example parenthesis () can be used to indicate groups with | used as an OR operator. You could run this search using -E:
+
+grep -E '^no(fork|group)' /etc/group
+#It return lines that start with either "nofork" or "nogroup". Without the -E switch you would have to escape the special characters involved because with normal pattern matching they would just search for that exact pattern;
+
+grep '^no\(fork\|group\)' /etc/group
+</code>
+
+=== Fgrep ===
+
+The -F switch switches grep into a different mode where it accepts a pattern to match, but then splits that pattern up into one search string per line and does an OR search on any of the strings without doing any special pattern matching.
+
+-F, --fixed-strings: Interpret PATTERN as a list of fixed strings, separated by newlines, any of which is to be matched.
+<code>
+# You have a file with a list of say ten Unix usernames in plain text. You want to search the group file on your machine to see if any of the ten users listed are in any special groups:
+
+grep -F -f user_list.txt /etc/group
+The reason the -F switch helps here is that the usernames in your pattern file are interpreted as plain text strings. Dots, for example, would be interpreted as dots rather than wild-cards.
+
+</code>

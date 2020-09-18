@@ -1,0 +1,153 @@
+
+<p>
+Page créée pour les aventureux qui sont sous centOS.
+</p>
+
+<h1 class="sectionedit1" id="paquets_utiles">Paquets utiles</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> sudo yum install bash-completion #active l&#039;autocompletion de certaines commandes typiquement git pu+[TAB] pour afficher git pull et git push</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Paquets utiles" [57-232] -->
+<h1 class="sectionedit2" id="keepassx_2">Keepassx 2</h1>
+<div class="level1">
+
+<p>
+Dans les paquets de centOS seul keepassx 1 est dispo. Il faut donc le compiler soit-même à partir des sources disponibles <a href="https://www.keepassx.org/" class="urlextern" title="https://www.keepassx.org/"  rel="nofollow">ici</a>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Keepassx 2" [233-417] -->
+<h3 class="sectionedit3" id="dependances">Dépendances</h3>
+<div class="level3">
+
+<p>
+Il vous faut le paquet qt-devel que vous pouvez installer comme ceci :
+</p>
+<pre class="code">sudo yum install qt-devel</pre>
+
+<p>
+N&#039;hésitez pas à lire le readme afin d&#039;identifier les autres dépendances !
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Dépendances" [418-630] -->
+<h3 class="sectionedit4" id="procedure">Procédure</h3>
+<div class="level3">
+<!-- EDIT5 PLUGIN_WRAP_START [0-] --><div class="wrap_center wrap_round wrap_important plugin_wrap" style="width: 60%;">
+<p>
+L&#039;installation va crasher si votre dossier d&#039;installation contient des caractères spéciaux. Typiquement si vous êtes dans ~/Téléchargements bougez l&#039;archive ailleurs, dans un répértoire qui ne contient pas d&#039;accents.
+</p>
+</div><!-- EDIT6 PLUGIN_WRAP_END [0-] --><pre class="code">cd MonRepertoireDinstallation
+tar xzvf keepassx-2.0.3.tar.gz 
+mkdir keepassx-2.0.3/build
+cd keepassx-2.0.3/build
+cmake ..
+make &amp;&amp; sudo make install</pre>
+
+</div>
+<!-- EDIT4 SECTION "Procédure" [631-1083] -->
+<h1 class="sectionedit7" id="google_chrome">Google Chrome</h1>
+<div class="level1">
+
+<p>
+<a href="http://www.tecmint.com/install-google-chrome-on-redhat-centos-fedora-linux/" class="urlextern" title="http://www.tecmint.com/install-google-chrome-on-redhat-centos-fedora-linux/"  rel="nofollow">source</a>
+</p>
+<pre class="code shell">    echo &quot;[google-chrome]&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;name=google-chrome&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;enabled=1&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;gpgcheck=1&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    echo &quot;gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub&quot; &gt;&gt; /etc/yum.repos.d/google-chrome.repo
+    yum info google-chrome-stable
+    yum install google-chrome-stable</pre>
+
+</div>
+<!-- EDIT7 SECTION "Google Chrome" [1084-1773] -->
+<h1 class="sectionedit8" id="sublime_texte_3">Sublime texte 3</h1>
+<div class="level1">
+
+<p>
+<a href="http://software-engineer.gatsbylee.com/how-to-install-sublime-3-on-centos-7-rhel-7/" class="urlextern" title="http://software-engineer.gatsbylee.com/how-to-install-sublime-3-on-centos-7-rhel-7/"  rel="nofollow">source</a>
+</p>
+<pre class="code shell">    cd ~/Téléchargements/
+    wget https://download.sublimetext.com/sublime_text_3_build_3114_x64.tar.bz2
+    tar -vxjf sublime_text_3_build_3114_x64.tar.bz2 -C ~/bin
+    ln -s $PWD/sublime_text ~/bin/sublime_text3114
+    #add configuration
+    sudo echo &quot;Exec=/home/cdelestre/bin/sublime_text3114&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Terminal=false&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Icon=/home/cdelestre/bin/sublime_text_3/Icon/48x48/sublime-text.png&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Categories=TextEditor;IDE;Development&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop
+    sudo echo &quot;Add to Programmation subfolder&quot; &gt;&gt; /usr/share/applications/sublime3114.desktop</pre>
+
+</div>
+<!-- EDIT8 SECTION "Sublime texte 3" [1774-2675] -->
+<h1 class="sectionedit9" id="bureau_windows_distant_vinagre">Bureau windows distant (vinagre)</h1>
+<div class="level1">
+
+<p>
+Lancer la commande
+</p>
+<pre class="code shell">    vinagre</pre>
+
+</div>
+
+<h4 id="ere_fenetre">1ere fenêtre</h4>
+<div class="level4">
+
+<p>
+Protocole : RDP
+</p>
+
+<p>
+Hôte : srvtse1.bioaster.local
+</p>
+
+<p>
+nom d&#039;utilisateur : AD (cdelestre dans mon cas)
+</p>
+
+</div>
+
+<h4 id="eme_fenetre">2éme fenêtre</h4>
+<div class="level4">
+
+<p>
+Domaine : BIOASTER
+</p>
+
+</div>
+
+<h4 id="caracteres_speciaux">Caractères spéciaux</h4>
+<div class="level4">
+
+<p>
+ALT + code ascii
+</p>
+
+<p>
+Exemple pour écrire un arobase : ALT + 64
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Bureau windows distant (vinagre)" [2676-3024] -->
+<h1 class="sectionedit10" id="webdav_owncloud">WebDav OwnCloud</h1>
+<div class="level1">
+<pre class="code shell">sudo yum install davfs2
+sudo mount.davfs https://owncloud.bioaster.org/remote.php/webdav/ /media/OwnCloud/</pre>
+
+</div>
+<!-- EDIT10 SECTION "WebDav OwnCloud" [3025-3183] -->
+<h1 class="sectionedit11" id="pb_fuseau_horaire_avec_tb">Pb fuseau horaire avec TB</h1>
+<div class="level1">
+
+<p>
+Cliquer sur les trois barres horizontales (bouton menu) puis <span style='color:black; background-color:lightgrey;'>Préférences</span> puis <span style='color:black; background-color:lightgrey;'>Agenda</span> puis <span style='color:black; background-color:lightgrey;'>Général</span> puis <span style='color:black; background-color:lightgrey;'>Fuseau horaire</span>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Pb fuseau horaire avec TB" [3184-] -->

@@ -1,0 +1,26 @@
+====== Résumé ======
+
+===== Objectifs =====
+
+Le portefeuille de projets internes s’est construit à partir de la nécessité de construire et d’organiser la gestion et l’analyse des données à l’intérieur de BIOASTER. Son objectif est de fournir à BIOASTER les outils nécessaires :
+  * à la récolte les données produites par les études précliniques, les partenaires et des unités technologiques;
+  * à l’intégration des données phénotypiques (précliniques, modèles animaux) et expérimentales (plateaux techniques omiques) à partir d’un système de suivi des échantillons;
+  * à la redistribution des données aux bio-informaticiens et aux statisticiens;
+  * à l’analyse intensive des données par les outils statistiques ou bio-informatiques;
+  * à la redistribution des données et des analyses à l’ensemble des experts au travers d’un LIMS, de TranSMART ou tout autre service d’exploration des données.
+
+
+===== Récapitulatif =====
+
+^Projet ^Description ^Qui travaille dessus en priorité? ^Priorité (1 - 5) ^
+| Automatisation des workflows            | Déploiement de Pegasus comme système de gestion des analyses                          | PV  | 1 |
+| Partage des données                     | Déploiement d'OwnCloud comme solution de récolte et de partage des données projets    | JG  | 1 |
+| Visualisation des études précliniques   | Déploiement d'eTRIKS/Transmart comme système de partages des études précliniques      | NS  | 1 |
+| Suivi des échantillons                  | Développement d'un système de suivi des échantillons internes comme prérequis au LIMS | AC  | 1 |
+| Boîte à outils bio-informatique         | Déploiement des outils d'analyses de données (binaires, Galaxy, etc.)                 | TLC | 1 |
+| Cloud computing                         | Déploiement et développement des outils de cloud computing sous OpenStack             | NS  | 1 |
+| Data warehouse                          | Test et déploiment d'IRODS comme back office de gestion des données                   | TLC | 1 |
+| Récolte des données volumineuses        | Développement d'une solution de récolte des données volumineuse                       | JG  | 1 |
+| Récolte des données précliniques        | Déploiement d'une solution d'electronic Care Report Form                              | PV  | 1 |
+| Tiering des données                     | Développement d'une solution de tiering entre GPFS et HPSS                            | x   | 5 |
+| Visualisation des données de cytométrie | Développement d'une visulaisation de type Voronoï des données de cytométrie à partir d'un package R développé à Pasteur | x   | 3 |

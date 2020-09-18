@@ -1,0 +1,248 @@
+
+<h1 class="sectionedit1" id="partenariat_avec_le_ccin2p3">Partenariat avec le CCIN2P3</h1>
+<div class="level1">
+
+<p>
+Cette page regroupe les infos sur la mise en oeuvre technique du partenariat avec le Centre de Calcul de l&#039;IN2P3. L&#039;hébergement de matériel BIOASTER est inclus dans cette mise en oeuvre, bien qu&#039;il fasse l&#039;objet d&#039;un contrat spécifique et indépendant de la convention. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Partenariat avec le CCIN2P3" [1-318] -->
+<h2 class="sectionedit2" id="resume">Résumé</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Résumé" [319-340] -->
+<h3 class="sectionedit3" id="contexte">Contexte</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="contexte_1">Contexte 1</h4>
+<div class="level4">
+
+<p>
+Au travers de l&#039;Unité Technologique 6, BIOASTER doit concevoir et déployer un système d&#039;information scientifique capable de récolter, stocker, organiser, traiter et visualisé les données et les informations obtenues au cours de ses projets de recherche et développement. 
+</p>
+
+</div>
+
+<h4 id="contexte_2">Contexte 2</h4>
+<div class="level4">
+
+<p>
+La plupart des projets de BIOASTER sont réalisées en partenariat avec une institution académique, une entreprise privée, un projet européen, etc. Chaque projet est confidentiel. Le système de traitement de l&#039;information doit gérer cette confidentialité, par exemple en cloisonnant les données entre projets. Par ailleurs, la traçabilité des données sera nécessaire pour gérer la propriété intellectuelle propre à chaque projet. Il est à noter qu&#039;une partie des données est issue d&#039;étude sur l&#039;homme, ce qui peu impliquer un traitement et un suivi particulier.
+</p>
+
+</div>
+
+<h4 id="contexte_3">Contexte 3</h4>
+<div class="level4">
+
+<p>
+BIOASTER et le CCIN2P3 ont conclut un partenariat afin que BIOASTER puisse mettre en place sont système d&#039;information scientifique grâce à l&#039;expertise et au savoir-faire acquis par le CCIN2P3 dans le domaine de la physique des hautes énergies et de l&#039;astrophysique. Le CCIN2P3 constitue donc le cœur du système de BIOASTER. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Contexte" [341-1610] -->
+<h3 class="sectionedit4" id="objectifs">Objectifs</h3>
+<div class="level3">
+
+<p>
+Idée générale de la gestion des traitements de données au CCIN2P3 :
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>La ferme de calcul :</strong> La ferme est utilisée en priorité, dans la mesure où la configuration des workers correspond au besoin du calcul (RAM, scratch, CPU, système d&#039;exploitation, etc.).</div>
+</li>
+<li class="level1"><div class="li"> <strong>Le cloud :</strong> le cloud est utilisé pour les calculs hors gabarit (c-à-d qui ne peuvent pas être exécutés sur les workers de la ferme) et pour les services bio-informatique non critiques (p.ex. Galaxy). </div>
+</li>
+<li class="level1"><div class="li"> <strong>L&#039;infrastructure de BIOASTER hébergée au CCIN2P3 :</strong> l&#039;infrastructure hébergée est utilisée comme relais pour le transfert et la copie de données entre BIOASTER et le CCIN2P3, pour les services critiques (p.ex. LIMS) et pour les stations de travail virtualisées. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Le stockage GPFS :</strong> le stockage de fichiers sous GPFS centralise les données des projets ou communes à tout BIOASTER. Les fichiers doivent être accessibles depuis la ferme, le cloud ou l&#039;infrastructure hébergée. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Le cluster de base de données Oracle/pgSQL/mySQL :</strong> le cluster de DB centralise les DB SQL des projets ou communes à tout BIOASTER. Les DB doivent être accessibles depuis la ferme, le cloud, l&#039;infrastructure hébergée ou <span class="wrap_warning ">un service distant (à vérifier)</span>.</div>
+</li>
+</ul>
+
+<p>
+Le schéma ci-dessous présente l&#039;architecture que BIOASTER souhaite déployer.
+</p>
+
+<p>
+<a href="/_detail/ut6/pt6/pt6/ccin2p3/schema-archi.png?id=ccin2p3%3Apartenariat" class="media" title="ut6:pt6:pt6:ccin2p3:schema-archi.png"><img src="/_media/ut6/pt6/pt6/ccin2p3/schema-archi.png?w=150&amp;tok=abf443" class="media" alt="" width="150" /></a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Objectifs" [1611-3031] -->
+<h2 class="sectionedit5" id="ressources_disponibles_au_ccin2p3">Ressources disponibles au CCIN2P3</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Ressources disponibles au CCIN2P3" [3032-3078] -->
+<h3 class="sectionedit6" id="stockage_et_calcul">Stockage et Calcul</h3>
+<div class="level3">
+
+<p>
+Demande actuelle : <a href="/_media/ut6/pt6/pt6/ccin2p3/bioaster_-_demandes_de_ressources_q4_2014_-_q2_2015.docx" class="media mediafile mf_docx" title="ut6:pt6:pt6:ccin2p3:bioaster_-_demandes_de_ressources_q4_2014_-_q2_2015.docx (43 KB)">2014/Q4 -&gt; 2015/Q2</a>
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Infrastructure                </th><th class="col1 rightalign">      Volume</th><th class="col2"> Statut </th><th class="col3">Remarque</th>
+	</tr>
+	<tr class="row1">
+		<td class="col0">Stockage de fichier sous GPFS </td><td class="col1 rightalign">      100 To</td><td class="col2 centeralign">  OK    </td><td class="col3">1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes (60 To actuellement disponibles) </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Stockage de fichier sous AFS  </td><td class="col1 rightalign">       50 Go</td><td class="col2 centeralign">  OK    </td><td class="col3">Sauvegarde selon les conditions par défaut du CC </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Base de données PostgreSQL    </td><td class="col1 rightalign">      200 Go</td><td class="col2 centeralign">  OK    </td><td class="col3">1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">Base de données MySQL         </td><td class="col1 rightalign">      200 Go</td><td class="col2 centeralign">  OK    </td><td class="col3">1 sauvegarde par 24 h + conservation de 2 sauvegardes courantes </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">Serveurs de calcul OpenStack  </td><td class="col1"> 2&times;16 coeurs</td><td class="col2 centeralign">  OK    </td><td class="col3">2 serveurs Dell de 16 coeurs physiques + 768 Go de RAM + 9 To de disque local </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">Ferme de caclul               </td><td class="col1"> 4&times;10<sup>6</sup> HS06</td><td class="col2 centeralign">  OK    </td><td class="col3">Workers connectés à AFS et GPFS </td>
+	</tr>
+</table></div>
+<!-- EDIT7 TABLE [3228-4026] -->
+</div>
+<!-- EDIT6 SECTION "Stockage et Calcul" [3079-4027] -->
+<h3 class="sectionedit8" id="services">Services</h3>
+<div class="level3">
+<div class="table sectionedit9"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Service                </th><th class="col1 leftalign">Volume            </th><th class="col2"> Statut </th><th class="col3">Remarque</th>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign">Forge Redmine          </td><td class="col1"> 1 projet BIOASTER</td><td class="col2 centeralign">  OK    </td><td class="col3">Les sous-projets ne sont visibles qu&#039;aux membres de BIOASTER </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Ticket OTRS            </td><td class="col1 rightalign">   1 file BIOASTER</td><td class="col2 centeralign">  OK    </td><td class="col3">Pour les demandes bio-info/calcul/statistique/… </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">Hébergement Web        </td><td class="col1 rightalign">         0 demande</td><td class="col2 centeralign">  -     </td><td class="col3">L&#039;hébergement pur ne correspond pas à notre besoin actuel (développement et test) </td>
+	</tr>
+</table></div>
+<!-- EDIT9 TABLE [4047-4471] -->
+</div>
+<!-- EDIT8 SECTION "Services" [4028-4472] -->
+<h3 class="sectionedit10" id="hebergement">Hébergement</h3>
+<div class="level3">
+
+<p>
+Demande en cours pour héberger du matériel BIOASTER au CCIN2P3.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Hébergement" [4473-4562] -->
+<h2 class="sectionedit11" id="plan_de_developpement_des_services">Plan de développement des services</h2>
+<div class="level2">
+
+<p>
+Le plan initial de développement des services figure en Annexe 5 de la convention avec le CCIN2P3. Il a évolué depuis la signature et à fait l&#039;objet d&#039;échange par courriel
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Plan de développement des services" [4563-4790] -->
+<h3 class="sectionedit12" id="liste_des_services_a_deployer">Liste des services à déployer</h3>
+<div class="level3">
+
+<p>
+BIOASTER prévoit de mettre en place les services suivants :
+</p>
+<div class="table sectionedit13"><table class="inline">
+	<tr class="row0">
+		<th class="col0">Nom </th><th class="col1">Fonction </th><th class="col2">Ressource </th><th class="col3">Statut </th><th class="col4">Remarque </th><th class="col5"> Flavor </th><th class="col6"> (Admin) </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"><a href="http://pegasus.isi.edu/" class="urlextern" title="http://pegasus.isi.edu/"  rel="nofollow">Pegasus</a> </td><td class="col1">Gestionnaire de workflows de calcul/analyse </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + VM <code>htc_bioaster</code> à la demande </td><td class="col3"> Va démarrer</td><td class="col4"> Nécessite le déploiement d&#039;<a href="http://research.cs.wisc.edu/htcondor/" class="urlextern" title="http://research.cs.wisc.edu/htcondor/"  rel="nofollow">HTcondor</a> </td><td class="col5">m1.small </td><td class="col6">PV </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Plateforme web d&#039;accès aux moyens de calcul </td><td class="col1"> Plateforme web d&#039;accès aux moyens de calcul </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 FQN + 1 DB</td><td class="col3"> Va démarrer </td><td class="col4"> Projet de développement interne à BIOASTER </td><td class="col5"> m1.small </td><td class="col6">PV </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">HTCondor </td><td class="col1"> Ordonnanceur</td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 FQN</td><td class="col3"> Va démarrer </td><td class="col4 leftalign">  </td><td class="col5">m1.small </td><td class="col6"> PV </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><a href="http://galaxyproject.org/" class="urlextern" title="http://galaxyproject.org/"  rel="nofollow">Galaxy</a> </td><td class="col1 leftalign">Service d&#039;analyse génomique/transcriptomique (Possilibité de greffer des focntinalités métabolomiqes dans un 1er temps ?)  </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP </td><td class="col3"> A planifier </td><td class="col4"> Possibilité de liée Galaxy à la ferme et à l&#039;AD? Connexion à une DB? </td><td class="col5">m1.medium </td><td class="col6"> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><a href="http://www.sequenceserver.com/" class="urlextern" title="http://www.sequenceserver.com/"  rel="nofollow">SequenceServer</a></td><td class="col1">Simple service de BLAST </td><td class="col2">1 VM <code>bioaster</code> + 1 adresse IP </td><td class="col3"> A planifier </td><td class="col4"> Connexion à une DB? </td><td class="col5">m1.small </td><td class="col6"> </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><a href="http://www.broadinstitute.org/cancer/software/genepattern" class="urlextern" title="http://www.broadinstitute.org/cancer/software/genepattern"  rel="nofollow">Gene Pattern</a> </td><td class="col1">Service d&#039;analyse génomique/transcriptomique </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP </td><td class="col3"> A planifier </td><td class="col4"> Connexion à une DB? </td><td class="col5">m1.medium </td><td class="col6"> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><a href="http://biomaj.genouest.org/" class="urlextern" title="http://biomaj.genouest.org/"  rel="nofollow">BioMAJ</a> </td><td class="col1">Mise à jour automatique des banques de séquences biologiques </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP </td><td class="col3"> En discussion </td><td class="col4"> Connexion à une DB? </td><td class="col5">m1.small </td><td class="col6"> </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><a href="http://transmartfoundation.org/" class="urlextern" title="http://transmartfoundation.org/"  rel="nofollow">tranSMART</a> </td><td class="col1">Visualisation et analyse d&#039;études cliniques </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 DB </td><td class="col3"> A planifier </td><td class="col4"> En discussion avec le projet européen eTRIKS </td><td class="col5"> m1.medium</td><td class="col6"> </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><a href="https://forge.in2p3.fr/projects/lims" class="urlextern" title="https://forge.in2p3.fr/projects/lims"  rel="nofollow">MiniLIMS</a> </td><td class="col1">Suivi des échantillons </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 DB </td><td class="col3 leftalign"> Opérationel  </td><td class="col4"> Développement en cours </td><td class="col5">m1.small </td><td class="col6">AC? </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">Base UTEC3/Inserm </td><td class="col1">Suivi des anti-corps </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 DB </td><td class="col3 leftalign"> En discussion  </td><td class="col4"> En discussion avec Severine </td><td class="col5">m1.small </td><td class="col6">AC? </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0">Ecrf </td><td class="col1">Solution de gestion d&#039;études cliniques </td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP + 1 DB </td><td class="col3 leftalign">  </td><td class="col4 leftalign">  </td><td class="col5">m1.small </td><td class="col6"> PV</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0">Wings</td><td class="col1">WINGS is a semantic workflow system that assists scientists with the design of computational experiments. </td><td class="col2 leftalign"> 1 VM <code>bioaster</code> + 1 adresse IP  </td><td class="col3">A planifier </td><td class="col4"><a href="http://www.wings-workflows.org/" class="urlextern" title="http://www.wings-workflows.org/"  rel="nofollow">http://www.wings-workflows.org/</a> </td><td class="col5"> m1.small</td><td class="col6"> PV</td>
+	</tr>
+	<tr class="row13">
+		<td class="col0">HUBzero</td><td class="col1"> HUBzero  is a powerful, open source software platform for creating dynamic web sites that support scientific research and educational activities </td><td class="col2"> 1 VM bioaster + 1 adresse IP </td><td class="col3 rightalign">  A planifier </td><td class="col4"> <a href="https://hubzero.org/" class="urlextern" title="https://hubzero.org/"  rel="nofollow">https://hubzero.org/</a> </td><td class="col5">m1.small </td><td class="col6"> PV </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0">Tests de migrations Openstack ←→ VMware </td><td class="col1">Tester le repositionnement des services </td><td class="col2"> 2 VM <code>bioaster</code> + 2 adresses IP </td><td class="col3"> Rapidement après le socle </td><td class="col4"> RAS </td><td class="col5">m1.medium </td><td class="col6"> JG </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0">Gestion des meta-données de métabolomique </td><td class="col1">Gestion des meta-données de métabolomique</td><td class="col2"> 1 VM <code>bioaster</code> + 1 BDD </td><td class="col3"> En cours </td><td class="col4"> RAS </td><td class="col5">m1.small </td><td class="col6"> AD </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0"><a href="http://www.matrixscience.com/" class="urlextern" title="http://www.matrixscience.com/"  rel="nofollow">Serveur Mascot</a> </td><td class="col1">Identification de proteins à partir d&#039;empreintes MS</td><td class="col2"> 1 VM <code>bioaster</code> + 1 adresse IP </td><td class="col3"> A plannifier </td><td class="col4"> RAS </td><td class="col5"> m1.large </td><td class="col6"> AD </td>
+	</tr>
+</table></div>
+<!-- EDIT13 TABLE [4896-8017] -->
+<p>
+<strong>Liste des flavors disponibles (nova flavor-list)</strong>
+</p>
+<div class="table sectionedit14"><table class="inline">
+	<tr class="row0">
+		<th class="col0">ID</th><th class="col1"> Name </th><th class="col2"> Memory_<abbr title="Megabyte">MB</abbr> </th><th class="col3"> Disk </th><th class="col4"> Ephemeral </th><th class="col5"> Swap </th><th class="col6"> VCPUs </th><th class="col7"> RXTX_Factor </th><th class="col8"> Is_Public </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign"> 1  </td><td class="col1 leftalign"> m1.tiny         </td><td class="col2 leftalign"> 512       </td><td class="col3 leftalign"> 0    </td><td class="col4 leftalign"> 0         </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 1     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> 2  </td><td class="col1 leftalign"> m1.small        </td><td class="col2 leftalign"> 2048      </td><td class="col3 leftalign"> 10   </td><td class="col4 leftalign"> 20        </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 1     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> 3  </td><td class="col1 leftalign"> m1.medium       </td><td class="col2 leftalign"> 4096      </td><td class="col3 leftalign"> 10   </td><td class="col4 leftalign"> 40        </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 2     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> 4  </td><td class="col1 leftalign"> m1.large        </td><td class="col2 leftalign"> 8192      </td><td class="col3 leftalign"> 10   </td><td class="col4 leftalign"> 80        </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 4     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> 41 </td><td class="col1 leftalign"> m1.small.2      </td><td class="col2 leftalign"> 2048      </td><td class="col3 leftalign"> 20   </td><td class="col4 leftalign"> 20        </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 1     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> 43 </td><td class="col1 leftalign"> m1.medium.2     </td><td class="col2 leftalign"> 4096      </td><td class="col3 leftalign"> 20   </td><td class="col4 leftalign"> 40        </td><td class="col5 leftalign">      </td><td class="col6 leftalign"> 2     </td><td class="col7 leftalign"> 1.0         </td><td class="col8 leftalign"> True      </td>
+	</tr>
+</table></div>
+<!-- EDIT14 TABLE [8073-8738] -->
+</div>
+<!-- EDIT12 SECTION "Liste des services à déployer" [4791-8739] -->
+<h2 class="sectionedit15" id="reunion_ccin2p3-bioaster">Réunion CCIN2P3-BIOASTER</h2>
+<div class="level2">
+
+<p>
+<a href="/reunion/reunion_14.01.2015" class="wikilink1" title="reunion:reunion_14.01.2015">Réunion du 14/01/2015</a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Réunion CCIN2P3-BIOASTER" [8740-] -->

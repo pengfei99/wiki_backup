@@ -1,0 +1,461 @@
+
+<h1 class="sectionedit1" id="use_big_data_techs_to_analyze_taobao_sales">Use Big data techs to analyze taobao sales</h1>
+<div class="level1">
+
+<p>
+The data set that I use can be downloaded from here <a href="https://pan.baidu.com/s/1cs02Nc" class="urlextern" title="https://pan.baidu.com/s/1cs02Nc" rel="nofollow">https://pan.baidu.com/s/1cs02Nc</a> .
+</p>
+
+<p>
+In the data_format.zip, we have 3 files:
+</p>
+<ul>
+<li class="level1"><div class="li"> user_log.csv → it logs the actions of users.</div>
+</li>
+<li class="level1"><div class="li"> train.csv → fidel client (client use taobao many times) training data set</div>
+</li>
+<li class="level1"><div class="li"> test.csv → fidel client (client use taobao many times) testing data set</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Use Big data techs to analyze taobao sales" [1-393] -->
+<h2 class="sectionedit2" id="data_set_description">Data set description</h2>
+<div class="level2">
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:real_world_example:taobao_sales&amp;codeblock=0" title="Download Snippet" class="mediafile mf_csv">user_log.csv</a></dt>
+<dd><pre class="code file csv">user_id,item_id,cat_id,merchant_id,brand_id,month,day,action,age_range,gender,province
+328862,323294,833,2882,2661,08,29,0,0,1,GuangDong
+328862,844400,1271,2882,2661,08,29,0,1,1,Xian
+328862,575153,1271,2882,2661,08,29,0,2,1,JiangSu
+328862,996875,1271,2882,2661,08,29,0,1,1,LiaoNing
+328862,1086186,1271,1253,1049,08,29,0,0,2,Taiwan</pre>
+</dd></dl>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:real_world_example:taobao_sales&amp;codeblock=1" title="Download Snippet" class="mediafile mf_csv">train.csv</a></dt>
+<dd><pre class="code file csv">user_id,age_range,gender,merchant_id,label
+34176,6,0,944,-1
+34176,6,0,412,-1
+34176,6,0,1945,-1
+34176,6,0,4752,-1
+34176,6,0,643,-1
+34176,6,0,2828,-1</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT2 SECTION "Data set description" [394-969] -->
+<h3 class="sectionedit3" id="user_logcsv">User_log.csv</h3>
+<div class="level3">
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">user_id</th><th class="col1">item_id</th><th class="col2">cat_id</th><th class="col3">merchant_id</th><th class="col4">brand_id</th><th class="col5">month</th><th class="col6">day</th><th class="col7">action</th><th class="col8">age_range</th><th class="col9">gender</th><th class="col10">province</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Id of buyer</td><td class="col1">Id of product</td><td class="col2">Id of product categories</td><td class="col3">Id of seller </td><td class="col4">Id of brand</td><td class="col5">transaction date in month</td><td class="col6">transaction date in day</td><td class="col7">Behavior of buyer, 0 means click on link, 1 means add to shopping chart, 2 means buy product, 3 means keep an eye on product</td><td class="col8">Age range: 1→ [0,18], 2→ [18,24], 3→ [25,29], 4→[30,34], 5→[35,39], 6→[40,49], 7→[50,200], 8→[Null]</td><td class="col9">Gender of the buyer 0→femal, 1→male, 2→NULL</td><td class="col10">Province Name of the buyer </td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [994-1519] -->
+</div>
+<!-- EDIT3 SECTION "User_log.csv" [970-1519] -->
+<h3 class="sectionedit5" id="traincsv_and_testcsv">train.csv and test.csv</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">user_id</th><th class="col1">age_range</th><th class="col2">gender</th><th class="col3">merchant_id</th><th class="col4">label</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Id of buyer</td><td class="col1">Age range: 1→ [0,18], 2→ [18,24], 3→ [25,29], 4→[30,34], 5→[35,39], 6→[40,49], 7→[50,200], 8→[Null]</td><td class="col2">Gender of the buyer 0→femal, 1→male, 2→NULL</td><td class="col3">Id of seller </td><td class="col4"> This label means will this client use taobao again. 1→yes, 0→No, -1→not considered, Null→only exists in test.csv</td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [1553-1900] -->
+</div>
+<!-- EDIT5 SECTION "train.csv and test.csv" [1520-1902] -->
+<h2 class="sectionedit7" id="import_data_to_hive">Import data to hive</h2>
+<div class="level2">
+
+<p>
+To make this tutorial, we will only load the small_user_log.csv into hive.
+</p>
+
+<p>
+Follow this link if you don&#039;t have hive installed. <a href="/doku.php?id=employes:pengfei.liu:big_data:hive:install_config" class="wikilink1" title="employes:pengfei.liu:big_data:hive:install_config">Install and configure Hive</a>
+</p>
+
+<p>
+First tload the data into hdfs
+</p>
+<pre class="code">#load from local file system to hdfs 
+hdfs dfs -put small_user_log.csv /test_data/
+#check the file
+[hadoop@localhost taobao_data_set]$ hdfs dfs -ls /test_data
+-rw-r--r--   1 hadoop supergroup     473395 2018-02-14 14:14 /test_data/small_user_log.csv</pre>
+
+<p>
+In hive, we create a external table. Please see this, the difference between internal and external hive table.<a href="/doku.php?id=employes:pengfei.liu:big_data:hive:internal_external_table" class="wikilink1" title="employes:pengfei.liu:big_data:hive:internal_external_table">Hive Internal and External tables</a>
+</p>
+<pre class="code">hive&gt;  CREATE EXTERNAL TABLE dbtaobao.user_log(user_id INT,item_id INT,cat_id INT,merchant_id INT,brand_id INT,month STRING,day STRING,action INT,age_range INT,gender INT,province STRING) COMMENT &#039;store taobao user action log in table dbtaobao.user_log!&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; STORED AS TEXTFILE LOCATION &#039;/dbtaobao/dataset/user_log&#039;;</pre>
+
+<p>
+Test the table content 
+</p>
+<pre class="code">hive&gt; select * from user_log limit 10;
+OK
+328862	406349	1280	2700	5476	11	11	0	0	1	ShiChuan
+328862	406349	1280	2700	5476	11	11	0	7	1	ChongQing
+328862	807126	1181	1963	6109	11	11	0	1	0	ShangHai
+328862	406349	1280	2700	5476	11	11	2	6	0	Taiwan
+328862	406349	1280	2700	5476	11	11	0	6	2	GanShu
+</pre>
+
+<p>
+Get column name and type list
+</p>
+<pre class="code">hive&gt; desc user_log;
+OK
+user_id             	int                 	                    
+item_id             	int                 	                    
+cat_id              	int                 	                    
+merchant_id         	int                 	                    
+brand_id            	int                 	                    
+month               	string              	                    
+day                 	string              	                    
+action              	int                 	                    
+age_range           	int                 	                    
+gender              	int                 	                    
+province            	string              	                    
+Time taken: 0.142 seconds, Fetched: 11 row(s)</pre>
+
+<p>
+Check table information with details;
+</p>
+<pre class="code">hive&gt; show create table user_log;
+OK
+CREATE EXTERNAL TABLE `user_log`(
+  `user_id` int, 
+  `item_id` int, 
+  `cat_id` int, 
+  `merchant_id` int, 
+  `brand_id` int, 
+  `month` string, 
+  `day` string, 
+  `action` int, 
+  `age_range` int, 
+  `gender` int, 
+  `province` string)
+COMMENT &#039;store taobao user action log in table dbtaobao.user_log!&#039;
+ROW FORMAT SERDE 
+  &#039;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#039; 
+WITH SERDEPROPERTIES ( 
+  &#039;field.delim&#039;=&#039;,&#039;, 
+  &#039;serialization.format&#039;=&#039;,&#039;) 
+STORED AS INPUTFORMAT 
+  &#039;org.apache.hadoop.mapred.TextInputFormat&#039; 
+OUTPUTFORMAT 
+  &#039;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#039;
+LOCATION
+  &#039;hdfs://localhost:9000/dbtaobao/dataset/user_log&#039;
+TBLPROPERTIES (
+  &#039;transient_lastDdlTime&#039;=&#039;1518623485&#039;)
+Time taken: 0.242 seconds, Fetched: 26 row(s)
+</pre>
+
+<p>
+As hive runs on top of map reduce, all the sql job will be transform to mapreduce job
+</p>
+<pre class="code"># count all the lines in table user_log
+hive&gt; select count(*) from user_log;
+
+# count distinct user 
+hive&gt; select count(distinct user_id) from user_log;
+
+# get the province which has most users
+hive&gt; select count(user_id) as num, province from user_log group by province order by num desc limit 10;
+
+
+# eliminate duplicate user orders
+# we could say two user orders are the same, if the following attributes (user_id, item_id, cat_id, merchant_id, brand_id, month, day, action) of two orders are the same
+# the following sql query distinc orders
+hive&gt; select count(*) from (select user_id,item_id,cat_id,merchant_id,brand_id,month,day,action from user_log group by user_id,item_id,cat_id,merchant_id,brand_id,month,day,action having count(*)=1)a;
+
+#check how many people buy an item at 11/11.
+hive&gt; select count(distinct user_id) from user_log where action=&#039;2&#039;;
+
+# get the female buyer numbers
+hive&gt; select count(distinct user_id) from user_log where action=&#039;2&#039; and gender=0;
+
+# get the product numbers which male buyer bought
+hive&gt; select count(*) from user_log where gender=1 and action=&#039;2&#039;;
+
+# get user id of users which have bought more than 5 products
+hive&gt; select user_id from user_log where action=&#039;2&#039; group by user_id having count(action=&#039;2&#039;)&gt;5;
+
+# get the top 5 buyer
+hive&gt; select user_id, count(action=&#039;2&#039;) as buy_num from user_log where action=&#039;2&#039; group by user_id order by buy_num desc limit 5;
+
+
+</pre>
+
+<p>
+WE can also create new table based on the existing table
+</p>
+<pre class="code"># create a table with 2 columns
+hive&gt; create table scan(brand_id INT,scan INT) COMMENT &#039;This is the search of bigdatataobao&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;\t&#039; STORED AS TEXTFILE;
+OK
+Time taken: 0.272 seconds
+
+# load data of brand visite number
+hive&gt; insert overwrite table scan select brand_id,count(action) from user_log where action=&#039;2&#039; group by brand_id;
+
+# check new table
+hive&gt; select * from scan limit 5;
+OK
+NULL	8
+60	3
+69	1
+82	11
+99	3
+</pre>
+
+</div>
+<!-- EDIT7 SECTION "Import data to hive" [1903-7069] -->
+<h2 class="sectionedit8" id="export_data_from_hive_to_sql_database">Export data from hive to sql database</h2>
+<div class="level2">
+
+<p>
+In this tutorial, we will export a hive table into a postgreql database. We will use login pliu to connect to the postgresql server.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Export data from hive to sql database" [7070-7254] -->
+<h3 class="sectionedit9" id="prepare_postgreql">Prepare postgreql</h3>
+<div class="level3">
+<pre class="code">#run the postgresql server and login as postgres (root)
+
+postgres=# create database dbtaobao;
+CREATE DATABASE
+postgres=# grant all privileges on database dbtaobao to pliu;
+GRANT
+
+[pliu@localhost tmp]$ psql -h 127.0.0.1 -p 5432 -U pliu -d dbtaobao
+Password for user pliu: 
+psql (9.5.11)
+Type &quot;help&quot; for help.
+
+dbtaobao=&gt; CREATE TABLE user_log (user_id varchar(20),item_id varchar(20),cat_id varchar(20),merchant_id varchar(20),brand_id varchar(20), month varchar(6),day varchar(6),action varchar(6),age_range varchar(6),gender varchar(6),province varchar(10));
+
+dbtaobao=&gt; \dt
+         List of relations
+ Schema |   Name   | Type  | Owner 
+--------+----------+-------+-------
+ public | user_log | table | pliu
+(1 row)
+</pre>
+
+</div>
+<!-- EDIT9 SECTION "Prepare postgreql" [7255-8017] -->
+<h3 class="sectionedit10" id="prepare_hive_table_for_export">Prepare hive table for export</h3>
+<div class="level3">
+
+<p>
+Sqoop does not support import export of hive external tables. So we need to create an interal hive table to make sqoop export works.
+</p>
+<pre class="code"># create a hive internal table
+hive&gt; create table dbtaobao.inner_user_log(user_id INT,item_id INT,cat_id INT,merchant_id INT,brand_id INT,month STRING,day STRING,action INT,age_range INT,gender INT,province STRING) COMMENT &#039;Now create inner table inner_user_log&#039; ROW FORMAT DELIMITED FIELDS TERMINATED BY &#039;,&#039; STORED AS TEXTFILE;
+
+# Use sqoop to export hive to 
+cd /opt/sqoop/sqoop-1.4.6/bin
+./sqoop export --connect jdbc:postgresql://127.0.0.1:5432/dbtaobao --username pliu --password changeMe --table user_log --export-dir &#039;/user/hive/warehouse/dbtaobao.db/inner_user_log&#039; --fields-terminated-by &#039;,&#039;;
+
+# last two lines of the output, we export 10000 records to postgreql
+18/02/19 11:44:26 INFO mapreduce.ExportJobBase: Transferred 479.0508 KB in 52.9949 seconds (9.0396 KB/sec)
+18/02/19 11:44:26 INFO mapreduce.ExportJobBase: Exported 10000 records.</pre>
+
+<p>
+Sqoop command explained :
+</p>
+<pre class="code"># postgresql part: 
+# connect to database dbtaobao table user_log with user name pliu and password
+--connect jdbc:postgresql://127.0.0.1:5432/dbtaobao --username pliu --password changeMe --table user_log 
+
+# hive part:
+# give the path of hive table file
+--export-dir &#039;/user/hive/warehouse/dbtaobao.db/inner_user_log&#039; 
+
+# hive table file separator
+--fields-terminated-by &#039;,&#039;</pre>
+
+</div>
+<!-- EDIT10 SECTION "Prepare hive table for export" [8018-9477] -->
+<h2 class="sectionedit11" id="use_spark_to_analyze_this_data_set">Use spark to analyze this data set</h2>
+<div class="level2">
+
+<p>
+We will redo the data analytics which we do in hive, but this time we do it in spark.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Use spark to analyze this data set" [9478-9613] -->
+<h3 class="sectionedit12" id="import_data_to_spark">Import data to spark</h3>
+<div class="level3">
+
+<p>
+As we export the data into postgresql server, in the following example. we will import data from the csv file and postgresql server.
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:real_world_example:taobao_sales&amp;codeblock=12" title="Download Snippet" class="mediafile mf_xml">pom.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;properties<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;spark.version<span class="re2">&gt;</span></span></span>2.2.0<span class="sc3"><span class="re1">&lt;/spark.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;scala.version<span class="re2">&gt;</span></span></span>2.11<span class="sc3"><span class="re1">&lt;/scala.version<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;project.build.sourceEncoding<span class="re2">&gt;</span></span></span>UTF-8<span class="sc3"><span class="re1">&lt;/project.build.sourceEncoding<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/properties<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependencies<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-core_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.apache.spark<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>spark-sql_${scala.version}<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>${spark.version}<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;dependency<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;groupId<span class="re2">&gt;</span></span></span>org.postgresql<span class="sc3"><span class="re1">&lt;/groupId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;artifactId<span class="re2">&gt;</span></span></span>postgresql<span class="sc3"><span class="re1">&lt;/artifactId<span class="re2">&gt;</span></span></span>
+            <span class="sc3"><span class="re1">&lt;version<span class="re2">&gt;</span></span></span>9.4-1200-jdbc41<span class="sc3"><span class="re1">&lt;/version<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependency<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/dependencies<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+The following scala script read data from csv or postgresql db and transform it into a dataframe, then write dataframe in a parquet file.   
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:real_world_example:taobao_sales&amp;codeblock=13" title="Download Snippet" class="mediafile mf_scala">TaobaoSales.scala</a></dt>
+<dd><pre class="code file scala"><a href="http://scala-lang.org"><span class="kw1">package</span></a> org.<span class="me1">pengfei</span>.<span class="me1">spark</span>.<span class="me1">application</span>.<span class="me1">example</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">types</span>.<span class="br0">&#123;</span>IntegerType, StringType, StructField, StructType<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="br0">&#123;</span>DataFrame, SparkSession<span class="br0">&#125;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> TaobaoSales <span class="br0">&#123;</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span>Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span><span class="br0">&#123;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+  Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.
+    <span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local&quot;</span><span class="br0">&#41;</span>.
+    <span class="me1">appName</span><span class="br0">&#40;</span><span class="st0">&quot;TaobaoSales&quot;</span><span class="br0">&#41;</span>.
+    <span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span>getDFFromDB<span class="br0">&#40;</span>spark<span class="br0">&#41;</span>
+  <span class="coMULTI">/*val filePath=&quot;file:///DATA/data_set/spark/taobao_data_set/small_user_log.csv&quot;
+  val userLogDF=getDFFromCSV(spark,filePath)*/</span>
+  <span class="co1">//userLogDF.show(5)</span>
+  userLogDF.<span class="me1">write</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;parquet&quot;</span><span class="br0">&#41;</span>.<span class="me1">save</span><span class="br0">&#40;</span><span class="st0">&quot;file:///tmp/taobao.parquet&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getDFFromDB<span class="br0">&#40;</span>spark <span class="sy0">:</span> SparkSession<span class="br0">&#41;</span><span class="sy0">:</span> DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span>spark.<span class="me1">read</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;jdbc&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;url&quot;</span>, <span class="st0">&quot;jdbc:postgresql://127.0.0.1:5432/dbtaobao&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;driver&quot;</span>,<span class="st0">&quot;org.postgresql.Driver&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;dbtable&quot;</span>, <span class="st0">&quot;user_log&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;user&quot;</span>, <span class="st0">&quot;pliu&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;password&quot;</span>, <span class="st0">&quot;Liua1983&quot;</span><span class="br0">&#41;</span>.<span class="me1">load</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> userLogDF
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> getDFFromCSV<span class="br0">&#40;</span>spark<span class="sy0">:</span>SparkSession,filePath<span class="sy0">:</span>String<span class="br0">&#41;</span><span class="sy0">:</span>DataFrame <span class="sy0">=</span><span class="br0">&#123;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogSchema <span class="sy0">=</span> StructType<span class="br0">&#40;</span>Array<span class="br0">&#40;</span>
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;user_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;item_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;cat_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;merchant_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;brand_id&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;month&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;day&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;action&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;age_range&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;gender&quot;</span>,IntegerType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>,
+      StructField<span class="br0">&#40;</span><span class="st0">&quot;province&quot;</span>,StringType,<a href="http://scala-lang.org"><span class="kw1">true</span></a><span class="br0">&#41;</span>
+    <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> userLogDF<span class="sy0">=</span> spark.<span class="me1">read</span>.<span class="me1">format</span><span class="br0">&#40;</span><span class="st0">&quot;csv&quot;</span><span class="br0">&#41;</span>.<span class="me1">option</span><span class="br0">&#40;</span><span class="st0">&quot;header&quot;</span>,<span class="st0">&quot;false&quot;</span><span class="br0">&#41;</span>.<span class="me1">schema</span><span class="br0">&#40;</span>userLogSchema<span class="br0">&#41;</span>.<span class="me1">load</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">return</span></a> userLogDF
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+For analytic, we use spark shell to read the parquet file
+</p>
+<pre class="code">scala&gt; val df=spark.read.parquet(&quot;file:///tmp/taobao.parquet&quot;)
+df: org.apache.spark.sql.DataFrame = [user_id: string, item_id: string ... 9 more fields]
+
+scala&gt; df.show(5)
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+
+|user_id|item_id|cat_id|merchant_id|brand_id|month|day|action|age_range|gender|province|
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+
+| 188983| 678722|     4|        231|    6065|   11| 11|     0|        6|     0|      四川|
+| 188983| 980237|  1023|       1595|    5800|   11| 11|     0|        0|     0|      河南|
+| 188983|1024557|   868|        184|    1360|   11| 11|     0|        2|     2|      江苏|
+| 188983|   3195|   868|       2786|    1360|   11| 11|     0|        7|     0|      四川|
+| 188983| 280132|   407|       1595|    5800|   11| 11|     0|        3|     2|      澳门|
++-------+-------+------+-----------+--------+-----+---+------+---------+------+--------+</pre>
+
+<p>
+In the following script, we redo all the analytic which 
+</p>
+<pre class="code"># count the number of all records 
+df.count
+
+# count distinct user 
+scala&gt; df.select($&quot;user_id&quot;).distinct.count
+res5: Long = 358
+
+# get the province which has most users
+scala&gt; df.groupBy($&quot;province&quot;).count().sort(desc(&quot;count&quot;))show(5)
+
+
+# eliminate duplicate user orders
+# we could say two user orders are the same, if the following attributes (user_id, item_id, cat_id, 
+# merchant_id, brand_id, month, day, action) of two orders are the same
+# the following sql query distinc orders
+
+hive&gt; select count(*) from (select user_id,item_id,cat_id,merchant_id,brand_id,month,day,action from user_log group by user_id,item_id,cat_id,merchant_id,brand_id,month,day,action having count(*)=1)a;
+
+#check how many people buy an item at 11/11.
+scala&gt; df.filter($&quot;action&quot;===&quot;2&quot;).select($&quot;user_id&quot;).distinct().count
+res11: Long = 358   
+
+# get the female buyer numbers
+scala&gt; df.filter($&quot;action&quot;===&quot;2&quot;&amp;&amp; $&quot;gender&quot;===2).select($&quot;user_id&quot;).distinct().count
+res12: Long = 228 
+
+# get the product numbers which male buyer bought
+scala&gt; df.filter($&quot;action&quot;===&quot;2&quot;&amp;&amp; $&quot;gender&quot;===1).select($&quot;item_id&quot;).count
+res13: Long = 401
+
+# get user id of users which have bought more than 5 products
+scala&gt; df.filter($&quot;action&quot;===&quot;2&quot;).groupBy($&quot;user_id&quot;).agg(count($&quot;action&quot;) as &quot;num&quot;).where($&quot;num&quot; &gt; 5).sort(desc(&quot;num&quot;))
++-------+---+                                                                   
+|user_id|num|
++-------+---+
+| 409280| 20|
+| 366342| 17|
+|  70816| 16|
+| 370679| 16|
+| 310632| 15|
++-------+---+
+
+
+# get the top 5 buyer, this request is similar to the privious one, we just remove the where and add show top 5
+scala&gt; df.filter($&quot;action&quot;===&quot;2&quot;).groupBy($&quot;user_id&quot;).agg(count($&quot;action&quot;) as &quot;num&quot;).sort(desc(&quot;num&quot;)).show(5)</pre>
+
+</div>
+<!-- EDIT12 SECTION "Import data to spark" [9614-] -->

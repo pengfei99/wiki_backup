@@ -1,0 +1,46 @@
+====== Linear regression ======
+
+===== What is linear regression =====
+
+Linear regression is a basic and commonly used type of predictive analysis.  The overall idea of regression is to examine two things: (1) does a set of predictor variables do a good job in predicting an outcome (dependent) variable?  (2) Which variables in particular are significant predictors of the outcome variable, and in what way do they indicated by the magnitude and sign of the beta estimates impact the outcome variable?  These regression estimates are used to explain the relationship between one dependent variable and one or more independent variables.  
+
+
+
+==== What is simple linear regression ====
+
+Simple linear regression is a statistical method that allows us to summarize and study relationships between two continuous (quantitative) variables:
+
+It can be defined by the formula y = c + b*x, where y = estimated **dependent variable** score, c = constant, b = regression coefficient, and x = score on the **independent variable**. 
+
+We often call x as the predictor, explanatory, or independent variable. And y as the response, outcome, or dependent variable. Because the other terms are used less frequently today, we'll use the **"predictor"** and **"response"** terms to refer to the variables encountered in this Lesson. 
+
+Simple linear regression gets its adjective "simple," because it concerns the study of only one predictor variable. In contrast, multiple linear regression, which we study later in this course, gets its adjective "multiple," because it concerns the study of two or more predictor variables.
+
+==== Types of relationships ====
+
+We can divide relationships types into two :
+  * Deterministic (or functional) relationships. 
+  * Statistical relationships.
+
+If the value of y can be exactly calculated by c+b*x, we say the relation between x and y is **deterministic**. In a graph, the (x, y) data points fall directly on a line.For example, the relationship between degrees Fahrenheit and degrees Celsius is known to be: Fahr = 9/5*Cels+32. As a result, we can determine the exact value of Fahr, if I have the value of Cels.
+
+If the value of y can't be calculated perfectly, we say the relation is statistical. For example, the height and weight of a man, as height increases, you'd expect weight to increase, but not perfectly. In a graph, the (x, y) data points will never fall on a line, they will be around the line y=c+b*x.
+
+==== The best model(fitting line) ====
+
+As in the simple linear regression, there are only two variables, so the regression model can be represented as a single line. By giving a set of variable x1,x2,..., if the model can output y_predicted and the difference between y_predicted and y_real (we could call this value as mean absolute error) is smallest compare to other model(line). We could say this model is the best model or best fitting line.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

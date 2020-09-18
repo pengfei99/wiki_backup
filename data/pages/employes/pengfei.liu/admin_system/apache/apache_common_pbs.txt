@@ -1,0 +1,43 @@
+====== Apache2 common problems ======
+
+===== No space left on device AH00023: Couldn't create the ssl-cache mutex. =====
+
+Apache is basically saying “I want to start, but I need to write some things down before I can start, and I have nowhere to write them!” If this happens to you, check these items in order:
+
+1. Check your disk space
+
+2. Review filesystem quotas
+If your filesystem uses quotas, you might be reaching a quota limit rather than a disk space limit. Use repquota / to review your quotas on the root partition. If you’re at the limit, raise your quota or clear up some disk space. Apache logs are usually the culprit in these situations.
+
+3. Clear out your active semaphores
+Semaphores? What the heck is a semaphore? Well, it’s actually an apparatus for conveying information by means of visual signals. But, when it comes to programming, semaphores are used for communicating between the active processes of a certain application. In the case of Apache, they’re used to communicate between the parent and child processes. If Apache can’t write these things down, then it can’t communicate properly with all of the processes it starts.
+
+<file bash>
+#stop apache
+systemctl stop httpd
+#show semaphores
+ipcs -s
+
+#create a clean script 
+vim clean.sh
+#!/bin/bash
+
+for i in `ipcs --semaphores | grep apache | awk '{print $2}'` ;
+do
+ipcrm --semaphore-id $i;
+done ;
+
+</file>
+
+if this is still not working you need to increase the semaphores spaces
+You need to tickle your kernel to do so.
+<code>
+vim /etc/sysctl.conf
+
+#put the following lines
+kernel.msgmni = 1024
+kernel.sem = 250 256000 32 1024
+
+#reload the conf file
+sysctl -p
+</code>

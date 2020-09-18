@@ -1,0 +1,24 @@
+====== Redmine FAQ ======
+
+Redmine is installed on CCLinDevToolsP01(10.70.3.13)
+
+It uses ruby on rails, a tutorial for installation
+
+(https://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_(Detailed))
+
+The config file are located at /var/www/html/redmine-3.1.1/config
+
+It uses httpd mod cgi to run
+
+So to restart the redmine, restart the httpd
+
+It uses a mysql server @CC. 
+
+The following are the db connection information.
+
+<code>
+database: bio_project
+host: ccmysql.in2p3.fr
+username: bio_project
+password: dYGXRAzy6g9zDcwg
+</code>

@@ -1,0 +1,48 @@
+====== Different data formats in big data ecosystem   ======
+
+In the big data environment, we have many different data formats. They can be divided into the following three categories.
+
+  * Structured Data
+  * Unstructured Data
+  * Semi-structured Data
+
+===== Structured Data =====
+
+A **data model** is an abstract model that organizes elements of data and standardizes how they relate to one another and to the properties of real-world entities. For instance, a data model may specify that the data element representing a car be composed of a number of other elements which, in turn, represent the color and size of the car and define its owner.
+
+The term **data model** is used in two distinct but closely related senses. Sometimes it refers to an abstract formalization of the objects and relationships found in a particular application domain, for example the customers, products, and orders found in a manufacturing organization. At other times it refers to a set of concepts used in defining such formalizations: for example concepts such as entities, attributes, relations, or tables. So the "data model" of a banking application may be defined using the entity-relationship "data model". We use the term in both senses. 
+
+All data which obey the formal structure of **data models** are considered as structured data.  
+
+For example, data stored in the relational database in the form of tables having multiple rows and columns. The spreadsheet(excel has more controls than csv on the columns) is another good example of structured data.
+
+Check this for more info about data model: https://en.wikipedia.org/wiki/Data_model#Database_model
+===== Semi-structured Data =====
+
+Semi-structured data is a form of structured data that does not obey the formal structure of **data models** associated with relational databases or other forms of data tables, but nonetheless contains tags or other markers to separate semantic elements and enforce hierarchies of records and fields within the data. Therefore, it is also known as self-describing structure. 
+
+JSON(JavaScript Object Notation) files, BibTex files, .csv files, tab-delimited text files, XML and other markup languages are examples of Semi-structured data.
+
+==== Advantages ====
+  * Programmers persisting objects from their application to a database do not need to worry about object-relational impedance mismatch, but can often serialize objects via a light-weight library.
+  * Support for nested or hierarchical data often simplifies data models representing complex relationships between entities.
+  * Support for lists of objects simplifies data models by avoiding messy translations of lists into a relational data model.
+
+==== Disadvantages ====
+  * The traditional relational data model has a popular and ready-made query language, SQL.
+  * Prone to "garbage in, garbage out"; by removing restraints from the data model, there is less fore-thought that is necessary to operate a data application.
+
+===== Unstructured Data =====
+
+Unstructured data (or unstructured information) is information that either does not have a pre-defined data model or is not organized in a pre-defined manner. Unstructured information is typically text-heavy but may contain data such as dates, numbers, and facts as well. This results in irregularities and ambiguities that make it difficult to understand using traditional programs as compared to data stored in fielded form in databases or annotated (semantically tagged) in documents.
+
+For example, e-mail messages, word processing documents, videos, photos, audio files, presentations, webpages and many other kinds of business documents are all unstructured data.
+
+
+===== Common data formats in big data environment =====
+
+Avro
+
+Parquet
+
+Sequence files

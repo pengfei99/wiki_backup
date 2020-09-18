@@ -1,0 +1,129 @@
+====== DokuWiki ======
+
+===== Informations =====
+
+  * **Version** : 2013-12-08 //"Binky"//
+  * **Licence** : GPLv2
+  * **Page Web** : [[https://www.dokuwiki.org]]
+  * **Description** : DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in access controls and authentication connectors make DokuWiki especially useful in the enterprise context and the large number of plugins contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki. 
+
+Une instance du nuage VMware a été configurée pour mettre à disposition le wiki.
+
+===== Installation =====
+
+==== Installation des logiciels ====
+
+<code>
+pkg install lighttpd php5 php5-session php5-xml
+</code>
+
+==== Configuration du serveur web ====
+
+Faire attention à créer tous les sous dossiers !!!
+
+<code text /usr/local/etc/lighttpd/lighttpd.conf>
+server.port = 443
+#server.bind = "localhost"
+#server.use-ipv6 = "enable"
+
+# IPv4 listening socket
+#$SERVER["socket"] == "0.0.0.0:80" { }
+
+#include "vhosts.d/wiki.conf"
+
+server.document-root = vhosts_dir + "/dokuwiki/"
+$HTTP["url"] =~ "/(\.|_)ht" { url.access-deny = ( "" ) }
+$HTTP["url"] =~ "^/(bin|data|inc|conf)/"  { url.access-deny = ( "" ) }
+ssl.engine = "enable"
+ssl.pemfile = "/etc/ssl/private/ccbiowiki1.in2p3.fr-combined.pem"
+
+$HTTP["url"] =~ "^" { index-file.names = ("doku.php") }
+    url.rewrite = (
+      "^/lib/.*$"              => "$0",
+      "^/_media/(.*)?\?(.*)$"  => "/lib/exe/fetch.php?media=$1&$2",
+      "^/_media/(.*)$"         => "/lib/exe/fetch.php?media=$1",
+      "^/_detail/(.*)?\?(.*)$" => "/lib/exe/detail.php?media=$1&$2",
+      "^/_detail/(.*)?$"       => "/lib/exe/detail.php?media=$1",
+      "^/_export/([^/]+)/(.*)\?(.*)$" => "/doku.php?do=export_$1&id=$2&$3",
+      "^/_export/([^/]+)/(.*)" => "/doku.php?do=export_$1&id=$2",
+      "^/doku.php.*"           => "$0",
+      "^/feed.php.*"           => "$0",
+      "^/(.*)\?(.*)"           => "/doku.php?id=$1&$2",
+      "^/(.*)"                 => "/doku.php?id=$1"
+    )
+</code>
+
+<code text /usr/local/etc/lighttpd/modules.conf>
+server.modules = (
+  "mod_access",
+#  "mod_alias",
+#  "mod_auth",
+#  "mod_evasive",
+#  "mod_redirect",
+  "mod_rewrite",
+#  "mod_setenv",
+#  "mod_usertrack",
+)
+</code>
+
+<code text /usr/local/etc/lighttpd/conf.d/fastcgi.conf>
+fastcgi.server = ( ".php" =>
+                   ( "php-local" =>
+                     (
+                       "socket" => socket_dir + "/php-fastcgi-1.socket",
+                       "bin-path" => "/usr/local/bin/php-cgi",
+                       "max-procs" => 1,
+                       "broken-scriptfilename" => "enable",
+                     )
+                   ),
+#                   ( "php-tcp" =>
+# [...]
+#                   ),
+                )
+</code>
+
+
+
+===== Configuration=====
+
+Activer les **options avancées** suivantes : ''configuration'' > ''advanced'' > nice URL w/ .htacces + use slash as name separator
+
+Installer les **extensions** :
+  * [[https://www.dokuwiki.org/plugin:templatepagename|templatepagename]] ;
+  * [[https://www.dokuwiki.org/plugin:pagelist|pagelist]] ;
+  * [[https://www.dokuwiki.org/plugin:tag|tag]].
+
+Installer l'extension pour se connecter à l'aide d'un certificat et disponible ici : 
+    bzr+ssh://LOGIN@ccage.in2p3.fr/~tlecarro/repo/dokuwiki-plugin-certlogin
+
+Ne pas oublier de changer le ''Auth Backend'' dans la configuration pour ''certlogin''.
+
+===== Connexion à l'AD =====
+
+D'après le fichier de configuration du wiki de DEUZZI, le plugin ''authad'' a été utilisé avec les paramètres sont les suivants :
+
+<code text local.protected.php>
+<?php
+  // general DokuWiki options
+  $conf['useacl']         = 1;
+  $conf['authtype']       = 'plain';
+ 
+  // configure your Active Directory data here
+  $conf['auth']['ad']['account_suffix']     = '@bioaster.local';
+  $conf['auth']['ad']['base_dn']            = 'DC=bioaster,DC=local';
+  $conf['auth']['ad']['domain_controllers'] = 'srvadmin.bioaster.local, srvfic.bioaster.local';
+  $conf['plugin']['authad']['sso'] = 1;
+  $conf['plugin']['authad']['admin_username'] = 'dokuwiki';
+  $conf['plugin']['authad']['admin_password'] = 'XXXXXXXX';
+
+  // optional parameters
+  $conf['plugin']['authad']['recursive_groups']   = 1;
+  $conf['plugin']['authad']['sso']                = 1;
+  $conf['plugin']['authad']['real_primarygroup']  = 1;
+  $conf['manager']   = '@DokuwikiAdmin';
+  $conf['superuser'] = '@DokuwikiAdmin';
+</code>
+
+===== Log =====
+
+* **2014.02.13 (tlc)** Version 2013-12-08 //"Binky"// installée

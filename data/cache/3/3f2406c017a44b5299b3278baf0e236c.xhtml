@@ -1,0 +1,75 @@
+
+<h1 class="sectionedit1" id="ansible">Ansible</h1>
+<div class="level1">
+<blockquote><div class="no">
+ Ansible is an IT automation tool. It can configure systems, deploy software, and orchestrate more advanced IT tasks such as continuous deployments or zero downtime rolling updates.</div></blockquote>
+
+<p>
+<a href="http://docs.ansible.com/" class="urlextern" title="http://docs.ansible.com/" rel="nofollow">http://docs.ansible.com/</a>
+</p>
+
+<p>
+Il permet de configurer un nouveau serveur en un rien de temps en fonction d&#039;une recette déjà définie.
+</p>
+<pre class="code">  $ ansible-playbook -i hosts site.yml</pre>
+
+<p>
+En conjonction avec <a href="/doku.php?id=informatique:informatique_vagrant" class="wikilink2" title="informatique:informatique_vagrant" rel="nofollow">Vagrant</a>, il permet de déployer de nouvelles machines sans effort.
+</p>
+
+<p>
+À la question <em>“Pourquoi Ansible et pas Chef ou Puppet ?”</em>, je répondrais que n&#039;en ayant jamais utilisé je ne peux pas vraiment les comparer, et que pour commencer je préfère utiliser un outils en Python (et pas Ruby) dont la syntaxe ne m&#039;est pas inconnue (YAML, comme Symfony).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ansible&quot;,&quot;hid&quot;:&quot;ansible&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-786&quot;} -->
+<h2 class="sectionedit2" id="parametre_par_defaut">Paramètre par défaut</h2>
+<div class="level2">
+
+<p>
+Les point de montages :
+</p>
+<ul>
+<li class="level1"><div class="li"> GPFS (<code>/sps/bioaster/</code>) : <code>/mnt/gpfs/</code></div>
+</li>
+<li class="level1"><div class="li"> Data store : <code>/mnt/[nom du data store]/</code>, p.ex. <code>utec2</code></div>
+</li>
+<li class="level1"><div class="li"> Donnée temporaire : <code>/scratch</code> pour OpenStack, <code>/mnt/[nom du data store]</code> pour VMware</div>
+</li>
+</ul>
+
+<p>
+Les utilisateurs, les rôles et les permissions :
+</p>
+<ul>
+<li class="level1"><div class="li"> admin : root, P.V., T.L.C., A.C.</div>
+</li>
+<li class="level1"><div class="li"> biodata : utilisateur réservé pour les machines de data management</div>
+</li>
+<li class="level1"><div class="li"> utilisateur lambda : sudoers avec uniquement les droit d&#039;installation (yum, rpm, pyhton pip), de redémarrage, de redémarrage des services. </div>
+</li>
+</ul>
+
+<p>
+Les utilisateurs avec leur paire de clé SSH. Les clés publiques sont stockés dans <code>/role/server/files/public_keys/</code>. les utilisateurs doivent transmettre leurs clé publique à l&#039;UTEC6. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Param\u00e8tre par d\u00e9faut&quot;,&quot;hid&quot;:&quot;parametre_par_defaut&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;787-1559&quot;} -->
+<h2 class="sectionedit3" id="pointeurs_docs">Pointeurs &amp; Docs</h2>
+<div class="level2">
+
+<p>
+<a href="http://docs.ansible.com/os_server_module.html" class="urlextern" title="http://docs.ansible.com/os_server_module.html" rel="nofollow"> Create/Delete Compute Instances from OpenStack</a>
+</p>
+
+<p>
+<a href="http://docs.ansible.com/vsphere_guest_module.html" class="urlextern" title="http://docs.ansible.com/vsphere_guest_module.html" rel="nofollow"> Create/delete/manage a guest VM through VMware vSphere</a>
+</p>
+
+<p>
+<a href="http://docs.ansible.com/test_strategies.html" class="urlextern" title="http://docs.ansible.com/test_strategies.html" rel="nofollow"> Integrating Testing With Ansible Playbooks</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pointeurs &amp; Docs&quot;,&quot;hid&quot;:&quot;pointeurs_docs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1560-&quot;} -->

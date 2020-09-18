@@ -1,0 +1,80 @@
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> com.<span class="me1">typesafe</span>.<span class="me1">config</span>.<span class="me1">ConfigFactory</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">log4j</span>.<span class="br0">&#123;</span>Level, Logger<span class="br0">&#125;</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">SparkSession</span>
+<a href="http://scala-lang.org"><span class="kw1">import</span></a> org.<span class="me1">apache</span>.<span class="me1">spark</span>.<span class="me1">sql</span>.<span class="me1">functions</span>.<span class="sy0">_</span>
+&nbsp;
+<a href="http://scala-lang.org"><span class="kw1">object</span></a> AccessLog <span class="br0">&#123;</span>
+&nbsp;
+  <a href="http://scala-lang.org"><span class="kw1">def</span></a> main<span class="br0">&#40;</span>args<span class="sy0">:</span> Array<span class="br0">&#91;</span>String<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">:</span> Unit <span class="sy0">=</span> <span class="br0">&#123;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;org&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+    Logger.<span class="me1">getLogger</span><span class="br0">&#40;</span><span class="st0">&quot;akka&quot;</span><span class="br0">&#41;</span>.<span class="me1">setLevel</span><span class="br0">&#40;</span>Level.<span class="me1">OFF</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> spark <span class="sy0">=</span> SparkSession.<span class="me1">builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">master</span><span class="br0">&#40;</span><span class="st0">&quot;local[2]&quot;</span><span class="br0">&#41;</span>.<span class="me1">appName</span><span class="br0">&#40;</span><span class="st0">&quot;Lesson4_Exec04_Parse_Apache_Access_Log&quot;</span><span class="br0">&#41;</span>.<span class="me1">getOrCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <a href="http://scala-lang.org"><span class="kw1">import</span></a> spark.<span class="me1">implicits</span>.<span class="sy0">_</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> sparkConfig <span class="sy0">=</span> ConfigFactory.<span class="me1">load</span><span class="br0">&#40;</span><span class="st0">&quot;application.conf&quot;</span><span class="br0">&#41;</span>.<span class="me1">getConfig</span><span class="br0">&#40;</span><span class="st0">&quot;spark&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> path <span class="sy0">=</span> sparkConfig.<span class="me1">getString</span><span class="br0">&#40;</span><span class="st0">&quot;sourceDataPath&quot;</span><span class="br0">&#41;</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> filePath <span class="sy0">=</span> s<span class="st0">&quot;${path}/spark_lessons/Lesson04_Spark_SQL/access.log.2&quot;</span>
+    <span class="co1">// Read raw data</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> rawDf <span class="sy0">=</span> spark.<span class="me1">read</span>.<span class="me1">text</span><span class="br0">&#40;</span>filePath<span class="br0">&#41;</span>
+&nbsp;
+    rawDf.<span class="me1">cache</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    rawDf.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">5</span>, <a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+    rawDf.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1">// split raw data into token list</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> splitDf <span class="sy0">=</span> rawDf.<span class="me1">select</span><span class="br0">&#40;</span>split<span class="br0">&#40;</span>col<span class="br0">&#40;</span><span class="st0">&quot;value&quot;</span><span class="br0">&#41;</span>, <span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>.<span class="me1">as</span><span class="br0">&#40;</span><span class="st0">&quot;tokenList&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+    splitDf.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">5</span>, <a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1">// transform token list into dataframe</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> tokenizedDf <span class="sy0">=</span> splitDf.<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;host&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;rfc931&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;authuser&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;date&quot;</span>, concat<span class="br0">&#40;</span>$<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">3</span><span class="br0">&#41;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">4</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">6</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;status&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">8</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;bytes&quot;</span>, $<span class="st0">&quot;tokenList&quot;</span>.<span class="me1">getItem</span><span class="br0">&#40;</span><span class="nu0">9</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+      .<span class="me1">drop</span><span class="br0">&#40;</span><span class="st0">&quot;tokenList&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+    tokenizedDf.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">5</span>, <a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+    tokenizedDf.<span class="me1">select</span><span class="br0">&#40;</span><span class="st0">&quot;status&quot;</span><span class="br0">&#41;</span>.<span class="me1">distinct</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="coMULTI">/* The following request give us the top ten most visited page. We could noticed that the second most viewed item is not in the top 10 sell list */</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> mostViewedPage <span class="sy0">=</span> tokenizedDf.<span class="me1">filter</span><span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span>.<span class="me1">contains</span><span class="br0">&#40;</span><span class="st0">&quot;product&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">groupBy</span><span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>.<span class="me1">count</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">orderBy</span><span class="br0">&#40;</span>$<span class="st0">&quot;count&quot;</span>.<span class="me1">desc</span><span class="br0">&#41;</span>
+&nbsp;
+    mostViewedPage.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">10</span>, <a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+    <span class="coMULTI">/* If we want to replace the 20% by space in the request, we can use the regexp_replace*/</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> betterView <span class="sy0">=</span> mostViewedPage.<span class="me1">select</span><span class="br0">&#40;</span>regexp<span class="sy0">_</span>replace<span class="br0">&#40;</span>$<span class="st0">&quot;request&quot;</span>, <span class="st0">&quot;%20&quot;</span>, <span class="st0">&quot; &quot;</span><span class="br0">&#41;</span>.<span class="me1">alias</span><span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>, $<span class="st0">&quot;count&quot;</span><span class="br0">&#41;</span>
+    betterView.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">10</span>, <a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+    <span class="coMULTI">/* refine data frame, only keep product name, and rename column name*/</span>
+&nbsp;
+    <span class="coMULTI">/*Here we use a interesting spark sql function substring_index to get the product name
+    * substring_index(str, delim, count) : Returns the substring from str before count occurrences of the delimiter
+    *          delim. If count is positive, everything to the left of the final delimiter (counting from the left) is
+    *          returned. If count is negative, everything to the right of the final delimiter (counting from the right)
+    *          is returned.
+    *
+    * For example, if we want to keep the head of the string(www), then we do the following
+    * SELECT substring_index('www.apache.org', '.', 1);
+    * If we want to keep the tail of the string(org), then we do the following
+    * SELECT substring_index('www.apache.org', '.', -1);
+    * */</span>
+   <span class="coMULTI">/* After analysis, we found we have false data in access log, so we want to remove all lines which has &quot;add_to_cart&quot;
+    * as product_name, we use filter() which takes boolean expression as argument, notice we can't use ! for negation
+    * here, we need to use not()
+    * */</span>
+    <a href="http://scala-lang.org"><span class="kw1">val</span></a> productVisitNumber <span class="sy0">=</span> betterView
+        .<span class="me1">withColumn</span><span class="br0">&#40;</span><span class="st0">&quot;product_name&quot;</span>,substring<span class="sy0">_</span>index<span class="br0">&#40;</span>col<span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>,<span class="st0">&quot;/&quot;</span>,-<span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        .<span class="me1">withColumnRenamed</span><span class="br0">&#40;</span><span class="st0">&quot;count&quot;</span>,<span class="st0">&quot;view_number&quot;</span><span class="br0">&#41;</span>
+        .<span class="me1">drop</span><span class="br0">&#40;</span><span class="st0">&quot;request&quot;</span><span class="br0">&#41;</span>
+        .<span class="me1">filter</span><span class="br0">&#40;</span>not<span class="br0">&#40;</span>$<span class="st0">&quot;product_name&quot;</span>.<span class="me1">contains</span><span class="br0">&#40;</span><span class="st0">&quot;add_to_cart&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        .<span class="me1">select</span><span class="br0">&#40;</span><span class="st0">&quot;product_name&quot;</span>,<span class="st0">&quot;view_number&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+    productVisitNumber.<span class="me1">show</span><span class="br0">&#40;</span><span class="nu0">10</span>,<a href="http://scala-lang.org"><span class="kw1">false</span></a><span class="br0">&#41;</span>
+&nbsp;
+  <span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="br0">&#125;</span>

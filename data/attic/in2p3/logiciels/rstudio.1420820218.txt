@@ -1,0 +1,35 @@
+====== RStudio ======
+
+===== Informations =====
+
+  * **Version** : 0.98.1056
+  * **Licence** : AGPL v3
+  * **Page Web** : [[http://www.rstudio.com/products/RStudio]]
+  * **Description** : RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management.
+
+===== Installation =====
+
+<WRAP round info>
+Le test ayant été fait sur Debian GNU/Linux, je ne fournis pas les commandes exactes pour SL6 ici !
+
+Les instructions en fonction de la distribution se trouve sur cette page : http://www.rstudio.com/products/rstudio/download-server
+</WRAP>
+
+<code>
+# Pour Debian 7 faire attention à bien avoir la bonne version d'OpenSSL installée
+$ wget http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl0.9.8_0.9.8o-4squeeze14_amd64.deb
+$ sudo dpkg -i libssl0.9.8_0.9.8o-4squeeze14_amd64.deb
+
+# Installer R (si il n'est pas présent RStudio crashera sans même se plaindre !)
+$ sudo apt-get install r-base
+
+# Télécharger et installer le paquet RStudio.
+$ sudo apt-get install gdebi-core
+$ wget http://download2.rstudio.org/rstudio-server-0.98.1056-amd64.deb
+$ sudo gdebi rstudio-server-0.98.1056-amd64.deb
+
+</code>
+
+===== Log =====
+
+  * **2014.09.10 (tlc)** Version 0.98.1056 installée sur une VM à Paris

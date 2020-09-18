@@ -1,0 +1,16 @@
+====== Vagrant ======
+
+> Vagrant provides easy to configure, reproducible, and portable work environments built on top of industry-standard technology and controlled by a single consistent workflow
+[[https://docs.vagrantup.com/v2]]
+
+Vagrant permet de déployer et de configure facilement des VM afin d'avoir des environnements de travail "reproductibles".
+
+    $ vagrant init hashicorp/precise32
+    $ vagrant up
+    $ vagrant ssh
+
+[[/informatique/ansible|Ansible]] s'intègre parfaitement à Vagrant :
+  * [[http://docs.ansible.com/guide_vagrant.html|Using Vagrant and Ansible]]
+  * [[https://adamcod.es/2014/09/23/vagrant-ansible-quickstart-tutorial.html|Vagrant & Ansible Quickstart Tutorial]]
+
+Vagrant peut théoriquement être utilisé pour [[https://github.com/cloudbau/vagrant-openstack-plugin|créer des VMs sur OpenStack]].

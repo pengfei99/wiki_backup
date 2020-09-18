@@ -1,0 +1,18 @@
+====== Cadre de développement web ======
+
+^Critères                   ^^Solutions                                                                        ^^^^
+^Fonctionnalité ^Pondération ^CakePHP            ^Symfony            ^Laravel            ^CherryPy                ^
+|Documentation  |            |http://cakephp.org |http://symfony.com |http://laravel.com |http://www.cherrypy.org |
+|Langage        |            |PHP                |PHP                |PHP                |Python                  |
+|Difficulté     |            |facile             |moyen              |moyen/difficile    |facile                  |
+|Installation   |            |manuelle           |composer           |composer           |package                 |
+|ORM            |            |simple             |[[http://symfony.com/doc/current/book/doctrine.html|Doctrine]] |[[http://laravel.com/docs/4.2/eloquent|Eloquent]]|[[http://www.sqlalchemy.org/library.html#tutorials|SQLAlchemy]]|
+|Migration      |            |[[https://pypi.python.org/pypi/yoyo-migrations|YoyoMigrations]] | [[http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html|Doctrine]] | [[http://laravel.com/docs/4.2/migrations|Eloquent]] | [[http://sqlalchemy-migrate.readthedocs.org/en/latest/versioning.html|SQLAlchemy]]|
+|**M**odel      | | | | | |
+|**V**iew       |            |[[http://book.cakephp.org/2.0/en/views.html|PHP]] |[[http://twig.sensiolabs.org/|Twig]] |[[http://laravel.com/docs/4.2/templates|Blade]] |[[http://www.makotemplates.org|Mako]] |
+|**C**ontroller |            |                   | | | |
+|Template       | | | | | |
+|Routing        |            |classe/méthode     |statique, anntotion|pas intuitif !     |classe/méthode, @expose|
+|REST API       | | | | | |
+
+

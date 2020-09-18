@@ -1,0 +1,130 @@
+
+<h1 class="sectionedit1" id="zookeeper_interview_question">Zookeeper Interview question</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper Interview question&quot;,&quot;hid&quot;:&quot;zookeeper_interview_question&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-44&quot;} -->
+<h2 class="sectionedit2" id="zookeeper是什么">1.ZooKeeper是什么？</h2>
+<div class="level2">
+
+<p>
+ZooKeeper是一个<strong>分布式</strong>的，开放源码的分布式<strong>应用程序协调服务</strong>.
+</p>
+
+<p>
+In the cluster, servers have three different types of roles: leader, follower, observer.
+</p>
+
+<p>
+客户端的<strong>读请求</strong>可以被集群中的任意一台机器处理，如果读请求在节点上注册了监听器，这个监听器也是由客户端所连接的zookeeper server来处理。对于<strong>写请求</strong>，这些请求会同时发给zookeeper leader, 并且follower达成一致后，读请求才会返回成功。因此，随着zookeeper的集群机器增多，<strong>读请求的吞吐会提高但是写请求的吞吐会下降</strong>。
+</p>
+
+<p>
+<strong>有序性</strong>是zookeeper中非常重要的一个特性，所有的更新都是全局有序的，每个更新都有一个唯一的时间戳，这个时间戳称为zxid（Zookeeper Transaction Id）。而读请求只会相对于更新有序，也就是读请求的返回结果中会带有这个zookeeper最新的zxid。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.ZooKeeper\u662f\u4ec0\u4e48\uff1f&quot;,&quot;hid&quot;:&quot;zookeeper\u662f\u4ec0\u4e48&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;45-1023&quot;} -->
+<h2 class="sectionedit3" id="zookeeper提供了什么">2. ZooKeeper提供了什么？</h2>
+<div class="level2">
+
+<p>
+1、文件系统 (in memory)
+2、通知机制 (watcher)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. ZooKeeper\u63d0\u4f9b\u4e86\u4ec0\u4e48\uff1f&quot;,&quot;hid&quot;:&quot;zookeeper\u63d0\u4f9b\u4e86\u4ec0\u4e48&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1024-1124&quot;} -->
+<h2 class="sectionedit4" id="zookeeper文件系统">3. Zookeeper文件系统</h2>
+<div class="level2">
+
+<p>
+Zookeeper提供一个多层级的节点命名空间（节点称为znode）。与文件系统不同的是，这些节点都可以设置关联的数据. Zookeeper为了保证高吞吐和低延迟，在内存中维护了这个树状的目录结构，这种特性使得Zookeeper不能用于存放大量的数据，每个节点的存放数据上限为1M。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Zookeeper\u6587\u4ef6\u7cfb\u7edf&quot;,&quot;hid&quot;:&quot;zookeeper\u6587\u4ef6\u7cfb\u7edf&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1125-1515&quot;} -->
+<h2 class="sectionedit5" id="znode的类型">4. znode的类型</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. znode\u7684\u7c7b\u578b&quot;,&quot;hid&quot;:&quot;znode\u7684\u7c7b\u578b&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1516-1547&quot;} -->
+<h2 class="sectionedit6" id="zookeeper通知机制">5. Zookeeper通知机制</h2>
+<div class="level2">
+
+<p>
+client端会对某个znode建立一个watcher事件，当该znode发生变化时，这些client会收到zk的事件通知，然后client可以根据事件来做出业务上的改变等。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Zookeeper\u901a\u77e5\u673a\u5236&quot;,&quot;hid&quot;:&quot;zookeeper\u901a\u77e5\u673a\u5236&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1548-1774&quot;} -->
+<h2 class="sectionedit7" id="zookeeper_都有哪些功能">6. Zookeeper 都有哪些功能？</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> 集群管理：监控节点存活状态、运行请求等；</div>
+</li>
+<li class="level1"><div class="li"> 主节点选举：主节点挂掉了之后可以从备用的节点开始新一轮选主，主节点选举说的就是这个选举的过程，使用 Zookeeper 可以协助完成这个过程；</div>
+</li>
+<li class="level1"><div class="li"> 分布式锁：Zookeeper 提供两种锁：独占锁、共享锁。独占锁即一次只能有一个线程使用资源，共享锁是读锁共享，读写互斥，即可以有多线线程同时读同一个资源，如果要使用写锁也只能有一个线程使用。Zookeeper 可以对分布式锁进行控制。</div>
+</li>
+<li class="level1"><div class="li"> 命名服务：命名服务是指通过指定的名字来获取资源或者服务的地址，利用zk创建一个znode，这个znode路径就可以作为一个名字，for example in znode /services/database/mysql, we can store the ip address and port number of the mysql server.</div>
+</li>
+<li class="level1"><div class="li"> 队列管理: 和分布式锁服务中的控制时序场景基本原理一致，入列有编号，出列按编号。在特定的目录下创建PERSISTENT_SEQUENTIAL节点，创建成功时Watcher通知等待的队列，队列删除序列号最小的节点用以消费。此场景下Zookeeper的znode用于消息存储，znode存储的数据就是消息队列中的消息内容，SEQUENTIAL序列号就是消息的编号，按序取出即可。由于创建的节点是持久化的，所以不必担心队列消息的丢失问题。</div>
+</li>
+<li class="level1"><div class="li"> 配置管理: 程序分布式的部署在不同的机器上，将程序的配置信息放在zk的znode下，当有配置发生改变时，也就是znode发生变化时，可以通过改变zk中某个目录节点的内容，利用watcher通知给各个客户端，从而更改配置。</div>
+</li>
+<li class="level1"><div class="li"> 负载均衡or service discovery: Set up a znode /proxies. We can use proxies to register all available proxy servers.</div>
+</li>
+</ol>
+
+<p>
+And we can set up algo for selecting the right server to do the load balancing. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6. Zookeeper \u90fd\u6709\u54ea\u4e9b\u529f\u80fd\uff1f&quot;,&quot;hid&quot;:&quot;zookeeper_\u90fd\u6709\u54ea\u4e9b\u529f\u80fd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1775-3715&quot;} -->
+<h2 class="sectionedit8" id="zookeeper数据复制">7. Zookeeper数据复制</h2>
+<div class="level2">
+
+<p>
+Zookeeper作为一个集群提供一致的数据服务，自然，它要在所有机器间做数据复制。数据复制的好处：
+</p>
+<ol>
+<li class="level1"><div class="li"> 容错：一个节点出错，不致于让整个系统停止工作，别的节点可以接管它的工作；</div>
+</li>
+<li class="level1"><div class="li"> 提高系统的扩展能力 ：把负载分布到多个节点上，或者增加节点来提高系统的负载能力；</div>
+</li>
+<li class="level1"><div class="li"> 提高性能：让客户端本地访问就近的节点，提高用户访问速度。</div>
+</li>
+</ol>
+
+<p>
+数据复制集群系统分下面两种：
+</p>
+<ol>
+<li class="level1"><div class="li"> 写主(WriteMaster) ：对数据的修改提交给指定的节点。读无此限制，可以读取任何一个节点。这种情况下客户端需要对读与写进行区别，俗称读写分离；</div>
+</li>
+<li class="level1"><div class="li"> 写任意(Write Any)：对数据的修改可提交给任意的节点，跟读一样。这种情况下，客户端对集群节点的角色与变化透明。</div>
+</li>
+</ol>
+
+<p>
+zookeeper采用的方式是写任意。通过增加机器，它的读吞吐能力和响应能力扩展性非常好，而写，随着机器的增多吞吐能力肯定下降（这也是它建立observer的原因.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7. Zookeeper\u6570\u636e\u590d\u5236&quot;,&quot;hid&quot;:&quot;zookeeper\u6570\u636e\u590d\u5236&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;3716-4830&quot;} -->
+<h2 class="sectionedit9" id="zookeeper工作原理_谈下你对_zab_协议的了解">8. Zookeeper工作原理(谈下你对 ZAB 协议的了解)</h2>
+<div class="level2">
+
+<p>
+Zookeeper 的核心是<strong>原子广播</strong>，这个机制保证了各个Server之间data的同步。实现这个机制的协议叫做<strong>Zab协议</strong>。Zab协议有两种模式，它们分别是<strong>恢复模式（选主）</strong>和<strong>广播模式（同步）</strong>。当服务启动或者在领导者崩溃后，Zab就进入了恢复模式，首先选举产生新的 Leader 服务器，然后集群中 Follower 服务器开始与新的 Leader 服务器进行数据同步。当集群中超过半数机器与该 Leader 服务器完成数据同步之后，退出恢复模式进入消息广播模式，Leader 服务器开始接收客户端的事务请求生成事物提案来进行事务请求处理。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;8. Zookeeper\u5de5\u4f5c\u539f\u7406(\u8c08\u4e0b\u4f60\u5bf9 ZAB \u534f\u8bae\u7684\u4e86\u89e3)&quot;,&quot;hid&quot;:&quot;zookeeper\u5de5\u4f5c\u539f\u7406_\u8c08\u4e0b\u4f60\u5bf9_zab_\u534f\u8bae\u7684\u4e86\u89e3&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;4831-5583&quot;} -->
+<h2 class="sectionedit10" id="zookeeper是如何保证事务的顺序一致性的">9. zookeeper是如何保证事务的顺序一致性的?</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9. zookeeper\u662f\u5982\u4f55\u4fdd\u8bc1\u4e8b\u52a1\u7684\u987a\u5e8f\u4e00\u81f4\u6027\u7684?&quot;,&quot;hid&quot;:&quot;zookeeper\u662f\u5982\u4f55\u4fdd\u8bc1\u4e8b\u52a1\u7684\u987a\u5e8f\u4e00\u81f4\u6027\u7684&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;5584-&quot;} -->

@@ -1,0 +1,43 @@
+====== Tanguy ======
+
+===== Objectifs 2014 =====
+
+  * **Infrastructure Informatique** à Pasteur
+    * Installation
+    * Formation VMware
+      * [[/si/vmware/windows|déploiement de Windows]]
+      * [[/si/vmware/freebsd|déploiement de FreeBSD]]
+
+===== Importants =====
+
+  * Installation de **TranSMART** (OpenStack + DB du CC)
+    * [[/in2p3/logiciels/transmart|en cours...]]
+  * Installer **Galaxy** (w/w/o LIMS)
+    * Mettre derrière HTTPS et authentifier par certificat
+  * Installer **BioMAJ**
+  * Mettre en place les [[ccin2p3:bases_de_donnees|bases de données]] sur SPS :
+    * NCBI-tRNA bactériens
+    * les données MetaHIT (http://gutmeta.genomics.org.cn/ ) gènes et contigs. 
+    * M5rrn
+
+===== Autres =====
+
+  * <del>Evaluation de [[/in2p3/logiciels/dsrc|DSRC - DNA Sequence Reads Compression]]</del>
+  * PC de labo
+    * <del>Faire l'[[/instruments|inventaire]] (PCs et instruments)</del>
+    * Temporairement, créer un utilisateur "labo" sur tous les instrument avec un seul mdp
+  * Installer et évaluer [[https://dev.launchpad.net/Running|Launchpad]] pour remplacer [[bioinformatique:outils:outils:reviewboard|ReviewBoard]]
+  * Signer "remise de materiel informatique" @Emilie
+  * Ancre pour la page [[/bioinformatique/themes_et_questions]]
+  * Problème bioinformatique de [[/samuel.bellais_bioaster.org|Samuel BELLAIS]]
+  * Page des [[/dp|délégués du personnel]]
+  * Lister [[/employes/tanguy.lecarrour_bioaster.org/logiciels_organisation|les logiciels « d'organisation »]].
+  * Le choix d'[[/bioinformatique/framework_web|un framework de développement web]].
+
+===== Trucs et astuces =====
+
+==== Putty ====
+
+  * Faire fonctionner les touches //fonctions// (pour Byobu, par exempl) : choisir ''Xterm R6'' dans ''Terminal > Keyboard''
+  * Faire marcher le copier/coller pour l'UTF8 : choisir ''UTF8'' dans ''Window > Translation''
+

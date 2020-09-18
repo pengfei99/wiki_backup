@@ -1,0 +1,93 @@
+
+<h1 class="sectionedit1" id="vm_fluxomique_utec07">VM fluxomique UTEC07</h1>
+<div class="level1">
+
+<p>
+<strong>Adresses IP :</strong> 134.158.37.3
+</p>
+
+<p>
+<strong>Infrastructure :</strong> Open Stack CC, tenant bioaster
+</p>
+
+<p>
+<strong>Nom :</strong> CCLinFluxUTEC07
+</p>
+
+<p>
+<strong>Image de base :</strong> CentOS7
+</p>
+
+<p>
+<strong>Point de montage GPFS :</strong> /mnt/gpfs
+</p>
+
+<p>
+<strong>Serveur NFS :</strong> ccdtli95
+</p>
+
+<p>
+<strong>Flavor :</strong> (4 VCPUs, RAM 4 <abbr title="Gigabyte">GB</abbr>, Disk root 40 <abbr title="Gigabyte">GB</abbr>, Disk ephemeral: 40 <abbr title="Gigabyte">GB</abbr>)
+</p>
+
+<p>
+<strong>Utilisateurs créés et mode d&#039;accès :</strong>
+</p>
+
+<p>
+Ndeye-Fatou Diallo ⇒ uid=42801(ndiallo) gid=1072(bioaster) groups=1072(bioaster)
+</p>
+
+<p>
+Adama Ouattara ⇒  uid=42286(ouattara) gid=1072(bioaster) groups=1072(bioaster)
+</p>
+
+<p>
+bioaster (pwd habituel)
+</p>
+
+<p>
+centos (avec clé ssh de pierre)
+</p>
+
+<p>
+<strong>Remarques :</strong>
+</p>
+
+<p>
+sudo yum autorisé au groupe bioaster via sudoers
+</p>
+
+<p>
+Accès en ssh avec password
+</p>
+
+<p>
+<strong>Logiciels installés :</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> x2go server (pour l&#039;accès distant)</div>
+</li>
+<li class="level1"><div class="li"> Scilab (/opt/scilab-5.5.2/)</div>
+</li>
+<li class="level1"><div class="li"> influx_s, influx_i (<a href="http://metasys.insa-toulouse.fr/software/influx/" class="urlextern" title="http://metasys.insa-toulouse.fr/software/influx/" rel="nofollow">http://metasys.insa-toulouse.fr/software/influx/</a>) ajouté au PATH de ndiallo et ouattara</div>
+</li>
+<li class="level1"><div class="li"> sysmetab (/home/ndiallo/SYSMETAB-5.0/ et j&#039;ai ensuite suivi la procédure suivante <a href="http://forge.scilab.org/index.php/p/sysmetab/page/2-Installation/" class="urlextern" title="http://forge.scilab.org/index.php/p/sysmetab/page/2-Installation/" rel="nofollow">http://forge.scilab.org/index.php/p/sysmetab/page/2-Installation/</a>) ajouté au PATH de ndiallo et ouattara</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "VM fluxomique UTEC07" [1-1092] -->
+<h2 class="sectionedit2" id="journal">Journal</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>2016.05.18 (pv)</strong> Instanciation &amp; installation</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.05.26 (pv)</strong> Ajout de l&#039;utilisateur ouattara</div>
+</li>
+<li class="level1"><div class="li"> <strong>2016.05.27 (pv)</strong> Snapshot de la machine (CCLinFluxUTEC07_27-05-2016)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Journal" [1093-] -->

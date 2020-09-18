@@ -1,0 +1,18 @@
+====== Ldap docs ======
+
+===== Server side =====
+
+[[employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration|Install Ldap and configuration on Centos7]]
+
+
+[[employes:pengfei.liu:security:ldap:ldap_server:architecture_example|Ldap architecture]]
+
+[[employes:pengfei.liu:security:ldap:ldap_server:apache_ds|Apache directory studio trouble shoot]]
+
+
+
+===== Client side =====
+
+[[employes:pengfei.liu:security:ldap:ldap_client:nslcd|Use nslcd as ldap authentication client in centos7]]
+
+[[employes:pengfei.liu:security:ldap:ldap_client:sssd_install|Use sssd as ldap authentication client in centos7]]

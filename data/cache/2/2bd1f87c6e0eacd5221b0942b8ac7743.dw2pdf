@@ -1,0 +1,48 @@
+<a name="employespengfeiliusecurityssh_key__"></a>
+<h1><bookmark content="Creating an SSH Key Pair for User Authentication" level="0" /><a name="employespengfeiliusecurityssh_key__creating_an_ssh_key_pair_for_user_authentication">Creating an SSH Key Pair for User Authentication</a></h1>
+<div class="level1">
+
+<p>
+For generating an SSH key pair, you need to use the ssh-keygen tool. There are two points you need to pay attention
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>Beware, you may overite your existing ssh key</strong>. So before you start, check your ~/.ssh/ is empty. If not, you can choose another directory and file name. </div>
+</li>
+<li class="level1"><div class="li"> If you don&#039;t want a passphrase for your private key just press enter. If you set a passphrase, every time you do an ssh connection, you need to provide this passphrase</div>
+</li>
+</ol>
+
+<p>
+Just follow this example to generate your ssh key pair
+</p>
+<pre class="code">
+(base) [pliu@localhost tmp]$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/pliu/.ssh/id_rsa): /tmp/myNewPriKey     
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /tmp/myNewPriKey.
+Your public key has been saved in /tmp/myNewPriKey.pub.
+The key fingerprint is:
+SHA256:xV2mnBP+6WF2XJ+SAi2cpfbv7HHOin6KWfMawR2JEmI pliu@localhost.localdomain
+The key&#039;s randomart image is:
++---[RSA 2048]----+
+|       E . .. o  |
+|      . o.*+.*.  |
+|         OooBo  .|
+|        ..* .ooo+|
+|        S  = +*.+|
+|            ++.o |
+|           + o.. |
+|          + B.=  |
+|         o.==*.o |
++----[SHA256]-----+
+(base) [pliu@localhost tmp]$ ls                                
+myNewPriKey   myNewPriKey.pub   
+</pre>
+
+<p>
+Important Note: Never send your private key to someone else. If someone has your private key, you need to generate a new key pair.
+</p>
+
+</div>

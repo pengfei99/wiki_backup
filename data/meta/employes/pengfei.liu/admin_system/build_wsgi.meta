@@ -1,0 +1,16 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1517306008;s:8:"modified";i:1524648678;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:39:"Run python web app with apache mod wsgi";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:39:"run_python_web_app_with_apache_mod_wsgi";s:5:"title";s:39:"Run python web app with apache mod wsgi";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:39:"install_python35u-mod_wsgi_via_repo_ius";s:5:"title";s:39:"Install python35u-mod_wsgi via repo IUS";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:2;a:4:{s:3:"hid";s:28:"check_installed_httpd_module";s:5:"title";s:28:"check installed httpd module";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:454:"Run python web app with apache mod wsgi
+
+0. You need to disable selinux to make this work
+
+vim /etc/sysconfig/selinux
+
+and change the line to SELINUX=disabled
+
+1. Get the wsgi_mod source
+Under centos 7 you have to compile the module by yourself.
+
+You can find the tar ball of wsgi in https://github.com/GrahamDumpleton/mod_wsgi/releases
+
+Download the version you want. Then untar it.
+
+For example, I choose mod_wsgi-4.5.7, it will donwload 4.5.7.tar.gz .";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1517306008;s:8:"modified";i:1524648678;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}

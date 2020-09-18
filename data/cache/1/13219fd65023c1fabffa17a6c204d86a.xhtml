@@ -1,0 +1,255 @@
+
+<h1 class="sectionedit1" id="linux_user_account_creation_and_group_creation">Linux user account creation and group creation</h1>
+<div class="level1">
+
+<p>
+All user account related information are stored in the following files:
+</p>
+<ul>
+<li class="level1"><div class="li"> Unordered List Item/etc/passwd – Contains one line for each user account.</div>
+</li>
+<li class="level1"><div class="li"> /etc/shadow – Contains the password information in encrypted formatfor the system’s accounts and optional account aging information.</div>
+</li>
+<li class="level1"><div class="li"> /etc/group – Defines the groups on the system.</div>
+</li>
+<li class="level1"><div class="li"> /etc/default/useradd – This file contains a value for the default group, if none is specified by the useradd command.</div>
+</li>
+<li class="level1"><div class="li"> /etc/login.defs – This file defines the site-specific configuration for the shadow password suite stored in /etc/shadow file.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Linux user account creation and group creation&quot;,&quot;hid&quot;:&quot;linux_user_account_creation_and_group_creation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-666&quot;} -->
+<h2 class="sectionedit2" id="list_all_available_users_in_the_linux">List all available users in the linux</h2>
+<div class="level2">
+
+<p>
+The below code will return all users (humain or process) of the linux system.
+</p>
+<pre class="code">cut -d: -f1 /etc/passwd</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List all available users in the linux&quot;,&quot;hid&quot;:&quot;list_all_available_users_in_the_linux&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;667-836&quot;} -->
+<h2 class="sectionedit3" id="create_user_account_with_all_possible_options">Create user account with all possible options</h2>
+<div class="level2">
+
+<p>
+Most used option table
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Option      </th><th class="col1 leftalign"> Action           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> -c    </td><td class="col1 leftalign"> Adds comment to the user account     </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> -m    </td><td class="col1"> Creates user home directory in default location, if nonexistent </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> -s    </td><td class="col1 leftalign"> Default shell other than /bin/bash     </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> -n    </td><td class="col1 leftalign"> Does not create a private group for the user, usually a group with username     </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;920-1223&quot;} -->
+<p>
+<strong>1. create user account</strong>
+</p>
+<pre class="code">
+# List all local users in your linux server
+cut -d: -f1 /etc/password
+
+sudo useradd pliu --uid 8888 --home /home/sweet_home/pliu/ --create-home --groups godTeam, bestDevs --gid bestMan 
+
+-add user pliu
+-uid is 8888
+-user home /home/sweet_home/pliu/ 
+-useradd will create user home
+-user will be added two groups godTeam and bestDevs as second group
+-user will be added group bestMan as primary group</pre>
+
+<p>
+<strong>2. set up password</strong>
+</p>
+<pre class="code">sudo passwd pliu
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create user account with all possible options&quot;,&quot;hid&quot;:&quot;create_user_account_with_all_possible_options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;837-1726&quot;} -->
+<h2 class="sectionedit5" id="disabling_user_accounts">Disabling user accounts</h2>
+<div class="level2">
+
+<p>
+There are several methods to disable accounts on a system. These range from editing the /etc/passwd file by hand. Or even using the passwd command with the -lswitch. Both of these methods have one big drawback: if the user has ssh access and uses an RSA key for authentication, they can still login using this method.
+</p>
+
+<p>
+Now let’s use the chage command, changing the password expiry date to a previous date. Also, it may be good to make a note on the account as to why we disabled it.
+</p>
+<pre class="code">[root@localhost Downloads]# chage -E 2005-10-01 bjones
+ 
+[root@localhost Downloads]# usermod  -c &quot;Disabled Account while Bob out of the country 
+for five months&quot; bjones
+
+[root@localhost Downloads]# grep bjones /etc/passwd 
+bjones:x:1001:1001:Disabled Account while Bob out of the country for four 
+months:/home/bjones:/bin/bash
+
+[root@localhost Downloads]#</pre>
+
+<p>
+chage
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Disabling user accounts&quot;,&quot;hid&quot;:&quot;disabling_user_accounts&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;1727-2627&quot;} -->
+<h2 class="sectionedit6" id="create_group_with_all_options">Create group with all options</h2>
+<div class="level2">
+<pre class="code">#this will create a group bestDevs with gid 8888
+groupadd -g 8888 bestDevs
+
+# all group info is stored in /etc/group
+# getent can get entries from name service switch libraries
+#show all groups and memebers in the system
+getent group
+
+# get info of a specific group/gid
+getent group bestDevs
+getent group 8888
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create group with all options&quot;,&quot;hid&quot;:&quot;create_group_with_all_options&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;2628-2996&quot;} -->
+<h3 class="sectionedit7" id="create_group_with_password">create group with password</h3>
+<div class="level3">
+
+<p>
+Let&#039;s make a new group called secret. We will add a password to the group, allowing the users to add themselves with a known password.
+</p>
+<pre class="code">[root@localhost]# groupadd secret
+
+[root@localhost]# gpasswd secret 
+Changing the password for group secret 
+New Password:  
+Re-enter new password:
+
+[root@localhost]# exit 
+exit
+
+[centos@localhost ~]$ newgrp secret 
+Password:
+
+[centos@localhost ~]$ groups 
+secret wheel rdc
+
+[centos@localhost ~]$</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;create group with password&quot;,&quot;hid&quot;:&quot;create_group_with_password&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;2997-3483&quot;} -->
+<h3 class="sectionedit8" id="modifier_user_account">Modifier user account</h3>
+<div class="level3">
+
+<p>
+usermod is used to update account attributes.
+</p>
+
+<p>
+Following are the common usermod switches.
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Option      </th><th class="col1 leftalign"> Action           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> -c    </td><td class="col1 leftalign"> Comment, updates the user comment value     </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> -a    </td><td class="col1"> Appends, adds user to supplementary groups, only with the -G option </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> -d    </td><td class="col1 leftalign"> Home directory, updates the user&#039;s home directory     </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> -G    </td><td class="col1 leftalign"> Groups, adds or removesthe secondary user groups     </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> -g    </td><td class="col1 leftalign"> Group, default primary group of the user     </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;3609-3968&quot;} --><pre class="code">[root@localhost]# groups centos 
+centos : accounting secret
+
+# change the primary group of pliu to bioaster
+[root@localhost]# usermod -g bioaster pliu
+
+# add the secondary group wheel to user centos
+[root@localhost]# usermod -a -G wheel centos
+
+[root@localhost]# groups centos
+centos : accounting wheel secret
+
+[root@localhost]#</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Modifier user account&quot;,&quot;hid&quot;:&quot;modifier_user_account&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;3484-4314&quot;} -->
+<h3 class="sectionedit10" id="modify_group">modify group</h3>
+<div class="level3">
+
+<p>
+<code>groupmod -g 8888 mygroup</code>
+</p>
+
+<p>
+change gid of mygroup to 8888
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;modify group&quot;,&quot;hid&quot;:&quot;modify_group&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;4315-4401&quot;} -->
+<h3 class="sectionedit11" id="remove_user">Remove user</h3>
+<div class="level3">
+<pre class="code">userdel pliu
+
+#remove user and user home
+userdel -r pliu</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Remove user&quot;,&quot;hid&quot;:&quot;remove_user&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:11,&quot;range&quot;:&quot;4402-4497&quot;} -->
+<h2 class="sectionedit12" id="default_file_permissions_umask">Default File Permissions (umask)</h2>
+<div class="level2">
+
+<p>
+When you create a file or directory, the default file permissions assigned to the file or directory are controlled by the user mask. The user mask is set by the umask command in a user initialization file. You can display the current value of the user mask by typing umask and pressing Return.
+</p>
+
+<p>
+The user mask contains the following octal values:
+</p>
+<ul>
+<li class="level1"><div class="li"> The first digit sets permissions for the user</div>
+</li>
+<li class="level1"><div class="li"> The second sets permissions for group</div>
+</li>
+<li class="level1"><div class="li"> The third sets permissions for other, also referred to as “world”</div>
+</li>
+</ul>
+
+<p>
+Note that if the first digit is zero, it is not displayed. For example, if umask is set to 022, 22 is displayed.
+</p>
+
+<p>
+To determine the umask value you want to set, subtract the value of the permissions you want from 666 (for a file) or 777 (for a directory). The remainder is the value to use with the umask command. For example, suppose you want to change the default mode for files to 644 (rw-r–r–). The difference between 666 and 644 is 022, which is the value you would use as an argument to the umask command. 
+</p>
+
+<p>
+If you have a umask 002, when you create a directory, it will have 775 (777-002). When you create a file, it will have 664(666-002) which means rw-rw-r. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Default File Permissions (umask)&quot;,&quot;hid&quot;:&quot;default_file_permissions_umask&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:12,&quot;range&quot;:&quot;4498-&quot;} -->

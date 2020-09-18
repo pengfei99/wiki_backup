@@ -1,0 +1,60 @@
+
+<h1 class="sectionedit1" id="spark_read_and_write_data_from_hbase">Spark read and write data from HBase</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Spark read and write data from HBase" [1-52] -->
+<h2 class="sectionedit2" id="create_table_in_hbase">Create table in Hbase</h2>
+<div class="level2">
+
+<p>
+If you don&#039;t have Hbase, follow this to install Hbase <a href="/doku.php?id=employes:pengfei.liu:big_data:hbase:install_hbase" class="wikilink1" title="employes:pengfei.liu:big_data:hbase:install_hbase">Install Hbase</a>
+</p>
+
+<p>
+To do this tutorial, you need to create a table student as followed
+</p>
+<pre class="code">+------+----------+--------+------+
+| id   | name     | gender | age  |
++------+----------+--------+------+
+|    1 | Xueqian  | F      |   23 |
+|    2 | Weiliang | M      |   24 |
++------+----------+--------+------+</pre>
+
+<p>
+The following commands can create this table
+</p>
+<pre class="code">#check your data base tables
+hbase(main):008:0&gt; list
+TABLE                                                                                                  
+student                                                                                                
+teacher                                                                                                
+2 row(s) in 0.0630 seconds
+
+=&gt; [&quot;student&quot;, &quot;teacher&quot;]
+
+#if you already have table student, delete the table
+hbase&gt; disable &#039;student&#039;
+hbase&gt; drop &#039;student&#039;
+
+#create table student
+hbase&gt;  create &#039;student&#039;,&#039;info&#039;
+
+#insert student 1 into the table
+hbase(main):009:0&gt; put &#039;student&#039;,&#039;1&#039;,&#039;info:name&#039;,&#039;pengfei&#039;
+hbase(main):010:0&gt; put &#039;student&#039;,&#039;1&#039;,&#039;info:gender&#039;,&#039;M&#039;
+hbase(main):011:0&gt; put &#039;student&#039;,&#039;1&#039;,&#039;info:age&#039;,&#039;33&#039;
+
+
+#insert student 2 into the table
+hbase(main):012:0&gt; put &#039;student&#039;,&#039;2&#039;,&#039;info:name&#039;,&#039;toto&#039;
+hbase(main):013:0&gt; put &#039;student&#039;,&#039;2&#039;,&#039;info:gender&#039;,&#039;F&#039;
+hbase(main):015:0&gt; put &#039;student&#039;,&#039;2&#039;,&#039;info:age&#039;,&#039;23&#039;
+</pre>
+
+<p>
+After this, you should see this 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Create table in Hbase" [53-] -->

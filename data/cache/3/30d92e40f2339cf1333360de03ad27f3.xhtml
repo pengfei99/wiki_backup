@@ -1,0 +1,112 @@
+
+<h1 class="sectionedit1" id="read_write_data_via_jdbc">Read write data via jdbc</h1>
+<div class="level1">
+
+<p>
+Suppose we have a database called northwind in a postgresql server
+</p>
+
+<p>
+username is spark and password is spark for connecting.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Read write data via jdbc" [1-166] -->
+<h2 class="sectionedit2" id="read_data_from_data_base">Read data from data base</h2>
+<div class="level2">
+<pre class="code">[pliu@localhost tmp]$ psql -h 127.0.0.1 -p 5432 -U spark northwind
+Password for user spark: 
+psql (9.5.10)
+Type &quot;help&quot; for help.
+
+northwind=&gt; 
+</pre>
+
+<p>
+You need to download the jdbc connector for postgresql <a href="https://jdbc.postgresql.org/download.html" class="urlextern" title="https://jdbc.postgresql.org/download.html" rel="nofollow">https://jdbc.postgresql.org/download.html</a>
+</p>
+
+<p>
+We download the current stable version (postgresql-42.1.4.jar) 
+Suppose we put it under /tmp
+</p>
+<pre class="code">#run spark-shell with the jdbc driver
+
+[hadoop@localhost tmp]$ spark-shell --jars /tmp/postgresql-42.1.4.jar --driver-class-path /tmp/postgresql-42.1.4.jar
+
+
+# create a dataframe
+
+val productsDF = spark.read.format(&quot;jdbc&quot;).option(&quot;url&quot;, &quot;jdbc:postgresql://localhost:5432/northwind&quot;).option(&quot;driver&quot;,&quot;org.postgresql.Driver&quot;).option(&quot;dbtable&quot;, &quot;products&quot;).option(&quot;user&quot;, &quot;spark&quot;).option(&quot;password&quot;, &quot;spark&quot;).load()
+
+#As tables are structure data, after import, our dataframe has the same schema
+scala&gt; productsDF.printSchema
+root
+ |-- productid: short (nullable = false)
+ |-- productname: string (nullable = false)
+ |-- supplierid: short (nullable = true)
+ |-- categoryid: short (nullable = true)
+ |-- quantityperunit: string (nullable = true)
+ |-- unitprice: float (nullable = true)
+ |-- unitsinstock: short (nullable = true)
+ |-- unitsonorder: short (nullable = true)
+ |-- reorderlevel: short (nullable = true)
+ |-- discontinued: integer (nullable = false)
+</pre>
+
+</div>
+<!-- EDIT2 SECTION "Read data from data base" [167-1530] -->
+<h2 class="sectionedit3" id="write_dataframe_to_database">Write dataframe to database</h2>
+<div class="level2">
+
+<p>
+We take the example data of <a href="/doku.php?id=employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction" class="wikilink1" title="employes:pengfei.liu:big_data:spark:spark_usecase:sf_client_satisfaction">Happy customers</a>
+</p>
+
+<p>
+suppose we have the following data frame
+</p>
+<pre class="code">scala&gt; val df=spark.read.parquet(&quot;file:///tmp/happyClient.parquet&quot;)
+df: org.apache.spark.sql.DataFrame = [manager_name: string, client_name: string ... 4 more fields]
+
+scala&gt; df.show
++---------------+-------------+-------------+----------+-------------+------------------+
+|   manager_name|  client_name|client_gender|client_age|response_time|satisfaction_level|
++---------------+-------------+-------------+----------+-------------+------------------+
+|    Arjun Kumar|  Rehan Nigam|         male|        30|          4.0|               0.5|
+|     Kabir Vish| Abhinav Neel|         male|        28|         12.0|               0.1|
+|    Arjun Kumar|    Sam Mehta|         male|        27|          3.0|               0.7|
+|    Arjun Kumar|    Ira Pawan|       female|        40|          2.5|               0.6|
+|Rohit Srivastav| Vihaan Sahni|         male|        38|          6.0|               0.5|
+|     Kabir Vish|Daivik Saxena|         male|        45|         16.0|               0.2|
+|Rohit Srivastav|   Lera Uddin|       female|        20|          8.0|               0.4|
+|Rohit Srivastav|   Aaran Puri|         male|        34|          7.5|               0.3|
+|     Kabir Vish|   Rudra Mati|         male|        50|         20.0|               0.1|
++---------------+-------------+-------------+----------+-------------+------------------+
+
+
+//create properties object
+val prop = new java.util.Properties
+prop.setProperty(&quot;driver&quot;, &quot;org.postgresql.Driver&quot;)
+prop.setProperty(&quot;user&quot;, &quot;spark&quot;)
+prop.setProperty(&quot;password&quot;, &quot;spark&quot;) 
+ 
+//jdbc mysql url - destination database is named &quot;data&quot;
+val url = &quot;jdbc:postgresql://localhost:5432/northwind&quot;
+ 
+//destination database table 
+val table = &quot;happy_client&quot;
+ 
+# write data from spark dataframe to database
+# this create a new table (happy_client) in data base 
+df.write.jdbc(url, table, prop)
+
+#if you want to insert a dataframe to an existing table, you have to add .mode(&quot;append&quot;)
+df.write.mode(&quot;append&quot;).jdbc(url,table,prop)</pre>
+
+<p>
+The mode() method specifies how to handle the database insert when then destination table already exists. The default behavior is for Spark to create and insert data into the destination table. If the table already exists, you will get a TableAlreadyExists Exception. In order to write to an existing table you must use mode(“append”) as in the example above.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Write dataframe to database" [1531-] -->

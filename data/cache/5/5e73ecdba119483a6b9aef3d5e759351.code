@@ -1,0 +1,1 @@
+bzcat Debian-8.vdi.bz2 | glance image-create --name=&quot;Debian-8&quot; --is-public=False --container-format=bare --disk-format=vdi

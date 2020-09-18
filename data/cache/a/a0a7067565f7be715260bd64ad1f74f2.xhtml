@@ -1,0 +1,69 @@
+
+<h1 class="sectionedit1" id="configurer_un_serveur_web">Configurer un serveur web</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Configurer un serveur web" [1-41] -->
+<h2 class="sectionedit2" id="lighttpd">Lighttpd</h2>
+<div class="level2">
+
+<p>
+<a href="http://www.lighttpd.net" class="urlextern" title="http://www.lighttpd.net"  rel="nofollow">Lighttpd</a> est utilisé pour servir du contenu sur le réseau. Il est configuré pour utilisé le protocole <strong>HTTPS</strong> avec les <a href="/securite/certification" class="wikilink1" title="securite:certification">certificats émis par le CA de BIOASTER</a>.
+</p>
+<dl class="code">
+<dt><a href="/_export/code/securite/serveur_web?codeblock=0" title="Télécharger un extrait" class="mediafile mf_conf">/etc/lighttpd/lighttpd.conf</a></dt>
+<dd><pre class="code text">ssl.engine = &quot;enable&quot;
+ssl.pemfile = &quot;/path/to/certificate+key-combined.pem&quot;</pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="/_export/code/securite/serveur_web?codeblock=1" title="Télécharger un extrait" class="mediafile mf_conf">/etc/lighttpd/conf-enabled/20-server.tld.conf</a></dt>
+<dd><pre class="code text">$SERVEUR[&quot;socket&quot;] == &quot;:443&quot; {
+   server.name = &quot;serveur.tld&quot;
+   server.document-root = &quot;/var/www&quot;
+   ssl.engine = &quot;enable&quot;
+   ssl.pemfile = &quot;/path/to/certificate+key-combined.pem&quot;
+&nbsp;
+   ssl.verifyclient.exportcert = &quot;enable&quot;
+   ssl.verifyclient.activate   = &quot;enable&quot;
+   ssl.verifyclient.username   = &quot;SSL_CLIENT_S_DN_CN&quot; # PHP: $_SERVER['SSL_CLIENT_S_DN_EMAILADDRESS']
+   ssl.verifyclient.enforce    = &quot;enable&quot;
+   ssl.verifyclient.depth      = 3
+   ssl.ca-file                 = &quot;/etc/ssl/crt/trusted_certificates.pem&quot;
+}</pre>
+</dd></dl>
+
+<p>
+<strong>Attention :</strong> Le fichier <code>trusted_certificate.pem</code> doit contenir tous les certificats de confiance pour la vérification des certificats clients ! <a href="/securite/certificats_de_confiance" class="wikilink1" title="securite:certificats_de_confiance">Une page est dédiée</a> à sa génération en fonction de l&#039;<abbr title="Operating System">OS</abbr>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Lighttpd" [42-1257] -->
+<h2 class="sectionedit3" id="apache2">Apache2</h2>
+<div class="level2">
+
+<p>
+Une configuration possible copiée d&#039;<a href="http://www.freebsddiary.org/openssl-client-authentication.php" class="urlextern" title="http://www.freebsddiary.org/openssl-client-authentication.php"  rel="nofollow">un article de FreeBDS</a> et <a href="https://www.startssl.com/?app=21" class="urlextern" title="https://www.startssl.com/?app=21"  rel="nofollow">StartSSL</a>:
+</p>
+<pre class="code">SSLEngine       on
+SSLProtocol all -SSLv2
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+
+SSLCertificateFile      /usr/local/etc/apache/ssl.crt/server_cert.pem
+SSLCertificateKeyFile   /usr/local/etc/apache/ssl.key/server_key.pem
+
+SSLVerifyClient none
+
+SSLCACertificatePath    configuration/certificates
+SSLCACertificateFile    configuration/certificates/cacert.pem
+
+&lt;Location /stuff&gt;
+     SSLVerifyClient require
+     SSLVerifyDepth  1
+&lt;/Location&gt;</pre>
+
+<p>
+La directive pointant vers le fichier de certificat est <code>SSLCACertificateFile</code>. Ce fichier contient la concaténation de tous les certificats de confiance.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Apache2" [1258-] -->

@@ -1,0 +1,243 @@
+
+<h1 class="sectionedit1" id="reunion_du_11_octobre_2017">Réunion du 11 Octobre 2017</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Réunion du 11 Octobre 2017" [1-44] -->
+<h2 class="sectionedit2" id="personnes_presentes">Personnes présentes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Guillaume Boissy">GB</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Marion Darnaud">MD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Karen Louis">KL</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Sophie Dixneuf">SDI</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Gustavo Stadthagen Gomez">GSG</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Emiline Biliaut">EBI</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Clément Delestre">CD</abbr></div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Yoann Mouscaz">YM</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Personnes présentes" [45-137] -->
+<h2 class="sectionedit3" id="absent">Absent</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Benoit Beitz">BB</abbr></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Absent" [138-166] -->
+<h2 class="sectionedit4" id="ordre_du_jour">Ordre du jour</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Démo</div>
+</li>
+<li class="level1"><div class="li"> Questions à la <abbr title="Noe Expert Team">NeT</abbr></div>
+</li>
+<li class="level1"><div class="li"> Questions aux devs</div>
+</li>
+<li class="level1"><div class="li"> Templates contenant les échantillons historiques</div>
+</li>
+</ul>
+
+<p>
+Information : l&#039;ensemble des remarques de cette réunion ont été transcrites sur le <a href="https://devtools.bioaster.org/redmine/issues/727" class="urlextern" title="https://devtools.bioaster.org/redmine/issues/727"  rel="nofollow">ticket redmine #727</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Ordre du jour" [167-463] -->
+<h3 class="sectionedit5" id="demo">Démo</h3>
+<div class="level3">
+
+<p>
+Une démonstration des features déjà implémentées a été réalisée.<br/>
+
+Les Experts ont pu voir :
+</p>
+<ul>
+<li class="level1"><div class="li"> comment créer un échantillon (non-<abbr title="Organisme Génétiquement Modifié">OGM</abbr>, <abbr title="Organisme Génétiquement Modifié">OGM</abbr>, lié à un <abbr title="Organisme Génétiquement Modifié">OGM</abbr>)</div>
+</li>
+<li class="level1"><div class="li"> comment ajouter un/plusieurs bioagents à un échantillon</div>
+</li>
+<li class="level1"><div class="li"> comment les champs dynamiques fonctionnaient</div>
+</li>
+<li class="level1"><div class="li"> comment éditer un échantillon</div>
+</li>
+<li class="level1"><div class="li"> comment chercher un/des échantillons</div>
+</li>
+<li class="level1"><div class="li"> comment cloner un échantillon </div>
+</li>
+<li class="level1"><div class="li"> comment créer n réplicats d&#039;échantillons</div>
+</li>
+<li class="level1"><div class="li"> comment créer un fournisseur</div>
+</li>
+<li class="level1"><div class="li"> comment visualiser la liste des fournisseurs existants</div>
+</li>
+<li class="level1"><div class="li"> la page d&#039;accueil</div>
+</li>
+<li class="level1"><div class="li"> la page <abbr title="Frequently Asked Questions">FAQ</abbr></div>
+</li>
+<li class="level1"><div class="li"> la page de visualisation des classifications (sample, bioentity, bioagents)</div>
+</li>
+</ul>
+
+<p>
+Suite à cette démonstration ouverte aux questions et aux remarques, quelques modifications sont à prévoir. À savoir :
+</p>
+<ul>
+<li class="level1"><div class="li"> Seules les personnes ayant accès au P3 devront pouvoir stocker des échantillons dans les storages du P3</div>
+</li>
+<li class="level1"><div class="li"> Dans le formulaire de création (et d&#039;édition) des échantillons il faudra filtrer la liste des frigos en fonction des droits UTEC. Chaque frigo est alloué à une ou plusieurs UTEC. Contrainte : il faudra être sûr que la liste des droits par frigo est à jour. </div>
+</li>
+<li class="level1"><div class="li"> Les personnes qui ne sont pas associés aux <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOTs</abbr> et <abbr title="Genetically Modified Organisms">GMOs</abbr> ne doivent pas pouvoir voir/interargir avec des <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOTs</abbr> et <abbr title="Genetically Modified Organisms">GMOs</abbr> dans la search table.</div>
+</li>
+<li class="level1"><div class="li"> Le label “reception date” ne convient pas. Il faudra le changer par “reception/stockage date”. Il reste obligatoire.</div>
+</li>
+<li class="level1"><div class="li"> Un champs statique date non-obligatoire doit être rajouté, il s&#039;agit de “sampling date”</div>
+</li>
+<li class="level1"><div class="li"> Dans un soucis de bonne compréhension il faudra changer le label “add <abbr title="Genetically Modified Organism">GMO</abbr>(s)&#039; par “associated <abbr title="Genetically Modified Organism">GMO</abbr>(s)” pour les personnes concernées par les <abbr title="Organisme Génétiquement Modifié">OGM</abbr>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Démo" [464-2148] -->
+<h3 class="sectionedit6" id="questions_a_la_net">Questions à la NeT</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> L&#039;information concernant le lieu de stockage de l&#039;échantillon ne sera pas présente dans les colonnes de la search table des échantillons. En revanche elle pourrait être mise à dispo dans la ligne d&#039;information supplémentaire propre à chaque échantillon si l&#039;utilisateur à les droits sur le WP du dit échantillon.</div>
+</li>
+<li class="level1"><div class="li"> Les droits d&#039;édition, de replication, de clonage et d&#039;invalidation d&#039;un échantillon seront attribués par WP, cela suit la politique actuelle du PMO à BIOASTER.</div>
+</li>
+<li class="level1"><div class="li"> Information à propos d&#039;un échantillon : le bloc <code>storage</code> contenant les informations sur la localisation de l&#039;échantillon sera caché pour les personnes n&#039;appartenant pas au WP de l&#039;échantillon.</div>
+</li>
+<li class="level1"><div class="li"> Parenté : il est possible qu&#039;un échantillon possède plusieurs parents. Il est possible qu&#039;un échantillon ait plusieurs enfants. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Questions à la NeT" [2149-3015] -->
+<h3 class="sectionedit7" id="questions_aux_developpeurs">Questions aux développeurs</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Question de <abbr title="Karen Louis">KL</abbr> : Pourra-t-on extraire les quantités de tous les <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOTs</abbr> à un instant t et si possible avoir l&#039;historique (audit trail) ?</div>
+<ul>
+<li class="level2"><div class="li"> <em class="u">Réponse apportée :</em> <em>l&#039;extrait de quantité sur de échantillons donnés peut être envisageable en V1. Pour l&#039;audit trail il faudra en reparler et cadrer le périmètre spécifique.</em></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Question de <abbr title="Emiline Biliaut">EBI</abbr> : Doit-on utiliser le LIMS pour des prestations ?</div>
+<ul>
+<li class="level2"><div class="li"> <em class="u">Réponse apportée :</em> <em>la question a été posée à NG. La direction devrait prochainement apporter une réponse. En l&#039;attente de cette réponse nous considérons que tous les échantillons à BIOASTER devront se trouver dans <abbr title="Network Of Experiments">NoE</abbr>.</em> </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Question de <abbr title="Sophie Dixneuf">SDI</abbr> : Pourra-t-on ajouter un parent et/ou un enfant dans la page édition de l&#039;échantillon</div>
+<ul>
+<li class="level2"><div class="li"> <em class="u">Réponse apportée :</em> <em>la feature devrait pouvoir être ajoutée dans la V1.</em></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Question de <abbr title="Gustavo Stadthagen Gomez">GSG</abbr> : Est-ce possible de changer massivement l&#039;information du lieu de storage pour une sélection d&#039;échantillon ?</div>
+<ul>
+<li class="level2"><div class="li"> <em class="u">Réponse apportée :</em> <em>c&#039;est une feature utile, nous allons essayer de l&#039;englober dans la V1. Nous pourrons également décliner ce genre d&#039;action d&#039;édition massive sur d&#039;autres champs à déterminer. A discuter.</em></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Questions aux développeurs" [3016-4260] -->
+<h3 class="sectionedit8" id="templates">Templates</h3>
+<div class="level3">
+
+<p>
+Suite au stage de <abbr title="Julie Hardy">JHA</abbr>, 4 templates sur 6 sont finalisés. Il s&#039;agit des templates pour les échantillons cliniques, les bactéries, les cellules/amibes et les plasmides.<br/>
+
+Les templates concernant les anticorps et le pré-clinique restent à faire. Priorité sera donnée au pré-clinique, les anticorps n&#039;étant pas prévus dans la V1.<br/>
+
+De plus, <abbr title="Julie Hardy">JHA</abbr> a rempli les ces templates avec les données transmises par les UTECs.<br/>
+
+Afin de rendre possible l&#039;import massif de l&#039;historique des échantillons @ BIOASTER il va être demandé à chaque experts de remplir les informations manquantes dans les templates pré-remplis. Un mail sera envoyé à chaque personne concernée, par template. <br/>
+
+Les zones d&#039;informations manquantes ont été colorées dans les templates par 3 couleurs :
+</p>
+<ul>
+<li class="level1"><div class="li"> rouge = info nécessaire manquante</div>
+</li>
+<li class="level1"><div class="li"> orange = info présente mais incomplète</div>
+</li>
+<li class="level1"><div class="li"> bleu = info erronée/non liée à la colonne</div>
+</li>
+</ul>
+
+<p>
+<code>Aucune deadline n&#039;est donnée mais il est évident que l&#039;accomplissement de cette tâche est primordial pour pouvoir donner un GO à la mise en production de la V1 de <abbr title="Network Of Experiments">NoE</abbr>.</code> <br/>
+
+</p>
+
+<p>
+L&#039;équipe développement de <abbr title="Network Of Experiments">NoE</abbr> espère pouvoir fournir la V1 en beta-test à la NET avant Noël (2017 <img class="emojione" alt="&#x1f604;" src="//cdn.jsdelivr.net/emojione/assets/png/1F604.png?v=1.2.4"/> ).
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Templates" [4261-5487] -->
+<h3 class="sectionedit9" id="reponses_obtenues_post_netmeeting_4_en_mail">Réponses obtenues post NETMeeting 4 en mail</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <abbr title="Marion Darnaud">MD</abbr> le 31/10/17</div>
+<ul>
+<li class="level2"><div class="li"> unités à rajouter : ng/µL, CFU/mL, CFU/µL, CFU/g, OD(600nm)</div>
+</li>
+<li class="level2"><div class="li"> colonnes search table : BA UID, Name, Sample Type, Origin, Provider, Creator, Creation date</div>
+</li>
+<li class="level2"><div class="li"> info dans le ”+“ vert : “Quantité initiale” pas indispensable, Concentration (if available), Thaw cycle number, Time point (if available)</div>
+</li>
+<li class="level2"><div class="li"> champs interrogeables : BA UID, Name, Sample Type, Origin, Provider, Creator, Creation date, Bioagent, Resistance to antibiotics, Resistance mechanism, Nature of modification</div>
+</li>
+<li class="level2"><div class="li"> valeurs possibles champs status : Available upon request from creator, Out of stock (sera automatiquement basculé sur l’archive ?), Unexploitable (deterioration, contamination, …)</div>
+</li>
+<li class="level2"><div class="li"> imprimantes étiquettes : PRT-PaperCut sur B1WINIMPP01 et TOSHIBA Universal Printer 2 et 10.69.13.221 au N1 BIOASTER1</div>
+</li>
+<li class="level2"><div class="li"> template étiquettes (dossier technique mis à disposition et rangé dans la pochette code barres) : </div>
+<ul>
+<li class="level3"><div class="li"> LCRY-1700 : format moyen (tubes &gt;=0.5mL), </div>
+</li>
+<li class="level3"><div class="li"> LCRY-1200 : format grand (tubes 15-50mL), </div>
+</li>
+<li class="level3"><div class="li"> SIDE100 : format plaque</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Point BSL : Mon avis est qu’il faut le faire sauter car nos pièces de stockage sont majoritairement P1, mais peuvent héberger des congélo <abbr title="Micro-Organismes et Toxines hautement pathogènes">MOT</abbr> par exemple. En tous cas les échantillons P2/P3 stockés en P1 classiques, doivent être exclusivement stockés et non techniqués, sinon cela impose que l’organisme soit désactivé, fixé, etc.</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <abbr title="Benoit Beitz">BB</abbr> le 03/11/17</div>
+<ul>
+<li class="level2"><div class="li"> unités : “De notre côté, nous travaillons souvent des solutions en mg/ml et µg/ml qui ne sont pas dans la liste et je ne pense pas qu’il faille laisser libre champs aux conversions.Coté concentrations cellulaires, cell/nL à fL peu utilisées. Est-ce qu’il est prévu avec ces unités d’avoir des « range » de 1 des qqs millions de cellules par ml exemple : 1- 10^6 (voir 10^9) cellules par ml. Cells = pour cellules eucaryotes et bactéries ou à distinguer.”</div>
+</li>
+<li class="level2"><div class="li"> colonnes search table : OK pour le mmt avec ce qu&#039;il y a de proposé</div>
+</li>
+<li class="level2"><div class="li"> champs interrogeables : OK pour le mmt</div>
+</li>
+<li class="level2"><div class="li"> imprimantes étiquettes : BRADY BBP33</div>
+</li>
+<li class="level2"><div class="li"> Point BSL : “Les échantillons P1 &amp; P2 (P2+) sont souvent stockés, sur du long terme (Azote, -80°, -20°), dans des pièces BSL1 et BSL2. Manipulations par contre doivent respecter le niveau de biosafety. Le stockage d’échantillons P3, se fait, il me semble qu’en niveau BSL3 à Bioaster. Donc, à garder le verrou P3 → P2 ou P1. Pas nécessaire pour le P2 → P1”</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Réponses obtenues post NETMeeting 4 en mail" [5488-] -->

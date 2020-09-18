@@ -1,0 +1,9 @@
+function buildCar(){
+  //bluild wheels
+  ...
+  //build glasses
+  ...
+  //mount the different pieces of the car
+  ...
+  return car;
+}  

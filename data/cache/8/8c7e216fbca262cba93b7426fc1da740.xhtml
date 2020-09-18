@@ -1,0 +1,565 @@
+
+<h1 class="sectionedit1" id="install_hdfs_on_multi_node_cluster">Install hdfs on multi node cluster</h1>
+<div class="level1">
+
+<p>
+There is a chinese hadoop video course which is really good <a href="https://www.youtube.com/watch?v=z-0KghOjV_E&amp;list=PLSGSXGjRyTbYD4KAaeA9At8PlHxSJTsev" class="urlextern" title="https://www.youtube.com/watch?v=z-0KghOjV_E&amp;list=PLSGSXGjRyTbYD4KAaeA9At8PlHxSJTsev" rel="ugc nofollow">https://www.youtube.com/watch?v=z-0KghOjV_E&amp;list=PLSGSXGjRyTbYD4KAaeA9At8PlHxSJTsev</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install hdfs on multi node cluster&quot;,&quot;hid&quot;:&quot;install_hdfs_on_multi_node_cluster&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-195&quot;} -->
+<h2 class="sectionedit2" id="prerequisite">0. Prerequisite</h2>
+<div class="level2">
+
+<p>
+﻿Hadoop 2.8.2 requires java 1.8. So you need to install jkd1.8 on all your servers
+<a href="/doku.php?id=employes:pengfei.liu:java:install_jdk" class="wikilink1" title="employes:pengfei.liu:java:install_jdk" data-wiki-id="employes:pengfei.liu:java:install_jdk">Install oracle jdk on ubuntu 16.04</a>
+</p>
+
+<p>
+Setup your local firewall to autorise connection between name node and data node.
+<a href="/doku.php?id=employes:pengfei.liu_bioaster.org:centos7_firewalld" class="wikilink2" title="employes:pengfei.liu_bioaster.org:centos7_firewalld" rel="nofollow" data-wiki-id="employes:pengfei.liu_bioaster.org:centos7_firewalld">Open port for service in Centos firewalld</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;0. Prerequisite&quot;,&quot;hid&quot;:&quot;prerequisite&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;196-568&quot;} -->
+<h2 class="sectionedit3" id="setup_cluster_information">1. Setup cluster information:</h2>
+<div class="level2">
+
+<p>
+Hadoop namenode: 192.168.1.1  ( hadoop-nn.pengfei.org )
+</p>
+
+<p>
+Hadoop datanode :  192.168.1.2  ( hadoop-dn1.pengfei.org )
+</p>
+
+<p>
+Hadoop datanode :  192.168.1.3  ( hadoop-dn2.pengfei.org )
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Setup cluster information:&quot;,&quot;hid&quot;:&quot;setup_cluster_information&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;569-789&quot;} -->
+<h2 class="sectionedit4" id="create_user_account">2. Create user account</h2>
+<div class="level2">
+
+<p>
+# useradd hadoop
+# passwd hadoop
+</p>
+
+<p>
+To allow ssh access to user hadoop, you also need to edit /etc/ssh/sshd_config
+</p>
+
+<p>
+AllowUsers hadoop
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Create user account&quot;,&quot;hid&quot;:&quot;create_user_account&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;790-957&quot;} -->
+<h2 class="sectionedit5" id="add_fqdn_mapping">3. Add FQDN Mapping</h2>
+<div class="level2">
+
+<p>
+Skip this step if your working environment has centralized hostname mapping.
+Edit /etc/hosts file on all master and slave servers and add following entries.
+</p>
+<pre class="code"># vim /etc/hosts
+192.168.1.1 hadoop-nn.pengfei.org
+192.168.1.2 hadoop-dn1.pengfei.org
+192.168.1.3 hadoop-dn2.pengfei.org</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Add FQDN Mapping&quot;,&quot;hid&quot;:&quot;add_fqdn_mapping&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;958-1285&quot;} -->
+<h2 class="sectionedit6" id="configuring_ssh_key_pair_login">4. Configuring SSH key pair login</h2>
+<div class="level2">
+
+<p>
+Hadoop framework itself doesn&#039;t need ssh, the administration tools like start.dfs.sh and stop.dfs.sh etc.. need it to start/stop various daemons. Thus, ssh must be installed and sshd must be running to use the Hadoop scripts that manage remote Hadoop daemons.
+So you need to create a ssh key paire for name node and copy the public key to dn1 and dn2.
+Repeat this for dn1 and dn2
+</p>
+<pre class="code">#In nn
+su - hadoop
+ssh-keygen -t rsa
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-nn.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn1.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn2.pengfei.org
+$ chmod 0600 ~/.ssh/authorized_keys</pre>
+<pre class="code">In dn1 
+su - hadoop
+ssh-keygen -t rsa
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-nn.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn1.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn2.pengfei.org
+$ chmod 0600 ~/.ssh/authorized_keys</pre>
+<pre class="code">In dn2 
+su - hadoop
+ssh-keygen -t rsa
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-nn.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn1.pengfei.org
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@hadoop-dn2.pengfei.org
+$ chmod 0600 ~/.ssh/authorized_keys</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Configuring SSH key pair login&quot;,&quot;hid&quot;:&quot;configuring_ssh_key_pair_login&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;1286-2562&quot;} -->
+<h2 class="sectionedit7" id="download_and_extract_hadoop_source">5. Download and Extract Hadoop Source</h2>
+<div class="level2">
+<pre class="code"># mkdir -p /opt/hadoop
+# chown hadoop:hadoop /opt/hadoop
+# su - hadoop
+$ cd /opt/hadoop
+$ wget http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz
+$ tar -xzvf hadoop-2.8.2.tar.gz</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Download and Extract Hadoop Source&quot;,&quot;hid&quot;:&quot;download_and_extract_hadoop_source&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;2563-2840&quot;} -->
+<h2 class="sectionedit8" id="setup_environment_variables">6. Setup Environment variables</h2>
+<div class="level2">
+
+<p>
+you need to do the following command in /etc/profile.d of the name node and two data node. 
+</p>
+<pre class="code">vim /etc/profile.d/hdfs.sh
+
+export HADOOP_HOME=/opt/hadoop/hadoop-2.8.2
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+</pre>
+
+<p>
+Set pid dir for hadoop daemon to put pid files
+</p>
+<pre class="code"># The prefer path for pid dir is /var/run, but for centos7 and some rhel(red hat enteprise linux), /var/run is a temp dir.
+# It&#039;s get cleanned after reboot, so you can create a run dir under the home of the user who runs
+# the daemon, for example, I run hadoop with user hadoop, so /home/hadooop/run/hadoop, for spark,
+# it will be /home/hadoop/run/spark
+# the default pid dir is /tmp, if you want to change it, you can do a export in .bashrc or .bash_profile
+export HADOOP_PID_DIR=/var/run/hadoop
+# if you don&#039;t do the export, you can modify it in &lt;HADOOP_HOME&gt;/etc/hadoop/hadoop-env.sh
+HADOOP_PID_DIR=/var/run/hadoop</pre>
+
+<p>
+Now apply changes in the current running session.
+</p>
+<pre class="code">source /etc/profile.d/hdfs.sh</pre>
+
+<p>
+Verify that hadoop get the right JAVA_HOME, and jvm config 
+</p>
+<pre class="code">vim /opt/hadoop/hadoop-2.8.2/etc/hadoop/hadoop-env.sh
+
+#check export JAVA_HOME=
+#and HADOOP_OPTS=
+#it should be 
+#JAVA_HOME=${JAVA_HOME} if you followed my jdk tuto
+#export HADOOP_OPTS=-Djava.net.preferIPv4Stack=true</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;6. Setup Environment variables&quot;,&quot;hid&quot;:&quot;setup_environment_variables&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;2841-4434&quot;} -->
+<h2 class="sectionedit9" id="configure_hadoop">7: Configure Hadoop</h2>
+<div class="level2">
+
+<p>
+Hadoop has many of configuration files, which need to configure as per requirements of your hadoop infrastructure. The following config example is the basic conf for running a hadoop multinode cluster. If you need to optimation or HA, you need to dig more.
+</p>
+
+<p>
+Lets start with the configuration with name node setup. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;7: Configure Hadoop&quot;,&quot;hid&quot;:&quot;configure_hadoop&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;4435-4782&quot;} -->
+<h3 class="sectionedit10" id="set_the_heap_size_of_hadoop">Set the heap size of hadoop</h3>
+<div class="level3">
+
+<p>
+The file hadoop-env.sh shoul locate at $HADOOP_HOME/etc/hadoop, in our case, it&#039;s /opt/hadoop/hadoop-2.8.2/etc/hadoop
+</p>
+<dl class="file">
+<dt><a href="/doku.php?do=export_code&amp;id=employes:pengfei.liu:big_data:hadoop:install_config_hadoop&amp;codeblock=9" title="Download Snippet" class="mediafile mf_sh">hadoop-env.sh</a></dt>
+<dd><pre class="code file sh">#HADOOP_HEAPSIZE sets the JVM heap size for all Hadoop project servers such as HDFS, YARN, and MapReduce
+#HADOOP_HEAPSIZE is an integer passed to the JVM as the maximum memory (Xmx) argument.
+#for example, if you need to give 8Go memory
+export HADOOP_HEAPSIZE=8192
+&nbsp;
+#HADOOP_NAMENODE_OPTS is specific to the NameNode and sets all JVM flags, which must be specified. 
+#HADOOP_NAMENODE_OPTS overrides the HADOOP_HEAPSIZE Xmx value for the NameNode. 
+&nbsp;
+# For example the initial heap is 1GB, the max is 4GB.
+export HADOOP_NAMENODE_OPTS=&quot;-Xms1024M -Xmx4028M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:+PrintTenuringDistribution -XX:OnOutOfMemoryError={{AGENT_COMMON_DIR}}/killparent.sh -Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_NAMENODE_OPTS&quot;</pre>
+</dd></dl>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Set the heap size of hadoop&quot;,&quot;hid&quot;:&quot;set_the_heap_size_of_hadoop&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;4783-5869&quot;} -->
+<h3 class="sectionedit11" id="define_who_is_masters_who_is_slaves">Define who is masters, who is slaves</h3>
+<div class="level3">
+
+<p>
+In folder $HADOOP_HOME/etc/hadoop, add two files <code>masters, slaves</code>
+</p>
+<pre class="code">vim masters
+
+#put the following lines
+hadoop-nn.pengfei.org
+
+#If you have more than one master, you can put the second master on the new line</pre>
+<pre class="code">vim slaves
+
+#put the following lines
+hadoop-dn1.pengfei.org
+hadoop-dn2.pengfei.org</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Define who is masters, who is slaves&quot;,&quot;hid&quot;:&quot;define_who_is_masters_who_is_slaves&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;5870-6247&quot;} -->
+<h3 class="sectionedit12" id="edit_core-sitexml">Edit core-site.xml</h3>
+<div class="level3">
+
+<p>
+The core-site.xml file contains information such as the url, the port number used for Hadoop instance, memory allocated for the file system, memory limit for storing the data, and size of Read/Write buffers.
+</p>
+<pre class="code">#Add the following inside the configuration tag
+# set the name node url
+&lt;property&gt;
+    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+    &lt;value&gt;hdfs://hadoop-nn.pengfei.org:9000/&lt;/value&gt;
+&lt;/property&gt;
+#If &quot;true&quot;, enable permission checking in HDFS. If &quot;false&quot;, permission checking is turned 
+#off, but all other behavior is unchanged. Switching from one parameter value to the other 
+#does not change the mode, owner or group of files or directories.
+&lt;property&gt;
+    &lt;name&gt;dfs.permissions&lt;/name&gt;
+    &lt;value&gt;false&lt;/value&gt;
+&lt;/property&gt;
+
+#set the tmporal file location for hdfs
+&lt;property&gt;
+&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+&lt;value&gt;/tmp/hadoop_tmp&lt;/value&gt;
+&lt;/property&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit core-site.xml&quot;,&quot;hid&quot;:&quot;edit_core-sitexml&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:12,&quot;range&quot;:&quot;6248-7135&quot;} -->
+<h3 class="sectionedit13" id="edit_hdfs-sitexml">Edit hdfs-site.xml</h3>
+<div class="level3">
+
+<p>
+The hdfs-site.xml file contains information such as the value of replication data, namenode path, and datanode paths of your local file systems. It means the place where you want to store the Hadoop infrastructure.
+</p>
+<pre class="code">#Path to put the data bloc (datanode)
+&lt;property&gt;
+	&lt;name&gt;dfs.data.dir&lt;/name&gt;
+	&lt;value&gt;/opt/hadoop/dfs/name/data&lt;/value&gt;
+	&lt;final&gt;true&lt;/final&gt;
+&lt;/property&gt;
+#Path to put the metadata (namenode)
+&lt;property&gt;
+	&lt;name&gt;dfs.name.dir&lt;/name&gt;
+	&lt;value&gt;/opt/hadoop/dfs/name&lt;/value&gt;
+	&lt;final&gt;true&lt;/final&gt;
+&lt;/property&gt;
+#number of data replication, it should be 3 ,for testing 1 is enough
+&lt;property&gt;
+	&lt;name&gt;dfs.replication&lt;/name&gt;
+	&lt;value&gt;1&lt;/value&gt;
+&lt;/property&gt;</pre>
+
+<p>
+You can config multiple entries for dfs.name.dir and dfs.data.dir, if your vm or server has many partitions.
+</p>
+
+<p>
+In hadoop hdfs-site.xml, there is a very important paramenter called dfs.data.dir, or dfs.datanode.data.dir.
+</p>
+
+<p>
+This definition determines where on the local filesystem an DFS data node should store its blocks. If this is a comma-delimited list of directories, then data will be stored in all named directories, typically on different devices. The directories should be tagged with corresponding storage types ([SSD]/[DISK]/[ARCHIVE]/[RAM_DISK]) for HDFS storage policies. The default storage type will be DISK if the directory does not have a storage type tagged explicitly. Directories that do not exist will be created if local filesystem permission allows.
+</p>
+
+<p>
+The reconginzed format is:
+</p>
+<pre class="code">file://${hadoop.tmp.dir}/dfs/data</pre>
+
+<p>
+For multiple entries, separate entries by comma, here is an example:
+</p>
+<pre class="code">&lt;property&gt;
+  &lt;name&gt;dfs.data.dir&lt;/name&gt;
+    &lt;value&gt;file:///disk/c0t2,/disk/c0t3,/disk/c0t4,/disk/c0t5&lt;/value&gt;
+&lt;/property&gt;</pre>
+
+<p>
+<strong>How does dfs.datanode.data.dir work with multiple entries?</strong>
+</p>
+
+<p>
+When dfs.data.dir has multiple values, data is copied to the HDFS in a round-robin fashion. If one of the directory&#039;s disk is full, round-robin data copy will continue on the rest of the directories.
+</p>
+
+<p>
+PS. You can specify dfs.data.dir location, but if the namenode is not in the slaves, there will not have datanode daemon running on the namenode, which means the dfs.data.dir config will never be used.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit hdfs-site.xml&quot;,&quot;hid&quot;:&quot;edit_hdfs-sitexml&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:13,&quot;range&quot;:&quot;7136-9358&quot;} -->
+<h3 class="sectionedit14" id="edit_mapred-sitexml">Edit mapred-site.xml</h3>
+<div class="level3">
+
+<p>
+This file is used to specify which MapReduce framework we are using. 
+</p>
+<pre class="code">#name node will be the map tracker
+&lt;property&gt;
+        &lt;name&gt;mapred.job.tracker&lt;/name&gt;
+	&lt;value&gt;hadoop-nn.pengfei.org:9001&lt;/value&gt;
+&lt;/property&gt;
+
+#the mapreduce job tracker will be managed by yarn
+
+&lt;property&gt;
+	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+	&lt;value&gt;yarn&lt;/value&gt;
+&lt;/property&gt;
+
+#set heap memory for each map (datanode)
+&lt;property&gt;
+        &lt;name&gt;mapred.child.java.opts&lt;/name&gt;
+        &lt;value&gt;-XX:+UseParallelGC -Xmx256m&lt;/value&gt;
+&lt;/property&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit mapred-site.xml&quot;,&quot;hid&quot;:&quot;edit_mapred-sitexml&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:14,&quot;range&quot;:&quot;9359-9913&quot;} -->
+<h3 class="sectionedit15" id="edit_the_yarn-sitexml">Edit the yarn-site.xml</h3>
+<div class="level3">
+
+<p>
+This file is used to configure yarn into Hadoop.
+</p>
+<pre class="code">&lt;configuration&gt;
+
+&lt;!-- Site specific YARN configuration properties --&gt;
+&lt;property&gt;
+	&lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
+	&lt;value&gt;mapreduce_shuffle&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+	&lt;name&gt;yarn.nodemanager.aux-services.mapreduce.shuffle.class&lt;/name&gt;
+	&lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+	&lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt;
+	&lt;value&gt;hadoop-nn.bioaster.org:8025&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+	&lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt;
+	&lt;value&gt;hadoop-nn.bioaster.org:8030&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+	&lt;name&gt;yarn.resourcemanager.address&lt;/name&gt;
+	&lt;value&gt;hadoop-nn.bioaster.org:8040&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;/configuration&gt;
+</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Edit the yarn-site.xml&quot;,&quot;hid&quot;:&quot;edit_the_yarn-sitexml&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:15,&quot;range&quot;:&quot;9914-10711&quot;} -->
+<h2 class="sectionedit16" id="copy_hadoop_folder_of_name_node_to_data_nodes">8: Copy Hadoop folder of name node to data nodes</h2>
+<div class="level2">
+
+<p>
+In step 7, we set the configuration which is the same for name node and data node.
+</p>
+
+<p>
+in name node, do the following command
+</p>
+<pre class="code">su - hadoop
+
+$ rsync -auvx $HADOOP_HOME hadoop-dn1.pengfei.org:/opt/hadoop
+$ rsync -auvx $HADOOP_HOME hadoop-dn2.pengfei.org:/opt/hadoop</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;8: Copy Hadoop folder of name node to data nodes&quot;,&quot;hid&quot;:&quot;copy_hadoop_folder_of_name_node_to_data_nodes&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:16,&quot;range&quot;:&quot;10712-11050&quot;} -->
+<h2 class="sectionedit17" id="configure_hadoop_on_namenode_server_only">9: Configure Hadoop on namenode Server Only</h2>
+<div class="level2">
+
+<p>
+After the copy of configuration files, you need to make sure the masters and slaves file is correct
+</p>
+<pre class="code"># su - hadoop
+$ cd $HADOOP_HOME/etc/hadoop
+$ vi slaves
+hadoop-dn1.pengfei.org
+hadoop-dn2.pengfei.org
+
+$ vi masters
+hadoop-nn.pengfei.org</pre>
+
+<p>
+You need to edit the hdfs-site.xml
+</p>
+<pre class="code">#remove the metadata path and the replication number must be the same as name node
+
+&lt;configuration&gt;
+&lt;property&gt;
+	&lt;name&gt;dfs.data.dir&lt;/name&gt;
+	&lt;value&gt;/opt/hadoop/dfs/name/data&lt;/value&gt;
+	&lt;final&gt;true&lt;/final&gt;
+&lt;/property&gt;
+
+
+&lt;property&gt;
+	&lt;name&gt;dfs.replication&lt;/name&gt;
+	&lt;value&gt;1&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;/configuration&gt;
+</pre>
+
+<p>
+Format the name node
+</p>
+<pre class="code"># su - hadoop
+$hadoop namenode -format</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;9: Configure Hadoop on namenode Server Only&quot;,&quot;hid&quot;:&quot;configure_hadoop_on_namenode_server_only&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:17,&quot;range&quot;:&quot;11051-11794&quot;} -->
+<h2 class="sectionedit18" id="configure_hadoop_on_datanode_server_only">10: Configure Hadoop on datanode server Only</h2>
+<div class="level2">
+
+<p>
+<strong>On each datanode, edit hdfs-site.xml, remove the dfs.name.dir and dfs.replication section. if the data dir path is different, change dfs.data.dir value accordingly</strong>
+</p>
+
+<p>
+The following config is an example
+</p>
+<pre class="code">&lt;configuration&gt;
+&lt;property&gt;
+	&lt;name&gt;dfs.data.dir&lt;/name&gt;
+	&lt;value&gt;/opt/hadoop/dfs/name/data&lt;/value&gt;
+	&lt;final&gt;true&lt;/final&gt;
+&lt;/property&gt;
+&lt;/configuration&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;10: Configure Hadoop on datanode server Only&quot;,&quot;hid&quot;:&quot;configure_hadoop_on_datanode_server_only&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:18,&quot;range&quot;:&quot;11795-12219&quot;} -->
+<h2 class="sectionedit19" id="start_hadoop_services">11: Start Hadoop Services</h2>
+<div class="level2">
+
+<p>
+<strong>Use the following command on namenode to start all services (namenode and datanode)</strong>
+if the ssh key is set up correctly, this will activate all datanode in the slaves files
+</p>
+<pre class="code">cd $HADOOP_HOME/sbin/
+ ./start-dfs.sh
+ ./start-yarn.sh </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;11: Start Hadoop Services&quot;,&quot;hid&quot;:&quot;start_hadoop_services&quot;,&quot;codeblockOffset&quot;:23,&quot;secid&quot;:19,&quot;range&quot;:&quot;12220-12508&quot;} -->
+<h2 class="sectionedit20" id="check_status_of_hdfs">12: Check status of hdfs</h2>
+<div class="level2">
+
+<p>
+#check status after starting the service
+</p>
+<pre class="code">[root@CCLinDataWHD01 pliu]# jps
+27562 Jps
+7050 NameNode
+7262 SecondaryNameNode
+5822 QuorumPeerMain</pre>
+
+<p>
+#check status via web interface
+<a href="http://pengfei.org:8042/" class="urlextern" title="http://pengfei.org:8042/" rel="ugc nofollow">http://pengfei.org:8042/</a>
+</p>
+
+<p>
+<a href="http://pengfei.org:50070/dfshealth.html#tab-overview" class="urlextern" title="http://pengfei.org:50070/dfshealth.html#tab-overview" rel="ugc nofollow">http://pengfei.org:50070/dfshealth.html#tab-overview</a>
+</p>
+
+<p>
+<a href="http://pengfei.org:8088/cluster" class="urlextern" title="http://pengfei.org:8088/cluster" rel="ugc nofollow">http://pengfei.org:8088/cluster</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;12: Check status of hdfs&quot;,&quot;hid&quot;:&quot;check_status_of_hdfs&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:20,&quot;range&quot;:&quot;12509-12848&quot;} -->
+<h2 class="sectionedit21" id="basic_hdfs_command">13. Basic hdfs command</h2>
+<div class="level2">
+<pre class="code">#Upload data to hdfs
+
+hdfs dfs -mkdir /usr/test_data
+
+hdfs dfs -put test.txt /usr/test_data
+
+
+[hadoop@CCLinDataWHD01 bin]$ hdfs dfs -ls /usr/test_data/
+Found 1 items
+-rw-r--r--   1 hadoop supergroup         19 2017-11-07 17:18 /usr/test_data/test.txt
+
+#show the content of test.txt
+[hadoop@CCLinDataWHD01 bin]$ hdfs dfs -cat /usr/test_data/test.txt
+
+hahah
+titit
+titit
+
+</pre>
+
+<p>
+<a href="http://10.70.3.48:50070/explorer.html#/usr/test_data" class="urlextern" title="http://10.70.3.48:50070/explorer.html#/usr/test_data" rel="ugc nofollow">http://10.70.3.48:50070/explorer.html#/usr/test_data</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;13. Basic hdfs command&quot;,&quot;hid&quot;:&quot;basic_hdfs_command&quot;,&quot;codeblockOffset&quot;:25,&quot;secid&quot;:21,&quot;range&quot;:&quot;12849-13325&quot;} -->
+<h2 class="sectionedit22" id="delete_mapreduce_job_from_hadoop_cluster">Delete mapReduce job from hadoop cluster</h2>
+<div class="level2">
+<pre class="code">
+
+# Kill a hadoop job in version &lt;2.3.0
+&gt; hadoop job -kill $jobId
+
+#You can get a list of all jobId&#039;s doing:
+&gt; hadoop job -list
+
+
+# Kill a hadoop job in version &gt;=2.3.0
+&gt; yarn application -kill $ApplicationId
+
+# You can get a list of all ApplicationId&#039;s doing:
+&gt; yarn application -list</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Delete mapReduce job from hadoop cluster&quot;,&quot;hid&quot;:&quot;delete_mapreduce_job_from_hadoop_cluster&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:22,&quot;range&quot;:&quot;13326-13682&quot;} -->
+<h2 class="sectionedit23" id="trouble_shooting">Trouble shooting</h2>
+<div class="level2">
+
+<p>
+If after start hadoop daemon, the hadoop daemon does not run correctly, you need to check the error message in the log file
+</p>
+
+<p>
+By default, all the hadoop log configuration is in $HADOOP_HOME/etc/hadoop/log4j.properties
+the log files are located at $HADOOP_HOME/logs/
+</p>
+
+<p>
+You can find some common bugs and solution in <a href="/doku.php?id=employes:pengfei.liu:big_data:hadoop:trouble_shooting" class="wikilink1" title="employes:pengfei.liu:big_data:hadoop:trouble_shooting" data-wiki-id="employes:pengfei.liu:big_data:hadoop:trouble_shooting">Hadoop common trouble shooting</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Trouble shooting&quot;,&quot;hid&quot;:&quot;trouble_shooting&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:23,&quot;range&quot;:&quot;13683-&quot;} -->

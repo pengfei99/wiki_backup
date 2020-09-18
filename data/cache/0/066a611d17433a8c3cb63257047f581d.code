@@ -1,0 +1,8 @@
+$ aptitude update
+$ aptitude install cloud-init cloud-utils cloud-initramfs-growroot
+$ echo &quot;&quot; &gt; /etc/udev/rules.d/70-persistent-net.rules
+$ echo &quot;&quot; &gt; /lib/udev/rules.d/75-persistent-net-generator.rules
+$ vim /etc/cloud/cloud.cfg
+name: bioaster
+groups: [..., sudo]
+lock_passwd: False # pour autoriser le sudo ?!

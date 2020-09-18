@@ -1,0 +1,16 @@
+BIOASTER doit s'équiper d'un système pour gérer les flux de donner et les analyses automatiques. Trois solutions ont été identifiées: 
+  * [[http://www.knime.org/|KNIME]] : Claire va tester knime pour dans 2 semaines.
+  * [[http://www.pentaho.com/|Pentaho]]
+  * [[http://www.cs.cmu.edu/~pegasus/what%20is%20pegasus.htm|Pegasus]]
+
+A partir du retour d'expérience de Claire, il faudra établir les prérequis:
+  * Possibilité d'intégrer facilement un binaire/software/script.
+  * Possibilité d'utiliser n'importe quel langage.
+  * Possibilité d'associer 1 noeud d'analyse à une infrastructure de calcul particulière.
+
+Premier retour d'expérience de Claire sur KNIME :
+  * Beaucoup d'outil déjà présent : R, Python, Perl.
+  * Plusieurs façon d'implémenter un noeud R dans KNIME.
+  * Impossibilité d'utiliser la bonne version de R pour installer les librairies d'analyses. Bloquer à l'intégration de R. 
+
+**Conclusion :** il faudrait une retour d'expérience d'un utilisateur confirmé; il faudrait chercher du côté de Creatis.

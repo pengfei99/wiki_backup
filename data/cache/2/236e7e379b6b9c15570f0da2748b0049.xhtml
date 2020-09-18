@@ -1,0 +1,89 @@
+
+<h1 class="sectionedit1" id="extend_disk_space_of_a_vm_in_centos7">Extend disk space of a vm in centos7</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Extend disk space of a vm in centos7&quot;,&quot;hid&quot;:&quot;extend_disk_space_of_a_vm_in_centos7&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-52&quot;} -->
+<h2 class="sectionedit2" id="increase_the_physical_volume">1. Increase the physical volume</h2>
+<div class="level2">
+
+<p>
+Open VMware or virtualbox setting of the VM, choose the disk and increase the size to your desired size. 
+Boot up your vm, you need first alter the physical volume of your partition. 
+</p>
+<pre class="code"># Normally, your linux has a /dev/sda, you should have the following lines by typing 
+$ lsblk
+           sda               8:0    0  200G  0 disk 
+            ├─sda1            8:1    0    1G  0 part /boot
+            └─sda2            8:2    0  39G  0 part 
+                ├─centos-root 253:0    0   37G  0 lvm  /
+                └─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+                
+# You can notice the sda partition has 200G, but sda2 use only 39 G. We want to increase sda2 from 37G to  199G. 
+</pre>
+
+<p>
+To do this, there are three steps to make:
+</p>
+<ul>
+<li class="level1"><div class="li"> alter your partition table so sda2 ends at the end of disk</div>
+</li>
+<li class="level1"><div class="li"> reread the partition table (will require a reboot)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Increase the physical volume&quot;,&quot;hid&quot;:&quot;increase_the_physical_volume&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;53-986&quot;} -->
+<h3 class="sectionedit3" id="alter_the_partition_table">1.1 - Alter the Partition table</h3>
+<div class="level3">
+<pre class="code"># Open the disk partition management tool  
+$ fdisk /dev/sda
+
+# 1. Issue p to print your current partition table and copy that output to some safe place. 
+# 2. Issue d followed by 2 to remove the second partition. 
+# 3. Issue n to create a new second partition. Make sure the start equals the start of the 2nd partition table you printed earlier. Make sure the end is at the end of the disk (usually the default).
+# 4. Issue t followed by 2 followed by 8e to toggle the partition type of your new second partition to 8e (Linux LVM, In Linux , LVM(Logical Volume Manager) provides the facility to increase and reduce the file system size.).
+# 5. Issue p to review your new partition layout and make sure the start of the new second partition is exactly where the old second partition was. If everything looks right, 
+# 6. Issue w to write the partition table to disk. 
+
+# You will get an error message from partprobe that the partition table couldn&#039;t be reread (because the disk is in use).</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.1 - Alter the Partition table&quot;,&quot;hid&quot;:&quot;alter_the_partition_table&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;987-2036&quot;} -->
+<h3 class="sectionedit4" id="reboot_your_system">1.2 Reboot your system</h3>
+<div class="level3">
+
+<p>
+This step is necessary so the partition table gets re-read.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1.2 Reboot your system&quot;,&quot;hid&quot;:&quot;reboot_your_system&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2037-2131&quot;} -->
+<h2 class="sectionedit5" id="resize_the_lvm">2. Resize the LVM</h2>
+<div class="level2">
+<pre class="code"># After your system rebooted invoke
+$ pvresize /dev/sda2
+
+# Now you should see your sda2 has 199G
+$ lsblk
+           sda               8:0    0  200G  0 disk 
+            ├─sda1            8:1    0    1G  0 part /boot
+            └─sda2            8:2    0 199G  0 part 
+                ├─centos-root 253:0    0   37G  0 lvm  /
+                └─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+# Now, we can create or extend logical volumes to use the free space which are not assigned. 
+# In our case,the partition centos-root under /dev/sda2 has 37G. We want to extend it to 197G </pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Resize the LVM&quot;,&quot;hid&quot;:&quot;resize_the_lvm&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;2132-2776&quot;} -->
+<h3 class="sectionedit6" id="resize_the_lvm1">2.1 Resize the LVM</h3>
+<div class="level3">
+<pre class="code"># 1. Check available space. 
+$ vgdisplay centos
+# 2. Use lvextend command to increase the size. 
+$ lvextend -L +160G /dev/mapper/centos-root
+# 3. Finally perform an online resize to resize the logical volume. 
+$ xfs_growfs /dev/mapper/centos-root</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2.1 Resize the LVM&quot;,&quot;hid&quot;:&quot;resize_the_lvm1&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;2777-&quot;} -->

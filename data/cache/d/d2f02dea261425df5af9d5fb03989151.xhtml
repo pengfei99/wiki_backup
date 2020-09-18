@@ -1,0 +1,161 @@
+
+<h1 class="sectionedit1" id="hbase_overview">HBase overview</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HBase overview&quot;,&quot;hid&quot;:&quot;hbase_overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="what_is_hbase">What is HBase?</h2>
+<div class="level2">
+
+<p>
+HBase is a distributed &lt;color #ed1c24&gt;column-oriented&lt;/color&gt; database built on top of the Hadoop file system. It is an open-source project and is horizontally scalable.
+</p>
+
+<p>
+HBase is a data model that is similar to Google’s big table designed to provide quick random access to huge amounts of structured data. It leverages the fault tolerance provided by the Hadoop File System (HDFS).
+</p>
+
+<p>
+It is a part of the Hadoop ecosystem that provides random real-time read/write access to data in the Hadoop File System.
+</p>
+
+<p>
+One can store the data in HDFS either directly or through HBase. Data consumer reads/accesses the data in HDFS randomly using HBase. HBase sits on top of the Hadoop File System and provides read and write access.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is HBase?&quot;,&quot;hid&quot;:&quot;what_is_hbase&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-781&quot;} -->
+<h2 class="sectionedit3" id="storage_mechanism_in_hbase">Storage Mechanism in HBase</h2>
+<div class="level2">
+
+<p>
+HBase is a column-oriented database and the tables in it are sorted by row. The table schema defines only column families, which are the key value pairs. A table have multiple column families and each column family can have any number of columns. Subsequent column values are stored contiguously on the disk. Each cell value of the table has a timestamp. In short, in an HBase:
+</p>
+<ul>
+<li class="level1"><div class="li"> Table is a collection of rows.</div>
+</li>
+<li class="level1"><div class="li"> Row is a collection of column families.</div>
+</li>
+<li class="level1"><div class="li"> Column family is a collection of columns.</div>
+</li>
+<li class="level1"><div class="li"> Column is a collection of key value pairs.</div>
+</li>
+</ul>
+
+<p>
+Given below is an example schema of table in HBase.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0" rowspan="2"> RowID </th><th class="col1" colspan="2"> Column Family 1 </th><th class="col3" colspan="2"> Column Family 2 </th>
+	</tr>
+	<tr class="row1">
+		<th class="col0">col1 </th><th class="col1 centeralign">  col2     </th><th class="col2 leftalign"> col1  </th><th class="col3 centeralign">  col2   </th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<td class="col0 leftalign">1      </td><td class="col1">val1 </td><td class="col2 centeralign">  val2     </td><td class="col3 leftalign"> val1  </td><td class="col4"> val2 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">2      </td><td class="col1">val1 </td><td class="col2 centeralign">  val2     </td><td class="col3 leftalign"> val1  </td><td class="col4"> val2 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">3      </td><td class="col1">val1 </td><td class="col2 centeralign">  val2     </td><td class="col3 leftalign"> val1  </td><td class="col4"> val2 </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;1425-1648&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Storage Mechanism in HBase&quot;,&quot;hid&quot;:&quot;storage_mechanism_in_hbase&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;782-1650&quot;} -->
+<h2 class="sectionedit5" id="column_oriented_and_row_oriented">Column oriented and Row oriented</h2>
+<div class="level2">
+
+<p>
+Column-oriented databases are those that store data tables as sections of columns of data, rather than as rows of data. Shortly, they will have column families.
+</p>
+
+<p>
+Row oriented : It is suitable for Online Transaction Process (OLTP). They are designed for small number of rows and columns.
+</p>
+
+<p>
+Column oriented : It is suitable for Online Analytical Processing (OLAP). They are designed for huge tables.
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">HBase </th><th class="col1 rightalign">  RDBMS</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">HBase is schema-less, it doesn&#039;t have the concept of fixed columns schema; defines only column families.</td><td class="col1">An RDBMS is governed by its schema, which describes the whole structure of tables.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">It is built for wide tables. HBase is horizontally scalable.</td><td class="col1">It is thin and built for small tables. Hard to scale.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">No transactions are there in HBase.</td><td class="col1">RDBMS is transactional.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">It has de-normalized data.</td><td class="col1">It will have normalized data.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">It is good for semi-structured as well as structured data.</td><td class="col1">It is good for structured data.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;2094-2631&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Column oriented and Row oriented&quot;,&quot;hid&quot;:&quot;column_oriented_and_row_oriented&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1651-2632&quot;} -->
+<h2 class="sectionedit7" id="features_of_hbase">Features of HBase</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> HBase is linearly scalable.</div>
+</li>
+<li class="level1"><div class="li"> It has automatic failure support.</div>
+</li>
+<li class="level1"><div class="li"> It provides consistent read and writes.</div>
+</li>
+<li class="level1"><div class="li"> It integrates with Hadoop, both as a source and a destination.<a href="http://134.158.37.239/lib/images/toolbar/ol.png" class="urlextern" title="http://134.158.37.239/lib/images/toolbar/ol.png" rel="nofollow">http://134.158.37.239/lib/images/toolbar/ol.png</a></div>
+</li>
+<li class="level1"><div class="li"> It has easy java <abbr title="Application Programming Interface">API</abbr> for client.</div>
+</li>
+<li class="level1"><div class="li"> It provides data replication across clusters.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Features of HBase&quot;,&quot;hid&quot;:&quot;features_of_hbase&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2633-2979&quot;} -->
+<h2 class="sectionedit8" id="where_to_use_hbase">Where to Use HBase</h2>
+<div class="level2">
+
+<p>
+Apache HBase is used to have random, real-time read/write access to Big Data.
+</p>
+
+<p>
+It hosts very large tables on top of clusters of commodity hardware.
+</p>
+
+<p>
+Apache HBase is a non-relational database modeled after Google&#039;s Bigtable. Bigtable acts up on Google File System, likewise Apache HBase works on top of Hadoop and HDFS.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Where to Use HBase&quot;,&quot;hid&quot;:&quot;where_to_use_hbase&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;2980-3331&quot;} -->
+<h2 class="sectionedit9" id="application_of_hbase">Application of HBase</h2>
+<div class="level2">
+
+<p>
+It is used whenever there is a need to write heavy applications.
+</p>
+
+<p>
+HBase is used whenever we need to provide fast random access to available data.
+</p>
+
+<p>
+Companies such as Facebook, Twitter, Yahoo, and Adobe use HBase internally.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Application of HBase&quot;,&quot;hid&quot;:&quot;application_of_hbase&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;3332-&quot;} -->

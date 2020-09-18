@@ -1,0 +1,52 @@
+====== GNU C Library ======
+
+===== Informations =====
+
+  * **Version** : 2.19
+  * **Licence** : GPLv3 ou +
+  * **Page Web** : [[https://www.gnu.org/software/libc/]]
+  * **Description** : The GNU C Library is primarily designed to be a portable and high performance C library. It follows all relevant standards including ISO C11 and POSIX.1-2008. It is also internationalized and has one of the most complete internationalization interfaces known. 
+
+<WRAP round important>
+**Attention** :\\
+Utiliser une version différente de glibc rend tous les logiciels liés dynamiquement à la version disponible sur le système instables !!
+</WRAP>
+
+===== Installation =====
+
+<code>
+export SOFTWARE="/afs/in2p3.fr/throng/bioaster"
+export APP="$SOFTWARE/apps/gcc-RedHat_4.4.7-4/glibc/2.19"
+mkdir -p $APP
+cd $SOFTWARE/src
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.gz
+tar xvzf glibc-2.19.tar.gz
+mkdir glibc-2.19-build
+cd glibc-2.19-build
+CFLAGS="-02" ../glibc-2.19/configure --prefix="$APP"
+make && make install
+</code>
+
+===== Intégration =====
+
+<code>
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "The GNU C Library.\n"
+}
+
+set version "2.19"
+
+set app "/afs/in2p3.fr/throng/bioaster/apps/gcc-RedHat_4.4.7-4/glibc/${version}"
+
+prepend-path PATH "${app}/bin"
+prepend-path LIBRARY_PATH "${app}/lib"
+prepend-path LD_LIBRARY_PATH "${app}/lib"
+prepend-path C_INCLUDE_PATH "${app}/include"
+prepend-path CPLUS_INCLUDE_PATH "${app}/include"
+</code>
+
+===== Log =====
+
+  * **2014.008/22 (tlc)** Version 2.19 installée

@@ -1,0 +1,15 @@
+$ aptitude install tcsh
+$ aptitude install apache2
+$ vim /etc/apache2/sites-available/wwwblast
+  &lt;VirtualHost *:80&gt;
+      ServerName wwwblast.paris.bioaster.org
+      DocumentRoot /var/www/wwwblast
+&nbsp;
+      SetEnv BLASTDB /var/db/blast/
+&nbsp;
+      &lt;Directory /var/www/wwwblast&gt;
+          Options FollowSymLinks ExecCGI
+          DirectoryIndex index.html index.cgi
+          AddHandler cgi-script .cgi .pl
+      &lt;/Directory&gt;
+  &lt;/VirtualHost&gt;

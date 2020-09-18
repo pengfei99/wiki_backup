@@ -1,0 +1,70 @@
+
+<h1 class="sectionedit1" id="reviewboard">ReviewBoard</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "ReviewBoard" [1-27] -->
+<h2 class="sectionedit2" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+L&#039;installation se fait en deux parties : <a href="/si/outils/reviewboard/serveur" class="wikilink2" title="si:outils:reviewboard:serveur" rel="nofollow">le serveur</a> et <a href="/si/outils/reviewboard/client" class="wikilink2" title="si:outils:reviewboard:client" rel="nofollow">le client</a>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installation" [28-189] -->
+<h2 class="sectionedit3" id="methode_de_travail">Méthode de travail</h2>
+<div class="level2">
+
+<p>
+ReviewBoard est un système reposant sur les correctifs (<em>patch</em>). Il ne prend pas en compte les branches et les révisions produits par les VCS. Pour chaque révision (<code>commit</code>) il y aura donc une revue de code distincte.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Méthode de travail" [190-450] -->
+<h3 class="sectionedit4" id="mise_en_place">Mise en place</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Enregistrer le dépôt dans ReviewBoard</div>
+</li>
+<li class="level1"><div class="li"> Créer le <code>.reviewboardrc</code> et l&#039;intégrer (<code>commit</code> et <code>push</code>) dans le dépôt pour que tout e monde puisse l&#039;utiliser</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Mise en place" [451-649] -->
+<h3 class="sectionedit5" id="utilisation">Utilisation</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Créer une branche locale de développement</div>
+</li>
+<li class="level1"><div class="li"> Faire une modification (ou un ensemble)</div>
+</li>
+<li class="level1"><div class="li"> L&#039;enregistrer (<code>commit</code>)</div>
+</li>
+<li class="level1"><div class="li"> Faire une demande de revue (<code>rbt post</code>) (utiliser <code>–depends-on ID</code> ?!)</div>
+</li>
+<li class="level1"><div class="li"> Recommencer depuis le point 2</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Utilisation" [650-910] -->
+<h3 class="sectionedit6" id="integration_des_correctifs">Intégration des correctifs</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Créer un branche liée (<code>checkout</code>)</div>
+</li>
+<li class="level1"><div class="li"> Intégrer le correctif (<code>rbt –patch ID</code>)</div>
+</li>
+<li class="level1"><div class="li"> Tester le code si nécessaire</div>
+</li>
+<li class="level1"><div class="li"> L&#039;enregistrer (<code>commit</code>, pas besoin de <code>push</code> car la branche est liée)</div>
+</li>
+</ol>
+<div class="tags"><span>
+	<a href="/tag/todo?do=showtag&amp;tag=todo" class="wikilink1" title="tag:todo" rel="tag">todo</a>
+</span></div>
+
+</div>
+<!-- EDIT6 SECTION "Intégration des correctifs" [911-] -->

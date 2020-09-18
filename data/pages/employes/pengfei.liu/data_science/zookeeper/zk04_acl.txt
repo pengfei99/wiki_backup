@@ -1,0 +1,143 @@
+====== ZooKeeper 04: The ZooKeeper ACLs ======
+
+ZooKeeper's data model provides a mechanism to control access to znodes using ACL. While creating a znode, the ACLs determine the permissions with respect to the various operations that you can perform on the znodes. The ZooKeeper ACL model is similar to the Unix/Linux file permissions in terms of permitting or preventing operations. **It also uses permission bits to permit or prevent access on Znode**. However, the ZooKeeper node **doesn't have the concept of ownership**. ACLs are determined on the basis of the authentication mechanism of the client and the ZooKeeper service.
+
+===== 4.1 Client authentication =====
+
+Because ZooKeeper needs to deal with Humain and machine clients. So it uses a system called **Scheme:ID** to identify a client.
+
+**Scheme** defines the types of Client, it has the following possible value:
+  * World scheme: This represents anyone who is connecting to the ZooKeeper service
+  * Auth scheme: This represents any authenticated user, but doesn't use any ID
+  * Digest scheme: This represents the username and password way of authentication
+  * IP scheme: This represents authentication with the IP address of the client
+  * Host scheme: This represents anyone within the same hosting server
+
+**ID** is the id of the client based on the **scheme**. 
+
+
+
+==== 4.1.1 World scheme ====
+
+**World scheme** has only one ID (anyone). This represents any user in the world. For example, we type in the following command to set the znode accessible by anyone. Here **crdwa** is the permission associated with the client. Check section 4.2 to see the permission details.
+
+
+<code>
+# It means anyone can do create/read/write/delete/admin on Znode /tmp
+setAcl /tmp world:anyone:crdwa
+</code>
+
+==== 4.1.2 Auth scheme ====
+
+Auth scheme represents any authenticated users, so no need to use any ID. **But in practice, if you try to set ACL on a znode using auth scheme and not provide any ID**, it tells you that is not a valid ID, or some form of ID is needed.
+
+<code>
+# This will raise an error message
+setAcl /tmp auth:crdwa
+</code>
+
+To do it correctly we need to add user name and password to the command
+<code>
+# It means an authenticated user can do create/read/write/delete/admin on Znode /tmp
+setAcl /tmp auth:username:password:crdwa
+</code>
+
+The above command still throws error, because the username and password are never registered in the zookeeper. 
+
+To register a username/pwd pair, we need to use **addauth** Command. Suppose we have two username/pwd paires: toto:pwd1, titi:pwd2 
+
+<code>
+# general form 
+addauth digest <username>:<pwd>
+
+# example 1
+addauth digest toto:pwd1
+
+# example 2, the znode name is optionnal
+addauth digest titi:pwd2
+</code>
+
+Now we can setacl with the id toto or titi
+
+<code>
+# set acl to /tmp
+setAcl /tmp auth:toto:pwd1:crdwa
+
+# if we login with another client and try to access /tmp, you receive the following message
+[zk: 127.0.0.1:2181(CONNECTED) 0] get /tmp
+org.apache.zookeeper.KeeperException$NoAuthException: KeeperErrorCode = NoAuth for /tmp
+
+# if you do a getAcl
+[zk: 127.0.0.1:2181(CONNECTED) 3] getAcl /tmp
+'digest,'titi:tXE6n5rWxi3HOpV0Td9wTswRkDs=
+: cdrwa
+'digest,'toto:zTPgpkViifORWafT6PF+xAjvKgw=
+: cdrwa
+
+
+</code>
+
+==== 4.1.3 Digest Scheme ====
+
+Digest scheme represents an individual user with authentication. This uses username:password string that is hashed using the SHA-1 hashing algorithm, and that hashed string is in turn base64 encoded. According to the ZooKeeper website, it is stated that the MD5 hash of <username>:<password> is used as an ACL ID identity. 
+
+<code>
+# set acl by using digest scheme, you don't need to register the username/pwd anymore. The digest will do it 
+setAcl /tmp digest:tata:pwd3:crdwa
+
+# check the new acl
+getAcl /tmp
+</code>
+
+
+==== 4.1.4 Host Scheme ====
+
+It uses the postfix of the host URL to check the permission. For example, if we set the following acl
+
+<code>
+setAcl /tmp host:pengfei.com:crwda
+
+# if a client connect to zk with host:host2.pengfei.org, it will be permitted, but host:host3.centos.org will be denied.
+</code>
+
+==== 4.1.5 IP Scheme ====
+IP scheme represents any user within the same IP address.
+
+<code>
+setAcl /tmp ip:127.0.0.1:crdwa
+</code>
+
+
+===== 4.2 ZooKeeper ACL permissions =====
+
+ZooKeeper ACL has the following permissions:
+
+^Permission ^ Definition^
+| Create | Creation of Znode|
+| Read | Read data of a Znode or list all children node of a Znode|
+| Write | Write data of a Znode |
+| Delete | Deletion of a Znode|
+| Admin | Modify the ACL of a Znode | 
+
+
+===== 4.3 Pluggable authentication and scheme =====
+
+In addition to the authentication schemes mentioned in the preceding list, ZooKeeper also supports a pluggable authentication mechanism, which makes it possible to integrate third-party authentication schemes if needed. Any authentication schemes in ZooKeeper consist of the following two main authentication operations:
+  - Firstly, the authentication framework in ZooKeeper authenticates the client. The client authentication occurs when the client connects to the ZooKeeper service by validating client information.
+  - Secondly, the authentication framework finds the entries in the ACL, which correspond to the client. ACL entries are pairs that consist of <IDs, Permissions> pairs, where IDs are some strings that identify the client.
+
+SASL kerberos authentication is a popular authentication for zookeeper. For more information on how to configure it, please visit: https://docs.cloudera.com/documentation/enterprise/5-3-x/topics/cdh_sg_zookeeper_security.html
+
+===== 4.4 ACL does not propagate to the child =====
+
+An important point about znode ACLs is that the A**CL associated with a particular znode doesn't propagate to its children**. A client's authentication with ZooKeeper is optional; if the ACLs associated with a znode require a client to authenticate, then it must authenticate using any of the previously mentioned authentication mechanisms. An ACL is the combination of an authentication mechanism, an identity for that mechanism, and a set of permissions.
+
+===== 4.5 Predefined ACL =====
+
+There are a number of predefined ACLs in ZooKeeper. These IDs, as defined by ZooKeeper ACLs, are shown in the following table:
+^ACL ID ^ ACL Description ^
+| ANYONE_ID_UNSAFE | This ID represents anyone|
+| AUTH_IDS | This is used to set ACLs, which get substituted with the IDs of the authenticated client |
+| OPEN_ACL_UNSAFE | This denotes a completely open ACL, and grants all permissions except the ADMIN permission |
+| CREATOR_ALL_ACL | This ACL grants all the permissions to the creator of the znode |
+| READ_ACL_UNSAFE | This ACL gives the world the ability to read |

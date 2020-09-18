@@ -1,0 +1,5 @@
+<span class="re2">outputDir</span>=<span class="st_h">'$OWNCLOUD/Projet_Biospecimens/exportDataFromV1/'</span>
+<span class="kw2">scp</span> <span class="re5">-r</span> bioaster<span class="sy0">@</span>10.69.40.11:<span class="sy0">/</span>tmp<span class="sy0">/</span>TESTCLEMENT3<span class="sy0">/</span> outputDir
+<span class="kw2">rm</span> dataFromV1<span class="sy0">/</span>TESTCLEMENT3<span class="sy0">/*</span>sql
+<span class="kw2">mv</span> dataFromV1<span class="sy0">/</span>TESTCLEMENT3<span class="sy0">/*</span> outputDir
+<span class="kw2">rm</span> <span class="re5">-rf</span> dataFromV1<span class="sy0">/</span>TESTCLEMENT3<span class="sy0">/</span>

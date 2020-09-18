@@ -1,0 +1,139 @@
+====== Bonnes pratiques de codage ======
+
+Il n'y a pas de consensus mondial sur les **"bonnes pratiques"** à appliquer quand on écrit un programme. Cependant, de nombreuses réflexions ont été menées par de brillants informaticiens ayant passé de nombreuses années à travailler à l'amélioration de leur **//art//**.
+
+Ici sont mentionnés quelques éléments sur lesquels nous nous sommes mis d'accord et que nous devrions appliquer au sein de BIOASTER.
+
+<WRAP round todo>
+Nous ne nous sommes **pas encore** mis d'accord... mais le but est de mettre sur cette page toutes les bonnes pratiques que nous nous engageons (surtout parce que nous avons réalisé qu'elles nous apportaient beaucoup) à appliquer.
+</WRAP>
+
+La plupart de ces pratiques sont étudiées plus en détail dans le livre "{{:bioinformatique:books:cleancodeahandbookofagilesoftwarecraftsmanship.pdf|Clean code handbook}}". Les références au livre sur cette page sont notées, par exemple, ''[cch:p64]'' pour la page 64 et ''[cch:c8]'' pour la chapitre 8.
+
+Les conseils donnés ici ne sont pas des vérités absolues ; il peuvent donc être amenés à changer si nous en trouvons des meilleurs.
+
+
+===== Documenter =====
+
+Commençons par une citation :
+ 
+<WRAP round box>
+**Le code est la documentation !**\\
+//-- Socrate, c. 440 avant notre ère//
+</WRAP>
+
+... tout ça pour dire que la documentation est souvent redondante avec le code et la maintenir à jour est un effort supplémentaire. Un code clair et bien écrit devrait être suffisant pour pouvoir comprendre **en première lecture** le fonctionnement du programme. La plupart des pratiques décrites sur cette page visent d'ailleurs à rendre le code plus clair et plus facile à comprendre.
+
+Cependant, de nombreuses choses doivent tout de même être expliquées dans programme : but du programme, justification technique de l'emploi d'un algorithme plutôt que d'un autre...
+
+Ces commentaires s'ils sont écrits en respectant certains standards peuvent facilement être lu par des générateurs de documentation (ex : [[/bioinformatique/doxygen|Doxygen]]) afin de produire des documentations plus lisibles (coloration syntaxique, suppression du code au profit des //signatures//...) et plus facilement navigables (liens hypertextes entre les éléments ayant une relation) dans différents formats : HTML, LaTeX, pdf, docx...
+
+Des exemples sur la manière de documenter le code seront donnés à chaque section de cette page.
+
+===== Bien commencer un programme =====
+
+La première chose lue est souvent, pour ne pas dire toujours, la première ligne ! Autant donc, être clair dès le début sur la fonction première du programme.
+
+<code>
+$ less `which bzr`
+#!/usr/bin/python
+
+# Copyright (C) 2005, 2006, 2007, 2008, 2009 Canonical Ltd
+#
+# [...longue notice de droit d'auteur...]
+# 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+"""Bazaar -- a free distributed version-control tool"""
+</code>
+
+===== Obtenir de l'aide =====
+
+Confronté à un nouveau programme (en ligne de commande), le premier réflexe est souvent d'invoquer le programme avec l'option d'aide : ''-h'', ''--help'', voir même ''man commande''.\\
+Il est donc important de fournir un message d'aide permettant à l'utilisateur de pouvoir utiliser le programme convenablement sans avoir à trouver et à lire la documentation ou même le code.
+
+De nombreuses bibliothèques logicielles ont été écrites afin de faciliter cette tâche. Celles-ci dépendent du langage utilisé. En voici [[/bioinformatique/python_help|un exemple en Python]].
+
+<code>
+$ bzr --help
+Bazaar 2.1.1 -- a free distributed version-control tool
+http://bazaar-vcs.org/
+
+Basic commands:
+  bzr init           makes this directory a versioned branch
+  bzr branch         make a copy of another branch
+  [...]
+</code>
+
+===== Conventions de nommage =====
+
+**Use Intention-Revealing Names** [cch:p18]\\
+La règle d'or est que les noms des objets (variables, fonctions, classes) doivent toujours **décrire leur rôle précis** dans l'algorithme.\\
+Une bonne pratique de nommage est donc celle qui nécessite **le moins de commentaires** dans le code.
+
+<color red>Mauvaise pratique :</color>
+    int d; //elapsed time in days
+
+<color green>Bonne pratique :</color>
+    int elapsedTimeInDays;
+    int daysSinceModification;
+
+
+===== Structures et classes =====
+
+**The Law of Demeter** [cch:p97]\\
+Une structure expose des variables (publiques), un objet expose des fonctions... 
+
+
+===== Fonctions, classes et méthodes (factorisation de code) =====
+
+<WRAP round todo>
+  * [cch:40] Function Arguments: 1, max 2!
+  * [cch:44] No side effect
+  * [cch:46] Prefer Exceptions to Returning Error Codes
+  * [cch:114] Bondaries: isolate from external library interfaces (ex: log4cpp)
+</WRAP>
+
+
+
+===== Utilisation des index dans les listes =====
+
+Voici un exemple [cch:p9] utilisant une constante bien nommée pour accéder aux éléments d'une liste. Notons aussi le renommage de la fonction pour obtenir les //flaggedCells//.
+
+<color red>Mauvaise pratique :</color>
+<code>
+public List<int[]> getThem() {
+    List<int[]> list1 = new ArrayList<int[]>();
+    for (int[] x : theList)
+        if (x[0] == 4)
+            list1.add(x);
+    return list1;
+}
+</code>
+
+<color green>Bonne pratique :</color>
+<code>
+public List<int[]> getFlaggedCells() {
+    List<int[]> flaggedCells = new ArrayList<int[]>();
+    for (int[] cell : gameBoard)
+        if (cell[STATUS_VALUE] == FLAGGED)
+            flaggedCells.add(cell);
+    return flaggedCells;
+}
+</code>
+
+===== Comparaison de valeurs =====
+
+Plutôt que de comparer des valeurs comme ci-dessus (''cell[STATUS_VALUE] == FLAGGED''), utiliser des méthodes (''.isFlagged'') sur un objet :
+
+<code>
+public List<Cell> getFlaggedCells() {
+    List<Cell> flaggedCells = new ArrayList<Cell>();
+    for (Cell cell : gameBoard)
+        if (cell.isFlagged())
+            flaggedCells.add(cell);
+    return flaggedCells;
+}
+</code>
+
+{{tag>ToDo}}

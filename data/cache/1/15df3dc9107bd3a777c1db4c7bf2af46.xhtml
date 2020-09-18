@@ -1,0 +1,48 @@
+
+<h1 class="sectionedit1" id="bzr-explorer">bzr-explorer</h1>
+<div class="level1">
+
+<p>
+Cet outils graphique perment d&#039;explorer visuellement des dépôts.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "bzr-explorer" [1-98] -->
+<h2 class="sectionedit2" id="debian">Debian</h2>
+<div class="level2">
+
+<p>
+Un simple <code>sudo aptitude install bzr-explorer</code> suffit.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Debian" [99-176] -->
+<h2 class="sectionedit3" id="windows">Windows</h2>
+<div class="level2">
+
+<p>
+L&#039;explorer vient avec le paquet <strong>Bazaar</strong>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Windows" [177-242] -->
+<h2 class="sectionedit4" id="scientific_linux">Scientific Linux</h2>
+<div class="level2">
+
+<p>
+Comme pas mal de choses sous SL, c&#039;est compliqué.
+</p>
+<pre class="code">  $ sudo yum install PyQt4
+  $ wget https://launchpadlibrarian.net/146077097/qbzr-0.23.1.tar.gz
+  $ sudo tar xvzf qbzr-0.23.1.tar.gz
+  $ cd qbzr-0.23.1
+  $ sudo python setup.py install
+  $ cd ~/.bazaar/plugins
+  $ bzr branch lp:bzr-explorer explorer
+  $ cd /my/repo
+  $ bzr explorer
+  
+  </pre>
+
+</div>
+<!-- EDIT4 SECTION "Scientific Linux" [243-] -->

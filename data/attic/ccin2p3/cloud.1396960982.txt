@@ -1,0 +1,46 @@
+====== Le nuage OpenStack ======
+
+La procédure BIOASTER est basée sur le [[https://ccwiki.in2p3.fr/infrastructure:cloud:start|guide OpenStack du CC-IN2P3]]. Ce dernier sert de document de base pour toutes bonnes pratiques concernant OpenStack.
+
+===== Obtenir un compte =====
+
+Un type de compte spécial est nécessaire afin de pouvoir utiliser les fonctionnalités d'OpenStack.
+Une demande doit être faite lors de la création du compte au CC.
+
+Si la demande n'a pas été faite lors de l'ouverture du compte il est tout de même possible d'obtenir un accès en passant par le [[https://cc-usersupport.in2p3.fr/|système de ticket]] de l'IN2P3. Dans le nouveau ticket il faut préciser le //laboratoire// auquel on appartient (BIOASTER) et le //service// auquel on veut accéder (plateforme de cloud IAAS).
+
+===== Se connecter au nuage =====
+
+La connexion se fait via //SSH// en utilisant l'identifiant et le mot de passe du compte IN2P3.
+
+''$ ssh <LOGIN>@ccage.in2p3.fr''
+
+Il n'est pas pour le moment possible d'utiliser un mécanisme de [[http://presentations.bioaster.org/presentations/PKI/#2|clé]] pour se connecter.
+===== Créer une machine virtuelle =====
+
+Avant de créer une machine virtuelle (VM) il est nécessaire de répondre à plusieurs questions :
+
+  * quelle quantité de ressources (CPU, RAM, disque) lui sera attribuée ?
+  * quelle image servira de modèle à la machine ?
+  * quel utilisateur sera autorisé à s'y connecter ?
+
+Pour facilité l'allocation de ressources des **flavors** (tiny, small...) sont prédéfinies.
+Chacune correspond à une quantité différente de CPU, de RAM et d'espace de stockage.
+Il suffit de connaitre l'usage que l'on veut faire de la VM afin de déterminer celle à utiliser.
+La commande pour lister les flavors est ''nova flavor-list''.
+
+L'**image** de base utilisée correspond au système d'exploitation (OS) qui sera installé sur la VM. Une [[/in2p3/cloud/images|liste complète de image disponibles]] se trouve dans le wiki. Pour l'obtenir depuis la ligne de commande il suffit de faire ''nova image-list'' et de suivre les instructions.
+
+Le choix de l'**utilisateur** se fait par le choix de la clé SSH qui est passée lors de la création de la VM. D'autres pourront être rajouté au système plus tard. La procédure dépendra de l'OS disponible sur la VM. Pour créer une nouvelle clé il suffit de faire ''ssh-keygen''. La clé peut ensuite être ajouté à la base de donnée d'OpenStack avec la commande suivante :
+
+''nova keypair-add --pub-key=FICHIER_CLE.pub NOM_DE_LA_CLE''
+
+Une fois les choix faits, on crée et démarre l'image comme ceci :
+
+''nova boot --key-name=NOM_DE_LA_CLE --image=NOM_DE_L_IMAGE --flavor=NOM_DE_LA_FLAVOR NOM_DE_LA_VM''
+===== Se connecter à une machine virtuelle =====
+
+
+===== Administrer un machine virtuelle =====
+
+

@@ -1,0 +1,184 @@
+
+<h1 class="sectionedit1" id="zookeeper_01an_introduction_to_apache_zookeeper">ZooKeeper 01: An introduction to Apache ZooKeeper</h1>
+<div class="level1">
+
+<p>
+If you don&#039;t know what is a distributed system. Please go to this lesson <a href="/doku.php?id=employes:pengfei.liu:data_science:zookeeper:distributed_sys_intro" class="wikilink1" title="employes:pengfei.liu:data_science:zookeeper:distributed_sys_intro">What a distributed system is and its characteristics</a> first.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper 01: An introduction to Apache ZooKeeper&quot;,&quot;hid&quot;:&quot;zookeeper_01an_introduction_to_apache_zookeeper&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-269&quot;} -->
+<h2 class="sectionedit2" id="what_is_zookeeper">What is ZooKeeper</h2>
+<div class="level2">
+
+<p>
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+</p>
+
+<p>
+ZooKeeper is, in itself, a replicated and distributed data storage application, with the intention to be run as a service, similar to the way we run <abbr title="Domain Name System">DNS</abbr> or any other centralized service. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is ZooKeeper&quot;,&quot;hid&quot;:&quot;what_is_zookeeper&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;270-647&quot;} -->
+<h3 class="sectionedit3" id="simple_coordination">Simple coordination</h3>
+<div class="level3">
+
+<p>
+While working on ZooKeeper, all distributed processes can coordinate with each other. <strong>This coordination is possible through a shared hierarchical namespace. However, it is organized as same as the standard file system. Here the namespaces which consist of data registers, what we call as znodes, in ZooKeeper parlance.</strong> Though, these are as same as files and directories. In addition, <strong>ZooKeeper data keeps in-memory</strong>, due to that it achieves high throughput as well as low latency numbers.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple coordination&quot;,&quot;hid&quot;:&quot;simple_coordination&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;648-1175&quot;} -->
+<h3 class="sectionedit4" id="data_replication_for_fault_tolenrance">Data replication for fault tolenrance</h3>
+<div class="level3">
+
+<p>
+Apache ZooKeeper itself is intended to be replicated over a set of hosts called an ensemble, as same as distributed processes it coordinates.
+</p>
+
+<p>
+ZooKeeper特别适合于<strong>以读为主要负荷的场合</strong>。ZooKeeper可以运行在数千台机器上，如果大部分操作为读，例如读写比例为10:1，ZooKeeper的效率会很高
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Data replication for fault tolenrance&quot;,&quot;hid&quot;:&quot;data_replication_for_fault_tolenrance&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1176-1559&quot;} -->
+<h2 class="sectionedit5" id="architecture_of_zookeeper">Architecture of Zookeeper</h2>
+<div class="level2">
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Azookeeper%3Azk01_introduction&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_archi.png" class="media" title="employes:pengfei.liu:data_science:zookeeper:zookeeper_archi.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=8bc1c6&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_archi.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+From the preceding diagram, you will see the replicated set of servers on which the ZooKeeper service is run. This is called an <strong>ensemble</strong>. Clients can connect to a ZooKeeper service by connecting to any member of the ensemble.
+<strong>You can send and receive requests and responses as well as event notifications between clients and the service, which are all done by maintaining a TCP connection and by periodically sending heartbeats.</strong>
+</p>
+
+<p>
+The members of the ensemble are aware of each other&#039;s state. By this, I mean that the <strong>current in-memory state</strong>, <strong>transaction logs</strong>, and the <strong>point-in-time copies of the state of the service</strong> are stored in a durable manner in the local data store by the individual hosts that form the ensemble. It is important to remember that ZooKeeper is a highly available service, so as long as a majority of the servers are available, the service will always be available. (通常Zookeeper由2n+1台servers组成，每个server都知道彼此的存在。每个server都维护的内存状态镜像以及持久化存储的事务日志和快照。为了保证Leader选举能过得到多数的支持，所以ZooKeeper集群的数量一般为奇数。对于2n+1台server，<strong>只要有n+1台（大多数）server可用</strong>，整个系统保持可用。所以Zookeeper集群至少需要3台servers服务器！)
+</p>
+
+<p>
+With this, ZooKeeper maintains <strong>a strict ordering of its transactions</strong> (all requests which modify or insert data have their order in the cluster), which enables the implementation of advanced distributed synchronization primitives that are simple and reliable. (ZooKeeper给每次更新附加一个数字标签，表明ZooKeeper中的事务顺序，后续操作可以利用这个顺序来完成更高层次的抽象功能，例如同步原语)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Architecture of Zookeeper&quot;,&quot;hid&quot;:&quot;architecture_of_zookeeper&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1560-3457&quot;} -->
+<h3 class="sectionedit6" id="集群中的角色">集群中的角色</h3>
+<div class="level3">
+
+<p>
+在ZooKeeper集群当中，集群中的服务器角色有两种Leader和Learner，Learner角色又分为Observer和Follower，具体功能如下：
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> 角色	</th><th class="col1"> 说明 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">Leader(领导者)	</td><td class="col1"> 为客户端提供读和写的服务，负责投票的发起和决议，更新系统状态。</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Follower（跟随者）</td><td class="col1"> 为客户端提供读服务，如果是写服务则转发给Leader。在选举过程中参与投票。</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Observe（观察者）</td><td class="col1">为客户端提供读服务器，如果是写服务则转发给Leader。不参与选举过程中的投票，也不参与“过半写成功”策略。在不影响写性能的情况下提升集群的读性能。此角色于zookeeper3.3系列新增的角色。</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">client（客户端）</td><td class="col1"> 连接zookeeper服务器的user，请求的发起者。独立于zookeeper服务器集群之外的角色。</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;3637-4318&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;\u96c6\u7fa4\u4e2d\u7684\u89d2\u8272&quot;,&quot;hid&quot;:&quot;\u96c6\u7fa4\u4e2d\u7684\u89d2\u8272&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3458-4319&quot;} -->
+<h3 class="sectionedit8" id="zookeeper_key_compenents">ZooKeeper key compenents</h3>
+<div class="level3">
+
+<p>
+<a href="/lib/exe/detail.php?id=employes%3Apengfei.liu%3Adata_science%3Azookeeper%3Azk01_introduction&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_components.png" class="media" title="employes:pengfei.liu:data_science:zookeeper:zookeeper_components.png"><img src="/lib/exe/fetch.php?w=600&amp;tok=139644&amp;media=employes:pengfei.liu:data_science:zookeeper:zookeeper_components.png" class="media" alt="" width="600" /></a>
+</p>
+
+<p>
+ZooKeeper的组件图中给出了ZooKeeper服务的高层次的组件。除了请求处理器（request processor）外，构成ZooKeeper服务的每个服务器都有一个备份。复制的数据库（Replicateddatabase）是一个内存数据库，包含整个数据树。为了可恢复，更新会被log到磁盘，并且在更新这个内存数据库之前，先序列化到磁盘。
+</p>
+
+<p>
+每个ZooKeeper都为客户端提供服务。客户端只连接到一个服务器，并提交请求。读请求直接由本地的复制数据库提供数据。对服务状态进行修改的请求、写请求通过一个约定的协议进行通讯。
+</p>
+
+<p>
+作为这个协议的一部分，所有的写请求都被传送到一个叫“首领(leader)”的服务器，而其他的服务器，叫做“(随从)followers”，follower从leader接收信息修改的提议，并同意进行。当leader发生故障时，协议的信息层（messaginglayer）关注leader的替换，并同步到所有的follower。
+</p>
+
+<p>
+ZooKeeper采用一个自定义的信息原子操作协议，由于信息层的操作是原子性的，ZooKeeper能保证本地的复制数据库不会产生不一致。当leader接收到一个写请求，它计算出写之后系统的状态，把它变成一个事务。
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ZooKeeper key compenents&quot;,&quot;hid&quot;:&quot;zookeeper_key_compenents&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;4320-5703&quot;} -->
+<h3 class="sectionedit9" id="zookeeper的读写机制和保证及特点">Zookeeper的读写机制和保证及特点</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="zookeeper的读写机制">ZooKeeper的读写机制</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Zookeeper是一个由多个server组成的集群, 一个leader，多个follower</div>
+</li>
+<li class="level1"><div class="li"> 每个server保存一份数据副本</div>
+</li>
+<li class="level1"><div class="li"> 全局数据一致</div>
+</li>
+<li class="level1"><div class="li"> 分布式读写</div>
+</li>
+<li class="level1"><div class="li"> 更新请求转发，由leader实施</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="zookeeper的保证">ZooKeeper的保证</h4>
+<div class="level4">
+
+<p>
+ZooKeeper运行非常快而且简单。虽然它的目标是构建更加复杂服务（例如同步）的基础，但它提供了一些保证，如下：
+</p>
+<ol>
+<li class="level1"><div class="li"> 顺序一致性：来自于客户端的更新，根据发送的先后被顺序实施。</div>
+</li>
+<li class="level1"><div class="li"> 唯一的系统映像：尽管客户端连接到不同的服务器，但它们看到的一个唯一（一致性）的系统服务，client无论连接到哪个server，数据视图都是一致的。</div>
+</li>
+<li class="level1"><div class="li"> 可靠性：一旦实施了一个更新，就会一直保持那种状态，直到客户端再次更新它，同时数据更新原子性，一次数据更新要么成功，要么失败。</div>
+</li>
+<li class="level1"><div class="li"> 及时性：在一个确定的时间内，客户端看到的系统状态是最新的。</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="zookeeper特点">ZooKeeper特点</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <strong>最终一致性</strong>：client不论连接到哪个Server，展示给它都是同一个视图，这是zookeeper最重要的性能。</div>
+</li>
+<li class="level1"><div class="li"> <strong>可靠性</strong>：具有简单、健壮、良好的性能，如果消息m被一台服务器接受，那么它将被所有的服务器接受。</div>
+</li>
+<li class="level1"><div class="li"> <strong>实时性</strong>：Zookeeper保证客户端将在一个时间间隔范围内获得服务器的更新信息，或者服务器失效的信息。 但由于网络延时等原因，Zookeeper不能保证两个客户端能同时得到刚更新的数据，如果需要最新数据，应该在读数据之前调用sync()接口！！</div>
+</li>
+<li class="level1"><div class="li"> <strong>等待无关(wait-free)</strong>：慢的或者失效的client，不得干预快速的client的请求，使得每个client都能有效的等待。</div>
+</li>
+<li class="level1"><div class="li"> <strong>原子性</strong>：更新只能成功或者失败，没有中间状态。</div>
+</li>
+<li class="level1"><div class="li"> <strong>顺序性</strong>：包括全局有序和偏序两种. 全局有序：是指如果在一台服务器上消息a在消息b前发布，则在所有Server上消息a都将在消息b前被发布；偏序：是指如果一个消息b在消息a后被同一个发送者发布，a必将排在b前面</div>
+</li>
+</ul>
+
+<p>
+<strong>If we put zookeeper in CAP theorem, then Zk is CP(consistency, partition tolerance), but not A(availability).</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zookeeper\u7684\u8bfb\u5199\u673a\u5236\u548c\u4fdd\u8bc1\u53ca\u7279\u70b9&quot;,&quot;hid&quot;:&quot;zookeeper\u7684\u8bfb\u5199\u673a\u5236\u548c\u4fdd\u8bc1\u53ca\u7279\u70b9&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;5704-&quot;} -->

@@ -1,0 +1,55 @@
+====== Installer la Django Debug Toolbar ======
+Tout est ici http://django-debug-toolbar.readthedocs.io/en/stable/installation.html mais pour les plus fainéants, il faut dans l'ordre :
+
+<Code>$ pip install django-debug-toolbar</Code>
+
+===== settings.py =====
+
+Dans le fichiers settings.py de votre projet Django :
+
+<Code>
+INSTALLED_APPS = [
+    # ...
+    'django.contrib.staticfiles',
+    # ...
+    'debug_toolbar',
+]
+
+STATIC_URL = '/static/'
+</Code>
+
+Puis à mettre le plus haut placé possible dans la liste :
+<Code>
+MIDDLEWARE = [
+    # ...
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # ...
+]
+</Code>
+
+Et enfin renseigner les ips de dev dans la clé INTERNAL_IPS :
+
+<Code>
+# mandatory for Django Debug Toolbar
+INTERNAL_IPS = ['127.0.0.1']
+</Code>
+
+===== urls.py =====
+
+Dans le fichiers urls.py de votre projet Django :
+
+<Code>
+from django.conf import settings
+from django.conf.urls import include, url
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+</Code>
+
+===== Problèmes possibles =====
+Si la Debug Toolbar ne s'affiche pas :
+  - vérifier que vous êtes bien en mode DEBUG=True
+  - vérifier que votre template contient bien une balise </body>
