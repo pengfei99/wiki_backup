@@ -212,4 +212,111 @@ Can&#039;t open file due to permission.
 </p>
 
 </div>
-<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;common problems&quot;,&quot;hid&quot;:&quot;common_problems&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4555-&quot;} -->
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;common problems&quot;,&quot;hid&quot;:&quot;common_problems&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4555-4693&quot;} -->
+<h1 class="sectionedit9" id="install_dokuwiki_on_ubuntu_20">Install dokuwiki on ubuntu 20</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Install dokuwiki on ubuntu 20&quot;,&quot;hid&quot;:&quot;install_dokuwiki_on_ubuntu_20&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;4694-4738&quot;} -->
+<h2 class="sectionedit10" id="install_php_and_required_php_modules">1. Install PHP and Required PHP Modules</h2>
+<div class="level2">
+<pre class="code">sudo apt install php php-gd php-xml php-json</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;1. Install PHP and Required PHP Modules&quot;,&quot;hid&quot;:&quot;install_php_and_required_php_modules&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:10,&quot;range&quot;:&quot;4739-4852&quot;} -->
+<h2 class="sectionedit11" id="install_apache_web_server">2. Install Apache Web Server</h2>
+<div class="level2">
+<pre class="code"># check if all apache2 required package are installed
+apt list apache2
+
+# correct output
+apache2/focal,now 2.4.41-4ubuntu3 amd64 [installed,automatic]
+
+# install apache2 package
+sudo apt install apache2
+
+# Start and enable Apache to run on system boot.
+sudo systemctl enable --now apache2
+
+# Open Apache Port on Firewall
+sudo ufw allow Apache</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;2. Install Apache Web Server&quot;,&quot;hid&quot;:&quot;install_apache_web_server&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:11,&quot;range&quot;:&quot;4853-5253&quot;} -->
+<h2 class="sectionedit12" id="copy_dokuwiki_to_local_file_system">3. Copy dokuwiki to local file system</h2>
+<div class="level2">
+<pre class="code">sudo cp dokuwiki /var/www/html/.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;3. Copy dokuwiki to local file system&quot;,&quot;hid&quot;:&quot;copy_dokuwiki_to_local_file_system&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:12,&quot;range&quot;:&quot;5254-5354&quot;} -->
+<h2 class="sectionedit13" id="create_dokuwiki_virtualhost">4. Create dokuwiki virtualhost</h2>
+<div class="level2">
+<pre class="code">sudo vim /etc/apache2/sites-available/dokuwiki.conf
+
+# put the following content in it
+&lt;VirtualHost *:80&gt;
+        ServerName    pengfei.com
+        DocumentRoot  /var/www/html/dokuwiki
+
+        &lt;Directory ~ &quot;/var/www/html/dokuwiki/(bin/|conf/|data/|inc/)&quot;&gt;
+            &lt;IfModule mod_authz_core.c&gt;
+                AllowOverride All
+                Require all denied
+            &lt;/IfModule&gt;
+            &lt;IfModule !mod_authz_core.c&gt;
+                Order allow,deny
+                Deny from all
+            &lt;/IfModule&gt;
+        &lt;/Directory&gt;
+
+        ErrorLog   /var/log/apache2/dokuwiki_error.log
+        CustomLog  /var/log/apache2/dokuwiki_access.log combined
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>
+The use of AllowOverride All allows the use of .htaccess files. As such, rename the DokuWiki .htaccess file as shown below;
+</p>
+<pre class="code">cd /var/www/html/dokuwiki/
+cp /var/www/html/dokuwiki/.htaccess{.dist,}</pre>
+
+<p>
+Set the ownership of the DokuWiki web root directory to www-data.
+</p>
+<pre class="code">sudo chown -R www-data:www-data /var/www/html/dokuwiki</pre>
+
+<p>
+Check Apache for any syntax errors;
+</p>
+<pre class="code">apache2ctl -t
+
+# If you get the Syntax OK output, then you good. Otherwise, fix any error.
+Syntax OK</pre>
+
+<p>
+Disable the default Apache test site;
+</p>
+<pre class="code">sudo a2dissite 000-default.conf</pre>
+
+<p>
+Enable the DokuWiki site;
+</p>
+<pre class="code">sudo a2ensite dokuwiki.conf</pre>
+
+<p>
+Reload Apache
+</p>
+<pre class="code">systemctl reload apache2</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;4. Create dokuwiki virtualhost&quot;,&quot;hid&quot;:&quot;create_dokuwiki_virtualhost&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:13,&quot;range&quot;:&quot;5355-6806&quot;} -->
+<h2 class="sectionedit14" id="check_your_dokuwiki">5. Check your dokuwiki</h2>
+<div class="level2">
+<pre class="code"># If its a new dokuwiki you are installing, type the following url for initiate it
+http://&lt;server-IP-or-hostname&gt;/install.php
+
+# if its a configured dokuwiki, just do
+http://&lt;server-IP-or-hostname&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;5. Check your dokuwiki&quot;,&quot;hid&quot;:&quot;check_your_dokuwiki&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:14,&quot;range&quot;:&quot;6807-&quot;} -->

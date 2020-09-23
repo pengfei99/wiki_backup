@@ -1,4 +1,4 @@
-a:78:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:27:"Install dokuwiki on Centos7";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1;}i:4;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:250:"DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup, and integration makes it an administrator's favorite.";}i:2;i:45;}i:5;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:295;}i:6;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:295;}i:7;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:72:"I use it to store all my documentation on all the jobs that I have done.";}i:2;i:297;}i:8;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:369;}i:9;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:369;}i:10;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:14:"Official doc: ";}i:2;i:371;}i:11;a:3:{i:0;s:12:"externallink";i:1;a:2:{i:0;s:39:"https://www.dokuwiki.org/install:centos";i:1;N;}i:2;i:385;}i:12;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:424;}i:13;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:427;}i:14;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:14:"0. Pre-Install";i:1;i:2;i:2;i:427;}i:2;i:427;}i:15;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:427;}i:16;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:427;}i:17;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:117:"dokuwiki requires only apache web server and php to run. If you want to enable https, you may need to install mod_ssl";}i:2;i:455;}i:18;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:572;}i:19;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:754:"
+a:125:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:27:"Install dokuwiki on Centos7";i:1;i:1;i:2;i:1;}i:2;i:1;}i:2;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:1;}i:3;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:1;}i:4;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:250:"DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax. The ease of maintenance, backup, and integration makes it an administrator's favorite.";}i:2;i:45;}i:5;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:295;}i:6;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:295;}i:7;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:72:"I use it to store all my documentation on all the jobs that I have done.";}i:2;i:297;}i:8;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:369;}i:9;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:369;}i:10;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:14:"Official doc: ";}i:2;i:371;}i:11;a:3:{i:0;s:12:"externallink";i:1;a:2:{i:0;s:39:"https://www.dokuwiki.org/install:centos";i:1;N;}i:2;i:385;}i:12;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:424;}i:13;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:427;}i:14;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:14:"0. Pre-Install";i:1;i:2;i:2;i:427;}i:2;i:427;}i:15;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:427;}i:16;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:427;}i:17;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:117:"dokuwiki requires only apache web server and php to run. If you want to enable https, you may need to install mod_ssl";}i:2;i:455;}i:18;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:572;}i:19;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:754:"
 # check your centos version
 cat /etc/centos-release
 
@@ -123,4 +123,68 @@ chown -R apache:root /var/www/html/dokuwiki
 yum install php71w-mbstring
 systemctl restart httpd
 ";i:1;N;i:2;N;}i:2;i:4491;}i:67;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:4555;}i:68;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:15:"common problems";i:1;i:1;i:2;i:4555;}i:2;i:4555;}i:69;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:4555;}i:70;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:4555;}i:71;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:35:"Can't open file due to permission. ";}i:2;i:4586;}i:72;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:4621;}i:73;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:4621;}i:74;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:68:"1. Check the /var/www/html/dokuwiki owner and acl
-2. disable selinux";}i:2;i:4623;}i:75;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:4691;}i:76;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:4691;}i:77;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:4691;}}
+2. disable selinux";}i:2;i:4623;}i:75;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:4691;}i:76;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:4694;}i:77;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:29:"Install dokuwiki on ubuntu 20";i:1;i:1;i:2;i:4694;}i:2;i:4694;}i:78;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:1;}i:2;i:4694;}i:79;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:4739;}i:80;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:39:"1. Install PHP and Required PHP Modules";i:1;i:2;i:2;i:4739;}i:2;i:4739;}i:81;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:4739;}i:82;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:46:"
+sudo apt install php php-gd php-xml php-json
+";i:1;N;i:2;N;}i:2;i:4797;}i:83;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:4853;}i:84;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:28:"2. Install Apache Web Server";i:1;i:2;i:2;i:4853;}i:2;i:4853;}i:85;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:4853;}i:86;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:344:"
+# check if all apache2 required package are installed
+apt list apache2
+
+# correct output
+apache2/focal,now 2.4.41-4ubuntu3 amd64 [installed,automatic]
+
+# install apache2 package
+sudo apt install apache2
+
+# Start and enable Apache to run on system boot.
+sudo systemctl enable --now apache2
+
+# Open Apache Port on Firewall
+sudo ufw allow Apache
+";i:1;N;i:2;N;}i:2;i:4900;}i:87;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:5254;}i:88;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:37:"3. Copy dokuwiki to local file system";i:1;i:2;i:2;i:5254;}i:2;i:5254;}i:89;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:5254;}i:90;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:34:"
+sudo cp dokuwiki /var/www/html/.
+";i:1;N;i:2;N;}i:2;i:5311;}i:91;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:5355;}i:92;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:30:"4. Create dokuwiki virtualhost";i:1;i:2;i:2;i:5355;}i:2;i:5355;}i:93;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:5355;}i:94;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:677:"
+sudo vim /etc/apache2/sites-available/dokuwiki.conf
+
+# put the following content in it
+<VirtualHost *:80>
+        ServerName    pengfei.com
+        DocumentRoot  /var/www/html/dokuwiki
+
+        <Directory ~ "/var/www/html/dokuwiki/(bin/|conf/|data/|inc/)">
+            <IfModule mod_authz_core.c>
+                AllowOverride All
+                Require all denied
+            </IfModule>
+            <IfModule !mod_authz_core.c>
+                Order allow,deny
+                Deny from all
+            </IfModule>
+        </Directory>
+
+        ErrorLog   /var/log/apache2/dokuwiki_error.log
+        CustomLog  /var/log/apache2/dokuwiki_access.log combined
+</VirtualHost>
+
+";i:1;N;i:2;N;}i:2;i:5404;}i:95;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:5404;}i:96;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:123:"The use of AllowOverride All allows the use of .htaccess files. As such, rename the DokuWiki .htaccess file as shown below;";}i:2;i:6091;}i:97;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6214;}i:98;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:72:"
+cd /var/www/html/dokuwiki/
+cp /var/www/html/dokuwiki/.htaccess{.dist,}
+";i:1;N;i:2;N;}i:2;i:6221;}i:99;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:6221;}i:100;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:65:"Set the ownership of the DokuWiki web root directory to www-data.";}i:2;i:6303;}i:101;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6368;}i:102;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:56:"
+sudo chown -R www-data:www-data /var/www/html/dokuwiki
+";i:1;N;i:2;N;}i:2;i:6375;}i:103;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:6375;}i:104;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:35:"Check Apache for any syntax errors;";}i:2;i:6441;}i:105;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6476;}i:106;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:102:"
+apache2ctl -t
+
+# If you get the Syntax OK output, then you good. Otherwise, fix any error.
+Syntax OK
+";i:1;N;i:2;N;}i:2;i:6483;}i:107;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:6483;}i:108;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:37:"Disable the default Apache test site;";}i:2;i:6595;}i:109;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6632;}i:110;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:33:"
+sudo a2dissite 000-default.conf
+";i:1;N;i:2;N;}i:2;i:6639;}i:111;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:6639;}i:112;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:25:"Enable the DokuWiki site;";}i:2;i:6682;}i:113;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6713;}i:114;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:29:"
+sudo a2ensite dokuwiki.conf
+";i:1;N;i:2;N;}i:2;i:6713;}i:115;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:6713;}i:116;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:13:"Reload Apache";}i:2;i:6752;}i:117;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:6771;}i:118;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:26:"
+systemctl reload apache2
+";i:1;N;i:2;N;}i:2;i:6771;}i:119;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:6807;}i:120;a:3:{i:0;s:6:"header";i:1;a:3:{i:0;s:22:"5. Check your dokuwiki";i:1;i:2;i:2;i:6807;}i:2;i:6807;}i:121;a:3:{i:0;s:12:"section_open";i:1;a:1:{i:0;i:2;}i:2;i:6807;}i:122;a:3:{i:0;s:4:"code";i:1;a:3:{i:0;s:199:"
+# If its a new dokuwiki you are installing, type the following url for initiate it
+http://<server-IP-or-hostname>/install.php
+
+# if its a configured dokuwiki, just do
+http://<server-IP-or-hostname>
+";i:1;N;i:2;N;}i:2;i:6848;}i:123;a:3:{i:0;s:13:"section_close";i:1;a:0:{}i:2;i:7055;}i:124;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:7055;}}

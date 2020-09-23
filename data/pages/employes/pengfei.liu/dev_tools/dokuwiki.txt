@@ -185,3 +185,113 @@ Can't open file due to permission.
 
 1. Check the /var/www/html/dokuwiki owner and acl
 2. disable selinux
+
+
+====== Install dokuwiki on ubuntu 20 ======
+
+===== 1. Install PHP and Required PHP Modules =====
+
+<code>
+sudo apt install php php-gd php-xml php-json
+</code>
+
+===== 2. Install Apache Web Server =====
+
+<code>
+# check if all apache2 required package are installed
+apt list apache2
+
+# correct output
+apache2/focal,now 2.4.41-4ubuntu3 amd64 [installed,automatic]
+
+# install apache2 package
+sudo apt install apache2
+
+# Start and enable Apache to run on system boot.
+sudo systemctl enable --now apache2
+
+# Open Apache Port on Firewall
+sudo ufw allow Apache
+</code>
+
+===== 3. Copy dokuwiki to local file system =====
+
+
+<code>
+sudo cp dokuwiki /var/www/html/.
+</code>
+
+===== 4. Create dokuwiki virtualhost =====
+
+<code>
+sudo vim /etc/apache2/sites-available/dokuwiki.conf
+
+# put the following content in it
+<VirtualHost *:80>
+        ServerName    pengfei.com
+        DocumentRoot  /var/www/html/dokuwiki
+
+        <Directory ~ "/var/www/html/dokuwiki/(bin/|conf/|data/|inc/)">
+            <IfModule mod_authz_core.c>
+                AllowOverride All
+                Require all denied
+            </IfModule>
+            <IfModule !mod_authz_core.c>
+                Order allow,deny
+                Deny from all
+            </IfModule>
+        </Directory>
+
+        ErrorLog   /var/log/apache2/dokuwiki_error.log
+        CustomLog  /var/log/apache2/dokuwiki_access.log combined
+</VirtualHost>
+
+</code>
+
+The use of AllowOverride All allows the use of .htaccess files. As such, rename the DokuWiki .htaccess file as shown below;
+
+<code>
+cd /var/www/html/dokuwiki/
+cp /var/www/html/dokuwiki/.htaccess{.dist,}
+</code>
+
+Set the ownership of the DokuWiki web root directory to www-data.
+
+<code>
+sudo chown -R www-data:www-data /var/www/html/dokuwiki
+</code>
+
+Check Apache for any syntax errors;
+
+<code>
+apache2ctl -t
+
+# If you get the Syntax OK output, then you good. Otherwise, fix any error.
+Syntax OK
+</code>
+
+Disable the default Apache test site;
+
+<code>
+sudo a2dissite 000-default.conf
+</code>
+
+Enable the DokuWiki site;
+<code>
+sudo a2ensite dokuwiki.conf
+</code>
+
+Reload Apache
+<code>
+systemctl reload apache2
+</code>
+
+===== 5. Check your dokuwiki =====
+
+<code>
+# If its a new dokuwiki you are installing, type the following url for initiate it
+http://<server-IP-or-hostname>/install.php
+
+# if its a configured dokuwiki, just do
+http://<server-IP-or-hostname>
+</code>
