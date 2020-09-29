@@ -9,11 +9,11 @@ In this tutorial, I will first install anaconda3, and reconfigure the spark inte
 
 ===== Step1. Install anaconda3 =====
 
-Follow this tutorial to install latest anaconda3 : [[employes:pengfei.liu:python:env_installation:install_anaconda|Install anaconda]] 
+Follow this tutorial to install latest anaconda3 : [[employes:pengfei.liu:python:conda:install|Install anaconda]]
 
 Two important points:
-1. The default installation path of anaconda is /root. We recommend you to use /opt/anaconda3 as the installation path.
-2. You should install anaconda on the server which runs Zeppelin and all worker nodes
+  -  The default installation path of anaconda is /root. We recommend you to use /opt/anaconda3 as the installation path.
+  - You should install anaconda on the server which runs Zeppelin and all worker nodes
 
 ===== Step2. Configure the path in Zeppelin =====
 

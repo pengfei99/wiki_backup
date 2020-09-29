@@ -1,9 +1,137 @@
-====== Install pyspark and use pycharm ======
+====== Install and use pyspark  ======
+
+===== 1.Install python dependencies =====
+
+==== 1.1 Install conda ====
+
+To install and use conda, please go check [[employes:pengfei.liu:python:conda:start|Anaconda documents]]
+
+==== 1.2 Create a conda virtual env for pyspark ====
+
+<code>
+# list existing env
+conda env list
+
+# create an env
+conda create --name spark --channel conda-forge python=3.8
+
+# activate env
+source activate spark
+
+# deactivate env
+conda deactivate
+</code>
+
+
+
+==== 1.3 install required packages ====
+
+Before we start, we need to check python, pip version
+<code>
+python --version
+
+pip --version
+</code>
+
+
+<code>
+# Install Jupyter 
+pip install jupyter
+
+# Install py4j
+pip install py4j
+</code>
+
+
+===== 2 Install Java and Scala =====
+
+To install Java, please check [[employes:pengfei.liu:java:install_jdk|Install oracle jdk on ubuntu 16.04]]
+
+To install scala, please check [[employes:pengfei.liu:java:scala|Install scala on centos]]
+
+===== 3. Install spark =====
+
+Install Apache Spark; go to the Spark download page (http://spark.apache.org/downloads.html) and choose the latest (default) version. I am using Spark 3.0.1 with Hadoop 2.7. After downloading, unpack it in the location you want to use it.
+
+===== 4. Edit the .bashrc =====
+We need to add the following var env into our .bashrc
+
+<code>
+#### java env
+export JAVA_HOME="/opt/Java/jdk1.8.0_261"
+export JRE_HOME="/opt/Java/jdk1.8.0_261/jre"
+
+
+
+#### spark env
+export SPARK_HOME="/opt/Spark/spark-3.0.1"
+# pyspark config
+export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
+export PYSPARK_DRIVER_PYTHON="jupyter"
+export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+export PYSPARK_PYTHON=python3
+export PATH=$SPARK_HOME:$PATH:~/.local/bin:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
+
+</code>
+
+===== 5. Test your pyspark via Jupyter =====
+
+<code>
+# start your jupyter
+jupyter notebook
+
+# choose the python3 kernel, and run the following code
+%%time
+
+
+from pyspark.sql import SparkSession
+spark=SparkSession.builder.appName("MyApp").getOrCreate()
+df = spark.read.csv('/home/pliu/data_set/flight.csv',inferSchema=True,header=True)
+
+df.show(5)
+print(df.count())
+</code>
+
+===== 6. Add spylon kernel into Jupyter for scala support =====
+
+<code>
+# Install package in your virtual env
+pip install spylon-kernel
+
+# Add kernel to the jupyter
+python -m spylon_kernel install
+
+# start the jupyter notebook
+ipython notebook
+
+# in the web gui, click on kernel-> New-> spylon-kernel
+# This will connect your note book to the spylon-kernel
+
+</code>
+
+Note the spylon-kernel will use SPARK_HOME env var to locate the spark executable. So make sure you set it right. 
+
+<code>
+# Put the following code in your notebook to test the kernel
+val data = Seq((1,2,3), (4,5,6), (6,7,8), (9,19,10))
+val ds = spark.createDataset(data)
+ds.show()
+
+# If everything goes well, you should see the following output
+Intitializing Scala interpreter ...
+Spark Web UI available at http://172.22.0.33:4040
+SparkContext available as 'sc' (version = 3.0.1, master = local[*], app id = local-1601362749037)
+SparkSession available as 'spark'
+
+</code>
+====== Use pyspark in pycharm ======
 
 
 
 
-===== pycharm =====
+
+
+===== 1. pycharm embedded interpreter=====
 
 By default, when you create a pycharm project, it will automatically create a virtual env. You can install pyspark in the dedicated virtual env with the following steps(Only works for Spark 2.2.0 and later).
 
@@ -11,7 +139,7 @@ By default, when you create a pycharm project, it will automatically create a vi
 Go to File -> Settings -> Project Interpreter -> Click on the + button (top right) and search for PySpark
 
 
-==== Manually with user-provided Spark installation ====
+===== 2. Manually add user-provided Spark installation to pycharm ====
 
 Create Run configuration:
 

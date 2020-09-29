@@ -52,6 +52,13 @@ in your /home/linuxize/.bashrc ? [yes|no]
 
 The installer will also ask you whether you would like to download and install Visual Studio Code. You can find more information about Visual Studio on the website (https://code.visualstudio.com/). If you want to install Visual Studio Code type yes otherwise type no.
 
+if the installer can't or don't add the conda path to your env path, you cand use the following command
+
+<code>
+# Here we suppose your conda path is ~/anaconda
+echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bashrc 
+</code>
+
 To activate the Anaconda installation load the new PATH environment variable which was added by the Anaconda installer into the current shell session with the following command:
 
 <code>
