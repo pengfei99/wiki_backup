@@ -125,10 +125,16 @@ docker run -d -p 4000:80 pythondemo
 
 You get the long container ID for your app and then are kicked back to your terminal. Your container is running in the background. You can also see the abbreviated container ID with docker container ls (and both work interchangeably when running commands):
 
+=== Check docker running container status ===
+
+ 
 <code>
 $ docker container ls
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                  NAMES
 2b8dbfb78d12        pythondemo          "python app.py"     57 seconds ago      Up 56 seconds       0.0.0.0:4000->80/tcp   modest_driscoll
+
+# You can also use docker ps to list all running container
+$ sudo docker ps -a
 
 # to stop a container run in the background
 $ dock stop <option> <container_id>
@@ -140,6 +146,18 @@ dock stop -t 20 2b8dbfb78d12
 
 </code>
 
+=== Get a shell of your running container  ===
+
+<code>
+# Step 1: Get the name of your running container
+sudo docker ps
+
+CONTAINER ID        IMAGE                   COMMAND                 CREATED             STATUS              PORTS                      NAMES
+f26b22765125        sansarip/apache-atlas   "/opt/atlas_start.sh"   21 minutes ago      Up 21 minutes       0.0.0.0:21000->21000/tcp   silly_satoshi
+
+# Step 2: Connect to the container
+sudo docker exec -it silly_satoshi /bin/bash
+</code>
 ==== Share your image ====
 
 To demonstrate the portability of what we just created, let’s upload our built image and run it somewhere else. After all, you need to know how to push to registries when you want to deploy containers to production.
