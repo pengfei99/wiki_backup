@@ -398,8 +398,13 @@ All the url for entity CRUD activity start with /v2/entity, the full list is
   * (GET) /v2/search/relationship : Relationship search to search for related entities satisfying the search parameters
 
 <code>
-# Check entity 
-curl -u admin:kdHVNXuo1zMjnM32QqAk http://localhost:21000/api/atlas/v2/entity/bulk
+# Check entity attributes by using their GUIDs. This allows you to add multiple guids 
+curl -X GET -u admin:admin --header 'Accept: application/json' 'http://atlas.lab.sspcloud.fr/api/atlas/v2/entity/bulk?guid=4263e0b8-fde9-4d78-bed5-0de470078bce&ignoreRelationships=false&minExtInfo=false'
+
+# example with two guids
+
+curl -X GET -u admin:admin --header 'Accept: application/json' 'http://atlas.lab.sspcloud.fr/api/atlas/v2/entity/bulk?guid=4263e0b8-fde9-4d78-bed5-0de470078bce&guid=a-new-guid&ignoreRelationships=false&minExtInfo=false'
+
 
 # Get all the entities in a given type
 curl -u admin:kdHVNXuo1zMjnM32QqAk -X GET http://localhost:21000/api/atlas/entities?type=GPFS_Path

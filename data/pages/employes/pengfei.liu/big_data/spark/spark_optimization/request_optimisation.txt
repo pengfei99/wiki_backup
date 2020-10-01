@@ -1,0 +1,17 @@
+====== Request optimization ======
+
+As spark uses the concept of SQL, so the basic sql optimization techniquies apply to spark too.
+
+
+===== 1. Predicate Pushdown / Filter Pushdown =====
+
+The basic idea of predicate pushdown is that certain parts of queries (the predicates) can be “pushed” to where the data stored. For example, when we give some filter criteria, data store tries to filter the records at the time of reading from disk. Advantage of predicate pushdown is fewer disks I/O and hence overall performance would be better. Otherwise, whole data would be brought into memory and then filtering needs to be done, which results in large memory requirement.
+
+
+This optimization can drastically reduce query/processing time by filtering out data earlier rather than later. Depending on the processing framework, predicate pushdown can optimize your query by doing things like filtering data before it is transferred over the network, filtering data before loading into memory, or skipping reading entire files or chunks of files.
+This concept is followed by most RDBMS and has been followed by big data storage formats like Parquet and ORC as well.
+
+===== 2. Projection Pushdown =====
+
+
+When data is read from the data store, only those columns would be read which are required as per the query, not all the fields would be read. Generally, columnar formats like Parquets and ORC follow this concept, which results in better I/O performance.
