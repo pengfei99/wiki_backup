@@ -1,0 +1,183 @@
+====== kubernetes Introduction ======
+
+You can find all information about kubernetes at https://kubernetes.io/. 
+
+Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications. It groups containers that make up an application into logical units for easy management and discovery.
+
+
+Here, we will use an example to illustrate how to use k8s to deploy an application. To deploy an application, first we need a k8s client to communicate with the k8s api.
+
+===== 1. Install k8s client =====
+
+You can find full tuto on how to install kubectl on various os in this url https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+I'm using centos 7, here is how 
+<code>
+# create a new repo for k8s
+sudo vim /etc/yum.repo.d/k8s.repo
+
+# put following code
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+# then run
+yum install -y kubectl
+</code>
+
+===== 2. Config your k8s client =====
+You have three things which you need to setup
+  * k8s cluster api server url
+  * your user credentials which allows you to connect to the api server
+  * your current working environment
+<code>
+#!/bin/sh
+# setup my k8s cluster api server url
+kubectl config set-cluster google-cloud-demo --server=https://oidc.demo.dev.sspcloud.fr
+# setup my credentials
+kubectl config set-credentials user-pengfei --token <value_of_your_k8s_api_token>
+# setup a working env
+kubectl config set-context google-cloud --user=user-pengfei --cluster=google-cloud-demo --namespace=user-pengfei
+# use the above env 
+kubectl config use-context google-cloud
+</code>
+
+To test if your client config works, you can use the following command to check if you have a running pod inside the k8s cluster. A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. To know more about pod, you can check https://kubernetes.io/docs/concepts/workloads/pods/#:~:text=Pods%20are%20the%20smallest%20deployable,how%20to%20run%20the%20containers.
+
+
+<code>
+# pods
+$ kubectl get pods
+> No resources found in user-pengfei namespace.
+
+# its like we run
+docker container ls
+</code>
+
+===== 3. Deploy a pod =====
+
+In replicas, you can have as many instances as you want. Notice that pods do not have ip address, so its not accessible at all
+
+<code>
+kubectl apply -f deployment.yml
+# check existing pods
+kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+mario-6d464ff776-5899m   1/1     Running   0          12s
+mario-6d464ff776-8t8w5   1/1     Running   0          12s
+mario-6d464ff776-g8tpk   1/1     Running   0          12s
+
+# check the log of a pod via his name
+kubectl logs mario-6d464ff776-g8tpk
+</code>
+  
+<file yml deployment.yml>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mario
+  template:
+    metadata:
+      labels:
+        app: mario
+    spec:
+      containers:
+        - name: mario
+          image: pengbai/docker-supermario
+</file>
+
+
+===== 4. Deploy a service =====
+
+A pod is not directly accessible, you need to create a service which encapsulate pobs. If you only have one pod instance, this service act as a proxy. If you have many pod instances, it can do load balancing too.
+
+<code>
+# start a service
+kubectl apply -f service.yml
+
+# check existing service
+kubectl get svc
+kubectl get service
+
+NAME    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+mario   ClusterIP   10.35.251.50   <none>        80/TCP    15s
+
+</code>
+Note that this service has only an internal IP, which cannot be accessible via internet.
+
+<file yml service.yml> 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mario
+spec:
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 80
+  selector:
+    app: mario
+</file>
+
+
+===== 5. Make your service public =====
+To make your service public, we use a module called ingress, which is an API object that manages external access to the services in a cluster, typically HTTP.
+
+Ingress may provide load balancing, SSL termination and name-based virtual hosting.
+
+<code>
+kubectl apply -f ingress.yml
+# if you want to apply all three file at same time, you can do the following code
+kubectl apply -f .
+
+# now you can check your application via a url, in our example, it's pengfei.demo.dev.sspcloud.fr
+</code>
+
+
+<file yml ingress.yml>
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mario
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - pengfei.demo.dev.sspcloud.fr
+  rules:
+    - host: pengfei.demo.dev.sspcloud.fr
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: mario
+              servicePort: http
+</file>
+
+===== 6. delete  =====
+If you want to remove your application, you can do the following
+<code>
+# To delete the ingress
+$ kubectl delete -f ingress.yml 
+> ingress.extensions "mario" deleted
+
+# To delete the service
+$ kubectl delete -f service.yml
+service "mario" deleted
+
+# To detele the pobs
+$ kubectl delete -f deployment.yml
+
+# if all three files are in the same folder, then you can do
+$ kubectl delete -f .
+</code>
