@@ -1,0 +1,118 @@
+====== 02: K8s basic concepts ======
+
+===== 2.1 Pods =====
+
+**The basic scheduling unit in Kubernetes is a pod.** **A pod is a grouping of containerized components. A pod consists of one or more containers that are guaranteed to be co-located on the same node.**
+
+**Each pod in Kubernetes is assigned a unique IP address within the cluster, which allows applications to use ports without the risk of conflict.** **Within the pod, all containers can reference each other on localhost, but a container within one pod has no way of directly addressing another container within another pod; for that, it has to use the Pod IP Address.** An application developer should never use the Pod IP Address though, to reference/invoke a capability in another pod, as **Pod IP addresses are ephemeral** - the specific pod that they are referencing may be assigned to another Pod IP address on restart. Instead, they **should use a reference to a Service**, which holds a reference to the target pod at the specific Pod IP Address.
+
+**A pod can define a volume, such as a local disk directory or a network disk, and expose it to the containers in the pod.** Pods can be managed manually through the Kubernetes API, or their management can be delegated to a controller. Such volumes are also the basis for the Kubernetes features of ConfigMaps (to provide access to configuration through the filesystem visible to the container) and Secrets (to provide access to credentials needed to access remote resources securely, by providing those credentials on the filesystem visible only to authorized containers).
+
+
+===== 2.2 Pods controller =====
+
+K8s has four types of controllers to manage pods:
+  * ReplicationController, ReplicaSet, Deployment (For managing stateless pods)
+  * StatefullSet (For managing stateful pods)
+  * DaemonSet (For managing pods need to run on every single working node)
+  * Job, CronJob
+
+==== 2.2.1 ReplicationController, ReplicaSet, Deployment ====
+
+
+
+=== ReplicationController ===
+
+A Replication Controller manages the system so that the number of healthy pods that are running matches the number of pods declared in the ReplicaSet (determined by evaluating its selector).
+
+=== ReplicaSet ===
+
+**A ReplicaSet’s purpose is to maintain a stable set of replica Pods running at any given time**. As such, it is often used to guarantee the availability of a specified number of identical Pods.
+
+The ReplicaSets can also be said to be a grouping mechanism that lets Kubernetes maintain the number of instances that have been declared for a given pod. **The definition of a Replica Set uses a selector**, whose evaluation will result in identifying all pods that are associated with it.
+
+=== Deployments ===
+
+Deployments are a higher level management mechanism for ReplicaSets. While the Replication Controller manages the scale of the ReplicaSet, Deployments will manage what happens to the ReplicaSet - whether an update has to be rolled out, or rolled back, etc. When deployments are scaled up or down, this results in the declaration of the ReplicaSet changing - and this change in declared state is managed by the Replication Controller.
+
+
+
+**Note that We should use Deployments instead of ReplicaSet. Because ReplicaSet does not support rolling-update**
+
+=== Rolling update of a deployment ===
+
+For example, we have a deployment of an App v1. This deployment needs 3 replicas. So this deployment creat a replicaSet **RS** for v1 which has 3 pods. Then we update the App to v2. This deployment will create a new replicaSet **RS1** for v2. RS1 create a pod, RS will delete a pod. When RS1 has three pod, and RS has 0 pod. The update is finished and RS is deactivated (not deleted). If we want to roll back to v1. RS will be activated and to the above process in backward. Check the below figure. 
+
+
+{{:employes:pengfei.liu:admin_system:container:k8s:k8s_rolling_update.png?400|}}
+
+
+=== Horizontal pod autoscaling ===
+
+Deployment and ReplicaSet also support horizontal pod autoscaling. See the below example
+
+<code>
+# This config means, if the pods use more than 80 percent of the cpu, create more pods, but not more than 9. 
+# If the pods use less than 80 percent, then delete pods but not less than 3.  
+if cpu> 80
+max 8
+min 3
+</code> 
+
+==== 2.2.2 StatefullSet ====
+
+StatefulSets are controllers (see Controller Manager, below) that are provided by Kubernetes that enforce the properties of uniqueness and ordering amongst instances of a pod and can be used to run stateful applications.
+
+There are four principal scenarios that you need to use StatefullSet:
+  * App needs persistent storage
+  * App needs persistent PodName and HostName. This is realized by using headless service which means the service does not have ClusterIP.
+  * App needs the instance uniqueness. For example, Kafka distribute the data amongst their brokers—so one broker is not the same as another
+  * App needs ordering of instances when scaling up or down. Databases are an example. When run in high-availability mode, many databases come with the notion of a primary instance and secondary instance(s)
+
+==== 2.2.3 DaemontSet ====
+
+A DaemonSet ensures that a pod replica will run on all or some of the worker nodes. When a new worker node is added to the cluster, a new pod replica of the DaemonSet will be added to the node. If a worker node is removed from the cluster, the pod is removed too. 
+    
+This is useful for use cases like 
+  * log collection
+  * ingress controllers
+  * storage services
+  * monitoring services like Prometheus
+
+==== 2.2.4 Job and CronJob ====
+
+Kubernetes uses a workload called **jobs** to provide a task-based workflow where the running containers are expected to exit successfully after some time once they have completed their work. Jobs are useful if you need to perform one-off or batch processing instead of running a continuous service.
+
+A Job ensures a pod (or many pods in this job) finishes a process correctly. If the process failed, the job will retry the process in this pod without rescheduling a new pod. The success condition of the process can be modified.
+For example, if I want to run a DB backup process twice successfully to finish the job, it's possible. 
+
+
+**Cron jobs** in Kubernetes provide an interface to run jobs with a scheduling component. Cron jobs can be used to schedule a job to execute in the future or on a regular, reoccurring basis. Kubernetes cron jobs are basically a reimplementation of the classic cron behavior, using the cluster as a platform instead of a single operating system.
+
+===== 2.3 Service =====
+
+A Kubernetes service is a set of pods that work together, such as one tier of a multi-tier application. The set of pods that constitute a service are defined by a label selector. 
+
+Kubernetes provides two modes of service discovery, using environmental variables, or using Kubernetes DNS. Service discovery assigns a stable IP address and DNS name to the service, and **load balances** traffic in a **round-robin** manner to network connections of that IP address among the pods matching the selector (even as failures cause the pods to move from machine to machine). 
+
+Any time you need to provide access to one or more pods to another application or to external consumers, you should configure a service. For instance, if you have a set of pods running web servers that should be accessible from the internet, a service will provide the necessary abstraction. Likewise, if your web servers need to store and retrieve data, you would want to configure an internal service to give them access to your database pods.
+
+==== 2.3.1 External service access ====
+
+The **NodePort** configuration works by opening a static port on each node’s external networking interface. Traffic to the external port will be routed automatically to the appropriate pods using an internal cluster IP service.
+
+
+==== 2.4 Volumes and Persistent Volumes ====
+
+Kubernetes uses its own volumes abstraction that **allows data to be shared by all containers within a pod and remain available until the pod is terminated. This means that tightly coupled pods can easily share files without complex external mechanisms. Container failures within the pod will not affect access to the shared files. Once the pod is terminated, the shared volume is destroyed, so it is not a good solution for truly persistent data**.
+
+**Persistent volumes** are a mechanism for abstracting more robust storage that is not tied to the pod life cycle. Instead, they allow administrators to configure storage resources for the cluster that users can request and claim for the pods they are running. Once a pod is done with a persistent volume, the volume’s reclamation policy determines whether the volume is kept around until manually deleted or removed along with the data immediately. Persistent data can be used to guard against node-based failures and to allocate greater amounts of storage than is available locally.
+
+==== 2.5 Labels and Annotations ====
+
+A Kubernetes organizational abstraction related to, but outside of the other concepts, is labeling. A **label** in Kubernetes is a semantic tag that can be attached to Kubernetes objects to mark them as a part of a group. These can then be selected for when targeting different instances for management or routing. For instance, each of the controller-based objects use labels to identify the pods that they should operate on. Services use labels to understand the backend pods they should route requests to.
+
+Labels are given as simple key-value pairs. Each unit can have more than one label, but each unit can only have one entry for each key. Usually, a “name” key is used as a general purpose identifier, but you can additionally classify objects by other criteria like development stage, public accessibility, application version, etc.
+
+**Annotations** are a similar mechanism that allows you to attach arbitrary key-value information to an object. While labels should be used for semantic information useful to match a pod with selection criteria, annotations are more free-form and can contain less structured data. In general, annotations are a way of adding rich metadata to an object that is not helpful for selection purposes.
+

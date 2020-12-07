@@ -1,0 +1,31 @@
+====== k8s components and architecture ======
+
+Kubernetes (commonly stylized as k8s) is an open-source **container orchestration system for automating computer application deployment, scaling, and management**.
+
+It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation. It aims to provide a "platform for automating deployment, scaling, and operations of application containers across clusters of hosts". It works with a range of container tools and originally launched with Docker support, which has since been deprecated
+
+===== Main components =====
+
+Kubernetes follows the primary/replica architecture. The components of Kubernetes can be divided into those that manage an individual node(aka, worker node) and those that are part of the control plane. The below figure shows the overall architecture of k8s. The Green part is the control plane. The blue parts are the worker node
+
+{{:employes:pengfei.liu:admin_system:container:k8s:kubernetes-archi.png?600|}}
+==== Control plane ====
+
+The Kubernetes master is the main controlling unit of the cluster, managing its workload and directing communication across the system. The Kubernetes control plane consists of various components, each its own process, that can run both on a single master node or on multiple masters supporting high-availability clusters. The various components of the Kubernetes control plane are as follows:
+
+  * Api Server: The API server is a key component and serves the Kubernetes API using JSON over HTTP, which provides both the internal and external interface to Kubernetes. **The API server processes and validates REST requests and updates state of the API objects in etcd**, thereby allowing clients to configure workloads and containers across Worker nodes.
+  * Controller Manager: A controller is a reconciliation loop that **drives the actual cluster state toward the desired cluster state**, communicating with the API server to create, update, and delete the resources it manages (pods, service endpoints, etc.). The controller manager is a process that manages a set of core Kubernetes controllers. One kind of controller is a **Replication Controller**, which handles replication and scaling by running a specified number of copies of a pod across the cluster. It also handles creating replacement pods if the underlying node fails. Other controllers that are part of the core Kubernetes system include a **DaemonSet Controller** for running exactly one pod on every machine (or some subset of machines), and a **Job Controller** for running pods that run to completion, e.g. as part of a batch job. The set of pods that a controller manages is determined by label selectors that are part of the controller's definition.
+  * Scheduler: The scheduler is the pluggable component that selects which node an unscheduled pod (the basic entity managed by the scheduler) runs on, based on resource availability. The scheduler tracks resource use on each node to ensure that workload is not scheduled in excess of available resources. For this purpose, the scheduler must know the resource requirements, resource availability, and other user-provided constraints and policy directives such as quality-of-service, affinity/anti-affinity requirements, data locality, and so on. In essence, the scheduler's role is to match resource "supply" to workload "demand".
+  * ETCD: etcd is a **persistent, lightweight**, **distributed**, **key-value data store** developed by CoreOS that **reliably stores the configuration data of the cluster, representing the overall state of the cluster at any given point of time**. **Just like Apache ZooKeeper, etcd is a system that favors consistency over availability** in the event of a network partition (see CAP theorem). This consistency is crucial for correctly scheduling and operating services. The Kubernetes API Server uses etcd's watch API to monitor the cluster and roll out critical configuration changes or simply restore any divergences of the state of the cluster back to what was declared by the deployer. As an example, if the deployer specified that three instances of a particular pod need to be running, this fact is stored in etcd. If it is found that only two instances are running, this delta will be detected by comparison with etcd data, and Kubernetes will use this to schedule the creation of an additional instance of that pod.
+
+==== Worker nodes ====
+
+**A worker node is a machine(physic or virtuel) where containers (workloads) are deployed**. Every node in the cluster must run two types of service:
+  * A container runtime (e.g. Docker, etc.) to run actual containers,
+  * k8s components (e.g. Kubelet, Kube-proxy), for communication with the primary for network configuration of these containers.
+
+=== K8s componenets on worker nodes ===
+
+  * Kubelet:** Kubelet is responsible for the running state of each node, ensuring that all containers on the node are healthy. It takes care of starting, stopping, and maintaining application containers organized into pods as directed by the control plane.** Kubelet monitors the state of a pod, and if not in the desired state, the pod re-deploys to the same node. Node status is relayed every few seconds via heartbeat messages to the primary. Once the primary detects a node failure, the Replication Controller observes this state change and launches pods on other healthy nodes.
+  * Kube-proxy: The Kube-proxy is an implementation of a network proxy and a load balancer, and it supports the service abstraction along with other networking operations. It is responsible for routing traffic to the appropriate container based on IP and port number of the incoming request.
+  * Container runtime: A container resides inside a pod. **The container is the lowest level of a micro-service, which holds the running application, libraries, and their dependencies. Containers can be exposed to the world through an external IP address.** Kubernetes supports Docker containers since its first version, and in July 2016 rkt container engine was added.
