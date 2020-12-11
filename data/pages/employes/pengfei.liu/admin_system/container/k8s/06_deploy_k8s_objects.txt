@@ -1,0 +1,118 @@
+====== 06: Deploy k8s objects ======
+
+In chapter [[employes:pengfei.liu:admin_system:container:k8s:05_resources|05: k8s resources]], we have seen how to list the k8s resources and objects. In this chapter, we will see how to deploy objects. 
+
+The most common objects are pods. 
+
+===== 6.1 Deploy pods =====
+
+We have many ways to deploy a pod in k8s. 
+
+==== 6.1.1 kubectl run command ====
+
+To deploy a single container pod, we can use the following command
+<code>
+kubectl run <pod-name> --image <name of the image from registry>>
+
+kubectl run tomcat --image tomcat:8.0
+
+# To delete a pod
+kubectl stop pods tomcat
+</code>
+
+==== 6.1.2 kubectl create ====
+
+
+To deploy k8s objects, we often edit a yaml file. It's difficult to remember all the required attributes of the yaml file, you can use the following command to get all attributes
+
+<code>
+kubectl explain pod
+</code>
+
+<file yaml tomcat-pod.yaml>
+
+# specify your k8s cluster api version, you can get this info by using "kubectl api-versions" 
+apiVersion: v1
+# the type of k8s resources, e.g. Pod, Deployment, etc
+kind: Pod
+# metadata of your k8s objects
+metadata:
+# The name of your objects, here is the name of the pod
+  name: tomcat-server
+# in which name space you want to deploy this object. if empty the default namespace will be used
+  namespace: user-pengfei
+# spec of this pod
+spec:
+  containers:
+  # number 1 container
+    - name: pengfei-tomcat
+      image: tomcat
+      ports:
+       - containerPort: 8080
+       # If pull policy is set to IfNotPresent or Never, then a local image is used. The default value is Always
+      imagePullPolicy: Always
+
+</file>
+
+To apply the above pod config, run the following command.
+
+<code>
+kubectl create -f tomcat-pod.yaml 
+
+# check the status of the pod 
+kubectl get pods
+
+# check the log of the tomcat server
+kubectl logs tomcat-server
+</code>
+
+==== 6.1.3 Create a pod with multi-containers ====
+
+We want to add a database to the pod, we just add a new database container to the pod
+
+<file yaml tomcat-pod.yaml>
+# specify your k8s cluster api version, you can get this info by using "kubectl api-versions" 
+apiVersion: v1
+# the type of k8s resources, e.g. Pod, Deployment, etc
+kind: Pod
+# metadata of your k8s objects
+metadata:
+# The name of your objects, here is the name of the pod
+  name: tomcat-server
+# in which name space you want to deploy this object
+  namespace: user-pengfei
+# spec of this pod
+spec:
+  containers:
+  # number 1 container
+    - name: pengfei-tomcat
+      image: tomcat
+      ports:
+       - containerPort: 8080
+       # If pull policy is set to IfNotPresent or Never, then a local image is used. The default value is Always
+      imagePullPolicy: Always
+   # number 2 container
+    - name: pengfei-mongo
+      image: mongo
+      ports:
+       - containerPort: 7501
+      imagePullPolicy: Always
+
+</file>
+
+As we have two containers in this pod, to view the log. we need to specify also the name of the container
+
+<code>
+kubectl logs tomcat-server pengfei-mongo
+</code>
+
+==== 6.1.4 Pod template====
+
+Controllers for workload resources create Pods from a pod template and manage those Pods on your behalf.
+===== 6.2 Init container in a Pod =====
+
+===== 6.3 Contianer lifecycle in a Pod =====
+
+You can run a command before the start of a container before shut down too.
+
+

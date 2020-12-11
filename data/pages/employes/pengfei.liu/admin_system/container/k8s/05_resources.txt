@@ -1,0 +1,121 @@
+====== 05: k8s resources ======
+
+All features which are provided by Kubernetes are called **Kubernetes resources**. The instances of these resources are called **Kubernetes objects**
+
+The most common resources are 
+  * workload resources: **pod, replicaset, deployment, statefulset, daemonset, job, cronjobs**
+  * ServiceDiscovery, LoadBalance resources: **Service, Ingress, etc.**
+  * Storage resources:** Volume, ConfigMap, Secrets, CSI**(container storage interface, can be used for all types of storage solution), **DownwardAPI**(inject external data into container)
+  * Cluster resources: **Namespace, Role, ClusterRole, Rolebinding, ClusterRoleBinding**
+  * MetaData resources: **HPA**(Horizontal Pod Autoscaler), **PodTemplate**, **LimitRange**
+
+To list all available resources which are provided by the k8s cluster.
+<code>
+kubectl api-resources
+</code>
+===== 5.1 List Workload resosurces =====
+
+To list all the workload resources(Kubernetes objects) associated with a specific namespace, you can either use individual kubectl get command to list down each resource one by one, or you can list down all the resources in a Kubernetes namespace by running a single command.
+
+<code>
+# get all workload resources of a namespace, if you dont specify a namespace the default namespace will be used.
+kubectl get all -n user-pengfei
+
+# if you want more details, you can add option wide
+kubectl get all -n user-pengfei -o wide
+
+# you can also list multiple reources
+kubectl get service, pod, deployment -n user-pengfei
+</code>
+
+To list each resource, just replace all with the resource name. For example, in 5.1.1, you can find how to get pod resource. 
+==== 5.1.1 List Pod ====
+
+<code>
+# get all deployed pods
+kubectl get pods
+
+# get all pods with details
+kubectl get pods -n user-pengfei -o wide
+
+# get details of a pod
+kubectl describe pods <pods_name>
+
+# get logs of a pod, only pod provide logs.
+kubectl logs <pods_name>
+</code>
+
+==== 5.1.2 replicaset and Deployment ====
+
+You can notice, deployment is an upper-layer of replicaset. So most of the time, we focus on deployment, not the replicaset
+
+<code>
+(base) [pliu@localhost ~]$ kubectl get replicaset
+NAME                                   DESIRED   CURRENT   READY   AGE
+pengfei-airflow-scheduler-6dbc6bdc55   1         1         1       8d
+pengfei-airflow-web-798ff4f645         1         1         1       8d
+(base) [pliu@localhost ~]$ kubectl get deployment
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+pengfei-airflow-scheduler   1/1     1            1           8d
+pengfei-airflow-web         1/1     1            1           8d
+</code>
+
+<code>
+# get all deployment
+kubectl get deployment
+
+# get all deployment with details
+kubectl get deployment -n user-pengfei -o wide
+
+# get more details of a deployment
+kubectl describe deployment <deployment_name>
+
+</code>
+
+==== 5.1.3 stateful set ====
+
+<code>
+# get all statefulset
+kubectl get statefulset
+
+# get all statefulset with details
+kubectl get statefulset -n user-pengfei -o wide
+
+# get more details of a statefulset
+kubectl describe statefulset <statefulset_name>
+
+</code>
+
+==== 5.1.4 daemon set ====
+
+<code>
+# get all daemonset
+kubectl get daemonset
+
+# get all daemonset with details
+kubectl get daemonset -n user-pengfei -o wide
+
+# get more details of a daemonset
+kubectl describe daemonset <daemonset_name>
+
+</code>
+
+==== 5.1.5 jobs cronjobs ====
+
+<code>
+# get all jobs/cronjobs
+kubectl get jobs/cronjobs
+
+# get all jobs/cronjobs with details
+kubectl get jobs/cronjobs -n user-pengfei -o wide
+
+# get more details of a jobs/cronjobs
+kubectl describe jobs/cronjobs <jobs/cronjobs_name>
+
+</code>
+
+
+===== 5.2 Create resources =====
+
+
+
