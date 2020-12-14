@@ -1,0 +1,20 @@
+====== 08: K8s services ======
+
+Service is an abstract way to **expose an application running on a set of Pods as a network service** (Micro-service).
+
+Each Pod gets its own IP address, however, the Deployment does not provide a way to provide the service of these pods. For example, if I have two deployments one called backend and one called frontend. They both have multiple pods. How frontend knows which backend pod to use through the backend deployment. 
+
+So we need another abstraction of the backend pod to provide service.
+
+If you're able to use Kubernetes APIs for service discovery in your application, you can query the API server for **Endpoints**, that get updated whenever the set of Pods in a Service changes.
+
+<code>
+kubectl get endpoints -n user-pengfei
+</code>
+
+
+===== 8.1 Defining a service =====
+
+<file yaml service.yaml>
+
+</file>
