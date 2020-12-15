@@ -1,4 +1,4 @@
-====== 07: k8s controllers ======
+====== 07: k8s pod controllers ======
 
 In chapter [[employes:pengfei.liu:admin_system:container:k8s:06_deploy_k8s_objects|06: Deploy k8s objects]], we have seen how to deploy a pod manually. But most of the time, we will use a controller to deploy a pod for us. 
 
@@ -224,3 +224,97 @@ Some rules on Job spec
 A CronJob creates Jobs on a repeating schedule.
 
 One CronJob object is like one line of a crontab (cron table) file. It runs a job periodically on a given schedule, written in Cron format.
+
+<file yaml cronjob.yaml>
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: pengfei-cronjob-hello
+  labels:
+    app: pengfei-cronjob
+spec:
+  # schedule defines how the job repeats, it uses the same syntax as the crontab, first arg is second, 2nd arg is minutes, 3: hour, 4: day 5: month
+  # */1 means every second. If you want every second starts after 6 second, you write 6/1. 8/2 means every 2 second starts after 8 second
+  schedule: "*/10 * * * *"
+  # job template specify the job 
+
+   # It stands for the deadline in seconds for starting the job if it misses its scheduled time for any reason. After the deadline, 
+    # the cron job does not start the job. Jobs that do not meet their deadline in this way count as failed jobs. 
+    # If this field is not specified, the jobs have no deadline.
+  startingDeadlineSeconds: 10
+   # if the job is long to finish, the schedule may start a new job without finishing the old one. Thus you need to set a policy to allow concurrency or
+    # not.
+    # It has three possible values
+    # - "Allow" (default). 
+    # - "Forbid" Ignore the new schedule job until the old job finishes
+    # - "Replace" The new schedule job replaces the unfinish old job
+  concurrencyPolicy: Forbid
+
+  # You can suspend a job by setting suspend = true. default value is false
+  suspend: true 
+
+  # set the controller to save the number of succeed jobs, default value is 3
+  successfulJobsHistoryLimit: 10
+
+  # set the controller to save the number of failed jobs, default valie is 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      name: subjob
+      labels:
+        app: pengfei-cronjob-subjob
+    spec:
+    # template specify the pod of the job
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
+</file>
+
+
+
+
+<code>
+# To apply this cronjob in a namespace
+kubectl apply -f cronjob.yaml -n user-pengfei
+
+# to list existing cronjob
+kubectl get cronjob -n user-pengfei
+</code>
+
+As we said, cronjob is just a higher layer of jobs. So cronjob will create job
+
+<code>
+# to watch the job created by cronjob
+kubectl get jobs --watch
+
+# to see the log of a pod attached to a job
+# Replace "hello-4111706356" with the job name in your system
+pods=$(kubectl get pods --selector=job-name=pengfei-cronjob-hello-1607949840 --output=jsonpath={.items[*].metadata.name})
+kubectl logs $pods
+</code> 
+
+To delete a cronjob
+
+<code>
+kubectl delete cronjob pengfei-cronjob-hello
+</code>
+
+==== 7.3.1 CronJob limitations ====
+
+=== No guaranee to a job schedule ===
+
+**A cron job creates a job object about once per execution time of its schedule**. **We say "about" because there are certain circumstances where two jobs might be created, or no job might be created.** We attempt to make these rare, but do not completely prevent them. Therefore, jobs should be idempotent.
+
+**If startingDeadlineSeconds is set to a large value or left unset (the default) and if concurrencyPolicy is set to Allow, the jobs will always run at least once.**
+
+=== Suspend automatic ===
+
+For every CronJob, the CronJob Controller checks how many schedules it missed in the duration from its last scheduled time until now. **If there are more than 100 missed schedules, then it does not start the job and logs the error**
