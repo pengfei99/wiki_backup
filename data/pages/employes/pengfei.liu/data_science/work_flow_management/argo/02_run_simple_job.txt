@@ -1,0 +1,422 @@
+====== 02: Run a simple job on argo ======
+
+===== 2.1 Run a job with parameters =====
+
+<file yaml flow_with_params.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: hello-world-parameters-
+spec:
+  # invoke the woker1 template with
+  # "hello ..." as the argument
+  # to the message parameter
+  entrypoint: worker1
+  arguments:
+    parameters:
+    - name: message
+      value: hello pengfei, this is my first parameter
+
+  templates:
+  - name: worker1
+    inputs:
+      parameters:
+      - name: message       # parameter declaration
+    container:
+      image: busybox
+      # run echo command with that message input parameter as args
+      command: ["echo"]
+      # invoke the parameter defined in argument section in container
+      args: ["{{inputs.parameters.message}}"]
+</file>
+
+<code>
+# argo submit a job
+argo submit flow_with_params.yaml
+
+# list all jobs
+argo list
+
+# get details of a job, note argo will auto complet the name of your job with random number
+argo get <job-name>
+
+# delete a job
+argo delete <job-name>
+
+# resubmit a job, note the resubmit can only rerun a job, you can not modify any parameter or logic init.
+# if you want to update your job, you just run submit on the new version again
+argo resubmit <job-name>
+</code>
+
+==== 2.1.1 Change parameter with option ====
+
+<code>
+# The -p option will override the parameters in your yaml file
+argo submit flow_with_params.yaml -p message="goodbye world"
+</code>
+
+In case of multiple parameters that can be overridden, the argo CLI provides a command to load parameters files in YAML or JSON format. Here is an example of that kind of parameter file:
+
+
+<file yaml params.yaml>
+message: goodbye world
+</file>
+
+You can apply it with the following command
+
+<code>
+argo submit flow_with_params.yaml --parameter-file params.yaml
+</code>
+
+
+===== 2.2 Global parameters =====
+
+The spec.entrypoint indicate which container the job should start with. 
+
+<file yaml flow-with-global-parameters.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: flow-with-global-parameters-
+spec:
+  entrypoint: worker1
+  # the parameter here is a global variable, every template can use it
+  arguments:
+    parameters:
+    - name: log-level
+      value: INFO
+
+  templates:
+  - name: worker1
+    container:
+      image: busybox
+      env:
+      - name: LOG_LEVEL
+      # you can inovke the global params by using workflow.parameterss.
+        value: "{{workflow.parameters.log-level}}"
+      command: ["echo" ,"This is worker 1 and log level is $(LOG_LEVEL)"]
+  - name: worker2
+    container:
+      image: busybox
+      env:
+      - name: LOG_LEVEL
+        value: "{{workflow.parameters.log-level}}"
+      command: ["echo" ,"This is worker 2 and log level is $(LOG_LEVEL)"]
+</file>
+
+You can override the default entry point in your yaml file 
+<code>
+# now the job should start with worker 2
+argo submit flow_with_global_params.yaml --entrypoint worker2
+</code>
+
+===== 2.3 Steps =====
+
+Step is a way to write workflow inside one template. Note that even though steps are in the same template, each step still has an individual pod to run the command. 
+
+<file yaml flow-with-steps.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: flow-with-steps-
+spec:
+  entrypoint: master
+  # Global vars are always overwrite by local vars
+  arguments:
+    parameters:
+    - name: message
+      value: "default value"
+
+  # This spec contains two templates: master and worker
+  templates:
+  - name: master
+    # Instead of just running a container
+    # This template has a sequence of steps. The order of these steps is the order of their execution
+    # If you use - - means steps are executed sequentially.
+    # If you use   - means steps are executed parallelly. 
+    steps:
+    - - name: step-a           # step-a is run before the following steps
+        template: worker
+        # local variables
+        arguments:
+          parameters:
+          - name: message
+            value: "I'm step A"
+    - - name: step-b           # step-b run after previous step
+        template: worker
+        arguments:
+          parameters:
+          - name: message
+            value: "I'm step B"
+      - name: step-c           # step-c run in parallel with step-b but after step-a
+        template: worker
+        arguments:
+          parameters:
+          - name: message
+            value: "I'm step C"
+    - - name: step-d
+        template: worker
+        arguments:
+          parameters:
+          - name: message
+            value: "I'm step d"
+
+  # This is the actual template that will print the message defined in the master template steps
+  - name: worker
+    inputs:
+      parameters:
+      - name: message
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["{{inputs.parameters.message}}"]
+</file>
+
+**Note steps start with - - means steps are executed sequentially and with - means steps are executed parallelly.** 
+
+===== 2.4 Dag =====
+
+<file yaml flow-with-dag.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: flow-with-dag-
+spec:
+  entrypoint: master
+  templates:
+  - name: worker
+    inputs:
+      parameters:
+      - name: message
+      - name: id
+    container:
+      image: busybox
+      command: [echo, "This is {{inputs.parameters.id}}, the message is {{inputs.parameters.message}}"]
+   # The master template defines the tasks and their relationships.    
+  - name: master
+    dag:
+      tasks:
+      # A task needs to use another template to run
+      - name: task-A
+      # indicates the name of the template which will run the task
+        template: worker
+      # the parameters which will be used on the template  
+        arguments:
+          parameters: 
+          - name: message
+            value: A
+          - name: id
+            value: task_A
+      - name: task-preB
+        template: worker
+        arguments:
+          parameters: [{name: message, value: preB},{name: id,value: task_preB}]
+      - name: task-B
+      # dependencies means the current task will start only if the dependent task finished correctly. 
+        dependencies: [task-A,task-preB]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: B},{name: id,value: task_B}]
+      - name: task-C
+        dependencies: [task-A]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: C},{name: id,value: task_C}]
+      - name: task-D
+        dependencies: [task-B, task-C]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: D},{name: id,value: task_D}]
+</file>
+
+As you can notice of the above DAG has multiple roots. 
+
+The DAG logic has a built-in fail fast feature to stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Then it waits until all DAG nodes are completed before failing the DAG itself. The FailFast flag default is true, if set to false, it will allow a DAG to run all branches of the DAG to completion (either success or failure), regardless of the failed outcomes of branches in the DAG. More info and examples about this feature at https://github.com/argoproj/argo/issues/1442.
+
+==== 2.4.1 Sub-dag ====
+The templates called from a DAG or steps template can themselves be DAG or steps templates. This can allow for complex workflows to be split into manageable pieces.
+
+<file yaml flow-with-dag.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: flow-with-sub-dag-
+spec:
+  entrypoint: master
+  templates:
+  - name: worker
+    inputs:
+      parameters:
+      - name: message
+      - name: id
+    container:
+      image: busybox
+      command: [echo, "This is {{inputs.parameters.id}}, the message is {{inputs.parameters.message}}"]
+   # The master template defines the tasks and their relationships. 
+  - name: sub-master
+    dag:
+      tasks:
+      - name: preB-sub-task-1
+        template: worker
+        arguments:
+          parameters: [{name: message, value: preB-sub-task-1},{name: id,value: task_preB_sub_task_1}]
+      - name: preB-sub-task-2
+        dependencies: [preB-sub-task-1]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: preB-sub-task-2},{name: id,value: task_preB_sub_task_2}]       
+  - name: master
+    dag:
+      tasks:
+      # A task needs to use another template to run
+      - name: task-A
+      # indicate the name of the template which will run the task
+        template: worker
+      # the parameters which will be used on the template  
+        arguments:
+          parameters: 
+          - name: message
+            value: A
+          - name: id
+            value: task_A
+      # this task calls a template which is also a dag      
+      - name: task-preB
+        template: sub-master
+        arguments:
+          parameters: [{name: message, value: preB},{name: id,value: task_preB}]
+      - name: task-B
+      # dependencies means the current task will start only if the dependent task finished correctly. 
+        dependencies: [task-A,task-preB]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: B},{name: id,value: task_B}]
+      - name: task-C
+        dependencies: [task-A]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: C},{name: id,value: task_C}]
+      - name: task-D
+        dependencies: [task-B, task-C]
+        template: worker
+        arguments:
+          parameters: [{name: message, value: D},{name: id,value: task_D}]
+
+</file>
+
+
+===== 2.5 Artifacts =====
+
+Argo workflow uses artifacts to exchange data between tasks. Because tasks are running on different pods. The volume of pods can not easily communicate with each other. 
+
+==== 2.5.1 Create an Artifacts repo ====
+
+To use artifacts, we first need to install an artifacts repo on k8s. Argo supports many backends for the repo. Here I will only highlight minio backend. For more details, plz visit https://argoproj.github.io/argo/configure-artifact-repository/
+
+<code>
+# use helm to install minio
+$ helm repo add minio https://helm.min.io/ # official minio Helm charts
+$ helm repo update
+$ helm install argo-artifacts minio/minio --set fullnameOverride=argo-artifacts
+
+# check the minio service on k8s
+kubectl get service argo-artifacts
+
+# access the minio server
+# Note that the public IP may take a couple of minutes to be available.
+# You can now access Minio server on http://<External-IP>:9000. 
+# If you can't get an external-IP, try to use the port forward
+kubectl port-forward --namespace user-pengfei svc/argo-artifacts 9000:9000
+
+# Then access minio server via http://localhost:9000. 
+
+# get the accesskey 
+kubectl get secret argo-artifacts -o jsonpath='{.data.accesskey}' | base64 --decode
+
+# get the secretkey
+kubectl get secret argo-artifacts -o jsonpath='{.data.secretkey}' | base64 --decode
+
+# use these key to login to minio server and create a bucket
+
+</code>
+
+==== 2.5.2 Configure your artifact repository as the argo default repo ====
+
+In order for Argo to use your artifact repository, you can configure it as the default repository. Edit the workflow-controller config map with the correct endpoint and access/secret keys for your repository.
+
+<code>
+
+</code>
+
+==== 2.5.3 Task output/input artifacts by using default artifact repo====
+
+While by default, the Docker and PNS workflow executors can get output artifacts from the base layer (e.g. /tmp), neither the Kubelet or the K8SAPI executors can. 
+
+So if you do as the argo workflow official artifact example output directly to /tmp, you will get an error. To avoid this, we will mount an empty dir volume for output. The original doc is here https://argoproj.github.io/argo/empty-dir/ 
+
+<file yaml .yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: flow-with-artifact-
+spec:
+  entrypoint: artifact-example
+  templates:
+  - name: artifact-example
+    steps:
+    - - name: generate-artifact
+        template: artifact1
+    - - name: consume-artifact
+        template: print-message
+        arguments:
+          artifacts:
+          # bind message to the hello-art artifact
+          # generated by the generate-artifact step
+          - name: message
+            from: "{{steps.generate-artifact.outputs.artifacts.hello-art}}"
+
+  - name: artifact1
+    container:
+      image: busybox
+      command: ["cat","hello world", ">>", "/tmp/hello_world.txt" ]
+      # While by default, the Docker and PNS workflow executors can get output artifacts from the base layer (e.g. /tmp), 
+      # neither the Kubelet or the K8SAPI executors can. 
+      # So if you do as the argo workflow official artifact example which output artifacts directly to /tmp, you will get an error. 
+      # To avoid this, we will mount an empty dir volume for output. The original doc is here https://argoproj.github.io/argo/empty-dir/ 
+      # mount the volume on /mnt/out
+      volumeMounts:
+        - name: out
+          mountPath: /mnt/out
+    # create an empty volume to output the artifacts 
+    volumes:
+      - name: out
+        emptyDir: { }
+    outputs:
+      artifacts:
+      # generate hello-art artifact from /tmp/hello_world.txt
+      # artifacts can be directories as well as files
+      - name: hello-art
+        path: /mnt/out/hello_world.txt
+
+  - name: print-message
+    inputs:
+      artifacts:
+      # unpack the message input artifact
+      # and put it at /tmp/message
+      - name: message
+        path: /tmp/message
+    container:
+      image: alpine:latest
+      command: [sh, -c]
+      args: ["cat /tmp/message"]
+</file>
+
+==== 2.5.3 Task output/input artifacts by using NON default artifact repo====
+
+<file yaml .yaml></file>
+<code></code>
+
+
+<file yaml .yaml></file>
+<code></code>
+
+===== Headline =====
