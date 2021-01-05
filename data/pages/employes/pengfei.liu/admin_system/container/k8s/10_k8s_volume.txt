@@ -1,4 +1,351 @@
-====== 10: k8s volume ======
+====== 10: k8s Volume, Persistent Volume, Persistent Volume claim ======
+
+===== 10.0 The need of persistent storage =====
+
+Many services need persistent storage(e.g. Mysql). And the storage must satisfy the following requirements:
+  - Storage that doesn't depend on the pod lifecycle
+  - Storage must be available on all nodes
+  - Storage needs to survive even if the k8s cluster crashes.
+
+K8s provide Volume, Persistent Volume, and Persistent Volume claim to address the storage.
+
+
+===== 10.1 Volume introduction =====
+
+**On-disk files in a container are ephemeral**, which means these files will be lost when a container crashes. Because the kubelet restarts the container with a clean state. A second problem occurs when sharing files between containers running together in a Pod. **The Kubernetes volume abstraction solves both of these problems**. 
+
+
+**K8s volume is different from the docker volume**. K8s has the following features:
+  * Kubernetes supports many types of volumes. 
+  * A Pod can use any number of volume types simultaneously. 
+  * **Ephemeral volume types** have a lifetime of a pod
+  * **Persistent volumes** exist beyond the lifetime of a pod. Consequently, a volume outlives any containers that run within the pod, and data is preserved across container restarts. When a pod ceases to exist, the volume is destroyed.
+
+**A Volume can be considered as a directory with or without data in it**. To use a volume in a Pod, specify the volumes in **.spec.volumes** and declare where to **mount those volumes into containers in .spec.containers[*].volumeMounts**
+
+
+===== 10.2 Volume types =====
+
+A volume type is just an interface that matches the k8s volume to the actual hardware that stores the data. 
+
+Based on different volume types, the hardware that stores data physically can be the node which runs your k8s cluster, or external network storages(e.g. nfs, aws-s3, etc.). 
+
+Based on their lifetime, the volume types can be Ephemeral or persistent.
+
+==== 10.2.1 EmptyDir ====
+
+An emptyDir volume is first created when a Pod is assigned to a node and exists as long as that Pod is running on that node. **So EmptyDir is Ephemeral and local to the node.** 
+
+As the name says, the emptyDir volume is initially empty. All containers in the Pod can read and write the same files in the emptyDir volume, though that volume can be mounted at the same or different paths in each container. **When a Pod is removed from a node for any reason, the data in the emptyDir is deleted permanently.** 
+
+
+Some uses for an emptyDir are:
+
+  * scratch space, such as for a disk-based merge sort
+  * checkpointing a long computation for recovery from crashes
+  * holding files that a content-manager container fetches while a webserver container serves the data.
+
+The following pod creates an emptyDir. One container writes some text to a file on an emptyDir volume, another container reads it.
+<file yaml pod-with-empty-dir.yaml>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-empty-dir
+spec:
+# We create a volume called temp-volume. This volume has type emptyDir
+  volumes:
+  - name: temp-volume
+    emptyDir: {}
+  containers:
+  # The writer container writes the env var to file
+  - name: writer-container
+    image: busybox
+    # We create a env var called MESSAGE
+    env:
+    - name: MESSAGE
+      value: "hello world"
+    # The command overwrites the default commands of the docker image
+    command: [ "/bin/sh","-c"]
+    # The args overwrites the default arguments of the docker image
+    # The following args is a shell script, we use ; to separate commands. && is used as condition, it means if cat /tmp/hello.txt
+    # runs correctly and returns 0 then exec sleep 600. If not, sleep will be omitted.
+    args: ["echo \"${MESSAGE}\" > /tmp/hello.txt; cat /tmp/hello.txt && sleep 600"]
+    # We mount the volume called temp-volume at /tmp
+    volumeMounts:
+    - mountPath: /tmp
+      name: temp-volume
+    resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"  
+# The reader container reads the file that writes by the writer-container. It means the volume is shared between containers in a pod
+  - name: reader-container
+    image: busybox
+    # The command overwrites the default commands of the docker image
+    command: [ "/bin/sh","-c"]
+    # The args overwrites the default arguments of the docker image
+    # The first echo will do nothing, because no env var is defined in this container
+    args: ["echo \"${MESSAGE}\"; cat /cache/hello.txt && sleep 600"]
+    # We mount the volume called temp-volume at /tmp
+    volumeMounts:
+    - mountPath: /cache
+      name: temp-volume
+    resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+  
+
+</file>
+
+==== 10.2.2 HostPath ====
+
+A hostPath volume mounts a file or directory from the host node's filesystem into your Pod. It means your pod can modify files on your host machine. **This is very dangerous**. If you really need it, use it with caution. 
+
+It has two other major problems, because:
+
+  * Pods with the identical configuration (such as created from a PodTemplate) may behave differently on different nodes due to different files on the nodes.
+  * The files or directories created on the underlying hosts are **only writable by root**. You either need to run your process as root in a privileged Container or modify the file permissions on the host to be able to write to a hostPath volume
+
+The following pod is an example
+
+<file yaml pod-with-host-path.yaml>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-host-path
+spec:
+  volumes:
+  - name: test-volume
+    hostPath:
+      # directory location on host
+      path: /tmp
+      # this field is optional
+      type: Directory
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    command: [ "/bin/sh","-c"]
+    args: ["echo \"toto titi tata\" > /test-pd/hello.txt; cat /test-pd/hello.txt && sleep 600"]
+    volumeMounts:
+    - mountPath: /test-pd
+      name: test-volume
+    resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+  
+</file>
+
+==== 10.2.3 Aws Elastic Block Store ====
+
+An awsElasticBlockStore volume mounts an Amazon Web Services (AWS) EBS volume into your pod. Unlike emptyDir, which is erased when a Pod is removed, the contents of an EBS volume are persisted and the volume is unmounted. This means that an EBS volume can be pre-populated with data, and that data can be shared between pods.
+
+There are some restrictions when using an awsElasticBlockStore volume:
+
+  * **the nodes on which pods are running must be AWS EC2 instances**
+  * those instances need to be in the same region and availability zone as the EBS volume
+  * EBS only supports a single EC2 instance mounting a volume
+
+<file yaml .yaml>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-ebs
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    volumeMounts:
+    - mountPath: /test-ebs
+      name: test-volume
+  volumes:
+  - name: test-volume
+    # This AWS EBS volume must already exist.
+    awsElasticBlockStore:
+      volumeID: "<volume id>"
+      fsType: ext4
+</file>
+
+
+=== ebs vs efs vs s3 ===
+https://www.missioncloud.com/blog/resource-amazon-ebs-vs-efs-vs-s3-picking-the-best-aws-storage-option-for-your-business
+
+ebs and efs only works for (elastic compute cloud)EC2. S3 works for everything that has an s3 client.
+
+
+===== 10.3 PersistentVolume and PersistentVolumeClaim introduction =====
+
+As you can notice in the Volume section, users who deploy a pod also need to worry about how a volume is mapped to physical hardware. 
+
+With two new API resources: **PersistentVolume** and **PersistentVolumeClaim**, we can separate how storage is provided (for k8s admins) from how it is consumed (for k8s users).
+
+A **PersistentVolume (PV)** is a piece of storage in the cluster that has been provisioned by an administrator or **dynamically provisioned using Storage Classes**. It is a resource in the cluster just like a node is a cluster resource. PVs are volume plugins like Volumes, but have a lifecycle independent of any individual Pod that uses the PV. This API object captures the details of the implementation of the storage, be that NFS, iSCSI, or a cloud-provider-specific storage system.
+
+A **PersistentVolumeClaim (PVC)** is a request for storage by a user. It is similar to a Pod. Pods consume node resources and PVCs consume PV resources. Pods can request specific levels of resources (CPU and Memory). PVC can request specific size and access modes (e.g., they can be mounted ReadWriteOnce, ReadOnlyMany or ReadWriteMany, see AccessModes).
+
+While PersistentVolumeClaims allows a user to consume abstract storage resources, it is common that users need PersistentVolumes with varying properties, such as performance, for different problems. Cluster administrators need to be able to offer a variety of PersistentVolumes that differ in more ways than just size and access modes, without exposing users to the details of how those volumes are implemented. For these needs, there is the StorageClass resource.
+
+
+==== 10.3.1 Lifecycle of a Persistent volume and PVC ====
+
+=== Step1 : Persistent volume Provisioning ===
+
+There are two ways PVs may be provisioned: statically or dynamically.
+
+== Static ==
+
+A cluster administrator creates a number of PVs. They carry the details of the real storage, which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
+
+== Dynamic ==
+
+When none of the static PVs that the administrator created matches a user's PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC. 
+
+This provisioning is based on StorageClasses: the PVC must request a storage class and the administrator must have created and configured that class for dynamic provisioning to occur. Claims that request the class "" effectively disable dynamic provisioning for themselves.
+
+== enable the DefaultStorageClass ==
+
+To enable dynamic storage provisioning based on storage class, the cluster administrator needs to enable the DefaultStorageClass admission controller on the API server. This can be done, for example, by ensuring that DefaultStorageClass is among the comma-delimited, ordered list of values for the --enable-admission-plugins flag of the API server component.
+
+=== Step2 : PVC binds with Persistent volume ===
+
+In the k8s master node, a control loop watches for new PVCs, finds a matching PV(if possible), and binds them together.
+
+If a PV was dynamically provisioned for a new PVC, the loop will always bind that PV to the PVC. Otherwise, the user will always get at least what they asked for, but the volume may be in excess of what was requested. 
+
+Once bound, PersistentVolumeClaim binds are exclusive, regardless of how they were bound. A PVC to PV binding is a one-to-one mapping, using a ClaimRef which is a bi-directional binding between the PersistentVolume and the PersistentVolumeClaim.
+
+PVCs will remain unbound indefinitely if a matching volume does not exist. PVCs will be bound as matching volumes become available. For example, a cluster provisioned with many 50Gi PVs would not match a PVC requesting 100Gi. The PVC can be bound when a 100Gi PV is added to the cluster.
+
+=== Step3 : Using PVC ===
+
+Pods use claims as volumes. The cluster inspects the claim to find the bound volume and mounts that volume for a Pod. For volumes that support multiple access modes, the user specifies which mode is desired when using their claim as a volume in a Pod.
+
+== Storage Object in Use Protection ==
+
+To avoid data loss, PVCs in active use by a Pod and PVs that are bound to PVC cant be removed from the system.
+
+If a user deletes a PVC in active use by a Pod, the PVC is not removed immediately. PVC removal is postponed until the PVC is no longer actively used by any Pods. Also, if an admin deletes a PV that is bound to a PVC, the PV is not removed immediately. PV removal is postponed until the PV is no longer bound to a PVC.
+
+=== Step4 : Reclaiming PV ===
+
+When a PVC is deleted, the bound PV can be reclaimed. Currently, Persistent volumes can either be Retained, Recycled, or Deleted.
+
+== Retain ==
+
+The Retain reclaim policy allows for **manual reclamation of the PV resource**. When the PersistentVolumeClaim is deleted, **the PersistentVolume still exists and the volume is considered "released". But it is not yet available for another claim because the previous claimant's data remains on the volume**. An administrator can manually reclaim the volume with some specific steps(i.e. https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
+
+== Delete ==
+
+Delete reclaim policy **removes both the PersistentVolume object from Kubernetes, as well as the associated storage asset in the external infrastructure**, such as an AWS EBS, GCE PD, Azure Disk, or Cinder volume.
+
+
+**Persistent Volumes that were dynamically provisioned inherit the reclaim policy of their StorageClass, which defaults to Delete**
+
+== Recycle ==
+
+If supported by the underlying volume plugin, the Recycle reclaim policy performs a basic scrub (rm -rf /thevolume/*) on the volume and makes it available again for a new claim.
+
+**The Recycle reclaim policy is deprecated. Instead, the recommended approach is to use dynamic provisioning.
+**
+
+
+===== 10.4 Types of Persistent Volumes =====
+
+PersistentVolume types are implemented as plugins. Kubernetes currently supports  many plugins. For a full plugin list, please visit this page (https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+The following yaml file is a nfs type pv. 
+<file yaml nfs-pv.yaml>
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+# pv name
+  name: pv0003
+spec:
+# pv capacity
+  capacity:
+    storage: 5Gi
+# volume mode defines how the PV is mounted on a pod, only two possible value: Filesystem, Block
+# Filesystem mode: PV is mounted into Pods as a directory. If the PV is backed by a block device and the device is empty, 
+#                  Kuberneretes creates a filesystem on the device before mounting it for the first time.
+# Block mode: PV is mounted into a Pod as a block device, without any filesystem on it. This mode is useful to provide a Pod 
+#             the fastest possible way to access a volume, without any filesystem layer between the Pod and the volume.
+#             On the other hand, the application running in the Pod must know how to handle a raw block device.
+  volumeMode: Filesystem
+# pv access mode, only the following three is available
+# ReadWriteOnce -- the volume can be mounted as read-write by a single node
+# ReadOnlyMany -- the volume can be mounted read-only by many nodes
+# ReadWriteMany -- the volume can be mounted as read-write by many nodes
+  accessModes:
+    - ReadWriteOnce
+# pv relcaim policy
+  persistentVolumeReclaimPolicy: Delete
+# storage class can be used by a pvc to bind with this pv
+  storageClassName: slow
+# nfs specific config
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tmp
+    server: 172.17.0.2
+</file>
+
+===== 10.5 Persistent Volume Claims example =====
+In this example, we first create a pvc, then we create a pod that uses the pvc as volume.
+
+<file yaml pod-with-pvc.yaml>
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+# used to bind PV with the same class name, if you want the DefaultStorageClass create a PV dynamically, just put "".
+  storageClassName: rook-ceph-block
+
+# Only the volumes whose labels match the selector can be bound to the PVC. The selector can consist of two fields:
+# - matchLabels: the volume must have a label with this value
+# - matchExpressions: a list of requirements made by specifying key, list of values, and operator that relates the key and values. 
+#                     Valid operators include In, NotIn, Exists, and DoesNotExist.
+# because of this selector, this pvc will always pending if you don't have a PV that matches the selector
+# you can comment the selector, if you want to test the default storage class
+  # selector:
+  #   matchLabels:
+  #     release: "stable"
+  #   matchExpressions:
+  #     - {key: environment, operator: In, values: [dev]}
+---
+# This pod use the above pvc as volume
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-pvc
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: my-volume
+# create a volume by using a pvc
+  volumes:
+    - name: my-volume
+      persistentVolumeClaim:
+        claimName: myclaim
+</file>
+
+===== 10.6 Volume Snapshot and Volume Cloning =====
+
+**Volume snapshots only support the out-of-tree CSI volume plugins.** For more details, please visit https://kubernetes.io/docs/concepts/storage/volume-snapshots/
+
+**Volume Cloning only available for CSI volume plugins.** For more details, please visit https://kubernetes.io/docs/concepts/storage/volume-pvc-datasource/
+
 
 <code></code>
 
