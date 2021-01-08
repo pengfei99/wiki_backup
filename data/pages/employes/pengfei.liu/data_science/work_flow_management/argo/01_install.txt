@@ -1,1 +1,240 @@
-====== Install argo workflow on k8s ======
+====== Intro and Install argo workflow on k8s ======
+
+===== 1. Introduction of Argo =====
+
+==== 1.1 What is Argo Workflows? ====
+
+Argo Workflows is an open-source container-native workflow engine for orchestrating parallel jobs on Kubernetes. Argo Workflows is implemented as a **Kubernetes CRD**.
+
+  * Define workflows where each step in the workflow is a container.
+  * Model multi-step workflows as a sequence of tasks or capture the dependencies between tasks using a graph (DAG).
+  * Easily run compute-intensive jobs for machine learning or data processing in a fraction of the time using Argo Workflows on Kubernetes.
+  * Run CI/CD pipelines natively on Kubernetes without configuring complex software development products.
+
+
+==== 1.2 Why Argo Workflows? ====
+
+  * Designed from the ground up for containers without the overhead and limitations of legacy VM and server-based environments.
+  * Cloud agnostic and can run on any Kubernetes cluster.
+  * Easily orchestrate highly parallel jobs on Kubernetes.
+  * Argo Workflows puts a cloud-scale supercomputer at your fingertips!
+
+==== 1.3 k8s CustomResourceDefinition(CRD) ====
+
+**A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind**; for example, the built-in pods resource contains a collection of Pod objects.
+
+**A custom resource is an extension of the Kubernetes API that is not necessarily available in a default Kubernetes installation**. It represents a customization of a particular Kubernetes installation. However, many core Kubernetes functions are now built using custom resources, making Kubernetes more modular.
+
+**Custom resources can appear and disappear in a running cluster through dynamic registration, and cluster admins can update custom resources independently of the cluster itself**. Once a custom resource is installed, users can create and access its objects using kubectl, just as they do for built-in resources like Pods.
+
+The **CustomResourceDefinition** is the definition of the custom resource. For more info on how to create, delete CRD. Please visit https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
+===== 2. Install argo via official argo helm =====
+The better way to do this is to write a local helm chart that uses the official chart with customized configuration.  
+
+This Chart.yaml is an example of argo local helm chart
+<file yaml Chart.yaml>
+apiVersion: v2
+name: argo
+version: 0.14.0
+dependencies:
+  - name: argo
+    version: 0.14.0
+    repository: https://argoproj.github.io/argo-helm
+    enabled: true
+</file>
+
+Each chart will allow you to set some custom values to configure the behavior of the service. The following values.yaml is an example.
+ 
+<file yaml values.yaml>
+# note all config value must be prefix by the chart name. In this example, our chart name is argo.
+# so we prefix all vaules with argo:
+argo:
+  images:
+    tag: v2.12.3
+  init:
+    # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
+    # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
+    serviceAccount: ""
+
+  createAggregateRoles: true
+
+  workflow:
+    serviceAccount:
+      create: true # Specifies whether a service account should be created
+      annotations: {}
+      name: "argo-workflow" # Service account which is used to run workflows
+    rbac:
+      create: true # adds Role and RoleBinding for the above specified service account to be able to run workflows
+
+  controller:
+    replicas: 1
+    containerRuntimeExecutor: k8sapi
+
+  server:
+    enabled: true
+
+    extraArgs:
+      #- --auth-mode=sso
+      - --auth-mode=client
+
+    ingress:
+      enabled: true
+      ## Annotations to be added to the web ingress.
+      ##
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      #   kubernetes.io/tls-acme: "true"
+
+      ## Hostnames.
+      ## Must be provided if Ingress is enabled.
+      ##
+      hosts:
+        - argo.kub.sspcloud.fr
+
+      ## Additional Paths for each host
+      # paths:
+      #   - serviceName: "ssl-redirect"
+      #     servicePort: "use-annotation"
+
+      ## TLS configuration.
+      ## Secrets must be manually created in the namespace.
+      ##
+      tls:
+        - hosts:
+            - argo.kub.sspcloud.fr
+
+    clusterWorkflowTemplates:
+      # Give the server permissions to edit ClusterWorkflowTemplates.
+      enableEditing: true
+    sso:
+      ## SSO configuration when SSO is specified as a server auth mode.
+      ## All the values are requied. SSO is activated by adding --auth-mode=sso
+      ## to the server command line.
+      #
+      ## The root URL of the OIDC identity provider.
+      issuer:
+        https://auth.lab.sspcloud.fr/auth/realms/sspcloud
+        ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
+      clientId:
+        name: argo-workflow-sso
+        key: client-id
+        ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
+      clientSecret:
+        name: argo-workflow-sso
+        key: client-secret
+        ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+      redirectUrl: https://argo.kub.sspcloud.fr/oauth2/callback
+  # Influences the creation of the ConfigMap for the workflow-controller itself.
+</file>
+
+Now we have all that we need to install argo via helm chart. Below is how we use the helm command to install service via a local chart
+
+<code>
+# if your chart uses other helm charts, you need to update your dependencies
+$ helm dependency update
+# the above command will download the required charts.tgz under charts folder
+
+# install a locale chart. here argo-workflow is the folder which you can find the above Chart.yaml file
+helm install argo-workflow ./argo-workflow -f ./argo-workflow/values.yml 
+</code>
+
+This chart will create two deployments on Argo namespace
+
+<code>
+(base) [pliu@localhost ~]$ kubectl get all -n argo
+NAME                                                     READY   STATUS    RESTARTS   AGE
+pod/argo-workflow-server-64dcc9bd5f-wx4ps                1/1     Running   0          20h
+pod/argo-workflow-workflow-controller-575dbd9c97-hmllk   1/1     Running   0          20h
+
+NAME                           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/argo-workflow-server   ClusterIP   10.233.20.86   <none>        2746/TCP   20h
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/argo-workflow-server                1/1     1            1           20h
+deployment.apps/argo-workflow-workflow-controller   1/1     1            1           20h
+
+</code>
+==== 2.1 Role and RoleBinding setup for argo-workflow ====
+
+Normally the argo-workflow-controller runs on argo namespace. And when you submit a workflow, the argo-work-flow need to create actual pods to run your workflow on your default namespace which is not the argo namespace. So we need to grant access to argo-workfloww-controller to deploy pod on users namespace. For more information, please visit [[employes:pengfei.liu:admin_system:container:k8s:11_k8s_rbac_auth|11. Using RBAC Authorization]]
+
+In our case, we need a role that grant access to create, get, watch pods on user default namespace(i.e. user-pengfei), and a roleBinding that binds the role with a subject
+
+In beloww role.yaml file, we define a role workflow-role which has rights on pods in namespace user-pengfei.
+<file yaml role.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workflow-role
+rules:
+# pod get/watch is used to identify the container IDs of the current pod
+# pod patch is used to annotate the step's outputs back to controller (e.g. artifact location)
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - patch
+# logs get/watch are used to get the pods logs for script outputs, and for log archival
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - watch
+</file>
+
+In below role-binding.yaml, we bind role "workflow-role" with a subject of type service-account called "default". argo-workflow-controller will login by using this service-account "default" to create pods. 
+
+<file yaml role-binding.yaml>
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+# role binding name
+  name: workflow-role
+# this role binding works only on namespace user-pengfei
+  namespace: user-pengfei
+# target role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workflow-role
+# target subject
+subjects:
+# type of the subject, here is a ServiceAccount, it can be User, Group, etc.
+  - kind: ServiceAccount
+    name: default
+    namespace: user-pengfei
+</file>
+
+===== 3. Use argocd to automate deployment of argo-workflow =====
+
+The above approach allows you to deploy argo-workflow manually by using helm command. But if you want to update the argo-workflow service, you need to re-type all the helm command again after modifying the Chart.yaml and values.yaml.
+
+To avoid this, we can set an argo-cd deployment that watches a git repo. When the git repo is updated, the new version will be automatically deployed on the k8s cluster.
+
+<file yaml argo-workflow-deployment.yaml>
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflow
+spec:
+  project: infra
+  source:
+    repoURL: https://github.com/InseeFrLab/paris-sspcloud.git
+    targetRevision: HEAD
+    path: apps/argo-workflow
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+</file>
+

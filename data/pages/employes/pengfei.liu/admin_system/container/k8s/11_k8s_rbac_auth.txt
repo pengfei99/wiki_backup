@@ -1,0 +1,149 @@
+====== 11. k8s: Using RBAC Authorization ======
+
+Role-based access control (RBAC) is a method of regulating access to a computer or network resources based on the roles of individual users within your organization.
+
+RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to dynamically configure policies through the Kubernetes API.
+
+To enable RBAC, start the API server with the --authorization-mode flag set to a comma-separated list that includes RBAC; for example:
+
+<code>
+kube-apiserver --authorization-mode=Example,RBAC --other-options --more-options
+</code>
+
+===== 11.1 K8s RBAC API =====
+
+The RBAC API declares four kinds of Kubernetes object: 
+  * Role
+  * ClusterRole
+  * RoleBinding
+  * ClusterRoleBinding
+
+===== 11.2 Role and ClusterRole =====
+
+**An RBAC Role or ClusterRole contains rules that represent a set of permissions. Permissions are purely additive (there are no "deny" rules)**.
+
+If you want to define a role within a namespace, use a Role; if you want to define a role cluster-wide, use a ClusterRole.
+
+For example, if you want a person who can only view pods of a single namespace, then use role. If you want to allow a particular user to run kubectl get pods --all-namespaces, then use clusterRole.
+
+==== 11.2.1 Role ====
+
+A Role always sets permissions within a particular namespace; when you create a Role, you have to specify the namespace it belongs in.
+
+Here's an example Role in the "default" namespace that can be used to grant read access to pods:
+
+
+<file yaml role-pod-reader.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+</file>
+
+==== 11.2.2 ClusterRole ====
+
+ClusterRole, by contrast, is a non-namespaced resource. The resources have different names (Role and ClusterRole) because a Kubernetes object always has to be either namespaced or not namespaced; it can't be both.
+
+Here is an example of a ClusterRole that can be used to grant read access to secrets in any particular namespace, or across all namespaces (depending on how it is bound):
+
+<file yaml cluster-role-secret-reader.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # "namespace" omitted since ClusterRoles are not namespaced
+  name: secret-reader
+rules:
+- apiGroups: [""]
+  #
+  # at the HTTP level, the name of the resource for accessing Secret
+  # objects is "secrets"
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+</file>
+
+===== 11.3 RoleBinding and ClusterRoleBinding =====
+
+A role binding grants the permissions defined in a role to a user or set of users. It holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted. 
+
+A RoleBinding grants permissions within a specific namespace whereas a ClusterRoleBinding grants that access cluster-wide.
+
+
+==== 11.3.1 RoleBinding ====
+
+Here is an example of a RoleBinding that grants the "pod-reader" Role to the user "jane" within the "default" namespace. This allows "jane" to read pods in the "default" namespace.
+
+<file yaml role-binding-read-pods.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows "jane" to read pods in the "default" namespace.
+# You need to already have a Role named "pod-reader" in that namespace.
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+# You can specify more than one "subject"
+- kind: User
+  name: jane # "name" is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: Role #this must be Role or ClusterRole
+  name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+</file>
+
+=== RoleBinding to a ClusterRole ===
+
+**A RoleBinding can also reference a ClusterRole** to grant the permissions defined in that ClusterRole to resources inside the RoleBinding's namespace. This kind of reference lets you define a set of common roles across your cluster, then reuse them within multiple namespaces.
+
+For instance, even though the following RoleBinding refers to a ClusterRole, "dave" (the subject, case sensitive) will only be able to read Secrets in the "development" namespace because the RoleBinding's namespace (in its metadata) is "development".
+
+<file yaml read-secrets.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows "dave" to read secrets in the "development" namespace.
+# You need to already have a ClusterRole named "secret-reader".
+kind: RoleBinding
+metadata:
+  name: read-secrets
+  #
+  # The namespace of the RoleBinding determines where the permissions are granted.
+  # This only grants permissions within the "development" namespace.
+  namespace: development
+subjects:
+- kind: User
+  name: dave # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</file>
+
+
+==== 11.3.2 ClusterRoleBinding ====
+
+To grant permissions across a whole cluster, you can use a ClusterRoleBinding. The following ClusterRoleBinding allows any user in the group "manager" to read secrets in any namespace.
+
+<file yaml ClusterRoleBinding.yaml>
+apiVersion: rbac.authorization.k8s.io/v1
+# This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: Group
+  name: manager # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</file>
+
+
+<code></code>
