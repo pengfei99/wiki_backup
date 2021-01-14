@@ -1,0 +1,160 @@
+====== 11: k8s ingress and ingress controller ======
+**Ingress is an API object that manages external access to the services in a k8s cluster**, typically HTTP. It means that it covers all 7 layers of OSI model. Unlike service which covers only 4 layers. That's why only the transport layer protocol is supported (e.g. TCP, UDP, DCCP, SCTP, RSVP, etc.).
+
+Ingress is mainly used to exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+**An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting.** An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic. For now, the most popular ingress controller is ingress-nginx (https://kubernetes.github.io/ingress-nginx/)
+
+===== 11.1 A simple ingress example =====
+A simple deployment which creates three pods
+<file yaml deployment.yaml>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: static-web
+  template:
+    metadata:
+      labels:
+        app: static-web
+    spec:
+      containers:
+        - name: static-site
+          image: dockersamples/static-site
+          imagePullPolicy: IfNotPresent
+          # note if the image only listens to port 80, and you set other port below, the container will not work
+          ports:
+            - name: http
+              containerPort: 80
+</file>
+
+Create a service to expose the deployment to the cluster
+<file yaml service.yaml>
+apiVersion: v1
+kind: Service
+# service name
+metadata:
+  name: static-web-service
+spec:
+  type: ClusterIP
+# service selector will link targets pod to this service
+# In this example, all pods with label app=static-web will be linked to this service
+  selector:
+    app: static-web
+# ports specify how service port will match to pod's port
+# In this example, the service listens to port 80, and forward the query to pod's port 80
+# by using tcp protocol.
+  ports:
+  # The default protocol is TCP, and UDP, SCTP is also supported
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+</file>
+
+Now we have a service that can expose the deployment to the cluster with a single IP. Now we want to expose it to the external network.  
+<file yaml ingress.yaml>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+# This tls config makes the ingress backend generate tls resolution for your service
+  tls:
+    - hosts:
+        - test-ingress.kub.sspcloud.fr
+  rules:
+  # specify the url of your ingress service
+    - host: test-ingress.kub.sspcloud.fr
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+            # specify which service the ingress match should redirect the query
+              service:
+                name: static-web-service
+                port:
+                  number: 80
+# you can use command kubectl get ingress to check the created ingress service
+# you shoul see the following line
+# test-ingress      <none>   test-ingress.kub.sspcloud.fr   10.233.13.191   80, 443   2m18s
+</file>
+
+===== 11.2 A simple ingress with basic authentication  =====
+Just like other web servers, we can add auth, ingress allows us to do it too.
+<code>
+# we can create a basic auth file by using the following command
+$ htpasswd -c auth pengfei
+# here auth is the output file name, pengfei is the user login. In the popup
+# you need to give a password. 
+# Note htpasswd is a bin from httpd. So you need to install httpd first.
+
+# Now we have the auth file, we need to add it to k8s secret with the following command
+$ kubectl create secret generic staic-web-basic-auth --from-file=auth
+# here staic-web-basic-auth is the name of the secret
+
+</code>
+
+
+<file yaml ingress-with-auth.yaml>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ingress-with-auth
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # The following auth config will add a authentication to your service
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: staic-web-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication required"
+spec:
+# This tls config makes the ingress backend generate tls resolution for your service
+  tls:
+    - hosts:
+        - test-ingress.kub.sspcloud.fr
+  rules:
+  # specify the url of your ingress service
+    - host: test-ingress.kub.sspcloud.fr
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+            # specify which service the ingress match should redirect the query
+              service:
+                name: static-web-service
+                port:
+                  number: 80
+
+# It supports other type of auth, for example oauth, https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/
+</file>
+
+===== 11.3 A simple ingress with redirect  =====
+
+In the above example, ingress always redirects queries to a k8s service. Ingress also can just redirect to another url 
+<file yaml ingress-redirect.yaml>
+# we can also redirect the query to another url
+# In this example, we create a ingress service which redirect all queries from re-ingress.kub.sspcloud.fr to test-ingress.kub.sspcloud.fr
+# because re-ingress does not match any k8s service. So it does not have the http.path.* to specify the matched k8s service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: https://test-ingress.kub.sspcloud.fr
+spec:
+# This tls config makes the ingress backend generate tls resolution for your service
+  tls:
+    - hosts:
+        - re-ingress.kub.sspcloud.fr
+  rules:
+  # specify the url of your ingress service
+    - host: re-ingress.kub.sspcloud.fr
+</file>
+

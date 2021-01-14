@@ -190,3 +190,165 @@ There are a few reasons for using proxying for Services:
   * There is a long history of DNS implementations not respecting record TTLs, and caching the results of name lookups after they should have expired.
   * Some apps do DNS lookups only once and cache the results indefinitely.
   * Even if apps and libraries did proper re-resolution, the low or zero TTLs on the DNS records could impose a high load on DNS that then becomes difficult to manage.
+
+
+===== 8.5 Service Topology =====
+
+**Service Topology enables a service to route traffic based upon the Node topology of the cluster.** This can make the service more performant. Because by default, the query may be routed to any backend of the Service. And backend may run in another cluster or in another datacenter of other regions. **For example, a service can specify that traffic be preferentially routed to endpoints that are on the same Node as the client, or in the same availability zone**
+
+The Service Topology feature resolves this by allowing the Service creator to define a policy for routing traffic based upon the Node labels for the originating and destination Nodes.
+
+Consider a cluster with Nodes that are labeled with their hostname, zone name, and region name. Then you can set the topologyKeys values of a service to direct traffic as follows.
+
+  * **Only to endpoints on the same node**, failing if no endpoint exists on the node: ["kubernetes.io/hostname"].
+  * **Preferentially to endpoints on the same node, falling back to endpoints in the same zone**, followed by the same region, and failing otherwise: ["kubernetes.io/hostname", "topology.kubernetes.io/zone", "topology.kubernetes.io/region"]. This may be useful, for example, in cases where data locality is critical.
+  * **Preferentially to the same zone, but fallback on any available endpoint if none are available within this zone**: ["topology.kubernetes.io/zone", "*"]
+
+The below service definition prefers **node local**, **zonal, then regional endpoints but falls back to cluster wide endpoints.**
+<file yaml service-topo.yaml>
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  topologyKeys:
+    - "kubernetes.io/hostname"
+    - "topology.kubernetes.io/zone"
+    - "topology.kubernetes.io/region"
+    - "*"
+</file>
+
+==== 8.5.1 Constraints ====
+
+Service topology has the following constraints:
+  * Service topology is not compatible with externalTrafficPolicy=Local, and therefore a Service cannot use both of these features. It is possible to use both features in the same cluster on different Services, just not on the same Service.
+  * Valid topology keys are currently limited to kubernetes.io/hostname, topology.kubernetes.io/zone, and topology.kubernetes.io/region, but will be generalized to other node labels in the future.
+  * Topology keys must be valid label keys and at most 16 keys may be specified.
+  * The catch-all value, "*", must be the last value in the topology keys, if it is used.
+
+===== 8.6 EndpointSlices =====
+
+Since all network endpoints for a Service were stored in a single Endpoints resource, those resources could get quite large. For example, an Endpoint may have thousands of backend pods in it. That affected the performance of Kubernetes components (notably the master control plane) and resulted in significant amounts of network traffic and processing when Endpoints changed. EndpointSlices help you mitigate those issues as well as provide an extensible platform for additional features such as topological routing.
+
+For more info: https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/
+==== 8.6.1 EndpointSlice resources ====
+
+**In Kubernetes, an EndpointSlice contains references to a set of network endpoints.** The control plane **automatically** creates EndpointSlices for any Kubernetes Service that has a selector specified. These EndpointSlices include references to all the Pods that match the Service selector. 
+
+Just like when you define a service with a selector, an Endpoint is created automatically. If you define a service with service topology, an EndpointSlice is created automatically too. So most of the time, you don't need to define an EndpointSlice by yourself.
+
+
+===== 8.7 Headless service =====
+
+Sometimes you don't need **load-balancing** and **a single Service IP**. In this case, you can create a "headless" Services.
+
+**Headless service is typically used with StatefulSets where the name of the pods are fixed.** This is useful in situations like when you're settling up a MySQL cluster where you need to know the name of the master. StatefulSets appends an ordinal number to the name of the pod and it will always assign the same ordinal number of the pod is restarted or migrated by the scheduler.
+
+In the case of a regular Deployment, ReplicaSet appends a hash to the pod's name making addressing specific pods difficult.
+
+So if your application is stateless then you will just use a 'regular' service because you don't care which pod you get. They're all the same.
+
+In the following example, I will create a depoyment with 5 pods, a normal service and a headless service.
+<file yaml deployment.yaml>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: eddiehale/hellonodeapi
+        ports:
+        - containerPort: 3000
+</file>
+
+<file yaml normal-service.yaml>
+apiVersion: v1
+kind: Service
+metadata:
+  name: normal-service
+spec:
+  selector:
+    app: api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+</file>
+
+<file yaml headless-service.yaml>
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless-service
+spec:
+# if we don't specify a type. "type: ClusterIP" will be set as default. 
+# Here we set cluterIP type with None to indicate this is a 
+  clusterIP: None # <-- Don't forget!!
+  selector:
+    app: api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+</file>
+
+After we apply the three above files. We can first check the created services
+<code>
+$ kubectl get svc -n user-pengfei
+
+headless-service                      ClusterIP   None            <none>        80/TCP     11m
+normal-service                        ClusterIP   10.233.22.13    <none>        80/TCP     11m
+
+</code>
+
+You can notice that headless-service does not have cluster IP. But you can still call this service on the network.
+
+For example, we create a new pod called utils. And we will try ns-lookup in this pod to check normal-service and headless-service
+
+<code>
+# this command creat a pod and return an interactive shell 
+$ kubectl run --rm utils -it --image eddiehale/utils --restart=Never bash
+If you don't see a command prompt, try pressing enter.
+root@utils:/# nslookup normal-service
+Server:		169.254.25.10
+Address:	169.254.25.10#53
+
+Name:	normal-service.user-pengfei.svc.cluster.local
+Address: 10.233.56.36
+
+root@utils:/# nslookup headless-service
+Server:		169.254.25.10
+Address:	169.254.25.10#53
+
+Name:	headless-service.user-pengfei.svc.cluster.local
+Address: 10.233.119.4
+Name:	headless-service.user-pengfei.svc.cluster.local
+Address: 10.233.118.251
+Name:	headless-service.user-pengfei.svc.cluster.local
+Address: 10.233.104.4
+Name:	headless-service.user-pengfei.svc.cluster.local
+Address: 10.233.86.86
+Name:	headless-service.user-pengfei.svc.cluster.local
+Address: 10.233.121.127
+
+</code>
+
+You can notice, the normal service has only one IP which will be used as a load balancer to redirect queries to the pod. The headless service does not have IP, but directly expose the ip of the pods.
