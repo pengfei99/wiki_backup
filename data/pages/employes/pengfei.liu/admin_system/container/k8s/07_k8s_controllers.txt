@@ -318,3 +318,126 @@ kubectl delete cronjob pengfei-cronjob-hello
 === Suspend automatic ===
 
 For every CronJob, the CronJob Controller checks how many schedules it missed in the duration from its last scheduled time until now. **If there are more than 100 missed schedules, then it does not start the job and logs the error**
+
+===== 7.4 StatefullSets =====
+
+StatefulSet is the workload API object used to manage stateful applications.
+
+Manages the deployment and scaling of a set of Pods, and **provides guarantees about the ordering and uniqueness of these Pods.**
+
+Like a Deployment, **a StatefulSet manages Pods that are based on an identical container spec**. Unlike a Deployment, **a StatefulSet maintains a sticky identity for each of their Pods**. **These pods are created from the same spec, but are not interchangeable: each has a persistent identifier that it maintains across any rescheduling**.
+
+If you want to use storage volumes to provide persistence for your workload, you can use a StatefulSet as part of the solution. Although individual Pods in a StatefulSet are susceptible to failure, the persistent Pod identifiers make it easier to match existing volumes to the new Pods that replace any that have failed.
+
+StatefulSets are valuable for applications that require one or more of the following.
+
+  * Stable, unique network identifiers.
+  * Stable, persistent storage.
+  * Ordered, graceful deployment and scaling.
+  * Ordered, automated rolling updates.
+
+In the above, **stable is synonymous with persistence across Pod (re)scheduling**. If an application doesn't require any stable identifiers or ordered deployment, deletion, or scaling, you should deploy your application using a workload object that provides a set of stateless replicas. Deployment or ReplicaSet may be better suited to your stateless needs
+
+Below example create a simple statfulsets which runs 3 httpd pods, and each pods has a persistent volume. This persistent volume is created by using **volumeClaimTemplates**. We also create a **headless service** that connects to this statfulsets.
+<file yaml simple-statfulsets.yaml>
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+  # label of the service
+  labels:
+    app: pengfei-ss-test
+spec:
+  ports:
+  # name of the port can be ommited
+  - port: 80
+  clusterIP: None
+  selector:
+    app: pengfei-web # has to match .spec.template.metadata.labels of the target statefulsets
+---
+# note the .spec.template.metadata.labels is very important. Its the primary id
+# of the pod. The StatefulSet will use selector to find all pods belongs to it
+# The service(endpoints) also use the selector match labels to find all pods. 
+# If the name does not match in the selecor and pod label. The service (endpoints)
+# finds 0 pod.
+apiVersion: apps/v1
+kind: StatefulSet
+# The name of the StatefulSet, Pods in a stateful set will take the name <ss-name>-<ordinal>
+# In this example, the pod name will be web-0, web-1, web-3
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: pengfei-web # has to match .spec.template.metadata.labels
+   # define the governing service of this statefulset
+  serviceName: web-svc
+  replicas: 3 # by default is 1
+  template:
+    metadata:
+    # The label of pods is very important, because the name of the pod is generated and different from each other
+    # so we can't find all pods of the same spec with their names, but we can with their labels
+      labels:
+        app: pengfei-web # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: httpd
+        image: httpd:2.4
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  # volumeClaimTemplate allows you to create persistentVolumeClaim inside a statefulset spec
+# It's equivalent to create a PVC, create a volume matches pvc then mount the volume to the pod.
+
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: rook-ceph-block
+      resources:
+        requests:
+          storage: 1Gi
+
+</file>
+
+Access statefulsets's pods via headless service
+<code>
+# get a shell of a pod
+$ kubectl exec -it web-0 -- bash
+# install curl on the pod
+$ apt update && apt install curl
+
+# query the service
+$ curl web-svc
+# <html><body><h1>It works!</h1></body></html>
+# The headless service allows you to connect to all pods that in the service endpoints
+# via <pod-name>.<service-name> 
+# For example : 
+$ curl web-1.web-svc 
+</code>
+
+
+==== Pod name in a statefulset ====
+Each Pod in a StatefulSet derives its **hostname from the name of the StatefulSet and the ordinal of the Pod**. The pattern for the constructed hostname is $(statefulset name)-$(ordinal). In this example, the pod name will be web-0, web-1, web-3
+
+==== Access pod of a statefulset via headless service ====
+
+A StatefulSet can use a Headless Service to control the domain of its Pods. The domain managed by this Service takes the form: $(service name).$(namespace).svc.cluster.local, where "cluster.local" is the cluster domain. As each Pod is created, it gets a matching DNS subdomain, taking the form: $(podname).$(governing service domain), where the governing service **is defined by the serviceName field on the StatefulSet**.
+
+<code>
+# So in this example, the pod web-0 will have the dns as 
+web-0.web-svc.user-pengfei.svc.cluster.local
+# here web-0 is the node name, web-svc is the service name, user-pengfei is the namespace
+</code>
+==== Limitations ====
+
+
+  * The storage for a given Pod must either be provisioned by a PersistentVolume Provisioner based on the requested storage class, or pre-provisioned by an admin.
+  * Deleting and/or scaling a StatefulSet down will not delete the volumes associated with the StatefulSet. This is done to ensure data safety, which is generally more valuable than an automatic purge of all related StatefulSet resources.
+  * StatefulSets currently require a Headless Service to be responsible for the network identity of the Pods. You are responsible for creating this Service.
+  * StatefulSets do not provide any guarantees on the termination of pods when a StatefulSet is deleted. To achieve ordered and graceful termination of the pods in the StatefulSet, it is possible to scale the StatefulSet down to 0 prior to deletion.
+  * When using Rolling Updates with the default Pod Management Policy (OrderedReady), it's possible to get into a broken state that requires manual intervention to repair.
