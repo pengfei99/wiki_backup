@@ -1,0 +1,275 @@
+====== 5-1: K8s resources pods  ======
+
+
+**Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.**
+
+A Pod (as in a pod of whales or pea pod) is **a group of one or more containers**, **with shared storage and network resources**, **and a specification for how to run the containers**. A Pod's contents are always co-located and co-scheduled and run in a shared context. A Pod models an application-specific "logical host": it contains one or more application containers that are relatively tightly coupled. 
+
+**The shared context of a Pod is a set of Linux namespaces, cgroups, and potentially other facets of isolation** - the same things that isolate a Docker container. 
+
+===== 1. Using a pod =====
+
+Usually you don't need to create Pods directly, even singleton Pods. Instead, create them using workload resources such as **Deployment or Job**. If your Pods need to track state, consider the **StatefulSet** resource.
+
+
+==== Pods that run a single container ====
+The "one-container-per-Pod" model is the most common Kubernetes use case; in this case, you can think of a Pod as a wrapper around a single container; Kubernetes manages Pods rather than managing the containers directly.
+
+==== Pods that run multiple containers that need to work together ====
+A Pod can encapsulate an application composed of multiple co-located containers that are tightly coupled and need to share resources. These co-located containers form a single cohesive unit of service. 
+
+For example, one container serving data stored in a shared volume to the public, while a separate sidecar container refreshes or updates those files. The Pod wraps these containers, storage resources, and an ephemeral network identity together as a single unit.
+
+{{:employes:pengfei.liu:admin_system:container:k8s:pod.png?400|}}
+
+
+===== 2. Working with pods =====
+
+As we mentioned before, we rarely create pods directly. We normally use Deployment, StatefulSets, Job to create pods for us.
+
+To see an example on how to create pods. Check 6.1 in [[employes:pengfei.liu:admin_system:container:k8s:06_deploy_k8s_objects|06: Deploy k8s objects]]
+
+===== 3. Pod Lifecycle =====
+
+Like individual application containers, Pods are considered to be relatively ephemeral (rather than durable) entities. Pods **are created, assigned a unique ID (UID), and scheduled to nodes where they remain until termination (according to restart policy) or deletion**. If a Node dies, the Pods scheduled to that node are scheduled for deletion after a timeout period.
+
+
+Pods do not, by themselves, self-heal. Kubernetes uses a higher-level abstraction, called a controller(e.g. deployment, statfullsets, etc), that handles the work of managing the relatively disposable Pod instances.
+
+==== 3.1 Pod status ====
+
+A Pod's status field is a PodStatus object, which has the following phase field.
+
+  * **Pending**: The Pod has been accepted by the Kubernetes cluster, but one or more of the containers has not been set up and made ready to run. This includes time a Pod spends waiting to be scheduled as well as the time spent downloading container images over the network.
+  * **Running**: The Pod has been bound to a node, and all of the containers have been created. At least one container is still running, or is in the process of starting or restarting.
+  * **Succeeded**: All containers in the Pod have terminated in success, and will not be restarted.
+  * **Failed**: All containers in the Pod have terminated, and at least one container has terminated in failure. That is, the container either exited with non-zero status or was terminated by the system.
+  * **Unknown**: For some reason the state of the Pod could not be obtained. This phase typically occurs due to an error in communicating with the node where the Pod should be running.
+
+==== 3.2 Container states ====
+
+Kubernetes also tracks the state of each container inside a Pod. You can use **container lifecycle hooks** to trigger events to run at certain points in a container's lifecycle.
+
+Once the scheduler assigns a Pod to a Node, the **kubelet** starts creating containers for that Pod using a container runtime. There are three possible container states: 
+  * **Waiting**: If a container is not in either the Running or Terminated state, it is Waiting. A container in the Waiting state is still running the operations it requires in order to complete startup: for example, pulling the container image from a container image registry, or applying Secret data. When you use kubectl to query a Pod with a container that is Waiting, you also see a Reason field to summarize why the container is in that state.
+  * **Running**: The Running status indicates that a container is executing without issues. **If there was a postStart hook configured, it has already executed and finished**. When you use kubectl to query a Pod with a container that is Running, you also see information about when the container entered the Running state.
+  * **Terminated**: A container in the Terminated state began execution and then either ran to completion or failed for some reason. When you use kubectl to query a Pod with a container that is Terminated, you see a reason, an exit code, and the start and finish time for that container's period of execution. **If a container has a preStop hook configured, that runs before the container enters the Terminated state.**
+
+To check the state of a Pod's containers, you can use kubectl describe pod <name-of-pod>. The output shows the state for each container within that Pod.
+
+==== 3.3 Pod condition ====
+
+When you describe a pod, you will see the following list, this list indicates all the conditions that the Pod has or has not passed.
+<code>
+ 
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+
+</code>
+
+  * **PodScheduled**: the Pod has been scheduled to a node.
+  * **ContainersReady**: all containers in the Pod are ready.
+  * **Initialized**: all init containers have started successfully.
+  * **Ready**: the Pod is able to serve requests and should be added to the load balancing pools of all matching Services.
+
+===== 4. Container Probes =====
+
+**A Probe is a diagnostic performed periodically by the kubelet on a Container**. To perform a diagnostic, the kubelet calls a **Handler implemented by the container**. There are three types of handlers:
+
+  * **ExecAction**: Executes a specified command inside the container. The diagnostic is considered successful if the command exits with a status code of 0.
+  * **TCPSocketAction**: Performs a TCP check against the Pod's IP address on a specified port. The diagnostic is considered successful if the port is open.
+  * **HTTPGetAction**: Performs an HTTP GET request against the Pod's IP address on a specified port and path. The diagnostic is considered successful if the response has a status code greater than or equal to 200 and less than 400.
+
+Each probe has one of three results:
+
+  * Success: The container passed the diagnostic.
+  * Failure: The container failed the diagnostic.
+  * Unknown: The diagnostic failed, so no action should be taken.
+
+
+The kubelet can optionally perform and react to **three kinds of probes on running containers**:
+
+  * **livenessProbe**: Indicates whether the container is running. If the liveness probe fails, the kubelet kills the container, and the container is subjected to its restart policy. If a Container does not provide a liveness probe, the default state is Success.
+  * **readinessProbe**: Indicates whether the container is ready to respond to requests. If the readiness probe fails, the endpoints controller removes the Pod's IP address from the endpoints of all Services that match the Pod. The default state of readiness before the initial delay is Failure. If a Container does not provide a readiness probe, the default state is Success.
+  * **startupProbe**: Indicates whether the application within the container is started. All other probes are disabled if a startup probe is provided, until it succeeds. If the startup probe fails, the kubelet kills the container, and the container is subjected to its restart policy. If a Container does not provide a startup probe, the default state is Success.
+
+===== 5. Init container =====
+
+A Pod can have **multiple containers**, it can also have **one or more init containers**, **which are run before the app containers are started.**
+
+Init containers are exactly like regular containers, except:
+
+  * Init containers always run to completion.
+  * Each init container must complete successfully before the next one starts.
+  * The resource requests and limits for an init container are handled differently, for more details please check https://kubernetes.io/docs/concepts/workloads/pods/init-containers/#resources.
+  * The init containers do not support **lifecycle, livenessProbe, readinessProbe, or startupProbe** because they must run to completion before the Pod can be ready
+
+If you specify multiple init containers for a Pod, kubelet runs each init container sequentially. Each init container must succeed before the next can run. When all of the init containers have run to completion, kubelet initializes the application containers for the Pod and runs them as usual.
+
+If a Pod's init container fails, the kubelet repeatedly restarts that init container until it succeeds. However, if the Pod has a **restartPolicy of Never**, and an init container fails during startup of that Pod, Kubernetes treats the overall Pod as failed.
+
+==== A simple init container example ====
+
+This example defines a simple Pod that has two init containers. The first waits for pengfei-fake-service, and the second waits for pengfei-fake-db. Once both init containers complete, the Pod runs the app container from its spec section.
+
+This yaml file creates a pod with two init container and a container
+<file yaml pod-with-init-container.yaml>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-init-container
+  labels:
+    app: pod-with-init-container
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "128Mi"
+
+  initContainers:
+  # The first init container will check if a service called "pengfei-fake-service" is available in the default namespace
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', "until nslookup pengfei-fake-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+ # The second init container will check if a service called "pengfei-fake-db" is available in the default namespace
+  - name: init-mydb
+    image: busybox
+    command: ['sh', '-c', "until nslookup pengfei-fake-db.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done"]
+</file>
+
+This creates a service called "pengfei-fake-service"
+<file yaml pengfei-fake-service.yaml>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pengfei-fake-service
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9376
+</file>
+
+This creates a service called "pengfei-fake-db"
+<file yaml pengfei-fake-db.yaml>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pengfei-fake-db
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9377
+</file>
+
+
+<code>
+# 1. First, create the pod
+$ kubectl apply -f pod-with-init-container.yaml
+
+# 2. Get the status of your pod
+$ kubectl get -f pod-with-init-container.yaml 
+NAME                      READY   STATUS     RESTARTS   AGE
+pod-with-init-container   0/1     Init:1/2   0          10s
+
+# Or you can get all details by using describe
+$ kubectl describe pods/pod-with-init-container
+
+# 3. Check the logs of the init container, you can notice, as there is no pengfei-fake-service. The init-myservice 
+# can't complete, so the second container init-mydb is not created yet. so the second command will return nothing
+$ kubectl logs pod-with-init-container -c init-myservice
+$ kubectl logs pod-with-init-container -c init-mydb
+
+# 4. now create the first service
+$ kubectl apply -f pengfei-fake-service.yaml
+
+# rerun the commands of 2 and 3, you will see the first container is completed and the second is running.
+
+# 5. now create the second service
+$ kubectl apply -f pengfei-fake-db.yaml
+
+# rerun the commands of 2 and 3, you can see the second init container is completed too and the normal container is running
+$ kubectl get pods/pod-with-init-container
+NAME                      READY   STATUS    RESTARTS   AGE
+pod-with-init-container   1/1     Running   0          15m
+
+</code>
+
+
+
+===== Appendix: Cgroups and Namespaces =====
+
+When you apply a full set of cgroups and of namespaces, you end up having a group of processes running inside a fully isolated environment within a Linux system.** This is what makes a Linux Container**.
+
+==== Cgroups ====
+
+**cgroups (abbreviated from control groups) is a Linux kernel feature that limits, accounts for, and isolates the resource usage (CPU, memory, disk I/O, network, etc.) of a collection of processes**. For example, you can apply CPU, memory, network or IO quotas.
+
+==== Namespaces ====
+
+Namespaces are a kernel mechanism for limiting the visibility that a group of processes has of the rest of a system. For example you can limit visibility to certain process trees, network interfaces, user IDs or filesystem mounts.
+
+==== Examples of cgroups and namespaces ====
+
+Normally we don't directly use cgroups and namespaces, because a container tool, such as **Docker, LXC or lmctfy** will do this for you. But for a better understanding, we use the two following example.
+
+=== cgroup ===
+
+Here is an example of running tar inside a cgroup with a kernel memory limit:
+
+<code>
+# cgroups are controlled via the /sys/fs/cgroup/ filesystem
+
+# create a new cgroup called test
+$ mkdir -p /sys/fs/cgroup/test/
+
+# allow this cgroup to access cpu and mems
+$ cat /sys/fs/cgroup/cpuset.cpus > /sys/fs/cgroup/test/cpuset.cpus
+$ cat /sys/fs/cgroup/cpuset.mems > /sys/fs/cgroup/test/cpuset.mems
+
+# Set up memory limits
+$ echo $((1<<26)) >/sys/fs/cgroup/test/memory.kmem.limit_in_bytes
+
+# puts the bash prompt which you are currently using (and any child 
+# processes run from that bash) inside the “test” cgroup.
+$ echo $$ > /sys/fs/cgroup/test/tasks
+
+# runs tar within the cgroup limits.
+$ tar xfz linux-3.14.1.tar.gz
+
+</code>
+
+There are many cgroup limits available, and the full documentation for these is at: https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt
+
+=== namespace ===
+
+Namespaces are controlled with the “unshare” command. The “unshare” command is available in util-linux-ng 2.17 and later. 
+
+As an example, if you run:
+<code>
+# This line starts a bash prompt inside an isolated mount namespace
+$ unshare –mount /bin/bash
+
+# Mount a filesystem inside this namespace
+$ mount /dev/sda2 /mnt
+
+# The mounted filesystem is visible from the bash prompt which you are 
+# currently using (and any child processes run from that bash), but that the rest 
+# of the system cannot see this filesystem mount.
+</code>
+
+
+Please see the man pages for unshare for a list of other namespaces which you can manipulate.
+
+
