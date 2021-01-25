@@ -1,0 +1,161 @@
+====== Solr: Security ======
+
+After installing solr, you will notice, it comes with 0 security. So you need to enable the security by yourself. Because without it, you can't use rest api to add configsets in solr.
+
+
+The official doc can be found here: 
+
+<code>
+1. To enable solr authentication and authorization plugin. 
+https://lucene.apache.org/solr/guide/6_6/authentication-and-authorization-plugins.html
+
+2. To use basic auth plugin.
+https://lucene.apache.org/solr/guide/6_6/basic-authentication-plugin.html#basic-authentication-plugin
+
+3. To understand the acl of security.json
+https://lucidworks.com/post/securing-solr-tips-tricks-and-other-things-you-really-need-to-know/ 
+</code>
+
+===== Edit the security.json =====
+
+All the security configurations need to be located in the security.json file. Then you need to upload this file to slor. 
+
+Below is an example of the security.json file. I created three user account (e.g. solr, atlas, pliu). I created two roles (e.g. admin, dev). For each role, you need to associate explicitly access rights.
+
+Below is an code example 
+<code>
+# user account def
+"credentials":{"solr":"F2A0any174WhnvB6sU8iFbafRYCuozBIxCF/a2xP73g= iJuIbOaDjEdtsLh+C47CFlLzR5lklk3K5LM9MHpHIpA=",
+                   "atlas":"u7PuIas2S4UlFXQ4oKRuMtj58JJudhea1IosaaLzAQo= lraiZhXcqhg1yG5mnJsBY2ED7XMh1kHJxb5tnzAo0FY=",
+                   "pliu":"u6YpOFoTmXenLcOubKBIQyqP/8R2EHb97xzU7+pOWqA= ZNsThdwIewYEvsUTwftdBAziIWOgt5dUTu/CwAs7isI="
+                }
+                
+# user role def
+"user-role":{"solr":"admin","atlas":"admin","pliu":"dev"},
+
+# link role with a access right. 
+# Here * means all roles. 
+"permissions":[{"name":"read","role":"*"},]
+# For more details on access rights, https://lucidworks.com/post/securing-solr-tips-tricks-and-other-things-you-really-need-to-know/
+</code>
+ 
+Below is a full example. The first 6 rules define all role has the read access right on schema, config, collection, etc. The seventh rule means admin role has all access rights. The 8th rule means only admin can read the collection called securecollection. So this rule has a confit with {"name":"collection-admin-read","role":"*"}. To resolve conflict, solr use first applicable as policy. So the "before": "collection-admin-read" means this rule apply before the all read rule. So the role dev can't read the securecollection. 
+
+<file json security.json>
+{"authentication":{
+    "class":"solr.BasicAuthPlugin",
+    "credentials":{"solr":"F2A0any174WhnvB6sU8iFbafRYCuozBIxCF/a2xP73g= iJuIbOaDjEdtsLh+C47CFlLzR5lklk3K5LM9MHpHIpA=",
+                   "atlas":"u7PuIas2S4UlFXQ4oKRuMtj58JJudhea1IosaaLzAQo= lraiZhXcqhg1yG5mnJsBY2ED7XMh1kHJxb5tnzAo0FY=",
+                   "pliu":"u6YpOFoTmXenLcOubKBIQyqP/8R2EHb97xzU7+pOWqA= ZNsThdwIewYEvsUTwftdBAziIWOgt5dUTu/CwAs7isI="
+                }
+    },
+    "authorization":{
+    "class":"solr.RuleBasedAuthorizationPlugin",
+    "user-role":{"solr":"admin","atlas":"admin","pliu":"dev"},
+    "permissions":[
+                   {"name":"read","role":"*"},
+                   {"name":"schema-read","role":"*"},
+                   {"name":"config-read","role":"*"},
+                   {"name":"collection-admin-read","role":"*"},
+                   {"name":"metrics-read","role":"*"},
+                   {"name":"core-admin-read","role":"*"},
+                   {"name":"all","role":"admin"},
+                   {"name":"secure-collection1-permission","collection":"securecollection","path":"/select","before": "collection-admin-read","role": "admin"}
+                ]
+    }}
+
+</file>
+
+===== Upload security.json via zookeeper =====
+
+As solr has two modes: mode cloud and standalone. So you need two different ways to upload this file based on your solr mode. Here I just show the cloud mode.
+
+For solr in cloud mode, you need to load the file via zookeeper
+
+<code>
+# you can get the zk java client here https://zookeeper.apache.org/releases.html
+
+# to connecto to a zk server
+bin/zkCli.sh -server localhost:2181
+
+# set the path /security.json with the json file content
+set /security.json '{"authentication":{"class":"solr.BasicAuthPlugin","credentials":{"solr":"F2A0any174WhnvB6sU8iFbafRYCuozBIxCF/a2xP73g= iJuIbOaDjEdtsLh+C47CFlLzR5lklk3K5LM9MHpHIpA="}},"authorization":{"class":"solr.RuleBasedAuthorizationPlugin","user-role":{"solr":"admin"}, "permissions":[{"name":"all","role":"admin"}]}}'
+
+# copy a local file to zk server
+bin/zkCli.sh -server localhost:2181 -cmd put /security.json \
+'{"authentication":{"class":"solr.BasicAuthPlugin","credentials":{"solr":"F2A0any174WhnvB6sU8iFbafRYCuozBIxCF/a2xP73g= iJuIbOaDjEdtsLh+C47CFlLzR5lklk3K5LM9MHpHIpA="}},"authorization":{"class":"solr.RuleBasedAuthorizationPlugin","user-role":{"solr":"admin"}, "permissions":[{"name":"all","role":"admin"}]}}'
+
+# if the file is too long, you can use the solr command
+bin/solr zk cp file:/home/pliu/git/k8s/tutos/l12_helm_chart/solr_chart/other-resources/security.json zk:/security.json -z localhost:8983
+
+# you can get solr bin from https://lucene.apache.org/solr/downloads.html.
+# Don't download the *-src.tgz. You need to download the binary. 
+</code>
+
+===== Generate the password hash =====
+
+In the account creation. You find below code
+
+<code>
+# here solr is the username, the second part is the hash or your password.
+"solr":"F2A0any174WhnvB6sU8iFbafRYCuozBIxCF/a2xP73g= iJuIbOaDjEdtsLh+C47CFlLzR5lklk3K5LM9MHpHIpA="
+
+</code>
+
+All the doc of solr does not tell how this password hash is generated. And you need to dive into Solr source code and identified that the method **sha256() of Sha256AuthenticationProvider.java** is the function that actually calculates the hash.
+
+Below is an extraction of this code
+<file java SolrPasswordHash.java>
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
+import org.apache.commons.codec.binary.Base64;
+
+public class SolrPasswordHash {
+  public static void main (String[] args) {
+    if (args.length == 0) {
+      System.err.println("Nothing to do.");
+      System.exit(1);
+    }
+
+    String pw = args[0];
+    MessageDigest digest;
+    try {
+      digest = MessageDigest.getInstance("SHA-256");
+
+      final Random r = new SecureRandom();
+      byte[] salt = new byte[32];
+      r.nextBytes(salt);
+
+      digest.reset();
+      digest.update(salt);
+      byte[] btPass = digest.digest(pw.getBytes(StandardCharsets.UTF_8));
+      digest.reset();
+      btPass = digest.digest(btPass);
+
+      System.out.println(Base64.encodeBase64String(btPass) + " " +
+        Base64.encodeBase64String(salt));
+      System.exit(0);
+    } catch (NoSuchAlgorithmException e) {
+      System.err.println("Unknown algorithm: " + e.getMessage());
+    }
+    System.exit(2);
+  }
+}
+</file>
+
+You need to comiple the above code to a jar file. For example, I compile it to SolrPasswordHash-v1.0.0.jar. If you don't want to compile it yourself. You can download it from https://github.com/pengfei99/k8s/raw/master/tutos/l12_helm_chart/solr_chart/other-resources/SolrPasswordHash-v1.0.0.jar. To generate a new password, you need to run the below code.
+
+<code>
+java -jar SolrPasswordHash-v1.0.0.jar NewPassword
+</code>
+
+===== Add user via rest api =====
+
+<code>
+curl --user solr:SolrRocks http://localhost:8983/sorl/admin/authentication \
+  -H 'Content-type:application/json' \
+  -d '{"set-user":{"solr":"NewPassword"}}'
+</code>
