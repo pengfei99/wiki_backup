@@ -1,28 +1,31 @@
-1601282932	127.0.0.1	C	employes:pengfei.liu:big_data:spark:spark_optimization:data_format	pliu	created		347
-1601292517	127.0.0.1	E	employes:pengfei.liu:python:conda:install	pliu	[Step2. Run the anaconda installer] 		225
-1601293687	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[Install pyspark and use pycharm] 		31
-1601295840	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu			166
-1601296274	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.1 Install conda] 		220
-1601296468	127.0.0.1	E	employes:pengfei.liu:big_data:zeppelin:spark_interpreter	pliu	[Step1. Install anaconda3] 		-21
-1601296501	127.0.0.1	E	employes:pengfei.liu:big_data:zeppelin:spark_interpreter	pliu	[Step1. Install anaconda3] 		3
-1601297053	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.2 Create a conda virtual env for pyspark] 		45
-1601298552	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.2 Create a conda virtual env for pyspark] 		43
-1601305837	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.2 Create a conda virtual env for pyspark] 		-10
-1601306402	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.3 config pyspark via jupyter] 		155
-1601306474	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[1.3 install required packages] 		34
-1601306513	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu			12
-1601307184	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu			1407
-1601362977	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[5. Test your pyspark via Jupyter] 		940
-1601362977	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[5. Test your pyspark via Jupyter] 		940
-1601363014	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[pycharm] 		2
-1601363079	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[pycharm] 		21
-1601363093	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[Use pyspark in pycharm] 		2
-1601363153	127.0.0.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[Manually with user-provided Spark installation] 		14
-1601473643	127.0.0.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Run the app] 		129
-1601478429	127.0.0.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Run the app] 		499
-1601539190	127.0.0.1	E	employes:pengfei.liu:big_data:data_format:start	pliu	[Common data formats in big data environment] 		8700
-1601539416	127.0.0.1	C	employes:pengfei.liu:big_data:spark:spark_optimization:request_optimisation	pliu	created		1437
-1601539447	127.0.0.1	E	employes:pengfei.liu:big_data:spark:spark_optimization:request_optimisation	pliu	[1. Predicate Pushdown / Filter Pushdown] 		16
-1601544301	127.0.0.1	E	employes:pengfei.liu:big_data:data_format:start	pliu			1405
-1600850652	127.0.0.1	E	employes:pengfei.liu:big_data:data_governance:atlas:rest_api		external edit		0
-1601559502	127.0.0.1	E	employes:pengfei.liu:big_data:data_governance:atlas:rest_api	pliu	[3. API for entity management] 		440
+1610970562	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_1_pods	pliu	[A simple init container example] 		524
+1611151038	192.168.184.1	C	employes:pengfei.liu:big_data:solr:security	pliu	created		1341
+1611159349	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu			3545
+1611159556	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Upload security.json via zookeeper] 		328
+1611159642	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		119
+1611159759	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Solr: Security] 		71
+1611161932	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		2017
+1611161983	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		-2
+1611336547	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:10_k8s_volume	pliu			945
+1611915370	192.168.184.1	C	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	created		32
+1611915402	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu			13
+1611915521	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu			773
+1611915581	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Why use DaemonSets?] 		178
+1611916011	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Why use DaemonSets?] 		806
+1611916764	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Default scheduler] 		2031
+1611917295	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[A working example] 		310
+1613493711	192.168.184.1	C	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	created		2133
+1613493732	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:start	pliu	[kubernetes docs] 		103
+1613493796	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	[11.1.1 Example] 		317
+1613493813	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	[11.1.2 Warning] 		8
+1602082440	127.0.0.1	E	employes:pengfei.liu:big_data:spark:start		external edit		0
+1614334678	192.168.184.1	E	employes:pengfei.liu:big_data:spark:start	pliu	[Spark Optimization] 		27
+1614334989	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu	created		180
+1614335448	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	created		231
+1614335684	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			131
+1614337319	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			1034
+1614337341	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			38
+1614337397	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[1. Deploy a spark cluster] 		50
+1614337411	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[1. Deploy a spark cluster] 		1
+1614337622	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[2. Run a spark shell to test the cluster] 		184
+1614359367	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu			201

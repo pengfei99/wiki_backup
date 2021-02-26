@@ -1,0 +1,53 @@
+====== Deploy a static spark cluster on k8s ======
+
+The easiest way to deploy a static spark cluster on k8s is to use a helm chart. You can use the bitnami helm chart 
+
+https://github.com/bitnami/charts/tree/master/bitnami/spark
+
+===== 1. Deploy a spark cluster =====
+
+<code>
+helm install my-spark bitnami/spark --set image.repository=inseefrlab/spark --set image.tag=latest -n pengfei-test
+</code>
+
+This chart will deploy the following entities on k8s
+
+<code>
+NAME                    READY   STATUS    RESTARTS   AGE
+pod/my-spark-master-0   1/1     Running   0          43m
+pod/my-spark-worker-0   1/1     Running   0          43m
+pod/my-spark-worker-1   1/1     Running   0          42m
+
+NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+service/my-spark-headless     ClusterIP   None            <none>        <none>            43m
+service/my-spark-master-svc   ClusterIP   10.233.37.243   <none>        7077/TCP,80/TCP   43m
+
+NAME                               READY   AGE
+statefulset.apps/my-spark-master   1/1     43m
+statefulset.apps/my-spark-worker   2/2     43m
+
+</code>
+
+You can check the spark UI by forwarding the port
+
+<code>
+# port forward spark master ui to localhost:8080
+kubectl port-forward --namespace pengfei-test svc/my-spark-master-svc 80:8080
+
+</code>
+
+===== 2. Run a spark shell to test the cluster =====
+
+<code>
+# run a spark shell which uses the spark cluster
+spark-shell --master spark://10.233.37.243:7077
+
+# create a collection of int
+val data = 1 to 10000
+
+# create an RDD
+val rdd_ata = sc.parallelize(data)
+
+# do a filter on your data
+val filtered_data=rdd_data.filter(_ < 10).collect()
+</code>

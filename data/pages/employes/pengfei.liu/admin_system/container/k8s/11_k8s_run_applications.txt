@@ -1,0 +1,42 @@
+====== 11: k8s: Run Applications  ======
+
+===== 11.1 Specifying a Disruption Budget for your Application =====
+
+The k8s cluster-admin may want to manage the nodes of the cluster. So he may want to drain a Node in purpose. If you try to drain a Node where an unevictable Pod is running, the drain will never complete. 
+Specify a PodDisruptionBudget allows you to guarantee the HA of your application and k8s cluster-admin to drain a Node safely.
+
+
+A PodDisruptionBudget has three fields:
+
+  * A label selector .spec.selector to specify the set of pods to which it applies. This field is required.
+  * .spec.minAvailable which is a description of the number of pods from that set that must still be available after the eviction, even in the absence of the evicted pod. minAvailable can be either an absolute number or a percentage.
+  * .spec.maxUnavailable (available in Kubernetes 1.7 and higher) which is a description of the number of pods from that set that can be unavailable after the eviction. It can be either an absolute number or a percentage.
+
+Example 1: With a minAvailable of 5, evictions are allowed as long as they leave behind 5 or more healthy pods among those selected by the PodDisruptionBudget's selector.
+
+Example 2: With a minAvailable of 30%, evictions are allowed as long as at least 30% of the number of desired replicas are healthy.
+
+Example 3: With a maxUnavailable of 5, evictions are allowed as long as there are at most 5 unhealthy replicas among the total number of desired replicas.
+
+Example 4: With a maxUnavailable of 30%, evictions are allowed as long as no more than 30% of the desired replicas are unhealthy.
+
+In typical usage, **a single budget would be used for a collection of pods managed by a controller**. For example, the pods in a single ReplicaSet or StatefulSet.
+
+==== 11.1.1 Example====
+In this example, we choose all pods of app:zookeeper. And allow eviction as long as there are 2 healthy zk pod left
+
+<file yaml zk-pdb.yaml>
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: zk-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: zookeeper
+</file>
+
+==== 11.1.2 Warning ====
+
+If you set **maxUnavailable to 0% or 0**, or you set **minAvailable to 100%** or the number of replicas, you are requiring zero voluntary evictions. When you set zero voluntary evictions for a workload object such as ReplicaSet, then you cannot successfully drain a Node running one of those Pods.

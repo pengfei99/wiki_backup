@@ -918,7 +918,7 @@ What is a (micro)service?
 The Database per Service pattern
 Event sourcing
 Applicaiton publishes events
-Docker
+Docker docs
 Part1 : Orientation and setup
 Part 2: Containers
 Part 3: Services
@@ -1024,3 +1024,29 @@ Spark cluster hardware setup
 Spark Job Configuration
 Data/File format
 Request optimization
+Atlas Security configuration
+Docs for containers
+kubernetes docs
+
+kubernetes quick-start
+01: k8s components and architecture
+02: K8s basic concepts
+03: k8s networking model
+04: k8s cluster installation
+05: k8s resources
+06: Deploy k8s objects
+07: k8s pod controllers
+08: K8s services
+09: k8s config map and secrets
+10: k8s Volume, Persistent Volume, Persistent Volume claim
+Argo workflow
+Intro and Install argo workflow on k8s
+02: Run a simple job on argo
+11. k8s: Using RBAC Authorization
+11: k8s ingress and ingress controller
+5-1: K8s resources pods
+Solr: Security
+05-2: K8s resources DaemonSet
+11: k8s: Run Applications
+Spark on k8s
+Deploy a static spark cluster on k8s
