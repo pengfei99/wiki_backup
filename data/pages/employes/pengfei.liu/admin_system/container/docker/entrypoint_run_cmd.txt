@@ -1,0 +1,110 @@
+====== DockerFile: RUN vs CMD vs entrypoint ======
+
+===== 01. Similarity =====
+
+RUN, CMD and entrypoint all have two mode(e.g. shell and exec ) to specify how to run command.
+
+==== 1.1 Shell mode ====
+
+<code>
+# general form
+<instruction> <command>
+
+# example, here RUN, CMD and ENTRYPOINT are the instruction
+# apt-get install python3, echo "Hello world" are the command
+RUN apt-get install python3
+CMD echo "Hello world"
+ENTRYPOINT echo "Hello world"
+</code>
+
+In shell mode, RUN, CMD, ENTRYPOINT will call /bin/sh -c to run the command. For example
+<code>
+# if we have the following code in a dockerfile1
+ENV name toto
+ENTRYPOINT echo "Hello, $name"
+
+# if we run dockerfile docker run-it, it will print
+Hello, toto
+</code>
+==== 1.2 Exec mode ====
+
+<code>
+# general form
+<instruction> ["executable", "param1", "param2", ...]
+
+# Examples
+RUN ["apt-get", "install", "python3"]
+CMD ["/bin/echo", "Hello world"]
+ENTRYPOINT ["/bin/echo", "Hello world"]
+</code>
+
+One important Note, the exec mode will call directly the invoked command without any shell processing. For example 
+<code>
+# if we have the following code in a dockerfile1
+ENV name toto
+ENTRYPOINT ["/bin/echo", "Hello, $name"]
+
+# if we run dockerfile docker run-it, it will print
+Hello, $name
+</code>
+
+==== 1.3 Other script ====
+
+If you want to use other shell script like bash, sh ,etc. You need to use the Exec mode. For example
+
+<code>
+# entrypoint will first call /bin/bash, then run the command with bash
+ENTRYPOINT ["/bin/bash", "-c", "echo Hello, $name"]
+</code>
+
+===== 2. RUN =====
+
+In a docker file, RUN is often used to install packages. It will create a new layer on the container. For example
+
+<code>
+RUN apt-get update && apt-get install -y \
+  bzr \
+  cvs \
+  git \
+  mercurial \
+  subversion
+</code>
+
+===== 3. CMD =====
+
+In a docker file, CMD allows you to define a default command when the docker image is launched without any init command. If you have multiple lines of CMD, only the last line of CMD will be executed.  
+
+<code>
+# In a docker file, we have the following line
+ENTRYPOINT ["/bin/chamber", "exec", "production", "--"]
+CMD ["/bin/service", "-d"]
+
+# If we run "docker runmyservice", the container will be created with the following commands:
+["/bin/chamber", "exec", "production", "--", "/bin/service", "-d"]
+
+# If we run "docker runmyservice /bin/debug", the container will be created with the following commands:
+["/bin/chamber", "exec", "production", "--", "/bin/debug"]
+
+# Note the last command has been replaced 
+</code>
+
+===== 4. ENTRYPOINT =====
+
+ENTRYPOINT is similar to CMD. But it will run before CMD. And it also can be replaced.
+
+<code>
+# This will replace the entrypoint of docker file, but you should not do it in most of the case
+docker run --entrypoint /bin/logwrap myservice
+</code>
+
+===== 5. When to use Entrypoint, or CMD =====
+
+Entrypoint is used to run static command which the container wants to run by default. CMD is used to provide the default arguments for the command in Entrypoint. And the user may want to change it when he runs the container. For example, for an Nginx webserver. The command to launch the Nginx server should in Entrypoint. The default conf file should in CMD. 
+
+<code>
+# run nginx with default CMD
+docker run nginx
+
+# run nginx with custom conf
+docker run nginx -c /test.conf
+</code>
