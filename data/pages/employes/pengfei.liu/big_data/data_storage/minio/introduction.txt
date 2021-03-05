@@ -9,3 +9,17 @@ MinIO is a High Performance Object Storage released under Apache License v2.0. I
 Please visit https://docs.min.io/docs/minio-quickstart-guide.html, if you want to install it on your local pc.
 
 ===== 2. Install client =====
+<code>
+# download the minio client bin from https://docs.min.io/docs/minio-admin-complete-guide.html
+# change acl of the minio client
+chmod a+x mc
+# put it under /usr/local/bin
+mv mc /usr/local/bin
+</code>
+
+===== 3. Configur your client to connect to a minio server =====
+<code>
+# configure minio client to connect to a minio service. Here I define the name as minio, you can call it as you want. 
+# For example, mystorage 
+mc alias set minio https://minio.lab.sspcloud.fr/ <accesskey> <secretkey>
+</code>

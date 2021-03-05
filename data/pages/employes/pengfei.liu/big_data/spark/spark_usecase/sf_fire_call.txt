@@ -594,9 +594,56 @@ total 371M
 
 
 </code>
+=== Create a partitioned parquet file ===
+If our analysis focus on only several columns. You can partition the parquet file to improve performance. In the following example, we partitioned the file by using the column "CallType".
 
+<code>
+//we can patitioned the output parquet file by using one or multiple column
+fireServiceCachedDF.write.partitionBy("CallType").mode("overwrite").parquet("/tmp/demo_data/partitionedFireServiceParquet")
+</code>
 
-Create a dataframe by reading Parquet
+If you check the generated parquet file, you can notice the parquet blocks are organized by the different call type.
+<code>
+[pliu@lin02 ~]$ hdfs dfs -ls /tmp/demo_data/partitionedFireServiceParquet
+Found 34 items
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Administrative
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Aircraft Emergency
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Alarms
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Assist Police
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Citizen Assist %2F Service Call
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Confined Space %2F Structure Collapse
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Electrical Hazard
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Elevator %2F Escalator Rescue
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Explosion
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Extrication %2F Entrapped (Machinery, Vehicle)
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Fuel Spill
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Gas Leak (Natural and LP Gases)
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=HazMat
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=High Angle Rescue
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Industrial Accidents
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Lightning Strike (Investigation)
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Marine Fire
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Medical Incident
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Mutual Aid %2F Assist Outside Agency
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Odor (Strange %2F Unknown)
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Oil Spill
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Other
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Outside Fire
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Smoke Investigation (Outside)
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Structure Fire
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Suspicious Package
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Traffic Collision
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Train %2F Rail Fire
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Train %2F Rail Incident
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Vehicle Fire
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Water Rescue
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=Watercraft in Distress
+drwxr-xr-x   - zeppelin hdfs          0 2021-03-05 18:04 /tmp/demo_data/partitionedFireServiceParquet/CallType=__HIVE_DEFAULT_PARTITION__
+
+</code>
+
+=== Create a dataframe by reading Parquet ===
+
 
 <code>
 scala> val tempDF = spark.read.parquet("/tmp/fireServiceParquet/")
@@ -606,8 +653,21 @@ scala> tempDF.limit(10).show()
 
 </code>
 
-Read from paquet is more efficient than ascii file.
+Read from Paquet is more efficient than ascii file.
 
+=== Read a partitioned parquet file ===
+
+When we read a partitioned parquet file, we can already do a filter. In the following example, we will only read rows where **CallType=Administrative**
+<code>
+val partitionedPath="/tmp/demo_data/partitionedFireServiceParquet"
+val adminDf=spark.read.parquet(partitionedPath+"/CallType=Administrative")
+parDF2.show(5,false)
+
+// you can also read the whole data set
+val partitionedDf=spark.read.parquet(partitionedPath)
+</code>
+
+Note if you have too many distinct values in a column. When you partitioned the data with this column. It will create many small files. It may not improve the performance, but make it worse. 
 ==== SQL queries ====
 
 <code>

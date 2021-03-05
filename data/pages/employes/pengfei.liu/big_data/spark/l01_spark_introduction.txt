@@ -167,6 +167,8 @@ The **SparkConf** has a configuration parameter that our Spark driver applicatio
 
 **Spark session is a unified entry point of a spark application from Spark 2.0**. It provides a way to interact with various spark’s functionality with a lesser number of constructs. Instead of having a spark context, hive context, SQL context, now all of it is encapsulated in a Spark session.
 
+Scala version:
+
 <code>
 //no more sparkConf, all configuration is done directly in spark session builder
 import org.apache.spark.sql.SparkSession
@@ -176,6 +178,22 @@ val spark = SparkSession.builder
 .config("spark.sql.warehouse.dir", "target/spark-warehouse") // spark creates a local warehouse to save data of hiveContext
 .enableHiveSupport() //enables access to Hive metastore, Hive serdes, and Hive udfs.
 .getOrCreate
+</code>
+
+python version: 
+<code>
+from pyspark.sql import SparkSession
+
+spark = SparkSession \
+       .builder.master("k8s://https://kubernetes.default.svc:443") \
+       .appName("Python Spark SQL basic example") \
+       .config("spark.kubernetes.container.image", "inseefrlab/jupyter-datascience:master") \
+       .config("spark.kubernetes.authenticate.driver.serviceAccountName", os.environ['KUBERNETES_SERVICE_ACCOUNT']) \
+       .config("spark.executor.instances", "5") \
+       .config("spark.kubernetes.namespace", os.environ['KUBERNETES_NAMESPACE']) \
+       .config("spark.eventLog.enabled","true") \
+       .config("spark.eventLog.dir","s3a://"+event_log_path) \
+       .getOrCreate()       
 </code>
 
 === 1.5.2.1 hive support ===
