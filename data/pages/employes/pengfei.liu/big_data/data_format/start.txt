@@ -44,7 +44,38 @@ Unstructured data (or unstructured information) is information that either does 
 For example, e-mail messages, word processing documents, videos, photos, audio files, presentations, webpages and many other kinds of business documents are all unstructured data.
 
 
-===== 2. Common data formats in big data environment =====
+===== 2. Basics of data formats =====
+
+==== 2.1 Criteria for evaluating a data format ====
+
+^ Property ^ CSV ^ Json/Xml ^Parquet^ Avro^ ORC^
+| Human Readable |YES|YES|NO|NO|NO|
+| Compressable |YES|YES|YES|YES|YES|
+| Splittable |YES*|YES*|YES|YES|YES|
+| Complex data structure |NO|YES|YES|YES|YES|
+| Schema evolution |NO|NO|YES|YES|YES|
+| Columnar |NO|NO|YES|NO|YES|
+
+Note:
+  * CSV is splittable when it is a raw, uncompressed file or using a splittable compression format such as BZIP2 or LZO (note: LZO needs to be indexed to be splittable!)
+  * JSON has the same conditions about splittability when compressed as CSV with one extra difference. When “wholeFile” option is set to true (re: SPARK-18352), JSON is NOT splittable.
+
+==== 2.2 Logical and physical====
+
+When we talk about data format, we always have two-layer:
+  * The **logical layer** represents how data is seen by the user. For example, the logical layer of tabular data is represented by rows and columns.
+  * The physical layer represents how data is stored on a physical device(e.g. hard drive, memory, etc.)
+
+The physical layer has three major solutions:
+  * row-wise:
+  * columnar:   
+  * Hybrid:
+
+Based on how they store data, they will behave differently in different scenarios. So we don't have one best solution which works for all scenarios. 
+
+
+
+===== 3. Common data formats in big data environment =====
 
 ==== 2.1 CSV ====
 
@@ -151,4 +182,37 @@ Avro can support many different programming languages. Because the schema is sto
 
 
 ==== Sequence files ====
+==== ORC ====
 
+
+===== Appendix: Nested data structure =====
+
+Json, Parquet, Avro, and ORC allows table cells to host nested complex data structure. For example, in the following table, we have a column called name, which is an object which has three properties(first-name, middle-name, last-name).
+
+<code>
+val structureData = Seq(
+    Row(Row("James ","","Smith"),"36636","M",3100),
+    Row(Row("Michael ","Rose",""),"40288","M",4300),
+    Row(Row("Robert ","","Williams"),"42114","M",1400),
+    Row(Row("Maria ","Anne","Jones"),"39192","F",5500),
+    Row(Row("Jen","Mary","Brown"),"","F",-1)
+  )
+
+val structureSchema = new StructType()
+    .add("name",new StructType()
+      .add("firstname",StringType)
+      .add("middlename",StringType)
+      .add("lastname",StringType))
+    .add("id",StringType)
+    .add("gender",StringType)
+    .add("salary",IntegerType)
+
+  val df2 = spark.createDataFrame(
+     spark.sparkContext.parallelize(structureData),structureSchema)
+  df2.printSchema()
+  df2.show()
+</code> 
+
+There is a negative consequence of keeping the nested structure in parquet. In some cases, spark predicate pushdown may not work properly if you have a nested structure in the parquet file.
+
+So even if you are working with few fields in your parquet dataset spark will load and materialize the entire dataset.
