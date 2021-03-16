@@ -1,0 +1,28 @@
+====== Data format: csv ======
+
+CSV files (comma separated values) are commonly used to exchange tabular data between systems using plain text. CSV is a row-based file format, which means that every line of the file is the row in the table. Basically, CSV contains a header row that provides column names for the data, otherwise, files are considered **partially structured**. CSV files cannot initially present hierarchical or relational data. Data connections are typically organized by using multiple CSV files. Foreign keys are stored in columns of one or more files, but the links between these files are not expressed by the format itself. Also, CSV format is not fully standardized, files can use delimiters other than commas, such as tabs or spaces.
+One of the other properties of CSV files is that they are only splittable when it is a raw, uncompressed file or when splittable compression format is used such as bzip2 or lzo (note: lzo needs to be indexed to be splittable!).
+
+=== 2.1.1 Advantages: ===
+
+  * CSV is human-readable and easy to edit manually;
+  * CSV provides a straightforward information schema;
+  * CSV is processed by almost all existing applications;
+  * CSV is simple to implement and parse;
+  * CSV is compact. For XML you start tag and end tag for each column in each row. In CSV you write the column headers only once.
+
+=== 2.1.2 Disadvantages ===
+
+  * CSV allows working with flat data. Complex data structures need to be handled aside from format;
+  * No support for column types. There is no distinction between text and numeric columns;
+  * No standard way to represent binary data;
+  * Problems with importing CSV (no distinction between NULL and quotes);
+  * Poor support of special characters;
+  * Lack of universal standard.
+
+Despite the limitations, CSV files are a popular choice for data sharing, as they are supported by a wide range of business applications, consumer and scientific applications. Similarly, most batch and streaming data processing modules (for example, Spark and Hadoop) initially support serialization and deserialization of CSV files and offer ways to add a schema when reading.
+
+=== Application environment ===
+
+Supported by all applications and languages. One of the most popular formats used to exchange data, because of its simplicity, but usually not recommended for feeding data analytic process.
+

@@ -1,0 +1,26 @@
+====== Data format : Json ======
+
+JSON data (JavaScript object notation) is represented as key-value pairs in a partially structured format. JSON is often compared to XML because it can store data in a hierarchical format. Child data is presented by parent data. Both formats are self-describing and readable by the user, but JSON documents are usually much smaller. Therefore, they are more often used in network communication, especially with the advent of REST-based web services.
+
+
+Since a lot of data transferring is already using JSON format, most web languages initially support JSON or use external libraries to serialize and deserialize JSON data. Thanks to this support, JSON is used in logical formats by presenting data structures, interchange formats for hot data, and cold data stores.
+
+
+Many batches and stream data processing modules natively support JSON serialization and deserialization. Although the data contained in JSON documents can ultimately be stored in more performance-optimized formats, such as Parquet or Avro, they serve as raw data, which is very important for reprocessing data (if necessary).
+
+
+=== Advantages: ===
+
+  * JSON supports hierarchical structures, simplifying the storage of related data in one document and the presentation of complex relations;
+  * Most languages provide simplified JSON serialization libraries or built-in support for JSON serialization/deserialization;
+  * JSON supports lists of objects, helping to avoid erratic transformations of lists into a relational data model;
+  * JSON is a widely used file format for NoSQL databases such as MongoDB, Couchbase and Azure Cosmos DB;
+  * Built-in support in most nowadays tools.
+
+
+SON is not splittable and lack indexing as many text formats
+Ecosystems
+
+It is privileged format for web applications
+JSON is a widely used file format for NoSQL databases such as MongoDB, Couchbase and Azure Cosmos DB. or example,in MongoDB, BSON is used instead the standard format. This rchitecture of MongoDB is easier to modify than structured database as Postgres where you’d need to extract the whole document for changing. ndeed, BSON is the binary encoding of JSON-like documents. It’s indexed and allows to be parsed much ore quickly than standard JSON. However, this doesn’t mean you can’t think of MongoDB as a JSON atabase.
+JSON is also an used language in GraphQL on which rely a data fully typed. GraphQL is a query language for an API. Instead of working with rigid server-defined endpoints, you can send queries to get exactly the data you are looking for in one request.

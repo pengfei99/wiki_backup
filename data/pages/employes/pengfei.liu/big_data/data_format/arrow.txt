@@ -1,0 +1,21 @@
+====== Data format: Arrow ======
+
+**Apache Arrow** is an **in-memory** data structure mainly for use by engineers for building data systems. It also has a variety of standard programming language. C, C++, C#, Go, Java, JavaScript, Ruby are in progress and also support in Apache Arrow. Apache Arrow was introduced as top-level Apache project on 17 Feb 2016. 
+
+The latest version of Apache Arrow is Apache Arrow 3.0.0 (26 January 2021)
+
+It has efficient and fast data interchange between systems without the serialization costs, which have been associated with other systems like thrift, Avro, and Protocol Buffers.
+
+Arrow is not a standalone piece of software but rather a component used to accelerate analytics within a particular network and to allow Arrow-enabled systems to exchange data with low overhead. It is flexible to support the most complex data models.
+
+
+===== 01: Basic concept of Apache Arrow =====
+
+Each data analytic/storage service implements its internal memory format and not compatible with each other. As a result, when we exchange data between these services, we have to do serialization and deserialization. And 70-80% of the computation power is wasted on serialization and deserialization.
+
+**Apache Arrow** enables fast and accurate **data interchange between systems without the serialization costs** associated with other systems like Thrift and Protocol Buffers.
+
+{{:employes:pengfei.liu:big_data:data_format:apache_arrow.png?600|}}
+
+Apache Arrow comes with bindings to C / C++ based interface to the Hadoop file system. It means that we can read and download all files from HDFS and interpret them ultimately with Python.
+

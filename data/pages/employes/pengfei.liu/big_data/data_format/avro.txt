@@ -1,1 +1,19 @@
-====== Avro ======
+====== Data format: Avro ======
+
+Apache Avro was released by the Hadoop working group in 2009. It is a row-based format that is highly splittable. It also described as a data serialization system similar to Java Serialization. The schema is stored in JSON format while the data is stored in binary format, minimizing file size and maximizing efficiency. Avro has robust support for schema evolution by managing added fields, missing fields, and fields that have changed. This allows old software to read the new data and new software to read the old data — a critical feature if your data has the potential to change.
+
+With Avro’s capacity to manage schema evolution, it’s possible to update components independently, at different times, with low risk of incompatibility. This saves applications from having to write if-else statements to process different schema versions and saves the developer from having to look at old code to understand old schemas. Because all versions of the schema are stored in a human-readable JSON header, it’s easy to understand all the fields that you have available.
+
+Avro can support many different programming languages. Because the schema is stored in JSON while the data is in binary, Avro is a relatively compact option for both persistent data storage and wire transfer. Avro is typically the format of choice for write-heavy workloads given its easy to append new rows.
+
+=== Advantages: ===
+
+  * Avro is language-neutral data serialization
+  * Avro stores the schema in the header of the file so data is self-describing;
+  * Avro formatted files are splittable and compressible and hence it’s a good candidate for data storage in Hadoop ecosystem;
+  * The schema used to read an Avro file need not be the same as schema which was used to write the files. This makes it possible to add new fields independently.
+  * Just as with Sequence Files, Avro files also contains Sync markers to separate the blocks. This makes it highly splittable;
+  * These blocks can be compressed using compression formats such as snappy.
+
+
+

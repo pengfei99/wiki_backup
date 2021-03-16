@@ -1,0 +1,28 @@
+====== Data format: parquet ======
+
+
+Launched in 2013, Parquet was developed by Cloudera and Twitter to serve as a column-based storage format, optimized for work with multi-column datasets. Because data is stored by columns, it can be highly compressed (compression algorithms perform better on data with low information entropy which is usually contained in columns) and splittable. The developers of the format claim that this storage format is ideal for Big Data problems.
+
+**Parquet files are binary files that contain metadata about their content**. So, without reading/parsing the content of the file(s), Spark can just rely on the metadata to determine column names, compression/encodings, data types and even some basic statistics. **The column metadata for a Parquet file is stored at the end of the file, which allows for fast, one-pass writing.**
+
+**Parquet is optimized for the Write Once Read Many (WORM) paradigm. It’s slow to write, but incredibly fast to read, especially when you’re only accessing a subset of the total columns. Parquet is a good choice for read-heavy workloads. For use cases requiring operating on entire rows of data, a format like CSV or AVRO should be used.**
+
+=== Advantages ===
+
+  * Parquet is a columnar format. Only required columns would be fetched/read, it reduces the disk I/O. This concept is called projection pushdown;
+  * Schema travels with the data so data is self-describing;
+  * Despite the fact that it is created for HDFS, data can be stored in other file systems, such as GlusterFs or on top of NFS;
+  * Parquet are just files, which means that it is easy to work with them, move, back up and replicate;
+  * Native support in Spark out of the box provides the ability to simply take and save the file to your storage;
+  * Parquet provides very good compression up to 75% when used even with the compression formats like snappy;
+  * As practice shows, this format is the fastest for reading workflows compared to other file formats;
+  * Parquet is well suited for data warehouse kind of solutions where aggregations are required on certain column over a huge set of data;
+  * Parquet can be read and write using Avro API and Avro Schema(which gives the idea to store all raw data in Avro format but all processed data in Parquet);
+  * It also provides predicate pushdown, thus reducing further disk I/O cost.
+
+=== Disadvantages: ===
+
+  * The column-based design makes you think about the schema and data types;
+  * Parquet does not always have native support in other tools other than Spark;
+  * Does not support data modification and schematic evolution. Of course, Spark knows how to merge the scheme, if you change it over time (you need to specify a special option when reading). But to change something in an already existing file, you can do nothing other than overwriting, except that you can add a new column.
+

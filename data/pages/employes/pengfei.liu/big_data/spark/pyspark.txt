@@ -54,26 +54,39 @@ To install scala, please check [[employes:pengfei.liu:java:scala|Install scala o
 Install Apache Spark; go to the Spark download page (http://spark.apache.org/downloads.html) and choose the latest (default) version. I am using Spark 3.0.1 with Hadoop 2.7. After downloading, unpack it in the location you want to use it.
 
 ===== 4. Edit the .bashrc =====
-We need to add the following var env into our .bashrc
 
 <code>
-#### java env
-export JAVA_HOME="/opt/Java/jdk1.8.0_261"
-export JRE_HOME="/opt/Java/jdk1.8.0_261/jre"
+# Create a new env setup file in /etc/profile.d/spark.sh
+touch /etc/profile.d/spark.sh
+</code>
 
+We need to add the following var env. Here I suppose you already set up your JAVA_HOME. If not, you need to set up JAVA_HOME.
 
-
-#### spark env
+If you want to use pyspark inside jupyter, you can use version 1
+<code>
+#### spark env version 1
 export SPARK_HOME="/opt/Spark/spark-3.0.1"
 # pyspark config
 export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
+# if you put jupyter, the pyspark will try to use jupyter to run your code.
+# if you don't want to use jupyter. you can put python in the place of juypter.
 export PYSPARK_DRIVER_PYTHON="jupyter"
 export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
 export PYSPARK_PYTHON=python3
 export PATH=$SPARK_HOME:$PATH:~/.local/bin:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
-
 </code>
 
+If you don't want to use pyspark via jupyter. you can use version 2
+
+<code>
+#### spark env version 2
+export SPARK_HOME="/opt/Spark/spark-3.0.1"
+# pyspark config
+export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
+export PYSPARK_DRIVER_PYTHON="python"
+export PYSPARK_PYTHON=python3
+export PATH=$SPARK_HOME:$PATH:~/.local/bin:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
+</code>
 ===== 5. Test your pyspark via Jupyter =====
 
 <code>
