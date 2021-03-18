@@ -105,7 +105,107 @@ df.show(5)
 print(df.count())
 </code>
 
-===== 6. Add spylon kernel into Jupyter for scala support =====
+===== 6. Jupyeter Kernel for spark  =====
+
+==== 6.1 Toree ====
+
+Note since Toree 0.3.0, pyspark interpreter has been removed. So we can't use it anymore
+
+<code>
+pip install --upgrade toree
+
+jupyter toree install --spark_home /home/pliu/Tools/spark/spark-3.0.1 --interpreters=Scala,SQL --user
+</code>
+
+For each interpreter, a kernel spec will be generated. For example, the following spec folder is for scala interpreter
+
+<code>
+# scala interpreter spec folder,  
+Installed kernelspec apache_toree_scala in /home/pliu/.local/share/jupyter/kernels/apache_toree_scala
+
+# You can find the following contents in it
+
+(base) [pliu@localhost spark-3.0.1]$ ls -lah /home/pliu/.local/share/jupyter/kernels/apache_toree_scala
+total 68K
+drwxrwxr-x 5 pliu pliu  221 Mar 17 14:50 .
+drwxrwxr-x 4 pliu pliu   56 Mar 17 14:40 ..
+drwxrwxr-x 2 pliu pliu   20 Mar 17 14:27 bin
+-rw-rw-r-- 1 pliu pliu  537 Mar 17 14:27 DISCLAIMER
+-rw-rw-r-- 1 pliu pliu  812 Mar 17 14:27 __init__.py
+-rw-rw-r-- 1 pliu pliu  415 Mar 17 14:40 kernel.json
+drwxrwxr-x 2 pliu pliu   49 Mar 17 14:27 lib
+-rw-rw-r-- 1 pliu pliu  31K Mar 17 14:27 logo-64x64.png
+-rw-rw-r-- 1 pliu pliu  898 Mar 17 14:27 __main__.py
+drwxrwxr-x 2 pliu pliu  130 Mar 17 14:27 __pycache__
+-rw-rw-r-- 1 pliu pliu 2.6K Mar 17 14:27 RELEASE_NOTES.md
+-rw-rw-r-- 1 pliu pliu 6.3K Mar 17 14:27 toreeapp.py
+-rw-rw-r-- 1 pliu pliu   47 Mar 17 14:27 VERSION
+-rw-rw-r-- 1 pliu pliu  920 Mar 17 14:27 _version.py
+
+</code>
+
+The most important is kernel.json. This is the default conf 
+
+<file json kernel.json>
+{
+  "argv": [
+    "/home/pliu/.local/share/jupyter/kernels/apache_toree_scala/bin/run.sh",
+    "--profile",
+    "{connection_file}"
+  ],
+  "env": {
+    "DEFAULT_INTERPRETER": "Scala",
+    "__TOREE_SPARK_OPTS__": "",
+    "__TOREE_OPTS__": "",
+    "SPARK_HOME": "/home/pliu/Tools/spark/spark-3.0.1"
+  },
+  "display_name": "Apache Toree - Scala",
+  "language": "scala",
+  "interrupt_mode": "signal",
+  "metadata": {}
+}
+
+</file>
+
+If you want to change the spec of the **spark context/session, you need to modify the "TOREE_SPARK_OPTS"**
+
+For example, if you want to use a remote spark cluster, you can add the following code
+
+<file json remote.json>
+{
+  "argv": [
+    "/home/pliu/.local/share/jupyter/kernels/apache_toree_scala/bin/run.sh",
+    "--profile",
+    "{connection_file}"
+  ],
+  "env": {
+    "DEFAULT_INTERPRETER": "Scala",
+    "__TOREE_SPARK_OPTS__": "",
+    "__TOREE_OPTS__": "",
+    "__TOREE_SPARK_OPTS__": "--master spark://192.168.0.255:7077 --deploy-mode client --num-executors 4 --executor-memory 4g --executor-cores 8 --packages org.apache.spark:spark-avro_2.12:3.0.1"
+  },
+  "display_name": "Apache Toree - Scala",
+  "language": "scala",
+  "interrupt_mode": "signal",
+  "metadata": {}
+}
+
+</file>
+
+**Note that we will create a spark session which connects to a Spark cluster at (192.168.0.255:7077) with client deploy mode, with 4 executors(8 core,4g memore), and a external avro package**
+
+So if you want to have two scala interpreter, one for local, one for remote, you can do the following steps:
+<code>
+# 1. copy the local one
+cp -pr /home/pliu/.local/share/jupyter/kernels/apache_toree_scala /home/pliu/.local/share/jupyter/kernels/scala_remote
+
+# 2. Edit the kernel.json file, put the option of your spark session in __TOREE_SPARK_OPTS__
+
+# 3. restart your jupyter
+</code>
+
+
+==== 6.2 Add spylon kernel into Jupyter for scala support ====
 
 <code>
 # Install package in your virtual env
