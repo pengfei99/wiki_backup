@@ -1,6 +1,7 @@
 ====== Data format: Avro ======
 
-Apache Avro was released by the Hadoop working group in 2009. It is a row-based format that is highly splittable. It also described as a data serialization system similar to Java Serialization. The schema is stored in JSON format while the data is stored in binary format, minimizing file size and maximizing efficiency. Avro has robust support for schema evolution by managing added fields, missing fields, and fields that have changed. This allows old software to read the new data and new software to read the old data — a critical feature if your data has the potential to change.
+
+Apache Avro was released by the Hadoop working group in 2009. It is a **row-based format that is highly splittable**. It also described as a **data serialization system similar to Java Serialization**. The schema is stored in JSON format while the data is stored in binary format, minimizing file size and maximizing efficiency. Avro has robust support for schema evolution by managing added fields, missing fields, and fields that have changed. This allows old software to read the new data and new software to read the old data — a critical feature if your data has the potential to change.
 
 With Avro’s capacity to manage schema evolution, it’s possible to update components independently, at different times, with low risk of incompatibility. This saves applications from having to write if-else statements to process different schema versions and saves the developer from having to look at old code to understand old schemas. Because all versions of the schema are stored in a human-readable JSON header, it’s easy to understand all the fields that you have available.
 
@@ -15,5 +16,26 @@ Avro can support many different programming languages. Because the schema is sto
   * Just as with Sequence Files, Avro files also contains Sync markers to separate the blocks. This makes it highly splittable;
   * These blocks can be compressed using compression formats such as snappy.
 
+===== Compression =====
 
+**By default, Avro data files are not compressed**, but it is generally advisable to enable compression to reduce disk usage and increase read and write performance. 
 
+Avro provides two built-in compression option :
+  * null: The "null" codec simply passes through data uncompressed.
+  * deflate: The "deflate" codec writes the data block using the deflate algorithm as specified in RFC 1951, and typically implemented using the zlib library. Note that this format (unlike the "zlib format" in RFC 1950) does not have a checksum.
+
+Avro supports other optional Codecs(You need to import the dependencies by yourself)
+  * bzip2: The "bzip2" codec uses the bzip2 compression library.
+  * snappy: The "snappy" codec uses Google's Snappy compression library. Each compressed block is followed by the 4-byte, big-endian CRC32 checksum of the uncompressed data in the block.
+  * xz: The "xz" codec uses the XZ compression library.
+  * zstandard: The "zstandard" codec uses Facebook's Zstandard compression library.
+
+**The most common codec is Deflate and Snappy. Snappy is faster, while Deflate is slightly more compact.**
+
+How you specify compression depends on the component being used, as explained in the sections below.
+
+<file java exp.java>
+DataFileWriter.setCodec(CodecFactory.deflateCodec(6)); // using deflate
+DataFileWriter.setCodec(CodecFactory.snappyCodec()); // using snappy codec
+</file>
+Note : To use snappy you need to include snappy-java library into your dependencies.

@@ -19,3 +19,21 @@ Each data analytic/storage service implements its internal memory format and not
 
 Apache Arrow comes with bindings to C / C++ based interface to the Hadoop file system. It means that we can read and download all files from HDFS and interpret them ultimately with Python.
 
+===== 02 Parquet vs Arrow =====
+
+Parquet is a columnar file format for data serialization. Reading a Parquet file requires decompressing and decoding its contents into some kind of in-memory data structure. It is designed to be space/IO-efficient at the expense of CPU utilization for decoding. It does not provide any data structures for in-memory computing. Parquet is a streaming format which must be decoded from start-to-end, while some "index page" facilities have been added to the storage format recently, in general random access operations are costly.
+
+Arrow on the other hand is first and foremost a library providing columnar data structures for in-memory computing. When you read a Parquet file, you can decompress and decode the data into Arrow columnar data structures, so that you can then perform analytics in-memory on the decoded data. Arrow columnar format has some nice properties: random access is O(1) and each value cell is next to the previous and following one in memory, so it's efficient to iterate over.
+
+What about "Arrow files" then? Apache Arrow defines a binary "serialization" protocol for arranging a collection of Arrow columnar arrays (called a "record batch") that can be used for messaging and interprocess communication. You can put the protocol anywhere, including on disk, which can later be memory-mapped or read into memory and sent elsewhere.
+
+This Arrow protocol is designed so that you can "map" a blob of Arrow data without doing any deserialization, so performing analytics on Arrow protocol data on disk can use memory-mapping and pay effectively zero cost. The protocol is used for many things, such as streaming data between Spark SQL and Python for running pandas functions against chunks of Spark SQL data, these are called "pandas udfs".
+
+In some applications, Parquet and Arrow can be used interchangeably for on-disk data serialization. Some things to keep in mind:
+
+Parquet is intended for "archival" purposes, meaning if you write a file today, we expect that any system that says they can "read Parquet" will be able to read the file in 5 years or 7 years. We are not yet making this assertion about long-term stability of the Arrow format (though we might in the future)
+Parquet is generally a lot more expensive to read because it must be decoded into some other data structure. Arrow protocol data can simply be memory-mapped.
+Parquet files are often much smaller than Arrow-protocol-on-disk because of the data encoding schemes that Parquet uses. If your disk storage or network is slow, Parquet is going to be a better choice
+So, in summary, Parquet files are designed for disk storage, Arrow is designed for in-memory (but you can put it on disk, then memory-map later). They are intended to be compatible with each other and used together in applications.
+
+For a memory-intensive frontend app I might suggest looking at the Arrow JavaScript (TypeScript) library.

@@ -76,12 +76,12 @@ Based on how they store data, they will behave differently in different scenario
 
 
 ===== 3. Common data formats in big data environment =====
-  * csv (on disk, unstructural)
-  * json（on disk, unstructural/semi-structural
-  * Avro (on disk, structural)
-  * Parquet (on disk, structural)
-  * ORC (on disk, structural)
-  * Arrow (on memory, structural)
+  * csv (on disk, unstructural): [[employes:pengfei.liu:big_data:data_format:csv|Data format: csv]]
+  * json（on disk, unstructural/semi-structural: [[employes:pengfei.liu:big_data:data_format:json|Data format : Json]]
+  * Avro (on disk, structural) : [[employes:pengfei.liu:big_data:data_format:avro|Data format: Avro]]
+  * Parquet (on disk, structural) : [[employes:pengfei.liu:big_data:data_format:parquet|Data format: parquet]]
+  * ORC (on disk, structural) : [[employes:pengfei.liu:big_data:data_format:orc|Data format: orc]]
+  * Arrow (on memory, structural) : [[employes:pengfei.liu:big_data:data_format:arrow|Data format: Arrow]]
 
 
 

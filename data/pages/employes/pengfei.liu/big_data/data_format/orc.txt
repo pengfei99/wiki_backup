@@ -1,0 +1,80 @@
+====== Data format: orc ======
+
+ORC (Optimized Row Columnar) format was created and open-sourced by** Hortonworks in collaboration with Facebook**. It is a **column-oriented data storage format similar to Parquet**. ORC files contain groups of row data called stripes, along with auxiliary information in a file footer. At the end of the file, a postscript holds compression parameters and the size of the compressed footer. The default stripe size is 250 MB. **Large stripe sizes enable large efficient reads from HDFS.**
+
+
+
+
+=== Advantage: ===
+  * Efficient compression: Stored as columns and compressed(reducing the size of the original data up to 75%.). The columnar format is also ideal for vectorization optimizations in Tez.
+  * Fast reads and columnar operations: **ORC has a built-in index, min/max values, and other aggregates that cause entire stripes to be skipped during reads(e.g. filter)**. In addition, predicate pushdown pushes filters into reads so that minimal rows are read. And Bloom filters further reduce the number of rows that are returned.
+  * Proven in large-scale deployments: Facebook uses the ORC file format for a 300+ PB deployment.
+
+
+=== Disadvantages: ===
+
+  * Don't support incremental update(Unable to add data without having to recreate the file.)
+  * Does not support schema evolution.
+  * Impala currently does not support ORC format.
+
+
+
+=== Summary ===
+
+ORC should be used in OLAP (write once, read many) batch processing scenarios, not for OLTP or steaming. Hive uses orc as the principal storage format, so many performance optimizations are based on ORC. Therefore ORC improves performance reading, writing, and processing in Hive.
+===== Introduction =====
+
+{{:employes:pengfei.liu:big_data:data_format:orc_file_structure.png?600|}}
+
+
+===== Compression =====
+
+Big data solutions should be able to process a large amount of data very quickly. 
+Compressing data pros:
+  * **speed up the disk I/O operations**
+  * **save storage space** 
+  * **save network bandwidth**
+Compressing data cons:
+  * **Increase the processing time**
+  * **Increase the CPU utilization because of compression and decompression**. 
+
+So balance is required – more the compression – lesser is the data size but more the processing and CPU utilization.
+
+Note: **Big data use massive parallel programming. So compressed files must also be splittable to support parallel processing.** If a file is not splittable, it means we cannot input it to multiple tasks running in parallel and hence we lose the biggest advantage of parallel processing frameworks like Hadoop, Spark etc.
+
+===== Orc supported compression =====
+
+Orc supports :
+  * NONE
+  * ZLIB
+  * SNAPPY
+
+
+===== Orc common settings  =====
+
+
+^Key ^Default Setting^ Notes^
+|orc.compress | ZLIB | Compression type (NONE, ZLIB, SNAPPY)|
+|orc.compress.size|262,144|Number of bytes in each compression block.|
+|orc.stripe.size|268,435,456|Number of bytes in each stripe.|
+|orc.row.index.stride|10,000|Number of rows between index entries (>= 1,000).|
+|orc.create.index|true|Sets whether to create row indexes.|
+|orc.bloom.filter.columns|--|Comma-separated list of column names for which a Bloom filter must be created.|
+|orc.bloom.filter.fpp|0.05|False positive probability for a Bloom filter. Must be greater than 0.0 and less than 1.0.|
+
+===== Hive code example =====
+Create a hive table and save it as orc, we also specify the compression codec as Zlib.
+<code>
+CREATE TABLE addresses (
+   name string,
+   street string,
+   city string,
+   state string,
+   zip int
+   ) STORED AS orc tblproperties ("orc.compress"="Zlib");
+</code>
+
+Convert an existing table to orc table
+<code>
+CREATE TABLE a_orc STORED AS ORC AS SELECT * FROM A; 
+</code>

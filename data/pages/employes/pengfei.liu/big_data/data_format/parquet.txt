@@ -26,3 +26,59 @@ Launched in 2013, Parquet was developed by Cloudera and Twitter to serve as a co
   * Parquet does not always have native support in other tools other than Spark;
   * Does not support data modification and schematic evolution. Of course, Spark knows how to merge the scheme, if you change it over time (you need to specify a special option when reading). But to change something in an already existing file, you can do nothing other than overwriting, except that you can add a new column.
 
+==== Accelerating ORC and Parquet Reads of s3 ====
+
+https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk_cloud-data-access/content/s3-orc-parquet-reads.html
+
+==== Parquet loses compression ratio after repartitioning ====
+
+Context: I have a data set imported by using Sqoop ImportTool as-parquet-file using codec snappy. I just read the origin parquet file and repartition the data frame and generate a new parquet file. The size of the new parquet file went up to 200GB. But the origin was 80GB.
+
+The data processing logic
+<code>
+val productDF = spark.read.parquet("/tmp/sample1")
+
+productDF
+.repartition(100)
+.write.mode(org.apache.spark.sql.SaveMode.Overwrite)
+.option("compression", "snappy")
+.parquet("/tmp/sample2")
+
+</code>
+
+=== Cause: ===
+
+This happened because when you call repartition(n) on a data frame **you are doing a round-robin partitioning**. Any data locality that existed before the repartitioning is gone. So the compression codecs can't compress data very well, and the run length and dictionary encoders don't really have much to work with.
+
+=== Solution: ===
+
+so when you do your repartition, you need to repartition your data frame base on a good column that preserves data locality.
+
+<code>
+repartition (n, col)
+</code>
+
+Also, if you are optimizing your sqooped tables for downstream jobs you can sortWithinPartition for faster scans.
+<code>
+df.repartition(100, $"userId").sortWithinPartitions("userId").write.parquet(...)
+</code>
+
+==== Parquet tools ====
+
+The python version does not work well. 
+<code>
+# install the tool via pypi
+pip install parquet-tools
+
+# get help
+parquet-tools --help
+
+# show the details of the parquet file
+parquet-tools show test.parquet
+parquet-tools show s3://bucket-name/prefix/*
+
+# 
+parquet-tools inspect /path/to/parquet
+</code>
+
+The jar file does not work too. https://repo1.maven.org/maven2/org/apache/parquet/parquet-tools/1.11.1/
