@@ -1,5 +1,102 @@
 ====== Linux bash terminal basics ======
 
+===== 01. login shell vs non-login shell =====
+
+When you open a shell, it will load an environment from different files, based on different shell types, it will read files from different locations. 
+
+==== 1.1 Login shell ====
+**By default, login shell load config from /etc/profile **
+=== 1.1.1 interactive login shell ===
+
+When you log in on a text console, or through SSH, or with su -, you get an interactive login shell. When you log in in graphical mode (on an X display manager), you don't get a login shell, instead you get a session manager or a window manager.
+
+=== 1.1.2 non-interactive login ===
+
+To get a non-interactive login shell is to log in remotely with a command passed through standard input which is not a terminal, e.g. ssh example.com <my-script-which-is-stored-locally 
+
+==== 1.2 Non-login shell ====
+**By default, non-login shell load config from ~/.bashrc**
+
+=== 1.2.1 interactive, non-login shell ===
+
+When you start a shell in a terminal in an existing session (screen, X terminal, Emacs terminal buffer, a shell inside another, etc.), you get an interactive, non-login shell.
+
+=== 1.2.2 non-interactive, non-login shell ===
+
+When you do a ssh example.com my-script-which-is-on-the-remote-machine, it runs a non-interactive, non-login shell)
+
+==== 1.3 Note ====
+Both** ~/.bashrc** and **/etc/profile** will load the init file under **/etc/profile.d**. You can find below code in **/etc/profile and /etc/bashrc (~/.bashrc will call /etc/bashrc )**. So all init file under **/etc/profile.d** will be loaded for every shell(login and non-login). 
+
+<code>
+# Source initialization files for specific programs (ls, vim, less, ...)
+for i in /etc/profile.d/*.sh ; do
+    if [ -r "$i" ]; then
+        . $i
+    fi
+done
+</code>
+
+===== 02. stdin, stdout, stderr =====
+
+**stdin, stdout, and stderr** are three data streams created when you launch a Linux command. You can use them to tell if your scripts are being piped or redirected. 
+
+In Linux, **stdin** is the standard input stream. This accepts text as its input. Text output from the command to the shell is delivered via the stdout (standard out) stream. Error messages from the command are sent through the stderr (standard error) stream.
+
+Streams in Linux—like almost everything else—are treated as though they were files. You can read text from a file, and you can write text into a file. Both of these actions involve a stream of data. So the concept of handling a stream of data as a file isn’t that much of a stretch.
+
+Each file associated with a process is allocated a unique number to identify it. This is known as the file descriptor. Whenever an action is required to be performed on a file, the file descriptor is used to identify the file.
+
+These values are always used for stdin, stdout, and stderr:
+
+  * 0: stdin
+  * 1: stdout
+  * 2: stderr
+
+==== Example ====
+
+<code>
+# add the following script
+$ vim error.sh
+#!/bin/bash
+
+echo "About to try to access a file that doesn't exist"
+cat bad-filename.txt
+
+# make the script executable
+chmod +x error.sh
+
+# run the script
+./error.sh
+</code>
+
+You can notice the std output and std error are all printed in the terminal. Now we want to redirect them to a specific place.
+
+=== Redirect stdout ===
+
+<code>
+# run the following script, you can notice stdout is redirected to the file, and stderr is print on the terminal
+# This is because the default value is 1.  
+./error.sh > stdout.txt
+
+# You can explicitly redirect the stdout
+./error.sh 1 > stdout.txt
+</code>
+
+=== Redirect stderr ===
+As the default value is 1, so if you want to redirect stderr, you must specify the 2.
+<code>
+./error.sh 2 > stderr.txt
+</code>
+
+
+You can also do both
+<code>
+./error.sh 1> stdout.txt 2> stderr.txt
+# get wiered errors
+./error.sh 1> stdout.txt 2> $1
+</code>
+
 ====== Navigate in linux file system ======
 
 <code>
