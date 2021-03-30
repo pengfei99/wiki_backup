@@ -147,6 +147,58 @@ If you want it effective right now.
 
 ''echo $JAVA_HOME''
 
-===== Install java 12 =====
+====== Install java via sdkman ======
 
-Since april 2019, Oracle has changed the java licence. It's only free for personal 
+Since April 2019, Oracle has changed the java license. It's only free for personal. 
+
+We can use sdkman to install various jdk from all vendors.
+
+Follow the instructions of https://sdkman.io/install to install sdkman.
+
+<code>
+# list available version of java
+sdk list java
+
+# the output looks like this
+================================================================================
+Available Java Versions
+================================================================================
+ Vendor        | Use | Version      | Dist    | Status     | Identifier
+--------------------------------------------------------------------------------
+ AdoptOpenJDK  |     | 16.0.0.j9    | adpt    |            | 16.0.0.j9-adpt      
+               |     | 16.0.0.hs    | adpt    |            | 16.0.0.hs-adpt      
+               |     | 11.0.10.j9   | adpt    |            | 11.0.10.j9-adpt     
+               |     | 11.0.10.hs   | adpt    |            | 11.0.10.hs-adpt   
+# install a version. the general form is sdk install <candidate-name> <Identifier>
+# below is an example
+sdk install java 8.0.282.j9-adpt 
+
+# Now you can test it
+java -version
+</code>
+
+===== Set JAVA_HOME =====
+
+The sdkman will install the candidate in his candidates' folder
+
+<code>
+# for example, all jdk will be located here.
+/home/pliu/.sdkman/candidates/java
+
+# for each version, it will have a subfolder and a symbolic link current point to the currently used version
+
+drwxr-xr-x 8 pliu pliu 4096 Jan 20 00:58 8.0.282.j9-adpt/
+lrwxrwxrwx 1 pliu pliu   15 Mar 30 02:40 current -> 8.0.282.j9-adpt/
+
+</code>
+
+<code>
+# create a init script to load JAVA_HOME into your bash env
+sudo vim /etc/profile.d/java.sh
+
+export JAVA_HOME=/home/pliu/.sdkman/candidates/java/8.0.282.j9-adpt
+export PATH=$PATH:$JAVA_HOME/bin
+
+# check your Java home
+echo $JAVA_HOME
+</code>
