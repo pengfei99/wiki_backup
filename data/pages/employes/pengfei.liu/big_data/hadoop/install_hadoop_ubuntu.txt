@@ -26,8 +26,32 @@ $ sudo apt-get install pdsh
 
 # Put the following line into your .bashrc
 export PDSH_RCMD_TYPE=ssh
+
+# don't forget to source .bashrc. otherwise when you run start hadoop service, you will get following error
+Starting namenodes on [pengfei.org]
+pdsh@pengfei: pengfei: rcmd: socket: Permission denied
+Starting datanodes
+pdsh@pengfei: localhost: rcmd: socket: Permission denied
+Starting secondary namenodes [pengfei.org]
+pdsh@pengfei: pengfei: rcmd: socket: Permission denied
+
 </code>
 
+Generate ssh key and setup ssh connexion. see this page [[employes:pengfei.liu:big_data:hadoop:install_config_hadoop|Install hdfs on multi node cluster]]
+
+<code>
+# generate a RSA key paire with no password private key 
+$ ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+
+# copy the public to authorized ssh key
+$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+# change the permission
+$ chmod 0600 ~/.ssh/authorized_keys
+</code>
+<code>
+Don't forget to change the static hostname via /etc/hosts and hostnamectl
+</code>
 
 ===== 1. Get hadoop binary =====
 
@@ -43,4 +67,166 @@ mv path/to/hadoop.tar.gz /opt/hadoop
 # 
 tar -xzvf /opt/hadoop/hadoop.tar.gz
 
+# 
+</code>
+
+Set up hadoop init file for bash env
+
+<code>
+$ sudo vim /etc/profile.d/hadoop.sh
+
+# put the following lines
+export HADOOP_HOME=/opt/hadoop/hadoop-3.2.2
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+# Below line can elimate the "WARN util.NativeCodeLoader: Unable 
+# to load native-hadoop library for your platform... using 
+# builtin-java classes where applicable"
+# This warning is caused by 32bit(compile) and 64bit(run) jdk 
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+# to activate it in the current shell
+source /etc/profile.d/hadoop.sh
+</code>
+For more details about the warning, check
+https://sparkbyexamples.com/hadoop/hadoop-unable-to-load-native-hadoop-library-for-your-platform-warning/
+
+Test your hadoop
+<code>
+$ hadoop version
+</code>
+===== 2. Run hadoop as non-distributed mode =====
+By default, Hadoop is configured to run in a non-distributed mode, as a single Java process. This is useful for debugging.
+
+The following example copies the unpacked conf directory to use as input and then finds and displays every match of the given regular expression. Output is written to the given output directory.
+===== 3. Run hadoop as Pseudo-Distributed mode =====
+
+Hadoop can also be run on a single-node in a pseudo-distributed mode where each Hadoop daemon runs in a separate Java process.
+
+==== hadoop-env.sh ====
+In this file, we need to configure the env variable of hadoop. 
+<code>
+# As we put all env var in /etc/profile.d/hadoop.sh, we only need to put java home
+$ vim hadoop-env.sh
+# add the below line
+export JAVA_HOME=/home/pliu/.sdkman/candidates/java/8.0.282.j9-adpt
+</code>
+
+==== 3.1 core-site.xml ====
+
+The core-site.xml file contains Hadoop cluster information used when starting up. These properties include:
+  * The port number used for Hadoop instance
+  * The memory allocated for file system
+  * The memory limit for data storage
+  * The size of Read / Write buffers.
+
+<file xml core-site.xml >
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+</file>
+
+==== 3.2 hdfs-site.xml ====
+
+The hdfs-site.xml file needs to be configured for each host to be used in the cluster. This file holds information such as:
+
+  * The namenode and datanode paths on the local filesystem.
+  * The value of replication data
+
+<code>
+# In this example, I want to store Hadoop data in /home/hadoop/hdfs.
+# name node path: /home/hadoop/hdfs/namenode
+# data node path: /home/hadoop/hdfs/datanode
+</code>
+
+<file xml hdfs-site.xml>
+<configuration>
+   <property>
+      <name>dfs.replication</name>
+      <value>1</value>
+   </property>
+	
+   <property>
+      <name>dfs.name.dir</name>
+      <value>file:////home/hadoop/hdfs/namenode</value>
+   </property>
+	
+   <property>
+      <name>dfs.data.dir</name>
+      <value>file:///home/pliu/hadoop/datanode</value>
+   </property>
+</configuration>
+</file>
+==== 3.3 mapred-site.xml ====
+
+In this file, we set which MapReduce framework to use. Here we don't have many choices. We put yarn, which is the resource manager for MapReduce
+
+
+
+<file xml mapred-site.xml>
+
+<configuration>
+   <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+   </property>
+</configuration>
+</file>
+
+==== 3.4 yarn-site.xml ====
+
+In this file, we define the resource management and job scheduling logic of yarn.
+
+<file xml mapred-site.xml>
+<configuration>
+   <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+   </property>
+</configuration>
+</file>
+
+===== 4. Test and start hadoop =====
+
+<code>
+# init hdfs name node
+$ hdfs namenode -format
+</code>
+
+<code>
+# start hdfs
+start-dfs.sh
+# start yarn
+start-yarn.sh
+</code>
+
+Hadoop 3.x defult Web UI ports:
+
+  * NameNode – Default HTTP port is 9870.
+  * ResourceManager – Default HTTP port is 8088.
+  * MapReduce JobHistory Server – Default HTTP port is 19888.
+
+Now we can do some actions
+
+<code>
+# create a dir
+hadoop fs -mkdir /test
+
+# get dir list
+hadoop fs -ls /
+
+# upload a file
+hadoop fs -put toto.txt /test
+</code>
+===== 5. Stop the service =====
+
+<code>
+stop-yarn.sh
+stop-dfs.sh
 </code>
