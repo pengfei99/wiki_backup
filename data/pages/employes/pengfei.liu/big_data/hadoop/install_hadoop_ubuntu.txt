@@ -176,6 +176,18 @@ In this file, we set which MapReduce framework to use. Here we don't have many c
       <name>mapreduce.framework.name</name>
       <value>yarn</value>
    </property>
+   <property>
+        <name>yarn.app.mapreduce.am.env</name>
+        <value>HADOOP_MAPRED_HOME=/home/hadoop/mapred_home</value>
+    </property>
+    <property>
+        <name>mapreduce.map.env</name>
+        <value>HADOOP_MAPRED_HOME=/home/hadoop/mapred_home</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.env</name>
+        <value>HADOOP_MAPRED_HOME=/home/hadoop/mapred_home</value>
+    </property>
 </configuration>
 </file>
 
@@ -189,6 +201,10 @@ In this file, we define the resource management and job scheduling logic of yarn
       <name>yarn.nodemanager.aux-services</name>
       <value>mapreduce_shuffle</value>
    </property>
+   <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property> 
 </configuration>
 </file>
 
