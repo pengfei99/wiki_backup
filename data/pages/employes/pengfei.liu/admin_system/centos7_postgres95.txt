@@ -1,39 +1,82 @@
-====== Install postgresql on centos 7 ======
+====== Postgresql tutorial ======
 
-1. Get postgresql repo
+===== 1. Install postgresql server on cenots 7 =====
 
-You can visit this link https://yum.postgresql.org/repopackages.php for more information on 
+==== 1.1 Exclude the default postgresql of base repo ====
 
-For example, I choose 11.x.
+Because the default version of postgresql of the base repo is an outdated version. So we need to exclude this to install a newer version.
+
+<code>
+sudo vim /etc/yum.repos.d/CentOS-Base.repo
+
+# find the base and updates section, put exclude=postgresql*
+...
+[base]
+name=CentOS-$releasever - Base
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
+#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+exclude=postgresql*
+
+#released updates
+[updates]
+name=CentOS-$releasever - Updates
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates&infra=$infra
+#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+exclude=postgresql*
+...
+</code>
+==== 1.2 Get postgresql repo ====
+
+
+You can visit this link https://yum.postgresql.org/repopackages.php for more information of PostgreSQL version.
+
+Install a repository configuration package using the official PostgreSQL repository for
+
 <code>
 # Add the PostgreSQL repository in CentOS 7.
-$ rpm -Uvh https://yum.postgresql.org/11/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+$ sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 
-# Now we can run the following command to install the postgresql server and client
-
-$ yum install postgresql11-server postgresql11 -y
+# Now we can list all the available postgresql server and client
+$ yum list postgresql*
 
 </code>
 
-2. Initialize your postgresql db
-
-''/usr/pgsql-11/bin/postgresql-11-setup initdb''
-
-3. Start, stop, status de postgresql service
-
-''systemctl start/stop/status postgresql-11''
-
-====== Configure postgresql ======
-
-1. Configure pg_hba to allow remote access to postgresql server
-
-The pg_hba file can be find in /var/lib/pgsql/11/data/
-
-''vim pg_hba.conf''
-
-You should see lines like this
+==== 1.2 Install postgresql ====
 
 <code>
+# For example, we want to install version 11
+sudo yum install postgresql11-server
+
+# Initialize your postgresql db
+sudo /usr/pgsql-11/bin/postgresql-11-setup initdb
+
+# Start, stop, status de postgresql service
+systemctl start/stop/status postgresql-11
+</code>
+
+
+
+===== 2. Configure postgresql =====
+
+There are two conf you need to modify
+  - pg_hba.conf (default location is /var/lib/pgsql/11/data you should changed it based on your verison )
+  - postgresql.conf (default location is /var/lib/pgsql/11/data you should changed it based on your verison )
+
+==== 2.1. Configure pg_hba to setup authentication rules ====
+
+
+In my case, the pg_hba.conf file can be find in /var/lib/pgsql/11/data/
+
+<code>
+# open it
+vim pg_hba.conf
+
+##### You should see following lines ########
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 
 # "local" is for Unix domain socket connections only
@@ -49,28 +92,34 @@ local   replication     postgres                                peer
 #host    replication     postgres        ::1/128                 ident
 </code>
 
-You need to change the first line auth method from peer to md5.
+Each line is an authentication rule. Postgres supports many authentications rules:
+  * trust: everyone can login (no-login)
+  * peer: get user id from the operating system. If user is set to all, means all authenticated user of the os can login
+  * iden: user id must identical to the given user name of the rule
+  * md5: use postgresql internal account and auth system.
+  * ldap: allow ldap auth
 
-So you can get access with login and password.
-
-If I want to allow a machine with IP 134.188.88.8 to access on my base toto with login titi
+The most used auth mod is md5. For example if I want to allow a machine with IP 134.188.88.8 to access on my base toto with login titi. Note titi must be an account created inside postgresql server.
 
 I should add a line like this
 
 ''host  toto    titi   134.188.88.8/32     md5''
 
-After this you also need to modify
-
+==== 2.2. Configure postgresql.conf to allow remote access to postgresql server ====
 add this line to allow remote connection on postgresql server
 
 <code>
-cd /var/lib/pgsql/9.5/data
+cd /var/lib/pgsql/11/data
 vim postgresql.conf
-# listen_addresses = 'localhost' means only local connexion is allowed, change it to *, postgres accept all connexiton 
+
+# listen_addresses = 'localhost' means only local connexion is allowed
+# change it to *, postgres accept all connexiton 
 listen_addresses = '*'
 </code>  
 
-2. User management
+==== 2.3 User management ====
+
+As I mentioned, if you want to use md5 auth mod in pg_hba.conf, you need to create an account. Below shows how to create an account. 
 
 <code>
 # create user pliu with pwd toto
@@ -81,80 +130,115 @@ ALTER USER 'user_name' WITH PASSWORD 'new_password';
 </code>
 
 
+==== 2.4 Grant privilege ====
 
-3. Add database
-
-CREATE DATABASE mysite ;
-
-4. Grant privilege on database
+Even you can login to the postgres server, it does mean you can access a database or a table. You also need to setup ACL for your database to allow allow certain accounts to access it.
 
 <code>
-# grant all privileges
-GRANT ALL PRIVILEGES ON DATABASE mysite TO pliu;
+# suppose you are in the postgresql server, and it allows ident auth as root user
+# become postgres in your os
+sudo su postgres
+# connect to the server via psql client
+psql
+
+# login into the server as postgres
+postgres=# 
+
+# create a new databasse
+postgres=# CREATE DATABASE mysite;
+
+# grant all privileges of database mysite to user pliu
+postgres=# GRANT ALL PRIVILEGES ON DATABASE mysite TO pliu;
 
 # grant read only privileges on a schema
-# first you need to grant user to use this schema
-GRANT USAGE ON SCHEMA mysite TO pliu;
-# second you grant select right on tables of this schema
-GRANT SELECT ON ALL TABLES IN SCHEMA mysite TO pliu;
+# 1. you need to grant user to use this schema
+postgres=# GRANT USAGE ON SCHEMA mysite TO pliu;
+# 2. you grant select right on tables of this schema
+postgres=# GRANT SELECT ON ALL TABLES IN SCHEMA mysite TO pliu;
+</code>
+
+==== 2.5 Test your account connexion ====
+
+<code>
+# -d means connect to database mysite, -W means interactive password input 
+psql -U pliu -h localhost -d mysite -W
+</code>
+
+=== 2.5.1 Install psql client on ubuntu ===
+
+<code>
+sudo apt-get install postgresql-client  
+</code>
+
+
+==== 2.6 config .pgpass ====
+
+If you don't want to type your password every time, when you connect to your db server. You can set up a .pgpass file in your home directory. When you start psql command, it will search first the .pgpass file in your home dir. If it finds it, it will try to use it to login. If it fails, it will ask you to enter the password again.
+
+<code>
+# create the conf file
+vim ~/.pgpass
+
+# Each line is for a connection, it has the following general format
+# hostname:port:database:username:password
+# Below is an example.
+10.233.5.21:5432:defaultdb:pengfei:eewxph0k7wg77qrz1z4c
 </code>
 
 
 
-5. Test your database
-
-psql -U pliu -h localhost -d mysite -W
-
-====== Install psycopg2 in virtual env to allow django to connect to postgres db ======
 
 
-1. Install dependencies
+====== 3. Python postgresql integration  ======
 
-psycopy needs postgresql developpement tool package to compile. As we use postgres9.5
+Most of the python application uses "psycopg2" to connect to postgres db(e.g. django, mlflow)
 
-So, ''sudo yum install postgresql95-devel''
+===== 3.1 Install psycopg2 =====
 
-2. Try ''pip install psycopg2''
+<code>
+# 1. Install dependencies
+# psycopy needs postgresql developpement tool package to compile.
+# You need to change the name based on your version
+$ sudo yum install postgresql11-devel
+
+# install psycopg2
+$ pip install psycopg2
+
+</code>
 
 If it fails, and says **Error: pg_config executable not found.**
 
 You need to add pg_config to your path.
+<code>
+# To find where is your pg_config
+$ find / -name pg_config  2>/dev/null
 
-Use ''find / -name pg_config  2>/dev/null'' to find where is your pg_config
+# For example, if it shows /usr/pgsql-11/bin/pg_config, you need to 
+$ export PATH=$PATH:/usr/pgsql-11/bin/
 
-For example, if it shows /usr/pgsql-9.5/bin/pg_config
+# Now you can reinstall 
+$ pip install psycopg2
+</code>
 
-''export PATH=$PATH:/usr/pgsql-9.5/bin/''
 
-Now you can do '' pip install psycopg2''
-
-====== create user login and database ======
-
-1. login as postgres and connect db with psql,create db noe and user noe, with password, grant full access of db noe to user noe.
+===== 3.2 Initial database with django web app database =====
 
 <code>
-sudo su postgres
-psql
-CREATE DATABASE noe;
+# Go to your django app folder, for example here my app is called web-app
+$ cd /var/www/web-app/
+
+# call the migration function
+$ python manage.py makemigrations
+$ python manage.py migrate
+
+# Test if everything goes well
+$ python manage.py runserver
+$ gunicorn web-app.wsgi:application
 </code>
 
 
 
-
-====== Initial database with django web app database ======
-
-<code>
-cd /var/www/NoE/
-python manage.py makemigrations
-python manage.py migrate
-</code>
-
-Test if everything goes well
-
-python manage.py runserver
-
-gunicorn NoE.wsgi:application
-====== pg_dump version mismatch - How to fix in CentOS 7 ======
+====== 4. pg_dump version mismatch - How to fix in CentOS 7 ======
 
 If you have the following message 
 
@@ -201,7 +285,7 @@ psql -U pliu -h cclindw01.in2p3.fr northwind < northwind.sql
 </code>
 
 
-====== Jdbc driver ======
+====== 5. Jdbc driver ======
 
 In this page you can find all jdbc drivers https://jdbc.postgresql.org/download.html
 
