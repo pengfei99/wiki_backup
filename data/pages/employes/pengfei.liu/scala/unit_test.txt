@@ -1,0 +1,59 @@
+====== 1. Unit Testing ======
+
+For now, the best way for doing unit testing in a scala project is using scalatest(https://www.scalatest.org/).
+
+And setting it up manually is very difficult. So the easiest way to integrate it in your project is to use maven to build a scala project with the scalatest support.
+===== 1.1 Build a scala project with maven =====
+
+If you want to know more, plz visit https://docs.scala-lang.org/tutorials/scala-with-maven.html
+We suppose you already have maven in your pc. If not, check this [[employes:pengfei.liu:java:maven|Maven Introduction]]
+
+The easiest way to create new projects is using an “archetype”. An archetype is a general skeleton structure or template for a project. Think back to “convention over configuration”; in our case, **the Scala Maven Plugin provides an archetype for scala projects.** 
+
+For more information about the plugin, plz check https://davidb.github.io/scala-maven-plugin/index.html
+
+You run the archetype plugin like this:
+<code>
+mvn archetype:generate -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple
+</code>
+
+After entering the above command, Maven will ask you for a **groupId, artifactId, and package**. The groupId and artifactId together should serve as a globally unique identifier for your project. You can read the guide to naming conventions, but in short:
+
+  * groupId: inverted domain name (e.g. com.my-organization)
+  * artifactId: project name (e.g. playground-project)
+  * version: anything you want, but I recommend you read and follow the guidelines for Semantic Versioning (e.g. 0.0.1)
+  * package: the default is the groupId, but you can change this (e.g. com.my-organization)
+
+
+
+When it’s done, you should see a new folder named with the **artifactId(project name)**. cd into it and run
+<code>
+mvn package
+</code>
+
+You’ll see Maven downloading dependencies including the Scala library (as mentioned above), **JUnit, ScalaTest, and Specs2** (the latter three are test frameworks; the archetype includes an example "Hello world" program and tests with each of the frameworks).
+
+===== 1.2 Contents of the scala Archetype =====
+
+
+In the project root of the scala archetype, you’ll see 
+  * pom.xml
+  * src
+  * target (target folder only appears after building). 
+
+Note: this archetype does not include a .gitignore file. Below is an example of .gitignore file.
+
+<file .gitignore>
+# ignore scala build file
+target
+*.class
+*.log
+# ignore itellij related file
+*.iml
+*.ipr
+*.iws
+.idea
+out
+</file>
+
+Inside the src folder you’ll see main and test; main includes your application code, and test includes your test suites. Inside each of those you’ll find a scala folder, followed by your package structure (actually, test/scala includes a sample package, but you should replace this with your own package and tests). If you want to mix Scala and Java source code, simply add a java folder inside main or test.

@@ -1,31 +1,33 @@
-1610970562	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_1_pods	pliu	[A simple init container example] 		524
-1611151038	192.168.184.1	C	employes:pengfei.liu:big_data:solr:security	pliu	created		1341
-1611159349	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu			3545
-1611159556	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Upload security.json via zookeeper] 		328
-1611159642	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		119
-1611159759	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Solr: Security] 		71
-1611161932	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		2017
-1611161983	192.168.184.1	E	employes:pengfei.liu:big_data:solr:security	pliu	[Generate the password hash] 		-2
-1611336547	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:10_k8s_volume	pliu			945
-1611915370	192.168.184.1	C	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	created		32
-1611915402	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu			13
-1611915521	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu			773
-1611915581	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Why use DaemonSets?] 		178
-1611916011	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Why use DaemonSets?] 		806
-1611916764	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[Default scheduler] 		2031
-1611917295	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset	pliu	[A working example] 		310
-1613493711	192.168.184.1	C	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	created		2133
-1613493732	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:start	pliu	[kubernetes docs] 		103
-1613493796	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	[11.1.1 Example] 		317
-1613493813	192.168.184.1	E	employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications	pliu	[11.1.2 Warning] 		8
-1602082440	127.0.0.1	E	employes:pengfei.liu:big_data:spark:start		external edit		0
-1614334678	192.168.184.1	E	employes:pengfei.liu:big_data:spark:start	pliu	[Spark Optimization] 		27
-1614334989	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu	created		180
-1614335448	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	created		231
-1614335684	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			131
-1614337319	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			1034
-1614337341	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu			38
-1614337397	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[1. Deploy a spark cluster] 		50
-1614337411	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[1. Deploy a spark cluster] 		1
-1614337622	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s	pliu	[2. Run a spark shell to test the cluster] 		184
-1614359367	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu			201
+1617350120	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[Install postgresql on centos 7] 		930
+1617355443	192.168.184.1	E	employes:pengfei.liu:data_science:work_flow_management:mlflow:01_install	pliu			3
+1618821111	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			182
+1618821261	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[1.2 Get postgresql repo] 		60
+1618821444	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			155
+1618823443	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2. Configure postgresql] 		1424
+1618824160	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			58
+1618824203	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[pg_dump version mismatch - How to fix in CentOS 7] 		3
+1618824219	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[Jdbc driver] 		3
+1618825322	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		172
+1618825572	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		437
+1618825603	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		0
+1618834393	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu			4
+1618834428	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Dockerfile] 		6
+1618834447	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Build the app] 		6
+1618834467	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Run the app] 		6
+1618834726	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Share your image] 		483
+1618834791	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		64
+1618834805	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		-3
+1618834820	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		1
+1619527221	192.168.184.1	C	employes:pengfei.liu:scala:start	pliu	created		25
+1602082440	127.0.0.1	E	employes:pengfei.liu:java:scala		external edit		0
+1619527231	192.168.184.1	D	employes:pengfei.liu:java:scala	pliu	removed		-2366
+1619527253	192.168.184.1	C	employes:pengfei.liu:scala:installation	pliu	created		2366
+1619527434	192.168.184.1	E	employes:pengfei.liu:scala:installation	pliu			188
+1619530569	192.168.184.1	C	employes:pengfei.liu:java:maven	pliu	created		1042
+1619530604	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu			11
+1619530694	192.168.184.1	C	employes:pengfei.liu:scala:unit_test	pliu	created		903
+1619530881	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu	[1.2 option 2] 		168
+1619531127	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu			201
+1619531177	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu	[1.2 option 2] 		55
+1619532600	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		1205
+1619537032	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		829

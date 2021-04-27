@@ -1,0 +1,49 @@
+====== Maven Introduction ======
+
+===== 1. Installation =====
+
+You can install maven via your system package manager. But it's often not the latest version. So we recommend you install it manually. You can get the latest version from here https://maven.apache.org/download.cgi 
+
+**Note maven requires java to run. Make sure you have installed java and set up JAVA_HOME before.**
+
+<code>
+# use apt
+$ (sudo) apt-get install maven
+
+# manual install
+# get the maven binary tarball. extract it and put it under /opt
+$ cd /opt/apache-maven-3.8.1
+
+</code>
+
+**Now, you need to add Maven to your environment Path variable**:
+==== 1.1 Option 1 ====
+Create a symlink to /usr/bin, which is already on your Path
+<code>
+ln -s /opt/apache-maven-3.8.1/bin/mvn /usr/bin/mvn 
+</code>
+
+
+==== 1.2 Option 2 ====
+Add the Maven bin folder directly to your path, using your shell configuration file. 
+It could be ~/.bash_profile or /etc/profile.d/maven.sh
+For example, you can Add export PATH=$PATH:/opt/apache-maven-X.X.X/bin to .bash_profile (or whatever profile for the shell you use)
+<code>
+# Create a maven.sh file
+sudo vim /etc/profile.d/maven.sh
+
+# add the following line
+export M2_HOME=/opt/maven
+export MAVEN_HOME=/opt/maven
+export PATH=${M2_HOME}/bin:${PATH}
+</code>
+
+==== 1.3 Test maven ====
+
+<code>
+mvn -version
+</code>
+
+===== 2. Use maven =====
+
+The easiest way to create new projects is using an “archetype”. An archetype is a general skeleton structure, or template for a project. 

@@ -1,46 +1,13 @@
-====== Install scala on centos ======
+====== Install scala ======
 
-===== Tar ball installation =====
 
-Get the scala binary from https://www.scala-lang.org/download/
+There are two main ways to install scala:
+  * use sdk man (package manager)
+  * binary tarball
 
-For example, I choose version 2.10.1 (https://www.scala-lang.org/download/2.10.1.html).
+We strongly recommend you to install scala via sdk man.
 
-<code>
-cd /tmp
-
-wget https://www.scala-lang.org/files/archive/scala-2.10.1.tgz
-
-mkdir -p /opt/SCALA/
-
-cp scala-2.10.1 /opt/SCALA/
-
-cd /opt/SCALA
- 
-tar -xzvf scala-2.10.1.tgz
-</code>
-
-Now add scala to path
-
-<code>
-vim /etc/profile.d/scala.sh
-
-#add the following lines
-export SCALA_HOME=/opt/SCALA/scala-2.10.1
-export PATH=$PATH:$SCALA_HOME/bin
-
-</code>
-
-Beware that, scala needs jdk to run, so make sure you have jdk and has 'JAVA_HOME'
-
-<code>
-#check scala version
-[hadoop@CCLinDataWHD01 hadoop]$ cat /etc/profile.d/scala.sh 
-export SCALA_HOME=/opt/SCALA/scala-2.10.1
-export PATH=$PATH:$SCALA_HOME/bin
-</code>
-
-===== sdk man installation =====
+===== 1. sdk man installation =====
 
 sdk man is a java enviromnent package manager, you can use it to install java, scala, spark, etc. You can find the full list in this site: https://sdkman.io/usage
 
@@ -87,3 +54,44 @@ sdk default scala 2.11.12
 sdk current scala
 </code>
 
+===== 2. Tar ball installation =====
+
+Get the scala binary from https://www.scala-lang.org/download/
+
+For example, I choose version 2.10.1 (https://www.scala-lang.org/download/2.10.1.html). 
+
+Below command are tested in Centos 7.
+
+<code>
+cd /tmp
+
+wget https://www.scala-lang.org/files/archive/scala-2.10.1.tgz
+
+mkdir -p /opt/SCALA/
+
+cp scala-2.10.1 /opt/SCALA/
+
+cd /opt/SCALA
+ 
+tar -xzvf scala-2.10.1.tgz
+</code>
+
+Now add scala to path
+
+<code>
+vim /etc/profile.d/scala.sh
+
+#add the following lines
+export SCALA_HOME=/opt/SCALA/scala-2.10.1
+export PATH=$PATH:$SCALA_HOME/bin
+
+</code>
+
+Beware that, scala needs jdk to run, so make sure you have jdk and has 'JAVA_HOME'
+
+<code>
+#check scala version
+[hadoop@CCLinDataWHD01 hadoop]$ cat /etc/profile.d/scala.sh 
+export SCALA_HOME=/opt/SCALA/scala-2.10.1
+export PATH=$PATH:$SCALA_HOME/bin
+</code>

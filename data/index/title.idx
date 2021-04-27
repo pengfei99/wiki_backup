@@ -709,7 +709,7 @@ DataBase view
 
 
 
-Install scala on centos
+
 Install spark on multi node mode
 Install hdfs on multi node cluster
 Hadoop common trouble shooting
@@ -742,7 +742,7 @@ Flume spark streaming
 Install and configure Hive
 Install python without using pyenv
 Run python web app with apache mod wsgi
-Install postgresql on centos 7
+Postgresql tutorial
 Sqoop Introduction Installation
 Create symbolic link in linux
 Inverted index of files of Shakespeare's works
@@ -1001,7 +1001,7 @@ Lesson03: Advance configuration
 Lesson09: Monitoring Kafka
 Kafka的生产集群部署
 Lesson04: Kafka producer
-Avro
+Data format: Avro
 Lesson01: Spark basics
 Lesson02: Spark unified stack and applicatioins
 Lesson03: Introduction of spark shell and spark UI
@@ -1050,3 +1050,17 @@ Solr: Security
 11: k8s: Run Applications
 Spark on k8s
 Deploy a static spark cluster on k8s
+DockerFile: RUN vs CMD vs entrypoint
+01 Mlflow: Install and quickstart
+MLflow tutorial
+Data format: csv
+Data format : Json
+Data format: Parquet
+Data format: Arrow
+Data format: orc
+Hadoop doc
+Install hadoop 3 on ubuntu
+Scala docs
+Install scala
+Maven Introduction
+1. Unit Testing

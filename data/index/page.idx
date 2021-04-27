@@ -1050,3 +1050,17 @@ employes:pengfei.liu:admin_system:container:k8s:05_2_daemonset
 employes:pengfei.liu:admin_system:container:k8s:11_k8s_run_applications
 employes:pengfei.liu:big_data:spark:spark_on_k8s:start
 employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s
+employes:pengfei.liu:admin_system:container:docker:entrypoint_run_cmd
+employes:pengfei.liu:data_science:work_flow_management:mlflow:01_install
+employes:pengfei.liu:data_science:work_flow_management:mlflow:start
+employes:pengfei.liu:big_data:data_format:csv
+employes:pengfei.liu:big_data:data_format:json
+employes:pengfei.liu:big_data:data_format:parquet
+employes:pengfei.liu:big_data:data_format:arrow
+employes:pengfei.liu:big_data:data_format:orc
+employes:pengfei.liu:big_data:hadoop:start
+employes:pengfei.liu:big_data:hadoop:install_hadoop_ubuntu
+employes:pengfei.liu:scala:start
+employes:pengfei.liu:scala:installation
+employes:pengfei.liu:java:maven
+employes:pengfei.liu:scala:unit_test
