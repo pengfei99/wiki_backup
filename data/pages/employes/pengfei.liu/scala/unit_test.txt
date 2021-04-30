@@ -6,7 +6,7 @@ And setting it up manually is very difficult. So the easiest way to integrate it
 ===== 1.1 Build a scala project with maven =====
 
 If you want to know more, plz visit https://docs.scala-lang.org/tutorials/scala-with-maven.html
-We suppose you already have maven in your pc. If not, check this [[employes:pengfei.liu:java:maven|Maven Introduction]]
+We suppose you already have maven on your pc. If not, check this [[employes:pengfei.liu:java:maven|Maven Introduction]]
 
 The easiest way to create new projects is using an “archetype”. An archetype is a general skeleton structure or template for a project. Think back to “convention over configuration”; in our case, **the Scala Maven Plugin provides an archetype for scala projects.** 
 

@@ -1,16 +1,3 @@
-1617350120	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[Install postgresql on centos 7] 		930
-1617355443	192.168.184.1	E	employes:pengfei.liu:data_science:work_flow_management:mlflow:01_install	pliu			3
-1618821111	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			182
-1618821261	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[1.2 Get postgresql repo] 		60
-1618821444	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			155
-1618823443	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2. Configure postgresql] 		1424
-1618824160	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu			58
-1618824203	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[pg_dump version mismatch - How to fix in CentOS 7] 		3
-1618824219	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[Jdbc driver] 		3
-1618825322	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		172
-1618825572	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		437
-1618825603	192.168.184.1	E	employes:pengfei.liu:admin_system:centos7_postgres95	pliu	[2.5 Test your account connexion] 		0
-1618834393	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu			4
 1618834428	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Dockerfile] 		6
 1618834447	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Build the app] 		6
 1618834467	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Run the app] 		6
@@ -19,7 +6,6 @@
 1618834805	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		-3
 1618834820	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		1
 1619527221	192.168.184.1	C	employes:pengfei.liu:scala:start	pliu	created		25
-1602082440	127.0.0.1	E	employes:pengfei.liu:java:scala		external edit		0
 1619527231	192.168.184.1	D	employes:pengfei.liu:java:scala	pliu	removed		-2366
 1619527253	192.168.184.1	C	employes:pengfei.liu:scala:installation	pliu	created		2366
 1619527434	192.168.184.1	E	employes:pengfei.liu:scala:installation	pliu			188
@@ -31,3 +17,17 @@
 1619531177	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu	[1.2 option 2] 		55
 1619532600	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		1205
 1619537032	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		829
+1619689921	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		0
+1619788766	192.168.184.1	C	employes:pengfei.liu:python:start	pliu	created		113
+1619789441	192.168.184.1	C	employes:pengfei.liu:python:poetry:installation	pliu	created		724
+1619789486	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[distutils.util module not found] 		69
+1619796108	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Install poetry] 		1951
+1619796348	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[0. Introduction] 		791
+1619797031	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Create a python project with poetry] 		196
+1619797894	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Create a python project with poetry] 		719
+1619798094	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1 Add dependencies] 		191
+1619798247	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		194
+1619798293	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		68
+1619799137	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		637
+1619800164	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.2 Add dependencies for developement] 		34
+1619800919	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[3 Pycharm integration] 		517

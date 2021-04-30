@@ -1,0 +1,188 @@
+====== 0. Introduction ======
+
+**poetry** is a tool to handle 
+  * dependency installation
+  * Python project structure management
+  * building and packaging of Python packages. 
+
+It only needs one file to do all of that:**pyproject.toml**.
+
+In other words, poetry uses pyproject.toml to replace 
+  * setup.py
+  * requirements.txt
+  * setup.cfg
+  * MANIFEST.in
+  * the newly added Pipfile.
+
+Below is an example of the pyproject.toml
+
+<file .toml pyproject.toml>
+[tool.poetry]
+name = "my-package"
+version = "0.1.0"
+description = "The description of the package"
+
+license = "MIT"
+
+authors = [
+    "Sébastien Eustace <sebastien@eustace.io>"
+]
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://github.com/python-poetry/poetry"
+homepage = "https://github.com/python-poetry/poetry"
+
+keywords = ['packaging', 'poetry']
+
+[tool.poetry.dependencies]
+python = "~2.7 || ^3.2"  # Compatible python versions must be declared here
+toml = "^0.9"
+# Dependencies with extras
+requests = { version = "^2.13", extras = [ "security" ] }
+# Python specific dependencies with prereleases allowed
+pathlib2 = { version = "^2.2", python = "~2.7", allow-prereleases = true }
+# Git dependencies
+cleo = { git = "https://github.com/sdispater/cleo.git", branch = "master" }
+
+# Optional dependencies (extras)
+pendulum = { version = "^1.4", optional = true }
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+pytest-cov = "^2.4"
+
+[tool.poetry.scripts]
+my-script = 'my_package:main'
+</file>
+
+
+There are some things we can notice in this file:
+  * It tries to enforce semantic versioning as the best practice in version naming.
+  * You can specify the readme, included and excluded files: no more MANIFEST.in. poetry will also use VCS ignore files (like .gitignore) to populate the exclude section.
+  * Keywords (up to 5) can be specified and will act as tags on the packaging site.
+  * The dependencies sections support caret, tilde, wildcard, inequality and multiple requirements.
+  * You must specify the python versions for which your package is compatible.
+
+poetry will also detect if you are inside a virtualenv and install the packages accordingly. So, poetry can be installed globally and used everywhere.
+
+poetry also comes with a full-fledged dependency resolution library.
+====== 1. Install poetry ======
+Please check https://pypi.org/project/poetry/ for more details.
+
+Below is the instruction of how to install poetry on Ubuntu 20.01
+
+<code>
+# because ubuntu only provide python2 and python3 as python executable
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
+
+# The above command will install the poetry under ~/.poetry
+
+# update poetry
+poetry self update
+
+</code>
+
+===== 1.1 Enable tab completion for Bash =====
+<code>
+# If Below command does not work 
+poetry completions bash > /etc/bash_completion.d/poetry.bash-completion
+
+# Generate the bash script
+poetry completions bash
+
+# and copy the generated script in the following file.
+sudo vim /etc/bash_completion.d/poetry.bash-completion
+</code>
+
+====== 2. Create a python project with poetry ======
+
+
+<code>
+# Create a new project with name PythonTest
+poetry new PythonTest
+</code>
+
+This will create the PythonTest project with these contents:
+
+<code>
+PythonTest
+  pythontest
+    __init__.py
+  pyproject.toml
+  README.rst
+  tests
+    __init__.py
+    test_pythontest.py
+</code>
+
+===== 2.1 Add dependencies =====
+
+<code>
+# Here we want to add pyspark as project dependencies
+$ poetry add pyspark
+</code>
+
+After you enter the above command, you will see that Poetry automatically created a virtual environment. And it starts to install the project dependencies on this virtual environment.
+
+Even though we just ask poetry to install pyspark, but you will see it installs at least 10 packages. Because pyspark depends on other libraries like py4j. Poetry needs to add everything PySpark depends on to the project as well.
+
+By default, Poetry installs pytest on your project. As pytest requires **py, importlib-metadata, and pluggy**, so those dependencies are added to the virtual environment too. 
+
+==== 2.1.1 Poetry lock file ====
+
+
+The **poetry add pyspark** command also creates a **poetry.lock** file. This file contains all the version details of your project dependencies. It can help your team to always test against the same dependency versions. However, this lock file will not have any effect on other projects that depend on it. It only has an effect on the main project. You may commit it or not, it will not affect your project too much.
+
+==== 2.1.2 Add dependencies for developement ====
+
+Some packages are only useful for development(e.g. testing framework dependencies). So we can add them as development dependencies, and they will be omitted when we build the project for production. 
+
+For example, chispa is a framework for testing pyspark functions. So we add it only for developement.
+<code>
+poetry add chispa --dev
+
+# In the pyproject.toml file, you will see the difference between normal and dev dependencies
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyspark = "^3.1.1"
+quinn = "^0.9.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+chispa = "^0.8.2"
+</code>
+
+===== 2.2 Pycharm integration =====
+
+If you want to edit a poetry project via Pycharm. You need to do two things
+  * Install poetry plugin
+  * Configure your project python interpreter to use the virtual env generated by the poetry.
+
+==== 2.2.1 Install poetry plugin ====
+
+Click on File-> Settings-> Plugin. Then in the Search bar, type poetry. Install the found plugin.
+
+==== 2.2.2 Configure project python interpreter  ====
+
+Click on File-> Settings -> Project:<your-project-name> -> python interpreter
+
+Click on add then choose poetry Environment.
+
+====== Appendix ======
+
+===== Common Error =====
+
+==== distutils.util module not found ====
+
+If you see below error message when running poetry, it means your ubuntu miss the system package **python3-distutils**
+<code>
+ModuleNotFoundError: No module named 'distutils.util'
+</code>
+
+**Solution:**
+<code>
+sudo apt-get install python3-distutils
+</code>
+
