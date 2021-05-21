@@ -168,7 +168,28 @@ Click on File-> Settings-> Plugin. Then in the Search bar, type poetry. Install 
 
 Click on File-> Settings -> Project:<your-project-name> -> python interpreter
 
-Click on add then choose poetry Environment.
+Click on add then choose poetry Environment. Note that poetry requires a python binary to run. So you need to specify a python binary path. For example, in linux you can get your current python bin
+
+<code>
+$ which python
+# You can get python bin path of a conda env 
+$ conda activate <env-name>
+$ which python
+</code> 
+
+==== 2.2.3 Change default python test framework ====
+
+Pycharm uses **unittest** as the default testing framework. But poetry framework uses **pytest** as the default testing framework. So you need to change the pycharm setting to enable pytest.
+
+Click on File-> Settings -> Tools -> Python Integration Tools -> Testing -> Default Test runner :
+Then choose pytest.
+
+==== 2.2.4 Generate test class from python function source ====
+
+Right-click on the function which you want to test -> Go to-> Test
+
+If you already write the Test class, pycharm will jump to the test page. If you don't have a test class, it will generate one.
+
 
 ====== Appendix ======
 
