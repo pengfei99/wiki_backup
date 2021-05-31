@@ -74,9 +74,13 @@ Below is the instruction of how to install poetry on Ubuntu 20.01
 
 <code>
 # because ubuntu only provide python2 and python3 as python executable
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
+# You can also run below command in a virtual env(e.g. conda or pyenv)
+$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
+
 
 # The above command will install the poetry under ~/.poetry
+# Update your current shell
+$ source $HOME/.poetry/env
 
 # update poetry
 poetry self update
@@ -93,6 +97,25 @@ poetry completions bash
 
 # and copy the generated script in the following file.
 sudo vim /etc/bash_completion.d/poetry.bash-completion
+</code>
+
+===== 1.2 Test your poetry installation =====
+
+<code>
+$ poetry
+
+# It should print following lines 
+Poetry version 1.1.6
+
+USAGE
+  poetry [-h] [-q] [-v [<...>]] [-V] [--ansi] [--no-ansi] [-n] <command> [<arg1>] ... [<argN>]
+
+ARGUMENTS
+  <command>              The command to execute
+  <arg>                  The arguments of the command
+
+GLOBAL OPTIONS
+  -h (--help)            Display this help message
 </code>
 
 ====== 2. Create a python project with poetry ======
@@ -154,6 +177,14 @@ pytest = "^5.2"
 chispa = "^0.8.2"
 </code>
 
+==== 2.1.3 Add dependencies by editing pyproject.toml====
+
+You can change dependencies by editing pyproject.toml directly. But the poetry lock file will not be modified automatically. To update the lock file, you need to do the following command
+
+<code>
+# update poetry lock file by using the pyproject.toml
+poetry update
+</code>
 ===== 2.2 Pycharm integration =====
 
 If you want to edit a poetry project via Pycharm. You need to do two things
@@ -190,7 +221,65 @@ Right-click on the function which you want to test -> Go to-> Test
 
 If you already write the Test class, pycharm will jump to the test page. If you don't have a test class, it will generate one.
 
+===== 2.3 Run a script in poetry project =====
 
+<code>
+# To run your script simply use 
+$ poetry run python your_script.py.
+
+# Likewise if you have command line tools such as pytest, you can run them using 
+$ poetry run pytest.
+</code>
+
+===== 2.4 Add poetry support to an existing python project =====
+
+<code>
+# Go to the root folder of your python project
+$ cd pre-existing-project
+
+# Add poetry support
+$ poetry init
+</code>
+
+====== 3. Import a poetry project to a new environment ======
+
+===== 3.1 Import project and install dependencies via poetry =====
+
+
+<code>
+# Get the source of the project
+git clone <project-url>
+
+# Go to your project folder where it contains **pyproject.toml**
+cd /path/to/your/project
+
+# install your project dependencies to new environment
+poetry install
+</code>
+
+
+===== 3.2 Run project in the newly created env =====
+
+<code>
+$ poetry run python your_script.py
+# 1. **poetry run python** will produce a python virtual environment
+# 2. **your_script.py** will be exectued in the virtual environment
+</code>
+
+===== 3.3 Create a Jupyter kernel based on the poetry virtual env =====
+
+<code>
+poetry run python -m ipykernel install --name spark_streaming_cv --user
+
+# -m ipykernel: the -m flag runs a library as a script. In our case, it's **ipykernel**.
+# --name spark_streaming_cv: is the name of the generated kernel
+# --user: indicates where to store the kernel, without this option, ipykernel will try to 
+#         store the kernel in '/usr/local/share/jupyter/kernels/'. With it, ipykernel will try to  
+#         store the kernel in '~/.local/share/jupyter/kernels/'. In plain english, --user means this
+#         kernel is only available for current user.
+</code>
+
+After the above command, you should see a new kernel in your jupyter kernel list.
 ====== Appendix ======
 
 ===== Common Error =====

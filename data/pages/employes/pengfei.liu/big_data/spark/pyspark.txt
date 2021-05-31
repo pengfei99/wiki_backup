@@ -237,6 +237,15 @@ SparkContext available as 'sc' (version = 3.0.1, master = local[*], app id = loc
 SparkSession available as 'spark'
 
 </code>
+
+===== 7. change juypter io rate limit =====
+
+The jupyter notebook has a default ioput rate limit: 10000000000. 
+You can change it by usgin following code
+<code>
+jupyter notebook --NotebookApp.iopub_data_rate_limit=1e10
+</code>
+
 ====== Use pyspark in pycharm ======
 
 
