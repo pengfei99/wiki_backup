@@ -280,6 +280,29 @@ poetry run python -m ipykernel install --name spark_streaming_cv --user
 </code>
 
 After the above command, you should see a new kernel in your jupyter kernel list.
+
+===== 3.4 Remove a kernel =====
+
+<code>
+#  list existing kernel,
+$ jupyter kernelspec list
+
+# you can remove a kernel by using the general code "jupyter kernelspec remove <kernel-name>"
+# Below is an example 
+$ jupyter kernelspec remove spark_streaming_cv
+
+</code>
+
+===== 3.5 Change the name of a kernel =====
+
+<code>
+$ jupyter kernelspec list 
+# Above command will show the detail of a kernel, you can find the folder of the kernel where it is located in
+
+# In that folder, open up file kernel.json and edit option "display_name"
+
+</code>
+
 ====== Appendix ======
 
 ===== Common Error =====
