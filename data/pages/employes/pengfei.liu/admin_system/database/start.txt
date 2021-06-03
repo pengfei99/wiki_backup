@@ -1,0 +1,170 @@
+====== Data base doc central ======
+
+
+There are seven main database paradigm:
+  - Relational: SQL
+  - Key value: No-SQL
+  - Wide column: No-SQL
+  - Documnet: No-SQL
+  - Graph:
+  - Search Engine:
+  - Multi-model:
+
+===== 1. Relational Database =====
+
+The most used and mature database.
+
+Some popular relation database implementations:
+  - Oracle
+  - Postgresql [[employes:pengfei.liu:admin_system:database:postgres:start|Postgres doc]]
+  - Mysql/Maria [[employes:pengfei.liu:admin_system:database:mariadb:start|Mysql/Maria_db doc]]
+
+Important points:
+  * Schema
+  * ACID
+===== 2. Key value data base paradigm=====
+The key-value paradigm stores value(logical level) as a python dictionary or a JSON file. You have a set of unique keys and each key point at some value. It stores data in memory. So It's extremely fast, but with limited space.
+It does not support joins, because there is no schema.
+
+It's best for:
+  * caching data for high performance
+  * Message queue (publish-subscribe pattern)
+  * Gaming leaderboards
+  * Session store
+  * Machine Learning
+  * Geospatial
+  * Real-time analytics
+
+Some popular key-value database implementations:
+  * Redis: means **Re**mote **Di**ctionary **S**erver. A single thread, so hard to scale vertically, native support on multi-node. It supports many data structures:
+    *Strings – text or binary data up to 512MB in size
+    *Lists – a collection of Strings in the order they were added
+    *Sets – an unordered collection of strings with the ability to intersect, union, and diff other Set types
+    *Sorted Sets – Sets ordered by a value
+    *Hashes – a data structure for storing a list of fields and values
+    *Bitmaps – a data type that offers bit-level operations
+    *HyperLogLogs – a probabilistic data structure to estimate the unique items in a data set 
+  * Memcached: Multi-thread, so easy to scale vertically. No native support on multi-node, but possible to scale horizontally. 
+
+===== 3. Wide column data base paradigm =====
+
+A wide-column database uses tables, rows, and columns, but unlike a relational database, the names and format of the columns can vary from row to row in the same table. A wide-column store can be interpreted as a two-dimensional key-value store. In the below figure, 
+{{:employes:pengfei.liu:admin_system:database:wide-column.png?400|}}
+
+You can notice the atomic entity is a simple **column** which is a key-value pair.(e.g. col-a->val-1.a, col-b->val-1.b ) and these columns can be grouped in a **column family**(e.g. Col family A). A row has a **row key** and the row value is a set of column families.  
+
+
+It does not require or provide a schema to store data, so no join is possible.
+
+It's best for:
+  * Hight writes, low read situation
+  * Time series
+  * Historical records
+
+
+Some popular wide-column database implementations:
+  - Cassandra
+  - Hbase
+
+===== 4. Document database paradigm =====
+
+**Document-oriented databases** can be considered as a subclass of the key-value database. The difference lies in the way the data is processed; in a key-value store, the value data is considered to be inherently opaque to the database, whereas a document-oriented db relies on internal structure in the document in order to extract metadata that the database engine uses for further optimization.
+
+For example, if we store a dictionary as a value in a key-value db. we can only access the dictionary as an object via the key. But the key-value store does not know the field name of the dictionary. In a document database, we can access the document via a unique key, we can also access the field of the dictionary(inside a document) directly. Because the document database extracts the metadata.
+
+**Key concepts:**
+  * **Document**. In general, documents encapsulate and encode data (or information) in some standard format or encoding(e.g. XML, YAML, JSON, BSON).
+  * **Collections**: are groups of documents, where depending on implementation, a document may be enforced to live inside one collection, or maybe allowed to live in multiple collections. Collections can have **logical hierarchies** between them which can be presented in a tree-like structure, typically based on path or URI.
+
+**Flexible schema**: The records which share the same structure do not need to have exactly the same fields. Unlike in a relational database, you need to have exactly the same fields, and you just put a null value for the unused fields. The below example is correct, so a document does not have empty fields. This approach allows new information to be added to some records without changing every other records in the database that share the same structure.
+<code>
+{
+    "FirstName": "Bob", 
+    "Address": "5 Oak St.", 
+    "Hobby": "sailing"
+}
+{
+    "FirstName": "toto", 
+    "Address": "3 Oak St.", 
+}
+</code>
+
+ 
+
+**It does not require or provide a schema to store data, so no join is possible in theory. But implementation such as MongoDB do provide join supports**
+
+It's best for:
+  * User Profiles: thanks to the flexible schema, you can store each user's profile efficiently by storing only the attributes that are specific to each user.
+  * Real-time big data: Historically, operational databases and analytical databases were maintained in different environments. By using document databases, a business can store and manage operational data from any source and concurrently feed the data to the BI engine of choice for analysis. There is no requirement to have two environments.
+  * Content Management: Due to their flexible schema, document databases are perfect for collecting and storing any type of data. You can use them to create and incorporate new types of content, including user-generated content, such as images, comments, and videos.
+
+
+Some popular document database implementations:
+  - MangoDB
+  - CouchDB
+
+===== 5. Graph database paradigm =====
+
+A graph database is a database that uses **graph structures for semantic queries with nodes, edges, and properties to represent and store data**. 
+
+Key concept:
+  * Graph: contains a set of nodes and edges.
+  * Nodes: contain a set of properties which represent the data.
+  * Edges: represent the relationships between the nodes. The relationships allow data in the store to be linked together directly and, in many cases, **retrieved with one operation**. 
+
+Graph databases stored the relationships between data perpetually in the database. So querying relationships is very fast, relationships can be intuitively visualized using graph databases, making them useful for heavily inter-connected data.
+
+It's best for:
+  * Fraud detection
+  * Real-time recommendation engines
+  * Knowlege graph
+  * Master data management (MDM)
+  * Network and IT operations
+  * Identity and access management (IAM)
+
+Some popular Graph database implementations:
+  * Neo4j.
+  * ArangoDB.
+  * Dgraph.
+  * OrientDB.
+  * Amazon Neptune.
+
+===== 6. Full text Search engine =====
+
+**Full-text search** refers to techniques for searching a single computer-stored document or a collection in a full-text database. Full-text search is distinguished from searches based on metadata or on parts of the original texts represented in databases (such as titles, abstracts, selected sections, or bibliographical references).
+
+It stores the **data as a document**(like in a document database). It also stores an **inverted index** for all searchable terms. This inverted index is generated and updated during the indexing stage. During the search stage, when performing a specific search query, only the index is analyzed, rather than the text of the original documents.
+
+==== 6.1 Inverted index ====
+
+https://en.wikipedia.org/wiki/Inverted_index. In short, the key of the index is the keyword, the value is the position in the documents of the keyword.
+
+It's best for:
+  * Type-ahead 
+  * search box
+
+Some popular full-text search engine database implementations:
+  * ElasticSearch
+  * Solr
+
+===== 7. Multi-model database  =====
+
+A **multi-model database** is a database management system designed to support multiple data models against a single, integrated backend. In contrast, most database management systems are organized around a single data model that determines how data can be organized, stored, and manipulated. Document, graph, relational, and key-value models are examples of data models that may be supported by a multi-model database.
+
+It's best for:
+  * Storing and Managing Multiple Heterogeneous Data Sources
+  * Multi-model support: for example, SQL query on JSON data. Has relational advantage without providing schema
+  * Hybrid Approach to Analytical and Operational Data: merge OLTP and OLAP
+
+
+Some popular multi-model database implementations:
+  * MarkLogic
+  * Arangodb
+  * OrientDB
+  * Azur Cosmos
+  * FoundationDB(Apple)
+  * CouchBase
+  * ApacheIgnite
+
+
+
