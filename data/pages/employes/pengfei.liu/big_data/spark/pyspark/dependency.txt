@@ -1,0 +1,51 @@
+====== Manage Python Dependencies in PySpark ======
+
+===== 1. Manage java/scala dependencies =====
+
+Manage the dependencies of your spark app for scala and java is quite easy. We can add a package by using the packages option.
+
+The official doc(https://spark.apache.org/docs/3.1.1/configuration.html#runtime-environment).
+spark.jars.packages: Comma-separated list of Maven coordinates of jars to include on the **driver and executor** classpaths. The coordinates should be groupId:artifactId:version. 
+
+If **spark.jars.ivySettings** is given artifacts will be resolved according to the configuration in the file, otherwise, artifacts will be searched for in
+  - **local maven repo**, 
+  - then **maven central**
+  - finally **any additional remote repositories** given by the command-line option **--repositories**. 
+
+For more details, see https://spark.apache.org/docs/3.1.1/submitting-applications.html#advanced-dependency-management.
+
+Some Examples:
+
+<code>
+# add packages in spark-shell mode
+bin/spark-shell --packages io.delta:delta-core_2.12:0.8.0
+
+# add packages in submit mode
+spark-submit --packages org.apache.spark:spark-avro_2.12:3.0.1 <your-app> <your-app-arg1> ...
+
+# add packages in jupyter notebook mode,
+spark = SparkSession \
+    .builder.master("k8s://https://kubernetes.default.svc:443") \
+    .appName("SparkStreamingComputerVision") \
+    .config("spark.jars.packages", "io.delta:delta-core_2.12:0.8.0")
+    
+# add repositories in spark-shell mode
+bin/spark-shell --packages io.delta:delta-core_2.12:0.8.0 --repositories https://oss.sonatype.org/content/repositories/releases
+
+# add packages in submit mode
+spark-submit --packages org.apache.spark:spark-avro_2.12:3.0.1 
+
+# add packages in jupyter notebook mode,
+spark = SparkSession \
+    .builder.master("k8s://https://kubernetes.default.svc:443") \
+    .appName("SparkStreamingComputerVision") \
+    .config("spark.jars.packages", "io.delta:delta-core_2.12:0.8.0") 
+    .config("spark.jars.repositories","https://oss.sonatype.org/content/repositories/releases")
+</code>
+
+==== 1.1 Package from different repo ====
+
+
+If you have two spark applications running on the same cluster that require two different (and possibly conflicting) versions of the same package, you could isolate the two jars by using the option spark.jars.ivy
+For example, add spark.jars.ivy=/ivy/cache/for/app1 for app1 and spark.jars.ivy=/ivy/cache/for/app2 for app2.
+

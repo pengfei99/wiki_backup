@@ -302,6 +302,76 @@ $ jupyter kernelspec list
 # In that folder, open up file kernel.json and edit option "display_name"
 
 </code>
+====== 4. Export a requirement.txt  ======
+
+We can export requirement.txt for conda env or pyenv
+
+<code>
+# This command export poetry project dependencies to a file called requirements.txt, without-hashes
+poetry export -f requirements.txt -o requirements.txt --without-hashes
+
+# the output looks like:
+aiobotocore==1.3.0; python_version >= "3.6"
+aiohttp==3.7.4.post0; python_version >= "3.6"
+aioitertools==0.7.1; python_version >= "3.6"
+appnope==0.1.2; platform_system == "Darwin" and python_version >= "3.7" and sys_platform == "darwin"
+argon2-cffi==20.1.0; python_version >= "3.6"
+# You can notice after ;, there are also information about the required python version. It's not supported by all the pip version. 
+</code>
+
+Possible options: 
+  * --format (-f): The format to export to (default: requirements.txt). Currently, only requirements.txt is supported.
+  * --output (-o): The name of the output file. If omitted, print to standard output.
+  * --dev: Include development dependencies.
+  * --extras (-E): Extra sets of dependencies to include.
+  * --without-hashes: Exclude hashes from the exported file.
+  * --with-credentials: Include credentials for extra indices.
+
+===== 4.1 Clean the requirements.txt =====
+
+To clean it, we write a little pyspark program
+
+<file .python CleanRequirementFile.py>
+from pyspark.sql import SparkSession
+
+
+def clean_poetry_generated_requirement_file(spark, input_file_path, output_file_path):
+    raw = spark.read.option("delimiter", ";").csv(input_file_path).toDF("dependency", "python-version")
+    # raw.show(5, False)
+    dep = raw.select("dependency")
+    dep.show(50, False)
+    dep.coalesce(1).write.format("com.databricks.spark.csv").option("header", "false").save(output_file_path)
+
+
+def main():
+    spark = SparkSession.builder.master("local").appName("test").getOrCreate()
+    input_file_path = "/requirements.txt"
+    output_file_path = "/tmp/requirement.txt"
+    clean_poetry_generated_requirement_file(spark,input_file_path,output_file_path)
+
+if __name__ == "__main__":
+    main()
+
+</file>
+
+After the clean, it should look like this：
+<code>
+aiohttp==3.7.4.post0
+aioitertools==0.7.1
+appnope==0.1.2
+argon2-cffi==20.1.0
+</code>
+
+
+===== 4.2 install the requirements.txt in a conda env =====
+
+<code>
+# if pip is not installed in your conda env
+conda install pip
+
+# install the dependencies
+pip install -r requirements.txt 
+</code>
 
 ====== Appendix ======
 
