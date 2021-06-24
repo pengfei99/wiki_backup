@@ -280,6 +280,13 @@ $ git remote rename pb paul
 $ git remote remove paul
 </code>
 
+==== 5.5 Track/clone a remote branch ====
+
+When you clone a project, by default only the master/main branch is cloned. So if you want to clone a specific branch that is not the default branch, you need to do the following command.
+
+<code>
+git checkout --track origin/<branch-name>
+</code>
 ===== 6. Tagging =====
 
 Like most VCSs, Git has the ability to tag specific points in a repository’s history as being important.

@@ -1,4 +1,6 @@
 ====== Basic config on centos 7 ======
+====== Centos various doc ======
+
 ===== Basic centos7 repo =====
 
 <code>
@@ -11,5 +13,27 @@ yum -y install yum-utils
 
 # centos developement 
 yum -y groupinstall development
+</code>
+
+===== Upgrade gcc =====
+
+The above command installs the default dev tools which includ a gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)
+
+To install a newer version, you need to do the following
+
+<code>
+# Add the scl repo 
+yum install centos-release-scl-rh
+
+# install the "devtoolsets" come from Software Collections (SCL).
+# it offers two version 6, 7
+# We want the version 7, so use the following command
+yum install devtoolset-7-toolchain
+
+# Activate it in your shell
+scl enable devtoolset-7 bash
+
+# Check the version of gcc 
+gcc --version
 </code>
 
