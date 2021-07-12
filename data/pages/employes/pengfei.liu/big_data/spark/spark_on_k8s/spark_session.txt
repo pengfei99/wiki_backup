@@ -1,0 +1,14 @@
+====== Spark Session ======
+
+<code python>
+spark = SparkSession \
+    .builder.master("k8s://https://kubernetes.default.svc:443") \
+    .appName("SparkStreamingComputerVision") \
+    .config("spark.kubernetes.container.image", "inseefrlab/jupyter-datascience:master") \
+    .config("spark.kubernetes.authenticate.driver.serviceAccountName", os.environ['KUBERNETES_SERVICE_ACCOUNT']) \
+    .config("spark.executor.instances", "4") \
+    .config("spark.executor.memory","8g") \
+    .config("spark.kubernetes.namespace", os.environ['KUBERNETES_NAMESPACE']) \
+    .config("spark.kubernetes.executor.podTemplateFile","/home/jovyan/work/formation/9-spark-tensorflow/pod_template.yaml") \
+    .getOrCreate()
+</code>

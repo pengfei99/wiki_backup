@@ -4,4 +4,5 @@ There are many ways to run spark on k8s:
 
   - Create a static spark cluster(master+workers). [[employes:pengfei.liu:big_data:spark:spark_on_k8s:static_spark_cluster_k8s|Deploy a static spark cluster on k8s]]
   - Spark submit can create a spark cluster dynamically
+  - Spark session by using Jupyter 
   - Spark on k8s operator,  https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
