@@ -1,0 +1,41 @@
+====== Statistic docs ======
+Basic concepts:
+
+  * Normal Distributions
+  * Standard Deviations and Variance: 
+  * Modality : The modality of a distribution is determined by the number of peaks it contains. Most distributions have only one peak but it is possible that you encounter distributions with two or more peaks.
+  * Skewness
+  * Kurtosis : Kurtosis measures whether your dataset is heavy-tailed or light-tailed compared to a normal distribution. Data sets with high kurtosis have heavy tails and more outliers and data sets with low kurtosis tend to have light tails and fewer outliers. 
+
+Note If a distribution is skewed, no need to calculate Kurtosis, because the distribution is not normally distributed. 
+
+
+https://builtin.com/data-science/intro-descriptive-statistics
+
+[[employes:pengfei.liu:data_science:statistic:glossary|Key concepts/words in statistics]]
+===== Moments =====
+
+Moments are a specific quantitative measure of the shape of the data. In statistics, moments are used to understand the various characteristics of a probability distribution. usually, we use moments to characterize the data, identify the shape of normal distribution. Moments are used measure to the central tendency, dispersion, skewness, and kurtosis of a distribution.
+
+==== Central tendency ====
+
+This is nothing but Mean, it's the average value of a distribution. 
+
+==== Dispersion ====
+
+This is nothing but Variance, which is a measure that how far the data set is spread out.
+
+==== skewness ====
+{{:employes:pengfei.liu:data_science:statistic:skewness.png?600|}}
+==== kurtosis ====
+{{:employes:pengfei.liu:data_science:statistic:kurtosis.png?600|}}
+
+
+==== Standard deviation ====
+
+{{:employes:pengfei.liu:data_science:statistic:standard_deviation.png?600|}}
+
+==== Modality ====
+
+{{:employes:pengfei.liu:data_science:statistic:modality.png?600|}}
+

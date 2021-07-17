@@ -1,33 +1,34 @@
-1618834428	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Dockerfile] 		6
-1618834447	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Build the app] 		6
-1618834467	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Run the app] 		6
-1618834726	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[Share your image] 		483
-1618834791	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		64
-1618834805	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		-3
-1618834820	192.168.184.1	E	employes:pengfei.liu:admin_system:container:docker:2containers	pliu	[2.5 Clean your local docker repo image] 		1
-1619527221	192.168.184.1	C	employes:pengfei.liu:scala:start	pliu	created		25
-1619527231	192.168.184.1	D	employes:pengfei.liu:java:scala	pliu	removed		-2366
-1619527253	192.168.184.1	C	employes:pengfei.liu:scala:installation	pliu	created		2366
-1619527434	192.168.184.1	E	employes:pengfei.liu:scala:installation	pliu			188
-1619530569	192.168.184.1	C	employes:pengfei.liu:java:maven	pliu	created		1042
-1619530604	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu			11
-1619530694	192.168.184.1	C	employes:pengfei.liu:scala:unit_test	pliu	created		903
-1619530881	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu	[1.2 option 2] 		168
-1619531127	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu			201
-1619531177	192.168.184.1	E	employes:pengfei.liu:java:maven	pliu	[1.2 option 2] 		55
-1619532600	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		1205
-1619537032	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		829
-1619689921	192.168.184.1	E	employes:pengfei.liu:scala:unit_test	pliu	[1.1 Build a scala project with maven] 		0
-1619788766	192.168.184.1	C	employes:pengfei.liu:python:start	pliu	created		113
-1619789441	192.168.184.1	C	employes:pengfei.liu:python:poetry:installation	pliu	created		724
-1619789486	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[distutils.util module not found] 		69
-1619796108	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Install poetry] 		1951
-1619796348	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[0. Introduction] 		791
-1619797031	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Create a python project with poetry] 		196
-1619797894	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[Create a python project with poetry] 		719
-1619798094	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1 Add dependencies] 		191
-1619798247	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		194
-1619798293	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		68
-1619799137	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.1 Poetry lock file] 		637
-1619800164	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[2.1.2 Add dependencies for developement] 		34
-1619800919	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[3 Pycharm integration] 		517
+1622796267	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		4
+1622796524	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		136
+1622798096	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		202
+1622798158	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[7. change juypter io rate limit] 		32
+1622798227	192.168.184.1	C	employes:pengfei.liu:big_data:spark:pyspark:start	pliu	created		27
+1622798903	192.168.184.1	C	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	created		52
+1622812889	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			1320
+1622812990	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			10
+1622814681	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			618
+1622814805	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			322
+1622817081	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			1
+1622821987	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			42
+1622822113	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			47
+1622822122	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	[Package from different repo] 		4
+1622822136	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	[1.1 Package from different repo] 		-2
+1624540405	192.168.184.1	E	employes:pengfei.liu:dev_tools:gitlab	pliu	[5.4 Renaming and Removing remotes] 		289
+1624547636	192.168.184.1	E	employes:pengfei.liu:os:centos7	pliu	[Basic centos7 repo] 		582
+1625214834	192.168.184.1	E	employes:pengfei.liu:big_data:spark:start	pliu	[Spark on k8s] 		71
+1625215198	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu			36
+1625217272	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:spark_session	pliu	created		708
+1602082440	127.0.0.1	E	employes:pengfei.liu:data_science:statistic:glossary		external edit		0
+1626423450	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:glossary	pliu	[10. Standard deviation] 		-2
+1626423679	192.168.184.1	C	employes:pengfei.liu:data_science:statistic:start	pliu	created		197
+1626424430	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu			446
+1626424671	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu			15
+1626425986	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu			122
+1626427396	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu			466
+1626427508	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[Moments] 		181
+1626428168	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[skewness] 		66
+1626428192	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[kurtosis] 		66
+1626428200	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[skewness] 		0
+1626428284	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[kurtosis] 		198
+1626428534	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[Statistic docs] 		90
+1626428570	192.168.184.1	E	employes:pengfei.liu:data_science:start	pliu	[0. Statistic] 		-18

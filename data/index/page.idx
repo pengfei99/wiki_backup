@@ -1066,3 +1066,11 @@ employes:pengfei.liu:java:maven
 employes:pengfei.liu:scala:unit_test
 employes:pengfei.liu:python:start
 employes:pengfei.liu:python:poetry:installation
+employes:pengfei.liu:admin_system:database:start
+employes:pengfei.liu:admin_system:database:mariadb:start
+employes:pengfei.liu:admin_system:database:postgres:start
+employes:pengfei.liu:admin_system:database:postgres:install
+employes:pengfei.liu:big_data:spark:pyspark:start
+employes:pengfei.liu:big_data:spark:pyspark:dependency
+employes:pengfei.liu:big_data:spark:spark_on_k8s:spark_session
+employes:pengfei.liu:data_science:statistic:start

@@ -1,4 +1,6 @@
-a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1528360557;s:8:"modified";i:1528360557;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1528360557;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"C";s:2:"id";s:31:"employes:pengfei.liu:os:centos7";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:227;}s:5:"title";s:24:"Basic config on centos 7";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:24:"basic_config_on_centos_7";s:5:"title";s:24:"Basic config on centos 7";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:18:"basic_centos7_repo";s:5:"title";s:18:"Basic centos7 repo";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:186:"Basic config on centos 7
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1528360557;s:8:"modified";i:1624547636;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1624547636;s:2:"ip";s:13:"192.168.184.1";s:4:"type";s:1:"E";s:2:"id";s:31:"employes:pengfei.liu:os:centos7";s:4:"user";s:4:"pliu";s:3:"sum";s:21:"[Basic centos7 repo] ";s:5:"extra";s:0:"";s:10:"sizechange";i:582;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}s:5:"title";s:24:"Basic config on centos 7";s:11:"description";a:2:{s:15:"tableofcontents";a:4:{i:0;a:4:{s:3:"hid";s:24:"basic_config_on_centos_7";s:5:"title";s:24:"Basic config on centos 7";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:18:"centos_various_doc";s:5:"title";s:18:"Centos various doc";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:2;a:4:{s:3:"hid";s:18:"basic_centos7_repo";s:5:"title";s:18:"Basic centos7 repo";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:3;a:4:{s:3:"hid";s:11:"upgrade_gcc";s:5:"title";s:11:"Upgrade gcc";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:329:"Basic config on centos 7
+
+Centos various doc
 
 Basic centos7 repo
 
@@ -11,4 +13,9 @@ yum install -y epel-release
 yum -y install yum-utils
 
 # centos developement 
-yum -y groupinstall development";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1528360557;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1528360557;s:2:"ip";s:14:"134.158.37.239";s:4:"type";s:1:"C";s:2:"id";s:31:"employes:pengfei.liu:os:centos7";s:4:"user";s:4:"pliu";s:3:"sum";s:7:"created";s:5:"extra";s:0:"";s:10:"sizechange";i:227;}}}
+yum -y groupinstall development
+
+
+Upgrade gcc
+
+The above command installs the default dev tools which includ a gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1528360557;s:8:"modified";i:1624547636;}s:7:"creator";s:11:"pengfei liu";s:4:"user";s:4:"pliu";s:11:"last_change";a:8:{s:4:"date";i:1624547636;s:2:"ip";s:13:"192.168.184.1";s:4:"type";s:1:"E";s:2:"id";s:31:"employes:pengfei.liu:os:centos7";s:4:"user";s:4:"pliu";s:3:"sum";s:21:"[Basic centos7 repo] ";s:5:"extra";s:0:"";s:10:"sizechange";i:582;}s:11:"contributor";a:1:{s:4:"pliu";s:11:"pengfei liu";}}}
