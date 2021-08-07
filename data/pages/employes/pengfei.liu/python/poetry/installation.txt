@@ -373,6 +373,104 @@ conda install pip
 pip install -r requirements.txt 
 </code>
 
+====== 5. Run jupyter notebook inside poetry venv ======
+In section 4, we showed how to create a kernel by using a poetry env and run it outside the poetry environment. We can also run jupyter notebook inside a poetry environment.
+
+<code>
+# 1. install jupyter dependencies
+poetry add jupyter ipykernel
+
+# 2.start a shell with poetry virtual env, note you must run this command under the folder where pyproject.yaml is located
+poetry shell
+
+# run the jupyter
+jupyter notebook 
+</code>
+
+====== 6. Poetry dependencie version specification ======
+
+===== 6.1 Let poetry decide which version is best for you  =====
+Let poetry determin which version is better for you. 
+<code>
+# no need to specify a version. The version is auto determin by poetry
+poetry add scipy
+</code>
+
+===== 6.2 Exact version =====
+In pyproject.yaml, if you don't include any modifiers in the version string, Poetry will keep your dependency pinned at that exact version.
+<code>
+# for example the version of scipy is fixed at 1.7.0
+scipy = "1.7.0"
+</code>
+
+If a version is fixed, even there is a new version released, poetry update will not install it.
+
+===== 6.3 Version string with Caret prefix =====
+
+If you use the caret ^ character, Poetry will update to any new version that does not change the leftmost non-zero section.
+
+<code>
+# Equivalent to >=3.8 and <4.0
+python = "^3.8"
+
+zeepzorp = "^0.24.1"
+# Equivalent to >=0.24.1, <0.25.0
+</code>
+
+With this configuration, poetry update can update python to 3.9, 3.10, but not 4.0. Because that changes the leftmost non-zero section of the version number.
+
+The caret version modifier is pretty aggressive about which upgraded versions are allowed. This can cause problems if the maintainers of your dependencies introduce breaking changes without incrementing the major version number.
+
+===== 6.4 Version string with Tilde prefix =====
+The tilde ~ character tells Poetry to allow minor updates. 
+
+<code>
+# Equivalent to >=2.1.7, <2.2.0
+beepboop = "~2.1.7"
+
+# Equivalent to >=2.1.0, <2.2.0
+beepboop = "~2.1"
+
+# Equivalent to >=2.0.0, <3.0.0
+beepboop = "~2"
+</code>
+
+The tilde version modifier is less aggressive than the caret version modifier in the upgrades it will allow.
+
+===== 6.5 Version string with wildcard sufix =====
+
+The star * character is a wildcard. Any version number is allowed at the wildcard position.
+
+<code>
+beepboop = "2.1.*"
+# Equivalent to >=2.1.0, <2.2.0
+
+beepboop = "2.*"
+# Equivalent to >=2.0.0, <3.0.0
+
+beepboop = "*"
+# Allows any version. Equivalent to >=0.0.0  
+</code>
+
+===== 6.5 Version string with inequality conditions =====
+
+You can use inequalities to specify allowed version ranges.
+
+<code>
+beepboop = ">= 1.2.0"
+beepboop = "> 1"
+beepboop = "< 2"
+beepboop = "!= 1.2.3"
+</code>
+
+===== 6.6 Version string with Multiple condition =====
+
+You can define ranges of allowed versions by using multiple inequalities, separated by commas.
+
+<code>
+beepboop = ">= 1.2, < 1.5, !=1.2.2"
+</code>
+
 ====== Appendix ======
 
 ===== Common Error =====
