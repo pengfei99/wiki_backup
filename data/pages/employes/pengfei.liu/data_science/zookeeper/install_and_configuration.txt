@@ -179,6 +179,7 @@ sudo systemctl restart zk
 
 Nodes in the ZooKeeper cluster that work together as an application form a quorum. Quorum refers to the minimum number of nodes that need to agree on a transaction before it’s committed. A quorum needs an odd number of nodes so that it can establish a majority. An even number of nodes may result in a tie, which would mean the nodes would not reach a majority or consensus.
 
+==== 7.1 Edit zoo.cfg ====
 
 Suppose we have zookeeper installed under /opt/zookeeper/zookeeper on three servers. 
 
@@ -201,7 +202,9 @@ server.3=hadoop-dn2.pengfei.org:2888:3888
 
   * **initLimit**: It specifies the time that the initial synchronization phase can take. This is the time within which each of the nodes in the quorum needs to connect to the leader. When you are processing large amounts of data just increase this value as required. 
   * **syncLimit**: It specifies the time that can pass between sending a request and receiving an acknowledgment. It is used to fix the allowable amount of time a server can be out of sync with the leader.   
-  * The properties **server.1**, **server.2** and **server.3** specify the servers that form the Zookeeper cluster. Then you specify the hostname of each of the servers followed by the port numbers 2888 and 3888. These ports are used for peer to peer communication. The first (2888) followers use to connect to the leader, and the second (3888) is for leader election. 
+  * The properties **server.1**, **server.2** and **server.3** specify the servers that form the Zookeeper cluster. Then you specify the hostname of each of the servers followed by the port numbers 2888 and 3888. These ports are used for peer to peer communication. The first (2888) followers use to connect to the leader, and the second (3888) is for leader election.
+  *  
+==== 7.2 Add myid file ====
 
 To make each server aware of the other servers in the ensemble you use a myid file that is placed in the data directory of each server. This file contains only a unique value between 1 and 255 which corresponds to the value specified in zoo.cfg file. For example for server.1 the **myid** file only contains the value 1.
 

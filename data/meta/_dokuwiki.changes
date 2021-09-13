@@ -1,24 +1,6 @@
-1622796267	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		4
-1622796524	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		136
-1622798096	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.1 Clean the requirements.txt] 		202
-1622798158	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark	pliu	[7. change juypter io rate limit] 		32
-1622798227	192.168.184.1	C	employes:pengfei.liu:big_data:spark:pyspark:start	pliu	created		27
-1622798903	192.168.184.1	C	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	created		52
-1622812889	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			1320
-1622812990	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			10
-1622814681	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			618
-1622814805	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			322
-1622817081	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			1
-1622821987	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			42
-1622822113	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu			47
-1622822122	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	[Package from different repo] 		4
-1622822136	192.168.184.1	E	employes:pengfei.liu:big_data:spark:pyspark:dependency	pliu	[1.1 Package from different repo] 		-2
-1624540405	192.168.184.1	E	employes:pengfei.liu:dev_tools:gitlab	pliu	[5.4 Renaming and Removing remotes] 		289
-1624547636	192.168.184.1	E	employes:pengfei.liu:os:centos7	pliu	[Basic centos7 repo] 		582
 1625214834	192.168.184.1	E	employes:pengfei.liu:big_data:spark:start	pliu	[Spark on k8s] 		71
 1625215198	192.168.184.1	E	employes:pengfei.liu:big_data:spark:spark_on_k8s:start	pliu			36
 1625217272	192.168.184.1	C	employes:pengfei.liu:big_data:spark:spark_on_k8s:spark_session	pliu	created		708
-1602082440	127.0.0.1	E	employes:pengfei.liu:data_science:statistic:glossary		external edit		0
 1626423450	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:glossary	pliu	[10. Standard deviation] 		-2
 1626423679	192.168.184.1	C	employes:pengfei.liu:data_science:statistic:start	pliu	created		197
 1626424430	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu			446
@@ -32,3 +14,7 @@
 1626428284	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[kurtosis] 		198
 1626428534	192.168.184.1	E	employes:pengfei.liu:data_science:statistic:start	pliu	[Statistic docs] 		90
 1626428570	192.168.184.1	E	employes:pengfei.liu:data_science:start	pliu	[0. Statistic] 		-18
+1627027275	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[4.2 install the requirements.txt in a conda env] 		488
+1627030541	192.168.184.1	E	employes:pengfei.liu:python:poetry:installation	pliu	[5. Run jupyter notebook inside poetry venv] 		2444
+1629191162	192.168.184.1	E	employes:pengfei.liu:big_data:hadoop:install_config_hadoop	pliu	[Install hdfs on multi node cluster] 		94
+1629709952	192.168.184.1	E	employes:pengfei.liu:data_science:zookeeper:install_and_configuration	pliu	[Step 7. Multi node Zookeeper cluster Configuration] 		60
