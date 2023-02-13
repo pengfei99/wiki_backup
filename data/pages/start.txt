@@ -65,12 +65,9 @@ ssl certficat : [[employes:pengfei.liu:security:ssl_certificate|Working with SSL
 
 ==== OpenLdap ====
 
-Install openldap : [[employes:pengfei.liu:security:ldap:ldap_server:install_config|Install openldap on centos 7]]
-
-[[employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration|Install Ldap and configuration on Centos7]]
+Install openldap : [[employes:pengfei.liu:security:ldap:ldap_server:installation_and_configuration|Install Ldap and configuration on Centos7]]
 
 
-Enable ssl for ldap : [[employes:pengfei.liu:security:ldap:ldap_server:config_ssl|Enable tls/ssl for openldap server]]
 
 Document of Ldap server architecture :  [[employes:pengfei.liu:security:ldap:ldap_server:architecture_example|Ldap architecture]]
 
@@ -97,7 +94,7 @@ Document of how to install openldap client on centos 7:
 
 Centos : 
 
-[[employes:pengfei.liu:admin_system:centos7_postgres95|Install postgresql on centos 7]]
+[[employes:pengfei.liu:admin_system:database:postgres:start|Install postgresql on centos 7]]
 
 Keys in data base : [[employes:pengfei.liu:data_science:data_base:keys_in_relational_db|Keys in relational model]]
 
@@ -348,16 +345,6 @@ data table : [[datatables|Guide d'utilisation]]
 
 ===== Shibbolet =====
 
-idp 3.3.0: 10.70.3.18 (/opt/shibbolet, /opt/jetty)
-
-idp 2.4.4: 10.70.3.11 (/opt/shibbolet, et /opt/jetty)
-
-sciforma dev : 10.69.2.31 (shib access)
-
-sciforma test : 10.69.2.41 (postgres access)
-
-sp_noe: 10.70.3.13
-
 
 Shibboleth SP install and configuration doc: 
 
@@ -375,9 +362,7 @@ Shibboleth IDP 3.3.0 install and configuration doc:
 
 
 
-===== Bioaster_shit =====
 
-[[employes:pengfei.liu_bioaster.org:bioaster_shit:redmin|Redmine FAQ]]
 
 
 

@@ -29,6 +29,7 @@ Most used option table
 
 ==== 1. create user account ====
 
+=== For centos ===
 <code>
 
 # List all local users in your linux server
@@ -42,6 +43,14 @@ sudo useradd pliu --uid 8888 --home /home/sweet_home/pliu/ --create-home --group
 -useradd will create user home
 -user will be added two groups godTeam and bestDevs as second group
 -user will be added group bestMan as primary group
+</code>
+
+=== For debian ===
+
+<code>
+# the -m option will create a home folder under /home
+# the -s option will create a default shell for the user
+sudo useradd -m pliu -s /bin/bash
 </code>
 
 ==== 2. set up password ====

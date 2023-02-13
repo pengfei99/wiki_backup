@@ -7,23 +7,27 @@ Linux Screen allows you to:
   * Disconnect and re-connect to a shell sessions from multiple locations.
   * Run a long running process without maintaining an active shell session.
 
-===== Install screen =====
+===== 1. Install screen =====
 
 There is great chance your linux already have screen installed
 
 <code>
 #check if you have screen or not
-[hadoop@CCLinDataWHD01 pliu]$ which screen
+
+$ which screen
 #if you see this, it's installed
 /bin/screen
 
-#otherwise
+#otherwise install it 
+# for centos/redhat
 sudo yum install screen
 
+# for debian
+sudo apt install screen
 
 </code>
 
-===== Use screen =====
+===== 2. Use screen =====
 
 <code>
 #open a screen
@@ -32,13 +36,13 @@ sudo yum install screen
 
 Once you are inside a screen you can type any command as you are in a normal shell, to give command to screen. You need to use<color #ed1c24> Ctrl-a</color> then options. Screen works like vim, it has a mode command. By typing ctrl-a you enter to command mode.
 
-==== Creating a new window ====
+==== 2.1 Creating a new window ====
 
 ''Ctrl-a c''
 
 This will create a new window for you with your default prompt.  Your old window is still active.
 
-==== Switching Between windows ====
+==== 2.2 Switching Between windows ====
 
 ''Ctrl-a n''
 
@@ -50,7 +54,7 @@ You can create several windows and toggle through them with “Ctrl-a” “n”
 
 Each process will keep running until you kill that window.
 
-==== Detaching from screen ====
+==== 2.3 Detaching from screen ====
 
 ''Ctrl-a d''
 
@@ -66,10 +70,12 @@ All screen windows are still there and you can re-attach to them later.
 
 This is great when you are using rsync for server migration.
 
-==== Reattach to screen ====
+==== 2.4 Reattach to screen ====
 
 <code>
-[hadoop@CCLinDataWHD01 pliu]$ screen -r
+$ screen -r
+# or 
+$ screen -x
 </code>
 
 This will re-attach to your screen.
@@ -82,47 +88,73 @@ There are several suitable screens on:
 31917.pts-5.office      (Detached)
 31844.pts-0.office      (Detached)
 Type "screen [-d] -r [pid.]tty.host" to resume one of them.
-If you get this, just specify the screen you want.
+If you get this, specify the screen you want.
 
 $ screen -r  31844.pts-0.office
+# or you can use the auto-completion, in the "", you only need to type 
+# the character which can distinguish one screen to another
+$ screen -x "pts-t"
 </code>
 
 Beware, ctrl-a c create a new window inside one screen. One screen can have multiple windows.
 
-==== List all screen session ====
+==== 2.5 List all screen session ====
 
 The screen -list depends on user session, see the following example
 
 <code>
-[root@CCLinDataWHD01 bin]# screen -list
-No Sockets found in /var/run/screen/S-root.
+$ screen -list
+# or in short version
+$ screen -ls
+# you should see below output
+There are screens on:
+        6307.update mirror      (02/13/2023 04:32:12 PM)        (Detached)
+        6257.pts-0.debian       (02/13/2023 03:43:29 PM)        (Detached)
+2 Sockets in /run/screen/S-aptly.
 
-[root@CCLinDataWHD01 bin]# su hadoop
-[hadoop@CCLinDataWHD01 bin]$ screen -list
+
+$ su hadoop
+$ screen -list
 There is a screen on:
 	16558.$name	(Attached)
 1 Socket in /var/run/screen/S-hadoop.
 </code>
 
-==== Attaching an attached screen ====
+==== 2.6 Attaching an attached screen ====
 
 <code>
 screen -x 16558.$name
 
 </code>
 
-==== Scoll up and down to your screen  ====
+==== 2.7 Scroll up and down to your screen  ====
 
 Use ctrl+a then [ to enter to copy mode.
 
-Once you are in copy mode, you can scoll up and down.
-==== Logging your screen output ====
+Once you are in copy mode, you can scroll up and down.
 
-It's important to keep track of what I do on a server. Fortunately, screen makes this easy.
+===== 3. Split screen into multiple windows =====
+
+GNU Screen lets you split your terminal into windows. Note when you detached from the screen session, all the splits will be destroyed.
+
+
+==== 3.1 Horizontal splits ====
+
+To create a **horizontal split**, press **Ctrl+A** and then **S (Shift+s)**. This creates a new window under the origin window. However, there is no prompt on the new window. To switch to your screen on the bottom, hit **Ctrl+A** and then the **Tab key**. Your cursor is now in the bottom session. To get a prompt, hit **Ctrl+A** and then **c**.
+
+==== 3.2 Vertical splits ====
+
+To create a **vertical split**, press **Ctrl+A** and then **| (Shift+\)**. This creates a new window on the right of the origin window. You can move into the right pane with **Ctrl+A** and then **Tab key**. Once there, use **Ctrl+A** then **n** to navigate through all your available windows until the content you want to be displayed is in the split pane.
+
+
+
+===== 4. Logging your screen output =====
+
+It's important to keep track of what I do on a server. Fortunately, `screen` makes this easy.
 
 Using “Ctrl-a” “H”, creates a running log of the session.
 
-Screen will keep appending data to the file through multiple sessions. Using the log function is very useful for capturing what you have done, especially if you are making a lot of changes. If something goes awry, you can look back through your logs.
+Screen will keep appending data to the file through multiple sessions. Using the log function is very useful for capturing what you have done, especially if you are making many changes. If something goes awry, you can look back through your logs.
 
 With "Ctrl-a H" the screen will write the output into the default log file which is defined in the default screen conf file
 
@@ -185,7 +217,7 @@ screen -c /tmp/log.conf -dmSL $name
 
 The above script takes an argument as session name, and creates a detached screen session. 
 
-===== Sharing a screen session with another user =====
+===== 5. Sharing a screen session with another user =====
 
   - Open a screen with user1
   - Enable mutli-user mode ([user1@ tmp]$ Ctrl-a :multiuser on)
@@ -204,3 +236,79 @@ logout
 </code>
 
 Ps: making the screen command suid root is a security issue (otherwise, wouldn't it already have been set this way). So, you may be better off making a third shared account which both users can log into to share a screen session with. 
+
+
+====== 6. cheat sheet ======
+
+===== Window attach and detach =====
+<code>
+# Start new screen session
+$ screen 
+
+# Attach to an existing screen session
+$ screen -raAd 
+
+# Join a session without detaching
+$ screen -x 
+
+# Detach from a session, leaving it running in the background
+Ctrl-A d 
+
+# Exit and quit screen session 
+Ctrl-A k 
+</code>
+
+===== Window management =====
+
+<code>
+# Create new window
+$ Ctrl-A c
+
+# Monitor window for activity
+$ Ctrl-A m
+
+# Move to next window
+$ Ctrl-A n 
+
+# Lock screen
+$ Ctrl-A x 
+
+# Move to previous window
+$ Ctrl-A p 
+
+# Set window title
+$ Ctrl-A A 
+
+# Move to window NUM
+$ Ctrl-A NUM 
+
+# Get info about the current window
+$ Ctrl-A I
+
+# Prompt to move to the window
+$ Ctrl-A ' 
+
+# Suspend (use fg to resume)
+$ Ctrl-A z 
+</code>
+
+=====  Split window into panes =====
+
+   
+<code>
+# Vertical split (panes side by side)
+$ Ctrl-A | 
+
+# Horizontal split (one pane below the other)
+$ Ctrl-A S 
+
+# Clear all splits
+$ Ctrl-A Q 
+
+# Move to next split
+$ Ctrl-A <Tab> 
+</code>
+
+
+
+
