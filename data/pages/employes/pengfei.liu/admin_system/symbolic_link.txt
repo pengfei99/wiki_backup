@@ -1,12 +1,30 @@
-====== Create symbolic link in linux ======
+====== Hardlink vs Symlink vs copy======
 
-===== Create  a soft symbolic link =====
+Underneath the file system, **files are represented by inodes**. (Or is it multiple inodes? Not sure.)
+
+A file in the file system is basically a link to an inode.
+
+A **hard link**, then, just creates another file with a link to the same underlying inode.
+
+When you delete a file, it removes one link to the underlying inode. The inode is only deleted (or deletable/over-writable) when all links to the inode have been deleted.
+
+A **symbolic link** is a link to another name in the file system.
+
+Once a hard link has been made the link is to the inode. Deleting, renaming, or moving the original file will not affect the hard link as it links to the underlying inode. Any changes to the data on the inode are reflected in all files that refer to that inode.
+
+Note: Hard links are only valid within the same File System. Symbolic links can span file systems as they are simply the name of other files.
+
+**Copy** will duplicate the **inodes** and then create a new link. This will consume hard drive space unlike the `symlink` and `hardlink`
+
+====== Create a symbolic link in Linux ======
+
+===== Create a soft symbolic link =====
 
 ln -s source destination
 
-for example I'm currently at /tmp/.
+for example, I'm currently at /tmp/.
 
-I want to creat a symbolic link my_documents of my home /home/pliu/Documents
+I want to create a symbolic link my_documents of my home /home/pliu/Documents
 
 I need to do 
 

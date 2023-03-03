@@ -1,0 +1,81 @@
+====== Jupyter Notebook kernels ======
+
+
+===== 1. Add virtual env as python kernel =====
+
+Replace the `venv` with the virtualenv name which you want to use as a kernel
+
+<code bash>
+# Activate the virtualenv
+$ source venv/bin/activate
+
+# Install jupyter in the virtualenv
+(venv)$ pip install jupyter
+
+#Add the virtualenv as a jupyter kernel
+(venv)$ ipython kernel install --name "local-venv" --user
+
+# You can now select the created kernel env when you start Jupyter:
+</code>
+
+===== 2. Add kernel via Jupyter plugin  =====
+
+To use other language as kernel in Jupyter, you can't use the virtual env. Below example add a Apache Spark kernel, by using a Jupyter plugin called **Apache Toree**.
+
+<code bash>
+# install jupyter in your python env
+$ pip install jupyter 
+
+# install the toree package (jupyter plugin)
+$ pip install --upgrade toree
+
+# install the toree plugin to your jupyter 
+# spark home indicates the spark binarie. This is mandatory
+$ jupyter toree install --user --spark_home=/pathToSpark/spark-3.3.2
+
+# run your notebook and try
+$ jupyter notebook
+</code>
+
+===== 3. Use 3rd party binary installer =====
+
+https://get-coursier.io/
+
+https://almond.sh/docs/quick-start-install
+
+<code bash>
+Download almond and scala libs
+
+(coursier is a scala tool used to install almond)
+
+$ curl -Lo coursier https://git.io/coursier-cli && chmod +x coursier
+(replace scala and almond versions if you need to)
+
+$ ./coursier bootstrap \
+    -r jitpack \
+    -i user -I user:sh.almond:scala-kernel-api_2.12.11:0.10.0 \
+    sh.almond:scala-kernel_2.12.11:0.10.0 \
+    -o almond
+Install Scala kernel in Jupyter
+
+$ ./almond --install --id scala_2_12_11  --display-name "Scala 2.12.11"
+Open Jupyter notebook and select Scala kernel
+
+$ jupyter notebook
+</code>
+
+===== Other useful command =====
+
+<code bash>
+# list available kernel
+jupyter kernelspec list
+
+#  remove kernel
+jupyter kernelspec remove old_kernel
+
+# Change Kernel display name
+# Use the below command to see the folder the kernel is located in
+$ jupyter kernelspec list
+# In that folder, open up file kernel.json and edit option "display_name"
+</code>
+
