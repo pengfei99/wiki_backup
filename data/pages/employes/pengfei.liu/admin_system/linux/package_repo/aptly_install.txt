@@ -1,0 +1,602 @@
+====== Use aptly to build a private Linux package repo ======
+
+
+=====  1. System Package repository Introduction =====
+
+Before we start, we need to understand what is a Linux system package repository. In Linux, the **system package repository** is a storage location hosted on remote servers from which the system retrieves and installs software and updates. 
+
+Each Linux distribution has its own repository and package manager. For example, for the //Red Hat// distribution, they use//yum/dnf// as the package manager,  the default repo URL is shown below
+
+<code>
+[base]
+name=CentOS-7 - Base
+mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=os&infra=$infra
+#baseurl=http://mirror.centos.org/centos/7/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#released updates
+[updates]
+name=CentOS-7 - Updates
+mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=updates&infra=$infra
+#baseurl=http://mirror.centos.org/centos/7/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that may be useful
+[extras]
+name=CentOS-7 - Extras
+mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=extras&infra=$infra
+#baseurl=http://mirror.centos.org/centos/7/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that extend the functionality of existing packages
+[centosplus]
+name=CentOS-7 - Plus
+mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=centosplus&infra=$infra
+#baseurl=http://mirror.centos.org/centos/7/centosplus/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+</code>
+
+For debian distribution, it uses __apt-get/apt__ as package manager, and the default/standard repo url are:
+
+<code>
+deb http://deb.debian.org/debian bullseye main
+deb-src http://deb.debian.org/debian bullseye main
+deb http://security.debian.org/debian-security bullseye-security main contrib
+deb-src http://security.debian.org/debian-security bullseye-security main contrib
+deb http://deb.debian.org/debian/ bullseye-updates main contrib
+deb-src http://deb.debian.org/debian/ bullseye-updates main contrib
+</code>
+
+You can find the repo list in the **/etc/apt/sources.list** file and files under the **/etc/apt/sources.list.d** directory.
+
+==== 1.1 Repo list format ====
+
+
+The below figure shows the format of each row in the source list.
+
+{{:employes:pengfei.liu:admin_system:linux:package_repo:deb_repo_list_format.png?600|}}
+
+=== Type ===
+
+
+The term //deb// indicates that it is the repository of binaries, which are pre-compiled files. The term //deb-src// indicates that it is the repository of packages in source file format, which requires `compilation` in order to use it in the system.
+
+=== Repository URL ===
+
+The URL (HTTP, HTTPS, or FTP) represents the location of the repository from which you can download the packages.
+
+=== Distribution ===
+
+
+The next term is the short codename (i.e. Buster, Wheezy, Lenny, Jessie, Bullseye, etc.) of the release of your current system. The repo server may support multiple releases, so we need to specify which release we want.
+
+=== Component ===
+
+The final term represents the //categories of the Debian package//. The available categories of the Debian distribution are:
+
+  * main: This category contains packages that are released under a free license (BSD, GPL, etc.) and that meet the DFSG (Debian Free Software Guidelines). These packages also contain the source code within them, which can be modified and redistributed.
+  * contrib: This category contains the packages that meet the DFSG (Debian Free Software Guidelines. The packages in the Contrib category are open-source packages but depend on non-free packages to work.
+  * non-free: This category contains the packages that do not meet the DFSG (Debian Free Software Guidelines). These packages have some strict license conditions that restrict the usage and redistribution of the software.
+
+
+==== 1.2 Add a repo by using the sources.list file ====
+
+
+In the below example, we add the VirtualBox repo to the repo list.
+You can follow the below steps to add a custom repository:
+
+1. Download and import GPG keys of vbox. You can use below command. You may need to install gpg first
+<code bash>
+wget -O- -q https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmour -o /usr/share/keyrings/oracle_vbox_2016.gpg
+</code>
+
+2. Open the **/etc/apt/sources.list** file and add below line at the end of the file. 
+<code>
+deb [arch=amd64 signed-by=/usr/share/keyrings/oracle_vbox_2016.gpg] http://download.virtualbox.org/virtualbox/debian bullseye contrib
+</code>
+
+Or you can run below command
+<code bash>
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle_vbox_2016.gpg] http://download.virtualbox.org/virtualbox/debian bullseye contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+</code>
+
+3. Save and close
+
+4. Update apt (sudo apt update)
+
+5. Search the virtual box package with `apt search virtualbox`. You should see below output
+<code bash>
+Sorting... Done
+Full Text Search... Done
+libvirt-daemon-driver-vbox/stable 7.0.0-3 amd64
+  Virtualization daemon VirtualBox connection driver
+
+virtualbox-6.1/unknown 6.1.42-155177~Debian~bullseye amd64
+  Oracle VM VirtualBox
+
+virtualbox-7.0/unknown 7.0.6-155176~Debian~bullseye amd64
+  Oracle VM VirtualBox
+</code>
+
+===== 2. Installing Aptly =====
+
+
+You **must not** run the below command with the **root** user privilege. 
+
+==== 2.1 Install Aptly dependencies ====
+
+
+Atply requires the below package:
+
+   * bzip2: compression
+   * gnupg: the gnu privacy guard is a complete and free implementation of the OpenPGP standard
+   * gpgv: gpgv is actually a stripped-down version of gpg which is only able to check signatures.
+   * xz-utils: is a general-purpose data compression software with a high compression ratio
+
+
+<code bash>
+sudo apt install bzip2 gnupg gpgv xz-utils
+</code>
+
+==== 2.2 Install Aptly ====
+
+The package repo for aptly can be found [here](http://repo.aptly.info/)
+
+Step1 : Download the public gpg key of Aptly 
+
+<code bash>
+# New key per 2022-03-15 !
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A0546A43624A8331
+</code>
+
+Step2 : Add aptly repo to sources.list
+
+<code bash>
+# -a means append which is important, without it the original content will be removed
+echo "deb http://repo.aptly.info/ squeeze main" | sudo tee -a /etc/apt/sources.list
+</code>
+
+Don't worry about **squeeze** part in the repo name. I have tested it, it works for the debian 11 (bullseye).
+
+
+Step3 : Update repo and install
+
+<code bash>
+sudo apt update
+sudo apt install aptly
+</code>
+
+Step4 : Check your aptly install
+
+<code bash>
+aptly version
+
+# you should see below output
+aptly version: '1.5.0'
+</code>
+
+==== 2.3 Create GPG pair ====
+
+
+We will use a `GPG key pair to sign the published repositories`. If you don't have one, use below command to generate one.
+
+<code bash>
+gpg --gen-key
+
+# it will prompt below lines, just fill it with name, email
+Real name: casd-debian
+Email address: service@casd.eu
+You selected this USER-ID:
+    "casd-onyxia <casd-support@casd.eu>"
+
+Change (N)ame, (E)mail, or (O)kay/(Q)uit? O
+
+# then it will ask you to enter a passphrase to secure the private key
+</code>
+
+After you entered all the information, a folder `.gnupg` will be generated in the current folder. For more information about the GPG key management, you can check this [page](https://fedoraproject.org/wiki/Creating_GPG_Keys)
+
+===== 3. Creating repo mirrors =====
+
+Now we have all the necessary parts to create a local mirror of an official repo. Suppose we need to 
+mirror `bullseye` (current stable 2023) for architecture `amd64`. Only `main` component is required and this repository is targeted for servers, not desktops. You can find local debian repo mirror per Country in this [page](https://www.debian.org/mirror/list). In below command, we choose the server in France.
+
+<code bash>
+# command 1
+aptly mirror create -architectures=amd64 -filter='Priority (required) | Priority (important) | Priority (standard)' bullseye-main http://ftp.fr.debian.org/debian/ bullseye main
+</code>
+
+
+You should see this error `ERROR: unable to fetch mirror: verification of detached signature failed: exit status 2` when you run the above command. So we need to add the default Debian keyring as trusted.
+
+<code bash>
+# command 2
+gpg --no-default-keyring --keyring /usr/share/keyrings/debian-archive-keyring.gpg --export | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+</code>
+
+
+Now rerun the `command 1`, you should see the below output
+
+<code>
+Downloading http://ftp.fr.debian.org/debian/dists/bullseye/InRelease...
+Success downloading http://ftp.fr.debian.org/debian/dists/bullseye/InRelease
+gpgv: can't allocate lock for '/home/coder/.gnupg/trustedkeys.gpg'
+gpgv: Signature made Sat 17 Dec 2022 10:15:20 AM UTC
+gpgv:                using RSA key 0146DC6D4A0B2914BDED34DB648ACFD622F3D138
+gpgv: Good signature from "Debian Archive Automatic Signing Key (10/buster) <ftpmaster@debian.org>"
+gpgv: Signature made Sat 17 Dec 2022 10:15:21 AM UTC
+gpgv:                using RSA key A7236886F3CCCAAD148A27F80E98404D386FA1D9
+gpgv: Good signature from "Debian Archive Automatic Signing Key (11/bullseye) <ftpmaster@debian.org>"
+gpgv: Signature made Sat 17 Dec 2022 10:20:04 AM UTC
+gpgv:                using RSA key A4285295FC7B1A81600062A9605C66F00D6C9793
+gpgv:                issuer "debian-release@lists.debian.org"
+gpgv: Good signature from "Debian Stable Release Key (11/bullseye) <debian-release@lists.debian.org>"
+
+Mirror [bullseye-main]: http://ftp.fr.debian.org/debian/ bullseye successfully added.
+You can run 'aptly mirror update bullseye-main' to download repository contents.
+</code>
+
+====  3.1 The filter flag ====
+
+
+The flag **-filter=** allows us to cut down number of packages to download. First part, `Priority (required) | Priority (important) | Priority (standard)` is essential “base” Debian system. 
+
+We can also specify individual packages explicitly. For example, with below command, the mirror will  add package such as: nginx, postgresql, etc. 
+
+<code bash>
+aptly mirror create -architectures=amd64 -filter='Priority (required) | Priority (important) | Priority (standard) | nginx | postgresql' -filter-with-deps bullseye-main http://ftp.fr.debian.org/debian/ bullseye main
+
+# we create also mirror for bullseye-updates and bullseye-security 
+# you can notice the repo url is the same, but the distribution is `bullseye-updates`
+# and the component is `main` 
+
+aptly mirror create -architectures=amd64 -filter='Priority (required) | Priority (important) | 
+Priority (standard) | nginx | postgresql' -filter-with-deps bullseye-updates 
+http://ftp.fr.debian.org/debian/ bullseye-updates main
+</code>
+
+
+Flag **-filter-with-deps** instructs `aptly` to include dependencies of matching packages as well. 
+
+
+**If the filter is not specified, all packages would be included in the mirror and which would require more space, and the download size would be bigger.**
+
+In the below example, we will mirror all the packages of the Debian security repo, because we have 0 filters in it.
+
+<code bash>
+# without filter, the mirror will take 20GiB 
+aptly mirror create -architectures=amd64 bullseye-security http://security.debian.org/debian-security bullseye-security/updates main contrib non-free
+
+# with filter 
+aptly mirror create -architectures=amd64 -filter='Priority (required) | Priority (important) | Priority (standard) | nginx | postgresql' -filter-with-deps bullseye-security http://security.debian.org/debian-security bullseye-security/updates main contrib non-free
+</code>
+
+==== 3.2 Check the created mirror ====
+
+
+<code bash>
+# bullseye-update mirror
+aptly mirror create -architectures=amd64 bullseye-updates http://ftp.fr.debian.org/debian/ bullseye-updates main
+
+# bullseye-security mirror
+aptly mirror create -architectures=amd64 bullseye-security http://security.debian.org/debian-security bullseye-security/updates main contrib non-free
+
+
+# get the full list of existing mirrors
+aptly mirror list
+
+# you should see below output
+List of mirrors:
+ * [bullseye-main]: http://ftp.fr.debian.org/debian/ bullseye
+
+To get more information about mirror, run `aptly mirror show <name>`.
+
+# get the detail of bullseye-main mirror
+ aptly mirror show bullseye-main
+
+# you should see below output
+Name: bullseye-main
+Archive Root URL: http://ftp.fr.debian.org/debian/
+Distribution: bullseye
+Components: main
+Architectures: amd64
+Download Sources: no
+Download .udebs: no
+Filter: Priority (required) | Priority (important) | Priority (standard)
+Filter With Deps: no
+Last update: never
+
+Information from release file:
+Acquire-By-Hash: yes
+Architectures: all amd64 arm64 armel armhf i386 mips64el mipsel ppc64el s390x
+Changelogs: https://metadata.ftp-master.debian.org/changelogs/@CHANGEPATH@_changelog
+Codename: bullseye
+Components: main contrib non-free
+Date: Sat, 17 Dec 2022 10:14:37 UTC
+Description:  Debian 11.6 Released 17 December 2022
+
+Label: Debian
+No-Support-For-Architecture-All: Packages
+Origin: Debian
+Suite: stable
+Version: 11.6
+</code>
+
+==== 3.3 Edit existing mirror ====
+
+
+When you want to modify an existing mirror configuraiton, you need to run below command.
+You can find more information [here](https://www.aptly.info/doc/aptly/mirror/edit/)
+
+
+<code bash>
+# note with below command, the old filter will be replaced, if you want to append, you need to do it
+# manually 
+aptly mirror edit -filter='nginx | postgresql' -filter-with-deps bullseye-main
+
+# append example
+aptly mirror edit -filter='Priority (required) | Priority (important) | Priority (standard) | nginx | postgresql' -filter-with-deps bullseye-main
+</code>
+
+
+==== 3.4 Update(Synchronize) the mirror ====
+
+
+Now we are ready to synchronize the local mirror with the official repo. 
+
+__The doc and command aptly called it update, I found this is ambigue, so I use the word synchronize.__
+
+<code bash>
+# this command will download all the filtered package to local server
+# in ~/.aptly/pool/
+aptly mirror update bullseye-main
+
+# you should see below output
+Downloading http://ftp.fr.debian.org/debian/dists/bullseye/InRelease...
+Success downloading http://ftp.fr.debian.org/debian/dists/bullseye/InRelease
+gpgv: can't allocate lock for '/home/coder/.gnupg/trustedkeys.gpg'
+gpgv: Signature made Sat 17 Dec 2022 10:15:20 AM UTC
+gpgv:                using RSA key 0146DC6D4A0B2914BDED34DB648ACFD622F3D138
+gpgv: Good signature from "Debian Archive Automatic Signing Key (10/buster) <ftpmaster@debian.org>"
+gpgv: Signature made Sat 17 Dec 2022 10:15:21 AM UTC
+gpgv:                using RSA key A7236886F3CCCAAD148A27F80E98404D386FA1D9
+gpgv: Good signature from "Debian Archive Automatic Signing Key (11/bullseye) <ftpmaster@debian.org>"
+gpgv: Signature made Sat 17 Dec 2022 10:20:04 AM UTC
+gpgv:                using RSA key A4285295FC7B1A81600062A9605C66F00D6C9793
+gpgv:                issuer "debian-release@lists.debian.org"
+gpgv: Good signature from "Debian Stable Release Key (11/bullseye) <debian-release@lists.debian.org>"
+Downloading & parsing package files...
+Downloading http://ftp.fr.debian.org/debian/dists/bullseye/main/binary-amd64/Packages.gz...
+Success downloading http://ftp.fr.debian.org/debian/dists/bullseye/main/binary-amd64/Packages.gz
+Applying filter...
+Packages filtered: 58640 -> 325.
+Building download queue...
+Download queue: 325 items (168.48 MiB)
+</code>
+
+Current mirror contents are stored in the package database. You can update mirror at any moment as required.
+
+=====  4 Use snapshots =====
+
+As you know, the package in the official repo can be updated anytime, but our mirror can't synchronize each modification in real time. We can use snapshot to release packages in a state  
+
+==== 4.1 Create snapshots ====
+ 
+
+It’s time take snapshots of the mirrors to preserve `exact current mirror state`. I will label snapshots after mirror name, applying version for the main **bullseye** mirror (i.e. Debian 11.6 -> bullseye ) and current date for frequently updated `security` and `updates` mirrors:
+
+
+<code bash>
+# the general form
+aptly snapshot create <snapshot-name> from mirror <mirror-name>
+
+# if you don't know the existing mirror name, use below command to get all available mirrors
+aptly mirror list
+
+# create a snapshot for mirror bullseye-main
+aptly snapshot create bullseye-main-11.6 from mirror bullseye-main
+
+# create a snapshot for mirror bullseye-updates
+aptly snapshot create bullseye-updates-20230206 from mirror bullseye-updates
+
+# create a snapshot for bullseye-security
+aptly snapshot create bullseye-security-20230206 from mirror bullseye-security
+</code>
+
+==== 4.2 Merging snapshots ====
+
+
+Releasing the snapshop one by one is not very productive. We can merge the three snapshoot into one by using below command.
+
+<code bash>
+# general form
+# -latest option chooses merge strategy: package with latest version “wins”.
+# it can take as many sub snapshot as possible
+aptly snapshot merge -latest <snapshot-name> <sub-snapshot-name1> <sub-snapshot-name2> ...
+
+# if you don't know your snapshot name, you can use below command to get them
+aptly snapshot list
+
+# our example
+aptly snapshot merge -latest bullseye-stable-20230206 bullseye-main-11.6 bullseye-security-20230206 bullseye-updates-20230206
+</code>
+
+Let's check the merged snapshot, for example the latest version of package nginx should came from the security mirror, because the there is a security update latly. 
+
+We can use below command to track the package origin
+
+<code bash>
+aptly package show -with-references 'Name (nginx)'
+
+# you should see below output
+Package: nginx
+Priority: optional
+Section: httpd
+Installed-Size: 102
+Maintainer: Debian Nginx Maintainers <pkg-nginx-maintainers@alioth-lists.debian.net>
+Architecture: all
+Version: 1.18.0-6.1+deb11u3
+Depends: nginx-core (<< 1.18.0-6.1+deb11u3.1~) | nginx-full (<< 1.18.0-6.1+deb11u3.1~) | nginx-light (<< 1.18.0-6.1+deb11u3.1~) | nginx-extras (<< 1.18.0-6.1+deb11u3.1~), nginx-core (>= 1.18.0-6.1+deb11u3) | nginx-full (>= 1.18.0-6.1+deb11u3) | nginx-light (>= 1.18.0-6.1+deb11u3) | nginx-extras (>= 1.18.0-6.1+deb11u3)
+Filename: nginx_1.18.0-6.1+deb11u3_all.deb
+Size: 92936
+MD5sum: 47deabf24cd33a9440782b61f30bc2e9
+SHA1: 320d46db1c47ef6f7ccc1c7d3685403615127b33
+SHA256: 795f27bbd556a60e132e6f779b78105969009d129e727ab60f826e1bf4320365
+SHA512: 47e69866c8e829f60b05d7074c28c89a21c09a3d3e6527192882f2c1f63abfafd8a3ee2f45ab1bb381508eb7f17e5663656b05da4efdfdb3ed129c467aa112ca
+Description: small, powerful, scalable web/proxy server
+Description-Md5: 902443ddbee17249123a068e7ca7c6d8
+Homepage: https://nginx.net
+
+References to package:
+  mirror [bullseye-security]: http://security.debian.org/debian-security/ bullseye-security/updates
+  mirror [bullseye-main]: http://ftp.fr.debian.org/debian/ bullseye
+  snapshot [bullseye-main-11.6]: Snapshot from mirror [bullseye-main]: http://ftp.fr.debian.org/debian/ bullseye
+  snapshot [bullseye-stable-20230206]: Merged from sources: 'bullseye-main-11.6', 'bullseye-security-20230206', 'bullseye-updates-20230206'
+  snapshot [bullseye-security-20230206]: Snapshot from mirror [bullseye-security]: http://security.debian.org/debian-security/ bullseye-security/updates
+</code>
+
+> In the `references to package` block, you can notice the package origin is from snapshot `bullseye-security-20230206` (last row). 
+
+
+
+
+===== 5 Publish Repository =====
+
+
+Now we can publish our snapshot `bullseye-stable-20230206` as **Debian repository**, which will be consumed by **apt-get** client.
+
+Use the below command to publish the snapshot
+
+<code bash>
+# general form
+# the -distribution option: specifies the distribution name of the repo, which is mandatory
+aptly publish snapshot -distribution=<distribution-name> <snapshot-name>
+
+
+# our example
+aptly publish snapshot -distribution=bullseye bullseye-stable-20230206
+</code>
+
+__The above command will publish the repository to `~/.aptly/public/` directory. You can start **any HTTP server to serve this directory as static files**, or use aptly built-in webserver for testing.__
+
+<code bash>
+# run aptly built-in webserver (for testing only, not recommended for prod)
+aptly serve
+</code>
+
+
+==== 5.1 Check published snapshot dependencies ====
+
+
+The below command will generate a graph that shows the dependencies of the published snapshot
+
+<code bash>
+# this command requires graphviz
+aptly graph
+
+# install graphviz
+sudo apt install graphviz
+</code>
+
+==== 5.2 Serve the published via a web server ====
+
+
+For testing purposes, the built-in web server is enough. But For production, we need to install a real webserver. In this tutorial, we recommend **nginx**, because it has better performance for serving static content and consumes fewer resources compare to **Apache2**.
+
+
+===== 6. Using the private Repository =====
+
+
+==== 6.1 Prepare the GPG (GNU privacy guard) key ====
+
+
+First I need to **import the public part of the GPG key** that was used to sign the repository into the trusted apt keyring on the target machine.
+
+<code bash>
+# run from the server which has aptly 
+gpg --export --armor > repo_gpg_key.pub
+
+# the generated file should look like this
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQGNBGPX2GABDACnY9HpMwewenBppirK3vZ4/JiKtzevZCwDMlx6OjKGcnfDKMVU
+/jWWoncIgZ3TxH8nEy3AgV109wy9ztX5kBa1IUgwdnLwpWepvGIKlWCCk9g2dEOM
+VJFlNcyl3pVUxbjov7jvcx/epB/79RO8IkRjjtLhDbiH5Wh07+gSfbIdDNXqT7av
+bnt1ZJNOo7+zRVJ5bgxbEF0q+sp4ESUtIxD8wfgV6N3dlzIgrA5IgLS4qt/0OWoC
+IdSf9Kq5LD+FXYJ9Q0WrbDC4G0zBQuYLf/eaAMkPnGBDTHLSWdGXL02jQQdZb9bq
+H/Zdunm+akngiOc1vAozXMECtZMVvdZ0GopJldZ0oofVRVSiRSimctpGlQ95BGU8
++/cDV174mtTvnw5RIsi9lsyif/ab11mt+dthJFt4/wcppEEhMLKqF/UTTshpSnes
+GAsEabdlv9kJu2gwJ79ftUgBDdbFp9d4unJoo2ui4ejuyJi1CXQdcKFaTIWRNolu
+cRWFdlJWvmKi++0AEQEAAbQiY2FzZC1vbnl4aWEgPGNhc2Qtc3VwcG9ydEBjYXNk
+LmV1PokB1AQTAQoAPhYhBF4/+09JAtKGdNdhUtXMNPl62Y49BQJj19hgAhsDBQkD
+wmcABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJENXMNPl62Y49I1IL/Rs0lmsu
+LktQ3fEwGjFYTBtU4a659Fb4QG6l65msiRtLH3jKOdng3B/CwRE71yzbv3MgQntF
+Myp7PKQhdD32hTKM0d8n8Fbj05qkq+SjoRmhnKH8gVpUv+fduEORSMpGqCYh+EI2
+9pw9Vkl5BWZFrx7KuXzatBShA1ZAF1v+kIRe8fFtr63laoyKhxM3rvtHJk/wFQe2
+b8Vy2ZyI1ez48WjoYJTo/S9VeX6x46FcA4KEvAbxcO2XcmOdQqmGl7d234HpYOns
+UDM/bmwqJgV+4J4Dq2a4WSkpObMUIMns99mTFCCJ6J43YftjMZ12AFjxmAgMx5g4
+FbdAsFhtD3WXsHcAMrbjbEdom00LiCkCBSzrHrPoT+mFM7D4tX7tbKKBg7oV+na7
+fICb5eIfqpAQaHjLlVelWS4K4vLT7LSDAgJH0WrjtOiz1idZK6Gv6DBLc0lOmimB
+xmcpVoHCEWs7RScjaMNnDdJsUx7yGA081AHsoo5Xaig1C37N9SYCBFMAELkBjQRj
+19hgAQwAqZ1LN0bjGGGaQq9Cgvffa+ROP75Ss0KjET1w++Ng2MkmxZCWdLv84qp9
+u6MEM6wxtL3wKi2Vwk5QGvfVi5AvOgRo0D15CtI8JKDZlnVGYiJ9f5Xl1aKubV0t
+ZJSM2yb/J5vg/MJ2TTKHYeNgnvFANkWrDeyhxCEfh6qUcY1nTuxkbmVTpw4YAFpI
+5WQuqtuI/94tJ6kd5P5AWCuVrZ88/Je43EGUhfaAA9353oHsz+r12FH1Bj1V+B9X
+dOSxemTZdb9zkpcKtlXSiGwfJWaPXABJmcKZ3T1LIRC0dunTLaEeoN7AlfQEuU5c
+prsi35SPBoo0sIKgUgzqGN7L89fBx2yQ4kHSzmhQUSI/F9sqdkMHxKWddyM+qX8O
+8uBILun+SG76NVZRoC+u3DsSwkfdvpVq/SOEOIaVWlWLj1yVIf7/aP1fYLCWs8B4
+x1YuMuDd36mswOINjceC+n0Khewfc9iB6VO/CZaKfoC2BegbMtsQ3FX010rPKgb5
+gIHIwleNABEBAAGJAbwEGAEKACYWIQReP/tPSQLShnTXYVLVzDT5etmOPQUCY9fY
+YAIbDAUJA8JnAAAKCRDVzDT5etmOPUYsC/9x/qfOQamOlB/ShmrajEDCB7KaR3/n
+Lb8ihC9GDXx0wJVEshpd9F3mQN+0/P05hRVj6AXJNHfyu0WcBjqtP1YCQKycK9FM
+I3xhvWsfzQQihw0r+a2DjXF4zWZwO9bQincbypHGNzDpiKC2FCR+Ciuijqm9EhIP
+knqbSvPHMQzuxiFdr+jVF+jpq3TEKeGVZzBIJhQJZzCrRjTn3op65nqcoGodJgOg
+vO4tHEHHeEG9ws9PR1L8FUO362C9/5xs/CziN6UppBN1U7MjLTuMMk2DLnCX8Q4N
+/fV3q/MbYYCHyzVCoaOoZuCHl+uN4cbS3JulnZjEC9XPtUtQgVpIS3Xpak+c8Vku
+F5+rdWftPzc53+DgFqOVHO1gci2B6Xpc6pMzaQ7UJF1SxZQid0VbsmBK88K41oQz
+Jzfk329lUq4D5cYFt//hJ2Fk6CS3AHkyrV2zGoZZ65BZ8OnYIavjGs2A7FOYZxo6
+AvQWBa75d4ySlyqQHh9wHJ0V5Ba7X/kePzM=
+=s9av
+-----END PGP PUBLIC KEY BLOCK-----
+</code>
+
+==== 6.2 Copy the public key to the target machine ====
+
+<code bash>
+# run from the target server which consumes apt repository
+# add our GPG as a trusted key
+sudo apt-key add repo_gpg_key.pub
+
+# another solution
+wget -qO- http://deb.casd.local/casd_gpg_key.asc | sudo tee /etc/apt/trusted.gpg.d/casd_gpg_key.asc
+</code>
+
+Now we need to edit the `/etc/apt/sources.list` file and add our repo as a source repo. Here suppose our repo server url is `http://10.0.8.8:8080`, your source.list should look like below file 
+
+<code>
+# comment the default sources
+# deb http://deb.debian.org/debian bullseye main
+# deb http://security.debian.org/debian-security bullseye-security main
+# deb http://deb.debian.org/debian bullseye-updates main
+
+# add our repo
+deb http://10.0.8.8:8080/ bullseye main
+</code>
+
+Save and exit, then you need to update the `apt-get` repo cache
+
+<code bash>
+# update repo cache
+sudo apt-get update
+
+# update the installed packages
+sudo apt-get upgrade
+</code>
+
+As this repository has been published from the snapshot, `it would never change until it is updated to a new snapshot`. The good thing is that I can set up all my machine to use this repo and get an identical set of packages installed. Bad thing is that I need to maintain and update my repo as updates are coming, but if I have many machines, the advantage of predictable upgrades outweighs the maintenance costs.
+

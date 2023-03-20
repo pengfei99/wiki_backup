@@ -1,0 +1,10 @@
+====== Some useful script ======
+
+
+===== 1. Read from file =====
+
+<code bash>
+gpg_pwd_file_path="./toto.txt"
+gpg_pwd=$(<"${gpg_pwd_file_path}")
+echo "${gpg_pwd}"
+</code>
