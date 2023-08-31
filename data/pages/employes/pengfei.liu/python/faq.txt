@@ -1,0 +1,25 @@
+====== Python FAQ ======
+
+===== 1. Remove item from a list during iteration =====
+Error: Miss items during iteration
+
+Context: when you loop a list, and try to remove items from the list during the loop. You will notice the loop will not iterate all items in the list.
+
+
+Run below code, you will notice the total length of the list is **6**. But the looped item is less than **6**. 
+This happened because, when we remove an item from the list, it changes the index, and the next iteration may no longer be the origin index. So it will miss items. 
+
+<code python>
+myList= [1,2,3,4,5,6]
+
+print(f"full length: {len(myList)}")
+            
+index = 0
+for i in myList:
+   index+=1
+   if (i % 2) == 0:
+      myList.remove(i)
+                  
+print(f"total index: {index}")
+</code>
+

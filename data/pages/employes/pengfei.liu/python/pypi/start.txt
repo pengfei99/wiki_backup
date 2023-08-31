@@ -1,0 +1,12 @@
+====== Python package repository ======
+
+The story is that inside a bulle, we don't have internet access, so `pip` can't contact the pypi server to install or update the packages. Users need to ask the admin to import packages one by one, this is time-consuming both for the users and admins. So we want to build a private pypi server and catalog. We can control who has access and which packages will be in the catalog.
+
+For now, the below list show the available tools
+  * pypi-server: https://github.com/pypiserver/pypiserver
+  * devpi: https://github.com/devpi/devpi (focus on releasing private python package)
+  * bandersnatch: https://github.com/pypa/bandersnatch (focus on mirroring the official repo )
+  * localshop: https://github.com/jazzband/localshop (too old, no release since 2015)
+  * JFog Artifactory: https://jfrog.com/artifactory (commercial license, the free version is too broken to meet our requirements)
+  * Warehouse: https://warehouse.pypa.io/application.html (The official codebase of pypi server)
+
