@@ -1,0 +1,169 @@
+====== Install mysql on ubuntu ======
+
+This page shows how to install MySQL on Ubuntu. You can find the original doc here: https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04
+
+===== 1. Install the package =====
+
+Run below command to install the server
+
+<code bash >
+sudo apt update
+sudo apt install mysql-server
+# start the service
+sudo systemctl start mysql.service
+</code>
+
+
+===== 2. Config your Mysql server =====
+
+For fresh installations of MySQL, you’ll want to run the DBMS’s included security script. This script changes some of the less secure default options for things like remote root logins and sample users.
+
+> Since July 2022, an error will occur when you run the **mysql_secure_installation** script.
+
+<code>
+# login to the console
+sudo MySQL
+# change the root password
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+# exit
+exit;
+
+# login with password
+MySQL -u root -p
+
+# run security script
+sudo mysql_secure_installation
+</code>
+
+
+===== 3. Create a user account =====
+
+<code>
+# create database
+create database retail_db;
+
+# Create user with localhost access, To give remote access, you need to change localhost to a IP or url.
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+create user 'retail_dba'@'localhost' identified by 'retail_dba_pwd';
+
+# drop user
+DROP USER ‘username’@‘localhost’;
+
+# grant access 
+# the first * is the database name, the second * is the table name
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+# 
+grant all privileges on retail_db. * to 'retail_dba'@'localhost';
+
+# grant user to access database
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' IDENTIFIED BY 'password';
+grant all privileges on retail_db to 'retail_dba'@'localhost' identified by 'retail_dba_pwd';
+
+# active permission changes
+FLUSH PRIVILEGES;
+</code>
+
+
+===== Exporting the Database =====
+
+The mysqldump console utility is used to export databases to SQL text files, making it relatively easy to transfer and move around. You will need the database name itself as well as the username and password to an account with privileges allowing at least full read only access to the database.
+
+Export your database using the following command structure:
+<code>mysqldump -u username -p database_name > data-dump.sql</code>
+
+username is the username you can log in to the database with
+database_name is the name of the database that will be exported
+data-dump.sql is the file in the current directory that the output will be saved to
+The command will produce no visual output, but you can inspect the contents of filename.sql to check if it's a legitimate SQL dump file by running the following command:
+
+<code>
+head -n 5 data-dump.sql
+</code>
+
+===== Import .sql file to database =====
+
+<code>
+mysql -u retail_dba -p retail_db < /tmp/retail_db.sql 
+</code>
+
+====== Grant remote access to mysql/mariadb server ======
+
+===== 0. Configure your firewall to allow access of port 3306 =====
+
+<code>
+# In centos7, we use firewalld. So the command is
+
+firewall-cmd --permanent --add-port=3306/tcp
+
+firewall-cmd --reload
+</code>
+
+===== 1. find the default config file =====
+
+<code>
+# The config file location depends on your linux distribution
+/etc/my.cnf                              (*nix/BSD)
+$MYSQL_HOME/my.cnf                       (*nix/BSD) *Most Notably /etc/mysql/my.cnf
+SYSCONFDIR/my.cnf                        (*nix/BSD)
+
+# In centos7, it located at /etc/my.cnf
+> vim /etc/my.cnf
+
+# locate the [mysqld] section, if you see the following line
+    # skip-networking refuse all remote access
+    skip-networking
+    ...
+    # only accept the ip address in the conf
+    bind-address = <some ip-address>
+    ... 
+    
+# remove or comment these two lines. Your mysql server is ready to accept any remote connection.    
+</code>
+
+To make this take effet, you need to restart the server
+
+<code>
+systemctl restart mariadb
+</code>
+
+===== 2. Grant privileges to user and table =====
+
+<code>
+# The first * in *.* is the name of the database, the second is the name of the table
+# 'root' is the user name
+# The % in '192.168.100.%' is the wildcard, so all ip looks like 192.168.100.* is acceptable
+# The  IDENTIFIED BY 'pwd' can be omitted, if omitted, you don't need to enter password to connect
+# WITH GRANT OPTION is optional which means you give user the right to grant access to the database  
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.100.%' IDENTIFIED BY 'pwd' WITH GRANT OPTION;
+
+# The above command gives user root connected from 192.168.100.* with password 'pwd' all access on all tables with grant option. 
+
+# Suppose we have a database named retail_db, and you want give user retail_dba access on all tables in the db, you can use the following command
+
+GRANT ALL PRIVILEGES ON retail_db.* TO 'retail_dba'@'192.168.100.%' IDENTIFIED BY 'pwd'
+
+# If you want retail_dba connected from 172.17.*.* does not require password, you can use the following command
+
+GRANT ALL PRIVILEGES ON retail_db.* TO 'retail_dba'@'172.17.%.%'
+
+# Unlike, postgresql, a user can have a distinct password for each remote host.
+
+# After you add all the privileges, you can check all user with remote access privileges with the below command.
+
+SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';
+</code>
+
+====== Remove priviliges ======
+
+<code>
+# 1. You need to remove the privileges on the database
+REVOKE ALL PRIVILEGES ON retail_db.* FROM 'retail_dba'@'172.17.%.%';
+
+# 2. Then remove the user
+drop user 'retail_dba'@'172.17.%.%'
+</code>
+
+===== JDBC driver =====
+
+https://mariadb.com/kb/en/library/about-mariadb-connector-j/
